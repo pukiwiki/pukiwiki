@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.59 2003/11/02 14:13:27 arino Exp $
+// $Id: make_link.php,v 1.60 2003/11/05 10:58:39 arino Exp $
 //
 
 // リンクを付加する
@@ -37,9 +37,10 @@ class InlineConverter
 				'url_interwiki', // URL (interwiki definition)
 				'mailto',        // mailto:
 				'interwikiname', // InterWikiName
+				'autolink',      // AutoLink
 				'bracketname',   // BracketName
 				'wikiname',      // WikiName
-				'autolink',      // AutoLink
+				'autolink_a',    // AutoLink(アルファベット)
 //				'rules',         // ユーザ定義ルール
 			);
 		}
@@ -577,27 +578,27 @@ class Link_wikiname extends Link
 class Link_autolink extends Link
 {
 	var $forceignorepages = array();
+	var $auto;
+	var $auto_a; // alphabet only
 	
 	function Link_autolink($start)
 	{
-		parent::Link($start);
-	}
-	function get_pattern()
-	{
 		global $autolink;
-		static $auto,$forceignorepages;
+		
+		parent::Link($start);
 		
 		if (!$autolink or !file_exists(CACHE_DIR.'autolink.dat'))
 		{
-			return FALSE;
+			return;
 		}
-		if (!isset($auto)) // and/or !isset($forceignorepages)
-		{
-			@list($auto,$forceignorepages) = file(CACHE_DIR.'autolink.dat');
-			$forceignorepages = explode("\t",trim($forceignorepages));
-		}
-		$this->forceignorepages = $forceignorepages;
-		return "($auto)";
+		@list($auto,$auto_a,$forceignorepages) = file(CACHE_DIR.'autolink.dat');
+		$this->auto = $auto;
+		$this->auto_a = $auto_a; 
+		$this->forceignorepages = explode("\t",trim($forceignorepages));
+	}
+	function get_pattern()
+	{
+		return isset($this->auto) ? "({$this->auto})" : FALSE;
 	}
 	function get_count()
 	{
@@ -623,6 +624,17 @@ class Link_autolink extends Link
 			'',
 			$this->page
 		);
+	}
+}
+class Link_autolink_a extends Link_autolink
+{
+	function Link_autolink_a($start)
+	{
+		parent::Link_autolink($start);
+	}
+	function get_pattern()
+	{
+		return isset($this->auto_a) ? "({$this->auto_a})" : FALSE;
 	}
 }
 // ユーザ定義ルール

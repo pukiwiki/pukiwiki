@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.52 2003/09/12 07:12:15 arino Exp $
+// $Id: func.php,v 1.53 2003/11/05 10:58:39 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -511,10 +511,13 @@ function get_autolink_pattern(&$pages)
 	
 	$auto_pages = array_unique($auto_pages);
 	sort($auto_pages,SORT_STRING);
+	$auto_pages_a = array_values(preg_grep('/^[A-Z]+$/i',$auto_pages));
+	$auto_pages = array_values(array_diff($auto_pages,$auto_pages_a));
 	
 	$result = get_autolink_pattern_sub($auto_pages,0,count($auto_pages),0);
+	$result_a = get_autolink_pattern_sub($auto_pages_a,0,count($auto_pages_a),0);
 	
-	return array($result,$forceignorepages);
+	return array($result,$result_a,$forceignorepages);
 }
 function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 {
