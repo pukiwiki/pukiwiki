@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.83 2004/07/03 09:52:36 henoheno Exp $
+// $Id: init.php,v 1.84 2004/07/03 12:57:56 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -90,20 +90,23 @@ $ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 foreach ($agents as $agent) {
 	if (preg_match($agent['pattern'], $ua, $matches)) {
 		$user_agent = $agent;	// array to array
-		$user_agent['matches'] = $matches;	// for UA_INI_FILE
+		$user_agent['matches'] = $matches;
 		break;
 	}
 }
-define('UA_TYPE', $user_agent['name']);
+define('UA_NAME',    $user_agent['name']);
+define('UA_MATCHES', $user_agent['matches']);
 $ua = 'HTTP_USER_AGENT';
-unset($agents, $user_agent, ${$ua}, $_SERVER[$ua], $HTTP_SERVER_VARS[$ua], $ua);
+unset($agents, ${$ua}, $_SERVER[$ua], $HTTP_SERVER_VARS[$ua], $ua);
 
 // UserAgent別の設定ファイル読み込み
-define('UA_INI_FILE' , UA_TYPE . '.ini.php');
+define('UA_INI_FILE' , UA_NAME . '.ini.php');
 if (!file_exists(UA_INI_FILE) || !is_readable(UA_INI_FILE)) {
-	die_message('UA_INI_FILE for "' . UA_TYPE . '" not found.');
+	die_message('UA_INI_FILE for "' . UA_NAME . '" not found.');
+} else {
+	require(UA_INI_FILE);
 }
-require(UA_INI_FILE);
+unset($user_agent);	// Unset after reading UA_INI_FILE
 
 /////////////////////////////////////////////////
 // ディレクトリのチェック
