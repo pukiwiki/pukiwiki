@@ -1,7 +1,7 @@
 <?php
 /*
  * PukiWiki calendar_viewerプラグイン
- * $Id: calendar_viewer.inc.php,v 1.19 2004/08/10 13:15:42 henoheno Exp $
+ * $Id: calendar_viewer.inc.php,v 1.20 2004/08/10 13:18:05 henoheno Exp $
  * calendarrecentプラグインを元に作成
  */
 
@@ -92,7 +92,7 @@ function plugin_calendar_viewer_convert()
 	}
 
 
-	// *一覧表示するページ名とファイル名のパターン　ファイル名には年月を含む
+	// 一覧表示するページ名とファイル名のパターン　ファイル名には年月を含む
 	if ($pagename == '') {
 		// pagename無しのyyyy-mm-ddに対応するための処理
 		$pagepattern = '';
@@ -107,7 +107,7 @@ function plugin_calendar_viewer_convert()
 	}
 
 	//echo "$pagename:$page_YM:$mode:$date_sep:$limit_base:$limit_page";
-	// *ページリストの取得
+	// ページリストの取得
 	//echo $pagepattern;
 	//echo $filepattern;
 
@@ -124,7 +124,7 @@ function plugin_calendar_viewer_convert()
 			$page = strip_bracket($page);
 			if (plugin_calendar_viewer_isValidDate(substr($page, $pagepattern_len), $date_sep) == false) continue;
 
-			// *mode毎に別条件ではじく
+			// mode毎に別条件ではじく
 			// past modeでは未来のページはNG
 			if (((substr($page, $pagepattern_len)) > $_date) && ($mode == 'past'))continue;
 			// future modeでは過去のページはNG
@@ -135,7 +135,7 @@ function plugin_calendar_viewer_convert()
 	}
 	closedir($dir);
 	//echo count($pagelist);
-	// *ここからインクルード開始
+	// ここからインクルード開始
 
 	$tmppage = $vars['page'];
 	$return_body = '';
