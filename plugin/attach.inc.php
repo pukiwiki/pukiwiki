@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.59 2004/08/14 23:52:18 henoheno Exp $
+//  $Id: attach.inc.php,v 1.60 2004/08/15 00:19:35 henoheno Exp $
 //
 
 /*
@@ -181,7 +181,7 @@ function attach_upload($file, $page, $pass = NULL)
 	}
 
 	$obj->getstatus();
-	$obj->status['pass'] = ($pass !== TRUE && $pass !== NULL) ? $pass : '';
+	$obj->status['pass'] = ($pass !== TRUE && $pass !== NULL) ? md5($pass) : '';
 	$obj->putstatus();
 
 	return array(
