@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.22 2003/02/28 06:18:19 panda Exp $
+// $Id: func.php,v 1.23 2003/03/04 07:03:43 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -144,9 +144,9 @@ function auto_template($page)
 }
 
 // 検索
-function do_search($word,$type='AND',$non_format=FALSE)
+function do_search($word,$type='AND')
 {
-	global $script,$vars,$whatsnew;
+	global $script,$vars,$whatsnew,$non_list,$search_non_list;
 	global $_msg_andresult,$_msg_orresult,$_msg_notfoundresult;
 	
 	$database = array();
@@ -158,8 +158,11 @@ function do_search($word,$type='AND',$non_format=FALSE)
 	$_pages = get_existpages();
 	$pages = array();
 	
-	foreach ($_pages as $page) {
-		if ($page == $whatsnew or ($non_format and $page == $vars['page'])) {
+	foreach ($_pages as $page)
+	{
+		if ($page == $whatsnew
+			or (!$search_non_list and preg_match("/$non_list/",$page))
+		{
 			continue;
 		}
 		
@@ -167,28 +170,30 @@ function do_search($word,$type='AND',$non_format=FALSE)
 		array_unshift($source,$page); // ページ名も検索対象に
 		
 		$b_match = FALSE;
-		foreach ($keys as $key) {
+		foreach ($keys as $key)
+		{
 			$tmp = preg_grep("/$key/i",$source);
 			$b_match = (count($tmp) > 0);
-			if ($b_match xor $b_type) {
+			if ($b_match xor $b_type)
+			{
 				break;
 			}
 		}
-		if ($b_match) {
+		if ($b_match)
+		{
 			$pages[$page] = get_filetime($page);
 		}
 	}
-	if ($non_format) {
-		return $pages;
-	}
 	$r_word = rawurlencode($word);
 	$s_word = htmlspecialchars($word);
-	if (count($pages) == 0) {
+	if (count($pages) == 0)
+	{
 		return str_replace('$1',$s_word,$_msg_notfoundresult);
 	}
 	ksort($pages);
 	$retval = "<ul>\n";
-	foreach ($pages as $page=>$time) {
+	foreach ($pages as $page=>$time)
+	{
 		$r_page = rawurlencode($page);
 		$s_page = htmlspecialchars($page);
 		$passage = get_passage($time);
