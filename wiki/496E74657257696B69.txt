@@ -1,3 +1,4 @@
-InterWiki は、PukiWiki と 他のサーバーを接続する機能です。
+* InterWiki [#teeaa78d]
+InterWiki は、[[PukiWiki]] と 他のサーバーを接続する機能です。
 
-InterWikiName のページでサーバー名を定義しています。
+[[InterWikiName]] のページでサーバー名を定義しています。

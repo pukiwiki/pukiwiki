@@ -5,13 +5,13 @@
 あなたのサイトに合わせ、自由に編集してください :)
 
 ** 練習ページ [#if72ced0]
-- SandBox -- 編集をお試しください
-- InterWikiSandBox -- InterWikiを試してみてください
+- [[SandBox]] -- 編集をお試しください
+- [[InterWikiSandBox]] -- [[InterWiki]]を試してみてください
 
 
 ** PukiWikiについて [#c2af49f4]
 
-- PukiWiki -- PukiWikiのご紹介
+- [[PukiWiki]] -- PukiWikiのご紹介
 
 *** ドキュメント [#o366701b]
 - [[ヘルプ]] -- PukiWikiで編集するには？
