@@ -26,7 +26,7 @@ $navi[] = "<a href=\"$script?plugin=newpage\" $accesskey=\"1\">1.New</a>";
 $navi[] = "<a href=\"$link_edit\" $accesskey=\"2\">2.Edit</a>";
 if ($is_read and $function_freeze) {
 	if ($is_freeze) {
-		$navi[] = "<a href=\"$link_unfreeze\" $accesskey=\"3\">3.Defreeze</a>";
+		$navi[] = "<a href=\"$link_unfreeze\" $accesskey=\"3\">3.Unfreeze</a>";
 	}
 	else {
 		$navi[] = "<a href=\"$link_freeze\" $accesskey=\"3\">3.Freeze</a>";
