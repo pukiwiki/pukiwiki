@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.11 2003/04/17 02:37:02 arino Exp $
+// $Id: pcomment.inc.php,v 1.12 2003/04/22 14:07:05 arino Exp $
 //
 
 /*
@@ -302,16 +302,16 @@ function pcmt_insert()
 //オプションを解析する
 function pcmt_check_arg($val, $key, &$params)
 {
-	foreach (array_keys($params) as $key)
+	if ($val != '')
 	{
-		if ($val == '')
+		$val = strtolower($val);
+		foreach (array_keys($params) as $key)
 		{
-			return;
-		}
-		if (strpos($key, strtolower($val)) === 0)
-		{
-			$params[$key] = TRUE;
-			return;
+			if (strpos($key,$val) === 0)
+			{
+				$params[$key] = TRUE;
+				return;
+			}
 		}
 	}
 	$params['_args'][] = $val;
