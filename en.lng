@@ -2,9 +2,19 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.27 2004/10/11 02:05:12 henoheno Exp $
+// $Id: en.lng,v 1.28 2004/10/16 05:45:13 henoheno Exp $
 //
 // PukiWiki message file (english)
+
+/////////////////////////////////////////////////
+// Encode setting
+// NOTE: Encoding of this file, must equal to this setting
+
+// Internal content encoding = Output content charset (for skin)
+define('CONTENT_CHARSET', 'iso-8859-1'); // 'UTF-8' or 'iso-8859-1' or 'EUC-JP' or ...
+
+// Internal content encoding (for mbstring)
+define('SOURCE_ENCODING', 'ASCII'); // 'UTF-8' or 'ASCII' or 'EUC-JP'
 
 ///////////////////////////////////////
 // page titles

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.12 2004/10/11 03:13:09 henoheno Exp $
+// $Id: init.php,v 1.13 2004/10/16 05:48:53 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -51,15 +51,6 @@ if (! file_exists(INI_FILE) || ! is_readable(INI_FILE)) {
 if ($die) die_message(nl2br("\n\n" . $die));
 
 /////////////////////////////////////////////////
-// INI_FILE: mbstring extension 関連
-
-mb_language('Japanese');
-mb_internal_encoding(SOURCE_ENCODING);
-ini_set('mbstring.http_input', 'pass');
-mb_http_output('pass');
-mb_detect_order('auto');
-
-/////////////////////////////////////////////////
 // INI_FILE: LANG 初期設定(言語ファイルの場所)
 define('LANG_FILE', DATA_HOME . LANG . '.lng');
 
@@ -71,6 +62,15 @@ if (! file_exists(LANG_FILE) || ! is_readable(LANG_FILE)) {
 	require(LANG_FILE);
 }
 if ($die) die_message(nl2br("\n\n" . $die));
+
+/////////////////////////////////////////////////
+// INI_FILE / LANG_FILE: mbstring extension 関連
+
+mb_language('Japanese');
+mb_internal_encoding(SOURCE_ENCODING);
+ini_set('mbstring.http_input', 'pass');
+mb_http_output('pass');
+mb_detect_order('auto');
 
 /////////////////////////////////////////////////
 // LANG_FILE: 曜日配列
