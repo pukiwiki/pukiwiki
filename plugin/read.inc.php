@@ -1,10 +1,8 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: read.inc.php,v 1.8 2005/01/15 13:57:07 henoheno Exp $
 //
-// $Id: read.inc.php,v 1.7 2004/08/04 13:43:23 henoheno Exp $
-//
-// ページの表示とInterWikiNameの解釈
+// Read plugin: Show a page and InterWiki
 
 function plugin_read_action()
 {
@@ -18,7 +16,7 @@ function plugin_read_action()
 		header_lastmod($page);
 		return array('msg'=>'', 'body'=>'');
 
-	} else if (is_interwiki($page)) {
+	} else if (! PKWK_SAFE_MODE && is_interwiki($page)) {
 		return do_plugin_action('interwiki'); // InterWikiNameを処理
 
 	} else if (is_pagename($page)) {
