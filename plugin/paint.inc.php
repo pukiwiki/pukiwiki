@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: paint.inc.php,v 1.10 2003/07/03 05:23:47 arino Exp $
+// $Id: paint.inc.php,v 1.11 2003/07/27 14:15:29 arino Exp $
 //
 
 /*
@@ -55,8 +55,11 @@ function plugin_paint_action()
 	$retval['msg'] = $_paint_messages['msg_title'];
 	$retval['body'] = '';
 	
-	if (array_key_exists('attach_file',$_FILES) and is_uploaded_file($_FILES['attach_file']['tmp_name']))
+	if (array_key_exists('attach_file',$_FILES)
+		and array_key_exists('refer',$vars)
+		and is_page($vars['refer']))
 	{
+		$file = $_FILES['attach_file'];
 		//BBSPaiter.jarは、shift-jisで内容を送ってくる。面倒なのでページ名はエンコードしてから送信させるようにした。
 		$vars['page'] = $vars['refer'] = decode($vars['refer']);
 		
@@ -64,23 +67,26 @@ function plugin_paint_action()
 		$filename = mb_convert_encoding($filename,SOURCE_ENCODING,'auto');
 		
 		//ファイル名置換
-		$attachname = preg_replace('/^[^\.]+/', $filename, $_FILES['attach_file']['name']);
+		$attachname = preg_replace('/^[^\.]+/',$filename,$file['name']);
 		//すでに存在した場合、 ファイル名に'_0','_1',...を付けて回避(姑息)
 		$count = '_0';
 		while (file_exists(PAINT_UPLOAD_DIR.encode($vars['refer']).'_'.encode($attachname)))
 		{
-			$attachname = preg_replace('/^[^\.]+/', $filename.$count++, $_FILES['attach_file']['name']);
+			$attachname = preg_replace('/^[^\.]+/',$filename.$count++,$file['name']);
 		}
 		
-		$_FILES['attach_file']['name'] = $attachname;
+		$file['name'] = $attachname;
 		
 		if (!exist_plugin('attach') or !function_exists('attach_upload'))
 		{
 			return array('msg'=>'attach.inc.php not found or not correct version.');
 		}
 		
-		$retval = attach_upload(TRUE);
-		$retval = paint_insert_ref($_FILES['attach_file']['name']);
+		$retval = attach_upload($file,$vars['refer'],TRUE);
+		if ($retval['result'] == TRUE)
+		{
+			$retval = paint_insert_ref($file['name']);
+		}
 	}
 	else
 	{

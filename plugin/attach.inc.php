@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.30 2003/07/06 15:11:41 arino Exp $
+//  $Id: attach.inc.php,v 1.31 2003/07/27 14:15:29 arino Exp $
 //
 
 /*
@@ -91,10 +91,10 @@ function plugin_attach_action()
 		$vars['pcmd'] = 'delete';
 		$vars['file'] = $vars['delfile'];
 	}
-	if (array_key_exists('attach_file',$_FILES) and
-		is_uploaded_file($_FILES['attach_file']['tmp_name']))
+	if (array_key_exists('attach_file',$_FILES))
 	{
-		return attach_upload();
+		$pass = array_key_exists('pass',$vars) ? md5($vars['pass']) : NULL;
+		return attach_upload($_FILES['attach_file'],$vars['refer'],$pass);
 	}
 	
 	$age = array_key_exists('age',$vars) ? $vars['age'] : 0;
@@ -132,42 +132,48 @@ function attach_filelist()
 }
 //-------- 実体
 //ファイルアップロード
-function attach_upload($force = FALSE)
+function attach_upload($file,$page,$pass=NULL)
 {
-	global $vars,$adminpass;
-	global $_attach_messages;
+// $pass=NULL : パスワードが指定されていない
+// $pass=TRUE : アップロード許可
+	global $adminpass,$_attach_messages;
 	
-	if ($_FILES['attach_file']['size'] > MAX_FILESIZE)
+	if ($file['tmp_name'] == '' or !is_uploaded_file($file['tmp_name']))
 	{
-		return array('msg'=>$_attach_messages['err_exceed']);
+		return array('result'=>FALSE);
+	}		
+	if ($file['size'] > MAX_FILESIZE)
+	{
+		return array('result'=>FALSE,'msg'=>$_attach_messages['err_exceed']);
 	}
-	if (!$force and !is_editable($vars['refer']))
+	if (!is_pagename($page) or ($pass !== TRUE and !is_editable($page)))
 	{
-		return array('msg'=>$_attach_messages['err_noparm']);
+		return array('result'=>FALSE,'msg'=>$_attach_messages['err_noparm']);
 	}
-	if (ATTACH_UPLOAD_ADMIN_ONLY and md5($vars['pass']) != $adminpass)
+	if (ATTACH_UPLOAD_ADMIN_ONLY and $pass !== TRUE
+		and ($pass === NULL or $pass != $adminpass))
 	{
-		return array('msg'=>$_attach_messages['err_adminpass']);
+		return array('result'=>FALSE,'msg'=>$_attach_messages['err_adminpass']);
 	}
 	
-	$obj = &new AttachFile($vars['refer'],$_FILES['attach_file']['name']);	
+	$obj = &new AttachFile($page,$file['name']);	
 	
 	if ($obj->exist)
 	{
-		return array('msg'=>$_attach_messages['err_exists']);
+		return array('result'=>FALSE,'msg'=>$_attach_messages['err_exists']);
 	}
-	move_uploaded_file($_FILES['attach_file']['tmp_name'],$obj->filename);
+	move_uploaded_file($file['tmp_name'],$obj->filename);
 	
-	if (is_page($vars['refer']))
+	if (is_page($page))
 	{
-		touch(get_filename($vars['refer']));
+		touch(get_filename($page));
 	}
 	
 	$obj->getstatus();
-	$obj->status['pass'] = array_key_exists('pass',$vars) ? md5($vars['pass']) : '';
+	$obj->status['pass'] = ($pass !== TRUE and $pass !== NULL) ? $pass : '';
 	$obj->putstatus();
 
-	return array('msg'=>$_attach_messages['msg_uploaded']);
+	return array('result'=>TRUE,'msg'=>$_attach_messages['msg_uploaded']);;
 }
 //詳細フォームを表示
 function attach_info($err='')
