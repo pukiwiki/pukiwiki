@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.15 2005/01/22 15:03:33 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.16 2005/01/23 11:54:26 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -24,6 +24,7 @@ if (! defined('PKWK_SKIN_SHOW_TOOLBAR'))
 // Prohibit direct access
 if (! defined('UI_LANG')) die('UI_LANG is not set');
 if (! isset($_LANG)) die('$_LANG is not set');
+if (! defined('PKWK_READONLY')) die('PKWK_READONLY is not set');
 
 // Check theme
 $theme = TDIARY_THEME;
@@ -325,6 +326,7 @@ if ($menu) {
 
 $lang  = & $_LANG['skin'];
 $link  = & $_LINK;
+$rw    = ! PKWK_READONLY;
 
 // Decide charset for CSS
 $css_charset = 'iso-8859-1';
@@ -380,8 +382,7 @@ if (isset($pkwk_dtd)) {
 <?php } // if ($menu && $sidebar == 'strict') ?>
 
 <!-- Navigation buttuns -->
-<div id="navigator"></div>
-<div class="adminmenu">
+<div id="navigator"><div class="adminmenu">
 <?php
 function _navigator($key, $value = '', $javascript = ''){
 	$lang = $GLOBALS['_LANG']['skin'];
@@ -400,22 +401,26 @@ function _navigator($key, $value = '', $javascript = ''){
  <?php _navigator('top') ?> &nbsp;
 
 <?php if ($is_page) { ?>
-   <?php _navigator('edit')   ?>
- <?php if ($is_read && $function_freeze) { ?>
-    <?php (! $is_freeze) ? _navigator('freeze') : _navigator('unfreeze') ?>
+  <?php if ($rw) { ?>
+	<?php _navigator('edit') ?>
+	<?php if ($is_read && $function_freeze) { ?>
+		<?php (! $is_freeze) ? _navigator('freeze') : _navigator('unfreeze') ?>
+	<?php } ?>
  <?php } ?>
    <?php _navigator('diff') ?>
  <?php if ($do_backup) { ?>
-   <?php _navigator('backup') ?>
+	<?php _navigator('backup') ?>
  <?php } ?>
- <?php if ((bool)ini_get('file_uploads')) { ?>
-   <?php _navigator('upload') ?>
+ <?php if ($rw && (bool)ini_get('file_uploads')) { ?>
+	<?php _navigator('upload') ?>
  <?php } ?>
-   <?php _navigator('reload')    ?>
+   <?php _navigator('reload') ?>
    &nbsp;
 <?php } ?>
 
-   <?php _navigator('new')  ?>
+ <?php if ($rw) { ?>
+	<?php _navigator('new') ?>
+ <?php } ?>
    <?php _navigator('list') ?>
  <?php if (arg_check('list')) { ?>
    <?php _navigator('filelist') ?>
@@ -431,7 +436,7 @@ function _navigator($key, $value = '', $javascript = ''){
 <?php if ($referer)   { ?> &nbsp;
    <?php _navigator('refer') ?>
 <?php } ?>
-</div>
+</div></div>
 
 <h1><?php echo $page_title ?></h1>
 
@@ -646,23 +651,29 @@ function _toolbar($key, $x = 20, $y = 20){
 
 <?php if ($is_page) { ?>
  &nbsp;
- <?php _toolbar('edit') ?>
- <?php if ($is_read && $function_freeze) { ?>
-  <?php if (! $is_freeze) { _toolbar('freeze'); } else { _toolbar('unfreeze'); } ?>
+ <?php if ($rw) { ?>
+	<?php _toolbar('edit') ?>
+	<?php if ($is_read && $function_freeze) { ?>
+		<?php if (! $is_freeze) { _toolbar('freeze'); } else { _toolbar('unfreeze'); } ?>
+	<?php } ?>
  <?php } ?>
  <?php _toolbar('diff') ?>
 <?php if ($do_backup) { ?>
-  <?php _toolbar('backup') ?>
+	<?php _toolbar('backup') ?>
 <?php } ?>
- <?php if ((bool)ini_get('file_uploads')) { ?>
-  <?php _toolbar('upload') ?>
+ <?php if ($rw && (bool)ini_get('file_uploads')) { ?>
+	<?php _toolbar('upload') ?>
  <?php } ?>
- <?php _toolbar('copy') ?>
- <?php _toolbar('rename') ?>
+ <?php if ($rw) { ?>
+	<?php _toolbar('copy') ?>
+	<?php _toolbar('rename') ?>
+ <?php } ?>
  <?php _toolbar('reload') ?>
 <?php } ?>
  &nbsp;
- <?php _toolbar('new')    ?>
+ <?php if ($rw) { ?>
+	<?php _toolbar('new') ?>
+ <?php } ?>
  <?php _toolbar('list')   ?>
  <?php _toolbar('search') ?>
  <?php _toolbar('recent') ?>
