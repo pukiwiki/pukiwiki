@@ -2,7 +2,7 @@ NAME
 
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
-        PukiWiki 1.4.5_alpha
+        PukiWiki 1.4.5_rc1
         Copyright (C) 2001-2004 PukiWiki Developers Team
         License: GPL
         Based on "PukiWiki" 1.3 by yu-ji

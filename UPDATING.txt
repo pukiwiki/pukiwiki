@@ -1,11 +1,11 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.18 2004/12/30 15:50:51 henoheno Exp $
+$Id: UPDATING.txt,v 1.19 2005/01/23 14:08:45 henoheno Exp $
 
 
 互換性に関する記述
 ==================
 
-PukiWiki 1.4.5_alpha: PukiWiki 1.4.4との非互換点
+PukiWiki 1.4.5_rc1: PukiWiki 1.4.4との非互換点
 
     詳しくは dev:開発日記 を参照して下さい。
 
@@ -22,10 +22,7 @@ PukiWiki 1.4.5_alpha: PukiWiki 1.4.4との非互換点
        「重要度(Severity)」に改められましたが、互換性を重視し、
        既に作成されたページに影響が出る部分はそのまま残されています。
 
-    4. tdiaryスキン(新規追加) は tDiary のデザインを再現させるため、
-       現状は必ず HTML 4.01 Strict のDOCTYPEタグを出力します。
-
-    5. 1.4.5以降のスキン、および :config/plugin/tracker/default の
+    4. 1.4.5以降のスキン、および :config/plugin/tracker/default の
        内容は新しく用意された機能あるいは変数を使用しているため、
        下位互換ではありません。(以前のPukiWikiでは利用できません)
 
