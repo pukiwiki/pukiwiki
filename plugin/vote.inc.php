@@ -1,5 +1,5 @@
 <?
-// $Id: vote.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
+// $Id: vote.inc.php,v 1.4 2002/06/27 08:47:55 masui Exp $
 
 function plugin_vote_action()
 {
@@ -137,7 +137,7 @@ function plugin_vote_convert()
 
 		$string .= "<tr>"
 			.  "<td width=\"80%\" class=\"$cls\" nowrap>$link</td>"
-			.  "<td class=\"$cls\" nowrap>$cnt&nbsp;&nbsp;<input type=\"submit\" name=\"vote[$arg]\" value=\"Vote\"></td>"
+			.  "<td class=\"$cls\" nowrap>$cnt&nbsp;&nbsp;<input type=\"submit\" name=\"vote[$arg]\" value=\"Vote\"></td>";
 			.  "</tr>\n";
 	}
 
