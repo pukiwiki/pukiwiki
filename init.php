@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.20.2.14 2004/06/27 13:00:37 henoheno Exp $
+// $Id: init.php,v 1.20.2.15 2004/06/27 13:36:59 henoheno Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -8,7 +8,14 @@ define("INI_FILE","./pukiwiki.ini.php");
 
 //** 初期設定 **
 
-ini_set('error_reporting', 5);
+/////////////////////////////////////////////////
+// 初期設定 (エラー出力レベル)
+// (E_WARNING | E_NOTICE)を除外しています。
+error_reporting(E_ERROR | E_PARSE);
+error_reporting(E_ALL);
+
+/////////////////////////////////////////////////
+
 define("S_VERSION","1.3.7");
 define("S_COPYRIGHT","<strong>\"PukiWiki\" ".S_VERSION."</strong> Copyright &copy; 2001-2004 <a href=\"http://pukiwiki.org\">PukiWiki Developers Team</a>. License is <a href=\"http://www.gnu.org/\">GNU/GPL</a>.<BR>Based on \"PukiWiki\" 1.3 by <a href=\"http://factage.com/sng/\">sng</a>");
 define("UTIME",time());
@@ -20,13 +27,6 @@ foreach (array('HTTP_USER_AGENT','PHP_SELF','SERVER_NAME','SERVER_SOFTWARE','SER
 }
 
 define("MUTIME",getmicrotime());
-
-if($script == "") {
-	$script = get_script_uri();
-	if ($script === FALSE or (php_sapi_name() == 'cgi' and !is_url($script,TRUE))) {
-		die_message("get_script_uri() failed: Please set \$script at INI_FILE manually.");
-	}
-}
 
 $WikiName = '[A-Z][a-z]+(?:[A-Z][a-z]+)+';
 
@@ -78,6 +78,7 @@ $LinkPattern = "/( (?# <1>:all)
 
 $cookie = $HTTP_COOKIE_VARS;
 
+$get = $post = array();
 if(get_magic_quotes_gpc())
 {
 	foreach($HTTP_GET_VARS as $key => $value) {
@@ -121,7 +122,7 @@ if (array_key_exists('page', $vars)) {
 }
 
 // 整形: word, rawurldecode()
-if (array_key_exists('page', $vars)) {
+if (array_key_exists('word', $vars)) {
 	$get['word'] = $post['word'] = $vars['word']  = rawurldecode($vars["word"]);
 }
 
@@ -130,9 +131,8 @@ if (!empty($vars['msg']))  {
 	$get['msg'] = $post['msg'] = $vars['msg'] = preg_replace("/((\x0D\x0A)|(\x0D)|(\x0A))/", "\n", $vars["msg"]);
 }
 
-$arg = rawurldecode((getenv('QUERY_STRING') != '')?
-		    getenv('QUERY_STRING') :
-		    $HTTP_SERVER_VARS["argv"][0]);
+$arg = rawurldecode((getenv('QUERY_STRING') != '') ? getenv('QUERY_STRING') :
+		    isset($HTTP_SERVER_VARS['argv'][0]) ? $HTTP_SERVER_VARS['argv'][0] : '');
 
 $arg = sanitize_null_character($arg);
 
@@ -155,6 +155,7 @@ if ($die)
 	die_message(nl2br("\n\n" . $message . "\n"));
 
 
+/////////////////////////////////////////////////
 // フェイスマークを$line_rulesに加える
 if ($usefacemark)
 	$line_rules += $facemark_rules;
