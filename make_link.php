@@ -135,6 +135,11 @@ function get_fullname($name,$refer)
 		while ($arrn[0] == '..') { array_shift($arrn); array_pop($arrp); }
 		$name = (count($arrp)) ? '[['.join('/',array_merge($arrp,$arrn)).']]' :
 			((count($arrn)) ? "[[$defaultpage/".join('/',$arrn).']]' : $defaultpage);
+		
+		// [[FrontPage/hoge]]の親は[[FrontPage]]ではなくFrontPage(という仕様)
+		$_name = strip_bracket($name);
+		if (preg_match("/^$WikiName$/",$_name))
+			$name = $_name;
 	}
 	
 	return $name;
