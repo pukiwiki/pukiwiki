@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.42 2003/05/26 14:00:24 arino Exp $
+// $Id: make_link.php,v 1.43 2003/05/28 04:50:45 arino Exp $
 //
 
 // リンクを付加する
@@ -444,18 +444,18 @@ class Link_interwikiname extends Link
 \[\[                    # open bracket
 (?:
  (\[\[)?                # (1) open bracket
- ([^\[\]]+)>            # (2) alias
+ ((?:(?<!\]\]).)+)>     # (2) alias
 )?
 (?:
  (\[\[)?                # (3) open bracket
- (\[*?[^\s\]]+?\]*?)    # (4) InterWiki
+ ([^\s:]+)              # (4) InterWiki
  (                      # (5)
   (?($s1)\]\]           #  close bracket if (1)
   |(?($s3)\]\])         #   or (3)
   )
  )?
  (?<! > | >\[\[ )       # not '>' or '>[['
- (\:(?:(?<!>).)*?)      # (6) param
+ (\:(?:(?<!>|\]\]).)+)  # (6) param
  (?($s5) |              # if !(5)
   (?($s1)\]\]           #  close bracket if (1)
   |(?($s3)\]\])         #   or (3)
@@ -511,7 +511,7 @@ class Link_bracketname extends Link
 \[\[                     # open bracket
 (?:
  (\[\[)?                 # (1) open bracket
- ([^\[\]]+)>             # (2) alias
+ ((?:(?<!\]\]).)+)>      # (2) alias
 )?
 (\[\[)?                  # (3) open bracket
 (                        # (4) PageName
@@ -780,6 +780,12 @@ function make_pagelink($page,$alias='',$anchor='',$refer='')
 function get_fullname($name,$refer)
 {
 	global $defaultpage;
+	
+	if ($name{0} == '/')
+	{
+		$name = substr($name,1);
+		return ($name == '') ? $defaultpage : $name;
+	}
 	
 	if ($name == './')
 	{
