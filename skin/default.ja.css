@@ -239,3 +239,51 @@ span.diff_removed {
 .ie5 {
 	text-align:center;
 }
+
+.size1{
+	font-size:xx-small;
+	line-height:130%;
+	text-indent:0px;
+	display:inline-block;
+}
+
+.size2{
+	font-size:x-small;
+	line-height:130%;
+	text-indent:0px;
+	display:inline-block;
+}
+
+.size3{
+	font-size:small;
+	line-height:130%;
+	text-indent:0px;
+	display:inline-block;
+}
+.size4{
+	font-size:medium;
+	line-height:130%;
+	text-indent:0px;
+	display:inline-block;
+}
+
+.size5{
+	font-size:large;
+	line-height:130%;
+	text-indent:0px;
+	display:inline-block;
+}
+
+.size6{
+	font-size:x-large;
+	line-height:130%;
+	text-indent:0px;
+	display:inline-block;
+}
+
+.size7{
+	font-size:xx-large;
+	line-height:130%;
+	text-indent:0px;
+	display:inline-block;
+}
