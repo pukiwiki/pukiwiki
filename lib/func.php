@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.21 2004/12/30 07:30:55 henoheno Exp $
+// $Id: func.php,v 1.22 2004/12/30 07:32:23 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -83,7 +83,7 @@ function is_freeze($page, $force = FALSE)
 		return FALSE;
 	}
 
-	list($lines) = get_source($page);
+	list($lines) = array_pad(get_source($page), 1, '');
 	$is_freeze[$page] = (rtrim($lines) == '#freeze');
 
 	return $is_freeze[$page];
