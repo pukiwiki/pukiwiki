@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.css.php,v 1.4 2004/09/18 12:01:42 henoheno Exp $
+// $Id: pukiwiki.css.php,v 1.5 2004/10/23 13:57:28 henoheno Exp $
 //
 header('Content-Type: text/css');
 
@@ -74,7 +74,7 @@ a:hover
 	text-decoration:underline;
 }
 
-h1, h2, h3, h4, h5, h6
+h1, h2
 {
 	font-family:verdana, arial, helvetica, Sans-Serif;
 	color:inherit;
@@ -82,6 +82,38 @@ h1, h2, h3, h4, h5, h6
 	padding:.3em;
 	border:0px;
 	margin:0px 0px .5em 0px;
+}
+h3
+{
+	font-family:verdana, arial, helvetica, Sans-Serif;
+	border-bottom:  3px solid #DDEEFF;
+	border-top:     1px solid #DDEEFF;
+	border-left:   10px solid #DDEEFF;
+	border-right:   5px solid #DDEEFF;
+
+	color:inherit;
+	background-color:#FFFFFF;
+	padding:.3em;
+	margin:0px 0px .5em 0px;
+}
+h4
+{
+	font-family:verdana, arial, helvetica, Sans-Serif;
+	border-left:   18px solid #DDEEFF;
+
+	color:inherit;
+	background-color:#FFFFFF;
+	padding:.3em;
+	margin:0px 0px .5em 0px;
+}
+h5, h6
+{
+	font-family:verdana, arial, helvetica, Sans-Serif;
+	color:inherit;
+	background-color:#DDEEFF;
+ 	padding:.3em;
+ 	border:0px;
+ 	margin:0px 0px .5em 0px;
 }
 
 h1.title
@@ -364,7 +396,7 @@ strong.word9
      clear:both;
 }
 
-/* pukiwiki.skin.*.php */
+/* pukiwiki.skin.php */
 div#header
 {
 	padding:0px;
@@ -481,6 +513,12 @@ div#footer
 	font-size:70%;
 	padding:0px;
 	margin:16px 0px 0px 0px;
+}
+
+div#banner
+{
+	float:right;
+	margin-top:24px;
 }
 
 div#preview
