@@ -1,9 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: keitai.skin.php,v 1.6 2005/02/13 02:35:56 henoheno Exp $
+// $Id: keitai.skin.php,v 1.7 2005/02/13 03:06:02 henoheno Exp $
 //
 // Skin for Embedded devices
 
+// ----
 // Prohibit direct access
 if (! defined('UI_LANG')) die('UI_LANG is not set');
 
@@ -11,11 +12,16 @@ global $max_size, $accesskey, $menubar;
 $link = $_LINK;
 $rw = ! PKWK_READONLY;
 
-// Force Shift JIS encode for Japanese embedded browsers and devices
+// Output HTTP headers
 pkwk_headers_sent();
-header('Content-Type: text/html; charset=Shift_JIS');
-$title = mb_convert_encoding($title, 'SJIS', SOURCE_ENCODING);
-$body  = mb_convert_encoding($body,  'SJIS', SOURCE_ENCODING);
+if(LANG == 'ja') {
+	// Force Shift JIS encode for Japanese embedded browsers and devices
+	header('Content-Type: text/html; charset=Shift_JIS');
+	$title = mb_convert_encoding($title, 'SJIS', SOURCE_ENCODING);
+	$body  = mb_convert_encoding($body,  'SJIS', SOURCE_ENCODING);
+} else {
+	header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
+}
 
 // Make 1KByte spare (for header, etc)
 $max_size = --$max_size * 1024;
