@@ -1,17 +1,18 @@
-*PukiWiki [#vfad867b]
+#freeze
+* FrontPage [#vfad867b]
 
-This is FrontPage.
-Please edit as you like.
+This page will be shown when no page name is specified.
 
--PukiWiki
---Introduction to PukiWiki
--[[Help]]
---How to edit page in PukiWiki.
--SandBox
---Edit this page freely. Try it.
--InterWikiName
---The lists of servers of InterWiki.
--InterWikiSandBox
---Try InterWiki here.
--[[PukiWiki.org:http://pukiwiki.org]]
---The official page of PukiWiki Developper Team.
+Please edit as you like :) ((To avoid easy-SPAMming and easy-tricks, please freeze this page after describing your site's subject and/or destination. And please note about changing administrator's password!))
+
+
+** Test pages
+- [[SandBox]] - Edit this page freely. Try it.
+- [[InterWikiSandBox]] - Try [[InterWiki]] here.
+
+** About PukiWiki
+- [[PukiWiki]] - Introduction to PukiWiki
+
+** Documents
+- [[Help]] - How to edit pages in PukiWiki.
+- [[FormatRule]] - Text formatting rules.
