@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.13 2002/07/01 11:34:12 masui Exp $
+// $Id: html.php,v 1.14 2002/07/02 04:15:10 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -72,9 +72,7 @@ function convert_html($string)
 	global $longtaketime;
 
 	$string = rtrim($string);
-	$string = preg_replace("/(\x0D\x0A)/","\n",$string);
-	$string = preg_replace("/(\x0D)/","\n",$string);
-	$string = preg_replace("/(\x0A)/","\n",$string);
+	$string = preg_replace("/((\x0D\x0A)|(\x0D)|(\x0A))/","\n",$string);
 
 	$start_mtime = getmicrotime();
 
@@ -484,8 +482,8 @@ return '
  </tr>
  <tr>
   <td align="right">
-   <input type="hidden" name="page" value="'.$page.'" />
-   <input type="hidden" name="digest" value="'.$digest.'" />
+   <input type="hidden" name="page" value="'.htmlspecialchars($page).'" />
+   <input type="hidden" name="digest" value="'.htmlspecialchars($digest).'" />
    <textarea name="msg" rows="'.$rows.'" cols="'.$cols.'" wrap="virtual">
 '.htmlspecialchars($refer.$postdata).'</textarea>
   </td>
@@ -503,7 +501,7 @@ return '
 
 <form action="'.$script.'?cmd=freeze" method="post">
 <div>
-<input type="hidden" name="page" value="'.$vars["page"].'" />
+<input type="hidden" name="page" value="'.htmlspecialchars($vars["page"]).'" />
 '.$str_freeze.'
 </div>
 </form>
@@ -681,7 +679,7 @@ function make_link($name)
 		}
 		
 		$page = strip_bracket($page);
-		$pagename = strip_bracket($name);
+		$pagename = htmlspecialchars(strip_bracket($name));
 		$percent_name = str_replace($aryconv_htmlspecial,$aryconv_html,$name);
 		$percent_name = rawurlencode($percent_name);
 

@@ -26,7 +26,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.6 2002/07/01 06:29:22 masui Exp $
+// $Id: pukiwiki.php,v 1.7 2002/07/02 04:15:10 masui Exp $
 /////////////////////////////////////////////////
 
 
@@ -60,7 +60,7 @@ if(!empty($vars["plugin"]) && exist_plugin_action($vars["plugin"]))
 	if($retvars["msg"])
 	{
 		$title =  str_replace("$1",$title,$retvars["msg"]);
-		$page =  str_replace("$1",$page,$retvars["msg"]);
+		$page =  str_replace("$1",htmlspecialchars($page),$retvars["msg"]);
 	}
 	
 	if(!empty($retvars["body"]))
@@ -103,7 +103,7 @@ else if(((arg_check("add") || arg_check("edit") || arg_check("preview")) && (is_
 // 追加
 else if(arg_check("add"))
 {
-	$title = str_replace('$1',strip_bracket($get["page"]),$_title_add);
+	$title = str_replace('$1',htmlspecialchars(strip_bracket($get["page"])),$_title_add);
 	$page = str_replace('$1',make_search($get["page"]),$_title_add);
 	$body = "<ul>\n";
 	$body .= "<li>$_msg_add</li>\n";
@@ -117,7 +117,7 @@ else if(arg_check("edit"))
 	if($postdata == '') {
 		$postdata = auto_template($get["page"]);
 	}  
-	$title = str_replace('$1',strip_bracket($get["page"]),$_title_edit);
+	$title = str_replace('$1',htmlspecialchars(strip_bracket($get["page"])),$_title_edit);
 	$page = str_replace('$1',make_search($get["page"]),$_title_edit);
 	$body = edit_form($postdata,$get["page"]);
 }
@@ -152,7 +152,7 @@ else if(arg_check("preview") || $post["preview"] || $post["template"])
 		$postdata = $post["msg"];
 	}
 
-	$title = str_replace('$1',strip_bracket($post["page"]),$_title_preview);
+	$title = str_replace('$1',htmlspecialchars(strip_bracket($post["page"])),$_title_preview);
 	$page = str_replace('$1',make_search($post["page"]),$_title_preview);
 
 	$body = "$_msg_preview<br />\n";
@@ -180,9 +180,9 @@ else if(arg_check("preview") || $post["preview"] || $post["template"])
 
 	$body .= "<form action=\"$script\" method=\"post\">\n"
 		."<div>\n"
-		."<input type=\"hidden\" name=\"help\" value=\"$post[add]\" />\n"
-		."<input type=\"hidden\" name=\"page\" value=\"".$post["page"]."\" />\n"
-		."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\" />\n"
+		."<input type=\"hidden\" name=\"help\" value=\"".htmlspecialchars($post["add"])."\" />\n"
+		."<input type=\"hidden\" name=\"page\" value=\"".htmlspecialchars($post["page"])."\" />\n"
+		."<input type=\"hidden\" name=\"digest\" value=\"".htmlspecialchars($post["digest"])."\" />\n"
 		."$addtag\n"
 		."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\">\n".htmlspecialchars($postdata_input)."</textarea><br />\n"
 		."<input type=\"submit\" name=\"preview\" value=\"$_btn_repreview\" accesskey=\"p\" />\n"
@@ -221,7 +221,7 @@ else if($post["write"])
         $oldpagesrc = get_source($post["page"]);
 	if(md5(join("",$oldpagesrc)) != $post["digest"])
 	{
-		$title = str_replace('$1',strip_bracket($post["page"]),$_title_collided);
+		$title = str_replace('$1',htmlspecialchars(strip_bracket($post["page"])),$_title_collided);
 		$page = str_replace('$1',make_search($post["page"]),$_title_collided);
 		$post["digest"] = md5(join("",($oldpagesrc)));
 		list($postdata_input,$auto) = do_update_diff(join("",$oldpagesrc),$postdata_input);
@@ -234,9 +234,9 @@ else if($post["write"])
 		}
 		$body .= "<form action=\"$script\" method=\"post\">\n"
 			."<div>\n"
-			."<input type=\"hidden\" name=\"page\" value=\"".$post["page"]."\" />\n"
-			."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\" />\n"
-			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">$postdata_input</textarea><br />\n"
+			."<input type=\"hidden\" name=\"page\" value=\"".htmlspecialchars($post["page"])."\" />\n"
+			."<input type=\"hidden\" name=\"digest\" value=\"".htmlspecialchars($post["digest"])."\" />\n"
+			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">".htmlspecialchars($postdata_input)."</textarea><br />\n"
 			."<input type=\"submit\" name=\"preview\" value=\"$_btn_repreview\" accesskey=\"p\" />\n"
 			."<input type=\"submit\" name=\"write\" value=\"$_btn_update\" accesskey=\"s\" />\n"
 			."$add_top\n"
@@ -277,16 +277,16 @@ else if($post["write"])
 
 		if($postdata)
 		{
-			$title = str_replace('$1',strip_bracket($post["page"]),$_title_updated);
+			$title = str_replace('$1',htmlspecialchars(strip_bracket($post["page"])),$_title_updated);
 			$page = str_replace('$1',make_search($post["page"]),$_title_updated);
 			$body = convert_html($postdata);
 			header("Location: $script?".rawurlencode($post["page"]));
 		}
 		else
 		{
-			$title = str_replace('$1',strip_bracket($post["page"]),$_title_deleted);
+			$title = str_replace('$1',htmlspecialchars(strip_bracket($post["page"])),$_title_deleted);
 			$page = str_replace('$1',make_search($post["page"]),$_title_deleted);
-			$body = str_replace('$1',strip_bracket($post["page"]),$_title_deleted);
+			$body = str_replace('$1',htmlspecialchars(strip_bracket($post["page"])),$_title_deleted);
 		}
 	}
 }
@@ -295,9 +295,9 @@ else if(arg_check("freeze") && $vars["page"] && $function_freeze)
 {
 	if(is_freeze($vars["page"]))
 	{
-		$title = str_replace('$1',strip_bracket($vars["page"]),$_title_isfreezed);
+		$title = str_replace('$1',htmlspecialchars(strip_bracket($vars["page"])),$_title_isfreezed);
 		$page = str_replace('$1',make_search($vars["page"]),$_title_isfreezed);
-		$body = str_replace('$1',strip_bracket($vars["page"]),$_title_isfreezed);
+		$body = str_replace('$1',htmlspecialchars(strip_bracket($vars["page"])),$_title_isfreezed);
 	}
 	else if(md5($post["pass"]) == $adminpass)
 	{
@@ -307,7 +307,7 @@ else if(arg_check("freeze") && $vars["page"] && $function_freeze)
 
 		file_write(DATA_DIR,$vars["page"],$postdata);
 
-		$title = str_replace('$1',strip_bracket($vars["page"]),$_title_freezed);
+		$title = str_replace('$1',htmlspecialchars(strip_bracket($vars["page"])),$_title_freezed);
 		$page = str_replace('$1',make_search($vars["page"]),$_title_freezed);
 		$postdata = join("",get_source($vars["page"]));
 		$postdata = convert_html($postdata);
@@ -316,7 +316,7 @@ else if(arg_check("freeze") && $vars["page"] && $function_freeze)
 	}
 	else
 	{
-		$title = str_replace('$1',strip_bracket($vars["page"]),$_title_freeze);
+		$title = str_replace('$1',htmlspecialchars(strip_bracket($vars["page"])),$_title_freeze);
 		$page = str_replace('$1',make_search($vars["page"]),$_title_freeze);
 
 		$body.= "<br />\n";
@@ -328,7 +328,7 @@ else if(arg_check("freeze") && $vars["page"] && $function_freeze)
 		
 		$body.= "<form action=\"$script?cmd=freeze\" method=\"post\">\n";
 		$body.= "<div>\n";
-		$body.= "<input type=\"hidden\" name=\"page\" value=\"$vars[page]\" />\n";
+		$body.= "<input type=\"hidden\" name=\"page\" value=\"".htmlspecialchars($vars["page"])."\" />\n";
 		$body.= "<input type=\"password\" name=\"pass\" size=\"12\" />\n";
 		$body.= "<input type=\"submit\" name=\"ok\" value=\"$_btn_freeze\" />\n";
 		$body.= "</div>\n";
@@ -340,9 +340,9 @@ else if(arg_check("unfreeze") && $vars["page"] && $function_freeze)
 {
 	if(!is_freeze($vars["page"]))
 	{
-		$title = str_replace('$1',strip_bracket($vars["page"]),$_title_isunfreezed);
+		$title = str_replace('$1',htmlspecialchars(strip_bracket($vars["page"])),$_title_isunfreezed);
 		$page = str_replace('$1',make_search($vars["page"]),$_title_isunfreezed);
-		$body = str_replace('$1',strip_bracket($vars["page"]),$_title_isunfreezed);
+		$body = str_replace('$1',htmlspecialchars(strip_bracket($vars["page"])),$_title_isunfreezed);
 	}
 	else if(md5($post["pass"]) == $adminpass)
 	{
@@ -352,7 +352,7 @@ else if(arg_check("unfreeze") && $vars["page"] && $function_freeze)
 
 		file_write(DATA_DIR,$vars["page"],$postdata);
 
-		$title = str_replace('$1',strip_bracket($vars["page"]),$_title_unfreezed);
+		$title = str_replace('$1',htmlspecialchars(strip_bracket($vars["page"])),$_title_unfreezed);
 		$page = str_replace('$1',make_search($vars["page"]),$_title_unfreezed);
 		
 		$postdata = join("",get_source($vars["page"]));
@@ -362,7 +362,7 @@ else if(arg_check("unfreeze") && $vars["page"] && $function_freeze)
 	}
 	else
 	{
-		$title = str_replace('$1',strip_bracket($vars["page"]),$_title_unfreeze);
+		$title = str_replace('$1',htmlspecialchars(strip_bracket($vars["page"])),$_title_unfreeze);
 		$page = str_replace('$1',make_search($vars["page"]),$_title_unfreeze);
 
 		$body.= "<br />\n";
@@ -374,7 +374,7 @@ else if(arg_check("unfreeze") && $vars["page"] && $function_freeze)
 
 		$body.= "<form action=\"$script?cmd=unfreeze\" method=\"post\">\n";
 		$body.= "<div>\n";
-		$body.= "<input type=\"hidden\" name=\"page\" value=\"$vars[page]\" />\n";
+		$body.= "<input type=\"hidden\" name=\"page\" value=\"".htmlspecialchars($vars["page"])."\" />\n";
 		$body.= "<input type=\"password\" name=\"pass\" size=\"12\" />\n";
 		$body.= "<input type=\"submit\" name=\"ok\" value=\"$_btn_unfreeze\" />\n";
 		$body.= "</div>\n";
@@ -405,7 +405,7 @@ else if(arg_check("diff"))
 
 	if(!file_exists(DIFF_DIR.encode($get["page"]).".txt") && is_page($get["page"]))
 	{
-		$title = str_replace('$1',strip_bracket($get["page"]),$_title_diff);
+		$title = str_replace('$1',htmlspecialchars(strip_bracket($get["page"])),$_title_diff);
 		$page = str_replace('$1',make_search($get["page"]),$_title_diff);
 
 		$diffdata = htmlspecialchars(join("",get_source($get["page"])));
@@ -416,18 +416,15 @@ else if(arg_check("diff"))
 	}
 	else if(file_exists(DIFF_DIR.encode($get["page"]).".txt"))
 	{
-		$title = str_replace('$1',strip_bracket($get["page"]),$_title_diff);
+		$title = str_replace('$1',htmlspecialchars(strip_bracket($get["page"])),$_title_diff);
 		$page = str_replace('$1',make_search($get["page"]),$_title_diff);
 
 		$diffdata = file(DIFF_DIR.encode($get["page"]).".txt");
-		$diffdata = preg_replace("/&/","&amp;",$diffdata);
-		$diffdata = preg_replace("/</","&lt;",$diffdata);
-		$diffdata = preg_replace("/>/","&gt;",$diffdata);
 		$diffdata = preg_replace("/^(\-)(.*)/","<span style=\"color:red\"> $2</span>",$diffdata);
 		$diffdata = preg_replace("/^(\+)(.*)/","<span style=\"color:blue\"> $2</span>",$diffdata);
 		
 		$body .= "<pre>\n"
-			.join("",$diffdata)
+			.htmlspecialchars(join("",$diffdata))
 			."\n"
 			."</pre>\n";
 	}
@@ -466,7 +463,7 @@ else if($do_backup && arg_check("backup"))
 {
 	if($get["page"] && $get["age"] && (file_exists(BACKUP_DIR.encode($get["page"]).".txt") || file_exists(BACKUP_DIR.encode($get["page"]).".gz")))
 	{
-		$pagename = strip_bracket($get["page"]);
+		$pagename = htmlspecialchars(strip_bracket($get["page"]));
 		$body =  "<ul>\n";
 
 		$body .= "<li><a href=\"$script?cmd=backup\">$_msg_backuplist</a></li>\n";
@@ -533,7 +530,7 @@ else if($do_backup && arg_check("backup"))
 			$title = str_replace('$1',$pagename,$_title_backupnowdiff)."(No.$get[age])";
 			$page = str_replace('$1',make_search($get["page"]),$_title_backupnowdiff)."(No.$get[age])";
 			
-			$backupdata = htmlspecialchars(@join("",get_backup($get[age],encode($get["page"]).".txt")));
+			$backupdata = htmlspecialchars(@join("",get_backup($get["age"],encode($get["page"]).".txt")));
 			$postdata = @join("",get_source($get["page"]));
 			$diffdata = split("\n",do_diff($backupdata,$postdata));
 		}
@@ -541,13 +538,13 @@ else if($do_backup && arg_check("backup"))
 		{
 			$title = str_replace('$1',$pagename,$_title_backupsource)."(No.$get[age])";
 			$page = str_replace('$1',make_search($get["page"]),$_title_backupsource)."(No.$get[age])";
-			$backupdata = htmlspecialchars(join("",get_backup($get[age],encode($get["page"]).".txt")));
+			$backupdata = htmlspecialchars(join("",get_backup($get["age"],encode($get["page"]).".txt")));
 			
 			$body.="</ul>\n<pre>\n$backupdata</pre>\n";
 		}
 		else
 		{
-			$pagename = strip_bracket($get["page"]);
+			$pagename = htmlspecialchars(strip_bracket($get["page"]));
 			$title = str_replace('$1',$pagename,$_title_backup)."(No.$get[age])";
 			$page = str_replace('$1',make_search($get["page"]),$_title_backup)."(No.$get[age])";
 			$backupdata = join("",get_backup($get[age],encode($get["page"]).".txt"));
@@ -559,8 +556,6 @@ else if($do_backup && arg_check("backup"))
 		
 		if(arg_check("backup_diff") || arg_check("backup_nowdiff"))
 		{
-			$diffdata = preg_replace("/</","&lt;",$diffdata);
-			$diffdata = preg_replace("/>/","&gt;",$diffdata);
 			$diffdata = preg_replace("/^(\-)(.*)/","<span style=\"color:red\"> $2</span>",$diffdata);
 			$diffdata = preg_replace("/^(\+)(.*)/","<span style=\"color:blue\"> $2</span>",$diffdata);
 
@@ -569,12 +564,12 @@ else if($do_backup && arg_check("backup"))
 				."<li>$_msg_delline</li>\n"
 				."</ul>\n"
 				."$hr\n"
-				."<pre>\n".join("\n",$diffdata)."</pre>\n";
+				."<pre>\n".htmlspecialchars(join("\n",$diffdata))."</pre>\n";
 		}
 	}
 	else if($get["page"] && (file_exists(BACKUP_DIR.encode($get["page"]).".txt") || file_exists(BACKUP_DIR.encode($get["page"]).".gz")))
 	{
-		$title = str_replace('$1',strip_bracket($get["page"]),$_title_pagebackuplist);
+		$title = str_replace('$1',htmlspecialchars(strip_bracket($get["page"])),$_title_pagebackuplist);
 		$page = str_replace('$1',make_search($get["page"]),$_title_pagebackuplist);
 		$body = get_backup_list($get["page"]);
 	}
@@ -618,7 +613,7 @@ else if((arg_check("read") && $vars["page"] != "") || (!arg_check("read") && $ar
 	// ページ名がWikiNameでなく、BracketNameでなければBracketNameとして解釈
 	if(!preg_match("/^(($WikiName)|($BracketName)|($InterWikiName))$/",$get["page"]))
 	{
-		$vars["page"] = "[[$vars[page]]]";
+		$vars["page"] = "[[".$vars["page"]."]]";
 		$get["page"] = $vars["page"];
 	}
 
@@ -628,7 +623,7 @@ else if((arg_check("read") && $vars["page"] != "") || (!arg_check("read") && $ar
 		$postdata = join("",get_source($get["page"]));
 		$postdata = convert_html($postdata);
 
-		$title = strip_bracket($get["page"]);
+		$title = htmlspecialchars(strip_bracket($get["page"]));
 		$page = make_search($get["page"]);
 		$body = $postdata;
 
@@ -642,7 +637,7 @@ else if((arg_check("read") && $vars["page"] != "") || (!arg_check("read") && $ar
 		if(!$interwikis[$match[2]]["url"])
 		{
 			$title = $page = $_title_invalidiwn;
-			$body = str_replace('$1',strip_bracket($get[page]),str_replace('$2',"<a href=\"$script?InterWikiName\">InterWikiName</a>",$_msg_invalidiwn));
+			$body = str_replace('$1',htmlspecialchars(strip_bracket($get["page"])),str_replace('$2',"<a href=\"$script?InterWikiName\">InterWikiName</a>",$_msg_invalidiwn));
 		}
 		else
 		{
@@ -716,13 +711,13 @@ else if((arg_check("read") && $vars["page"] != "") || (!arg_check("read") && $ar
 		//$body = "指定されたページは見つかりませんでした。";
 
 		if(preg_match("/^(($BracketName)|($WikiName))$/",$get["page"])) {
-			$title = str_replace('$1',strip_bracket($get["page"]),$_title_edit);
-			$page = str_replace('$1',make_search($get["page"]),$_title_edit);
+			$title = str_replace('$1',htmlspecialchars(strip_bracket($get["page"])),$_title_edit);
+			$page = str_replace('$1',htmlspecialchars(make_search($get["page"])),$_title_edit);
 			$template = auto_template($get["page"]);
 			$body = edit_form($template,$get["page"]);
 	        }
 		else {
-			$title = str_replace('$1',strip_bracket($get["page"]),$_title_invalidwn);
+			$title = str_replace('$1',htmlspecialchars(strip_bracket($get["page"])),$_title_invalidwn);
 			$body = $page = str_replace('$1',make_search($get["page"]), str_replace('$2','WikiName',$_msg_invalidiwn));
 			$template = '';
 		}
@@ -735,7 +730,7 @@ else
 	$postdata = join("",get_source($defaultpage));
 
 	$vars["page"] = $defaultpage;
-	$title = strip_bracket($defaultpage);
+	$title = htmlspecialchars(strip_bracket($defaultpage));
 	$page = make_search($vars["page"]);
 	$body = convert_html($postdata);
 
