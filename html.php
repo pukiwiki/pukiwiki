@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.44 2002/12/02 14:27:36 panda Exp $
+// $Id: html.php,v 1.45 2002/12/05 01:12:53 panda Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -292,9 +292,9 @@ function convert_html($string)
 			if (preg_match("/^(LEFT|CENTER|RIGHT):(.*)$/",$line,$tmp)) {
 				if ($_p)
 					array_push($result,"</p>");
-				array_push($result,'<p align="'.strtolower($tmp[1]).'">');
+				array_push($result,'<div class="p_'.strtolower($tmp[1]).'">');
 				array_push($result,inline($tmp[2]));
-				array_push($result,"</p>");
+				array_push($result,"</div>");
 				$line = '';
 				$_p = FALSE;
 			}

@@ -314,3 +314,12 @@ ol.list2{
 ol.list3{
 	list-style-type:lower-alpha;
 }
+div.p_left{
+	text-align:left;
+}
+div.p_center{
+	text-align:center;
+}
+div.p_right{
+	text-align:right;
+}
