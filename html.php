@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.54 2003/02/11 05:42:44 panda Exp $
+// $Id: html.php,v 1.55 2003/02/20 12:26:36 panda Exp $
 //
 
 // 本文を出力
@@ -101,7 +101,6 @@ function edit_form($page,$postdata,$digest = 0,$b_template = TRUE)
 	global $script,$vars,$rows,$cols,$hr,$function_freeze;
 	global $_btn_addtop,$_btn_preview,$_btn_repreview,$_btn_update,$_btn_freeze,$_msg_help,$_btn_notchangetimestamp;
 	global $whatsnew,$_btn_template,$_btn_load,$non_list,$load_template_func;
-	global $_btn_viewtag;
 	
 	$refer = $template = $addtag = $add_top = '';
 	
@@ -161,12 +160,13 @@ $template
   <input type="hidden" name="page" value="$s_page" />
   <input type="hidden" name="digest" value="$s_digest" />
   <textarea name="msg" rows="$rows" cols="$cols">$s_postdata</textarea>
-  <textarea name="original" rows="$rows" cols="$cols" style="display:none">$s_original</textarea>
   <br />
   <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
   <input type="submit" name="write" value="$_btn_update" accesskey="s" />
   $add_top
-  <input type="checkbox" name="notimestamp" value="true"$checked_time /><span style="small">$_btn_notchangetimestamp</span>
+  <input type="checkbox" name="notimestamp" value="true"$checked_time />
+  <span style="small">$_btn_notchangetimestamp</span>
+  <textarea name="original" rows="1" cols="1" style="display:none">$s_original</textarea>
  </div>
 </form>
 EOD;
