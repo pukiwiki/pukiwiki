@@ -2,11 +2,11 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.26 2003/07/05 01:31:55 arino Exp $
+// $Id: file.php,v 1.27 2003/07/14 03:54:24 arino Exp $
 //
 
 // ソースを取得
-function get_source($page)
+function get_source($page=NULL)
 {
 	if (!is_page($page))
 	{
