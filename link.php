@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: link.php,v 1.4 2003/04/03 01:41:08 panda Exp $
+// $Id: link.php,v 1.5 2003/04/17 14:51:51 arino Exp $
 //
 
 /*
@@ -75,15 +75,15 @@ function links_update($page)
 	$rel_new = array_merge($rel_new,$rel_auto);
 	
 	// .rel:$pageが参照しているページの一覧
-	if ($time) // ページが存在しているときは空でも作る
+	if ($time) // ページが存在している
 	{
-		$fp = fopen($rel_file,'w')
-			or die_message('cannot write '.htmlspecialchars($rel_file));
 		if (count($rel_new))
 		{
+    		$fp = fopen($rel_file,'w')
+    			or die_message('cannot write '.htmlspecialchars($rel_file));
 			fputs($fp,join("\t",$rel_new));
+			fclose($fp);
 		}
-		fclose($fp);
 	}
 	// .ref:$_pageを参照しているページの一覧
 	links_add($page,array_diff($rel_new,$rel_old),$rel_auto);
