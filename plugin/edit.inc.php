@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.7 2003/05/01 00:24:41 arino Exp $
+// $Id: edit.inc.php,v 1.8 2003/05/14 10:08:48 arino Exp $
 //
 //  ‘Ω∏
 // cmd=edit
@@ -10,14 +10,14 @@ function plugin_edit_action()
 {
 	global $vars,$_title_edit;
 	
+	check_editable($vars['page']);
+	
 	if (array_key_exists('preview',$vars) or array_key_exists('template',$vars)) {
 		return plugin_edit_preview();
 	}
 	else if (array_key_exists('write',$vars)) {
 		return plugin_edit_write();
 	}
-	
-	check_editable();
 	
 	$postdata = @join('',get_source($vars['page']));
 	if ($postdata == '') {

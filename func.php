@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.37 2003/05/12 10:33:43 arino Exp $
+// $Id: func.php,v 1.38 2003/05/14 10:08:40 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -84,24 +84,24 @@ function is_freeze($page)
 }
 
 // 編集不可能なページを編集しようとしたとき
-function check_editable()
+function check_editable($page)
 {
-	global $script,$get,$_title_cannotedit,$_msg_unfreeze;
+	global $script,$_title_cannotedit,$_msg_unfreeze;
 	
-	edit_auth();
+	edit_auth($page);
 	
-	if (is_editable($get['page']))
+	if (is_editable($page))
 	{
 		return;
 	}
 	
-	$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($get['page'])),$_title_cannotedit);
-	$page = str_replace('$1',make_search($get['page']),$_title_cannotedit);
+	$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($page)),$_title_cannotedit);
+	$page = str_replace('$1',make_search($page),$_title_cannotedit);
 
-	if(is_freeze($get['page']))
+	if(is_freeze($page))
 	{
 		$body .= "(<a href=\"$script?cmd=unfreeze&amp;page=".
-			rawurlencode($get['page'])."\">$_msg_unfreeze</a>)";
+			rawurlencode($page)."\">$_msg_unfreeze</a>)";
 	}
 	
 	catbody($title,$page,$body);
@@ -109,9 +109,9 @@ function check_editable()
 }
 
 // 編集時の認証
-function edit_auth()
+function edit_auth($page)
 {
-	global $get,$edit_auth,$edit_auth_users,$_msg_auth,$_title_cannotedit;
+	global $edit_auth,$edit_auth_users,$_msg_auth,$_title_cannotedit;
 
 	if ($edit_auth and
 		(!isset($_SERVER['PHP_AUTH_USER']) or
@@ -121,8 +121,8 @@ function edit_auth()
 		header('WWW-Authenticate: Basic realm="'.$_msg_auth.'"');
 		header('HTTP/1.0 401 Unauthorized');
 		// press cancel.
-		$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($get['page'])),$_title_cannotedit);
-		$page = str_replace('$1',make_search($get['page']),$_title_cannotedit);
+		$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($page)),$_title_cannotedit);
+		$page = str_replace('$1',make_search($page),$_title_cannotedit);
 		
 		catbody($title,$page,$body);
 		exit;

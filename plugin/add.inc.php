@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: add.inc.php,v 1.1 2003/01/27 05:38:44 panda Exp $
+// $Id: add.inc.php,v 1.2 2003/05/14 10:08:48 arino Exp $
 //
 // ди╡ц
 // cmd=add
@@ -10,7 +10,7 @@ function plugin_add_action()
 {
 	global $post,$vars,$_title_add,$_msg_add;
 	
-	check_editable();
+	check_editable($vars['page']);
 	
 	$vars['add'] = $post['add'] = TRUE;
 	
