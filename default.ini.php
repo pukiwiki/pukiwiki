@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: default.ini.php,v 1.5 2004/07/13 13:12:15 henoheno Exp $
+// $Id: default.ini.php,v 1.6 2004/07/15 12:44:36 henoheno Exp $
 //
 // PukiWiki setting file (user agent:default)
 
@@ -146,6 +146,17 @@ $facemark_rules = array(
 	'&amp;(pb9);'	=> '[9]',
 	'&amp;(pb0);'	=> '[0]',
 	'&amp;(pb#);'	=> '[#]',
+
+	// Other icons (Compatibility with cell phones)
+	'&amp;(zzz);'	=> '[zzz]',
+	'&amp;(man);'	=> '[man]',
+	'&amp;(clock);'	=> '[clock]',
+	'&amp;(mail);'	=> '[mail]',
+	'&amp;(mailto);'=> '[mailto]',
+	'&amp;(phone);'	=> '[phone]',
+	'&amp;(phoneto);'=> '[phoneto]',
+	'&amp;(faxto);'	=> '[faxto]',
+
 );
 
 ?>
