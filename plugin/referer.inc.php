@@ -1,5 +1,5 @@
 <?php
-// $Id: referer.inc.php,v 1.3 2003/08/03 13:52:56 arino Exp $
+// $Id: referer.inc.php,v 1.4 2003/08/06 08:24:02 arino Exp $
 /*
  * PukiWiki Referer プラグイン(リンク元表示プラグイン)
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -96,6 +96,10 @@ function referer_body($page,$sort)
 	{
 		// 0:最終更新日時, 1:初回登録日時, 2:参照カウンタ, 3:Referer ヘッダ, 4:利用可否フラグ(1は有効)
 		list($ltime,$stime,$count,$url,$enable) = $arr;
+		
+		// 非ASCIIキャラクタ(だけ)をURLエンコードしておく BugTrack/440
+		$url = preg_replace('/([" \x80-\xff]+)/e','rawurlencode("$1")',$url);
+		
 		$s_url = htmlspecialchars($url);
 		
 		$lpass = get_passage($ltime,FALSE); // 最終更新日時からの経過時間
