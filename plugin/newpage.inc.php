@@ -1,26 +1,23 @@
 <?php
-// $Id: newpage.inc.php,v 1.12 2004/12/25 00:43:22 henoheno Exp $
+// $Id: newpage.inc.php,v 1.13 2005/01/02 06:56:46 henoheno Exp $
 
 function plugin_newpage_convert()
 {
-	global $script,$vars,$_btn_edit,$_msg_newpage,$BracketName;
+	global $script, $vars, $_btn_edit, $_msg_newpage, $BracketName;
 
 	$newpage = '';
-	if (func_num_args()) {
-		list($newpage) = func_get_args();
-	}
-	if (!preg_match("/^$BracketName$/",$newpage)) {
-		$newpage = '';
-	}
-	$s_page = htmlspecialchars(array_key_exists('refer',$vars) ? $vars['refer'] : $vars['page']);
+	if (func_num_args()) list($newpage) = func_get_args();
+	if (! preg_match('/^' . $BracketName . '$/', $newpage)) $newpage = '';
+
+	$s_page    = htmlspecialchars(isset($vars['refer']) ? $vars['refer'] : $vars['page']);
 	$s_newpage = htmlspecialchars($newpage);
 	$ret = <<<EOD
 <form action="$script" method="post">
  <div>
   <input type="hidden" name="plugin" value="newpage" />
-  <input type="hidden" name="refer" value="$s_page" />
+  <input type="hidden" name="refer"  value="$s_page" />
   $_msg_newpage:
-  <input type="text" name="page" size="30" value="$s_newpage" />
+  <input type="text"   name="page"   value="$s_newpage" size="30" />
   <input type="submit" value="$_btn_edit" />
  </div>
 </form>
@@ -34,17 +31,19 @@ function plugin_newpage_action()
 	global $vars, $_btn_edit, $_msg_newpage;
 
 	if ($vars['page'] == '') {
-		$retvars['msg'] = $_msg_newpage;
+		$retvars['msg']  = $_msg_newpage;
 		$retvars['body'] = plugin_newpage_convert();
 		return $retvars;
-	}
-	$page = strip_bracket($vars['page']);
-	$r_page = rawurlencode(array_key_exists('refer',$vars) ?
-		get_fullname($page,$vars['refer']) : $page);
-	$r_refer = rawurlencode($vars['refer']);
+	} else {
+		$page    = strip_bracket($vars['page']);
+		$r_page  = rawurlencode(isset($vars['refer']) ?
+			get_fullname($page, $vars['refer']) : $page);
+		$r_refer = rawurlencode($vars['refer']);
 
-	pkwk_headers_sent();
-	header('Location: ' . get_script_uri() . '?cmd=read&page=' . $r_page . '&refer=' . $r_refer);
-	exit;
+		pkwk_headers_sent();
+		header('Location: ' . get_script_uri() .
+			'?cmd=read&page=' . $r_page . '&refer=' . $r_refer);
+		exit;
+	}
 }
 ?>
