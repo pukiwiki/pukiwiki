@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ls2.inc.php,v 1.20 2004/08/12 14:26:58 henoheno Exp $
+// $Id: ls2.inc.php,v 1.21 2004/08/12 14:56:22 henoheno Exp $
 //
 
 /*
@@ -34,7 +34,7 @@ actionプラグインを呼び出すリンクを表示
 LS2_LIST_COMPACTがTRUEの時は無効(変化しない)
 
 - タイトル
-見出しのタイトルを指定する
+見出しのタイトルを指定する (linkを指定した時のみ)
 
 */
 
@@ -53,8 +53,7 @@ function plugin_ls2_action()
 	global $_ls2_msg_title;
 
 	$params = array();
-	foreach (array('title', 'include', 'reverse') as $key)
-	{
+	foreach (array('title', 'include', 'reverse') as $key) {
 		$params[$key] = isset($vars[$key]);
 	}
 	$prefix = isset($vars['prefix']) ? $vars['prefix'] : '';
@@ -71,21 +70,6 @@ function plugin_ls2_convert()
 	global $script, $vars;
 	global $_ls2_msg_title;
 
-	$prefix = '';
-	if (func_num_args())
-	{
-		$args = func_get_args();
-		$prefix = array_shift($args);
-	}
-	else
-	{
-		$args = array();
-	}
-	if ($prefix == '')
-	{
-		$prefix = strip_bracket($vars['page']) . '/';
-	}
-
 	$params = array(
 		'link'    => FALSE,
 		'title'   => FALSE,
@@ -95,116 +79,107 @@ function plugin_ls2_convert()
 		'_args'   => array(),
 		'_done'   => FALSE
 	);
+
+	$args = array();
+	$prefix = '';
+	if (func_num_args()) {
+		$args   = func_get_args();
+		$prefix = array_shift($args);
+	}
+	if ($prefix == '') {
+		$prefix = strip_bracket($vars['page']) . '/';
+	}
+
 	array_walk($args, 'ls2_check_arg', & $params);
 
-	$title = (count($params['_args']) > 0) ?
-		htmlspecialchars(join(',', $params['_args'])) :
-		str_replace('$1', htmlspecialchars($prefix), $_ls2_msg_title);
+	$title = (! empty($params['_args'])) ?
+		htmlspecialchars(join(',', $params['_args'])) : // Manual
+		str_replace('$1', htmlspecialchars($prefix), $_ls2_msg_title); // Auto
 
-	if ($params['link'])
-	{
+	if ($params['link']) {
 		$tmp = array();
 		$tmp[] = 'plugin=ls2&amp;prefix=' . rawurlencode($prefix);
-		if (isset($params['title']))
-		{
+		if (isset($params['title'])) {
 			$tmp[] = 'title=1';
 		}
-		if (isset($params['include']))
-		{
+		if (isset($params['include'])) {
 			$tmp[] = 'include=1';
 		}
 		return '<p><a href="' . $script . '?' . join('&amp;', $tmp) . '">' . $title . '</a></p>' . "\n";
+	} else {
+		return ls2_show_lists($prefix, $params);
 	}
-	return ls2_show_lists($prefix, $params);
 }
 
-function ls2_show_lists($prefix, &$params)
+function ls2_show_lists($prefix, & $params)
 {
 	global $_ls2_err_nopages;
 
-	if (strlen($prefix))
-	{
-		$pages = array();
-		foreach (get_existpages() as $_page)
-		{
+	$pages = array();
+	if (strlen($prefix)) {
+		foreach (get_existpages() as $_page) {
 			if (strpos($_page, $prefix) === 0)
-			{
 				$pages[] = $_page;
-			}
 		}
-	}
-	else
-	{
+	} else {
 		$pages = get_existpages();
 	}
-	natcasesort($pages);
 
-	if ($params['reverse'])
-	{
-		$pages = array_reverse($pages);
-	}
-	foreach ($pages as $page)
-	{
+	natcasesort($pages);
+	if ($params['reverse']) $pages = array_reverse($pages);
+
+	foreach ($pages as $page) {
 		$params["page_$page"] = 0;
 	}
-	if (count($pages) == 0)
-	{
-		return str_replace('$1', htmlspecialchars($prefix), $_ls2_err_nopages);
-	}
 
-	$params['result'] = array();
-	$params['saved'] = array();
-	foreach ($pages as $page)
-	{
-		ls2_get_headings($page, $params, 1);
+	if (count($pages) == 0) {
+		return str_replace('$1', htmlspecialchars($prefix), $_ls2_err_nopages);
+	} else {
+		$params['result'] = $params['saved'] = array();
+		foreach ($pages as $page) {
+			ls2_get_headings($page, $params, 1);
+		}
+		return join("\n", $params['result']) . join("\n", $params['saved']);
 	}
-	return join("\n", $params['result']) . join("\n", $params['saved']);
 }
 
-function ls2_get_headings($page, &$params, $level, $include = FALSE)
+function ls2_get_headings($page, & $params, $level, $include = FALSE)
 {
 	global $script;
 	static $_ls2_anchor = 0;
 
-	$is_done = (isset($params["page_$page"]) and $params["page_$page"] > 0); //ページが表示済みのときTrue
-
-	if (!$is_done)
-	{
-		$params["page_$page"] = ++$_ls2_anchor;
-	}
+	// ページが未表示のとき
+	$is_done = (isset($params["page_$page"]) && $params["page_$page"] > 0);
+	if (! $is_done) $params["page_$page"] = ++$_ls2_anchor;
 
 	$r_page = rawurlencode($page);
 	$s_page = htmlspecialchars($page);
-	$title = $s_page . ' ' . get_pg_passage($page, FALSE);
-	$href = $script . '?cmd=read&amp;page=' . $r_page;
+	$title  = $s_page . ' ' . get_pg_passage($page, FALSE);
+	$href   = $script . '?cmd=read&amp;page=' . $r_page;
 
 	ls2_list_push($params, $level);
 	$ret = $include ? '<li>include ' : '<li>';
-	if ($params['title'] and $is_done)
-	{
+
+	if ($params['title'] && $is_done) {
 		$ret .= "<a href=\"$href\" title=\"$title\">$s_page</a> ";
 		$ret .= "<a href=\"#list_{$params["page_$page"]}\"><sup>&uarr;</sup></a>";
 		array_push($params['result'], $ret);
 		return;
 	}
-	else
-	{
-		$ret .= "<a id=\"list_{$params["page_$page"]}\" href=\"$href\" title=\"$title\">$s_page</a>";
-		array_push($params['result'], $ret);
-	}
+
+	$ret .= "<a id=\"list_{$params["page_$page"]}\" href=\"$href\" title=\"$title\">$s_page</a>";
+	array_push($params['result'], $ret);
 
 	$anchor = LS2_ANCHOR_ORIGIN;
-	foreach (get_source($page) as $line)
-	{
-		if ($params['title'] and preg_match('/^(\*{1,3})/', $line, $matches))
-		{
-			$id = make_heading($line);
+	$matches = array();
+	foreach (get_source($page) as $line) {
+		if ($params['title'] && preg_match('/^(\*{1,3})/', $line, $matches)) {
+			$id    = make_heading($line);
 			$level = strlen($matches[1]);
-			$id = LS2_CONTENT_HEAD . $anchor++;
+			$id    = LS2_CONTENT_HEAD . $anchor++;
 			ls2_list_push($params, $level + strlen($level));
 			array_push($params['result'], "<li><a href=\"$href$id\">$line</a>");
-		}
-		else if ($params['include']
+		} else if ($params['include']
 			and preg_match('/^#include\((.+)\)/', $line, $matches) and is_page($matches[1]))
 		{
 			ls2_get_headings($matches[1], $params, $level + 1, TRUE);
@@ -213,75 +188,63 @@ function ls2_get_headings($page, &$params, $level, $include = FALSE)
 }
 
 //リスト構造を構築する
-function ls2_list_push(&$params, $level)
+function ls2_list_push(& $params, $level)
 {
 	global $_ul_left_margin, $_ul_margin, $_list_pad_str;
 
-	$result =& $params['result'];
-	$saved  =& $params['saved'];
+	$result = & $params['result'];
+	$saved  = & $params['saved'];
 	$cont   = TRUE;
-	$open   = "<ul%s>";
+	$open   = '<ul%s>';
 	$close  = '</li></ul>';
 
-	while (count($saved) > $level or
-		(count($saved) > 0 and $saved[0] != $close))
-	{
+	while (count($saved) > $level ||
+	      (! empty($saved) && $saved[0] != $close)) {
 		array_push($result, array_shift($saved));
 	}
 
 	$margin = $level - count($saved);
 
-	while (count($saved) < ($level - 1))
-	{
+	while (count($saved) < ($level - 1)) {
 		array_unshift($saved, ''); //count($saved)を増やすためのdummy
 	}
 
-	if (count($saved) < $level)
-	{
+	if (count($saved) < $level) {
 		$cont = FALSE;
 		array_unshift($saved, $close);
 
 		$left = ($level == $margin) ? $_ul_left_margin : 0;
-		if ($params['compact'])
-		{
-			// マージンを固定
-			$left += $_ul_margin;
-			// レベルを修正
-			$level -= ($margin - 1);
-		}
-		else
-		{
+		if (isset($params['compact'])) {
+			$left  += $_ul_margin;   // マージンを固定
+			$level -= ($margin - 1); // レベルを修正
+		} else {
 			$left += $margin * $_ul_margin;
 		}
 		$str = sprintf($_list_pad_str, $level, $left, $left);
 		array_push($result, sprintf($open, $str));
 	}
-	if ($cont)
-	{
-		array_push($result, '</li>');
-	}
+
+	if ($cont) array_push($result, '</li>');
 }
 
 //オプションを解析する
-function ls2_check_arg($val, $key, &$params)
+function ls2_check_arg($value, $key, & $params)
 {
-	if ($val == '')
-	{
+	if ($value == '') {
 		$params['_done'] = TRUE;
 		return;
 	}
-	if (!$params['_done'])
-	{
-		foreach (array_keys($params) as $key)
-		{
-			if (strpos($key, strtolower($val)) === 0)
-			{
-				$params[$key] = TRUE;
+
+	if (! $params['_done']) {
+		foreach (array_keys($params) as $param) {
+			if (strpos($param, strtolower($value)) === 0) {
+				$params[$param] = TRUE;
 				return;
 			}
 		}
 		$params['_done'] = TRUE;
 	}
-	$params['_args'][] = $val;
+
+	$params['_args'][] = $value;
 }
 ?>
