@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
+// $Id: init.php,v 1.2 2004/08/04 14:14:52 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -262,7 +262,15 @@ unset($matches);
 $get    = & $_GET;
 $post   = & $_POST;
 $cookie = & $_COOKIE;
-$vars   = array_merge($_GET, $_POST);	// Seems more reliable than using $_REQUEST
+
+if (empty($_POST)) {
+	$vars = & $_GET;
+} else if (empty($_GET)) {
+	$vars = & $_POST;
+} else {
+	// Seems more reliable than using $_REQUEST
+	$vars = array_merge($_GET, $_POST);
+}
 
 // 入力チェック: cmd, plugin の文字列は英数字以外ありえない
 foreach(array('cmd', 'plugin') as $var){
