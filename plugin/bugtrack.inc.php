@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.10 2003/02/28 06:19:59 panda Exp $
+ * $Id: bugtrack.inc.php,v 1.11 2003/03/05 09:16:52 panda Exp $
  */
 
 function plugin_bugtrack_init()
@@ -304,7 +304,7 @@ function plugin_bugtrack_list_convert()
 		list($page, $no, $summary, $name, $priority, $state, $category) = $line;
 		$page_link = make_link("[[$page]]");
 		$state_no = array_search($state,$_bugtrack_plugin_state_sort);
-		if ($state_no === NULL) {
+		if ($state_no === NULL or $state_no === FALSE) {
 			$state_no = count($_bugtrack_plugin_state_list);
 		}
 		
