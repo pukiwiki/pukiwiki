@@ -7,7 +7,7 @@ body,td
 	color: black;
 	margin-left: 2%;
 	margin-right: 2%;
-	font-size: 10.5pt;
+	font-size: 14px;
 	font-family: verdana, arial, helvetica, Sans-Serif;
 }
 
@@ -44,12 +44,12 @@ h1, h2, h3, h4, h5, h6
 {
 	font-family: verdana, arial, helvetica, Sans-Serif;
 	background-color: #DDEEFF;
-	padding: 0.3em;
+	padding: .3em;
 }
 
 dt {
 	font-weight: bold;
-	margin-top: 2ex;
+	margin-top: 1em;
 	margin-left: 1em;
 }
 
@@ -58,7 +58,7 @@ pre {
 	border-bottom: #888899 1px solid;
 	border-left:   #DDDDEE 1px solid;
 	border-right:  #888899 1px solid;
-	padding: 0.5em;
+	padding: .5em;
 	margin-left: 1em;
 	margin-right: 2em;
 	white-space: pre;
@@ -71,19 +71,24 @@ img {
 	vertical-align: middle;
 }
 
-small {
-	font-size:8.5pt;
-}
-
-sup {
-	color: #DD3333;
-	font-weight: bold;
-}
-
 ul {
-	margin-top: 5px;
-	margin-bottom: 5px;
+	margin-top: .5em;
+	margin-bottom: .5em;
 	line-height:130%;
+}
+
+em {
+	font-style:italic;
+}
+
+strong {
+	font-weight:bold;
+}
+
+address {
+	font-style:normal;
+	font-family:Verdana;
+	font-size:8px;
 }
 
 .noexists {
@@ -93,7 +98,7 @@ ul {
 .style_table {
 	border: 0px;
 	background-color: #CCD5DD;
-	margin: 5px;
+	margin: .5em;
 	margin-left: 3em;
 	padding: 0px;
 }
@@ -102,6 +107,8 @@ ul {
 	background-color: #EEF5FF;
 	padding: 5px;
 	margin: 1px;
+	width:14%;
+	height:19px;
 }
 
 .style_calendar {
@@ -114,34 +121,85 @@ ul {
 	background-color: #EEF5FF;
 	padding: 5px;
 	margin: 1px;
+	height:15px;
 }
 
 .style_td_today {
 	background-color: #FFFFDD;
 	padding: 5px;
 	margin: 1px;
+	width:14%;
+	height:19px;
 }
 
 .style_td_sat {
 	background-color: #DDE5FF;
 	padding: 5px;
 	margin: 1px;
+	width:14%;
+	height:19px;
 }
 
 .style_td_sun {
 	background-color: #FFEEEE;
 	padding: 5px;
 	margin: 1px;
+	width:14%;
+	height:19px;
 }
 
 .style_td_blank {
 	background-color: #EEF5FF;
 	padding: 5px;
 	margin: 1px;
+	width:14%;
+	height:19px;
 }
 
 .style_td_week {
 	background-color: #DDE5EE;
 	padding: 5px;
 	margin: 1px;
+	height:15px;
+}
+
+.small {
+	font-size:12px;
+}
+
+.super_index {
+	color: #DD3333;
+	font-weight: bold;
+	font-size:12px;
+	vertical-align:super;
+}
+
+.note_super {
+	color: #DD3333;
+	font-weight: bold;
+	font-size:10px;
+	vertical-align:super;
+}
+
+.full_hr {
+	border-style:ridge;
+	border-color:#333333;
+	border-width:1px 0px;
+}
+
+.note_hr {
+	width:90%;
+	border-style:ridge;
+	border-color:#333333;
+	border-width:1px 0px;
+	text-align:center;
+	margin:1em auto 0em auto;
+}
+
+.side_label {
+	text-align:center;
+}
+
+.counter {
+	font-size:8px;
 }
