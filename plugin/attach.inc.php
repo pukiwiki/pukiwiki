@@ -53,8 +53,8 @@ function plugin_attach_convert()
 				$counter = ' <small>' . chop($list[0]) . '·ï</small>';
 			}
 			
-			$del = "[<a href=\"$script?plugin=attach&mode=confirm&delfile=${filename_url}&refer=${refername_url}\" title=\"".str_replace('$1',$filename,$_msg_delete)."\">$_btn_delete</a>]";
-			$open = "<a href=\"$script?plugin=attach&openfile=${filename_url}&refer=${refername_url}\" title=\"$lastmod $file_size\">$icon$filename</a>$counter\n";
+			$del = "[<a href=\"$script?plugin=attach&amp;mode=confirm&amp;delfile=${filename_url}&amp;refer=${refername_url}\" title=\"".str_replace('$1',$filename,$_msg_delete)."\">$_btn_delete</a>]";
+			$open = "<a href=\"$script?plugin=attach&amp;openfile=${filename_url}&amp;refer=${refername_url}\" title=\"$lastmod $file_size\">$icon$filename</a>$counter\n";
 			
 			$into = "$open <small>$del</small>";
 			
@@ -83,7 +83,7 @@ function plugin_attach_convert()
 		$ret.= "<input type=\"hidden\" name=\"plugin\" value=\"attach\">\n";
 		$ret.= "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\">\n";
 		$ret.= "<input type=\"hidden\" name=\"max_file_size\" value=\"".MAX_FILESIZE."\">\n";
-		$ret.= "<small>[<a href=\"$script?plugin=attach&pcmd=list\">$_msg_attach_filelist</a>]</small><br>\n";
+		$ret.= "<small>[<a href=\"$script?plugin=attach&amp;pcmd=list\">$_msg_attach_filelist</a>]</small><br>\n";
 		$ret.= "<small>".str_replace('$1',$max_size,$_msg_maxsize)."</small><br>\n";
 		$ret.= "$_msg_attachfile: <input type=\"file\" name=\"attach_file\">\n";
 		$ret.= "<input type=\"submit\" value=\"$_btn_upload\"><br>\n";
@@ -192,9 +192,9 @@ function plugin_attach_action()
 				
 				$lastmod = date("Y/m/d H:i:s",filemtime(UPLOAD_DIR.$file));
 				
-				$del = "[<a href=\"$script?plugin=attach&mode=confirm&delfile=${filename_url}&refer=${pagename_url}\" title=\"".str_replace('$1',$filename,$_msg_delete)."\">$_btn_delete</a>]";
+				$del = "[<a href=\"$script?plugin=attach&amp;mode=confirm&amp;delfile=${filename_url}&amp;refer=${pagename_url}\" title=\"".str_replace('$1',$filename,$_msg_delete)."\">$_btn_delete</a>]";
 				
-				$open = "<a href=\"$script?plugin=attach&openfile=${filename_url}&refer=${pagename_url}\" title=\"$lastmod $file_size\">$filename</a>";
+				$open = "<a href=\"$script?plugin=attach&amp;openfile=${filename_url}&amp;refer=${pagename_url}\" title=\"$lastmod $file_size\">$filename</a>";
 
 				$aryret[$pagename] .= "<li>$open <small>$del</small></li>\n";
 			}
@@ -224,7 +224,7 @@ function plugin_attach_action()
 		$ret.= "<input type=\"hidden\" name=\"plugin\" value=\"attach\">\n";
 		$ret.= "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\">\n";
 		$ret.= "<input type=\"hidden\" name=\"max_file_size\" value=\"".MAX_FILESIZE."\">\n";
-		$ret.= "<small>[<a href=\"$script?plugin=attach&pcmd=list\">$_msg_attach_filelist</a>]</small><br>\n";
+		$ret.= "<small>[<a href=\"$script?plugin=attach&amp;pcmd=list\">$_msg_attach_filelist</a>]</small><br>\n";
 		$ret.= "<small>".str_replace('$1',$max_size,$_msg_maxsize)."</small><br>\n";
 		$ret.= "$_msg_attachfile: <input type=\"file\" name=\"attach_file\">\n";
 		$ret.= "<input type=\"submit\" value=\"$_btn_upload\"><br>\n";

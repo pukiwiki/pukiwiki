@@ -48,7 +48,7 @@ function plugin_ls_convert()
       			$url = rawurlencode($page);
 			$name = strip_bracket($page);
 			$title = $name ." " .get_pg_passage($page,false);
-			$ls .= "<li><a href=\"$script?cmd=read&page=$url\" title=\"$title\">$name</a>$comment\n";
+			$ls .= "<li><a href=\"$script?cmd=read&amp;page=$url\" title=\"$title\">$name</a>$comment\n";
 		}
 		closedir($dir);
 	}

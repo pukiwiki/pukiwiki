@@ -117,13 +117,13 @@ function plugin_calendar_convert()
 		$page = "[[$prefix$dt]]";
 		$page_url = rawurlencode("[[$prefix$dt]]");
 		
-		if($cmd == "edit") $refer = "&refer=$page_url";
+		if($cmd == "edit") $refer = "&amp;refer=$page_url";
 		else               $refer = "";
 		
 		if($cmd == "read" && !is_page($page))
 			$link = "<b>$day</b>";
 		else
-			$link = "<a href=\"$script?cmd=$cmd&page=$page_url$refer\" title=\"$name\"><b>$day</b></a>";
+			$link = "<a href=\"$script?cmd=$cmd&amp;page=$page_url$refer\" title=\"$name\"><b>$day</b></a>";
 
 		if($fweek)
 		{

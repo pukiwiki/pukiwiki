@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.2 2002/06/21 10:42:40 masui Exp $
+// $Id: html.php,v 1.3 2002/06/21 12:33:29 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -29,15 +29,15 @@ function catbody($title,$page,$body)
 		$is_page = 1;
 	}
 
-	$link_add = "$script?cmd=add&page=".rawurlencode($vars["page"]);
-	$link_edit = "$script?cmd=edit&page=".rawurlencode($vars["page"]);
-	$link_diff = "$script?cmd=diff&page=".rawurlencode($vars["page"]);
+ 	$link_add = "$script?cmd=add&amp;page=".rawurlencode($vars["page"]);
+ 	$link_edit = "$script?cmd=edit&amp;page=".rawurlencode($vars["page"]);
+ 	$link_diff = "$script?cmd=diff&amp;page=".rawurlencode($vars["page"]);
 	$link_top = "$script?$defaultpage";
 	$link_list = "$script?cmd=list";
 	$link_filelist = "$script?cmd=filelist";
 	$link_search = "$script?cmd=search";
 	$link_whatsnew = "$script?$whatsnew";
-	$link_backup = "$script?cmd=backup&page=".rawurlencode($vars["page"]);
+ 	$link_backup = "$script?cmd=backup&amp;page=".rawurlencode($vars["page"]);
 	$link_help = "$script?cmd=help";
 
 	if(is_page($vars["page"]) && $is_page)
@@ -441,7 +441,7 @@ function edit_form($postdata,$page,$add=0)
 	if($vars["help"] == "true")
 		$help = $hr.catrule();
 	else
-		$help = "<br>\n<ul><li><a href=\"$script?cmd=edit&help=true&page=".rawurlencode($page)."\">$_msg_help</a></ul></li>\n";
+ 		$help = "<br>\n<ul><li><a href=\"$script?cmd=edit&amp;help=true&amp;page=".rawurlencode($page)."\">$_msg_help</a></ul></li>\n";
 
 	if($function_freeze)
 		$str_freeze = '<input type="submit" name="freeze" value="'.$_btn_freeze.'" accesskey="f">';
@@ -690,7 +690,7 @@ function make_link($name)
 			return "<a href=\"$script?$percent_name\" $str_title>$page</a>";
 		}
 		else
-			return "<span class=\"noexists\">$page<a href=\"$script?cmd=edit&page=$percent_name&refer=$refer\">?</a></span>";
+ 			return "<span class=\"noexists\">$page<a href=\"$script?cmd=edit&amp;page=$percent_name&amp;refer=$refer\">?</a></span>";
 	}
 	else
 	{
@@ -754,7 +754,7 @@ function make_search($page)
 	//if(preg_match("/^$WikiName$/",$page))
 	//	$name = preg_replace("/([A-Z][a-z]+)/","$1 ",$name);
 
-	return "<a href=\"$script?cmd=search&word=$url\">$name</a> ";
+ 	return "<a href=\"$script?cmd=search&amp;word=$url\">$name</a> ";
 }
 
 ?>

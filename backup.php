@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.php,v 1.1 2002/06/21 05:21:46 masui Exp $
+// $Id: backup.php,v 1.2 2002/06/21 12:33:29 masui Exp $
 /////////////////////////////////////////////////
 
 // バックアップデータを作成する
@@ -180,11 +180,11 @@ function get_backup_list($_page="")
 			$backupdate = "($ins_date $ins_week $ins_time)";
 			if(!$_page)
 			{
-				$line["link"] .= "<li><a href=\"$script?cmd=backup&page=$page_url&age=$key\">$key $backupdate</a></li>\n";
+ 				$line["link"] .= "<li><a href=\"$script?cmd=backup&amp;page=$page_url&amp;age=$key\">$key $backupdate</a></li>\n";
 			}
 			else
 			{
-				$line["link"] .= "<li><a href=\"$script?cmd=backup&page=$page_url&age=$key\">$key $backupdate</a> [ <a href=\"$script?cmd=backup_diff&page=$page_url&age=$key\">$_msg_diff</a> | <a href=\"$script?cmd=backup_nowdiff&page=$page_url&age=$key\">$_msg_nowdiff</a> | <a href=\"$script?cmd=backup_source&page=$page_url&age=$key\">$_msg_source</a> ]</li>\n";
+ 				$line["link"] .= "<li><a href=\"$script?cmd=backup&amp;page=$page_url&amp;age=$key\">$key $backupdate</a> [ <a href=\"$script?cmd=backup_diff&amp;page=$page_url&amp;age=$key\">$_msg_diff</a> | <a href=\"$script?cmd=backup_nowdiff&amp;page=$page_url&amp;age=$key\">$_msg_nowdiff</a> | <a href=\"$script?cmd=backup_source&amp;page=$page_url&amp;age=$key\">$_msg_source</a> ]</li>\n";
 			}
 		}
 		if(count($arybackups)) $line["link"] .= "</ul>";

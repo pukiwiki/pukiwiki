@@ -112,7 +112,7 @@ function plugin_yetlist_action()
 		}
 		$link_ref = trim($link_ref);
 		
-		$ret["body"] .= "<li><a href=\"$script?cmd=edit&page=$url&refer=$refurl\">$wbn</a> <i>($link_ref)</i></li>\n";
+		$ret["body"] .= "<li><a href=\"$script?cmd=edit&amp;page=$url&amp;refer=$refurl\">$wbn</a> <i>($link_ref)</i></li>\n";
 	}
 
 

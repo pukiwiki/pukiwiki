@@ -26,7 +26,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.2 2002/06/21 05:21:46 masui Exp $
+// $Id: pukiwiki.php,v 1.3 2002/06/21 12:33:29 masui Exp $
 /////////////////////////////////////////////////
 
 
@@ -98,7 +98,7 @@ else if(((arg_check("add") || arg_check("edit") || arg_check("preview")) && (is_
 	$page = str_replace('$1',make_search($vars["page"]),$_title_cannotedit);
 
 	if(is_freeze($vars["page"]))
-		$body .= "(<a href=\"$script?cmd=unfreeze&page=".rawurlencode($vars["page"])."\">$_msg_unfreeze</a>)";
+ 		$body .= "(<a href=\"$script?cmd=unfreeze&amp;page=".rawurlencode($vars["page"])."\">$_msg_unfreeze</a>)";
 }
 // ди╡ц
 else if(arg_check("add"))
@@ -464,22 +464,22 @@ else if($do_backup && arg_check("backup"))
 
 		if(!arg_check("backup_diff") && is_page($get["page"]))
 		{
-			$link = str_replace('$1',"<a href=\"$script?cmd=backup_diff&page=".rawurlencode($get["page"])."&age=$get[age]\">$_msg_diff</a>",$_msg_view);
+ 			$link = str_replace('$1',"<a href=\"$script?cmd=backup_diff&amp;page=".rawurlencode($get["page"])."&amp;age=$get[age]\">$_msg_diff</a>",$_msg_view);
 			$body .= "<li>$link</li>\n";
 		}
 		if(!arg_check("backup_nowdiff") && is_page($get["page"]))
 		{
-			$link = str_replace('$1',"<a href=\"$script?cmd=backup_nowdiff&page=".rawurlencode($get["page"])."&age=$get[age]\">$_msg_nowdiff</a>",$_msg_view);
+ 			$link = str_replace('$1',"<a href=\"$script?cmd=backup_nowdiff&amp;page=".rawurlencode($get["page"])."&amp;age=$get[age]\">$_msg_nowdiff</a>",$_msg_view);
 			$body .= "<li>$link</li>\n";
 		}
 		if(!arg_check("backup_source"))
 		{
-			$link = str_replace('$1',"<a href=\"$script?cmd=backup_source&page=".rawurlencode($get["page"])."&age=$get[age]\">$_msg_source</a>",$_msg_view);
+ 			$link = str_replace('$1',"<a href=\"$script?cmd=backup_source&amp;page=".rawurlencode($get["page"])."&amp;age=$get[age]\">$_msg_source</a>",$_msg_view);
 			$body .= "<li>$link</li>\n";
 		}
 		if(arg_check("backup_diff") || arg_check("backup_source") || arg_check("backup_nowdiff"))
 		{
-			$link = str_replace('$1',"<a href=\"$script?cmd=backup&page=".rawurlencode($get["page"])."&age=$get[age]\">$_msg_backup</a>",$_msg_view);
+ 			$link = str_replace('$1',"<a href=\"$script?cmd=backup&amp;page=".rawurlencode($get["page"])."&amp;age=$get[age]\">$_msg_backup</a>",$_msg_view);
 			$body .= "<li>$link</li>\n";
 		}
 		
@@ -504,7 +504,7 @@ else if($do_backup && arg_check("backup"))
 			$ins_week = "(".$weeklabels[date("w",$val)].")";
 			$backupdate = "($ins_date $ins_week $ins_time)";
 			if($key != $get["age"])
-				$body .= "<li><a href=\"$script?cmd=$get[cmd]&page=".rawurlencode($get["page"])."&age=$key\">$key $backupdate</a></li>\n";
+ 				$body .= "<li><a href=\"$script?cmd=$get[cmd]&amp;page=".rawurlencode($get["page"])."&amp;age=$key\">$key $backupdate</a></li>\n";
 			else
 				$body .= "<li><i>$key $backupdate</i></li>\n";
 		}

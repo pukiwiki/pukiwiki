@@ -34,7 +34,7 @@ function plugin_template_action()
 		if($vars["help"] == "true")
 			$help = $hr.catrule();
 		else
-			$help = "<br>\n<ul><li><a href=\"$script?cmd=edit&help=true&page=".rawurlencode($page)."\">$_msg_help</a></ul></li>\n";
+			$help = "<br>\n<ul><li><a href=\"$script?cmd=edit&amp;help=true&amp;page=".rawurlencode($page)."\">$_msg_help</a></ul></li>\n";
 
 		if($function_freeze)
 			$str_freeze = '<input type="submit" name="freeze" value="'.$_btn_freeze.'" accesskey="f">';

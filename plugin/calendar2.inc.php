@@ -113,7 +113,7 @@ function plugin_calendar2_convert()
   <tbody>
   <tr>
     <td align="middle" class="style_td_caltop" colspan="7" height="15">
-      <div align="center"><small><a href="'.$script.'?plugin=calendar2&file='.$prefix_.'&date='.$prev_date_str.'">&lt;&lt;</a> <b>'.$m_name.'</b> <a href="'.$script.'?plugin=calendar2&file='.$prefix_.'&date='.$next_date_str.'">&gt;&gt;</a></small></div>
+      <div align="center"><small><a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$prev_date_str.'">&lt;&lt;</a> <b>'.$m_name.'</b> <a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$next_date_str.'">&gt;&gt;</a></small></div>
     </td>
   </tr>
   <tr>
@@ -125,7 +125,7 @@ function plugin_calendar2_convert()
   <tbody>
   <tr>
     <td align="middle" class="style_td_caltop" colspan="7" height="15">
-      <div align="center"><small><a href="'.$script.'?plugin=calendar2&file='.$prefix_.'&date='.$prev_date_str.'">&lt;&lt;</a> <b>'.$m_name.'</b> <a href="'.$script.'?plugin=calendar2&file='.$prefix_.'&date='.$next_date_str.'">&gt;&gt;</a><br>[<a href="'.$script.'?'.$prefix_url.'">'.$pre.'</a>]</small></div>
+      <div align="center"><small><a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$prev_date_str.'">&lt;&lt;</a> <b>'.$m_name.'</b> <a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$next_date_str.'">&gt;&gt;</a><br>[<a href="'.$script.'?'.$prefix_url.'">'.$pre.'</a>]</small></div>
     </td>
   </tr>
   <tr>
@@ -149,13 +149,13 @@ function plugin_calendar2_convert()
 		$page = "[[$prefix$dt]]";
 		$page_url = rawurlencode("[[$prefix$dt]]");
 		
-		if($cmd == "edit") $refer = "&refer=$page_url";
+		if($cmd == "edit") $refer = "&amp;refer=$page_url";
 		else               $refer = "";
 		
 		if($cmd == "read" && !is_page($page))
-			$link = "<small><a href=\"$script?cmd=$cmd&page=$page_url$refer\" title=\"$name\">$day</a></small>";
+			$link = "<small><a href=\"$script?cmd=$cmd&amp;page=$page_url$refer\" title=\"$name\">$day</a></small>";
 		else
-			$link = "<a href=\"$script?cmd=$cmd&page=$page_url$refer\" title=\"$name\"><b>$day</b></a>";
+			$link = "<a href=\"$script?cmd=$cmd&amp;page=$page_url$refer\" title=\"$name\"><b>$day</b></a>";
 
 		if($fweek)
 		{
@@ -206,7 +206,7 @@ function plugin_calendar2_convert()
 	$page_url = rawurlencode($page);
 	if(is_page($page)) {
 		$str = convert_html(join("",file(get_filename(encode($page)))));
-		$str .= "<hr><small><a href=\"$script?cmd=edit&page=$page\">[この日記を編集]</a></small>";
+		$str .= "<hr><small><a href=\"$script?cmd=edit&amp;page=$page\">[この日記を編集]</a></small>";
 	}
 	else {
 		$str = make_link(sprintf('[[%s%4d-%02d-%02d]]',$prefix, $today[year], $today[mon], $today[mday])).'は空です。';
