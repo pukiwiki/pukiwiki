@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.42 2003/07/14 04:27:07 arino Exp $
+// $Id: pukiwiki.ini.php,v 1.43 2003/07/27 13:54:58 arino Exp $
 //
 // PukiWiki setting file
 
@@ -173,6 +173,21 @@ $splitter = ">>>>>>>>>>";
 // ページの更新時にバックグランドで実行されるコマンド(mknmzなど)
 $update_exec = '';
 //$update_exec = '/usr/bin/mknmz --media-type=text/pukiwiki -O /var/lib/namazu/index/ -L ja -c -K /var/www/wiki/';
+
+/////////////////////////////////////////////////
+// HTTPリクエストにプロキシサーバを使用する
+$use_proxy = 0;
+// proxy ホスト
+$proxy_host = 'proxy.xxx.yyy.zzz';
+// proxy ポート番号
+$proxy_port = 8080;
+// プロキシサーバを使用しないホストのリスト
+$no_proxy = array(
+'127.0.0.1',
+'localhost',
+//'192.168.1.0/24',
+//'no-proxy.com',
+);
 
 ////////////////////////////////////////////////
 // ページの更新時にメールを送信する
