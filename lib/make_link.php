@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.16 2005/01/27 13:07:49 henoheno Exp $
+// $Id: make_link.php,v 1.17 2005/02/05 03:40:13 henoheno Exp $
 //
 // Hyperlink-related functions
 
@@ -301,14 +301,14 @@ EOD;
 
 		$id   = ++$note_id;
 		$note = make_link($body);
-		$page = isset($vars['page']) ? htmlspecialchars($vars['page']) : '';
+		$page = isset($vars['page']) ? rawurlencode($vars['page']) : '';
 
 		// Footnote
-		$foot_explain[$id] = <<<EOD
-<a id="notefoot_$id" href="$script?$page#notetext_$id" class="note_super">*$id</a>
-<span class="small">$note</span>
-<br />
-EOD;
+		$foot_explain[$id] = '<a id="notefoot_' . $id . '" href="' .
+			$script . '?' . $page . '#notetext_' . $id .
+			'" class="note_super">*' . $id . '</a>' . "\n" .
+			'<span class="small">' . $note . '</span><br />';
+
 		// A hyperlink, content-body to footnote
 		$name = '<a id="notetext_' . $id . '" href="' . $script . '?' . $page .
 			'#notefoot_' . $id . '" class="note_super" title="' .
