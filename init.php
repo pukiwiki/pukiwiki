@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.43 2003/05/16 05:50:03 arino Exp $
+// $Id: init.php,v 1.44 2003/05/26 13:58:58 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -16,6 +16,8 @@ define('SOURCE_ENCODING','EUC-JP');
 define('LANG','ja');
 mb_internal_encoding(SOURCE_ENCODING);
 mb_http_output(SOURCE_ENCODING);
+mb_detect_order('ASCII,JIS,EUC,UTF-8,SJIS');
+// mb_detect_order('ASCII,JIS,UTF-8,EUC,SJIS'); // UTF-8を優先する場合
 
 /////////////////////////////////////////////////
 // 初期設定(設定ファイルの場所)
@@ -141,16 +143,7 @@ $post   = sanitize($_POST);
 $cookie = sanitize($_COOKIE);
 
 // ポストされた文字のコードを変換
-// original by nitoyon (2003/02/20)
-$encode = mb_detect_encoding(join('',array_merge($post,$get)));
-if ($encode != 'ASCII' and $encode != SOURCE_ENCODING) {
-	foreach(array_keys($get) as $key) {
-		$get[$key] = mb_convert_encoding($get[$key],SOURCE_ENCODING,$encode);
-	}
-	foreach(array_keys($post) as $key) {
-		$post[$key] = mb_convert_encoding($post[$key],SOURCE_ENCODING,$encode);
-	}
-}
+mb_convert_variables(SOURCE_ENCODING,'',$get,$post);
 
 if (!empty($get['page'])) {
 	$get['page']  = strip_bracket($get['page']);
