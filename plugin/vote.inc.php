@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: vote.inc.php,v 1.20 2005/01/04 14:50:51 henoheno Exp $
+// $Id: vote.inc.php,v 1.21 2005/01/06 13:44:00 henoheno Exp $
 //
 // Vote plugin
 
@@ -82,7 +82,7 @@ function plugin_vote_convert()
 	if (! isset($number[$page])) $number[$page] = 0; // Init
 	$vote_no = $number[$page]++;
 
-	if (! func_num_args()) return '#vote(): No arguments';
+	if (! func_num_args()) return '#vote(): No arguments<br/>' . "\n";
 
 	$args     = func_get_args();
 	$s_page   = htmlspecialchars($page);
