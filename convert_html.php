@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.30 2003/04/25 00:53:11 arino Exp $
+// $Id: convert_html.php,v 1.31 2003/04/25 01:17:25 arino Exp $
 //
 function convert_html($lines)
 {
@@ -49,7 +49,7 @@ class Inline extends Element
 			$this->setParent($parent);
 		}
 		else {
-			$this->text = (substr($text,0,1) == "\n") ? $text : inline2(inline($text));
+			$this->text = trim((substr($text,0,1) == "\n") ? $text : inline2(inline($text)));
 		}
 	}
 	function &add(&$obj)
