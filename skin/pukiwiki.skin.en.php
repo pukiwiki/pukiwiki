@@ -6,7 +6,7 @@
 	<meta http-equiv="content-style-type" content="text/css">
 	<title><?=$page_title ?> - <?=$title?></title>
 	<link rel="stylesheet" href="skin/default.en.css" type="text/css" media="screen" charset="iso-8859-1">
-	<script tyle="text/javascript">
+	<script type="text/javascript">
 	<!--
 		function open_mini(URL,width,height){
 			aWindow = window.open(URL, "mini", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=no,width="+width+",height="+height);
