@@ -74,8 +74,6 @@
   以下の値を global でグローバル変数にすることによって値を取得できます。
 
   $script : スクリプト名
-  $get : GETメソッドによるHTTPからの引数
-  $post : POSTメソッドによるHTTPからの引数
   $vars : GET・POST両方のメソッドによるHTTPからの引数
+          ($vars["page"] : 開いているページ名)
 
-  $vars["page"] : 開いているページ名(strip_bracket関数により[[]]を取り除ける)

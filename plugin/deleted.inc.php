@@ -2,19 +2,19 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: deleted.inc.php,v 1.3 2003/07/03 05:19:37 arino Exp $
+// $Id: deleted.inc.php,v 1.4 2004/07/01 14:38:19 henoheno Exp $
 //
 //削除されたページ(BACKUP_DIRにあって、DATA_DIRにないファイル)の一覧を表示する
 
 function plugin_deleted_action()
 {
-	global $get;
+	global $vars;
 	global $_deleted_plugin_title,$_deleted_plugin_title_withfilename;
 
 	$retval = array();
 
 	$retval['msg'] = $_deleted_plugin_title;
-	if ($withfilename = array_key_exists('file',$get))
+	if ($withfilename = array_key_exists('file',$vars))
 	{
 		$retval['msg'] = $_deleted_plugin_title_withfilename;
 	}
