@@ -1,6 +1,6 @@
 <?php
 /*
- $Id: ref.inc.php,v 1.8 2003/03/02 02:39:01 panda Exp $
+ $Id: ref.inc.php,v 1.9 2003/03/02 16:07:43 panda Exp $
 
 *プラグイン ref
 ページに添付されたファイルを展開する
@@ -246,7 +246,7 @@ function plugin_ref_body($args,$page)
 			}
 			else
 			{
-				$title = make_user_rules($title);
+				$title = make_line_rules($title);
 			}
 		}
 	}

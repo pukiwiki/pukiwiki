@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.10 2003/03/02 02:48:45 panda Exp $
+// $Id: file.php,v 1.11 2003/03/02 16:08:04 panda Exp $
 //
 
 // ソースを取得
@@ -29,7 +29,7 @@ function get_filename($page)
 // ページの出力
 function page_write($page,$postdata)
 {
-	$postdata = user_rules_str($postdata);
+	$postdata = make_str_rules($postdata);
 	
 	// 差分ファイルの作成
 	$oldpostdata = is_page($page) ? join('',get_source($page)) : '';
@@ -47,6 +47,29 @@ function page_write($page,$postdata)
 	
 	// linkデータベースを更新
 	links_update($page);
+}
+
+// ユーザ定義ルール(ソースを置換する)
+function make_str_rules($str)
+{
+	global $str_rules;
+	
+	$arr = explode("\n",$str);
+	
+	// 日付・時刻置換処理
+	foreach ($arr as $str)
+	{
+		if ($str{0} != ' ' and $str{0} != "\t")
+		{
+			foreach ($str_rules as $rule => $replace)
+			{
+				$str = preg_replace("/$rule/",$replace,$str);
+			}
+		}
+		$retvars[] = $str;
+	}
+	
+	return join("\n",$retvars);
 }
 
 // ファイルへの出力

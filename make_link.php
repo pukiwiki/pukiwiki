@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.19 2003/02/28 03:33:42 panda Exp $
+// $Id: make_link.php,v 1.20 2003/03/02 16:08:04 panda Exp $
 //
 
 // リンクを付加する
@@ -356,7 +356,7 @@ EOD;
 		
 		$arr = $this->splice($arr);
 		
-		$alias = make_user_rules($converter->convert($arr[2],$page));
+		$alias = make_line_rules($converter->convert($arr[2],$page));
 		$name = $arr[4];
 		$this->anchor = $arr[8];
 		

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.64 2003/03/02 02:49:55 panda Exp $
+// $Id: html.php,v 1.65 2003/03/02 16:08:04 panda Exp $
 //
 
 // 本文を出力
@@ -112,7 +112,7 @@ function inline($line,$remove=FALSE)
 // インライン要素のパース (リンク、見出し一覧)
 function inline2($str)
 {
-	return make_user_rules(make_link($str));
+	return make_line_rules(make_link($str));
 }
 
 // 編集フォームの表示
@@ -130,7 +130,6 @@ function edit_form($page,$postdata,$digest = 0,$b_template = TRUE)
 	
 	$checked_top = array_key_exists('add_top',$vars) ? ' checked="checked"' : '';
 	$checked_time = array_key_exists('notimestamp',$vars) ? ' checked="checked"' : '';
-	$checked_viewtag = array_key_exists('viewtag',$vars) ? ' checked="checked"' : '';
 	
 	if(array_key_exists('add',$vars)) {
 		$addtag = '<input type="hidden" name="add" value="true" />';
@@ -247,32 +246,13 @@ function make_related($page,$tag='')
 	return $retval;
 }
 
-// ユーザ定義ルール(ソースを置換する)
-function user_rules_str($str)
-{
-	global $str_rules;
-	
-	$arystr = explode("\n",$str);
-	
-	// 日付・時刻置換処理
-	foreach ($arystr as $str) {
-		if (substr($str,0,1) != " ") {
-			foreach ($str_rules as $rule => $replace) {
-				$str = preg_replace("/$rule/",$replace,$str);
-			}
-		}
-		$retvars[] = $str;
-	}
-	
-	return join("\n",$retvars);
-}
-
 // ユーザ定義ルール(ソースは置換せずコンバート)
-function make_user_rules($str)
+function make_line_rules($str)
 {
-	global $user_rules;
+	global $line_rules;
 	
-	foreach($user_rules as $rule => $replace) {
+	foreach($line_rules as $rule => $replace)
+	{
 		$str = preg_replace("/$rule/",$replace,$str);
 	}
 	
@@ -300,5 +280,4 @@ function make_search($page)
 	
  	return "<a href=\"$script?cmd=search&amp;word=$r_page\">$s_page</a> ";
 }
-
 ?>

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.25 2003/02/21 07:04:44 panda Exp $
+// $Id: pukiwiki.ini.php,v 1.26 2003/03/02 16:08:11 panda Exp $
 //
 // PukiWiki setting file
 
@@ -177,10 +177,13 @@ $str_rules = array(
 	'now\?' => format_date(UTIME),
 	'date\?' => get_date($date_format),
 	'time\?' => get_date($time_format),
+//	'&now;' => format_date(UTIME),
+//	'&date;' => get_date($date_format),
+//	'&time;' => get_date($time_format),
 );
 
 /////////////////////////////////////////////////
-// フェイスマーク定義ルール
+// フェイスマーク定義ルール(コンバート時に置換)
 // $usefacemark = 1ならフェイスマークが置換されます
 // 文章内にXDなどが入った場合にfacemarkに置換されてしまうので
 // 必要のない方は $usefacemarkを0にしてください。

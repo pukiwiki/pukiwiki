@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.2 2003/01/31 01:49:35 panda Exp $
+// $Id: edit.inc.php,v 1.3 2003/03/02 16:07:32 panda Exp $
 //
 //  ‘Ω∏
 // cmd=edit
@@ -32,39 +32,42 @@ function plugin_edit_preview()
 	global $script,$post;
 	global $_title_preview,$_msg_preview,$_msg_preview_delete;
 
-	if (array_key_exists('template_page',$post) and is_page($post['template_page'])) {
+	if (array_key_exists('template_page',$post) and is_page($post['template_page']))
+	{
 		$post['msg'] = join('',get_source($post['template_page']));
 	}
 	
 	$post['msg'] = preg_replace("/^#freeze\n/",'',$post['msg']);
 	$postdata_input = $post['msg'];
 
-	if (!empty($post['add'])) {
-		if ($post['add_top']) {
+	if (!empty($post['add']))
+	{
+		if ($post['add_top'])
+		{
 			$postdata  = $post['msg']."\n\n".@join('',get_source($post['page']));
 		}
-		else {
+		else
+		{
 			$postdata  = @join('',get_source($post['page']))."\n\n".$post['msg'];
 		}
 	}
-	else {
+	else
+	{
 		$postdata = $post['msg'];
 	}
 
 	$body = "$_msg_preview<br />\n";
-	if ($postdata == '') {
+	if ($postdata == '')
+	{
 		$body .= "<strong>$_msg_preview_delete</strong>";
 	}
 	$body .= "<br />\n";
 
-	if ($postdata != '') {
+	if ($postdata != '')
+	{
+		$postdata = make_str_rules($postdata);
 		$postdata = explode("\n",$postdata);
 		$postdata = drop_submit(convert_html($postdata));
-		
-		if (!empty($post['viewtag'])) {
-			$postdata = preg_replace("/(<[^\/][^>]*>)/e",'"$1".htmlspecialchars("$1")', $postdata);
-			$postdata = preg_replace("/(<\/[^>]+>)/e",'htmlspecialchars("$1")."$1"', $postdata);
-		}
 		
 		$body .= <<<EOD
 <div id="preview">
