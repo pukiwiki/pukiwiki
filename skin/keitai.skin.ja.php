@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.skin.ja.php,v 1.8 2004/08/06 12:51:17 henoheno Exp $
+// $Id: keitai.skin.ja.php,v 1.9 2004/08/06 15:31:25 henoheno Exp $
 //
 
 global $script, $vars, $page_title, $max_size, $accesskey, $menubar;
@@ -33,7 +33,7 @@ $lastpage = $pagecount - 1;
 // ナビゲーション
 $navi = array();
 $navi[] = "<a href=\"$link_top\" $accesskey=\"0\">0.Top</a>";
-$navi[] = "<a href=\"$script?plugin=newpage&refer=$r_page\" $accesskey=\"1\">1.New</a>";
+$navi[] = "<a href=\"$script?plugin=newpage&amp;refer=$r_page\" $accesskey=\"1\">1.New</a>";
 $navi[] = "<a href=\"$link_edit\" $accesskey=\"2\">2.Edit</a>";
 if ($is_read and $function_freeze) {
 	if ($is_freeze) {
@@ -51,11 +51,11 @@ if ($pagecount > 1) {
 	$prev = $pageno - 1;
 	$next = $pageno + 1;
 	if ($pageno > 0) {
-		$navi[] = "<a href=\"$script?cmd=read&page=$r_page&p=$prev\" $accesskey=\"7\">7.Prev</a>";
+		$navi[] = "<a href=\"$script?cmd=read&amp;page=$r_page&amp;p=$prev\" $accesskey=\"7\">7.Prev</a>";
 	}
 	$navi[] = "$next/$pagecount ";
 	if ($pageno < $lastpage) {
-		$navi[] = "<a href=\"$script?cmd=read&page=$r_page&p=$next\" $accesskey=\"8\">8.Next</a>";
+		$navi[] = "<a href=\"$script?cmd=read&amp;page=$r_page&amp;p=$next\" $accesskey=\"8\">8.Next</a>";
 	}
 }
 
