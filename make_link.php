@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.37 2003/05/13 07:56:12 arino Exp $
+// $Id: make_link.php,v 1.38 2003/05/14 10:13:30 arino Exp $
 //
 
 // リンクを付加する
@@ -40,6 +40,7 @@ class InlineConverter
 				'autolink',      // AutoLink
 				'bracketname',   // BracketName
 				'wikiname',      // WikiName
+//				'rules',         // ユーザ定義ルール
 			);
 		}
 		if ($excludes !== NULL)
@@ -48,7 +49,7 @@ class InlineConverter
 		}
 		$this->converters = array();
 		$patterns = array();
-		$start = 3; // $this->patternのサブパターン2個を含む
+		$start = 1;
 		
 		foreach ($converters as $name)
 		{
@@ -64,25 +65,31 @@ class InlineConverter
 			$start += $converter->get_count();
 			$start++;
 		}
-		$this->pattern = '(.*?)('.join('|',$patterns).')'; // $start += 2
+		$this->pattern = join('|',$patterns);
 	}
 	function convert($string,$page)
 	{
 		$this->page = $page;
-		$this->result = '';
+		$this->result = array();
 		
 		$string = preg_replace_callback("/{$this->pattern}/x",array(&$this,'replace'),$string);
 		
-		return $this->result.htmlspecialchars($string);
+		$arr = explode("\x08",make_line_rules(htmlspecialchars($string)));
+		$retval = '';
+		while (count($arr))
+		{
+			$retval .= array_shift($arr).array_shift($this->result);
+		}
+		return $retval;
 	}
 	function replace($arr)
 	{
 		$obj = $this->get_converter($arr);
 		
-		$this->result .= ($obj !== NULL and $obj->set($arr,$this->page) !== FALSE) ?
-			htmlspecialchars($arr[1]).$obj->toString() : htmlspecialchars($arr[0]);
+		$this->result[] = ($obj !== NULL and $obj->set($arr,$this->page) !== FALSE) ?
+			$obj->toString() : make_line_rules(htmlspecialchars($arr[0]));
 		
-		return ''; //処理済みの部分を文字列から削除する
+		return "\x08"; //処理済みの部分にマークを入れる
 	}
 	function get_objects($string,$page)
 	{
@@ -292,7 +299,7 @@ EOD;
 		$arr = $this->splice($arr);
 		
 		$id = ++$note_id;
-		$note = make_line_rules(make_link($arr[1]));
+		$note = make_link($arr[1]);
 		
 		$foot_explain[$id] = <<<EOD
 <a id="notefoot_$id" href="#notetext_$id" class="note_super">*$id</a>
@@ -664,6 +671,76 @@ class Link_autolink extends Link
 		);
 	}
 }
+// ユーザ定義ルール
+/*
+class Link_rules extends Link
+{
+	var $replaces;
+	var $count;
+	
+	function Link_rules($start)
+	{
+		parent::Link($start);
+	}
+	function get_pattern()
+	{
+		global $line_rules;
+		
+		$rules = array();
+		$this->replaces = array();
+		$this->count = 0;
+		
+		foreach ($line_rules as $pattern=>$replace)
+		{
+			$rules[] = "($pattern)";
+			$this->replaces[++$this->count] = $replace;
+			if (preg_match_all('/\$\d/',$replace,$matches,PREG_SET_ORDER))
+			{
+				$this->count += count($matches);
+			}
+		}
+		$this->replaces[++$this->count] = ''; // sentinel
+		return join("|",$rules);
+	}
+	function get_count()
+	{
+		return $this->count;
+	}
+	function set($arr,$page)
+	{
+		$arr = $this->splice($arr);
+		
+		$name = $arr[0];
+		reset($this->replaces);
+		while (list($start,$replace) = each($this->replaces))
+		{
+			if ($replace == '')
+			{
+				$name = htmlspecialchars($name);
+				break;
+			}
+			if (!array_key_exists($start,$arr) or $arr[$start] == '')
+			{
+				continue;
+			}
+			list($end,$dummy) = each($this->replaces);
+			$count = $end - $start;
+			$_arr = array_splice($arr,$start,$count);
+			$name = $replace;
+			for ($n = 1; $n < $count; $n++)
+			{
+				$name = str_replace('$'.$n,make_link($_arr[$n]),$name);
+			}
+			break;
+		}
+		return parent::setParam($page,$name,'rule','');
+	}
+	function toString()
+	{
+		return $this->name;
+	}
+}
+*/
 // ページ名のリンクを作成
 function make_pagelink($page,$alias='',$anchor='',$refer='')
 {

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.inc.php,v 1.16 2003/04/13 06:28:52 arino Exp $
+// $Id: comment.inc.php,v 1.17 2003/05/14 10:13:30 arino Exp $
 
 /////////////////////////////////////////////////
 // コメントの名前テキストエリアのカラム数
@@ -81,7 +81,7 @@ function plugin_comment_action()
 	$body = '';
 	if (md5(@join('',get_source($post['refer']))) != $post['digest']) {
 		$title = $_title_comment_collided;
-		$body = $_msg_comment_collided . make_link($post['refer']);
+		$body = $_msg_comment_collided . make_pagelink($post['refer']);
 	}
 	
 	page_write($post['refer'],$postdata);

@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.12 2003/03/28 15:34:29 panda Exp $
+ * $Id: bugtrack.inc.php,v 1.13 2003/05/14 10:13:31 arino Exp $
  */
 
 function plugin_bugtrack_init()
@@ -262,9 +262,8 @@ function plugin_bugtrack_pageinfo($page,$no = NULL)
 		}
 	}
 	
-	global $_bugtrack_plugin_summary;
 	if (preg_match("/\*([^\n]+)/",$body,$matches)) {
-		$summary = htmlspecialchars($matches[1]);
+		$summary = make_heading($matches[1]);
 	}
 	
 	return array($page, $no, $summary, $name, $priority, $state, $category);
@@ -304,7 +303,7 @@ function plugin_bugtrack_list_convert()
 	
 	foreach ($data as $line) {
 		list($page, $no, $summary, $name, $priority, $state, $category) = $line;
-		$page_link = make_link("[[$page]]");
+		$page_link = make_pagelink($page);
 		$state_no = array_search($state,$_bugtrack_plugin_state_sort);
 		if ($state_no === NULL or $state_no === FALSE) {
 			$state_no = count($_bugtrack_plugin_state_list);

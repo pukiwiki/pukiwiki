@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.36 2003/05/12 10:28:48 arino Exp $
+// $Id: convert_html.php,v 1.37 2003/05/14 10:13:29 arino Exp $
 //
 function convert_html($lines)
 {
@@ -49,7 +49,7 @@ class Inline extends Element
 			$this->setParent($parent);
 		}
 		else {
-			$this->text = trim((substr($text,0,1) == "\n") ? $text : inline2($text));
+			$this->text = trim((substr($text,0,1) == "\n") ? $text : make_link($text));
 		}
 	}
 	function &add(&$obj)
@@ -318,7 +318,7 @@ class DList extends ListContainer
 		}
 		parent::ListContainer('dl','dd',$level,$out[1]);
 		if ($out[0] != '') {
-			array_unshift($this->elements,new Inline("\n<dt>".inline2($out[0])."</dt>\n"));
+			array_unshift($this->elements,new Inline("\n<dt>".make_link($out[0])."</dt>\n"));
 		}
 	}
 }
@@ -583,7 +583,7 @@ class YTable extends Block
 					$colspan[$i]++;
 				}
 				$colspan[$i] = ($colspan[$i] > 1) ? " colspan=\"{$colspan[$i]}\"" : '';
-				$str .= "<td class=\"style_td\"{$align[$i]}{$colspan[$i]}>".inline2($value[$i]).'</td>';
+				$str .= "<td class=\"style_td\"{$align[$i]}{$colspan[$i]}>".make_link($value[$i]).'</td>';
 			}
 		}
 		$this->elements[] = $str;

@@ -1,18 +1,26 @@
 <?php
-// $Id: vote.inc.php,v 1.12 2003/04/13 06:28:52 arino Exp $
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: vote.inc.php,v 1.13 2003/05/14 10:13:31 arino Exp $
+//
 
 function plugin_vote_init()
 {
 	if (LANG == 'ja')
+	{
 		$messages = array(
 			'_vote_plugin_choice' => 'ÁªÂò»è',
 			'_vote_plugin_votes' => 'ÅêÉ¼',
 		);
+	}
 	else
+	{
 		$messages = array(
 			'_vote_plugin_choice' => 'Selection',
 			'_vote_plugin_votes' => 'Vote',
 		);
+	}
 	set_plugin_messages($messages);
 }
 
@@ -26,26 +34,32 @@ function plugin_vote_action()
 	$vote_no = 0;
 	$title = $body = $postdata = '';
 
-	foreach($postdata_old as $line) {
-		if (!preg_match("/^#vote\((.*)\)\s*$/",$line,$arg)) {
+	foreach($postdata_old as $line)
+	{
+		if (!preg_match("/^#vote\((.*)\)\s*$/",$line,$arg))
+		{
 			$postdata .= $line;
 			continue;
 		}
 		
-		if ($vote_no++ != $post['vote_no']) {
+		if ($vote_no++ != $post['vote_no'])
+		{
 			$postdata .= $line;
 			continue;
 		}
 		$args = explode(',',$arg[1]);
 		
-		foreach($args as $arg) {
+		foreach($args as $arg)
+		{
 			$cnt = 0;
-			if (preg_match("/^(.+)\[(\d+)\]$/",$arg,$match)) {
+			if (preg_match("/^(.+)\[(\d+)\]$/",$arg,$match))
+			{
 				$arg = $match[1];
 				$cnt = $match[2];
 			}
 			$e_arg = encode($arg);
-			if (!empty($post["vote_$e_arg"]) and $post["vote_$e_arg"] == $_vote_plugin_votes) {
+			if (!empty($post["vote_$e_arg"]) and $post["vote_$e_arg"] == $_vote_plugin_votes)
+			{
 				$cnt++;
 			}
 			
@@ -58,7 +72,8 @@ function plugin_vote_action()
 		$postdata .= $vote_str;
 	}
 
-	if (md5(@join('',get_source($post['refer']))) != $post['digest']) {
+	if (md5(@join('',get_source($post['refer']))) != $post['digest'])
+	{
 		$title = $_title_collided;
 		
 		$s_refer = htmlspecialchars($post['refer']);
@@ -103,7 +118,8 @@ function plugin_vote_convert()
 	}
 	$vote_no = $numbers[$vars['page']]++;
 	
-	if (!func_num_args()) {
+	if (!func_num_args())
+	{
 		return '';
 	}
 
@@ -127,10 +143,12 @@ function plugin_vote_convert()
 EOD;
 	
 	$tdcnt = 0;
-	foreach($args as $arg) {
+	foreach($args as $arg)
+	{
 		$cnt = 0;
 		
-		if (preg_match("/^(.+)\[(\d+)\]$/",$arg,$match)) {
+		if (preg_match("/^(.+)\[(\d+)\]$/",$arg,$match))
+		{
 			$arg = $match[1];
 			$cnt = $match[2];
 		}

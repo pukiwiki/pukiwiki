@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar2.inc.php,v 1.17 2003/03/03 07:30:42 panda Exp $
+// $Id: calendar2.inc.php,v 1.18 2003/05/14 10:13:30 arino Exp $
 // *引数にoffと書くことで今日の日記を表示しないようにした。
 function plugin_calendar2_convert()
 {
@@ -154,7 +154,7 @@ EOD;
 			$get['page'] = $post['page'] = $vars['page'] = $_page;
 		}
 		else {
-			$str = sprintf($_calendar2_plugin_empty,make_link(sprintf('[[%s%4d-%02d-%02d]]',$prefix, $today['year'], $today['mon'], $today['mday'])));
+			$str = sprintf($_calendar2_plugin_empty,make_pagelink(sprintf('%s%4d-%02d-%02d',$prefix, $today['year'], $today['mon'], $today['mday'])));
 		}
 		$ret .= "  </td>\n  <td valign=\"top\">$str</td>\n </tr>\n</table>\n";
 	}

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.73 2003/05/12 10:29:48 arino Exp $
+// $Id: html.php,v 1.74 2003/05/14 10:13:29 arino Exp $
 //
 
 // 本文を出力
@@ -113,10 +113,10 @@ function inline($line,$remove=FALSE)
 	return $line;
 }
 
-// インライン要素のパース (リンク、見出し一覧)
+// インライン要素のパース (リンク、見出し一覧) (obsolete)
 function inline2($str)
 {
-	return make_line_rules(make_link($str));
+	return make_link($str);
 }
 
 // 編集フォームの表示
@@ -290,6 +290,9 @@ function make_heading($str)
 {
 	global $NotePattern;
 	
-	return strip_htmltag(inline2(preg_replace($NotePattern,'',$str)));
+	// 見出しの固有ID部を削除
+	$str = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m','$1$2',$str);
+	
+	return strip_htmltag(make_link(preg_replace($NotePattern,'',$str)));
 }
 ?>
