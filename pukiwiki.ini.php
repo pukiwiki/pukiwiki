@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.113 2005/03/13 17:29:01 teanan Exp $
+// $Id: pukiwiki.ini.php,v 1.114 2005/03/19 03:03:03 henoheno Exp $
 //
 // PukiWiki main setting file
 
@@ -225,7 +225,7 @@ $edit_auth = 0;
 $edit_auth_pages = array(
 	'#Barの公開日記#'	=> 'bar',
 	'#ひきこもるほげ#'	=> 'hoge',
-	'#(ネタバレ|ねたばれ)#'	=> 'foo',
+	'#(ネタバレ|ねたばれ)#'	=> 'foo,bar,hoge',
 );
 
 /////////////////////////////////////////////////
