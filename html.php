@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.62 2003/02/28 03:30:17 panda Exp $
+// $Id: html.php,v 1.63 2003/02/28 14:55:18 panda Exp $
 //
 
 // 本文を出力
@@ -75,9 +75,10 @@ function catbody($title,$page,$body)
 		$keys = array_keys($keys);
 		foreach ($keys as $key) {
 			$s_key = htmlspecialchars($key);
+			$q_key = preg_quote($key,'/');
 			$search_word .= " <strong class=\"word{$words[$key]}\">$s_key</strong>";
 			$to = "<strong class=\"word{$words[$key]}\">\$1</strong>";
-			$body = preg_replace("/(?:^|(?<=>))([^<]*)/e",'preg_replace("/($s_key)/i",$to,\'$1\')',$body);
+			$body = preg_replace("/(?:^|(?<=>))([^<]*)/e",'preg_replace("/($q_key)/i",$to,\'$1\')',$body);
 		}
 		$body = "<div class=\"small\">$_msg_word$search_word</div>$hr\n$body";
 	}
