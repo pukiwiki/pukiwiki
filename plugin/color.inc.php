@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: color.inc.php,v 1.15 2004/11/21 13:37:53 henoheno Exp $
+// $Id: color.inc.php,v 1.16 2004/11/22 14:09:59 henoheno Exp $
 //
 // Text color plugin
 
@@ -39,7 +39,7 @@ function plugin_color_inline()
 		if ($bgcolor != '') $bgcolor = ';background-color:' . $bgcolor;
 		return '<span style="color:' . $color . $bgcolor . '">' . $text . '</span>';
 	} else {
-		if ($bgcolor != '') return '&color(): bgcolor (with CSS) not allowd;';
+		if ($bgcolor != '') return '&color(): bgcolor (with CSS) not allowed;';
 		return '<font color="' . $color . '">' . $text . '</font>';
 	}
 }
