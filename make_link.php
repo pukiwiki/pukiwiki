@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.60 2003/11/05 10:58:39 arino Exp $
+// $Id: make_link.php,v 1.61 2003/11/05 11:05:09 arino Exp $
 //
 
 // リンクを付加する
@@ -802,7 +802,7 @@ function get_interwiki_url($name,$param)
 		{
 			if (preg_match('/\[((?:(?:https?|ftp|news):\/\/|\.\.?\/)[!~*\'();\/?:\@&=+\$,%#\w.-]*)\s([^\]]+)\]\s?([^\s]*)/',$line,$matches))
 			{
-				$interwikinames[$matches[2]] = array($matches[1],$matches[3]);
+				$interwikinames[$matches[2]] = array(htmlspecialchars($matches[1]),$matches[3]);
 			}
 		}
 	}
