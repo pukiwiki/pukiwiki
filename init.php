@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.93 2004/07/24 08:04:23 henoheno Exp $
+// $Id: init.php,v 1.94 2004/07/25 14:29:28 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -175,6 +175,7 @@ $_COOKIE = input_filter($_COOKIE); $cookie = & $_COOKIE;
 
 // Expire risk
 unset($HTTP_GET_VARS, $HTTP_POST_VARS);	//, 'SERVER', 'ENV', 'SESSION', ...
+unset($_REQUEST);	// Seems not reliable
 
 /////////////////////////////////////////////////
 // 文字コードを変換
@@ -189,7 +190,6 @@ if (isset($post['encode_hint']) && $post['encode_hint'] != '')
 	// コードが混入した場合に、コード検出に失敗する恐れがある。
 	$encode = mb_detect_encoding($post['encode_hint']);
 	mb_convert_variables(SOURCE_ENCODING, $encode, $post);
-	mb_convert_variables(SOURCE_ENCODING, $encode, $vars);
 }
 else if (isset($post['charset']) && $post['charset'] != '')
 {
@@ -198,9 +198,6 @@ else if (isset($post['charset']) && $post['charset'] != '')
 	// うまくいかなかった場合はコード検出の設定で変換しなおし
 	if (mb_convert_variables(SOURCE_ENCODING, $post['charset'], $post) !== $post['charset'])
 		mb_convert_variables(SOURCE_ENCODING, 'auto', $post);
-
-	if (mb_convert_variables(SOURCE_ENCODING, $vars['charset'], $vars) !== $vars['charset'])
-		mb_convert_variables(SOURCE_ENCODING, 'auto', $vars);
 }
 else if (count($post) > 0)
 {
@@ -209,7 +206,6 @@ else if (count($post) > 0)
 
 	// 全部まとめて、コード検出、変換
 	mb_convert_variables(SOURCE_ENCODING, 'auto', $post);
-	mb_convert_variables(SOURCE_ENCODING, 'auto', $vars);
 }
 
 // get は <form> からの場合と、<a href="http;//script/?query> の場合がある
@@ -262,8 +258,7 @@ unset($matches);
 /////////////////////////////////////////////////
 // GET + POST = $vars
 
-$_REQUEST = input_filter($_REQUEST);
-$vars = & $_REQUEST;
+$vars = array_merge($get, $post);	// Seems more reliable than using $_REQUEST
 
 // 入力チェック: cmd, plugin の文字列は英数字以外ありえない
 foreach(array('cmd', 'plugin') as $var){
