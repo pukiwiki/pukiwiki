@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
+// $Id: func.php,v 1.2 2004/08/01 13:16:25 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -16,7 +16,7 @@ function is_interwiki($str)
 // 文字列がページ名かどうか
 function is_pagename($str)
 {
-	global $BracketName,$WikiName;
+	global $BracketName;
 
 	$is_pagename = (!is_interwiki($str) and preg_match("/^(?!\/)$BracketName$(?<!\/$)/",$str)
 		and !preg_match('/(^|\/)\.{1,2}(\/|$)/',$str));
@@ -92,6 +92,7 @@ function auto_template($page)
 	}
 
 	$body = '';
+	$matches = array();
 	foreach ($auto_template_rules as $rule => $template)
 	{
 		if (preg_match("/$rule/",$page,$matches))
@@ -141,7 +142,7 @@ function get_search_words($words,$special=FALSE)
 		// 英数字は半角,カタカナは全角,ひらがなはカタカナに
 		$word_zk = $convert_kana($word,'aKCV');
 		$chars = array();
-		for ($pos = 0; $pos < mb_strlen($word_zk);$pos++)
+		for ($pos = 0; $pos < mb_strlen($word_zk); $pos++)
 		{
 			$char = mb_substr($word_zk,$pos,1);
 			// $special : htmlspecialchars()を通すか
@@ -174,11 +175,10 @@ function get_search_words($words,$special=FALSE)
 // 検索
 function do_search($word,$type='AND',$non_format=FALSE)
 {
-	global $script,$vars,$whatsnew,$non_list,$search_non_list;
-	global $_msg_andresult,$_msg_orresult,$_msg_notfoundresult;
+	global $script, $whatsnew, $non_list, $search_non_list;
+	global $_msg_andresult, $_msg_orresult, $_msg_notfoundresult;
 	global $search_auth;
 
-	$database = array();
 	$retval = array();
 
 	$b_type = ($type == 'AND'); // AND:TRUE OR:FALSE
@@ -271,11 +271,12 @@ function decode($key)
 // [[ ]] を取り除く
 function strip_bracket($str)
 {
-	if (preg_match('/^\[\[(.*)\]\]$/',$str,$match))
-	{
-		$str = $match[1];
+	$matches = array();
+	if (preg_match('/^\[\[(.*)\]\]$/', $str, $match)) {
+		return $match[1];
+	} else {
+		return $str;
 	}
-	return $str;
 }
 
 // ページ一覧の作成
@@ -296,7 +297,7 @@ function page_list($pages, $cmd = 'read', $withfilename=FALSE)
 		$readings = get_readings($pages);
 	}
 
-	$list = array();
+	$list = $matches = array();
 	foreach($pages as $file=>$page)
 	{
 		$r_page = rawurlencode($page);
@@ -351,7 +352,7 @@ function page_list($pages, $cmd = 'read', $withfilename=FALSE)
 
 		if ($list_index)
 		{
-			$cnt++;
+			++$cnt;
 			$arr_index[] = "<a id=\"top_$cnt\" href=\"#head_$cnt\"><strong>$head</strong></a>";
 			$retval .= " <li><a id=\"head_$cnt\" href=\"#top_$cnt\"><strong>$head</strong></a>\n  <ul>\n";
 		}
@@ -533,11 +534,11 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 	$count = 0;
 	$x = (mb_strlen($pages[$start]) <= $pos);
 
-	if ($x)
-	{
-		$start++;
+	if ($x) {
+		++$start;
 	}
-	for ($i = $start; $i < $end; $i = $j)
+
+	for ($i = $start; $i < $end; $i = $j) // What is the initial state of $j?
 	{
 		$char = mb_substr($pages[$i],$pos,1);
 		for ($j = $i; $j < $end; $j++)
@@ -561,7 +562,7 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 				str_replace(' ','\\ ',preg_quote($char,'/')).
 				get_autolink_pattern_sub($pages,$i,$j,$pos + 1);
 		}
-		$count++;
+		++$count;
 	}
 	if ($x or $count > 1)
 	{
@@ -633,18 +634,16 @@ function sanitize($param) {
 // CSV形式の文字列を配列に
 function csv_explode($separator, $string)
 {
-	$_separator = preg_quote($separator,'/');
-	if (!preg_match_all('/("[^"]*(?:""[^"]*)*"|[^'.$_separator.']*)'.$_separator.'/', $string.$separator, $matches))
-	{
-		return array();
-	}
+	$retval = $matches = array();
 
-	$retval = array();
-	foreach ($matches[1] as $str)
-	{
+	$_separator = preg_quote($separator,'/');
+	if (!preg_match_all('/("[^"]*(?:""[^"]*)*"|[^' . $_separator . ']*)' .
+	    $_separator . '/', $string . $separator, $matches))
+		return array();
+
+	foreach ($matches[1] as $str) {
 		$len = strlen($str);
-		if ($len > 1 and $str{0} == '"' and $str{$len - 1} == '"')
-		{
+		if ($len > 1 and $str{0} == '"' and $str{$len - 1} == '"') {
 			$str = str_replace('""', '"', substr($str, 1, -1));
 		}
 		$retval[] = $str;
