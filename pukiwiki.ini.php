@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.47 2003/09/24 00:38:43 arino Exp $
+// $Id: pukiwiki.ini.php,v 1.48 2003/09/24 07:28:51 arino Exp $
 //
 // PukiWiki setting file
 
@@ -198,6 +198,11 @@ $use_proxy = 0;
 $proxy_host = 'proxy.xxx.yyy.zzz';
 // proxy ポート番号
 $proxy_port = 8080;
+// proxyのBasic認証が必要な場合に1
+$need_proxy_auth = 0;
+// proxyのBasic認証用ID,PW
+$proxy_auth_user = 'foo';
+$proxy_auth_pass = 'foo_password';
 // プロキシサーバを使用しないホストのリスト
 $no_proxy = array(
 'localhost',        // localhost 
