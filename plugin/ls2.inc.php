@@ -1,5 +1,5 @@
 <?php
-// $Id: ls2.inc.php,v 1.1.2.4 2004/07/31 03:15:07 henoheno Exp $
+// $Id: ls2.inc.php,v 1.1.2.5 2004/12/05 11:47:33 henoheno Exp $
 /*
 Last-Update:2002-10-29 rev.8
 
@@ -168,7 +168,7 @@ function ls2_check_arg($val, $key, &$params) {
 		}
 		$params['_done'] = TRUE;
 	}
-	$params['_args'][] = $val;
+	$params['_args'][] = htmlspecialchars($val);
 }
 
 ?>
