@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.109 2005/01/25 14:17:53 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.110 2005/01/30 09:59:23 henoheno Exp $
 //
 // PukiWiki main setting file
 
@@ -28,7 +28,7 @@ if (! defined('PKWK_SAFE_MODE'))
 // PKWK_QUERY_STRING_MAX
 //   Max length of GET method, prohibits some worm attack ASAP
 //   NOTE: Keep (page-name + attach-file-name) <= PKWK_QUERY_STRING_MAX
-define('PKWK_QUERY_STRING_MAX', 640);
+define('PKWK_QUERY_STRING_MAX', 640); // Bytes, 0 = OFF
 
 /////////////////////////////////////////////////
 // Language / Encoding settings
@@ -100,7 +100,7 @@ $modifier = 'anonymous';
 // Site admin's Web page (CHANGE THIS)
 $modifierlink = 'http://pukiwiki.example.com/';
 
-// Defautl page name
+// Default page name
 $defaultpage  = 'FrontPage';     // Top / Default page
 $whatsnew     = 'RecentChanges'; // Modified page list
 $whatsdeleted = 'RecentDeleted'; // Removeed page list
