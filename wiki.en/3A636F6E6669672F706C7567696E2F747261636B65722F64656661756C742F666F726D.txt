@@ -1,11 +1,11 @@
 #freeze
-|RIGHT:|LEFT:|c
-|~Submitter|[name]|
-|~Category|[category]|
-|~Priority|[priority]|
-|~State|[state]|
-|~Page Name|[_name] &size(12){Blank means automatic naming.};|
-|~Version|[version] &size(12){Blank is allowed};|
-|~Summary|[summary]|
-|~Message|[body]|
-|>|CENTER:[_submit]|
+|RIGHT:    |LEFT:     |c
+|~Proposer |[Proposer]|
+|~Category |[Category]|
+|~Severity |[Severity]|
+|~Status   |[Status]  |
+|~Page name|[_name] &size(12){Blank means automatic naming.};|
+|~Version  |[Version] &size(12){Blank is allowed};|
+|~Summary  |[Summary] |
+|~Messages |[Messages]|
+|>|CENTER:[_submit]   |

@@ -1,15 +1,15 @@
 #freeze
-* [summary]
--Page: [_refer]
--Submitter: [name]
--Priority: [priority]
--State: [state]
--Category: [category]
--Date Posted: [_date]
--Version: [version]
+* [Summary]
+-Page:     [_refer]
+-Proposer: [Proposer]
+-Severity: [Severity]
+-Status:   [Status]
+-Category: [Category]
+-Posted:   [_date]
+-Version:  [Version]
 
 ** Messages
-[body]
+[Messages]
 ----
 
 #comment

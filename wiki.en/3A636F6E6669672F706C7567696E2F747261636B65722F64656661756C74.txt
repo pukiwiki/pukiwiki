@@ -1,40 +1,41 @@
 #freeze
-*Default settings for tracker plugin [#v6038968]
-These settings are used when no tracker config is specified. (e.g. #tracker)
+* Tracker plugin: Default settings [#v6038968]
+These settings below, are used when no tracker configuration is specified. (e.g. "#tracker")
+
 ----
 #ls(./)
 
 * fields [#pd66cd88]
-|Item|Index|Format|Option|Default Value|h
-|name|Submitter|page|20|anonymous|
-|category|Category|select|||
-|priority|Priority|select||Minor|
-|state|Status|select||Proposed|
-|version|Version|text|10||
-|summary|Summary|title|60||
-|body|Message|textarea|60,6||
+|Item    |Index    |Type    |Option|Default value|h
+|Proposer|Proposer |page    |20    |anonymous    |
+|Category|Category |select  |      |             |
+|Severity|Severity |select  |      |Trivial      |
+|Status  |Status   |select  |      |Proposed     |
+|Version |Version  |text    |10    |             |
+|Summary |Summary  |title   |60    |             |
+|Messages|Messages |textarea|60,6  |             |
 
-* priority [#a95888db]
-|Index|Cell Format|h
-|Critical|BGCOLOR(#ff8080):%s|
+* Severity [#a95888db]
+|Index    |Cell format        |h
+|Critical |BGCOLOR(#ff8080):%s|
 |Important|BGCOLOR(#ffcccc):%s|
-|Normal|BGCOLOR(#cccccc):%s|
-|Minor|BGCOLOR(#ffffff):%s|
+|Normal   |BGCOLOR(#cccccc):%s|
+|Trivial  |BGCOLOR(#ffffff):%s|
 
-* state [#w61d68f8]
-|Index|Cell Format|h
-|Proposed|BGCOLOR(#ffccff):%s|
-|Started|BGCOLOR(#ccccff):%s|
-|Pending CVS Commit|BGCOLOR(#ffccff):%s|
-|Completed|BGCOLOR(#ccffcc):%s|
-|Suspended|BGCOLOR(#ccddcc):%s|
-|Rejected|BGCOLOR(#cccccc):%s|
+* Status [#w61d68f8]
+|Index         |Cell format        |h
+|Proposed      |BGCOLOR(#ffccff):%s|
+|Started       |BGCOLOR(#ccccff):%s|
+|Waiting commit|BGCOLOR(#ffccff):%s|
+|Fixed         |BGCOLOR(#ccffcc):%s|
+|Suspended     |BGCOLOR(#ccddcc):%s|
+|Refused       |BGCOLOR(#cccccc):%s|
 
-* category [#saa52d1e]
-|Index|Cell Format|h
-|Bug|BGCOLOR(#ffccff):%s|
-|New feature|BGCOLOR(#ccccff):%s|
-|Plugin|BGCOLOR(#ccffcc):%s|
-|Plugin request|BGCOLOR(#ccffcc):%s|
-|Site|BGCOLOR(#ccddcc):%s|
-|Other|BGCOLOR(#cccccc):%s|
+* Category [#saa52d1e]
+|Index         |Cell format        |h
+|Bug           |BGCOLOR(#ffccff):%s|
+|New feature   |BGCOLOR(#ccccff):%s|
+|Plugin        |BGCOLOR(#ccffcc):%s|
+|Plugin wanted |BGCOLOR(#ccffcc):%s|
+|Website       |BGCOLOR(#ccddcc):%s|
+|Other         |BGCOLOR(#cccccc):%s|
