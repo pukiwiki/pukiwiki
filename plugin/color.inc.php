@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: color.inc.php,v 1.6 2003/09/03 01:31:14 arino Exp $
+// $Id: color.inc.php,v 1.7 2003/09/03 04:25:32 arino Exp $
 //
 
 function plugin_color_inline()
@@ -43,6 +43,6 @@ function plugin_color_inline()
 }
 function plugin_color_is_valid($color)
 {
-	return preg_match('/^(#[0-9a-f]+|[\w-]+)/i',$color);
+	return ($color == '') or preg_match('/^(#[0-9a-f]+|[\w-]+)/i',$color);
 }
 ?>
