@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.10 2003/01/27 05:38:41 panda Exp $
+// $Id: func.php,v 1.11 2003/01/31 01:49:35 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -148,7 +148,7 @@ function do_search($word,$type='AND',$non_format=FALSE)
 	$retval = array();
 
 	$b_type = ($type == 'AND'); // AND:TRUE OR:FALSE
-	$keys = preg_split('/\s+/',str_replace('/','\/',quotemeta($word)),-1,PREG_SPLIT_NO_EMPTY);
+	$keys = preg_split('/\s+/',preg_quote($word,'/'),-1,PREG_SPLIT_NO_EMPTY);
 	
 	$_pages = get_existpages();
 	$pages = array();
@@ -191,12 +191,8 @@ function do_search($word,$type='AND',$non_format=FALSE)
 	}
 	$retval .= "</ul>\n";
 	
-	if($b_type) {
-		$retval .= str_replace('$1',$s_word,str_replace('$2',count($pages),str_replace('$3',count($_pages),$_msg_andresult)));
-	}
-	else {
-		$retval .= str_replace('$1',$s_word,str_replace('$2',count($pages),str_replace('$3',count($_pages),$_msg_orresult)));
-	}
+	$retval .= str_replace('$1',$s_word,str_replace('$2',count($pages),
+		str_replace('$3',count($_pages),$b_type ? $_msg_andresult : $_msg_orresult)));
 	
 	return $retval;
 }
@@ -307,7 +303,7 @@ function catrule()
 	if (!is_page($rule_page)) {
 		return "<p>sorry, $rule_page unavailable.</p>";
 	}
-	return convert_html(join('',get_source($rule_page)));
+	return convert_html(get_source($rule_page));
 }
 
 // エラーメッセージを表示する
@@ -453,7 +449,7 @@ function myErrorHandler($no, $str, $file, $line, $variable)
 	}
 	
 	$error .= "($no)";
-	$error .= "~\n $str on $file line $line\n";
+	$error .= "~\n$str on $file line $line\n";
 	$fp = fopen('./wiki/'.encode(':ErrorLog').'.txt','a') or exit -1;
 	fwrite($fp,$error);
 	fclose($fp);

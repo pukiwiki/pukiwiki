@@ -3,7 +3,7 @@
  * PukiWiki calendar_viewerプラグイン
  *
  *
- *$Id: calendar_viewer.inc.php,v 1.2 2003/01/27 05:38:44 panda Exp $
+ *$Id: calendar_viewer.inc.php,v 1.3 2003/01/31 01:49:35 panda Exp $
   calendarrecentプラグインを元に作成
  */
 /**
@@ -168,8 +168,7 @@ function plugin_calendar_viewer_convert()
     $post["page"] = $page;
     $vars["page"] = $page;
 
-    $body = @join("",@get_source($page));
-    $body = convert_html($body);
+    $body = convert_html(get_source($page));
     $link = "<a href=\"$script?cmd=edit&page=".rawurlencode($page)."\">".strip_bracket($page)."</a>";
     $head = "<h1>$link</h1>\n";
     $return_body .= $head . $body;

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.17 2003/01/27 05:38:44 panda Exp $
+// $Id: pukiwiki.ini.php,v 1.18 2003/01/31 01:49:35 panda Exp $
 //
 // PukiWiki setting file
 
@@ -214,9 +214,9 @@ $auto_template_rules = array(
 /////////////////////////////////////////////////
 // ユーザ定義ルール(直接ソースを置換)
 $str_rules = array(
-"now\?" => format_date(UTIME),
-"date\?" => get_date($date_format),
-"time\?" => get_date($time_format),
+	'now\?' => format_date(UTIME),
+	'date\?' => get_date($date_format),
+	'time\?' => get_date($time_format),
 );
 
 /////////////////////////////////////////////////

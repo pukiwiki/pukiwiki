@@ -81,7 +81,7 @@
 <?php if (arg_check('read') and is_page('MenuBar')) { ?>
 <table border="0" width="100%">
 <tr><td valign="top" style="width:120px;word-break:break-all;padding:4px;">
-<div id="menubar"><?php echo preg_replace('/<ul[^>]*>/','<ul>',convert_html(join('',get_source('MenuBar')))) ?></div>
+<div id="menubar"><?php echo preg_replace('/<ul[^>]*>/','<ul>',convert_html(get_source('MenuBar'))) ?></div>
 </td><td valign="top" style="padding-left:10px;">
 <div><?php echo $body ?></div>
 </td></tr>

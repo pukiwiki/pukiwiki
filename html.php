@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.48 2003/01/29 06:56:35 panda Exp $
+// $Id: html.php,v 1.49 2003/01/31 01:49:35 panda Exp $
 //
 
 // 本文を出力
@@ -92,13 +92,7 @@ function inline($line,$remove=FALSE)
 // インライン要素のパース (リンク、見出し一覧)
 function inline2($str)
 {
-	global $vars;
-	
-	return make_user_rules(
-		preg_replace('/#related/e','make_related($vars[\'page\'],TRUE)',
-			make_link($str)
-		)
-	);
+	return make_user_rules(make_link($str));
 }
 
 // 編集フォームの表示
@@ -239,12 +233,12 @@ function user_rules_str($str)
 {
 	global $str_rules;
 	
-	$arystr = split("\n",$str);
+	$arystr = explode("\n",$str);
 	
 	// 日付・時刻置換処理
-	foreach($arystr as $str) {
-		if(substr($str,0,1) != " ") {
-			foreach($str_rules as $rule => $replace) {
+	foreach ($arystr as $str) {
+		if (substr($str,0,1) != " ") {
+			foreach ($str_rules as $rule => $replace) {
 				$str = preg_replace("/$rule/",$replace,$str);
 			}
 		}

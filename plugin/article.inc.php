@@ -19,11 +19,11 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.8 2003/01/27 05:38:44 panda Exp $
+ $Id: article.inc.php,v 1.9 2003/01/31 01:49:35 panda Exp $
  
  */
 
-global $name_format, $subject_format, $no_subject, $_mailto;
+global $_mailto;
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -39,13 +39,13 @@ define('NAME_COLS',24);
 define('SUBJECT_COLS',60);
 /////////////////////////////////////////////////
 // 名前の挿入フォーマット
-$name_format = '[[$name]]';
+define('NAME_FORMAT','[[$name]]');
 /////////////////////////////////////////////////
 // 題名の挿入フォーマット
-$subject_format = '**$subject';
+define('SUBJECT_FORMAT','**$subject');
 /////////////////////////////////////////////////
 // 題名が未記入の場合の表記 
-$no_subject = '無題';
+define('NO_SUBJECT','無題');
 /////////////////////////////////////////////////
 // 挿入する位置 1:欄の前 0:欄の後
 define('ARTICLE_INS',0);
@@ -92,8 +92,7 @@ function plugin_article_init()
 
 function plugin_article_action()
 {
-	global $post,$vars,$script,$cols,$rows,$now;
-	global $name_format, $subject_format, $no_subject, $name, $subject, $article;
+	global $script,$post,$vars,$cols,$rows,$now;
 	global $_title_collided,$_msg_collided,$_title_updated;
 	global $_mailto;
 	
@@ -106,11 +105,11 @@ function plugin_article_action()
 	
 	$article_no = 0;
 	
-	if ($post['name']) {
-		$name = str_replace('$name',$post['name'],$name_format);
+	if ($post['name'] != '') {
+		$name = str_replace('$name',$post['name'],NAME_FORMAT);
 	}
 	
-	$subject = str_replace('$subject',$post['subject'] ? $post['subject'] : $no_subject,$subject_format);
+	$subject = str_replace('$subject',$post['subject'] == '' ? NO_SUBJECT : $post['subject'],SUBJECT_FORMAT);
 
 	$article  = "$subject\n>$name ($now)~\n~\n";
 
@@ -165,7 +164,7 @@ EOD;
 	}
 	else {
 		page_write($post['refer'],trim($postdata));
-		
+		print "<pre>$_mailto</pre>";
 		// 投稿内容のメール自動送信
 		if (MAIL_AUTO_SEND) {
 			$mailaddress = implode(',' ,$_mailto);
@@ -199,15 +198,10 @@ EOD;
 }
 function plugin_article_convert()
 {
-	global $script,$article_no,$vars,$digest;
-	global $_btn_article,$_btn_name,$_btn_subject,$vars;
+	global $script,$vars,$digest;
+	global $_btn_article,$_btn_name,$_btn_subject;
+	static $article_no = 0;
 	
-	$button = '';
-	if (arg_check('read') or !array_key_exists('cmd',$vars) or $vars['cmd'] == '' or arg_check('unfreeze') or arg_check('freeze') or
-		array_key_exists('write',$vars) or array_key_exists('comment',$vars)) {
-		$button = "<input type=\"submit\" name=\"article\" value=\"$_btn_article\" />\n";
-	}
-
 	$s_page = htmlspecialchars($vars['page']);
 	$s_digest = htmlspecialchars($digest);
 	$name_cols = NAME_COLS;
@@ -224,7 +218,7 @@ function plugin_article_convert()
   $_btn_name <input type="text" name="name" size="$name_cols" /><br />
   $_btn_subject <input type="text" name="subject" size="$subject_cols" /><br />
   <textarea name="msg" rows="$article_rows" cols="$article_cols">\n</textarea><br />
-  $button
+  <input type="submit" name="article" value="$_btn_article" />
  </div>
 </form>
 EOD;

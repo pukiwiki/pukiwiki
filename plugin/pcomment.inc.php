@@ -299,7 +299,7 @@ function pcmt_get_comments($page,$count,$dir,$reply) {
 	while (count($data) > 0 and substr($data[0],0,1) != '-') { array_shift($data); }
 
 	//html変換
-	$comments = convert_html(join('', $data));
+	$comments = convert_html($data);
 	unset($data);
 
 	//コメントにラジオボタンの印をつける

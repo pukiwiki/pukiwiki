@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: backup.inc.php,v 1.1 2003/01/27 05:38:44 panda Exp $
+// $Id: backup.inc.php,v 1.2 2003/01/31 01:49:35 panda Exp $
 //
 // バックアップ
 function plugin_backup_action()
@@ -105,7 +105,7 @@ function plugin_backup_action()
 	}
 	// else
 	$body .= "$hr\n".
-		drop_submit(convert_html(join('',$backups[$get['age']]['data'])));
+		drop_submit(convert_html($backups[$get['age']]['data']));
 	
 	return array('msg'=>str_replace('$2',$s_age,$_title_backup),'body'=>$body);
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.inc.php,v 1.10 2003/01/27 05:38:44 panda Exp $
+// $Id: comment.inc.php,v 1.11 2003/01/31 01:49:35 panda Exp $
 
 global $name_cols, $comment_cols, $msg_format, $name_format;
 global $msg_format, $now_format, $comment_format;
@@ -44,7 +44,7 @@ function plugin_comment_action()
 		$retvars['msg'] = $name;
 		$post['page'] = $post['refer'];
 		$vars['page'] = $post['refer'];
-		$retvars['body'] = convert_html(join('',get_source($post['refer'])));
+		$retvars['body'] = convert_html(get_source($post['refer']));
 		return $retvars;
 	}
 	if ($post['msg']) {

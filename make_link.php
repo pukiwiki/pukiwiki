@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.8 2003/01/29 06:56:35 panda Exp $
+// $Id: make_link.php,v 1.9 2003/01/31 01:49:35 panda Exp $
 //
 
 // リンクを付加する
@@ -531,12 +531,17 @@ EOD;
 // ページ名のリンクを作成
 function make_pagelink($page,$alias='',$anchor='',$refer='')
 {
-	global $script,$show_passage;
+	global $script,$vars,$show_passage,$related;
 	
 	$r_page = rawurlencode($page);
 	$s_page = htmlspecialchars(strip_bracket($page));
 	$r_refer = ($refer == '') ? '' : '&amp;refer='.rawurlencode($refer);
 	$s_alias = ($alias == '') ? $s_page : $alias;
+	
+	if (!array_key_exists($page,$related) and $page != $vars['page'] and is_page($page)) {
+		$related[$page] = get_filetime($page);
+	}
+
 	
 	if (is_page($page)) {
 		$passage = $show_passage ? ' '.get_pg_passage($page,FALSE) : '';

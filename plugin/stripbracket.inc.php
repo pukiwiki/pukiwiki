@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: stripbracket.inc.php,v 1.1 2003/01/27 05:38:47 panda Exp $
+// $Id: stripbracket.inc.php,v 1.2 2003/01/31 01:49:35 panda Exp $
 //
 
 /*
@@ -14,7 +14,7 @@
 */
 
 function plugin_stripbracket_action() {
-	$result = '';
+	$result = array();
 	
 	$dirs = array('attach','backup','counter','diff','wiki');
 	
@@ -29,7 +29,7 @@ function plugin_stripbracket_action() {
 				$newfile = $matches[1].$matches[2];
 				$page = decode($matches[1]);
 				if (file_exists("$dir/$newfile")) {
-					$result .= "-$page file $dir/$newfile already exists.\n";
+					$result[] = "-$page file $dir/$newfile already exists.";
 					continue;
 				}
 			}

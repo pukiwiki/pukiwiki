@@ -29,7 +29,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.17 2003/01/27 05:38:44 panda Exp $
+// $Id: pukiwiki.php,v 1.18 2003/01/31 01:49:35 panda Exp $
 /////////////////////////////////////////////////
 
 
@@ -102,7 +102,7 @@ else {
 	
 	$vars['cmd'] = 'read';
 	$vars['page'] = $base;
-	$body = convert_html(join('',get_source($base)));
+	$body = convert_html(get_source($base));
 }
 
 // ** 出力処理 **

@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar2.inc.php,v 1.15 2003/01/27 05:38:44 panda Exp $
+// $Id: calendar2.inc.php,v 1.16 2003/01/31 01:49:35 panda Exp $
 // *引数にoffと書くことで今日の日記を表示しないようにした。
 function plugin_calendar2_convert()
 {
@@ -149,7 +149,7 @@ EOD;
 		if (is_page($tpage)) {
 			$_page = $vars['page'];
 			$get['page'] = $post['page'] = $vars['page'] = $tpage;
-			$str = convert_html(join('',get_source($tpage)));
+			$str = convert_html(get_source($tpage));
 			$str .= "<hr /><a class=\"small\" href=\"$script?cmd=edit&amp;page=$r_tpage\">$_calendar2_plugin_edit</a>";
 			$get['page'] = $post['page'] = $vars['page'] = $_page;
 		}

@@ -24,7 +24,7 @@ function plugin_include_convert()
 	$tmppage = $vars['page'];
 	$get['page'] = $post['page'] = $vars['page'] = $page;
 	
-	$body = convert_html(join('',get_source($page)));
+	$body = convert_html(get_source($page));
 	
 	$get['page'] = $post['page'] = $vars['page'] = $tmppage;
 

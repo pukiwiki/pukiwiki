@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.1 2003/01/27 05:38:46 panda Exp $
+// $Id: edit.inc.php,v 1.2 2003/01/31 01:49:35 panda Exp $
 //
 //  ‘Ω∏
 // cmd=edit
@@ -58,6 +58,7 @@ function plugin_edit_preview()
 	$body .= "<br />\n";
 
 	if ($postdata != '') {
+		$postdata = explode("\n",$postdata);
 		$postdata = drop_submit(convert_html($postdata));
 		
 		if (!empty($post['viewtag'])) {

@@ -2,34 +2,28 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.1 2003/01/27 05:44:11 panda Exp $
+// $Id: convert_html.php,v 1.2 2003/01/31 01:49:35 panda Exp $
 //
 
-function convert_html($string)
+function &convert_html(&$lines)
 {
 	global $script,$vars,$digest;
 	static $contents_id = 0;
 
+	$digest = md5(join('',get_source($vars['page'])));
+
 	$contents = new Contents(++$contents_id);
 
-	$string = rtrim($string);
-	$string = preg_replace("/^#freeze\n/","","$string\n");    // 凍結指示子除去
-	$string = preg_replace("/\n\/\/[^\n]*/","", "\n$string"); // コメント除去
-	$string = preg_replace("/\n\n+/","\n\n\n", $string);      // 空行の調整
-	$string = preg_replace("/(?<=[\r\n])(?!\s)([^\n]*~)\n/", "$1\r", "\n$string");
-
-	$lines = split("\n", $string);
-
-	$digest = md5(@join('',get_source($vars['page'])));
-
 	$body = new Body();
-	$last =& $body->insert(new Paragraph(''));
+	$last =& $body;
 
 	foreach ($lines as $line) {
 		if (substr($line,0,2) == '//') { //コメントは処理しない
 			continue;
 		}
-
+		
+		$line = rtrim($line);
+		
 		$align = '';
 		if (preg_match('/^(LEFT|CENTER|RIGHT):(.*)$/',$line,$matches)) {
 			$last =& $last->add(new Align(strtolower($matches[1]))); // <div style="text-align:...">
@@ -38,32 +32,64 @@ function convert_html($string)
 			}
 			$line = $matches[2];
 		}
-
+		
 		// 行頭文字
 		$head = substr($line,0,1);
-		     if ($line == '')  { $last =& $body;                             } // 空行 
-		else if (rtrim($line) == '----') {
-			$last =& $body->insert(new HRule());                               } // HRule
-		else if ($head == '*') {
-			$last =& $body->insert(new Heading($line, $contents));             } // Heading
-		else if ($head == '-') { $last =& $last->add(new UList($line));      } // UList
-		else if ($head == '+') { $last =& $last->add(new OList($line));      } // OList
-		else if ($head == ':') { $last =& $last->add(new DList($line));      } // DList
-		else if ($head == '|') { $last =& $last->add(new Table($line));      } // Table
-		else if ($head == ',') { $last =& $last->add(new YTable($line));     } // Table(YukiWiki互換)
-		else if ($head == ' ' or $head == "\t")
-		                       { $last =& $last->add(new Pre($line));        } // Pre
-		else if ($head == '>') { $last =& $last->add(new BQuote($line));     } // BrockQuote
-		else if ($head == '<') { $last =& bq_end($last, $line);              } // BlockQuote end
-		else if ($head == '#') { $last =& $last->add(new Div($line));        } // Div
-		else                   { $last =& $last->add(new Inline($line));     } // 段落
+		
+		if ($line == '') { // 空行
+			$last =& $body;
+		}
+		else if (substr($line,0,4) == '----') { // HRule
+			$last =& $body->insert(new HRule());
+		}
+		else if ($head == ' ' or $head == "\t") { // Pre
+			$last =& $last->add(new Pre($line));
+		}
+		else if ($head == '*') { // Heading
+			$last =& $body->insert(new Heading($line, $contents));
+		}
+		else {
+			if (substr($line,-1) == '~') {
+				$line .= "\r";
+			}
+			if      ($head == '-') { // UList
+				$last =& $last->add(new UList($line));
+			}
+			else if ($head == '+') { // OList
+				$last =& $last->add(new OList($line));
+			}
+			else if ($head == ':') { // DList
+				$last =& $last->add(new DList($line));
+			}
+			else if ($head == '|') { // Table
+				$last =& $last->add(new Table($line));
+			}
+			else if ($head == ',') { // Table(YukiWiki互換)
+				$last =& $last->add(new YTable($line));
+			}
+			else if ($head == '>') { // BrockQuote
+				$last =& $last->add(new BQuote($line));
+			}
+			else if ($head == '<') { // BlockQuote end
+				$last =& bq_end($last, $line);
+			}
+			else if ($head == '#') { // Div
+				$last =& $last->add(new Div($line));
+			}
+			else { // 通常文字列
+				$last =& $last->add(new Inline($line));
+			}
+		}
 	}
-	$ret = $body->toArray();
-//	$ret = inline2($ret);
-	$ret = $contents->replaceContents($ret);
+	$ret = $body->toString();
 	
-	return join("\n",$ret);
-
+	// #contents
+	$ret = preg_replace("/<p>#contents<\/p>/",$contents->getContents(),$ret);
+	
+	// 関連するページ
+	$ret = preg_replace('/#related/e','make_related($vars[\'page\'],TRUE)',$ret);
+	
+	return $ret;
 }
 
 class Element
@@ -84,11 +110,11 @@ class Inline extends Element
 	{
 		if (substr($text,0,1) == '~') { // 行頭~。パラグラフ開始
 			$parent =& $this->parent;
-			$this = new Paragraph(" ".substr($text,1));
+			$this = new Paragraph(substr($text,1));
 			$this->setParent($parent);
 		}
 		else {
-			$this->text = trim((preg_match("/^\n/", $text)) ? $text : inline($text));
+			$this->text = (substr($text,0,1) == "\n") ? $text : inline2(inline($text));
 		}
 	}
 	function &add(&$obj)
@@ -99,9 +125,9 @@ class Inline extends Element
 	{
 		return $this->parent->add($obj);
 	}
-	function toArray()
+	function toString()
 	{
-		return ($this->text == '') ? array() : array(inline2($this->text));
+		return $this->text;
 	}
 	function toPara($class = '')
 	{
@@ -139,23 +165,19 @@ class Block extends Element
 	{
 		return TRUE;
 	}
-	function toArray()
+	function toString()
 	{
-		$arr = array();
+		$ret = '';
 		if (isset($this->elements) and count($this->elements) > 0) {
 			foreach ($this->elements as $obj) {
-				array_splice($arr, count($arr), 0, $obj->toArray());
+				$ret .= $obj->toString();
 			}
 		}
-		return $arr;
+		return $ret;
 	}
-	function wrap($arr, $tag, $param = '')
+	function wrap($string, $tag, $param = '')
 	{
-		if (count($arr) > 0) {
-			array_unshift($arr,"<$tag$param>");
-			array_push($arr,"</$tag>");
-		}
-		return $arr;
+		return  ($string == '') ? '' : "\n<$tag$param>$string</$tag>\n";
 	}
 }
 class Body extends Block
@@ -189,14 +211,15 @@ class Paragraph extends Block
 	{
 		return is_a($obj,'Inline');
 	}
-	function toArray()
+	function toString()
 	{
-		return $this->wrap(parent::toArray(), 'p', $this->class); 
+		return $this->wrap(parent::toString(), 'p', $this->class);
 	}
 }
 
 class Heading extends Block
 { // *
+	var $level;
 	function Heading($text, &$contents)
 	{
 		parent::Block();
@@ -208,9 +231,9 @@ class Heading extends Block
 	{
 		return FALSE;
 	}
-	function toArray()
+	function toString()
 	{
-		return $this->wrap(array($this->text),'h'.$this->level, $this->contents_str);
+		return $this->wrap($this->text,'h'.$this->level, $this->contents_str);
 	}
 }
 class HRule extends Block
@@ -219,11 +242,11 @@ class HRule extends Block
 	{
 		return FALSE;
 	}
-	function toArray()
+	function toString()
 	{
 		global $hr;
 		
-		return array($hr);
+		return $hr;
 	}
 }
 class _List extends Block
@@ -277,7 +300,7 @@ class _List extends Block
 		$this->last =& $obj;
 		return parent::insert($obj);
 	}
-	function toArray($param='')
+	function toString($param='')
 	{
 		global $_list_left_margin, $_list_margin, $_list_pad_str;
 		
@@ -286,7 +309,7 @@ class _List extends Block
 			$margin += $_list_left_margin;
 		}
 		$style = sprintf($_list_pad_str,$this->level,$margin,$margin);
-		return $this->wrap(Block::toArray(),$this->tag,$style.$param);
+		return $this->wrap(Block::toString(),$this->tag,$style.$param);
 	}
 }
 class ListElement extends Block
@@ -302,9 +325,9 @@ class ListElement extends Block
 	{
 		return !(is_a($obj, '_List') and ($obj->level <= $this->level));
 	}
-	function toArray()
+	function toString()
 	{
-		return $this->wrap(parent::toArray(), $this->head);
+		return $this->wrap(parent::toString(), $this->head);
 	}
 }
 class UList extends _List
@@ -333,12 +356,14 @@ class DList extends _List
 		}
 		parent::_List('dl', 'dd', strlen($out[1]), $out[3]);
 		if ($out[2] != '') {
-			array_unshift($this->elements,new Inline("\n".'<dt>'.inline($out[2]).'</dt>'));
+			array_unshift($this->elements,new Inline("\n<dt>".inline($out[2])."</dt>\n"));
 		}
 	}
 }
 class BQuote extends Block
 { // >
+	var $level;
+	
 	function BQuote($text)
 	{
 		parent::Block();
@@ -365,9 +390,9 @@ class BQuote extends Block
 		$this->last =& $obj;
 		return parent::insert($obj);
 	}
-	function toArray()
+	function toString()
 	{
-		return $this->wrap(parent::toArray(),'blockquote');
+		return $this->wrap(parent::toString(),'blockquote');
 	}
 }
 function &bq_end(&$last, $text)
@@ -385,7 +410,8 @@ function &bq_end(&$last, $text)
 }
 class Table extends Block
 { // |
-	var $col;
+	var $col,$head,$foot;
+	var $level;
 	
 	function Table($text)
 	{
@@ -435,31 +461,37 @@ class Table extends Block
 		$this->elements[] = $obj;
 		return $this;
 	}
-	function toArray()
+	function toString()
 	{
 		$col = NULL;
 		if (isset($this->col) and is_object($this->col)) {
 			$col =& $this->col;
 		}
-		$arr = $col ? $this->col->toArray() : array();
+		$string = $col ? $this->col->toString() : '';
 		$part = array(0=>'thead',1=>'tfoot',2=>'tbody');
 		foreach ($part as $type=>$str) {
-			$tmp = array();
+			$tmp = '';
 			foreach ($this->elements as $row) {
 				if ($row->type != $type) {
 					continue;
 				}
-				$tmp = array_merge($tmp,$row->toArray($col));
+				$tmp .= $row->toString($col);
 			}
-			if (count($tmp) > 0) {
-				$arr = array_merge($arr,$this->wrap($tmp,$str));
+			if ($tmp != '') {
+				$string .= $this->wrap($tmp,$str);
 			}
 		}
-		if (count($arr) > 0) {
-			array_unshift($arr, '<div class="ie5">','<table class="style_table" cellspacing="1" border="0">');
-			array_push($arr,'</table>','</div>');
+		if ($string != '') {
+			$string = <<<EOD
+
+<div class="ie5">
+ <table class="style_table" cellspacing="1" border="0">
+  $string
+ </table>
+</div>
+EOD;
 		}
-		return $arr;
+		return $string;
 	}
 }
 class Row extends Block
@@ -484,9 +516,9 @@ class Row extends Block
 			}
 		}
 	}
-	function toArray($obj)
+	function toString($obj)
 	{
-		$cells = array();
+		$cells = '';
 		for ($n = 0; $n < count($this->elements); $n++) {
 			$cell = $this->elements[$n];
 			if ($cell == '>' or $cell == '~') {
@@ -519,7 +551,7 @@ class Row extends Block
 			$style = $width == '' ? '' : 'width:'.$width.'px;';
 			$style.= $align == '' ? '' : 'text-align:'.$align.';';
 			$style = $style == '' ? '' : ' style="'.$style.'"';
-			$cells[] = "<$tag class=\"style_$tag\"$style$row$col>".inline2(inline($cell))."</$tag>";
+			$cells .= "\n<$tag class=\"style_$tag\"$style$row$col>".inline2(inline($cell))."</$tag>\n";
 		}
 		return $this->wrap($cells,'tr');
 	}
@@ -539,17 +571,16 @@ class Col extends Row
 			else if ($cells[$n] != '>') {
 				if (preg_match("/^(LEFT|CENTER|RIGHT):(.*)$/",$cells[$n],$out)) {
 					$align = strtolower($out[1]);
-					$cell = $out[2];
+					$width = htmlspecialchars($out[2]);
 				}
-				$width = htmlspecialchars($cell);
 			}
 			$this->align[$n] = $align;
 			$this->width[$n] = $width;
 		}
 	}
-	function toArray()
+	function toString()
 	{
-		$cells = array();
+		$cells = '';
 		for ($n = 0; $n < count($this->elements); $n++) {
 			$cell = $this->elements[$n];
 			if ($cell == '>') {
@@ -558,7 +589,7 @@ class Col extends Row
 			$span = " span=\"{$this->col[$n]}\"";
 			$align = $this->align[$n] == '' ? '' : ' align="'.$this->align[$n].'"';
 			$width = $this->width[$n] == '' ? '' : ' width="'.$this->width[$n].'"';
-			$cells[] = "<colgroup$span$align$width></colgroup>";
+			$cells .= "\n<colgroup$span$align$width></colgroup>\n";
 		}
 		return $cells;
 	}
@@ -618,17 +649,22 @@ class YTable extends Block
 		$this->elements[] = $obj->elements[0];
 		return $this;
 	}
-	function toArray()
+	function toString()
 	{
-		$arr = array();
+		$rows = '';
 		foreach ($this->elements as $str) {
-			$arr[] = '<tr class="style_tr">';
-			$arr[] = $str;
-			$arr[] = '</tr>';
+			$rows .= "\n<tr class=\"style_tr\">$str</tr>\n";
 		}
-		array_unshift($arr, '<div class="ie5">','<table class="style_table" cellspacing="1" border="0">');
-		array_push($arr,'</table>','</div>');
-		return $arr;
+		$string = <<<EOD
+
+<div class="ie5">
+ <table class="style_table" cellspacing="1" border="0">
+  $rows
+ </table>
+</div>
+
+EOD;
+		return $string;
 	}
 }
 class Pre extends Block
@@ -652,9 +688,9 @@ class Pre extends Block
 		$this->elements[] = $obj->elements[0];
 		return $this;
 	}
-	function toArray()
+	function toString()
 	{
-		return $this->wrap($this->elements,'pre');
+		return $this->wrap(join("\n",$this->elements),'pre');
 	}
 }
 class Div extends Block
@@ -670,7 +706,7 @@ class Div extends Block
 	{
 		return FALSE;
 	}
-	function toArray()
+	function toString()
 	{
 		if (preg_match("/^\#([^\(]+)(.*)$/",$this->text,$out) and exist_plugin_convert($out[1])) {
 			if ($out[2]) {
@@ -682,9 +718,9 @@ class Div extends Block
 			$text = "\t$_plugin";
 		}
 		else {
-			$text = '<p>'.htmlspecialchars($this->text).'</p>';
+			$text = "\n<p>".htmlspecialchars($this->text)."</p>\n";
 		}
-		return array($text);
+		return $text;
 	}
 }
 class Align extends Body
@@ -695,27 +731,29 @@ class Align extends Body
 	{
 		$this->align = $align;
 	}
-	function toArray()
+	function toString()
 	{
-		$arr = parent::toArray();
-		if (count($arr)) {
-			if (preg_match('/^(.+)style="(.+)$/',$arr[0],$matches)) {
-				$arr[0] = $matches[1].'style="text-align:'.$this->align.'; '.$matches[2];
+		$string = parent::toString();
+		if ($string != '') {
+			if (preg_match('/^(.+)style="(.+)$/',$string,$matches)) {
+				$string = $matches[1].'style="text-align:'.$this->align.'; '.$matches[2];
 			}
 			else {
-				$arr[0] = preg_replace('/(<[a-z]+)/', '$1 style="text-align:'.$this->align.';"',$arr[0]);
+				$string = preg_replace('/(<[a-z]+)/', '$1 style="text-align:'.$this->align.';"',$string);
 			}
 		}
-		return $arr;
+		return $string;
 	}
 }
 //見出しの一覧関係
 class Contents
 {
 	var $id,$count,$top,$contents,$last;
+	
 	function Contents($id)
 	{
 		global $top;
+		
 		$this->id = $id;
 		$this->count = 0;
 		$this->top = "<a href=\"#contents_$id\">$top</a>";
@@ -729,26 +767,30 @@ class Contents
 		$this->count++;
 		return array(inline2(inline($text)).$this->top," id=\"{$content_str}\"");
 	}
-	function replaceContents($text)
+	function getContents()
 	{
 		global $strip_link_wall;
 		
 		$contents  = "<a id=\"contents_{$this->id}\"></a>";
-		$contents .= join("\n",$this->contents->toArray());
-		if($strip_link_wall) {
+		$contents .= $this->contents->toString();
+		if ($strip_link_wall) {
 			$contents = preg_replace("/\[\[([^\]]+)\]\]/","$1",$contents);
 		}
-		return preg_replace("/^<p>#contents<\/p>/",$contents,$text);
+		return $contents;
 	}
 }
 class Contents_UList extends _List
 { // -
+	var $id;
+	
 	function Contents_UList($text,$id,$level,$content_str)
 	{
 		$this->id = $id;
 		// テキストのリフォーム
+		// 行頭\nで整形済みを表す ... X(
 		$text = "\n<a href=\"#{$content_str}\">".
-			strip_htmltag(make_user_rules(inline($text,TRUE))).'</a>';
+			strip_htmltag(make_user_rules(inline($text,TRUE))).
+			"</a>\n";
 		parent::_List('ul', 'li', --$level, $text);
 	}
 }
