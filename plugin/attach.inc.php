@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.28 2003/07/03 05:10:53 arino Exp $
+//  $Id: attach.inc.php,v 1.29 2003/07/05 10:32:58 arino Exp $
 //
 
 /*
@@ -293,9 +293,8 @@ function attach_mime_content_type($filename)
 	
 	// mime-type一覧表を取得
 	$config = new Config(ATTACH_CONFIG_PAGE_MIME);
-	$table = $config->read() ? $config->get('MimeType') : array();
-	// メモリ節約
-	unset($config);
+	$table = $config->read() ? $config->get('mime-type') : array();
+	unset($config); // メモリ節約
 	
 	foreach ($table as $row)
 	{
