@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.13 2005/01/23 03:33:38 henoheno Exp $
+// $Id: make_link.php,v 1.14 2005/01/23 09:50:49 henoheno Exp $
 //
 // Hyperlink-related functions
 
@@ -700,11 +700,16 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '')
 		$related[$page] = get_filetime($page);
 
 	if (is_page($page)) {
+		// Hyperlinks
 		$passage = get_pg_passage($page, FALSE);
 		$title   = $link_compact ? '' : ' title="' . $s_page . $passage . '"';
 		return '<a href="' . $script . '?' . $r_page . $anchor . '"' . $title . '>' .
 			$s_alias . '</a>';
+	} else if (PKWK_READONLY) {
+		// Without hyperlink (= Suppress dangling link)
+		return $s_alias;
 	} else {
+		// Dangling links
 		$retval = $s_alias . '<a href="' .
 			$script . '?cmd=edit&amp;page=' . $r_page . $r_refer . '">' .
 			$_symbol_noexists . '</a>';
