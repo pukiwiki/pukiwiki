@@ -1,10 +1,9 @@
 <?
 // pukiwiki.php - Yet another WikiWikiWeb clone.
 //
-// PukiWiki 1.3.* MASUI'z Edition
-//  Copyright (C) 2002 by sng, MASUI.
-//  Yuichiro MASUI <masui@masui.net>
-//  http://masui.net/pukiwiki/
+// PukiWiki 1.3.* 
+//  Copyright (C) 2002 by PukiWiki Developers Team
+//  http://pukiwiki.org/
 //
 // PukiWiki 1.3 (Base)
 //  Copyright (C) 2001,2002 by sng.
@@ -26,7 +25,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.14 2002/08/07 08:51:45 masui Exp $
+// $Id: pukiwiki.php,v 1.15 2002/10/15 05:28:09 masui Exp $
 /////////////////////////////////////////////////
 
 
@@ -39,6 +38,7 @@ require("template.php");
 require("html.php");
 require("backup.php");
 require("rss.php");
+require('make_link.php');
 
 
 /////////////////////////////////////////////////

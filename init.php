@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.16 2002/09/15 15:50:44 masui Exp $
+// $Id: init.php,v 1.17 2002/10/15 05:28:09 masui Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -22,10 +22,48 @@ if($script == "") {
 	$script = (getenv('SERVER_PORT')==443?'https://':('http://')).getenv('SERVER_NAME').(getenv('SERVER_PORT')==80?'':(':'.getenv('SERVER_PORT'))).getenv('SCRIPT_NAME');
 }
 
-$WikiName = '([A-Z][a-z]+([A-Z][a-z]+)+)';
-$BracketName = '\[\[(\[*[^\s\]]+?\]*)\]\]';
-$InterWikiName = '\[\[(\[*[^\s\]]+?\]*):(\[*[^>\]]+?\]*)\]\]';
-$InterWikiNameNoBracket = '(\[*[^\s\]]+?\]*):(\[*[^>\]]+?\]*)';
+$WikiName = '[A-Z][a-z]+(?:[A-Z][a-z]+)+';
+$BracketName = '\[\[(:?[^\s\]#&<>":]+:?)\]\]';
+$InterWikiName = "\[\[(\[*[^\s\]]+?\]*):(\[*[^>\]]+?\]*)\]\]";
+
+$LinkPattern = "/( (?# <1>:all)
+	(?# url )
+	(?: \[\[([^\]&>]+) :)?       (?#<2>:alias)
+		(\[)?                      (?#<3>:open bracket)
+			((?:https?|ftp|news)(?::\/\/[!~*'();\/?:\@&=+\$,%#\w.-]+)) (?#<4>:url)
+		(?(3)\s([^\]&>]+)\])       (?#<5>:alias, close bracket if <3>)
+	(?(2)\]\])                   (?# close bracket if <2>)
+	|
+	(?# mailto)
+	(?:\[\[([^\]]+):)?           (?#<6>alias)
+		([\w.-]+@[\w-]+\.[\w.-]+)  (?#<7>:mailto>)
+	(?(6)\]\])                   (?# close bracket if <6>)
+	|
+	(?# BracketName or InterWikiName)
+	(\[\[                        (?#<8>:all)
+		(?:
+			(\[\[)?                  (?#<9>:open bracket)
+			([^\[\]]+)               (?#<10>:alias)
+			(?:(?:&gt;)|>)           (?# '&gt;' or '>')
+		)?
+		(?:
+			(\[\[)?                  (?#<11>:open bracket)
+			(:?[^\s\[\]#&<>\":]*?:?) (?#<12>BracketName)
+			((?(9)\]\]|(?(11)\]\])))?(?#<13>:close bracket if <9> or <11>)
+			(\#(?:[a-zA-Z][\w-]*)?)? (?#<14>anchor)
+			(?(13)|(?(9)\]\]|(?(11)\]\]))) (?#close bracket if <9> or <11> but !<13>)
+			|
+			(\[\[)?                  (?#<15>:open bracket)
+			(\[*?[^\s\]]+?\]*?)      (?#<16>InterWiki)
+			((?(9)\]\]|(?(15)\]\])))?(?#<17>:close bracket if <9> or <15>)
+			(\:.*?)                  (?#<18>param)
+			(?(17)|(?(9)\]\]|(?(15)\]\]))) (?#close bracket if <9> or <15> but !<17>)
+		)?
+	\]\])
+	|
+	(?# WikiNmae)
+	($WikiName)                  (?#<19>:all)
+	)/x";
 
 //** 入力値の整形 **
 

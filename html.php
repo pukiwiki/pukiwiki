@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.37 2002/08/28 18:10:15 masui Exp $
+// $Id: html.php,v 1.38 2002/10/15 05:28:09 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -420,27 +420,8 @@ function inline2($str)
 		}
 	}
 
-	$str = preg_replace("/
-		(
-			(\[\[([^\]]+)\:(https?|ftp|news)(:\/\/[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)\]\])
-			|
-			(\[(https?|ftp|news)(:\/\/[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)\s([^\]]+)\])
-			|
-			(https?|ftp|news)(:\/\/[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)
-			|
-			([[:alnum:]\-_.]+@[[:alnum:]\-_]+\.[[:alnum:]\-_\.]+)
-			|
-			(\[\[([^\]]+)\:([[:alnum:]\-_.]+@[[:alnum:]\-_]+\.[[:alnum:]\-_\.]+)\]\])
-			|
-			($InterWikiName)
-			|
-			($BracketName)
-			|
-			($WikiName)
-		)/ex","make_link('$1')",$str);
-
+	$str = make_link($str);
 	$str = preg_replace("/#related/e",'make_related($vars["page"],TRUE)',$str);
-
 	$str = make_user_rules($str);
 
 	$tmp = $str;
@@ -714,126 +695,9 @@ function make_note($str)
 }
 
 // リンクを付加する
-function make_link($name)
+function make_link($name,$page = '')
 {
-	global $BracketName,$WikiName,$InterWikiName,$InterWikiNameNoBracket,$script,$link_target,$interwiki_target;
-	global $related,$show_passage,$vars,$defaultpage;
-
-	$aryconv_htmlspecial = array("&amp;","&lt;","&gt;");
-	$aryconv_html = array("&","<",">");
-
-	$page = $name;
-
-	if(preg_match("/^\[\[([^\]]+)\:((https?|ftp|news)([^\]]+))\]\]$/",$name,$match))
-	{
-		if(preg_match("/(\.gif|\.png|\.jpeg|\.jpg)$/",$match[1]) )
-			return "<a href=\"$match[2]\" target=\"$link_target\"><img src=\"$match[1]\" border=\"0\" alt=\"$match[1]\"></a>";
-		else
-			return "<a href=\"$match[2]\" target=\"$link_target\">$match[1]</a>";
-	}
-	else if(preg_match("/^\[((https?|ftp|news)([^\]\s]+))\s([^\]]+)\]$/",$name,$match))
-	{
-		return "<a href=\"$match[1]\" target=\"$link_target\">$match[4]</a>";
-	}
-	else if(preg_match("/^(https?|ftp|news).*?(\.gif|\.png|\.jpeg|\.jpg)?$/",$name,$match))
-	{
-		if($match[2])
-			return "<a href=\"$name\" target=\"$link_target\"><img src=\"$name\" border=\"0\"></a>";
-		else
-			return "<a href=\"$name\" target=\"$link_target\">$page</a>";
-	}
-	else if(preg_match("/^\[\[([^\]]+)\:([[:alnum:]\-_.]+@[[:alnum:]\-_]+\.[[:alnum:]\-_\.]+)\]\]/",$name,$match))
-	{
-		return "<a href=\"mailto:$match[2]\">$match[1]</a>";
-	}
-	else if(preg_match("/^([[:alnum:]\-_]+@[[:alnum:]\-_]+\.[[:alnum:]\-_\.]+)/",$name))
-	{
-		return "<a href=\"mailto:$name\">$page</a>";
-	}
-	else if(preg_match("/^(.+?)&gt;($InterWikiNameNoBracket)$/",strip_bracket($name),$match))
-	{
-		$page = $match[1];
-		$name = '[['.$match[2].']]';
-		$percent_name = str_replace($aryconv_htmlspecial,$aryconv_html,$name);
-		$percent_name = rawurlencode($percent_name);
-
-		return "<a href=\"$script?$percent_name\" target=\"$interwiki_target\">$page</a>";
-	}
-	else if(preg_match("/^($InterWikiName)$/",$name))
-	{
-		$page = strip_bracket($page);
-		$percent_name = str_replace($aryconv_htmlspecial,$aryconv_html,$name);
-		$percent_name = rawurlencode($percent_name);
-
-		return "<a href=\"$script?$percent_name\" target=\"$interwiki_target\">$page</a>";
-	}
-	else if(preg_match("/^($BracketName)|($WikiName)$/",$name))
-	{
-		if(preg_match("/^(.+?)&gt;(.+)$/",strip_bracket($name),$match))
-		{
-
-			$page = $match[1];
-			$name = $match[2];
-			if(!preg_match("/^($BracketName)|($WikiName)$/",$page))
-				$page = "[[$page]]";
-			if(!preg_match("/^($BracketName)|($WikiName)$/",$name))
-				$name = "[[$name]]";
-		}
-		if(preg_match("/^\[\[\.\/([^\]]*)\]\]/",$name,$match))
-		{
-			if(!$match[1])
-				$name = $vars["page"];
-			else
-				$name = "[[".strip_bracket($vars["page"])."/$match[1]]]";
-		}
-		else if(preg_match("/^\[\[\..\/([^\]]+)\]\]/",$name,$match))
-		{
-			for($i=0;$i<substr_count($name,"../");$i++)
-				$name = preg_replace("/(.+)\/([^\/]+)$/","$1",strip_bracket($vars["page"]));
-
-			if(!preg_match("/^($BracketName)|($WikiName)$/",$name))
-				$name = "[[$name]]";
-			
-			if($vars["page"]==$name)
-				$name = "[[$match[1]]]";
-			else
-				$name = "[[".strip_bracket($name)."/$match[1]]]";
-		}
-		else if($name == "[[../]]")
-		{
-			$name = preg_replace("/(.+)\/([^\/]+)$/","$1",strip_bracket($vars["page"]));
-			
-			if(!preg_match("/^($BracketName)|($WikiName)$/",$name))
-				$name = "[[$name]]";
-			if($vars["page"]==$name)
-				$name = $defaultpage;
-		}
-		
-		$page = strip_bracket($page);
-		$pagename = htmlspecialchars(strip_bracket($name));
-		$percent_name = str_replace($aryconv_htmlspecial,$aryconv_html,$name);
-		$percent_name = rawurlencode($percent_name);
-
-		$refer = rawurlencode($vars["page"]);
-		if(is_page($name))
-		{
-			$str = get_pg_passage($name,FALSE);
-			$tm = @filemtime(get_filename(encode($name)));
-			if($vars["page"] != $name)
-				$related[$tm] = "<a href=\"$script?$percent_name\">$pagename</a>$str";
-			if($show_passage)
-			{
-				$str_title = "title=\"$pagename $str\"";
-			}
-			return "<a href=\"$script?$percent_name\" $str_title>$page</a>";
-		}
-		else
- 			return "<span class=\"noexists\">$page<a href=\"$script?cmd=edit&amp;page=$percent_name&amp;refer=$refer\">?</a></span>";
-	}
-	else
-	{
-		return $page;
-	}
+	return p_make_link($name,$page);
 }
 
 // ユーザ定義ルール(ソースを置換する)

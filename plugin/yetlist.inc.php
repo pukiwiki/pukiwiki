@@ -1,167 +1,53 @@
 <?
-// $Id: yetlist.inc.php,v 1.5 2002/07/29 01:47:24 masui Exp $
+// $Id: yetlist.inc.php,v 1.6 2002/10/15 05:28:09 masui Exp $
 
-function plugin_yetlist_action()
-{
-	global $script,$InterWikiName,$WikiName,$BracketName,$defaultpage;
+// modified by PANDA <panda@arino.jp> http://home.arino.jp/
+// Last-Update:2002-09-12 rev.1
+
+function plugin_yetlist_action() {
+	global $script,$LinkPattern;
+
+	$ret['msg'] = 'List of pages,are not made yet';
 	
-	if ($dir = @opendir(DATA_DIR))
-	{
-		while($file = readdir($dir))
-		{
-			if($file == ".." || $file == ".") continue;
-			$cnt++;
-			$page = decode(trim(preg_replace("/\.txt$/"," ",$file)));
-			$data[$page] = file(DATA_DIR.$file);
-		}
-		closedir($dir);
-	}
+	if (!$dir = @opendir(DATA_DIR)) { return $ret; }
 
-	$ret["body"] = "<ul>\n";
-
-	foreach($data as $name => $lines)
-	{
-		$lines = preg_replace("/^\s(.*)$/","",$lines);
-		
-		$line = join("\n",$lines);
-		
-		preg_replace("/
-		(
-			(\[\[([^\]]+)\:(https?|ftp|news)(:\/\/[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)\]\])
-			|
-			(\[(https?|ftp|news)(:\/\/[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)\s([^\]]+)\])
-			|
-			(https?|ftp|news)(:\/\/[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)
-			|
-			([[:alnum:]\-_.]+@[[:alnum:]\-_]+\.[[:alnum:]\-_\.]+)
-			|
-			(\[\[([^\]]+)\:([[:alnum:]\-_.]+@[[:alnum:]\-_]+\.[[:alnum:]\-_\.]+)\]\])
-			|
-			($InterWikiName)
-			|
-			($BracketName)
-			|
-			($WikiName)
-		)/ex","check_link('$1',\$name,\$_gwbn)",$line);
-	}
-	
-	foreach($_gwbn as $wbn => $refs_arr)
-	{
-
-		foreach (array_unique($refs_arr) as $name)
-		{
-
-		if(preg_match("/^[^>]+>([^\]]+)/",$wbn,$match))
-		{
-			$wbn = $match[1];
-			//閉じブラケットの補充。/^\[\[/でも必要十分だが念のため
-			if(preg_match("/^\[\[[^\]]+$/",$wbn))
-				$wbn = "$wbn]]";
-			if(!preg_match("/($WikiName)|($BracketName)/",$wbn))
-				$wbn = "[[$wbn]]";
-		}
-		
-		$keep = $wbn;
-		
-		if(preg_match("/^\[\[\.\/([^\]]*)\]\]/",$wbn,$match))
-		{
-			if(!$match[1])
-				$wbn = $name;
-			else
-				$wbn = "[[".strip_bracket($name)."/$match[1]]]";
-		}
-		else if(preg_match("/^\[\[\..\/([^\]]+)\]\]/",$wbn,$match))
-		{
-			for($i=0;$i<substr_count($keep,"../");$i++)
-				$wbn = preg_replace("/(.+)\/([^\/]+)$/","$1",strip_bracket($name));
-
-			if(!preg_match("/^($BracketName)|($WikiName)$/",$wbn))
-				$wbn = "[[$wbn]]";
-			
-			if($wbn==$name)
-				$wbn = "[[$match[1]]]";
-			else
-				$wbn = "[[".strip_bracket($wbn)."/$match[1]]]";
-		}
-		else if($wbn == "[[../]]")
-		{
-			$wbn = preg_replace("/(.+)\/([^\/]+)$/","$1",strip_bracket($name));
-			
-			if(!preg_match("/^($BracketName)|($WikiName)$/",$wbn))
-				$wbn = "[[$wbn]]";
-			if($wbn==$name)
-				$wbn = $defaultpage;
-		}
-
-		if(!is_page($wbn))
-		{
-			$refer[$wbn][] = $name;
-		}
-
-			$wbn = $keep; //ひー ^^;)
+	while($file = readdir($dir)) {
+		if ($file == '..' || $file == '.') continue;
+		$page = decode(str_replace('.txt','',$file));
+		$line = join("\n",preg_replace('/^(\s|\/\/|#).*$/','',file(DATA_DIR.$file)));
+		$obj = new link_wrapper($page);
+		foreach ($obj->get_link($line) as $obj) {
+			if ($obj->name != '' and ($obj->type == 'WikiName' or $obj->type == 'BracketName') and !is_page($obj->name)) {
+				$refer[$obj->name][] = $page;
+			}
 		}
 	}
+	closedir($dir);
+
+	if (count($refer) == 0)
+		return $ret;
 
 	ksort($refer);
-	foreach($refer as $wbn => $refs_arr)
-	{
-		$url = rawurlencode($wbn);
-		$name = strip_bracket($wbn);
+
+	foreach($refer as $page=>$refs) {
+		$page_raw  = rawurlencode($page);
+		$page_disp = strip_bracket($page);
 		
-		$link_ref = "";
-		foreach(array_unique($refs_arr) as $refs)
-		{
-			$ref = strip_bracket($refs);
-			$refurl = rawurlencode($refs);
+		$link_refs = array();
+		foreach(array_unique($refs) as $ref) {
+			$ref_raw  = rawurlencode($ref);
+			$ref_disp = strip_bracket($ref);
 			
-			$link_ref .= " <a href=\"$script?$refurl\">$ref</a>";
+			$link_refs[] = "<a href=\"$script?$ref_raw\">$ref_disp</a>";
 		}
-		$link_ref = trim($link_ref);
-		
-		$ret["body"] .= "<li><a href=\"$script?cmd=edit&amp;page=$url&amp;refer=$refurl\">$name</a> <em>($link_ref)</em></li>\n";
+		$link_ref = join(' ',$link_refs);
+		// 参照元ページが複数あった場合、referは最後のページを指す(いいのかな)
+		$ret['body'] .= "<li><a href=\"$script?cmd=edit&amp;page=$page_raw&amp;refer=$ref_raw\">$page_disp</a> <em>($link_ref)</em></li>\n";
 	}
 
+	if ($ret['body'] != '')
+		$ret['body'] = "<ul>\n{$ret['body']}</ul>\n";
 
-	$ret["body"] .= "</ul>\n";
-
-	$ret["msg"] = "List of pages,are not made yet";
-	
 	return $ret;
-}
-
-function check_link($name,$refer,&$_gwbn)
-{
-	global $BracketName,$WikiName,$InterWikiName;
-
-	if(preg_match("/^\[\[([^\]]+)\:((https?|ftp|news)([^\]]+))\]\]$/",$name))
-	{
-		return;
-	}
-	else if(preg_match("/^\[((https?|ftp|news)([^\]\s]+))\s([^\]]+)\]$/",$name))
-	{
-		return;
-	}
-	else if(preg_match("/^(https?|ftp|news).*?(\.gif|\.png|\.jpeg|\.jpg)?$/",$name))
-	{
-		return;
-	}
-	else if(preg_match("/^\[\[([^\]]+)\:([[:alnum:]\-_.]+@[[:alnum:]\-_]+\.[[:alnum:]\-_\.]+)\]\]/",$name))
-	{
-		return;
-	}
-	else if(preg_match("/^([[:alnum:]\-_]+@[[:alnum:]\-_]+\.[[:alnum:]\-_\.]+)/",$name))
-	{
-		return;
-	}
-	else if(preg_match("/^($InterWikiName)$/",$name))
-	{
-		return;
-	}
-	else if(preg_match("/^($BracketName)|($WikiName)$/",$name))
-	{
-		$_gwbn[$name][] = $refer;
-		return;
-	}
-	return;
 }
 ?>
