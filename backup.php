@@ -11,7 +11,7 @@
  * @access  public
  * @author  
  * @create  
- * @version $Id: backup.php,v 1.9 2003/04/26 11:17:47 arino Exp $
+ * @version $Id: backup.php,v 1.10 2003/05/16 06:40:27 arino Exp $
  **/
 
 /**
@@ -29,33 +29,44 @@ function make_backup($page,$delete = FALSE)
 	global $splitter,$cycle,$maxage;
 	global $do_backup,$del_backup;
 	
-	if (!$do_backup) {
+	if (!$do_backup)
+	{
 		return;
 	}
 	
-	if ($del_backup and $delete) {
+	if ($del_backup and $delete)
+	{
 		backup_delete($page);
 		return;
 	}
 	
-	if (!is_page($page)) {
+	if (!is_page($page))
+	{
 		return;
 	}
 	
 	$arystrout = array();
 	
 	$lastmod = backup_get_filetime($page);
-	if (($lastmod == 0) or (UTIME - $lastmod) > (60 * 60 * $cycle)) {
-		//直後に1件追加するので、最大件数-1で切る
-		$backups = array_splice(get_backup($page),1 - $maxage);
+	if (($lastmod == 0) or (UTIME - $lastmod) > (60 * 60 * $cycle))
+	{
+		$backups = get_backup($page);
+		$count = count($backups) + 1;
+		if ($count > $maxage)
+		{
+			//直後に1件追加するので、最大件数-1で切る
+			array_splice($backups,$maxage - $count);
+		}
 		
 		$strout = '';
-		foreach($backups as $age=>$data) {
+		foreach($backups as $age=>$data)
+		{
 			$strout .= "$splitter {$data['time']}\n";
 			$strout .= join('',$data['data']);
 		}
 		$strout = trim($strout);
-		if ($strout != '') {
+		if ($strout != '')
+		{
 			$strout .= "\n";
 		}
 		
@@ -89,22 +100,27 @@ function get_backup($page,$age = 0)
 	
 	$lines = backup_file($page);
 	
-	if (!is_array($lines)) {
+	if (!is_array($lines))
+	{
 		return array();
 	}
 	
 	$_age = 0;
 	$retvars = array();
 	
-	foreach($lines as $line) {
-		if (preg_match("/^$splitter\s(\d+)$/",trim($line),$match)) {
+	foreach($lines as $line)
+	{
+		if (preg_match("/^$splitter\s(\d+)$/",trim($line),$match))
+		{
 			$_age++;
-			if ($age > 0 and $_age > $age) {
+			if ($age > 0 and $_age > $age)
+			{
 				return $retvars[$age];
 			}
 			$retvars[$_age]['time'] = $match[1];
 		}
-		else {
+		else
+		{
 			$retvars[$_age]['data'][] = $line;
 		}
 	}
@@ -173,7 +189,8 @@ function backup_delete($page)
 
 /////////////////////////////////////////////////
 
-if (function_exists('gzfile')) {
+if (function_exists('gzfile'))
+{
 	// ファイルシステム関数
 	// zlib関数を使用
 	define('BACKUP_EXT','.gz');
@@ -239,7 +256,8 @@ if (function_exists('gzfile')) {
 	}
 }
 /////////////////////////////////////////////////
-else {
+else
+{
 	// ファイルシステム関数
 	define('BACKUP_EXT','.txt');
 	
