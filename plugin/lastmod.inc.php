@@ -1,9 +1,9 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: lastmod.inc.php,v 1.1 2005/01/23 13:02:08 henoheno Exp $
+// $Id: lastmod.inc.php,v 1.2 2005/01/23 13:57:38 henoheno Exp $
 //
 // Lastmod plugin - Show lastmodifled date of the page
-// Originally written by Reimy
+// Originally written by Reimy, 2003
 
 function plugin_lastmod_inline()
 {
