@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.30 2004/10/07 12:56:48 henoheno Exp $
+// $Id: dump.inc.php,v 1.31 2004/10/31 07:55:24 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -163,22 +163,23 @@ function plugin_dump_upload()
 	if ($_FILES['upload_file']['size'] >  PLUGIN_DUMP_MAX_FILESIZE * 1024)
 		die_message('Max file size exceeded: ' . PLUGIN_DUMP_MAX_FILESIZE . 'KB');
 
-	// アップロードファイル
-	$uploadfile = tempnam(CACHE_DIR, 'upload');
-	move_uploaded_file($_FILES['upload_file']['tmp_name'], $uploadfile) or
-		die_message('ファイルがみつかりませんでした。');
-
-	// tarファイルを展開する
+	// Create a temporary tar file
+	$uploadfile = tempnam(CACHE_DIR, 'tarlib_uploaded_');
 	$tar = new tarlib();
-	$tar->open($uploadfile, $arc_kind) or
+	if(! move_uploaded_file($_FILES['upload_file']['tmp_name'], $uploadfile) ||
+	   ! $tar->open($uploadfile, $arc_kind)) {
+		@unlink($uploadfile);
 		die_message('ファイルがみつかりませんでした。');
+	}
 
 	$pattern = "(({$_STORAGE['DATA_DIR']['extract_filter']})|" .
 		    "({$_STORAGE['UPLOAD_DIR']['extract_filter']})|" .
 		    "({$_STORAGE['BACKUP_DIR']['extract_filter']}))";
 	$files = $tar->extract($pattern);
-	if (empty($files))
+	if (empty($files)) {
+		@unlink($uploadfile);
 		return array('code' => FALSE, 'msg' => '<p>展開できるファイルがありませんでした。</p>');
+	}
 
 	$msg  = '<p><strong>展開したファイル一覧</strong><ul>';
 	foreach($files as $name) {
@@ -343,7 +344,7 @@ class tarlib
 	////////////////////////////////////////////////////////////
 	function create($tempdir, $kind = 'tgz')
 	{
-		$tempnam = tempnam($tempdir, 'tarlib_');
+		$tempnam = tempnam($tempdir, 'tarlib_create_');
 		if ($tempnam === FALSE) return FALSE;
 
 		if ($kind == 'tgz') {
@@ -353,15 +354,17 @@ class tarlib
 			$this->arc_kind = TARLIB_KIND_TAR;
 			$this->fp       = @fopen($tempnam, 'wb');
 		}
-		if ($this->fp === FALSE) return FALSE;
 
-		$this->filename  = $tempnam;
-		$this->dummydata = join('', array_fill(0, TARLIB_BLK_LEN, "\0"));
-		$this->status    = TARLIB_STATUS_CREATE;
-
-		rewind($this->fp);
-
-		return TRUE;
+		if ($this->fp === FALSE) {
+			@unlink($tempnam);
+			return FALSE;
+		} else {
+			$this->filename  = $tempnam;
+			$this->dummydata = join('', array_fill(0, TARLIB_BLK_LEN, "\0"));
+			$this->status    = TARLIB_STATUS_CREATE;
+			rewind($this->fp);
+			return TRUE;
+		}
 	}
 
 	////////////////////////////////////////////////////////////
@@ -381,8 +384,12 @@ class tarlib
 		unset($files);
 
 		//  指定されたパスのファイルのリストを取得する
-		$dp = @opendir($dir) or
+		$dp = @opendir($dir);
+		if($dp === FALSE) {
+			@unlink($this->filename);
 			die_message($dir . ' is not found or not readable.');
+		}
+
 		while ($filename = readdir($dp)) {
 			if (preg_match("/$mask/", $filename))
 				$files[] = $dir . $filename;
@@ -435,8 +442,8 @@ class tarlib
 			// ファイルサイズを取得
 			$size = filesize($name);
 			if ($size == FALSE) {
+				@unlink($this->filename);
 				die_message($name . ' is not found or not readable.');
-				continue;	// ファイルがない
 			}
 
 			// ヘッダ生成
@@ -469,8 +476,7 @@ class tarlib
 		$tar_data = array_fill(0, TARLIB_HDR_LEN, "\0");
 		
 		// ファイル名を保存
-		for($i = 0; $i < strlen($filename); $i++ )
-		{
+		for($i = 0; $i < strlen($filename); $i++ ) {
 			if ($i < TARLIB_HDR_NAME_LEN) {
 				$tar_data[$i + TARLIB_HDR_NAME_OFFSET] = $filename{$i};
 			} else {
@@ -647,16 +653,12 @@ class tarlib
 			// タイプフラグ
 //			 $type = $buff{TARLIB_HDR_TYPE_OFFSET};
 
-			if ($name == TARLIB_DATA_LONGLINK)
-			{
+			if ($name == TARLIB_DATA_LONGLINK) {
 				// LongLink
 				$buff     = fread($this->fp, $pdsz);
 				$longname = substr($buff, 0, $size);
-			}
-			else
-			if (preg_match("/$pattern/", $name) )
-//			if ($type == 0 && preg_match("/$pattern/", $name) )
-			{
+			} else if (preg_match("/$pattern/", $name) ) {
+//			} else if ($type == 0 && preg_match("/$pattern/", $name) ) {
 				$buff = fread($this->fp, $pdsz);
 
 				// 既に同じファイルがある場合は上書きされる
@@ -671,9 +673,7 @@ class tarlib
 					fclose($fpw);
 					$files[] = $name;
 				}
-			}
-			else
-			{
+			} else {
 				// ファイルポインタを進める
 				@fseek($this->fp, $pdsz, SEEK_CUR);
 			}
@@ -688,8 +688,7 @@ class tarlib
 	////////////////////////////////////////////////////////////
 	function close()
 	{
-		if ($this->status == TARLIB_STATUS_CREATE)
-		{
+		if ($this->status == TARLIB_STATUS_CREATE) {
 			// ファイルを閉じる
 			if ($this->arc_kind == TARLIB_KIND_TGZ) {
 				// バイナリーゼロを1024バイト出力
@@ -702,9 +701,7 @@ class tarlib
 				fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
 				fclose($this->fp);
 			}
-		}
-		else if ($this->status == TARLIB_STATUS_OPEN)
-		{
+		} else if ($this->status == TARLIB_STATUS_OPEN) {
 			if ($this->arc_kind == TARLIB_KIND_TGZ) {
 				gzclose($this->fp);
 			} else {
