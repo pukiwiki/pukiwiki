@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.114.2.1 2005/03/19 17:51:20 teanan Exp $
+// $Id: pukiwiki.ini.php,v 1.114.2.2 2005/03/20 10:31:19 teanan Exp $
 //
 // PukiWiki main setting file
 
@@ -148,11 +148,14 @@ $nowikiname = 0;
 // AutoLink minimum bytes (0 = Disable)
 $autolink = 8;
 
-// Enable AutoAlias (1:Enable, 0:Disable)
-$autoalias_enable = 1;
+/////////////////////////////////////////////////
+// AutoAlias feature
+
+// AutoAlias minimum bytes (0 = Disable)
+$autoalias_min_len = 8;
 
 // Maximum number of words which AutoAlias replace
-$autoalias_max = 50;
+$autoalias_max_words = 50;
 
 /////////////////////////////////////////////////
 // Enable Freeze / Unfreeze feature

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.33.2.1 2005/03/19 17:51:30 teanan Exp $
+// $Id: func.php,v 1.33.2.2 2005/03/20 10:31:29 teanan Exp $
 //
 // General functions
 
@@ -457,7 +457,7 @@ function drop_submit($str)
 
 // AutoLinkのパターンを生成する
 // thx for hirofummy
-function get_autolink_pattern(& $pages)
+function get_autolink_pattern(& $pages, $min_len = -1)
 {
 	global $WikiName, $autolink, $nowikiname;
 
@@ -468,9 +468,13 @@ function get_autolink_pattern(& $pages)
 	unset($config);
 	$auto_pages = array_merge($ignorepages, $forceignorepages);
 
+	if ($min_len == -1) {
+		$min_len = $autolink;	// set $autolink, when omitted.
+	}
+
 	foreach ($pages as $page) {
 		if (preg_match('/^' . $WikiName . '$/', $page) ?
-		    $nowikiname : strlen($page) >= $autolink)
+		    $nowikiname : strlen($page) >= $min_len)
 			$auto_pages[] = $page;
 	}
 
@@ -522,7 +526,7 @@ function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 // get pagelist for AutoAlias
 function get_autoaliases()
 {
-	global $autoalias, $autoalias_max;
+	global $autoalias, $autoalias_max_words;
 
 	$aliaspages = array();
 	$pattern = <<<EOD
@@ -540,7 +544,7 @@ EOD;
 		}
 	}
 	// fail safe
-	$aliaspages = array_slice($aliaspages, 0, $autoalias_max);
+	$aliaspages = array_slice($aliaspages, 0, $autoalias_max_words);
 
 	return $aliaspages;
 }

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.13.2.1 2005/03/19 17:51:30 teanan Exp $
+// $Id: file.php,v 1.13.2.2 2005/03/20 10:31:29 teanan Exp $
 //
 // File related functions
 
@@ -90,7 +90,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	global $notify, $notify_diff_only, $notify_to, $notify_subject, $notify_header;
 	global $smtp_server, $smtp_auth;
 	global $whatsdeleted, $maxshow_deleted;
-	global $autolink, $autoalias_enable, $autoalias;
+	global $autoalias_min_len, $autoalias;
 
 	if (PKWK_READONLY) return; // Do nothing
 
@@ -154,11 +154,12 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
  		mb_send_mail($notify_to, $subject, $str, $notify_header);
 	}
 	// for AutoAlias
-	if ($autoalias_enable!=0 && $autolink && $page==$autoalias) {
+	if ($autoalias_min_len>0 && $page==$autoalias) {
 		// AutoAliasName is updated
 		$pages = array_keys(get_autoaliases());
 		if(count($pages)>0) {
-			autolink_pattern_write(CACHE_DIR . 'autoalias.dat', $pages);
+			autolink_pattern_write(CACHE_DIR . 'autoalias.dat',
+				get_autolink_pattern($pages, $autoalias_min_len));
 		} else {
 			@unlink(CACHE_DIR . 'autoalias.dat');
 		}
@@ -255,15 +256,15 @@ function put_lastmodified()
 
 	// For AutoLink
 	if ($autolink) {
-		autolink_pattern_write(CACHE_DIR . 'autolink.dat', $pages);
+		autolink_pattern_write(CACHE_DIR . 'autolink.dat',
+			get_autolink_pattern($pages, $autolink));
 	}
 }
 
 // update autolink data
-function autolink_pattern_write($filename, & $pages)
+function autolink_pattern_write($filename, $autolink_pattern)
 {
-	list($pattern, $pattern_a, $forceignorelist) =
-		get_autolink_pattern($pages);
+	list($pattern, $pattern_a, $forceignorelist) = $autolink_pattern;
 
 	$fp = fopen($filename, 'w') or
 		die_message("Cannot write autolink file $filename<br />" .

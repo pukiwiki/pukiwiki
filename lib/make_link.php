@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.17.2.1 2005/03/19 17:51:29 teanan Exp $
+// $Id: make_link.php,v 1.17.2.2 2005/03/20 10:31:29 teanan Exp $
 //
 // Hyperlink-related functions
 
@@ -694,12 +694,11 @@ class Link_autoalias extends Link
 
 	function Link_autoalias($start)
 	{
-		global $autolink;
-		global $autoalias;
+		global $autoalias, $autoalias_min_len;
 
 		parent::Link($start);
 
-		if (!$autolink or !file_exists(CACHE_DIR.'autoalias.dat') or $this->page==$autoalias)
+		if (!$autoalias_min_len || !file_exists(CACHE_DIR.'autoalias.dat') || $this->page==$autoalias)
 		{
 			return;
 		}
