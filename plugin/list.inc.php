@@ -1,37 +1,31 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: list.inc.php,v 1.5 2005/01/09 08:16:28 henoheno Exp $
 //
-// $Id: list.inc.php,v 1.4 2004/07/31 03:09:20 henoheno Exp $
-//
-// 一覧の表示
+// IndexPages plugin: Show a list of page names
+
 function plugin_list_action()
 {
-	global $vars,$_title_list,$_title_filelist,$whatsnew;
+	global $vars, $_title_list, $_title_filelist, $whatsnew;
 
-	$filelist = (array_key_exists('cmd',$vars) and $vars['cmd']=='filelist'); //姑息だ…
+	// Redirected from filelist plugin?
+	$filelist = (isset($vars['cmd']) && $vars['cmd'] == 'filelist');
 
 	return array(
 		'msg'=>$filelist ? $_title_filelist : $_title_list,
-		'body'=>get_list($filelist)
-	);
+		'body'=>plugin_list_getlist($filelist));
 }
 
-// 一覧の取得
-function get_list($withfilename)
+// Get a list
+function plugin_list_getlist($withfilename = FALSE)
 {
-	global $non_list,$whatsnew;
+	global $non_list, $whatsnew;
 
-	$pages = array_diff(get_existpages(),array($whatsnew));
-	if (!$withfilename)
-	{
-		$pages = array_diff($pages,preg_grep("/$non_list/",$pages));
-	}
-	if (count($pages) == 0)
-	{
-	        return '';
-	}
+	$pages = array_diff(get_existpages(), array($whatsnew));
+	if (! $withfilename)
+		$pages = array_diff($pages, preg_grep('/' . $non_list . '/', $pages));
+	if (empty($pages)) return '';
 
-	return page_list($pages,'read',$withfilename);
+	return page_list($pages, 'read', $withfilename);
 }
 ?>
