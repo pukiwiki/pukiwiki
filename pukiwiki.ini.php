@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.89 2004/10/17 13:29:52 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.90 2004/10/21 13:10:32 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -92,7 +92,7 @@ $referer = 0;
 // ScriptにJavaScriptを使用する (常にヘッダを出力する)
 // $trackbackなど、いくつかの設定によっては
 // 自動的にonになります
-$javascript = 0;
+// $javascript = 0;
 
 /////////////////////////////////////////////////
 // WikiNameを *無効に* する
