@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.38 2002/10/15 05:28:09 masui Exp $
+// $Id: html.php,v 1.39 2002/10/15 05:42:23 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -77,7 +77,7 @@ function convert_html($string)
 	global $InterWikiName, $BracketName;
 
 	global $content_id;
-	$content_id++;
+	$content_id_local = ++$content_id;
 	$content_count = 0;
 
 	$string = rtrim($string);
@@ -105,7 +105,7 @@ function convert_html($string)
 	$table = 0;
 
 	if(preg_match("/#contents/",$string))
-		$top_link = "<a href=\"#contents_$content_id\">$top</a>";
+		$top_link = "<a href=\"#contents_$content_id_local\">$top</a>";
 
 	foreach ($lines as $line)
 	{
@@ -165,8 +165,8 @@ function convert_html($string)
 				
 				$level = strlen($out[1]) + 1;
 
-				array_push($result, "<h$level><a name=\"content_{$content_id}_$content_count\"></a>$str $top_link</h$level>");
-				$arycontents[] = str_repeat("-",$level-1)."<a href=\"#content_{$content_id}_$content_count\">".strip_htmltag(make_user_rules($str))."</a>\n";
+				array_push($result, "<h$level><a name=\"content_{$content_id_local}_$content_count\"></a>$str $top_link</h$level>");
+				$arycontents[] = str_repeat("-",$level-1)."<a href=\"#content_{$content_id_local}_$content_count\">".strip_htmltag(make_user_rules($str))."</a>\n";
 				$content_count++;
 			}
 			else if(preg_match("/^(-{1,4})(.*)/",$line,$out))
@@ -327,7 +327,7 @@ function convert_html($string)
 		}
 		$result = array_merge($result,$saved); $saved = array();
 		
-		$contents = "<a name=\"contents_$content_id\"></a>\n";
+		$contents = "<a name=\"contents_$content_id_local\"></a>\n";
 		$contents .= join("\n",$result);
 		if($strip_link_wall)
 		{
