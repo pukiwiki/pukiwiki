@@ -43,18 +43,18 @@
 ~[[ば科学的愛情:http://www.geocities.co.jp/SiliconValley-SanJose/8609/]]で配布されている[[BBSPainter.jar:http://www.geocities.co.jp/SiliconValley-SanJose/8609/java/bbspainter/]]を使用しています。
 ~幅と高さに、デフォルトのキャンバスサイズを指定します。省略時は(80,60)となります（変更可能）
 :プラグイン内設定|~
---PAINT_INSERT_INS − 入力内容を先頭/末尾のどちらに挿入するか
---PAINT_DEFAULT_WIDTH − デフォルトの描画領域の幅
---PAINT_DEFAULT_HEIGHT − デフォルトの描画領域の高さ
---PAINT_MAX_WIDTH − 描画領域の幅の上限
---PAINT_MAX_HEIGHT − 描画領域の高さの上限
---PAINT_APPLET_WIDTH − アプレット領域の幅
---PAINT_APPLET_HEIGHT − アプレット領域の高さ
---PAINT_NAME_FORMAT −名前欄の挿入フォーマット 
---PAINT_MSG_FORMAT − コメント欄の挿入フォーマット
---PAINT_NOW_FORMAT − 時刻欄の挿入フォーマット
---PAINT_FORMAT − コメント内容全体の挿入フォーマット（メッセージあり）
---PAINT_FORMAT_NOMSG − コメント内容全体の挿入フォーマット（メッセージなし）
+--PAINT_INSERT_INS　入力内容を先頭/末尾のどちらに挿入するか
+--PAINT_DEFAULT_WIDTH　デフォルトの描画領域の幅
+--PAINT_DEFAULT_HEIGHT　デフォルトの描画領域の高さ
+--PAINT_MAX_WIDTH　描画領域の幅の上限
+--PAINT_MAX_HEIGHT　描画領域の高さの上限
+--PAINT_APPLET_WIDTH　アプレット領域の幅
+--PAINT_APPLET_HEIGHT　アプレット領域の高さ
+--PAINT_NAME_FORMAT　名前欄の挿入フォーマット 
+--PAINT_MSG_FORMAT　コメント欄の挿入フォーマット
+--PAINT_NOW_FORMAT　時刻欄の挿入フォーマット
+--PAINT_FORMAT　コメント内容全体の挿入フォーマット（メッセージあり）
+--PAINT_FORMAT_NOMSG　コメント内容全体の挿入フォーマット（メッセージなし）
 :備考|
 ~PukiWikiのインストールディレクトリに上記BBSPainter.jarを入れるのを忘れないでください。このプラグインが何の役にも立たなくなります。
 
@@ -122,11 +122,13 @@
 :概要|
 ~人気のある（参照回数の多い）ページの上位数件を表示します。
 :引数|
-~件数には一覧の数を指定して下さい。省略時は10件です。
+~件数には一覧の数を指定して下さい。省略時はPLUGIN_POPULAR_DEFAULTに指定した件数です。
 ~対象外ページには、表示対象外とするページを正規表現で指定します。例えば FrontPage や MenuBar などのページを一覧に表示させたくないときに使用します。
 ~true, falseで、ページのカウント条件を指定します。省略時は false です。
 --true − 今日参照のあった回数順でページを表示します。
 --false − 通算の参照回数順でページを表示します。
+:プラグイン内設定|~
+--PLUGIN_POPULAR_DEFAULT　件数未指定時の件数
 :備考|
 ~[[counter>../A-D#zedb02cf]]プラグインのカウンター情報を利用しているので、counterプラグインを設置していないページはカウントの対象外となります。全てのページにcounterプラグインを設置するのは非効率であるため counterプラグインをMenubarやスキンに設置するのが一般的です。
 
