@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.15 2003/02/26 11:56:36 panda Exp $
+//  $Id: attach.inc.php,v 1.16 2003/02/26 12:04:39 panda Exp $
 //
 
 /*
@@ -255,13 +255,14 @@ EOD;
 	}
 	$info = $obj->to_string(TRUE,FALSE);
 	$type = attach_mime_content_type(UPLOAD_DIR.$obj->file);
+	$age = array_key_exists('age',$vars) and is_numeric($vars['age']) ? $vars['age'] : 0;
 	$retval['body'] .= <<< EOD
 <dl>
  <dt>$info</dt>
  <dd>{$_attach_messages['msg_filesize']}:{$obj->size_str} ({$obj->size} bytes)</dd>
  <dd>Content-type:$type</dd>
  <dd>{$_attach_messages['msg_date']}:{$obj->time_str}</dd>
- <dd>{$_attach_messages['msg_dlcount']}:{$obj->status['count'][0]}</dd>
+ <dd>{$_attach_messages['msg_dlcount']}:{$obj->status['count'][$age]}</dd>
   $msg_freezed
 </dl>
 EOD;
