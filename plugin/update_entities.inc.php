@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: update_entities.inc.php,v 1.3 2004/07/18 14:11:37 henoheno Exp $
+// $Id: update_entities.inc.php,v 1.4 2004/07/24 04:43:10 henoheno Exp $
 //
 
 // DTDの場所
@@ -24,7 +24,7 @@ function plugin_update_entities_init()
 PHPの持つテーブルおよびW3CのDTDをスキャンして、キャッシュに記録します。
 
 * 処理対象
-「COLOR(red){not found.}」が表示されたファイルは処理されません。
+「COLOR(red){not found.}」と表示されたファイルは処理されません。
 -%s
 
 * 実行
