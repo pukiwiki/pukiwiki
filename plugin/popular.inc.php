@@ -61,22 +61,15 @@ function plugin_popular_convert()
 
 	$counters = array();
 
-	if (($dir = opendir(COUNTER_DIR)) == FALSE)
-		return '';
-
-	while (($file = readdir($dir)) !== FALSE) {
-		if (!ereg("\.count$", $file))
+	foreach (get_existpages(COUNTER_DIR,'.count') as $page) {
+		if ($except != '' and ereg($except,$page)) {
 			continue;
-		
-		$page = substr($file, 0, strlen($file)-6);
-		$decode = decode($page);
-		
-		if ($except != '' and ereg($except,$decode))
+		}
+		if ($page == $whatsnew or preg_match("/$non_list/",$page) or !is_page($page)) {
 			continue;
-		if ($decode == $whatsnew or preg_match("/$non_list/",$decode) or !is_page($decode))
-			continue;
+		}
 		
-		$array = file(COUNTER_DIR.$file);
+		$array = file(COUNTER_DIR.encode($page).'.count');
 		$count = rtrim($array[0]);
 		$date = rtrim($array[1]);
 		$today_count = rtrim($array[2]);
@@ -93,7 +86,6 @@ function plugin_popular_convert()
 			$counters["_$page"] = $count;
 		}
 	}
-	closedir($dir);
 	
 	asort($counters, SORT_NUMERIC);
 	$counters = array_splice(array_reverse($counters,TRUE),0,$max);
@@ -102,12 +94,11 @@ function plugin_popular_convert()
 	if (count($counters)) {
 		$items = '<ul class="recent_list">';
 		
-		foreach ($counters as $k=>$v) {
-			$k = substr($k,1);
-			$p = decode($k);
+		foreach ($counters as $page=>$count) {
+			$page = substr($page,1);
 			
-			$title = strip_bracket($p);
-			$items .=" <li><a href=\"$script?".rawurlencode($p)."\" title=\"$title ".get_pg_passage($p,FALSE)."\">$title</a><span class=\"counter\">($v)</span></li>\n";
+			$s_page = htmlspecialchars($page);
+			$items .= " <li>".make_pagelink($page,"$s_page<span class=\"counter\">($count)</span>")."</li>\n";
 		}
 		$items .= '</ul>';
 	}

@@ -22,14 +22,9 @@
  * 
  * 避難所       ->   http://do3ob.s20.xrea.com/
  *
- * version: $Id: showrss.inc.php,v 1.2 2003/01/27 05:38:47 panda Exp $
+ * version: $Id: showrss.inc.php,v 1.3 2003/02/17 07:34:50 panda Exp $
  * 
  */
-
-// キャッシュ機能を使う場合は以下で指定するディレクトリを作成して置いてください
-if (!defined('CACHE_DIR')) {
-	define('CACHE_DIR', './cache/');
-}
 
 // RSS中の "&lt; &gt; &amp;" などを 一旦 "< > &" に戻すか？      ＜ "&amp;" が "&amp;amp;" になっちゃうの対策
 if (!defined('SHOWRSS_VALUE_UNESCAPE')) {
