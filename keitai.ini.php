@@ -2,19 +2,22 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.ini.php,v 1.2 2004/07/08 12:20:13 henoheno Exp $
+// $Id: keitai.ini.php,v 1.3 2004/07/10 14:34:42 henoheno Exp $
 //
 // PukiWiki setting file (Cell phones, PDAs and other thin clients)
 
 /////////////////////////////////////////////////
 // max_size (SKINで使用)
 
-$max_size = 5;	//KByte (default)
+$max_size = 5;	// SKINで使用, KByte (default)
 
 $matches = array();
 
 // Browser-name only
-switch ($user_agent['name']) {
+$ua_name  = $user_agent['name'];
+$ua_vers  = $user_agent['vers'];
+$ua_agent = $user_agent['agent'];
+switch ($ua_name) {
 
 	// NetFront / Compact NetFront
 	//   DoCoMo Net For MOBILE: ｉモード対応HTMLの考え方: ユーザエージェント
@@ -24,29 +27,28 @@ switch ($user_agent['name']) {
 	case 'NetFront':
 	case 'CNF':
 	case 'DoCoMo':
-		if (preg_match('#\bc([0-9]+)\b#', $user_agent['agent'], $matches))
-			$max_size = $matches[1];	// Cache size
+	case 'Opera': // Performing CNF compatible
+		if (preg_match('#\b[cC]([0-9]+)\b#', $ua_agent, $matches))
+			$max_size = $matches[1];	// Cache max size
 		break;
 
 	// Vodafone 技術資料: ユーザーエージェントについて
 	// http://www.dp.j-phone.com/dp/tool_dl/web/useragent.php
 	case 'J-PHONE':
-		if (preg_match('#\bProfile/#', $user_agent['agent'])) {
-			// パケット対応機
-			$max_size = 12; // SKINで使用, KByte
+		if (preg_match('#\bProfile/#', $ua_agent)) {
+			$max_size = 12; // パケット対応機
 		} else {
-			// パケット非対応機
-			$max_size =  6;
+			$max_size =  6; // パケット非対応機
 		}
 		break;
 
 }
 
 // Browser-name + version
-switch ($user_agent['name'] . '/' . $user_agent['vers']) {
+switch ("$ua_name/$ua_vers") {
 	case 'DoCoMo/2.0':	$max_size = min($max_size, 30); break;
 }
-unset($matches);
+unset($matches, $ua_name, $ua_vers, $ua_agent);
 
 
 /////////////////////////////////////////////////

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.66 2004/07/09 22:50:57 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.67 2004/07/10 14:34:42 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -331,6 +331,10 @@ $agents = array( // pattern: デバイス[ブラウザ]名およびバージョンの検出パターン 
 	array('pattern'=>'#\b(CNF)/([0-9\.]+)#',	'profile'=>'keitai'),
 	array('pattern'=>'#\b(AveFront)/([0-9\.]+)#',	'profile'=>'keitai'),
 	array('pattern'=>'#\b(AVE-Front)/([0-9\.]+)#',	'profile'=>'keitai'), // The same?
+
+	// Opera, dressing up as other embedded browsers
+	// Sample: "Mozilla/3.0(DDIPOCKET;KYOCERA/AH-K3001V/1.4.1.67.000000/0.1/C100) Opera 7.0" (Like CNF at 'keitai'-mode)
+	array('pattern'=>'#\bDDIPOCKET\b.+\b(Opera) ([0-9\.]+)\b#',	'profile'=>'keitai'),
 
 	// Planetweb http://www.planetweb.com/
 	// Sample: "Mozilla/3.0 (Planetweb/v1.07 Build 141; SPS JP)" ("EGBROWSER", Web browser for PlayStation 2)
