@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: link.php,v 1.6 2003/07/29 09:09:20 arino Exp $
+// $Id: link.php,v 1.7 2004/07/09 23:47:48 henoheno Exp $
 //
 
 /*
@@ -35,8 +35,8 @@ function links_get_related_db($page)
 //ページの関連を更新する
 function links_update($page)
 {
-	set_time_limit(0);
-	
+	if (ini_get('safe_mode') == '0') set_time_limit(0);
+
 	$time = is_page($page,TRUE) ? get_filetime($page) : 0;
 	
 	$rel_old = array();
@@ -124,9 +124,9 @@ function links_update($page)
 function links_init()
 {
 	global $whatsnew;
-	
-	set_time_limit(0);
-	
+
+	if (ini_get('safe_mode') == '0') set_time_limit(0);
+
 	// データベースの初期化
 	foreach (get_existfiles(CACHE_DIR,'.ref') as $cache)
 	{

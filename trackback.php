@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.16 2004/03/18 09:24:35 arino Exp $
+// $Id: trackback.php,v 1.17 2004/07/09 23:47:48 henoheno Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -76,8 +76,9 @@ function tb_send($page,$data)
 	{
 		return;
 	}
-	
-	set_time_limit(0); // 処理実行時間制限(php.ini オプション max_execution_time )
+
+	// 処理実行時間制限(php.ini オプション max_execution_time )
+	if (ini_get('safe_mode') == '0') set_time_limit(0);
 	
 	$data = convert_html($data);
 	
