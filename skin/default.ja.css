@@ -1,12 +1,12 @@
+@charset "shift_jis";
+/* this @charset is for mozilla's bug */
 /*
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: default.ja.css,v 1.14.2.1 2004/04/03 16:35:51 arino Exp $
+// $Id: default.ja.css,v 1.14.2.2 2004/04/03 18:38:11 arino Exp $
 //
 */
-@charset "shift_jis";
-/* this @charset is for mozilla's bug */
 
 pre, dl, ol, p, blockquote { line-height:130%; }
 

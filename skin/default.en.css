@@ -1,11 +1,11 @@
+@charset "iso-8859-1";
 /*
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: default.en.css,v 1.13.2.1 2004/04/03 16:35:51 arino Exp $
+// $Id: default.en.css,v 1.13.2.2 2004/04/03 18:38:11 arino Exp $
 //
 */
-@charset "iso-8859-1";
 
 pre, dl, ol, p, blockquote { line-height:130%; }
 
