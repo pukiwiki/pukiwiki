@@ -463,8 +463,9 @@ td.menubar
 
 div#menubar
 {
-	padding:4px;
-	margin:0px;
+	width:9em;
+	padding:0px;
+	margin:4px;
 	word-break:break-all;
 	font-size:90%;
 	overflow:hidden;
