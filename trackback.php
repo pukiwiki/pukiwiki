@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.12 2003/09/03 04:05:38 arino Exp $
+// $Id: trackback.php,v 1.13 2003/09/03 05:53:45 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -62,7 +62,7 @@ function tb_id2page($tb_id)
 // TrackBack Ping データファイル名を取得
 function tb_get_filename($page,$ext='.txt')
 {
-	return TRACKBACK_DIR.encode($page).$ext;
+	return TRACKBACK_DIR.tb_get_id($page).$ext;
 }
 
 // TrackBack Ping データ個数取得
