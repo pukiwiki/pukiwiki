@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: link.php,v 1.2 2003/03/15 11:38:50 panda Exp $
+// $Id: link.php,v 1.3 2003/03/30 03:50:03 panda Exp $
 //
 
 /*
@@ -35,8 +35,6 @@ function links_get_related_db($page)
 //ページの関連を更新する
 function links_update($page)
 {
-	global $whatsnew;
-	
 	set_time_limit(0);
 	
 	$time = is_page($page) ? get_filetime($page) : 0;

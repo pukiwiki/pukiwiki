@@ -1,11 +1,11 @@
 <?php
-// $Id: template.inc.php,v 1.8 2003/03/03 07:35:56 panda Exp $
+// $Id: template.inc.php,v 1.9 2003/03/30 03:49:26 panda Exp $
 
 define('MAX_LEN',60);
 
 function plugin_template_action()
 {
-	global $script,$vars,$whatsnew;
+	global $script,$vars;
 	global $_title_edit;
 	
 	if (!is_page($vars['refer']))
