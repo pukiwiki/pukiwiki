@@ -1,13 +1,11 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: clear.inc.php,v 1.4 2004/11/27 10:01:21 henoheno Exp $
 //
-// $Id: clear.inc.php,v 1.3 2004/08/23 11:46:10 henoheno Exp $
-//
-// div class="clear"を表示し、テキストの回りこみを解除する
-// plugin=clear
+// Clear plugin - inserts a CSS class 'clear', to set 'clear:both'
 
-function plugin_clear_convert() {
+function plugin_clear_convert()
+{
 	return '<div class="clear"></div>';
 }
 ?>
