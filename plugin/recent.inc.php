@@ -31,7 +31,7 @@ function plugin_recent_convert()
 	$recent = file(CACHE_DIR.'recent.dat');
 	$lines = array_splice($recent,0,$recent_lines);
 	foreach ($lines as $line) {
-		list($time,$page) = explode("\t",$line);
+		list($time,$page) = explode("\t",rtrim($line));
 		$_date = get_date($date_format,$time);
 		if ($date != $_date) {
 			if ($date != '') {
