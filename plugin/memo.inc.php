@@ -1,5 +1,5 @@
 <?php
-// $Id: memo.inc.php,v 1.4.2.3 2004/07/25 13:45:10 henoheno Exp $
+// $Id: memo.inc.php,v 1.4.2.4 2004/07/25 13:59:31 henoheno Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -16,17 +16,17 @@ function plugin_memo_action()
 
 	if (! isset($post['msg']) || $post['msg'] == '') return;
 
-	$post['msg'] = preg_replace("/(\x0D\x0A)/", "\n", $post['msg']);
-	$post['msg'] = preg_replace("/(\x0D)/", "\n", $post['msg']);
-	$post['msg'] = preg_replace("/(\x0A)/", "\n", $post['msg']);
-
-	$post['msg'] = str_replace("\n", "\\n", $post['msg']);
+	$memo_body = $post['msg'];
+	$memo_body = preg_replace("/(\x0D\x0A)/", "\n",	$memo_body);
+	$memo_body = preg_replace("/(\x0D)/", "\n",	$memo_body);
+	$memo_body = preg_replace("/(\x0A)/", "\n",	$memo_body);
+	$memo_body = str_replace("\n", "\\n",	$memo_body);
+	$memo_body = str_replace('"', '&#x22;',	$memo_body); // Escape double quotes
+	$memo_body = str_replace(',', '&#x2c;',	$memo_body); // Escape commas
 
 	$postdata = '';
 	$postdata_old  = file(get_filename(encode($post['refer'])));
 	$memo_no = 0;
-
-	$memo_body = $post['msg'];
 
 	foreach($postdata_old as $line)
 	{
@@ -41,7 +41,6 @@ function plugin_memo_action()
 		}
 		$postdata .= $line;
 	}
-
 	$postdata_input = "$memo_body\n";
 
 	if(md5(@join('', @file(get_filename(encode($post['refer']))))) != $post['digest'])
@@ -106,10 +105,11 @@ function plugin_memo_convert()
 	global $_btn_memo_update, $vars;
 	static $memo_no = 0;
 
-	if(func_num_args())
-		$aryargs = func_get_args();
-
-	$s_data = htmlspecialchars(str_replace("\\n", "\n", $aryargs[0]));
+	$data = func_get_args();
+	$data = implode(',', $data);	// Care all arguments
+	$data = str_replace('&#x2c;', ',', $data);	// Unescape commas
+	$data = str_replace('&#x22;', '"', $data);	// Unescape double quotes
+	$data = htmlspecialchars(str_replace("\\n", "\n", $data));
 
 	if((arg_check('read') || $vars['cmd'] == '' || arg_check('unfreeze') ||
 	    arg_check('freeze') || $vars['write'] || $vars['memo']))
@@ -123,7 +123,7 @@ function plugin_memo_convert()
 		 . "<input type=\"hidden\" name=\"refer\"   value=\"$s_page\" />\n"
 		 . "<input type=\"hidden\" name=\"plugin\"  value=\"memo\" />\n"
 		 . "<input type=\"hidden\" name=\"digest\"  value=\"$digest\" />\n"
-		 . "<textarea name=\"msg\" rows=\"" . MEMO_ROWS . "\" cols=\"" . MEMO_COLS . "\">\n$s_data</textarea><br />\n"
+		 . "<textarea name=\"msg\" rows=\"" . MEMO_ROWS . "\" cols=\"" . MEMO_COLS . "\">\n$data</textarea><br />\n"
 		 . $button
 		 . "</div>\n"
 		 . "</form>";
