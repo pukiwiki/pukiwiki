@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.ini.php,v 1.15 2004/09/30 12:29:51 henoheno Exp $
+// $Id: keitai.ini.php,v 1.16 2004/10/10 09:00:56 henoheno Exp $
 //
 // PukiWiki setting file (Cell phones, PDAs and other thin clients)
 
@@ -24,13 +24,13 @@ $list_index = 0;
 
 /////////////////////////////////////////////////
 // リスト構造の左マージン
-$_ul_left_margin = 0;   // リストと画面左端との間隔(px)
-$_ul_margin = 16;       // リストの階層間の間隔(px)
-$_ol_left_margin = 0;   // リストと画面左端との間隔(px)
-$_ol_margin = 16;       // リストの階層間の間隔(px)
-$_dl_left_margin = 0;   // リストと画面左端との間隔(px)
-$_dl_margin = 16;        // リストの階層間の間隔(px)
-$_list_pad_str = '';
+$_ul_left_margin =  0;	// リストと画面左端との間隔(px)
+$_ul_margin      = 16;	// リストの階層間の間隔(px)
+$_ol_left_margin =  0;	// リストと画面左端との間隔(px)
+$_ol_margin      = 16;	// リストの階層間の間隔(px)
+$_dl_left_margin =  0;	// リストと画面左端との間隔(px)
+$_dl_margin      = 16;	// リストの階層間の間隔(px)
+$_list_pad_str   = '';
 
 /////////////////////////////////////////////////
 // 大・小見出しから目次へ戻るリンクの文字
@@ -73,7 +73,7 @@ $accesskey = 'accesskey';
 
 /////////////////////////////////////////////////
 // $scriptを短縮
-if (preg_match('#([^/]+)$#',$script,$matches)) {
+if (preg_match('#([^/]+)$#', $script, $matches)) {
 	$script = $matches[1];
 }
 
@@ -93,7 +93,7 @@ $cols = 22; $rows = 5;	// i_mode
 $ua_name  = $user_agent['name'];
 $ua_vers  = $user_agent['vers'];
 $ua_agent = $user_agent['agent'];
-$matches = array();
+$matches  = array();
 
 // Browser-name only
 switch ($ua_name) {
@@ -134,9 +134,8 @@ switch ($ua_name) {
 		// UP.Browser for KDDI cell phones
 		// http://www.au.kddi.com/ezfactory/tec/spec/xhtml.html ('About 9KB max')
 		// http://www.au.kddi.com/ezfactory/tec/spec/4_4.html (User-agent strings)
-		if (preg_match('#^KDDI#', $ua_agent)) {
-			$max_size =  9;
-		}
+		if (preg_match('#^KDDI#', $ua_agent)) $max_size =  9;
+		break;
 }
 
 // Browser-name + version
