@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rename.inc.php,v 1.8 2003/07/03 05:25:10 arino Exp $
+// $Id: rename.inc.php,v 1.9 2003/11/12 00:47:15 arino Exp $
 //
 
 /*
@@ -56,7 +56,7 @@ function plugin_rename_action()
 		$refer = rename_getvar('refer');
 		if ($refer == '')
 		{
-			return rename_phase1($s_vars);
+			return rename_phase1();
 		}
 		if (!is_page($refer))
 		{
@@ -187,7 +187,7 @@ $msg
   <input type="hidden" name="refer" value="$s_refer" />
   $msg_rename<br />
   {$_rename_messages['msg_newname']}:<input type="text" name="page" size="80" value="$s_page" /><br />
-  $rename_related
+  $msg_related
   <input type="submit" value="{$_rename_messages['btn_next']}" /><br />
  </div>
 </form>
