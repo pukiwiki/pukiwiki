@@ -2,61 +2,36 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.27 2004/08/19 11:55:19 henoheno Exp $
+// $Id: ref.inc.php,v 1.28 2004/08/19 12:01:53 henoheno Exp $
 //
 
 /*
-
 * プラグイン ref
-ページに添付されたファイルを展開する
-URLを展開する
+- ページに添付されたファイルを展開する
+- URLを展開する
 
 * Usage
  #ref(filename[,page][,parameters][,title])
 
 * パラメータ
-- filename
-添付ファイル名、あるいはURL
-
-'ページ名/添付ファイル名'を指定すると、そのページの添付ファイルを参照する
-
-- page
-ファイルを添付したページ名(省略可)
-
-- Left|Center|Right
-横の位置合わせ
-
-- Wrap|Nowrap
-テーブルタグで囲む/囲まない
-
-- Around
-テキストの回り込み
-
-- noicon
-アイコンを表示しない
-
-- nolink
-元ファイルへのリンクを張らない
-
-- noimg
-画像を展開しない
-
-- zoom
-縦横比を保持する
-
-- 999x999
-サイズを指定(幅x高さ)
-
-- 999%
-サイズを指定(拡大率)
-
-- その他の文字列
-imgのalt/hrefのtitleとして使用~
+- filename -- 添付ファイル名、あるいはURL
+-- 'ページ名/添付ファイル名'を指定すると、指定したページの添付ファイルを参照する
+- page    -- ファイルを添付したページ名(省略可)
+- Left|Center|Right -- 横の位置合わせ
+- Wrap|Nowrap -- テーブルタグで囲む/囲まない
+- Around  -- テキストの回り込み
+- noicon  -- アイコンを表示しない
+- nolink  -- 元ファイルへのリンクを張らない
+- noimg   -- 画像を展開しない
+- zoom    -- 縦横比を保持する
+- 999x999 -- サイズを指定(幅x高さ)
+- 999%    -- サイズを指定(拡大率)
+- その他の文字列 -- imgのalt/hrefのtitleとして使用
 ページ名やパラメータに見える文字列を使用するときは、#ref(hoge.png,,zoom)のように
 タイトルの前にカンマを余分に入れる
-
 */
 
+// Usage
 define('PLUGIN_REF_USAGE', "(attached-file-name[,page][,parameters][,title])");
 
 // File icon image
@@ -70,7 +45,7 @@ if (! defined('FILE_ICON')) {
 define('REF_DEFAULT_ALIGN', 'left'); // 'left', 'center', 'right'
 
 // Force wrap on default
-define('REF_WRAP_TABLE', FALSE); // TRUE,FALSE
+define('REF_WRAP_TABLE', FALSE); // TRUE, FALSE
 
 // URL指定時に画像サイズを取得するか
 define('REF_URL_GETIMAGESIZE', FALSE);
@@ -99,7 +74,7 @@ function plugin_ref_convert()
 	$params = plugin_ref_body(func_get_args());
 
 	if (isset($params['_error']) && $params['_error'] != '') {
-		return "<p>#ref(): {$params['_error']}</p>";
+		return "<p>#ref(): {$params['_error']}</p>\n";
 	}
 
 	if ((REF_WRAP_TABLE && ! $params['nowrap']) || $params['wrap']) {
