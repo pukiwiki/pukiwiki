@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.8 2004/10/02 01:21:48 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.9 2004/10/03 07:05:34 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -15,8 +15,30 @@ if (! file_exists(SKIN_DIR . $skin_lang)) {
 	die($skin_lang . ' is not found');  // die_message() causes a loop!
 } else {
 	require_once(SKIN_DIR . $skin_lang);
-	$lang = $_LANG['skin'];
 }
+
+// Set skin-specific images
+$_IMAGE['skin']['logo']     = 'pukiwiki.png';
+$_IMAGE['skin']['reload']   = 'reload.png';
+$_IMAGE['skin']['new']      = 'new.png';
+$_IMAGE['skin']['edit']     = 'edit.png';
+$_IMAGE['skin']['freeze']   = 'freeze.png';
+$_IMAGE['skin']['unfreeze'] = 'unfreeze.png';
+$_IMAGE['skin']['diff']     = 'diff.png';
+$_IMAGE['skin']['upload']   = 'file.png';
+$_IMAGE['skin']['copy']     = 'copy.png';
+$_IMAGE['skin']['rename']   = 'rename.png';
+$_IMAGE['skin']['top']      = 'top.png';
+$_IMAGE['skin']['list']     = 'list.png';
+$_IMAGE['skin']['search']   = 'search.png';
+$_IMAGE['skin']['recent']   = 'recentchanges.png';
+$_IMAGE['skin']['backup']   = 'backup.png';
+$_IMAGE['skin']['help']     = 'help';
+$_IMAGE['skin']['rss']      = 'rss.png';
+
+$lang  = $_LANG['skin'];
+$link  = $_LINK;
+$image = $_IMAGE['skin'];
 
 // Decide charset for CSS
 $css_charset = 'iso-8859-1';
@@ -50,10 +72,7 @@ if ($html_transitional) { ?>
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>" type="text/css" media="screen" charset="<?php echo $css_charset ?>" />
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>&amp;media=print" type="text/css" media="print" charset="<?php echo $css_charset ?>" />
 
-<?php
-  global $trackback, $referer;
-  if ($trackback) {
-?>
+<?php if ($trackback) { ?>
  <meta http-equiv="Content-Script-Type" content="text/javascript" />
  <script type="text/javascript" src="skin/trackback.js"></script>
 <?php } ?>
@@ -63,74 +82,67 @@ if ($html_transitional) { ?>
 <body>
 
 <div id="header">
- <a href="<?php echo $link_top ?>"><img id="logo" src="<?php echo IMAGE_DIR ?>pukiwiki.png" width="80" height="80" alt="[PukiWiki]" title="[PukiWiki]" /></a>
+ <a href="<?php echo $link['top'] ?>"><img id="logo" src="<?php echo IMAGE_DIR . $image['logo'] ?>" width="80" height="80" alt="[PukiWiki]" title="[PukiWiki]" /></a>
+
  <h1 class="title"><?php echo $page ?></h1>
 
 <?php if ($is_page) { ?>
- <a href="<?php echo "$script?$r_page" ?>"><span class="small"><?php echo "$script?$r_page" ?></span></a>
+ <a href="<?php echo $link['reload'] ?>"><span class="small"><?php echo $link['reload'] ?></span></a>
 <?php } ?>
 
 </div>
-
 
 <div id="navigator">
+<?php
+function _navigator($key, $value = ''){
+	$lang = $GLOBALS['_LANG']['skin'];
+	$link = $GLOBALS['_LINK'];
+	if (! isset($lang[$key])) { echo 'LANG NOT FOUND'; return FALSE; }
+	if (! isset($link[$key])) { echo 'LINK NOT FOUND'; return FALSE; }
 
+	echo '<a href="' . $link[$key] . '">' . (($value === '') ? $lang[$key] : $value) . '</a>';
+
+	return TRUE;
+}
+?>
 <?php if ($is_page) { ?>
- [ <a href="<?php echo "$script?$r_page" ?>"><?php echo $lang['reload'] ?></a> ]
- &nbsp;
- [ <a href="<?php echo "$script?plugin=newpage&amp;refer=$r_page" ?>"><?php echo $lang['new'] ?></a>
- | <a href="<?php echo $link_edit ?>"><?php echo $lang['edit'] ?></a>
-<?php   if ($is_read and $function_freeze) { ?>
-<?php     if ($is_freeze) { ?>
- | <a href="<?php echo $link_unfreeze ?>"><?php echo $lang['unfreeze'] ?></a>
-<?php     } else { ?>
- | <a href="<?php echo $link_freeze ?>"><?php echo $lang['freeze'] ?></a>
-<?php     } ?>
-<?php   } ?>
+ [ <?php _navigator('reload') ?> ] &nbsp;
 
- | <a href="<?php echo $link_diff ?>"><?php echo $lang['diff'] ?></a>
+ [ <?php _navigator('new')    ?>
+ | <?php _navigator('edit')   ?>
+ <?php if ($is_read and $function_freeze) { ?>
+ |  <?php (! $is_freeze) ? _navigator('freeze') : _navigator('unfreeze') ?>
+ <?php } ?>
+ | <?php _navigator('diff') ?>
+ <?php if ((bool)ini_get('file_uploads')) { ?>
+ | <?php _navigator('upload') ?>
+ <?php } ?>
+ ] &nbsp;
+<?php } ?>
 
-<?php   if ((bool)ini_get('file_uploads')) { ?>
- | <a href="<?php echo $link_upload ?>"><?php echo $lang['upload'] ?></a>
-<?php   } ?>
-
+ [ <?php _navigator('top')  ?>
+ | <?php _navigator('list') ?>
+ <?php if (arg_check('list')) { ?>
+ | <?php _navigator('filelist') ?>
+ <?php } ?>
+ | <?php _navigator('search') ?>
+ | <?php _navigator('recent') ?>
+ <?php if ($do_backup) { ?>
+ | <?php _navigator('backup') ?>
+ <?php } ?>
+ | <?php _navigator('help')   ?>
  ]
- &nbsp;
+
+<?php if ($trackback) { ?> &nbsp;
+ [ <?php _navigator('trackback', $lang['trackback'] . '(' . tb_count($_page) . ')') ?> ]
 <?php } ?>
-
- [ <a href="<?php echo $link_top ?>"><?php echo $lang['top'] ?></a>
- | <a href="<?php echo $link_list ?>"><?php echo $lang['list'] ?></a>
-
-<?php if (arg_check('list')) { ?>
- | <a href="<?php echo $link_filelist ?>"><?php echo $lang['filelist'] ?></a>
-<?php } ?>
-
- | <a href="<?php echo $link_search ?>"><?php echo $lang['search'] ?></a>
- | <a href="<?php echo $link_whatsnew ?>"><?php echo $lang['recent'] ?></a>
-
-<?php if ($do_backup) { ?>
- | <a href="<?php echo $link_backup ?>"><?php echo $lang['backup'] ?></a>
-<?php } ?>
-
- | <a href="<?php echo $link_help ?>"><?php echo $lang['help'] ?></a>
- ]
-<?php
-  if ($trackback) {
-    $tb_id = tb_get_id($_page);
-?>
- &nbsp;
- [ <a href="<?php echo "$script?plugin=tb&amp;__mode=view&amp;tb_id=$tb_id" ?>"><?php echo $lang['trackback'] ?>(<?php echo tb_count($_page) ?>)</a> ]
-<?php } ?>
-
-<?php
-  if ($referer) {
-?>
- [ <a href="<?php echo "$script?plugin=referer&amp;page=$r_page" ?>"><?php echo $lang['refer'] ?></a> ]
+<?php if ($referer)   { ?> &nbsp;
+ [ <?php _navigator('refer') ?> ]
 <?php } ?>
 
 </div>
-<?php echo $hr ?>
 
+<?php echo $hr ?>
 
 <?php if (arg_check('read') and exist_plugin_convert('menu')) { ?>
 <table border="0" style="width:100%">
@@ -149,13 +161,11 @@ if ($html_transitional) { ?>
 <div id="body"><?php echo $body ?></div>
 <?php } ?>
 
-
 <?php if ($notes) { ?>
 <div id="note">
 <?php echo $notes ?>
 </div>
 <?php } ?>
-
 
 <?php if ($attaches) { ?>
 <div id="attach">
@@ -164,46 +174,51 @@ if ($html_transitional) { ?>
 </div>
 <?php } ?>
 
-
 <?php echo $hr ?>
+
 <div id="toolbar">
+<?php
+function _toolbar($key, $x = 20, $y = 20){
+	$lang  = $GLOBALS['_LANG']['skin'];
+	$link  = $GLOBALS['_LINK'];
+	$image = $GLOBALS['_IMAGE']['skin'];
+	if (! isset($lang[$key]) ) { echo 'LANG NOT FOUND';  return FALSE; }
+	if (! isset($link[$key]) ) { echo 'LINK NOT FOUND';  return FALSE; }
+	if (! isset($image[$key])) { echo 'IMAGE NOT FOUND'; return FALSE; }
 
+	echo '<a href="' . $link[$key] . '">' .
+		'<img src="' . IMAGE_DIR . $image[$key] . '" width="' . $x . '" height="' . $y . '" ' .
+			'alt="' . $lang[$key] . '" title="' . $lang[$key] . '" />' .
+		'</a>';
+	return TRUE;
+}
+?>
 <?php if ($is_page) { ?>
- <a href="<?php echo "$script?$r_page" ?>"><img src="<?php echo IMAGE_DIR ?>reload.png" width="20" height="20" alt="<?php echo $lang['reload'] ?>" title="<?php echo $lang['reload'] ?>" /></a>
+ <?php _toolbar('reload') ?>
  &nbsp;
- <a href="<?php echo $script ?>?plugin=newpage"><img src="<?php echo IMAGE_DIR ?>new.png" width="20" height="20" alt="<?php echo $lang['new'] ?>" title="<?php echo $lang['new'] ?>" /></a>
- <a href="<?php echo $link_edit ?>"><img src="<?php echo IMAGE_DIR ?>edit.png" width="20" height="20" alt="<?php echo $lang['edit'] ?>" title="<?php echo $lang['edit'] ?>" /></a>
-<?php   if ($is_read and $function_freeze) { ?>
-<?php     if ($is_freeze) { ?>
- <a href="<?php echo $link_unfreeze ?>"><img src="<?php echo IMAGE_DIR ?>unfreeze.png" width="20" height="20" alt="<?php echo $lang['unfreeze'] ?>" title="<?php echo $lang['unfreeze'] ?>" /></a>
-<?php     } else { ?>
- <a href="<?php echo $link_freeze ?>"><img src="<?php echo IMAGE_DIR ?>freeze.png" width="20" height="20" alt="<?php echo $lang['freeze'] ?>" title="<?php echo $lang['freeze'] ?>" /></a>
-<?php     } ?>
-<?php   } ?>
- <a href="<?php echo $link_diff ?>"><img src="<?php echo IMAGE_DIR ?>diff.png" width="20" height="20" alt="<?php echo $lang['diff'] ?>" title="<?php echo $lang['diff'] ?>" /></a>
-<?php   if ((bool)ini_get('file_uploads')) { ?>
- <a href="<?php echo $link_upload ?>"><img src="<?php echo IMAGE_DIR ?>file.png" width="20" height="20" alt="<?php echo $lang['upload'] ?>" title="<?php echo $lang['upload'] ?>" /></a>
-<?php   } ?>
- <a href="<?php echo $link_template ?>"><img src="<?php echo IMAGE_DIR ?>copy.png" width="20" height="20" alt="<?php echo $lang['copy'] ?>" title="<?php echo $lang['copy'] ?>" /></a>
- <a href="<?php echo $link_rename ?>"><img src="<?php echo IMAGE_DIR ?>rename.png" width="20" height="20" alt="<?php echo $lang['rename'] ?>" title="<?php echo $lang['rename'] ?>" /></a>
+ <?php _toolbar('new') ?>
+ <?php _toolbar('edit') ?>
+ <?php if ($is_read and $function_freeze) { ?>
+  <?php if (! $is_freeze) { _toolbar('freeze'); } else { _toolbar('unfreeze'); } ?>
+ <?php } ?>
+ <?php _toolbar('diff') ?>
+ <?php if ((bool)ini_get('file_uploads')) { ?>
+  <?php _toolbar('upload') ?>
+ <?php } ?>
+ <?php _toolbar('copy') ?>
+ <?php _toolbar('rename') ?>
  &nbsp;
 <?php } ?>
-
- <a href="<?php echo $link_top ?>"><img src="<?php echo IMAGE_DIR ?>top.png" width="20" height="20" alt="<?php echo $lang['top'] ?>" title="<?php echo $lang['top'] ?>" /></a>
- <a href="<?php echo $link_list ?>"><img src="<?php echo IMAGE_DIR ?>list.png" width="20" height="20" alt="<?php echo $lang['list'] ?>" title="<?php echo $lang['list'] ?>" /></a>
- <a href="<?php echo $link_search ?>"><img src="<?php echo IMAGE_DIR ?>search.png" width="20" height="20" alt="<?php echo $lang['search'] ?>" title="<?php echo $lang['search'] ?>" /></a>
- <a href="<?php echo $link_whatsnew ?>"><img src="<?php echo IMAGE_DIR ?>recentchanges.png" width="20" height="20" alt="<?php echo $lang['recent'] ?>" title="<?php echo $lang['recent'] ?>" /></a>
-
+ <?php _toolbar('top')    ?>
+ <?php _toolbar('list')   ?>
+ <?php _toolbar('search') ?>
+ <?php _toolbar('recent') ?>
 <?php if ($do_backup) { ?>
- <a href="<?php echo $link_backup ?>"><img src="<?php echo IMAGE_DIR ?>backup.png" width="20" height="20" alt="<?php echo $lang['backup'] ?>" title="<?php echo $lang['backup'] ?>" /></a>
+  <?php _toolbar('backup') ?>
 <?php } ?>
-
- &nbsp;
- <a href="<?php echo $link_help ?>"><img src="<?php echo IMAGE_DIR ?>help.png" width="20" height="20" alt="<?php echo $lang['help'] ?>" title="<?php echo $lang['help'] ?>" /></a>
- &nbsp;
- <a href="<?php echo $link_rss ?>"><img src="<?php echo IMAGE_DIR ?>rss.png" width="36" height="14" alt="<?php echo $lang['rss'] ?>" title="<?php echo $lang['rss'] ?>" /></a>
+ &nbsp; <?php _toolbar('help') ?>
+ &nbsp; <?php _toolbar('rss', 36, 14) ?>
 </div>
-
 
 <?php if ($lastmodified) { ?>
 <div id="lastmodified">
@@ -211,13 +226,11 @@ if ($html_transitional) { ?>
 </div>
 <?php } ?>
 
-
 <?php if ($related) { ?>
 <div id="related">
  Link: <?php echo $related ?>
 </div>
 <?php } ?>
-
 
 <div id="footer">
  Modified by <a href="<?php echo $modifierlink ?>"><?php echo $modifier ?></a>

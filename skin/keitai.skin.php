@@ -2,49 +2,48 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.skin.php,v 1.1 2004/09/30 12:29:51 henoheno Exp $
+// $Id: keitai.skin.php,v 1.2 2004/10/03 07:05:34 henoheno Exp $
 //
 
-global $script, $vars, $page_title, $max_size, $accesskey, $menubar;
+// Prohibit direct access
+if (! defined('SKIN_LANG')) exit;
 
-if (! defined('DATA_DIR')) exit;
+global $max_size, $accesskey, $menubar;
+$link = $_LINK;
 
-// Shift JIS encode
+// Force Shift JIS encode for Japanese embedded browsers and devices
 header('Content-Type: text/html; charset=Shift_JIS');
 $title = mb_convert_encoding($title, 'SJIS', SOURCE_ENCODING);
 $body  = mb_convert_encoding($body,  'SJIS', SOURCE_ENCODING);
 
-//1KByte余裕を見る(ヘッダなど)
-$max_size = (--$max_size * 1024);
+// Make 1KByte spare (for header, etc)
+$max_size = --$max_size * 1024;
 
-// ALT option を持つ IMG タグ(画像)を文字列に置換
+// IMG タグ(画像)を文字列に置換
+// With ALT option
 $body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]*alt="([^"]+)"[^>]*>(?(2)</a>)(?(1)</div>)#i', '[$3]', $body);
-
-// ALT option の無い IMG タグ(画像)を文字列に置換
+// Without ALT option
 $body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]+>(?(2)</a>)(?(1)</div>)#i', '[img]', $body);
 
-// ページ番号
-$r_page = isset($vars['page']) ? $vars['page'] : '';
-$r_page = rawurlencode($r_page);
+// Page numbers, divided by this skin
 $pageno = (isset($vars['p']) and is_numeric($vars['p'])) ? $vars['p'] : 0;
 $pagecount = ceil(strlen($body) / $max_size);
 $lastpage = $pagecount - 1;
 
-// ナビゲーション
+// Top navigation (text) bar
 $navi = array();
-$navi[] = "<a href=\"$link_top\" $accesskey=\"0\">0.Top</a>";
-$navi[] = "<a href=\"$script?plugin=newpage&amp;refer=$r_page\" $accesskey=\"1\">1.New</a>";
-$navi[] = "<a href=\"$link_edit\" $accesskey=\"2\">2.Edit</a>";
+$navi[] = '<a href="' . $link['top']  . '" ' . $accesskey . '="0">0.Top</a>';
+$navi[] = '<a href="' . $link['new']  . '" ' . $accesskey . '="1">1.New</a>';
+$navi[] = '<a href="' . $link['edit'] . '" ' . $accesskey . '="2">2.Edit</a>';
 if ($is_read and $function_freeze) {
-	if ($is_freeze) {
-		$navi[] = "<a href=\"$link_unfreeze\" $accesskey=\"3\">3.Unfreeze</a>";
-	}
-	else {
-		$navi[] = "<a href=\"$link_freeze\" $accesskey=\"3\">3.Freeze</a>";
+	if (! $is_freeze) {
+		$navi[] = '<a href="' . $link['freeze']   . '" ' . $accesskey . '="3">3.Freeze</a>';
+	} else {
+		$navi[] = '<a href="' . $link['unfreeze'] . '" ' . $accesskey . '="3">3.Unfreeze</a>';
 	}
 }
-$navi[] = "<a href=\"$script?$menubar\" $accesskey=\"4\">4.Menu</a>";
-$navi[] = "<a href=\"$link_whatsnew\" $accesskey=\"5\">5.Recent</a>";
+$navi[] = '<a href="' . $script . '?' . $menubar . '" ' . $accesskey . '="4">4.Menu</a>';
+$navi[] = '<a href="' . $link['recent'] . '" ' . $accesskey . '="5">5.Recent</a>';
 
 // 前/次のブロック
 if ($pagecount > 1) {

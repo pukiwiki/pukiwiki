@@ -2,15 +2,16 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.2 2004/08/06 15:41:41 henoheno Exp $
+// $Id: html.php,v 1.3 2004/10/03 07:05:34 henoheno Exp $
 //
 
 // 本文を出力
 function catbody($title,$page,$body)
 {
-	global $script,$vars,$arg,$defaultpage,$whatsnew,$help_page,$hr;
-	global $related_link,$cantedit,$function_freeze,$search_word_color,$_msg_word;
-	global $foot_explain,$note_hr,$head_tags;
+	global $script, $vars, $arg, $defaultpage, $whatsnew, $help_page, $hr;
+	global $related_link, $cantedit, $function_freeze, $search_word_color, $_msg_word;
+	global $foot_explain, $note_hr, $head_tags, $trackback, $referer;
+	global $_LANG, $_LINK, $_IMAGE;
 
 	global $html_transitional; // FALSE:XHTML1.1 TRUE:XHTML1.0 Transitional
 	global $page_title;        // ホームページのタイトル
@@ -18,25 +19,35 @@ function catbody($title,$page,$body)
 	global $modifier;          // 編集者のホームページ
 	global $modifierlink;      // 編集者の名前
 
-	$_page = $vars['page'];
+	$_LANG = $_LINK = $_IMAGE = array();
+
+	$_page  = isset($vars['page']) ? $vars['page'] : '';
 	$r_page = rawurlencode($_page);
 
-	$link_add      = "$script?cmd=add&amp;page=$r_page";
-	$link_edit     = "$script?cmd=edit&amp;page=$r_page";
-	$link_diff     = "$script?cmd=diff&amp;page=$r_page";
-	$link_top      = "$script?".rawurlencode($defaultpage);
-	$link_list     = "$script?cmd=list";
-	$link_filelist = "$script?cmd=filelist";
-	$link_search   = "$script?cmd=search";
-	$link_whatsnew = "$script?".rawurlencode($whatsnew);
-	$link_backup   = "$script?cmd=backup&amp;page=$r_page";
-	$link_help     = "$script?".rawurlencode($help_page);
-	$link_rss      = "$script?cmd=rss10";
-	$link_freeze   = "$script?cmd=freeze&amp;page=$r_page";
-	$link_unfreeze = "$script?cmd=unfreeze&amp;page=$r_page";
-	$link_upload   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
-	$link_template = "$script?plugin=template&amp;refer=$r_page";
-	$link_rename   = "$script?plugin=rename&amp;refer=$r_page";
+	// Set $_LINK for skin
+	$_LINK['add']      = "$script?cmd=add&amp;page=$r_page";
+	$_LINK['backup']   = "$script?cmd=backup&amp;page=$r_page";
+	$_LINK['copy']     = "$script?plugin=template&amp;refer=$r_page";
+	$_LINK['diff']     = "$script?cmd=diff&amp;page=$r_page";
+	$_LINK['edit']     = "$script?cmd=edit&amp;page=$r_page";
+	$_LINK['filelist'] = "$script?cmd=filelist";
+	$_LINK['freeze']   = "$script?cmd=freeze&amp;page=$r_page";
+	$_LINK['help']     = "$script?" . rawurlencode($help_page);
+	$_LINK['list']     = "$script?cmd=list";
+	$_LINK['new']      = "$script?plugin=newpage&amp;refer=$r_page";
+	$_LINK['recent']   = "$script?" . rawurlencode($whatsnew);
+	$_LINK['refer']    = "$script?plugin=referer&amp;page=$r_page";
+	$_LINK['reload']   = "$script?$r_page";
+	$_LINK['rename']   = "$script?plugin=rename&amp;refer=$r_page";
+	$_LINK['rss']      = "$script?cmd=rss10";
+	$_LINK['search']   = "$script?cmd=search";
+	$_LINK['top']      = "$script?" . rawurlencode($defaultpage);
+	if ($trackback) {
+		$tb_id = tb_get_id($_page);
+		$_LINK['trackback'] = "$script?plugin=tb&amp;__mode=view&amp;tb_id=$tb_id";
+	}
+	$_LINK['unfreeze'] = "$script?cmd=unfreeze&amp;page=$r_page";
+	$_LINK['upload']   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
 
 	// ページの表示時TRUE(バックアップの表示、RecentChangesの表示を除く)
 	$is_page = (is_pagename($_page) and !arg_check('backup') and $_page != $whatsnew);
