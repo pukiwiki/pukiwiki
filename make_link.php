@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.40 2003/05/19 09:14:40 arino Exp $
+// $Id: make_link.php,v 1.41 2003/05/19 14:16:33 arino Exp $
 //
 
 // リンクを付加する
@@ -343,8 +343,8 @@ EOD;
 	{
 		$arr = $this->splice($arr);
 		
-		$name = $arr[3];
-		$alias = ($arr[2] == '') ? $arr[3] : $arr[2];
+		$name = htmlspecialchars($arr[3]);
+		$alias = ($arr[2] == '') ? $name : $arr[2];
 		return parent::setParam($page,$name,'url',$alias);
 		
 	}
@@ -380,7 +380,7 @@ EOD;
 	{
 		$arr = $this->splice($arr);
 		
-		$name = $arr[1];
+		$name = htmlspecialchars($arr[1]);
 		$alias = $arr[2];
 		
 		return parent::setParam($page,$name,'url',$alias);
