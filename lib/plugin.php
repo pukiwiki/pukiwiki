@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: plugin.php,v 1.13 2004/07/31 03:09:19 henoheno Exp $
+// $Id: plugin.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
 //
 
 // プラグイン用に未定義の変数を設定

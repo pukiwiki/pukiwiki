@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.65 2004/07/31 03:09:19 henoheno Exp $
+// $Id: make_link.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
 //
 
 // リンクを付加する

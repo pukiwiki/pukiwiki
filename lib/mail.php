@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mail.php,v 1.7 2004/07/17 15:17:48 henoheno Exp $
+// $Id: mail.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
 //
 
 // APOP/POP Before SMTP

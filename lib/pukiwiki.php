@@ -29,7 +29,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.36 2004/08/01 01:22:37 henoheno Exp $
+// $Id: pukiwiki.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
 /////////////////////////////////////////////////
 
 /////////////////////////////////////////////////

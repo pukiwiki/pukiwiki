@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.php,v 1.8 2004/07/31 03:09:19 henoheno Exp $
+// $Id: diff.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
 //
 //衝突時に対応表を出す
 define('DIFF_SHOW_TABLE',TRUE);

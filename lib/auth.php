@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: auth.php,v 1.4 2004/07/31 03:09:19 henoheno Exp $
+// $Id: auth.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
 //
 
 // 編集不可能なページを編集しようとしたとき
