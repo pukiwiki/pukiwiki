@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.3 2003/01/31 04:50:17 panda Exp $
+// $Id: convert_html.php,v 1.4 2003/01/31 05:11:38 panda Exp $
 //
 
 function &convert_html(&$lines)
@@ -734,7 +734,7 @@ class Align extends Body
 	function toString()
 	{
 		$string = parent::toString();
-		if ($string != '') { print "<pre>'$string'</pre>";
+		if ($string != '') {
 			if (preg_match('/^(\s*<[^>]+style=")([^"]+)"/',$string,$matches)) {
 				$string = $matches[1]."text-align:{$this->align};".$matches[2];
 			}
