@@ -104,8 +104,6 @@ address {
 	background-color: #EEF5FF;
 	padding: 5px;
 	margin: 1px;
-	width:14%;
-	height:19px;
 }
 
 .style_calendar {
@@ -139,6 +137,14 @@ address {
 
 .style_td_sun {
 	background-color: #FFEEEE;
+	padding: 5px;
+	margin: 1px;
+	width:14%;
+	height:19px;
+}
+
+.style_td_day {
+	background-color: #EEF5FF;
 	padding: 5px;
 	margin: 1px;
 	width:14%;

@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar.inc.php,v 1.9 2002/11/29 00:09:01 panda Exp $
+// $Id: calendar.inc.php,v 1.10 2002/12/02 02:51:24 panda Exp $
 
 function plugin_calendar_convert()
 {
@@ -154,7 +154,7 @@ function plugin_calendar_convert()
 		else
 		{
 			// Weekday 
-			$ret .= "    <td align=\"center\" class=\"style_td\"><span class=\"small\">$link</span></td>\n";
+			$ret .= "    <td align=\"center\" class=\"style_td_day\"><span class=\"small\">$link</span></td>\n";
 		}
 		$day++;
 		$wday++;
