@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.22 2002/07/16 07:48:41 masui Exp $
+// $Id: html.php,v 1.23 2002/07/16 14:07:13 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -109,7 +109,7 @@ function convert_html($string)
 		if(!preg_match("/^\/\/(.*)/",$line,$comment_out) && $table != 0)
 		{
 			if(!preg_match("/^\|(.+)\|$/",$line,$out))
-				array_push($result, "</table>");
+				array_push($result, "</table></div>");
 			if(!$out[1] || $table != count(explode("|",$out[1])))
 				$table = 0;
 		}
@@ -228,7 +228,7 @@ function convert_html($string)
 				if(!$table)
 				{
 					$result = array_merge($result,$saved); $saved = array();
-					array_push($result,"<table class=\"style_table\" cellspacing=\"1\" border=\"0\">");
+					array_push($result,"<div class=\"ie5\"><table class=\"style_table\" cellspacing=\"1\" border=\"0\">");
 					$table = count($arytable);
 				}
 
@@ -298,7 +298,7 @@ function convert_html($string)
 		array_push($result, "</blockquote>");
 		$saved = array();
 	}
-	if($table) array_push($result, "</table>");
+	if($table) array_push($result, "</table></div>");
 	
 	$result_last = $result = array_merge($result,$saved); $saved = array();
 
