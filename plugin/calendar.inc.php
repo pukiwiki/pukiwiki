@@ -1,5 +1,5 @@
 <?
-// $Id: calendar.inc.php,v 1.4 2002/06/26 06:23:57 masui Exp $
+// $Id: calendar.inc.php,v 1.5 2002/07/01 07:08:57 masui Exp $
 
 function plugin_calendar_convert()
 {
@@ -95,8 +95,8 @@ function plugin_calendar_convert()
 <table class="style_calendar" cellspacing="1" width="150" border="0">
   <tbody>
   <tr>
-    <td align="middle" class="style_td_caltop" colspan="7" height="15">
-      <div align="center"><small><b>'.$m_name.'</b><br>[<a href="'.$script.'?'.$prefix_url.'">'.$pre.'</a>]</small></div>
+    <td align="middle" class="style_td_caltop" colspan="7">
+      <div class="small" style="text-align:center"><strong>'.$m_name.'</strong><br />[<a href="'.$script.'?'.$prefix_url.'">'.$pre.'</a>]</div>
     </td>
   </tr>
   <tr>
@@ -105,8 +105,8 @@ function plugin_calendar_convert()
 	foreach($weeklabels as $label)
 	{
 		$ret .= '
-    <td align="middle" class="style_td_week" height="15">
-      <div align="center"><small><b>'.$label.'</b></small></div>
+    <td align="middle" class="style_td_week">
+      <div class="small" style="text-align:center"><strong>'.$label.'</strong></div>
     </td>';
 	}
 
@@ -123,15 +123,15 @@ function plugin_calendar_convert()
 		else               $refer = "";
 		
 		if($cmd == "read" && !is_page($page))
-			$link = "<b>$day</b>";
+			$link = "<strong>$day</strong>";
 		else
-			$link = "<a href=\"$script?cmd=$cmd&amp;page=$page_url$refer\" title=\"$name\"><b>$day</b></a>";
+			$link = "<a href=\"$script?cmd=$cmd&amp;page=$page_url$refer\" title=\"$name\"><strong>$day</strong></a>";
 
 		if($fweek)
 		{
 			for($i=0;$i<$wday;$i++)
 			{ // Blank 
-				$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_blank\" height=\"19\">　</td>\n"; 
+				$ret .= "    <td align=\"center\" class=\"style_td_blank\">　</td>\n"; 
 			} 
 		$fweek=false;
 		}
@@ -140,22 +140,22 @@ function plugin_calendar_convert()
 		if(!$other_month && ($day == $today[mday]) && ($m_num == $today[mon]) && ($year == $today[year]))
 		{
 			//  Today 
-			$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_today\" height=\"19\"><small>$link</small></td>\n"; 
+			$ret .= "    <td align=\"center\" class=\"style_td_today\"><span class=\"small\">$link</span></td>\n"; 
 		}
 		else if($wday == 0)
 		{
 			//  Sunday 
-			$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_sun\" height=\"19\"><small>$link</small></td>\n";
+			$ret .= "    <td align=\"center\" class=\"style_td_sun\"><span class=\"small\">$link</span></td>\n";
 		}
 		else if($wday == 6)
 		{
 			//  Saturday 
-			$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_sat\" height=\"19\"><small>$link</small></td>\n";
+			$ret .= "    <td align=\"center\" class=\"style_td_sat\"><span class=\"small\">$link</span></td>\n";
 		}
 		else
 		{
 			// Weekday 
-			$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td\" height=\"19\"><small>$link</small></td>\n";
+			$ret .= "    <td align=\"center\" class=\"style_td\"><span class=\"small\">$link</span></td>\n";
 		}
 		$day++;
 		$wday++;
@@ -165,7 +165,7 @@ function plugin_calendar_convert()
 	{
 		while($wday < 7)
 		{ // Blank 
-			$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_blank\" height=\"19\">　</td>\n";
+			$ret .= "    <td align=\"center\" class=\"style_td_blank\">　</td>\n";
 		$wday++;
 		} 
 	}

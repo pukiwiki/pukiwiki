@@ -1,5 +1,5 @@
 <?
-// $Id: yetlist.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
+// $Id: yetlist.inc.php,v 1.4 2002/07/01 07:08:57 masui Exp $
 
 function plugin_yetlist_action()
 {
@@ -114,7 +114,7 @@ function plugin_yetlist_action()
 		}
 		$link_ref = trim($link_ref);
 		
-		$ret["body"] .= "<li><a href=\"$script?cmd=edit&amp;page=$url&amp;refer=$refurl\">$wbn</a> <i>($link_ref)</i></li>\n";
+		$ret["body"] .= "<li><a href=\"$script?cmd=edit&amp;page=$url&amp;refer=$refurl\">$wbn</a> <em>($link_ref)</em></li>\n";
 	}
 
 

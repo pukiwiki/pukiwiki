@@ -1,5 +1,5 @@
 <?
-// $Id: newpage.inc.php,v 1.2 2002/06/26 06:23:57 masui Exp $
+// $Id: newpage.inc.php,v 1.3 2002/07/01 07:08:57 masui Exp $
 
 function plugin_newpage_init()
 {
@@ -14,11 +14,13 @@ function plugin_newpage_convert()
 	global $script,$vars,$_btn_edit,$_msg_newpage;
 	
 	$ret = "<form action=\"$script\" method=\"post\">\n";
-	$ret.= "<input type=\"hidden\" name=\"plugin\" value=\"newpage\">\n";
-	$ret.= "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\">\n";
+	$ret.= "<div>\n";
+	$ret.= "<input type=\"hidden\" name=\"plugin\" value=\"newpage\" />\n";
+	$ret.= "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n";
 	$ret.= "$_msg_newpage: ";
-	$ret.= "<input type=\"text\" name=\"page\" size=\"30\" value=\"\">\n";
-	$ret.= "<input type=\"submit\" value=\"$_btn_edit\">\n";
+	$ret.= "<input type=\"text\" name=\"page\" size=\"30\" value=\"\" />\n";
+	$ret.= "<input type=\"submit\" value=\"$_btn_edit\" />\n";
+	$ret.= "</div>\n";
 	$ret.= "</form>\n";
 
 	return $ret;
@@ -31,11 +33,13 @@ function plugin_newpage_action()
 	if(!$vars["page"]) {
 		$retvars["msg"] = $_msg_newpage;
 		$retvars["body"] = "<form action=\"$script\" method=\"post\">\n";
-		$retvars["body"].= "<input type=\"hidden\" name=\"plugin\" value=\"newpage\">\n";
-		$retvars["body"].= "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\">\n";
+		$retvars["body"].= "<div>\n";
+		$retvars["body"].= "<input type=\"hidden\" name=\"plugin\" value=\"newpage\" />\n";
+		$retvars["body"].= "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n";
 		$retvars["body"].= "$_msg_newpage: ";
-		$retvars["body"].= "<input type=\"text\" name=\"page\" size=\"30\" value=\"\">\n";
-		$retvars["body"].= "<input type=\"submit\" value=\"$_btn_edit\">\n";
+		$retvars["body"].= "<input type=\"text\" name=\"page\" size=\"30\" value=\"\" />\n";
+		$retvars["body"].= "<input type=\"submit\" value=\"$_btn_edit\" />\n";
+		$retvars["body"].= "</div>\n";
 		$retvars["body"].= "</form>\n";
 
 		return $retvars;

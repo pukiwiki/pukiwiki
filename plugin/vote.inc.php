@@ -1,5 +1,5 @@
 <?
-// $Id: vote.inc.php,v 1.4 2002/06/27 08:47:55 masui Exp $
+// $Id: vote.inc.php,v 1.5 2002/07/01 07:08:57 masui Exp $
 
 function plugin_vote_action()
 {
@@ -52,9 +52,11 @@ function plugin_vote_action()
 		$body = "$_msg_collided\n";
 
 		$body .= "<form action=\"$script?cmd=preview\" method=\"post\">\n"
-			."<input type=\"hidden\" name=\"refer\" value=\"".$post["refer"]."\">\n"
-			."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\">\n"
-			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">$postdata_input</textarea><br>\n"
+			."<div>\n"
+			."<input type=\"hidden\" name=\"refer\" value=\"".$post["refer"]."\" />\n"
+			."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\" />\n"
+			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">$postdata_input</textarea><br />\n"
+			."</div>\n"
 			."</form>\n";
 	}
 	else
@@ -107,16 +109,15 @@ function plugin_vote_convert()
 
 	$string = ""
 		. "<form action=\"$script\" method=\"post\">\n"
-                . "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\">\n"
-
+		. "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\">\n"
 		. "<tr>\n"
-		. "<td align=\"left\" class=\"vote_label\"><b>The choices</b>"
-		. "<input type=\"hidden\" name=\"plugin\" value=\"vote\">\n"
-		. "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\">\n"
-		. "<input type=\"hidden\" name=\"vote_no\" value=\"$vote_no\">\n"
-		. "<input type=\"hidden\" name=\"digest\" value=\"$digest\">\n"
-                . "</td>\n"
-		. "<td align=\"center\" class=\"vote_label\"><b>Votes</b></td>\n"
+		. "<td align=\"left\" class=\"vote_label\"><strong>The choices</strong>"
+		. "<input type=\"hidden\" name=\"plugin\" value=\"vote\" />\n"
+		. "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n"
+		. "<input type=\"hidden\" name=\"vote_no\" value=\"$vote_no\" />\n"
+		. "<input type=\"hidden\" name=\"digest\" value=\"$digest\" />\n"
+		. "</td>\n"
+		. "<td align=\"center\" class=\"vote_label\"><strong>Votes</strong></td>\n"
 		. "</tr>\n";
 
 	$tdcnt = 0;
@@ -137,11 +138,11 @@ function plugin_vote_convert()
 
 		$string .= "<tr>"
 			.  "<td width=\"80%\" class=\"$cls\" nowrap>$link</td>"
-			.  "<td class=\"$cls\" nowrap>$cnt&nbsp;&nbsp;<input type=\"submit\" name=\"vote[$arg]\" value=\"Vote\"></td>";
+			.  "<td class=\"$cls\" nowrap=\"nowrap\">$cnt&nbsp;&nbsp;<input type=\"submit\" name=\"vote[$arg]\" value=\"Vote\" /></td>"
 			.  "</tr>\n";
 	}
 
-	$string .= "</table></form>\n"
+	$string .= "</table></form>\n";
 
 	$vote_no++;
 

@@ -1,5 +1,5 @@
 <?
-// $Id: img.inc.php,v 1.2 2002/06/26 06:23:57 masui Exp $
+// $Id: img.inc.php,v 1.3 2002/07/01 07:08:57 masui Exp $
 
 function plugin_img_convert()
 {
@@ -13,10 +13,12 @@ function plugin_img_convert()
 	if($align == 'R' || $align == 'RIGHT') {
 		$align = 'right';
 	}
-	else {
+	else if($align == 'L' || $align == 'LEFT') {
 		$align = 'left';
 	}
-	
-	return "<div style=\"float:$align\"><img src=\"$url\"></div>";
+	else {
+		return "<br style=\"clear:both\">";
+	}
+	return "<div style=\"float:$align;padding:.5em 1.5em .5em 1.5em\"><img src=\"$url\" alt=\"\" /></div>";
 }
 ?>

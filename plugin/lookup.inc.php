@@ -1,5 +1,5 @@
 <?
-// $Id: lookup.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
+// $Id: lookup.inc.php,v 1.4 2002/07/01 07:08:57 masui Exp $
 
 function plugin_lookup_convert()
 {
@@ -14,12 +14,14 @@ function plugin_lookup_convert()
 	$default = trim(strip_tags($args[2]));
 	
 	$ret = "<form action=\"$script\" method=\"post\">\n";
-	$ret.= "<input type=\"hidden\" name=\"plugin\" value=\"lookup\">\n";
-	$ret.= "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\">\n";
-	$ret.= "<input type=\"hidden\" name=\"inter\" value=\"$iwn\">\n";
+	$ret.= "<div>\n";
+	$ret.= "<input type=\"hidden\" name=\"plugin\" value=\"lookup\" />\n";
+	$ret.= "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n";
+	$ret.= "<input type=\"hidden\" name=\"inter\" value=\"$iwn\" />\n";
 	$ret.= "$iwn:\n";
-	$ret.= "<input type=\"text\" name=\"page\" size=\"30\" value=\"$default\">\n";
-	$ret.= "<input type=\"submit\" value=\"$btn\">\n";
+	$ret.= "<input type=\"text\" name=\"page\" size=\"30\" value=\"$default\" />\n";
+	$ret.= "<input type=\"submit\" value=\"$btn\" />\n";
+	$ret.= "</div>\n";
 	$ret.= "</form>\n";
 
 	return $ret;

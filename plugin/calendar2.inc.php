@@ -1,5 +1,5 @@
 <?
-// $Id: calendar2.inc.php,v 1.4 2002/06/26 06:23:57 masui Exp $
+// $Id: calendar2.inc.php,v 1.5 2002/07/01 07:08:57 masui Exp $
 
 function plugin_calendar2_convert()
 {
@@ -113,8 +113,8 @@ function plugin_calendar2_convert()
 <table class="style_calendar" cellspacing="1" width="150" border="0">
   <tbody>
   <tr>
-    <td align="middle" class="style_td_caltop" colspan="7" height="15">
-      <div align="center"><small><a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$prev_date_str.'">&lt;&lt;</a> <b>'.$m_name.'</b> <a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$next_date_str.'">&gt;&gt;</a></small></div>
+    <td align="middle" class="style_td_caltop" colspan="7">
+      <div class="small" style="text-align:center"><a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$prev_date_str.'">&lt;&lt;</a> <strong>'.$m_name.'</strong> <a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$next_date_str.'">&gt;&gt;</a></div>
     </td>
   </tr>
   <tr>
@@ -125,8 +125,8 @@ function plugin_calendar2_convert()
 <table class="style_calendar" cellspacing="1" width="150" border="0">
   <tbody>
   <tr>
-    <td align="middle" class="style_td_caltop" colspan="7" height="15">
-      <div align="center"><small><a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$prev_date_str.'">&lt;&lt;</a> <b>'.$m_name.'</b> <a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$next_date_str.'">&gt;&gt;</a><br>[<a href="'.$script.'?'.$prefix_url.'">'.$pre.'</a>]</small></div>
+    <td align="middle" class="style_td_caltop" colspan="7">
+      <div class="small" style="text-align:center"><a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$prev_date_str.'">&lt;&lt;</a> <strong>'.$m_name.'</strong> <a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$next_date_str.'">&gt;&gt;</a><br />[<a href="'.$script.'?'.$prefix_url.'">'.$pre.'</a>]</div>
     </td>
   </tr>
   <tr>
@@ -136,8 +136,8 @@ function plugin_calendar2_convert()
 	foreach($weeklabels as $label)
 	{
 		$ret .= '
-    <td align="middle" class="style_td_week" height="15">
-      <div align="center"><small><b>'.$label.'</b></small></div>
+    <td align="middle" class="style_td_week">
+      <div class="small" style="text-align:center"><strong>'.$label.'</strong></div>
     </td>';
 	}
 
@@ -154,15 +154,15 @@ function plugin_calendar2_convert()
 		else               $refer = "";
 		
 		if($cmd == "read" && !is_page($page))
-			$link = "<small><a href=\"$script?cmd=$cmd&amp;page=$page_url$refer\" title=\"$name\">$day</a></small>";
+			$link = "<a href=\"$script?cmd=$cmd&amp;page=$page_url$refer\" title=\"$name\" class=\"small\">$day</a>";
 		else
-			$link = "<a href=\"$script?cmd=$cmd&amp;page=$page_url$refer\" title=\"$name\"><b>$day</b></a>";
+			$link = "<a href=\"$script?cmd=$cmd&amp;page=$page_url$refer\" title=\"$name\"><strong>$day</strong></a>";
 
 		if($fweek)
 		{
 			for($i=0;$i<$wday;$i++)
 			{ // Blank 
-				$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_blank\" height=\"19\">&nbsp;</td>\n"; 
+				$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n"; 
 			} 
 		$fweek=false;
 		}
@@ -171,22 +171,22 @@ function plugin_calendar2_convert()
 		if(!$other_month && ($day == $today[mday]) && ($m_num == $today[mon]) && ($year == $today[year]))
 		{
 			//  Today 
-			$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_today\" height=\"19\">$link</td>\n"; 
+			$ret .= "    <td align=\"center\" class=\"style_td_today\">$link</td>\n"; 
 		}
 		else if($wday == 0)
 		{
 			//  Sunday 
-			$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_sun\" height=\"19\">$link</td>\n";
+			$ret .= "    <td align=\"center\" class=\"style_td_sun\">$link</td>\n";
 		}
 		else if($wday == 6)
 		{
 			//  Saturday 
-			$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_sat\" height=\"19\">$link</td>\n";
+			$ret .= "    <td align=\"center\" class=\"style_td_sat\">$link</td>\n";
 		}
 		else
 		{
 			// Weekday 
-			$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td\" height=\"19\">$link</td>\n";
+			$ret .= "    <td align=\"center\" class=\"style_td\">$link</td>\n";
 		}
 		$day++;
 		$wday++;
@@ -196,7 +196,7 @@ function plugin_calendar2_convert()
 	{
 		while($wday < 7)
 		{ // Blank 
-			$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_blank\" height=\"19\">&nbsp;</td>\n";
+			$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n";
 		$wday++;
 		} 
 	}
@@ -207,7 +207,7 @@ function plugin_calendar2_convert()
 	$page_url = rawurlencode($page);
 	if(is_page($page)) {
 		$str = convert_html(join("",file(get_filename(encode($page)))));
-		$str .= "<hr><small><a href=\"$script?cmd=edit&amp;page=$page\">[この日記を編集]</a></small>";
+		$str .= "<hr /><a class=\"small\" href=\"$script?cmd=edit&amp;page=$page\">[この日記を編集]</a>";
 	}
 	else {
 		$str = make_link(sprintf('[[%s%4d-%02d-%02d]]',$prefix, $today[year], $today[mon], $today[mday])).'は空です。';

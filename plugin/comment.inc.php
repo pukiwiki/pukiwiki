@@ -1,5 +1,5 @@
 <?
-// $Id: comment.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
+// $Id: comment.inc.php,v 1.4 2002/07/01 07:07:54 masui Exp $
 
 global $name_cols, $comment_cols, $msg_format, $name_format;
 global $msg_format, $now_format, $comment_format;
@@ -16,7 +16,7 @@ $comment_cols = 70;
 // コメントの挿入フォーマット
 $name_format = '[[$name]]';
 $msg_format = '$msg';
-$now_format = 'SIZE(1):$now';
+$now_format = 'SIZE(10):$now';
 /////////////////////////////////////////////////
 // コメントの挿入フォーマット(コメント内容)
 $comment_format = '$msg -- $name $now';
@@ -141,7 +141,7 @@ function plugin_comment_convert()
 
 	$options = func_get_args();
 	
-	$nametags = "$_btn_name<input type=\"text\" name=\"name\" size=\"$name_cols\">\n";
+	$nametags = "$_btn_name<input type=\"text\" name=\"name\" size=\"$name_cols\" />\n";
 	if(is_array($options) && in_array("noname",$options)) {
 		$nametags = $_msg_comment;
 	}
@@ -152,17 +152,19 @@ function plugin_comment_convert()
 	}
 
 	if((arg_check("read")||$vars["cmd"] == ""||arg_check("unfreeze")||arg_check("freeze")||$vars["write"]||$vars["comment"]))
-		$button = "<input type=\"submit\" name=\"comment\" value=\"$_btn_comment\">\n";
+		$button = "<input type=\"submit\" name=\"comment\" value=\"$_btn_comment\" />\n";
 
-	$string = "<p><form action=\"$script\" method=\"post\">\n"
-		 ."<input type=\"hidden\" name=\"comment_no\" value=\"$comment_no\">\n"
-		 ."<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\">\n"
-		 ."<input type=\"hidden\" name=\"plugin\" value=\"comment\">\n"
-		 ."<input type=\"hidden\" name=\"nodate\" value=\"$nodate\">\n"
-		 ."<input type=\"hidden\" name=\"digest\" value=\"$digest\">\n"
+	$string = "<br /><form action=\"$script\" method=\"post\">\n"
+		 ."<div>\n"
+		 ."<input type=\"hidden\" name=\"comment_no\" value=\"$comment_no\" />\n"
+		 ."<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n"
+		 ."<input type=\"hidden\" name=\"plugin\" value=\"comment\" />\n"
+		 ."<input type=\"hidden\" name=\"nodate\" value=\"$nodate\" />\n"
+		 ."<input type=\"hidden\" name=\"digest\" value=\"$digest\" />\n"
 		 ."$nametags"
-		 ."<input type=\"text\" name=\"msg\" size=\"$comment_cols\">\n"
+		 ."<input type=\"text\" name=\"msg\" size=\"$comment_cols\" />\n"
 		 .$button
+		 ."</div>\n"
 		 ."</form>";
 
 	$comment_no++;

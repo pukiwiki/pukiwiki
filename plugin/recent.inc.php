@@ -11,14 +11,14 @@
  * 
  *  2002.06.17: plugin_recent_init()を設定
  *
- * $Id: recent.inc.php,v 1.2 2002/06/26 06:23:57 masui Exp $
+ * $Id: recent.inc.php,v 1.3 2002/07/01 07:08:57 masui Exp $
  */
 
 function plugin_recent_init()
 {
   $_plugin_recent_messages = array(
     '_recent_plugin_li'=>'・',
-    '_recent_plugin_frame '=>'<span align="center"><h5 class="side_label">最新の%d件</h5></span><small>%s</small>');
+    '_recent_plugin_frame '=>'<h5 class="side_label">最新の%d件</h5><span class="small">%s</span>');
   set_plugin_messages($_plugin_recent_messages);
 }
 
@@ -53,13 +53,14 @@ function plugin_recent_convert()
 			if(preg_match("/([0-9]{4}-[0-9]{2}-[0-9]{2})/",$line,$match)) {
 				if($date != $match[0]) {
 					if($date != '') {
-						$items .= "<br>";
+						$items .= "<br />";
 					}
-					$items .= "<b>".$match[0]."</b><br>";
+					$items .= "<strong>".$match[0]."</strong><br />";
 					$date = $match[0];
 				}
 			}
-			$items .= $_recent_plugin_li."<a href=\"".$script."?".rawurlencode($name)."\" title=\"$title ".get_pg_passage($name,false)."\">".$title."</a><BR>\n";
+			$title = htmlspecialchars($title);
+			$items .= $_recent_plugin_li."<a href=\"".$script."?".rawurlencode($name)."\" title=\"$title ".get_pg_passage($name,false)."\">".$title."</a><br />\n";
 			$cnt++;
 		}
 	}

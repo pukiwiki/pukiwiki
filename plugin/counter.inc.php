@@ -5,7 +5,7 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: counter.inc.php,v 1.2 2002/06/26 06:23:57 masui Exp $
+ * $Id: counter.inc.php,v 1.3 2002/07/01 07:08:57 masui Exp $
  */
 
 // counter file
@@ -48,7 +48,7 @@ function plugin_counter_convert()
 	fputs($nf,"$ip\n");
 	fclose($nf);
 	
-	return "<font size='1'>Counter: $count, today: $today_count, yesterday: $yesterday_count</font>";
+	return "<span class=\"counter\">Counter: $count, today: $today_count, yesterday: $yesterday_count</span>";
 
 }
 ?>

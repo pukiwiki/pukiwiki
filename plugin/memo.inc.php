@@ -1,5 +1,5 @@
 <?
-// $Id: memo.inc.php,v 1.2 2002/06/26 06:23:57 masui Exp $
+// $Id: memo.inc.php,v 1.3 2002/07/01 07:08:57 masui Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -53,9 +53,11 @@ function plugin_memo_action()
 		$body = "$_msg_collided\n";
 
 		$body .= "<form action=\"$script?cmd=preview\" method=\"post\">\n"
-			."<input type=\"hidden\" name=\"refer\" value=\"".$post["refer"]."\">\n"
-			."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\">\n"
-			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">$postdata_input</textarea><br>\n"
+			."<div>\n"
+			."<input type=\"hidden\" name=\"refer\" value=\"".$post["refer"]."\" />\n"
+			."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\" />\n"
+			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">$postdata_input</textarea><br />\n"
+			."</div>\n"
 			."</form>\n";
 	}
 	else
@@ -110,15 +112,17 @@ function plugin_memo_convert()
 	$data = str_replace("\\n","\n",$aryargs[0]);
 
 	if((arg_check("read")||$vars["cmd"] == ""||arg_check("unfreeze")||arg_check("freeze")||$vars["write"]||$vars["memo"]))
-		$button = "<input type=\"submit\" name=\"memo\" value=\"$_btn_memo_update\">\n";
+		$button = "<input type=\"submit\" name=\"memo\" value=\"$_btn_memo_update\" />\n";
 
 	$string = "<form action=\"$script\" method=\"post\" class=\"memo\">\n"
-		 ."<input type=\"hidden\" name=\"memo_no\" value=\"$memo_no\">\n"
-		 ."<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\">\n"
-		 ."<input type=\"hidden\" name=\"plugin\" value=\"memo\">\n"
-		 ."<input type=\"hidden\" name=\"digest\" value=\"$digest\">\n"
-		 ."<textarea name=\"msg\" rows=\"".MEMO_ROWS."\" cols=\"".MEMO_COLS."\">\n$data</textarea><br>\n"
+		 ."<div>\n"
+		 ."<input type=\"hidden\" name=\"memo_no\" value=\"$memo_no\" />\n"
+		 ."<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n"
+		 ."<input type=\"hidden\" name=\"plugin\" value=\"memo\" />\n"
+		 ."<input type=\"hidden\" name=\"digest\" value=\"$digest\" />\n"
+		 ."<textarea name=\"msg\" rows=\"".MEMO_ROWS."\" cols=\"".MEMO_COLS."\">\n$data</textarea><br />\n"
 		 .$button
+		 ."</div>\n"
 		 ."</form>";
 
 	$memo_no++;

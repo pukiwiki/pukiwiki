@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
+ $Id: article.inc.php,v 1.4 2002/07/01 07:08:57 masui Exp $
  
  */
 
@@ -149,9 +149,11 @@ function plugin_article_action()
 		$body = "$_msg_collided\n";
 
 		$body .= "<form action=\"$script?cmd=preview\" method=\"post\">\n"
-			."<input type=\"hidden\" name=\"refer\" value=\"".$post["refer"]."\">\n"
-			."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\">\n"
-			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">$postdata_input</textarea><br>\n"
+			."<div>\n"
+			."<input type=\"hidden\" name=\"refer\" value=\"".$post["refer"]."\" />\n"
+			."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\" />\n"
+			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">$postdata_input</textarea><br />\n"
+			."</div>\n"
 			."</form>\n";
 	}
 	else
@@ -222,17 +224,19 @@ function plugin_article_convert()
 	global $_btn_article,$_btn_name,$_btn_subject,$vars;
 
 	if((arg_check("read")||$vars["cmd"] == ""||arg_check("unfreeze")||arg_check("freeze")||$vars["write"]||$vars["article"]))
-		$button = "<input type=\"submit\" name=\"article\" value=\"$_btn_article\">\n";
+		$button = "<input type=\"submit\" name=\"article\" value=\"$_btn_article\" />\n";
 
 	$string = "<form action=\"$script\" method=\"post\">\n"
-		 ."<input type=\"hidden\" name=\"article_no\" value=\"$article_no\">\n"
-		 ."<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\">\n"
-		 ."<input type=\"hidden\" name=\"plugin\" value=\"article\">\n"
-		 ."<input type=\"hidden\" name=\"digest\" value=\"$digest\">\n"
-		 ."$_btn_name<input type=\"text\" name=\"name\" size=\"".NAME_COLS."\"><br>\n"
-		 ."$_btn_subject<input type=\"text\" name=\"subject\" size=\"".SUBJECT_COLS."\"><br>\n"
-		 ."<textarea name=\"msg\" rows=\"".article_ROWS."\" cols=\"".article_COLS."\">\n</textarea><br>\n"
+		 ."<div>\n"
+		 ."<input type=\"hidden\" name=\"article_no\" value=\"$article_no\" />\n"
+		 ."<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n"
+		 ."<input type=\"hidden\" name=\"plugin\" value=\"article\" />\n"
+		 ."<input type=\"hidden\" name=\"digest\" value=\"$digest\" />\n"
+		 ."$_btn_name<input type=\"text\" name=\"name\" size=\"".NAME_COLS."\" /><br />\n"
+		 ."$_btn_subject<input type=\"text\" name=\"subject\" size=\"".SUBJECT_COLS."\" /><br />\n"
+		 ."<textarea name=\"msg\" rows=\"".article_ROWS."\" cols=\"".article_COLS."\">\n</textarea><br />\n"
 		 .$button
+		 ."</div>\n"
 		 ."</form>";
 
 	$article_no++;
