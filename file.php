@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.3 2002/11/29 00:09:00 panda Exp $
+// $Id: file.php,v 1.3.2.1 2003/01/27 04:25:41 panda Exp $
 /////////////////////////////////////////////////
 
 // ソースを取得
@@ -60,7 +60,7 @@ function put_lastmodified()
 {
 	global $script,$maxshow,$whatsnew,$date_format,$time_format,$weeklabels,$post,$non_list;
 
-	if($post["notimestamp"]) return;
+//	if($post["notimestamp"]) return;
 
 	$files = get_existpages();
 	foreach($files as $page) {
