@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: lookup.inc.php,v 1.13 2004/12/02 11:34:25 henoheno Exp $
+// $Id: lookup.inc.php,v 1.14 2004/12/25 00:43:22 henoheno Exp $
 //
 // Lookup plugin
 
@@ -54,6 +54,6 @@ function plugin_lookup_action()
 
 	pkwk_headers_sent();
 	header('Location: ' . $url); // Publish as GET method
-	die();
+	exit;
 }
 ?>
