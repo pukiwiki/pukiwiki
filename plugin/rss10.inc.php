@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss10.inc.php,v 1.10 2004/02/29 07:43:21 arino Exp $
+// $Id: rss10.inc.php,v 1.11 2004/03/18 09:18:41 arino Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss10_action()
@@ -42,7 +42,7 @@ function plugin_rss10_action()
 		{
 			$tb_id = md5($r_page);
 			$dc_identifier = " <dc:identifier>$self?$r_page</dc:identifier>";
-			$trackback_ping = " <trackback:ping>$self?plugin=tb&amp;tb_id=$tb_id</trackback:ping>";
+			$trackback_ping = " <trackback:ping>$self?tb_id=$tb_id</trackback:ping>";
 		}
 		$items .= <<<EOD
 <item rdf:about="$self?$r_page">
@@ -62,6 +62,8 @@ EOD;
 	
 	header('Content-type: application/xml');
 	
+	$r_whatsnew = rawurlencode($whatsnew);
+	
 	print <<<EOD
 <?xml version="1.0" encoding="utf-8"?>
 
@@ -72,9 +74,9 @@ $xmlns_trackback
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
   xml:lang="ja">
 
- <channel rdf:about="$self?$whatsnew">
+ <channel rdf:about="$self?$r_whatsnew">
   <title>$page_title_utf8</title>
-  <link>$self?$whatsnew</link>
+  <link>$self?$r_whatsnew</link>
   <description>PukiWiki RecentChanges</description>
   <items>
    <rdf:Seq>
