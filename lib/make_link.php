@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
+// $Id: make_link.php,v 1.2 2004/09/19 14:05:30 henoheno Exp $
 //
 
 // リンクを付加する
@@ -15,7 +15,7 @@ function make_link($string,$page = '')
 	{
 		$converter = new InlineConverter();
 	}
-	$_converter = $converter; // copy
+	$_converter = $converter->get_clone($converter);
 	return $_converter->convert($string, ($page != '') ? $page : $vars['page']);
 }
 //インライン要素を置換する
@@ -26,6 +26,25 @@ class InlineConverter
 	var $pos;
 	var $result;
 
+	function get_clone($obj) {
+		static $clone_func;
+
+		if (!isset($clone_func)) {
+			if (version_compare(PHP_VERSION,'5.0.0','<')) {
+				$clone_func = create_function('$a','return $a;');
+			} else {
+				$clone_func = create_function('$a','return clone $a;');
+			}
+		}
+		return $clone_func($obj);
+	}
+	function __clone() {
+		$converters = array();
+		foreach ($this->converters as $key=>$converter) {
+			$converters[$key] = $this->get_clone($converter);
+		}
+		$this->converters = $converters;
+	}
 	function InlineConverter($converters=NULL,$excludes=NULL)
 	{
 		if ($converters === NULL)
@@ -101,7 +120,7 @@ class InlineConverter
 			$obj = $this->get_converter($match);
 			if ($obj->set($match,$page) !== FALSE)
 			{
-				$arr[] = $obj; // copy
+				$arr[] = $this->get_clone($obj);
 				if ($obj->body != '')
 				{
 					$arr = array_merge($arr,$this->get_objects($obj->body,$page));

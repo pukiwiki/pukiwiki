@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: showrss.inc.php,v 1.13 2004/07/31 03:09:20 henoheno Exp $
+// $Id: showrss.inc.php,v 1.14 2004/09/19 14:05:30 henoheno Exp $
 //
 // Modified version by PANDA <panda@arino.jp>
 //
@@ -239,6 +239,7 @@ class ShowRSS_XML
 	var $item;
 	var $is_item;
 	var $tag;
+	var $encoding;
 
 	function parse($buf)
 	{
@@ -248,7 +249,13 @@ class ShowRSS_XML
 		$this->is_item = FALSE;
 		$this->tag = '';
 
-		$xml_parser = xml_parser_create();
+		// 文字コード検出
+		$this->encoding = mb_detect_encoding($buf);
+		if (!in_array(strtolower($this->encoding),array('us-ascii','iso-8859-1','utf-8'))) {
+			$buf = mb_convert_encoding($buf,'utf-8',$this->encoding);
+			$this->encoding = 'utf-8';
+		}
+		$xml_parser = xml_parser_create($this->encoding);
 		xml_set_element_handler($xml_parser,array(&$this,'start_element'),array(&$this,'end_element'));
 		xml_set_character_data_handler($xml_parser,array(&$this,'character_data'));
 
@@ -270,7 +277,7 @@ class ShowRSS_XML
 		$str = htmlspecialchars($str);
 
 		// 文字コード変換
-		$str = mb_convert_encoding($str, SOURCE_ENCODING, 'auto');
+		$str = mb_convert_encoding($str, SOURCE_ENCODING, $this->encoding);
 
 		return trim($str);
 	}

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.60 2004/08/15 00:19:35 henoheno Exp $
+//  $Id: attach.inc.php,v 1.61 2004/09/19 14:05:30 henoheno Exp $
 //
 
 /*
@@ -384,7 +384,7 @@ class AttachFile
 	function AttachFile($page, $file, $age = 0)
 	{
 		$this->page = $page;
-		$this->file = basename($file);
+		$this->file = preg_replace('#^.*/#','',$file);
 		$this->age  = is_numeric($age) ? $age : 0;
 
 		$this->basename = UPLOAD_DIR . encode($page) . '_' . encode($this->file);

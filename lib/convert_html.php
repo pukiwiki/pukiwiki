@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
+// $Id: convert_html.php,v 1.2 2004/09/19 14:05:30 henoheno Exp $
 //
 
 function convert_html($lines)
@@ -96,6 +96,54 @@ class Element
 	}
 }
 
+  // PHP5 mod: $this cannot be reassigned
+function &Factory_Inline($text)
+{
+	if (substr($text,0,1) == '~') { // 行頭~。パラグラフ開始
+		return new Paragraph(' '.substr($text,1));
+	}
+	return new Inline($text);
+}
+
+  // PHP5 mod: $this cannot be reassigned
+function &Factory_DList(&$root, $text)
+{
+	$out = explode('|', ltrim($text), 2);
+	if (count($out) < 2) {
+		return Factory_Inline($text);
+	}
+
+	return new DList($out);
+}
+
+  // PHP5 mod: $this cannot be reassigned
+function &Factory_Table(&$root, $text)
+{
+	if (!preg_match("/^\|(.+)\|([hHfFcC]?)$/",$text,$out)) {
+		return Factory_Inline($text);
+	}
+	return new Table($out);
+}
+
+  // PHP5 mod: $this cannot be reassigned
+function &Factory_YTable(&$root,$text)
+{
+	$_value = csv_explode(',', substr($text,1));
+	if (count($_value) == 0) {
+		return Factory_Inline($text);
+	}
+	return new YTable($_value);
+}
+
+  // PHP5 mod: $this cannot be reassigned
+function &Factory_Div(&$root,$text)
+{
+	if (!preg_match("/^\#([^\(]+)(?:\((.*)\))?/", $text, $out) or !exist_plugin_convert($out[1])) {
+		return new Paragraph($text);
+	}
+	return new Div($out);
+}
+
 class Inline extends Element
 { // インライン要素
 
@@ -103,13 +151,6 @@ class Inline extends Element
 	{
 		parent::Element();
 
-		if (substr($text,0,1) == '~') // 行頭~。パラグラフ開始
-		{
-			$this = new Paragraph(' '.substr($text,1));
-			$this->last = &$this;
-
-			return;
-		}
 		$this->elements[] = trim((substr($text, 0, 1) == "\n") ? $text : make_link($text));
 	}
 
@@ -157,7 +198,7 @@ class Paragraph extends Element
 		{
 			$text = ' '.substr($text, 1);
 		}
-		$this->insert(new Inline($text));
+		$this->insert(Factory_Inline($text));
 	}
 
 	function canContain($obj)
@@ -183,7 +224,7 @@ class Heading extends Element
 
 		$this->level = min(3, strspn($text, '*'));
 		list($text, $this->msg_top, $this->id) = $root->getAnchor($text, $this->level);
-		$this->insert(new Inline($text));
+		$this->insert(Factory_Inline($text));
 		$this->level++; // h2,h3,h4
 	}
 
@@ -254,7 +295,7 @@ class ListContainer extends Element
 		parent::insert(new ListElement($this->level, $tag2));
 		if ($text != '')
 		{
-			$this->last = &$this->last->insert(new Inline($text));
+			$this->last = &$this->last->insert(Factory_Inline($text));
 		}
 	}
 
@@ -348,22 +389,14 @@ class OList extends ListContainer
 
 class DList extends ListContainer
 { // :
-	function DList(&$root, $text)
+	function DList($out)
 	{
-		$out = explode('|', $text, 2);
-		if (count($out) < 2)
-		{
-			$this = new Inline($text);
-			$this->last = &$this;
-
-			return;
-		}
 		parent::ListContainer('dl', 'dt', ':', $out[0]);
 
 		$this->last = &Element::insert(new ListElement($this->level, 'dd'));
 		if ($out[1] != '')
 		{
-			$this->last = &$this->last->insert(new Inline($out[1]));
+			$this->last = &$this->last->insert(Factory_Inline($out[1]));
 		}
 	}
 }
@@ -387,12 +420,12 @@ class BQuote extends Element
 			$this->last = &$this->end($root, $level);
 			if ($text != '')
 			{
-				$this->last = &$this->last->insert(new Inline($text));
+				$this->last = &$this->last->insert(Factory_Inline($text));
 			}
 		}
 		else
 		{
-			$this->insert(new Inline($text));
+			$this->insert(Factory_Inline($text));
 		}
 	}
 
@@ -490,7 +523,7 @@ class TableCell extends Element
 		if ($text != '' and $text{0} == '#')
 		{
 			// セル内容が'#'で始まるときはDivクラスを通してみる
-			$obj = &new Div($this, $text);
+			$obj = &Factory_Div($this, $text);
 			if (is_a($obj, 'Paragraph'))
 			{
 				$obj = &$obj->elements[0];
@@ -498,7 +531,7 @@ class TableCell extends Element
 		}
 		else
 		{
-			$obj = &new Inline($text);
+			$obj = &Factory_Inline($text);
 		}
 		$this->insert($obj);
 	}
@@ -545,18 +578,10 @@ class Table extends Element
 	var $types;
 	var $col; // number of column
 
-	function Table(&$root, $text)
+	function Table($out)
 	{
 		parent::Element();
 
-		$out = array();
-		if (!preg_match("/^\|(.+)\|([hHfFcC]?)$/", $text, $out))
-		{
-			$this = new Inline($text);
-			$this->last = &$this;
-
-			return;
-		}
 		$cells = explode('|', $out[1]);
 		$this->col = count($cells);
 		$this->type = strtolower($out[2]);
@@ -666,18 +691,10 @@ class YTable extends Element
 { // ,
 	var $col;
 
-	function YTable(&$root, $text)
+	function YTable($_value)
 	{
 		parent::Element();
 
-		$_value = csv_explode(',', substr($text,1));
-		if (count($_value) == 0)
-		{
-			$this = new Inline($text);
-			$this->last = &$this;
-
-			return;
-		}
 		$align = $value = $matches = array();
 		foreach($_value as $val)
 		{
@@ -776,17 +793,10 @@ class Div extends Element
 	var $name;
 	var $param;
 
-	function Div(&$root, $text)
+	function Div($out)
 	{
 		parent::Element();
 
-		if (!preg_match("/^\#([^\(]+)(?:\((.*)\))?/", $text, $out) or !exist_plugin_convert($out[1]))
-		{
-			$this = new Paragraph($text);
-			$this->last = &$this;
-
-			return;
-		}
 		list(, $this->name, $this->param) = array_pad($out,3,'');
 	}
 
@@ -832,11 +842,13 @@ class Body extends Element
 	var $classes = array(
 		'-' => 'UList',
 		'+' => 'OList',
+		'>' => 'BQuote',
+		'<' => 'BQuote'
+	);
+	var $factories = array(
 		':' => 'DList',
 		'|' => 'Table',
 		',' => 'YTable',
-		'>' => 'BQuote',
-		'<' => 'BQuote',
 		'#' => 'Div'
 	);
 
@@ -912,9 +924,16 @@ class Body extends Element
 				$this->last = &$this->last->add(new $classname($this,$line));
 				continue;
 			}
+			// Other Character
+			if (array_key_exists($head, $this->factories))
+			{
+				$factoryname = 'Factory_'. $this->factories[$head];
+				$this->last = &$this->last->add($factoryname($this,$line));
+				continue;
+			}
 
 			// Default
-			$this->last = &$this->last->add(new Inline($line));
+			$this->last = &$this->last->add(Factory_Inline($line));
 		}
 	}
 
@@ -992,7 +1011,7 @@ class Contents_UList extends ListContainer
 		make_heading($text);
 		$text = "\n<a href=\"#$id\">$text</a>\n";
 		parent::ListContainer('ul', 'li', '-', str_repeat('-',$level));
-		$this->insert(new Inline($text));
+		$this->insert(Factory_Inline($text));
 	}
 
 	function setParent(&$parent)

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.38 2004/09/01 13:15:16 henoheno Exp $
+// $Id: ref.inc.php,v 1.39 2004/09/19 14:05:30 henoheno Exp $
 //
 
 // UPLOAD_DIR のデータ(画像ファイルのみ)に直接アクセスさせる
@@ -403,7 +403,7 @@ function plugin_ref_action()
 	$page = $vars['page'];
 	$file = $vars['src'];
 
-	$ref = UPLOAD_DIR . encode($page) . '_' . encode(basename($file));
+	$ref = UPLOAD_DIR . encode($page) . '_' . encode(preg_replace('#^.*/#','',$file));
 	if(! file_exists($ref))
 		return array('msg'=>'Attach file not found', 'body'=>$usage);
 
