@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.28 2004/10/01 12:48:19 henoheno Exp $
+// $Id: dump.inc.php,v 1.29 2004/10/01 12:59:29 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -462,7 +462,9 @@ class tarlib
 
 			// ファイルデータの取得
 			$fpr = @fopen($name , 'rb');
+			flock($fpr, LOCK_SH);
 			$data = fread($fpr, $size);
+			flock($fpr, LOCK_UN);
 			fclose( $fpr );
 
 			// ファイル出力
