@@ -29,7 +29,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.28 2003/07/27 13:52:18 arino Exp $
+// $Id: pukiwiki.php,v 1.29 2003/07/27 13:54:58 arino Exp $
 /////////////////////////////////////////////////
 
 
@@ -48,6 +48,7 @@ require('config.php');
 require('link.php');
 require('trackback.php');
 require('auth.php');
+require('proxy.php');
 if (!extension_loaded('mbstring'))
 {
 	require('mbstring.php');
