@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.2 2003/01/31 01:49:35 panda Exp $
+// $Id: convert_html.php,v 1.3 2003/01/31 04:50:17 panda Exp $
 //
 
 function &convert_html(&$lines)
@@ -294,9 +294,7 @@ class _List extends Block
 			}
 			return $this->last;
 		}
-		else {
-			$obj =& new ListElement($obj, $this->level, $this->tag2); // wrap
-		}
+		$obj =& new ListElement($obj, $this->level, $this->tag2); // wrap
 		$this->last =& $obj;
 		return parent::insert($obj);
 	}
@@ -370,7 +368,7 @@ class BQuote extends Block
 		preg_match("/^(\>{1,3})(.*)$/",$text,$out) or die("BQuote");
 		$this->level = strlen($out[1]);
 		$this->text = $out[2];
-		$this->insert(new Paragraph($this->text, ' class="quotation"'));
+		$this->last =& $this->insert(new Paragraph($this->text, ' class="quotation"'));
 	}
 	function canContain(&$obj)
 	{
@@ -382,10 +380,12 @@ class BQuote extends Block
 	function &insert(&$obj)
 	{
 		if (is_a($obj, 'BQuote') and $obj->level == $this->level) {
-			$obj =& $obj->elements[0];
-		}
-		else if (is_a($obj,'Inline')) {
-			$obj = $obj->toPara('quotation');
+			if (is_a($this->last,'Paragraph')) {
+				$this->last->insert($obj->elements[0]->elements[0]);
+			} else {
+				$this->last =& $this->insert($obj->elements[0]);
+			}
+			return $this->last;
 		}
 		$this->last =& $obj;
 		return parent::insert($obj);
@@ -734,12 +734,12 @@ class Align extends Body
 	function toString()
 	{
 		$string = parent::toString();
-		if ($string != '') {
-			if (preg_match('/^(.+)style="(.+)$/',$string,$matches)) {
-				$string = $matches[1].'style="text-align:'.$this->align.'; '.$matches[2];
+		if ($string != '') { print "<pre>'$string'</pre>";
+			if (preg_match('/^(\s*<[^>]+style=")([^"]+)"/',$string,$matches)) {
+				$string = $matches[1]."text-align:{$this->align};".$matches[2];
 			}
 			else {
-				$string = preg_replace('/(<[a-z]+)/', '$1 style="text-align:'.$this->align.';"',$string);
+				$string = preg_replace('/^(\s*<[a-z]+)/', '$1 style="text-align:'.$this->align.';"',$string);
 			}
 		}
 		return $string;
@@ -789,7 +789,7 @@ class Contents_UList extends _List
 		// テキストのリフォーム
 		// 行頭\nで整形済みを表す ... X(
 		$text = "\n<a href=\"#{$content_str}\">".
-			strip_htmltag(make_user_rules(inline($text,TRUE))).
+			strip_htmltag(inline2(inline($text,TRUE))).
 			"</a>\n";
 		parent::_List('ul', 'li', --$level, $text);
 	}
