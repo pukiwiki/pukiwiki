@@ -1,31 +1,23 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: source.inc.php,v 1.13 2004/11/28 08:52:29 henoheno Exp $
 //
-// $Id: source.inc.php,v 1.12 2004/07/31 03:09:20 henoheno Exp $
-//
-// ページソースを表示
+// Source plugin
 
+// Output source text of the page
 function plugin_source_action()
 {
-	global $vars;
-	global $_source_messages;
+	global $vars, $_source_messages;
 
-	$vars['refer'] = $vars['page'];
+	$page = isset($vars['page']) ? $vars['page'] : '';
+	$vars['refer'] = $page;
 
-	if (!is_page($vars['page']) || !check_readable($vars['page'],false,false))
-	{
-		return array(
-			'msg'=>$_source_messages['msg_notfound'],
-			'body'=>$_source_messages['err_notfound']
-		);
-	}
-	return array(
-		'msg'=>$_source_messages['msg_title'],
-		'body' =>
-			'<pre id="source">'.
-			htmlspecialchars(join('',get_source($vars['page']))).
-			'</pre>'
-	);
+	if (! is_page($page) || ! check_readable($page, false, false))
+		return array('msg' => $_source_messages['msg_notfound'],
+			'body' => $_source_messages['err_notfound']);
+
+	return array('msg' => $_source_messages['msg_title'],
+		'body' => '<pre id="source">' .
+		htmlspecialchars(join('', get_source($page))) . '</pre>');
 }
 ?>
