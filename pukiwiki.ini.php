@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.54 2004/03/20 13:43:58 arino Exp $
+// $Id: pukiwiki.ini.php,v 1.55 2004/04/03 15:56:08 arino Exp $
 //
 // PukiWiki setting file
 
@@ -32,6 +32,9 @@ define('COUNTER_DIR', './counter/');
 /////////////////////////////////////////////////
 // TrackBackファイル格納ディレクトリ
 define('TRACKBACK_DIR','./trackback/');
+/////////////////////////////////////////////////
+// スキン/スタイルシートファイル格納ディレクトリ
+define('SKIN_DIR','./skin/');
 
 /////////////////////////////////////////////////
 // ローカル時間

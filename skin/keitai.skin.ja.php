@@ -1,4 +1,10 @@
 <?php
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: keitai.skin.ja.php,v 1.5 2004/04/03 15:56:08 arino Exp $
+//
+
 if (!defined('DATA_DIR')) { exit; }
 
 global $script,$vars,$page_title,$max_size,$accesskey;

@@ -2,13 +2,13 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: i_mode.ini.php,v 1.4 2003/06/13 01:04:53 arino Exp $
+// $Id: i_mode.ini.php,v 1.5 2004/04/03 15:56:08 arino Exp $
 //
 // PukiWiki setting file (user agent:DoCoMo)
 
 /////////////////////////////////////////////////
 // スキンファイルの場所
-define('SKIN_FILE','./skin/keitai.skin.'.LANG.'.php');
+define('SKIN_FILE',SKIN_DIR.'keitai.skin.'.LANG.'.php');
 
 /////////////////////////////////////////////////
 // 雛形とするページの読み込みを表示させる

@@ -1,4 +1,9 @@
 <?php
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: pukiwiki.skin.ja.php,v 1.32 2004/04/03 15:56:08 arino Exp $
+//
 if (!defined('DATA_DIR')) { exit; }
 header('Cache-control: no-cache');
 header('Pragma: no-cache');
