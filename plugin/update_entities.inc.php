@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: update_entities.inc.php,v 1.2 2003/07/22 05:56:49 arino Exp $
+// $Id: update_entities.inc.php,v 1.3 2004/07/18 14:11:37 henoheno Exp $
 //
 
 // DTDの場所
@@ -37,10 +37,10 @@ PHPの持つテーブルおよびW3CのDTDをスキャンして、キャッシュに記録します。
 
 function plugin_update_entities_action()
 {
-	global $script,$post,$vars,$adminpass;
+	global $script, $vars;
 	global $_entities_messages;
 	
-	if (empty($vars['action']) or empty($post['adminpass']) or md5($post['adminpass']) != $adminpass)
+	if (empty($vars['action']) or empty($vars['adminpass']) or ! pkwk_login($vars['adminpass']))
 	{
 		$items = plugin_update_entities_create();
 		$body = convert_html(sprintf($_entities_messages['msg_usage'],join("\n-",$items)));
@@ -74,6 +74,7 @@ EOD;
 		'body'=>$_entities_messages['err_invalid']
 	);
 }
+
 function plugin_update_entities_create($do=FALSE)
 {
 	$files = array('xhtml-lat1.ent','xhtml-special.ent','xhtml-symbol.ent');
