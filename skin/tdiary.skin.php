@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.14 2005/01/19 13:49:19 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.15 2005/01/22 15:03:33 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -57,6 +57,50 @@ switch(TDIARY_THEME){
 case 'hatena':	/*FALLTHROUGH*/
 	$disable_backlink = TRUE;
 	break;
+}
+
+// Select CSS color theme (testing)
+$css_theme = '';
+switch(TDIARY_THEME){
+case 'alfa':
+case 'bill':
+case 'black-lingerie':
+case 'bubble':
+case 'cosmos':
+case 'darkness-pop':
+case 'fine':
+case 'fri':
+case 'giza':
+case 'kaizou':
+case 'lightning':
+case 'lime':
+case 'line':
+case 'midnight':
+case 'moo':
+case 'nachtmusik':
+case 'nebula':
+case 'nippon':
+case 'noel':
+case 'petith-b':
+case 'quiet_black':
+case 'redgrid':
+case 'starlight':
+case 'tinybox_green':
+case 'white-lingerie':
+case 'whiteout':
+case 'wine':
+case 'wood':
+case 'xmastree':
+case 'yukon':
+	$css_theme = 'black';
+
+// Another theme needed?
+case 'bluely':
+case 'brown':
+case 'deepblue':
+case 'scarlet':
+case 'smoking_black':
+	;
 }
 
 // Select title design (which is fancy, date and text?)
@@ -230,6 +274,7 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'cool_ice':
 	case 'flower':
 	case 'germany':
+	case 'hiki':
 	case 'himawari':
 	case 'kotatsu':
 	case 'light-blue':
@@ -311,8 +356,8 @@ if (isset($pkwk_dtd)) {
 
  <link rel="stylesheet" href="skin/theme/base.css" type="text/css" media="all" />
  <link rel="stylesheet" href="skin/theme/<?php echo $theme ?>/<?php echo $theme ?>.css" type="text/css" media="all" />
- <link rel="stylesheet" href="skin/tdiary.css.php?charset=<?php echo $css_charset ?>" type="text/css" media="screen" charset="<?php echo $css_charset ?>" />
- <link rel="stylesheet" href="skin/tdiary.css.php?charset=<?php echo $css_charset ?>&amp;media=print" type="text/css" media="print" charset="<?php echo $css_charset ?>" />
+ <link rel="stylesheet" href="skin/tdiary.css.php?charset=<?php echo $css_charset ?>&amp;color=<?php echo $css_theme ?>" type="text/css" media="screen" charset="<?php echo $css_charset ?>" />
+ <link rel="stylesheet" href="skin/tdiary.css.php?charset=<?php echo $css_charset ?>&amp;color=<?php echo $css_theme ?>&amp;media=print" type="text/css" media="print" charset="<?php echo $css_charset ?>" />
 
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
 
