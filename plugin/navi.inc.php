@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: navi.inc.php,v 1.18 2004/12/26 12:47:02 henoheno Exp $
+// $Id: navi.inc.php,v 1.19 2004/12/26 13:25:41 henoheno Exp $
 //
 // Navi plugin: Show DocBook-like navigation bar and contents
 
@@ -52,22 +52,24 @@ function plugin_navi_convert()
 	$current = $vars['page'];
 	if (func_num_args()) {
 		list($home) = func_get_args();
-		$home    = strip_bracket($home);
+		$home    = get_fullname($home, $current);
 		$is_home = ($home == $current);
 		if (! is_page($home)) {
 			return '#navi(contents-page-name): No such page: ' .
-				htmlspecialchars($home);
+				htmlspecialchars($home) . '<br/>';
 		} else if (! $is_home &&
 		    ! preg_match('|^' . preg_quote($home, '|') . '|', $current)) {
 			return '#navi(' . htmlspecialchars($home) .
 				'): Not a child page like: ' .
-				htmlspecialchars($home . '/' . basename($current));
+				htmlspecialchars($home . '/' . basename($current)) .
+				'<br/>';
 		}
 	} else {
 		$home    = $vars['page'];
 		$is_home = TRUE; // $home == $current
 	}
 
+	$pages  = array();
 	$footer = isset($navi[$home]); // The first time: FALSE, the second: TRUE
 	if (! $footer) {
 		$navi[$home] = array(
@@ -135,7 +137,10 @@ function plugin_navi_convert()
 
 	if ($is_home) {
 		// Contents
-		if (count($pages) == 1) {
+		$count = count($pages);
+		if ($count == 0) {
+			return '#navi(contents-page-name): You already view the result<br/>';
+		} else if ($count == 1) {
 			// Sentinel only: Show usage and warning
 			$home = htmlspecialchars($home);
 			$ret .= '#navi(' . $home . '): No child page like: ' .
