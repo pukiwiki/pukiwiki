@@ -4,6 +4,11 @@
 
 あなたのサイトに合わせ、自由に編集してください :)
 
+** 練習ページ [#if72ced0]
+- SandBox -- 編集をお試しください
+- InterWikiSandBox -- InterWikiを試してみてください
+
+
 ** PukiWikiについて [#c2af49f4]
 
 - PukiWiki -- PukiWikiのご紹介
@@ -12,7 +17,3 @@
 - [[ヘルプ]] -- PukiWikiで編集するには？
 - [[テキスト整形のルール(詳細版)>整形ルール]]
 - [[プラグインマニュアル>PukiWiki/1.4/Manual/Plugin]]
-
-*** 練習ページ [#if72ced0]
-- SandBox -- 編集をお試しください
-- InterWikiSandBox -- InterWikiを試してみてください
