@@ -1,31 +1,24 @@
 <?php
-// $Id: calendar.inc.php,v 1.10 2002/12/02 02:51:24 panda Exp $
+// $Id: calendar.inc.php,v 1.10.2.1 2003/02/28 03:16:15 panda Exp $
 
 function plugin_calendar_convert()
 {
 	global $script,$weeklabels,$vars,$command,$WikiName,$BracketName;
 	
+	$date_str = date("Ym");
+	$page = "";
+	
 	$args = func_get_args();
 	
-	if(func_num_args() == 0)
-	{
-		$date_str = date("Ym");
-		$pre = $vars[page];
-		$prefix = preg_replace("/^\[\[(.*)\]\]$/","$1",$vars[page])."/";
-	}
-	else if(func_num_args() == 1)
+	if(func_num_args() == 1)
 	{
 		if(is_numeric($args[0]) && strlen($args[0]) == 6)
 		{
 			$date_str = $args[0];
-			$pre = $vars[page];
-			$prefix = preg_replace("/^\[\[(.*)\]\]$/","$1",$vars[page])."/";
 		}
 		else
 		{
-			$date_str = date("Ym");
-			$pre = $args[0];
-			$prefix = $args[0]."/";
+			$page = $args[0];
 		}
 	}
 	else if(func_num_args() == 2)
@@ -33,26 +26,33 @@ function plugin_calendar_convert()
 		if(is_numeric($args[0]) && strlen($args[0]) == 6)
 		{
 			$date_str = $args[0];
-			$pre = $args[1];
-			$prefix = $args[1]."/";
+			$page = $args[1];
 		}
 		else if(is_numeric($args[1]) && strlen($args[1]) == 6)
 		{
 			$date_str = $args[1];
-			$pre = $args[0];
-			$prefix = $args[0]."/";
+			$page = $args[0];
 		}
-		else
-		{
-			$date_str = date("Ym");
-			$pre = $vars[page];
-			$prefix = preg_replace("/^\[\[(.*)\]\]$/","$1",$vars[page])."/";
-		}
+	}
+
+	if ($page == "")
+	{
+		$page = $vars["page"];
 	}
 	else
 	{
-		return FALSE;
+		if (!preg_match("/^($WikiName|$BracketName)$/",$page))
+		{
+			$page = "[[$page]]";
+		}
+		$page = get_fullname($page);
+		if (!preg_match("/^($WikiName|$BracketName)$/",$page))
+		{
+			return FALSE;
+		}
 	}
+	$pre = $page;
+	$prefix = strip_bracket($page)."/";
 
 	if(!$command) $cmd = "read";
 	else          $cmd = $command;
