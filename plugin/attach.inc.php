@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.23 2003/03/07 07:07:13 panda Exp $
+//  $Id: attach.inc.php,v 1.24 2003/05/02 07:44:59 arino Exp $
 //
 
 /*
@@ -181,7 +181,7 @@ function attach_filelist()
 }
 //-------- 実体
 //ファイルアップロード
-function attach_upload()
+function attach_upload($force = FALSE)
 {
 	global $vars,$adminpass,$HTTP_POST_FILES;
 	global $_attach_messages;
@@ -190,7 +190,7 @@ function attach_upload()
 	{
 		return array('msg'=>$_attach_messages['err_exceed']);
 	}
-	if (is_freeze($vars['refer']) || !is_editable($vars['refer']))
+	if (!$force and !is_editable($vars['refer']))
 	{
 		return array('msg'=>$_attach_messages['err_noparm']);
 	}
