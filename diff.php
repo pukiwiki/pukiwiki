@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.php,v 1.3 2003/01/29 09:48:24 panda Exp $
+// $Id: diff.php,v 1.4 2003/02/08 11:33:04 panda Exp $
 //
 //衝突時に対応表を出す
 define('DIFF_SHOW_TABLE',TRUE);
@@ -111,8 +111,14 @@ class line_diff
 	}
 	function compare()
 	{
-		$this->m = count($this->arr1) - 1;
-		$this->n = count($this->arr2) - 1;
+		$this->m = count($this->arr1);
+		$this->n = count($this->arr2);
+		
+		if ($this->m == 0 or $this->n == 0) { // no need compare.
+			$this->result = array(array('x'=>0,'y'=>0));
+			return;
+		}
+		
 		$this->reverse = ($this->n < $this->m);
 		if ($this->reverse) { // swap
 			$tmp = $this->m; $this->m = $this->n; $this->n = $tmp;
@@ -120,19 +126,12 @@ class line_diff
 			unset($tmp);
 		}
 		
-		$sentinel = array('x'=>0,'y'=>0);
-		
-		if ($this->m <= 0) { // no need compare.
-			$this->result = array($sentinel);
-			return;
-		}
-		
 		$delta = $this->n - $this->m; // must be >=0;
 		
 		$fp = array();
 		$this->path = array();
 		
-		for ($p = -($this->m + 1); $p <= $this->n + 1; $p++) {
+		for ($p = -($this->m); $p <= $this->n; $p++) {
 			$fp[$p] = -1;
 			$this->path[$p] = array();
 		}
@@ -163,7 +162,8 @@ class line_diff
 		}
 		$this->path[$k] = $this->path[$_k];// ここまでの経路をコピー
 		$x = $y - $k;
-		while (($x < $this->m) and ($y < $this->n) and $this->arr1[$x + 1]->compare($this->arr2[$y + 1])) {
+		while ((($x + 1) < $this->m) and (($y + 1) < $this->n)
+			and $this->arr1[$x + 1]->compare($this->arr2[$y + 1])) {
 			$x++; $y++;
 			$this->path[$k][] = array('x'=>$x,'y'=>$y); // 経路を追加
 		}
@@ -181,6 +181,7 @@ class line_diff
 		
 		$x = $y = 1;
 		$this->add_count = $this->delete_count = 0;
+		$this->pos[] = array('x'=>$this->m,'y'=>$this->n); // sentinel
 		foreach ($this->pos as $pos) {
 			$this->delete_count += ($pos[$_x] - $x);
 			$this->add_count += ($pos[$_y] - $y);
