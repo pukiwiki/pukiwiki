@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.91 2003/07/29 09:57:14 arino Exp $
+// $Id: html.php,v 1.92 2003/08/08 05:30:22 arino Exp $
 //
 
 // 本文を出力
@@ -69,7 +69,7 @@ function catbody($title,$page,$body)
 	//単語検索
 	if ($search_word_color and array_key_exists('word',$vars))
 	{
-		$search_word = '';
+		$body = '<div class="small">'.$_msg_word.htmlspecialchars($vars['word'])."</div>$hr\n$body";
 		$words = array_flip(array_splice(preg_split('/\s+/',$vars['word'],-1,PREG_SPLIT_NO_EMPTY),0,10));
 		$keys = array();
 		foreach ($words as $word=>$id)
@@ -82,7 +82,6 @@ function catbody($title,$page,$body)
 		foreach ($keys as $key=>$pattern)
 		{
 			$s_key = htmlspecialchars($key);
-			$search_word .= " <strong class=\"word$id\">$s_key</strong>";
 			$pattern = ($s_key{0} == '&') ?
 				"/(<[^>]*>)|($pattern)/" :
 				"/(<[^>]*>|&(?:#[0-9]+|#x[0-9a-f]+|[0-9a-zA-Z]+);)|($pattern)/";
@@ -91,7 +90,6 @@ function catbody($title,$page,$body)
 					'return $arr[1] ? $arr[1] : "<strong class=\"word'.$id.'\">{$arr[2]}</strong>";'),$body);
 			$id++;
 		}
-		$body = "<div class=\"small\">$_msg_word$search_word</div>$hr\n$body";
 	}
 	
 	$longtaketime = getmicrotime() - MUTIME;
