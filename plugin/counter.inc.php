@@ -5,7 +5,7 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: counter.inc.php,v 1.4 2002/11/29 00:09:01 panda Exp $
+ * $Id: counter.inc.php,v 1.5 2002/12/05 01:06:12 panda Exp $
  */
 
 // counter file
@@ -13,7 +13,7 @@ define(COUNTER_DIR, "./counter/");
 
 function plugin_counter_convert()
 {
-	global $vars;
+	global $vars,$HTTP_SERVER_VARS;
 	
 	$file = COUNTER_DIR.encode($vars["page"]).".count";
 	if(!file_exists($file))
@@ -28,7 +28,7 @@ function plugin_counter_convert()
 	$today_count = rtrim($array[2]);
 	$yesterday_count = rtrim($array[3]);
 	$ip = rtrim($array[4]);
-	if($ip != $_SERVER["REMOTE_ADDR"] && !(arg_check("add") || arg_check("edit") || arg_check("preview") || $vars['preview'] != '' || $vars['write'] != '')) {
+	if($ip != $HTTP_SERVER_VARS["REMOTE_ADDR"] && !(arg_check("add") || arg_check("edit") || arg_check("preview") || $vars['preview'] != '' || $vars['write'] != '')) {
 		$t = date("Y/m/d");
 		if($t != $today) {
 			$yesterday_count = $today_count;
@@ -39,7 +39,7 @@ function plugin_counter_convert()
 		++$today_count;
 	}
 	
-	$ip = $_SERVER["REMOTE_ADDR"];
+	$ip = $HTTP_SERVER_VARS["REMOTE_ADDR"];
 	$nf = fopen($file, "w");
 	fputs($nf,"$count\n");
 	fputs($nf,"$today\n");
