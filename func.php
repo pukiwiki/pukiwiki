@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.65 2004/07/03 05:02:43 henoheno Exp $
+// $Id: func.php,v 1.66 2004/07/18 09:46:25 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -610,21 +610,19 @@ http://ns1.php.gr.jp/pipermail/php-users/2003-January/012742.html
 2003-05-16: magic quotes gpcの復元処理を統合
 2003-05-21: 連想配列のキーはbinary safe
 */ 
-function sanitize($param)
+function input_filter($param)
 {
-	if (is_array($param))
-	{
-		$result = array_map('sanitize',$param);
+	static $magic_quotes_gpc = NULL;
+	if ($magic_quotes_gpc === NULL)
+	    $magic_quotes_gpc = get_magic_quotes_gpc();
+
+	if (is_array($param)) {
+		return array_map('input_filter', $param);
+	} else {
+		$result = str_replace("\0", '', $param);
+		if ($magic_quotes_gpc) $result = stripslashes($result);
+		return $result;
 	}
-	else
-	{
-		$result = str_replace("\0",'',$param);
-		if (get_magic_quotes_gpc())
-		{
-			$result = stripslashes($result);
-		}
-	}
-	return $result;
 }
 
 // CSV形式の文字列を配列に
