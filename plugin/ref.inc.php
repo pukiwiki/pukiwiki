@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.10 2003/03/03 07:07:28 panda Exp $
+// $Id: ref.inc.php,v 1.11 2003/03/05 07:01:26 panda Exp $
 //
 
 /*
@@ -141,7 +141,7 @@ function plugin_ref_body($args,$page)
 		$title = preg_match('/([^\/]+)$/', $name, $match) ? $match[1] : $url;
 		
 		$is_image = preg_match("/\.(gif|png|jpe?g)$/i",$name);
-		if ($is_image)
+		if ($is_image and (bool)ini_get('allow_url_fopen'))
 		{
 			$size = getimagesize($name);
 			if (is_array($size))
