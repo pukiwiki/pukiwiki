@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.18 2002/07/10 08:18:20 kawara Exp $
+// $Id: html.php,v 1.19 2002/07/11 09:54:32 kawara Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -272,7 +272,11 @@ function convert_html($string)
 			}
 			
 			if( substr($line,0,1) == '' && $_p){
-				array_push($result, "</p>");
+				$_tmp = array_pop($result);
+				if($_tmp == "<p>") {
+					$_tmp = '<p class="empty">';
+				}
+				array_push($result, $_tmp, "</p>");
 				$_p = FALSE;
 			}
 			else if( substr($line,0,1) != '' && !$_p) {
