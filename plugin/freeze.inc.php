@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: freeze.inc.php,v 1.5 2004/07/02 13:59:58 henoheno Exp $
+// $Id: freeze.inc.php,v 1.6 2004/07/18 13:06:24 henoheno Exp $
 //
 // Åà·ë
 function plugin_freeze_convert()
@@ -12,7 +12,7 @@ function plugin_freeze_convert()
 
 function plugin_freeze_action()
 {
-	global $script, $vars, $function_freeze, $adminpass;
+	global $script, $vars, $function_freeze;
 	global $_title_isfreezed, $_title_freezed, $_title_freeze;
 	global $_msg_invalidpass, $_msg_freezing, $_btn_freeze;
 
@@ -27,7 +27,7 @@ function plugin_freeze_action()
 			'msg'  => $_title_isfreezed,
 			'body' => str_replace('$1', htmlspecialchars(strip_bracket($page)), $_title_isfreezed)
 		);
-	} else if (md5($pass) == $adminpass) {
+	} else if ($pass !== NULL && pkwk_login($pass)) {
 		$postdata = get_source($page);
 		array_unshift($postdata, "#freeze\n");
 		$postdata = join('', $postdata);

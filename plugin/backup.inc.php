@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: backup.inc.php,v 1.12 2004/07/05 14:28:34 henoheno Exp $
+// $Id: backup.inc.php,v 1.13 2004/07/18 13:02:15 henoheno Exp $
 //
 // バックアップ
 function plugin_backup_action()
@@ -113,26 +113,27 @@ function plugin_backup_action()
 // バックアップを削除
 function plugin_backup_delete($page)
 {
-	global $script, $vars, $adminpass;
+	global $script, $vars;
 	global $_title_backup_delete, $_msg_backup_deleted, $_msg_backup_delete;
 	global $_msg_backup_adminpass, $_btn_delete, $_msg_invalidpass;
-	
+
 	if (!backup_file_exists($page))
 		return array('msg'=>$_title_pagebackuplist, 'body'=>get_backup_list($page)); // Say "is not found"
 
-	$s_page = htmlspecialchars($page);
-	$pass = isset($vars['pass']) ? $vars['pass'] : NULL;
-	
-	if (md5($pass) == $adminpass)
-	{
-		backup_delete($page);
-		return array(
-			'msg'  => $_title_backup_delete,
-			'body' => str_replace('$1',make_pagelink($page),$_msg_backup_deleted)
-		);
+	$body = '';
+	if (isset($vars['pass'])) {
+		if (pkwk_login($vars['pass'])) {
+			backup_delete($page);
+			return array(
+				'msg'  => $_title_backup_delete,
+				'body' => str_replace('$1',make_pagelink($page),$_msg_backup_deleted)
+			);
+		} else {
+			$body = "<p><strong>$_msg_invalidpass</strong></p>\n";
+		}
 	}
 
-	$body = ($pass === NULL) ? '' : "<p><strong>$_msg_invalidpass</strong></p>\n";
+	$s_page = htmlspecialchars($page);
 	$body .= <<<EOD
 <p>$_msg_backup_adminpass</p>
 <form action="$script" method="post">

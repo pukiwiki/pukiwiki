@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: unfreeze.inc.php,v 1.5 2004/07/02 13:59:58 henoheno Exp $
+// $Id: unfreeze.inc.php,v 1.6 2004/07/18 13:09:00 henoheno Exp $
 //
 // Åà·ë²ò½ü
 
@@ -11,7 +11,7 @@ define('UNFREEZE_EDIT', FALSE);
 
 function plugin_unfreeze_action()
 {
-	global $script, $vars, $function_freeze, $adminpass;
+	global $script, $vars, $function_freeze;
 	global $_title_isunfreezed, $_title_unfreezed, $_title_unfreeze;
 	global $_msg_invalidpass, $_msg_unfreezing, $_btn_unfreeze;
 
@@ -27,7 +27,7 @@ function plugin_unfreeze_action()
 			'msg'  => $_title_isunfreezed,
 			'body' => str_replace('$1', htmlspecialchars(strip_bracket($page)), $_title_isunfreezed)
 		);
-	} else if (md5($pass) == $adminpass) {
+	} else if ($pass !== NULL && pkwk_login($pass)) {
 		$postdata = get_source($page);
 		array_shift($postdata);
 		$postdata = join('', $postdata);
