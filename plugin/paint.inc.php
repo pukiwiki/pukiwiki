@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: paint.inc.php,v 1.6 2003/04/13 06:28:52 arino Exp $
+// $Id: paint.inc.php,v 1.7 2003/05/02 07:45:45 arino Exp $
 //
 
 /*
@@ -94,7 +94,12 @@ function plugin_paint_action()
 		
 		$HTTP_POST_FILES['attach_file']['name'] = $attachname;
 		
-		$retval = do_plugin_action('attach');
+		if (!exist_plugin('attach') or !function_exists('attach_upload'))
+		{
+			return array('msg'=>'attach.inc.php not found or not correct version.');
+		}
+		
+		$retval = attach_upload(TRUE);
 		$retval = paint_insert_ref($HTTP_POST_FILES['attach_file']['name']);
 	}
 	else
