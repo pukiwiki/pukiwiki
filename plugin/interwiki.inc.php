@@ -1,12 +1,14 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: interwiki.inc.php,v 1.9 2004/12/04 14:45:36 henoheno Exp $
+// $Id: interwiki.inc.php,v 1.10 2004/12/04 14:48:32 henoheno Exp $
 //
 // InterWiki redirection plugin (OBSOLETE)
 
 function plugin_interwiki_action()
 {
 	global $vars, $InterWikiName;
+
+	if (PKWK_SAFE_MODE) die_message('InterWiki plugin is not allowed');
 
 	$match = array();
 	if (! preg_match("/^$InterWikiName$/", $vars['page'], $match))
