@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.3.2.4 2003/02/14 07:29:46 panda Exp $
+// $Id: file.php,v 1.3.2.5 2003/03/02 04:33:25 panda Exp $
 /////////////////////////////////////////////////
 
 // ソースを取得
@@ -23,6 +23,17 @@ function page_exists($page)
 function file_write($dir,$page,$str)
 {
 	global $post,$update_exec;
+	global $WikiName,$BracketName;
+	global $_msg_invalidiwn;
+	
+	if (!preg_match("/^(($BracketName)|($WikiName))$/",$page))
+	{
+		die_message(
+			str_replace('$1',htmlspecialchars($page),
+				str_replace('$2','WikiName',$_msg_invalidiwn)
+			)
+		);
+	}
 	
 	$timestamp = FALSE;
 	
