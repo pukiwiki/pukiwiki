@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.6 2002/07/04 05:33:23 masui Exp $
+// $Id: init.php,v 1.7 2002/07/04 05:47:37 masui Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -65,6 +65,11 @@ $update_exec = "";
 // 設定ファイルの読込
 @require(INI_FILE);
 @require(LANG.".lng");
+
+// 変数のチェック
+if(!preg_match("/^http:\/\/[-a-zA-Z0-9\@:;_.]+\//",$script))
+	die_message("please set '\$script' in ".INI_FILE);
+
 
 // 設定ファイルの変数チェック
 $wrong_ini_file = "";
