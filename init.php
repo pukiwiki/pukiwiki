@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.65 2003/11/02 14:13:01 arino Exp $
+// $Id: init.php,v 1.66 2003/11/05 10:30:02 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -74,7 +74,8 @@ if (!isset($script) or $script == '') {
 	$script = get_script_uri();
 }
 if ($script === FALSE or
-	(php_sapi_name() == 'cgi' and !preg_match("/^http:\/\/[-a-zA-Z0-9\@:;_.]+\//",$script))) {
+	(php_sapi_name() == 'cgi' and
+		!preg_match('/^https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]*$/',$script))) {
 	die_message("please set '\$script' in ".INI_FILE);
 }
 
