@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.1 2002/06/21 05:21:46 masui Exp $
+// $Id: file.php,v 1.2 2002/07/18 15:24:08 masui Exp $
 /////////////////////////////////////////////////
 
 // ソースを取得
@@ -35,6 +35,7 @@ function file_write($dir,$page,$str)
 			$timestamp = @filemtime($dir.encode($page).".txt");
 		}
 		$fp = fopen($dir.encode($page).".txt","w");
+		if($fp===FALSE) die_message("cannot write page file or diff file or other".htmlspecialchars($page)."<br>maybe permission is not writable or filename is too long");
 		while(!flock($fp,LOCK_EX));
 		fputs($fp,$str);
 		flock($fp,LOCK_UN);
@@ -78,6 +79,7 @@ function put_lastmodified()
 	$cnt = 1;
 	krsort($putval);
 	$fp = fopen(get_filename(encode($whatsnew)),"w");
+	if($fp===FALSE) die_message("cannot write page file ".htmlspecialchars($whatsnew)."<br>maybe permission is not writable or filename is too long");
 	flock($fp,LOCK_EX);
 	foreach($putval as $pages)
 	{
