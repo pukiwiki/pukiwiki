@@ -2,12 +2,13 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss10.inc.php,v 1.5 2003/06/05 06:20:49 arino Exp $
+// $Id: rss10.inc.php,v 1.6 2003/06/06 08:08:14 arino Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss10_action()
 {
 	global $script,$rss_max,$page_title,$whatsnew;
+	global $trackback;
 	
 	$self = $script.'?';
 	
@@ -25,26 +26,35 @@ function plugin_rss10_action()
 	{
 		list($time,$page) = explode("\t",rtrim($line));
 		$r_page = rawurlencode($page);
-		$tb_id = md5($r_page);
 		$title = mb_convert_encoding($page,'UTF-8',SOURCE_ENCODING);
 		// 'O'が出力する時刻を'+09:00'の形に整形
-		$dcdate = substr_replace(get_date('Y-m-d\TH:i:sO',$time),':',-2,0);
+		$dc_date = substr_replace(get_date('Y-m-d\TH:i:sO',$time),':',-2,0);
 		
 //		$desc = get_date('D, d M Y H:i:s T',$time);
 // <description>$desc</description>
 		
+		$dc_identifier = $trackback_ping = '';
+		if ($trackback)
+		{
+			$tb_id = md5($r_page);
+			$dc_identifier = " <dc:identifer>$script?$r_page</dc:identifer>";
+			$trackback_ping = " <trackback:ping>$script?plugin=tb&amp;tb_id=$tb_id</trackback:ping>";
+		}
 		$items .= <<<EOD
 <item rdf:about="$script?$r_page">
  <title>$title</title>
  <link>$script?$r_page</link>
- <dc:date>$dcdate</dc:date>
- <dc:identifer>$script?$r_page</dc:identifer>
- <trackback:ping>$script?plugin=tb&amp;tb_id=$tb_id</trackback:ping>
+ <dc:date>$dc_date</dc:date>
+$dc_identifier
+$trackback_ping
 </item>
 
 EOD;
 		$rdf_li .= "    <rdf:li rdf:resource=\"$script?$r_page\" />\n";
 	}
+	
+	$xmlns_trackback = $trackback ?  
+		'  xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"' : '';
 	
 	header('Content-type: application/xml');
 	
@@ -53,7 +63,7 @@ EOD;
 
 <rdf:RDF 
   xmlns:dc="http://purl.org/dc/elements/1.1/"
-  xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
+$xmlns_trackback
   xmlns="http://purl.org/rss/1.0/"
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
   xml:lang="ja">
