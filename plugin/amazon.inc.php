@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: amazon.inc.php,v 1.10 2004/12/25 07:39:37 henoheno Exp $
+// $Id: amazon.inc.php,v 1.11 2004/12/28 15:12:25 henoheno Exp $
 // Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 ´×¼Ë
 //
 // Amazon plugin: Book-review maker via amazon.com/amazon.jp
@@ -257,7 +257,7 @@ function plugin_amazon_print_object($align, $alt, $title)
 		$div  = '<div style="float:' . $align . ';padding:.5em 1.5em .5em 1.5em;' . $center . '">' . "\n";
 		$div .= ' <table style="width:110px;border:0;' . $center . '">' . "\n";
 		$div .= '  <tr><td style="' . $center . '">' . "\n";
-		$div .= '   <a href="' . $url_sho . '"><img src="' . $url . '" alt="' . $alt  .'" /></a></td></tr>' . "\n";
+		$div .= '   <a href="' . $url_shop . '"><img src="' . $url . '" alt="' . $alt  .'" /></a></td></tr>' . "\n";
 		$div .= '  <tr><td style="' . $center . '"><a href="' . $url_shop . '">' . $title . '</a></td></tr>' . "\n";
 		$div .= ' </table>' . "\n";
 		$div .= '</div>' . "\n";
