@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.63 2004/05/08 02:57:52 arino Exp $
+// $Id: func.php,v 1.64 2004/06/26 13:27:49 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -12,6 +12,7 @@ function is_interwiki($str)
 
 	return preg_match("/^$InterWikiName$/",$str);
 }
+
 // 文字列がページ名かどうか
 function is_pagename($str)
 {
@@ -34,17 +35,20 @@ function is_pagename($str)
 	
 	return $is_pagename;
 }
+
 // 文字列がURLかどうか
 function is_url($str,$only_http=FALSE)
 {
 	$scheme = $only_http ? 'https?' : 'https?|ftp|news';
 	return preg_match('/^('.$scheme.')(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]*)$/', $str);
 }
+
 // ページが存在するか
 function is_page($page,$reload=FALSE)
 {
 	return file_exists(get_filename($page));
 }
+
 // ページが編集可能か
 function is_editable($page)
 {
@@ -111,6 +115,7 @@ function auto_template($page)
 	}
 	return $body;
 }
+
 // 検索語を展開する
 function get_search_words($words,$special=FALSE)
 {
@@ -165,6 +170,7 @@ function get_search_words($words,$special=FALSE)
 	}
 	return $retval;
 }
+
 // 検索
 function do_search($word,$type='AND',$non_format=FALSE)
 {
@@ -515,6 +521,7 @@ function get_autolink_pattern(&$pages)
 	
 	return array($result,$result_a,$forceignorepages);
 }
+
 function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 {
 	if ($end == 0)
@@ -566,6 +573,7 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 	}
 	return $result;
 }
+
 // pukiwiki.phpスクリプトのabsolute-uriを生成
 function get_script_uri()
 {
@@ -596,6 +604,7 @@ function get_script_uri()
 	
 	return $script;
 }
+
 /*
 変数内のnull(\0)バイトを削除する
 PHPはfopen("hoge.php\0.txt")で"hoge.php"を開いてしまうなどの問題あり
