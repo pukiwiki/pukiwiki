@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.css.php,v 1.1 2004/12/24 14:41:12 henoheno Exp $
+// $Id: tdiary.css.php,v 1.2 2005/01/13 13:32:09 henoheno Exp $
 //
 // tDiary-css-wrapper
 
@@ -108,7 +108,7 @@ div.jumpmenu {
 }
 
 /* for tDiary themes */
-hr.full_hr { display:none }
+hr.full_hr {}
 hr.note_hr { display:none }
 
 span.size1 {
