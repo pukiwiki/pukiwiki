@@ -4,6 +4,9 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
 	<meta http-equiv="content-style-type" content="text/css">
+<?if (! ( ($vars['cmd']==''||$vars['cmd']=='read') && $is_page) ) { ?>
+	<meta name="robots" content="noindex">
+<? } ?>
 	<title><?=$page_title ?> - <?=$title?></title>
 	<link rel="stylesheet" href="skin/default.en.css" type="text/css" media="screen" charset="iso-8859-1">
 	<script type="text/javascript">
