@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.81 2004/09/19 13:45:48 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.82 2004/09/20 02:04:24 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -236,9 +236,6 @@ $date_format = 'Y-m-d';
 
 // 時刻フォーマット
 $time_format = 'H:i:s';
-
-// 曜日配列
-$weeklabels = $_msg_week;
 
 /////////////////////////////////////////////////
 // RSS に出力するページ数

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.9 2004/09/20 00:48:34 henoheno Exp $
+// $Id: init.php,v 1.10 2004/09/20 02:04:24 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -71,6 +71,11 @@ if (! file_exists(LANG_FILE) || ! is_readable(LANG_FILE)) {
 	require(LANG_FILE);
 }
 if ($die) { die_message(nl2br("\n\n" . $die)); }
+
+/////////////////////////////////////////////////
+// LANG_FILE: 曜日配列
+
+$weeklabels = $_msg_week;
 
 /////////////////////////////////////////////////
 // INI_FILE: $script: 初期設定
