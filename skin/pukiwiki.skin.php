@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.40 2005/01/26 12:58:57 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.41 2005/01/26 13:04:08 henoheno Exp $
 //
 // PukiWiki default skin
 
@@ -16,7 +16,7 @@ if (! defined('SKIN_DEFAULT_DISABLE_TOPICPATH'))
 // Show / Hide navigation bar UI at your choice
 // NOTE: This is not stop their functionalities!
 if (! defined('PKWK_SKIN_SHOW_NAVBAR'))
-	define('PKWK_SKIN_SHOW_NAVBAR', 0); // 1, 0
+	define('PKWK_SKIN_SHOW_NAVBAR', 1); // 1, 0
 
 // Show / Hide toolbar UI at your choice
 // NOTE: This is not stop their functionalities!
