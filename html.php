@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.78 2003/05/28 04:49:40 arino Exp $
+// $Id: html.php,v 1.79 2003/06/01 14:28:00 arino Exp $
 //
 
 // 本文を出力
@@ -180,7 +180,7 @@ EOD;
 	
 	$body = <<<EOD
 <form action="$script" method="post">
- <div>
+ <div class="edit_form">
 $template
   $addtag
   <input type="hidden" name="cmd" value="edit" />

@@ -627,3 +627,9 @@ div.jumpmenu{
 	font-size:xx-small;
 	vertical-align:super;
 }
+
+/* html.php/edit_form() */
+.edit_form
+{
+     clear:both;
+}
