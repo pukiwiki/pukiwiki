@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: navi.inc.php,v 1.12 2003/05/01 01:12:20 arino Exp $
+// $Id: navi.inc.php,v 1.13 2003/05/01 08:49:55 arino Exp $
 //
 
 /*
@@ -130,7 +130,7 @@ function plugin_navi_convert()
 				{
 					$s_page = htmlspecialchars($_page);
 					$r_page = rawurlencode($_page);
-					$head_tags[] = " <link rel=\"$rel\" href=\"$script?$r_page\" title=\"$s_page\">";
+					$head_tags[] = " <link rel=\"$rel\" href=\"$script?$r_page\" title=\"$s_page\" />";
 				}
 			}
 		}
