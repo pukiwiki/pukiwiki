@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.43 2002/12/02 03:08:47 panda Exp $
+// $Id: html.php,v 1.44 2002/12/02 14:27:36 panda Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -582,7 +582,8 @@ function edit_form($postdata,$page,$add=0)
 		foreach($files as $pg_org) {
 			if($pg_org == $whatsnew) continue;
 			if(preg_match("/$non_list/",$pg_org)) continue;
-			$s_name = htmlspecialchars(strip_bracket($pg_org));
+			$name = strip_bracket($pg_org);
+			$s_name = htmlspecialchars($name);
 			$s_org = htmlspecialchars($pg_org);
 			$vals[$name] = "    <option value=\"$s_org\">$s_name</option>";
 		}
