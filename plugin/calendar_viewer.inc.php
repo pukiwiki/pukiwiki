@@ -3,7 +3,7 @@
  * PukiWiki calendar_viewerプラグイン
  *
  *
- *$Id: calendar_viewer.inc.php,v 1.3 2003/01/31 01:49:35 panda Exp $
+ *$Id: calendar_viewer.inc.php,v 1.4 2003/02/11 01:31:57 panda Exp $
   calendarrecentプラグインを元に作成
  */
 /**
@@ -169,7 +169,9 @@ function plugin_calendar_viewer_convert()
     $vars["page"] = $page;
 
     $body = convert_html(get_source($page));
-    $link = "<a href=\"$script?cmd=edit&page=".rawurlencode($page)."\">".strip_bracket($page)."</a>";
+    $r_page = rawurlencode($page);
+    $s_page = htmlspecialchars($page);
+    $link = "<a href=\"$script?cmd=edit&amp;page=$r_page\">$s_page</a>";
     $head = "<h1>$link</h1>\n";
     $return_body .= $head . $body;
 
@@ -234,12 +236,12 @@ function plugin_calendar_viewer_convert()
   }
   //リンク作成
   if ($left_YM != ""){
-    $left_link = "<a href=\"". $script."?plugin=calendar_viewer&file=".$enc_pagename."&date=".$left_YM ."&date_sep=".$date_sep."&mode=".$mode."\">".$left_text."</a>";
+    $left_link = "<a href=\"$script?plugin=calendar_viewer&amp;file=$enc_pagename&amp;date=$left_YM&amp;date_sep=$date_sep&amp;mode=$mode\">$left_text</a>";
   }else{
     $left_link = "";
   }
   if ($right_YM != ""){
-    $right_link = "<a href=\"". $script."?plugin=calendar_viewer&file=".$enc_pagename."&date=".$right_YM ."&date_sep=".$date_sep."&mode=".$mode."\">".$right_text."</a>";
+    $right_link = "<a href=\"$script?plugin=calendar_viewer&amp;file=$enc_pagename&amp;date=$right_YM&amp;date_sep=$date_sep&amp;mode=$mode\">$right_text</a>";
   }else {
     $right_link = "";
   }

@@ -1,52 +1,56 @@
 <?php
-// $Id: includesubmenu.inc.php,v 1.3 2003/01/31 01:49:35 panda Exp $
+// $Id: includesubmenu.inc.php,v 1.4 2003/02/11 01:31:57 panda Exp $
 
 function plugin_includesubmenu_convert()
 {
-  global $vars,$script;
+  global $script,$vars;
+  
   $ShowPageName = FALSE;
+  
   if (func_num_args()) {
     $aryargs = func_get_args();
-    if ($aryargs[0] == "showpagename") $ShowPageName = TRUE;
-  }else{
-    $ShowPageName = FALSE;
+    if ($aryargs[0] == 'showpagename') {
+      $ShowPageName = TRUE;
+    }
   }
 
-  $SubMenuPageName = "";
+  $SubMenuPageName = '';
 
-  $tmppage = strip_bracket($vars["page"]);
+  $tmppage = strip_bracket($vars['page']);
   //下階層のSubMenuページ名
-  $SubMenuPageName1 = $tmppage . "/SubMenu";
+  $SubMenuPageName1 = $tmppage . '/SubMenu';
 
   //同階層のSubMenuページ名
-  $LastSlash= strrpos($tmppage,"/");
-  if ($LastSlash === false){
-    $SubMenuPageName2 = "SubMenu";
-  }else{
-    $SubMenuPageName2 = substr($tmppage,0,$LastSlash)."/SubMenu";
+  $LastSlash= strrpos($tmppage,'/');
+  if ($LastSlash === FALSE) {
+    $SubMenuPageName2 = 'SubMenu';
+  } else {
+    $SubMenuPageName2 = substr($tmppage,0,$LastSlash) . '/SubMenu';
   }
   //echo "$SubMenuPageName1 <br>";
   //echo "$SubMenuPageName2 <br>";
   //下階層にSubMenuがあるかチェック
   //あれば、それを使用
-  if (is_page($SubMenuPageName1)){
+  if (is_page($SubMenuPageName1)) {
     //下階層にSubMenu有り
-    $SubMenuPageName=$SubMenuPageName1;
-  }elseif (is_page($SubMenuPageName2)){
+    $SubMenuPageName = $SubMenuPageName1;
+  }
+  else if (is_page($SubMenuPageName2)) {
     //同階層にSubMenu有り
-    $SubMenuPageName=$SubMenuPageName2;
-  }else{
+    $SubMenuPageName = $SubMenuPageName2;
+  }
+  else {
     //SubMenu無し
     return "";
   }
   
-  $link = "<a href=\"$script?cmd=edit&page=".rawurlencode($SubMenuPageName)."\">".strip_bracket($SubMenuPageName)."</a>";
-
   $body = convert_html(get_source($SubMenuPageName));
   
-  if ($ShowPageName == TRUE) {
-    $head = "<h1>$link</h1>\n";
-    $body = "$head\n$body\n";
+  if ($ShowPageName) {
+    $r_page = rawurlencode($SubMenuPageName);
+    $s_page = htmlspecialchars($SubMenuPageName);
+    $link = "<a href=\"$script?cmd=edit&amp;page=$r_page\">$s_page</a>";
+    $body = "<h1>$link</h1>\n$body";
   }
   return $body;
 }
