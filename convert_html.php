@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.38 2003/05/17 11:17:11 arino Exp $
+// $Id: convert_html.php,v 1.39 2003/05/26 13:53:49 arino Exp $
 //
 function convert_html($lines)
 {
@@ -392,9 +392,19 @@ class TableCell extends Block
 		parent::Block();
 		$this->style = array();
 		
-		if (preg_match("/^(LEFT|CENTER|RIGHT):(.*)$/",$text,$out)) {
-			$this->style['align'] = 'text-align:'.strtolower($out[1]).';';
-			$text = $out[2];
+		while (preg_match('/^(?:(LEFT|CENTER|RIGHT)|(BG)?COLOR\(([#\w]+)\)):(.*)$/',$text,$matches))
+		{
+			if ($matches[1])
+			{
+				$this->style['align'] = 'text-align:'.strtolower($matches[1]).';';
+				$text = $matches[4];
+			}
+			else if ($matches[3])
+			{
+				$name = $matches[2] ? 'background-color' : 'color';
+				$this->style[$name] = $name.':'.htmlspecialchars($matches[3]).';';
+				$text = $matches[4];
+			}
 		}
 		if ($is_template) {
 			if (is_numeric($text)) {
@@ -411,7 +421,7 @@ class TableCell extends Block
 			$this->tag = 'th';
 			$text = substr($text,1);
 		}
-		$this->last =& $this->insert(new Inline($text));
+		$this->last =& $this->insert(new Div($this,$text));
 	}
 	function setStyle(&$style) {
 		foreach ($style as $key=>$value) {
@@ -643,7 +653,7 @@ class Div extends Block
 	function Div(&$root,$text)
 	{
 		if (!preg_match("/^\#([^\(]+)(?:\((.*)\))?/",$text,$out) or !exist_plugin_convert($out[1])) {
-			$this = new Paragraph($text);
+			$this = new Inline($text);
 			return;
 		}
 		parent::Block();
