@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.31 2004/10/17 13:51:49 henoheno Exp $
+// $Id: ja.lng.php,v 1.1 2004/10/29 23:53:41 henoheno Exp $
 //
 // PukiWiki message file (japanese)
 
