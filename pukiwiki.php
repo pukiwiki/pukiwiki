@@ -1,5 +1,5 @@
 <?php
-// pukiwiki.php - Yet another WikiWikiWeb clone.
+// PukiWiki - Yet another WikiWikiWeb clone.
 //
 // PukiWiki 1.4.* 
 //  Copyright (C) 2002 by PukiWiki Developers Team
@@ -29,7 +29,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.33 2004/07/24 10:08:47 henoheno Exp $
+// $Id: pukiwiki.php,v 1.34 2004/07/24 12:28:57 henoheno Exp $
 /////////////////////////////////////////////////
 
 /////////////////////////////////////////////////
