@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.62 2004/07/04 12:18:57 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.63 2004/07/05 11:23:40 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -10,31 +10,31 @@
 // ディレクトリ指定 最後に / が必要 属性は 777
 /////////////////////////////////////////////////
 // データの格納ディレクトリ
-define('DATA_DIR','./wiki/');
+define('DATA_DIR', DATA_HOME . './wiki/');
 /////////////////////////////////////////////////
 // 差分ファイルの格納ディレクトリ
-define('DIFF_DIR','./diff/');
+define('DIFF_DIR', DATA_HOME . './diff/');
 /////////////////////////////////////////////////
 // バックアップファイル格納先ディレクトリ
-define('BACKUP_DIR','./backup/');
+define('BACKUP_DIR', DATA_HOME . './backup/');
 /////////////////////////////////////////////////
 // キャッシュファイル格納ディレクトリ
-define('CACHE_DIR','./cache/');
+define('CACHE_DIR', DATA_HOME . './cache/');
 /////////////////////////////////////////////////
 // 添付ファイル格納ディレクトリ
-define('UPLOAD_DIR','./attach/');
+define('UPLOAD_DIR', DATA_HOME . './attach/');
 /////////////////////////////////////////////////
 // カウンタファイル格納ディレクトリ
-define('COUNTER_DIR', './counter/');
+define('COUNTER_DIR', DATA_HOME . './counter/');
 /////////////////////////////////////////////////
 // TrackBackファイル格納ディレクトリ
-define('TRACKBACK_DIR','./trackback/');
+define('TRACKBACK_DIR', DATA_HOME . './trackback/');
 
 /////////////////////////////////////////////////
 // ディレクトリ指定 最後に / が必要
 /////////////////////////////////////////////////
 // プラグインファイル格納先ディレクトリ
-define('PLUGIN_DIR','./plugin/');
+define('PLUGIN_DIR', DATA_HOME . './plugin/');
 /////////////////////////////////////////////////
 // スキン/スタイルシートファイル格納ディレクトリ
 define('SKIN_DIR','./skin/');

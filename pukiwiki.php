@@ -29,14 +29,22 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.31 2004/06/19 14:27:35 henoheno Exp $
+// $Id: pukiwiki.php,v 1.32 2004/07/05 11:23:40 henoheno Exp $
 /////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// データを格納するディレクトリや設定ファイルを置くディレクトリ
+
+if (! defined('DATA_HOME')) define('DATA_HOME', './');
 
 /////////////////////////////////////////////////
 // サブルーチンの格納先ディレクトリ (他の *.phpファイル)
-define('SUB_DIR', './');
 
+if (! defined('SUB_DIR')) define('SUB_DIR', './');
+
+/////////////////////////////////////////////////
 // サブルーチンの読み込み
+
 require(SUB_DIR . 'func.php');
 require(SUB_DIR . 'file.php');
 require(SUB_DIR . 'plugin.php');
@@ -52,14 +60,12 @@ require(SUB_DIR . 'trackback.php');
 require(SUB_DIR . 'auth.php');
 require(SUB_DIR . 'proxy.php');
 require(SUB_DIR . 'mail.php');
-if (!extension_loaded('mbstring'))
-{
+if (!extension_loaded('mbstring')) {
 	require(SUB_DIR . 'mbstring.php');
 }
 
-/////////////////////////////////////////////////
-// プログラムファイル読み込み
-require('init.php');
+// 初期化: 設定ファイルの読み込み
+require(SUB_DIR . 'init.php');
 
 /////////////////////////////////////////////////
 // メイン処理
