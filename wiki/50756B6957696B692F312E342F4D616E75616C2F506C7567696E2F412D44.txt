@@ -193,9 +193,11 @@
 :|~0、1で水平線の有無を指定します。省略すると1になります。
 --0 − 水平線を表示しません。
 --1 − 水平線を表示します。
-:|~戻り先はURLで指定します。現状ではWikiNameやBracketNameを指定できません。省略すると直前に参照していたページが戻り先になりますが、利用者のブラウザの設定がJavaScript onでないと機能しません。
-:備考|
-~JavaScriptを使わない場合は、InterWikiName及びAliasでbackプラグインと同じことが簡単に実現できます。backプラグインでは戻り先をWikiNameやBracketNameで指定できないため、JavaScriptを使わないとPukiWiki内での移動には使いにくいです。
+:|~戻り先はリンクを選択時の移動先となるURL、ページ名のいずれかで指定します。PLUGIN_BACK_ALLOW_PAGELINKがTRUEの場合のみページ名を指定可能です。ページ名は「ページ名#anchor」の記述を行う事で移動先のアンカーも指定可能です。PLUGIN_BACK_ALLOW_JAVASCRIPTがTRUEの場合のみ戻り先の省略が可能です。戻り先を省略すると直前に参照していたページが戻り先になりますが、利用者のブラウザの設定がJavaScript onでないと機能しません。
+:プラグイン内設定|~
+--PLUGIN_BACK_ALLOW_PAGELINK　ページ名(+アンカー名)による戻り先指定を可能とするかどうか
+--PLUGIN_BACK_ALLOW_JAVASCRIPT　戻り先の指定にJavaScript(history.go(-1))を利用するかどうか
+--PLUGIN_BACK_USAGE　エラー時に表示される使用方法
 
 
 **backup [#n727318e]
@@ -469,7 +471,7 @@ Yellow = "#FFFF00"
 --today − そのページが参照された回数（当日分）を表示します。
 --yesterday − そのページが参照された回数（昨日分）を表示します。
 :プラグイン内設定|~
---COUNTER_EXT　ページ参照回数を保持するデータファイルの拡張子
+--PLUGIN_COUNTER_SUFFIX　ページ参照回数を保持するデータファイルの拡張子
 :備考|
 ~すべてのページで参照回数を表示したい場合は、MenuBarやスキンからcounterプラグインを呼び出してください。
 
