@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.3.2.3 2003/01/31 10:05:12 panda Exp $
+// $Id: file.php,v 1.3.2.4 2003/02/14 07:29:46 panda Exp $
 /////////////////////////////////////////////////
 
 // ソースを取得
@@ -150,6 +150,7 @@ function is_freeze($page)
 	if($_freeze === true || $_freeze === false) return $_freeze;
 
 	$lines = get_source($page);
+	$lines = preg_replace("/\x0D\x0A|\x0D|\x0A/","\n",$lines);
 	
 	if($lines[0] == "#freeze\n")
 		$_freeze = true;
