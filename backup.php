@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.php,v 1.2 2002/06/21 12:33:29 masui Exp $
+// $Id: backup.php,v 1.3 2002/07/08 04:44:28 masui Exp $
 /////////////////////////////////////////////////
 
 // バックアップデータを作成する
@@ -57,6 +57,7 @@ function make_backup($filename,$body,$oldtime)
 function get_backup($age,$filename)
 {
 	$aryages = read_backup($filename);
+	$retvars = array();
 	
 	foreach($aryages as $key => $lines)
 	{
