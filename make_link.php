@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.30 2003/03/23 04:16:24 panda Exp $
+// $Id: make_link.php,v 1.31 2003/03/23 08:24:19 panda Exp $
 //
 
 // リンクを付加する
@@ -279,7 +279,7 @@ EOD;
 		$arr = $this->splice($arr);
 		
 		$id = ++$note_id;
-		$note = make_link($arr[1]);
+		$note = make_line_rules(make_link($arr[1]));
 		
 		$foot_explain[$id] = <<<EOD
 <a id="notefoot_$id" href="#notetext_$id" class="note_super">*$id</a>
