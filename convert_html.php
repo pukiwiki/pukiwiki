@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.58 2003/12/03 12:17:26 arino Exp $
+// $Id: convert_html.php,v 1.59 2003/12/04 03:09:27 arino Exp $
 //
 function convert_html($lines)
 {
@@ -16,7 +16,7 @@ function convert_html($lines)
 	
 	$digest = md5(join('', get_source($vars['page'])));
 	
-	$body = new Body(++$contents_id);
+	$body = &new Body(++$contents_id);
 	$body->parse($lines);
 	$ret = $body->toString();
 	
@@ -96,18 +96,17 @@ class Inline extends Element
 		
 		if (substr($text,0,1) == '~') // 行頭~。パラグラフ開始
 		{
-			$parent = &$this->parent;
-			$this = &new Paragraph(' '.substr($text,1));
-			$this->setParent($parent);
+			$this = new Paragraph(' '.substr($text,1));
+			$this->last = &$this;
+			
+			return;
 		}
-		else
-		{
-			$this->elements[] = trim((substr($text, 0, 1) == "\n") ? $text : make_link($text));
-		}
+		$this->elements[] = trim((substr($text, 0, 1) == "\n") ? $text : make_link($text));
 	}
 	function &insert(&$obj)
 	{
 		$this->elements[] = $obj->elements[0];
+		
 		return $this;
 	}
 	function canContain($obj)
@@ -320,6 +319,8 @@ class DList extends ListContainer
 		if (count($out) < 2)
 		{
 			$this = new Inline($text);
+			$this->last = &$this;
+			
 			return;
 		}
 		parent::ListContainer('dl', 'dt', ':', $out[0]);
@@ -452,7 +453,7 @@ class TableCell extends Element
 		}
 		else
 		{
-			$obj = new Inline($text);
+			$obj = &new Inline($text);
 		}
 		$this->insert($obj);
 	}
@@ -503,6 +504,8 @@ class Table extends Element
 		if (!preg_match("/^\|(.+)\|([hHfFcC]?)$/", $text, $out))
 		{
 			$this = new Inline($text);
+			$this->last = &$this;
+			
 			return;
 		}
 		$cells = explode('|', $out[1]);
@@ -513,7 +516,7 @@ class Table extends Element
 		$row = array();
 		foreach ($cells as $cell)
 		{
-			$row[] = new TableCell($cell, $is_template);
+			$row[] = &new TableCell($cell, $is_template);
 		}
 		$this->elements[] = $row;
 	}
@@ -617,6 +620,8 @@ class YTable extends Element
 		if (!preg_match_all('/("[^"]*(?:""[^"]*)*"|[^,]*),/', "$text,", $out))
 		{
 			$this = new Inline($text);
+			$this->last = &$this;
+			
 			return;
 		}
 		array_shift($out[1]);
@@ -722,11 +727,12 @@ class Div extends Element
 		
 		if (!preg_match("/^\#([^\(]+)(?:\((.*)\))?/", $text, $out) or !exist_plugin_convert($out[1]))
 		{
-			$this = new Paragraph($text);
+			$this = new Inline($text);
+			$this->last = &$this;
+			
 			return;
 		}
-		$this->name = $out[1];
-		$this->param = array_key_exists(2, $out) ? $out[2] : '';
+		list(, $this->name, $this->param) = array_pad($out,3,'');
 	}
 	function canContain(&$obj)
 	{
@@ -776,7 +782,7 @@ class Body extends Element
 	function Body($id)
 	{
 		$this->id = $id;
-		$this->contents = new Element();
+		$this->contents = &new Element();
 		$this->contents_last = &$this->contents;
 		parent::Element();
 	}
