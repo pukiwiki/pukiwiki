@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.59 2003/12/04 03:09:27 arino Exp $
+// $Id: convert_html.php,v 1.60 2003/12/06 02:40:10 arino Exp $
 //
 function convert_html($lines)
 {
@@ -58,9 +58,9 @@ class Element
 	{
 		return TRUE;
 	}
-	function wrap($string, $tag, $param = '')
+	function wrap($string, $tag, $param = '', $canomit = TRUE)
 	{
-		return  ($string == '') ? '' : "<$tag$param>$string</$tag>";
+		return ($canomit and $string == '') ? '' : "<$tag$param>$string</$tag>";
 	}
 	function toString()
 	{
@@ -488,7 +488,7 @@ class TableCell extends Element
 			$param .= ' style="'.join(' ', $this->style).'"';
 		}
 		
-		return $this->wrap(parent::toString(), $this->tag, $param);
+		return $this->wrap(parent::toString(), $this->tag, $param, FALSE);
 	}
 }
 class Table extends Element
