@@ -1,5 +1,5 @@
 <?php
-// $Id: back.inc.php,v 1.3 2003/03/17 00:29:33 panda Exp $
+// $Id: back.inc.php,v 1.4 2003/07/03 05:11:38 arino Exp $
 /*
  * PukiWiki back プラグイン
  * (C) 2002, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -16,14 +16,6 @@
  * 3 - <hr> タグの有無       省略時:出力
  * 4 - 通常は、戻るなわけなんですが、どうしてもの場合の飛び先を指定可能
  */
-
-function plugin_back_init()
-{
-	$messages = array(
-		'_msg_back_word' => '戻る'
-	);
-	set_plugin_messages($messages);
-}
 
 function plugin_back_convert()
 {

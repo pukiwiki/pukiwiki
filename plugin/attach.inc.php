@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.27 2003/06/10 14:00:58 arino Exp $
+//  $Id: attach.inc.php,v 1.28 2003/07/03 05:10:53 arino Exp $
 //
 
 /*
@@ -40,53 +40,6 @@ if (!defined('FILE_ICON'))
 
 // mime-typeを記述したページ
 define('ATTACH_CONFIG_PAGE_MIME','plugin/attach/mime-type');
-
-//-------- init
-function plugin_attach_init()
-{
-	$messages = array(
-		'_attach_messages'=>array(
-			'msg_uploaded' => '$1 にアップロードしました',
-			'msg_deleted'  => '$1 からファイルを削除しました',
-			'msg_freezed'  => '添付ファイルを凍結しました。',
-			'msg_unfreezed'=> '添付ファイルを凍結解除しました。',
-			'msg_upload'   => '$1 への添付',
-			'msg_info'     => '添付ファイルの情報',
-			'msg_confirm'  => '<p>%s を削除します。</p>',
-			'msg_list'     => '添付ファイル一覧',
-			'msg_listpage' => '$1 の添付ファイル一覧',
-			'msg_listall'  => '全ページの添付ファイル一覧',
-			'msg_file'     => '添付ファイル',
-			'msg_maxsize'  => 'アップロード可能最大ファイルサイズは %s です。',
-			'msg_count'    => ' <span class="small">%s件</span>',
-			'msg_password' => 'パスワード',
-			'msg_adminpass'=> '管理者パスワード',
-			'msg_delete'   => 'このファイルを削除します。',
-			'msg_freeze'   => 'このファイルを凍結します。',
-			'msg_unfreeze' => 'このファイルを凍結解除します。',
-			'msg_isfreeze' => 'このファイルは凍結されています。',
-			'msg_require'  => '(管理者パスワードが必要です)',
-			'msg_filesize' => 'サイズ',
-			'msg_date'     => '登録日時',
-			'msg_dlcount'  => 'アクセス数',
-			'msg_md5hash'  => 'MD5ハッシュ値',
-			'msg_page'     => 'ページ',
-			'msg_filename' => '格納ファイル名',
-			'err_noparm'   => '$1 へはアップロード・削除はできません',
-			'err_exceed'   => '$1 へのファイルサイズが大きすぎます',
-			'err_exists'   => '$1 に同じファイル名が存在します',
-			'err_notfound' => '$1 にそのファイルは見つかりません',
-			'err_noexist'  => '添付ファイルがありません。',
-			'err_delete'   => '$1 からファイルを削除できませんでした',
-			'err_password' => 'パスワードが一致しません。',
-			'err_adminpass'=> '管理者パスワードが一致しません。',
-			'btn_upload'   => 'アップロード',
-			'btn_info'     => '詳細',
-			'btn_submit'   => '実行'
-		)
-	);
-	set_plugin_messages($messages);
-}
 
 //-------- convert
 function plugin_attach_convert()
@@ -168,8 +121,6 @@ function plugin_attach_action()
 function attach_filelist()
 {
 	global $vars,$_attach_messages;
-	
-	plugin_attach_init();
 	
 	$obj = &new AttachPages($vars['page'],0);
 
