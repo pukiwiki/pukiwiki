@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.9 2003/02/25 06:17:35 panda Exp $
+ * $Id: bugtrack.inc.php,v 1.10 2003/02/28 06:19:59 panda Exp $
  */
 
 function plugin_bugtrack_init()
@@ -86,7 +86,8 @@ function plugin_bugtrack_print_form($base,$category)
 	else {
 		$encoded_category = '<select name="category">';
 		foreach ($category as $_category) {
-			$encoded_category .= "<option value=\"$_category\">$_category</option>\n";
+			$s_category = htmlspecialchars($_category);
+			$encoded_category .= "<option value=\"$s_category\">$s_category</option>\n";
 		}
 		$encoded_category .= '</select>';
 	}
@@ -182,7 +183,6 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 	$pagename = strip_bracket($pagename);
 	
 	$postdata = plugin_bugtrack_template($base, $summary, $name, $priority, $state, $category, $version, $body);
-	$postdata = user_rules_str($postdata);
 
 	$i = 0;
 	do {
