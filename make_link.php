@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.34 2003/04/24 14:42:30 arino Exp $
+// $Id: make_link.php,v 1.35 2003/05/12 10:31:03 arino Exp $
 //
 
 // リンクを付加する
@@ -24,6 +24,7 @@ class InlineConverter
 	var $converters; // as array()
 	var $pattern;
 	var $pos;
+	var $result;
 	
 	function InlineConverter($converters=NULL,$excludes=NULL)
 	{
@@ -33,6 +34,7 @@ class InlineConverter
 				'plugin',        // インラインプラグイン
 				'note',          // 注釈 
 				'url',           // URL
+				'url_interwiki', // URL (interwiki definition)
 				'mailto',        // mailto:
 				'interwikiname', // InterWikiName
 				'autolink',      // AutoLink
@@ -46,7 +48,7 @@ class InlineConverter
 		}
 		$this->converters = array();
 		$patterns = array();
-		$start = 1;
+		$start = 3; // $this->patternのサブパターン2個を含む
 		
 		foreach ($converters as $name)
 		{
@@ -62,22 +64,25 @@ class InlineConverter
 			$start += $converter->get_count();
 			$start++;
 		}
-		$this->pattern = join('|',$patterns);
+		$this->pattern = '(.*?)('.join('|',$patterns).')'; // $start += 2
 	}
 	function convert($string,$page)
 	{
 		$this->page = $page;
-		return preg_replace_callback("/{$this->pattern}/x",array(&$this,'replace'),$string);
+		$this->result = '';
+		
+		$string = preg_replace_callback("/{$this->pattern}/x",array(&$this,'replace'),$string);
+		
+		return $this->result.htmlspecialchars($string);
 	}
 	function replace($arr)
 	{
 		$obj = $this->get_converter($arr);
 		
-		if ($obj !== NULL and $obj->set($arr,$this->page) !== FALSE)
-		{
-			return $obj->toString();
-		}
-		return $arr[0];
+		$this->result .= ($obj !== NULL and $obj->set($arr,$this->page) !== FALSE) ?
+			htmlspecialchars($arr[1]).$obj->toString() : htmlspecialchars($arr[0]);
+		
+		return ''; //処理済みの部分を文字列から削除する
 	}
 	function get_objects($string,$page)
 	{
@@ -160,7 +165,7 @@ class Link
 		$this->page = $page;
 		$this->name = $name;
 		$this->type = $type;
-		if (preg_match('/\.(gif|png|jpe?g)$/i',$alias))
+		if ($type != 'InterWikiName' and preg_match('/\.(gif|png|jpe?g)$/i',$alias))
 		{
 			$alias = "<img src=\"$alias\" alt=\"$name\" />";
 		}
@@ -189,7 +194,7 @@ class Link_plugin extends Link
 	function get_pattern()
 	{
 		return <<<EOD
-&amp;(\w+) # (1) plugin name
+&(\w+) # (1) plugin name
 (?:
  \(
   ([^)]*)  # (2) parameter
@@ -230,7 +235,7 @@ EOD;
 	{
 		//&hoge(){...}; &fuga(){...}; のbodyが'...}; &fuga(){...'となるので、前後に分ける
 		$after = '';
-		if (preg_match("/^ ((?!};).*?) }; (.*?) &amp; (\w+) (?: \( ([^()]*) \) )? { (.+)$/x",$body,$matches))
+		if (preg_match("/^ ((?!};).*?) }; (.*?) & (\w+) (?: \( ([^()]*) \) )? { (.+)$/x",$body,$matches))
 		{
 			$body = $matches[1];
 			$after = $matches[2].$this->make_inline($matches[3],$matches[4],$matches[5]);
@@ -247,7 +252,7 @@ EOD;
 		}
 		
 		// プラグインが存在しないか、変換に失敗
-		return $this->text;
+		return htmlspecialchars($this->text);
 	}
 }
 // 注釈
@@ -313,44 +318,69 @@ class Link_url extends Link
 	function get_pattern()
 	{
 		$s1 = $this->start + 1;
-		$s2 = $this->start + 2;
 		return <<<EOD
-(?:\[\[              # open bracket
- ([^\]]+)            # (1) alias
- (?:&gt;|>|:)        # '&gt;' or '>' or ':'
+(\[\[         # (1) open bracket
+ ([^\]]+)     # (2) alias
+ (?:&gt;|>|:) # '&gt;' or '>' or ':'
 )?
-(\[)?                # (2) open bracket
-(                    # (3) url
- (?:https?|ftp|news)
- (?::\/\/[!~*'();\/?:\@&=+\$,%#\w.-]+)
+(             # (3) url
+ (?:https?|ftp|news):\/\/[!~*'();\/?:\@&=+\$,%#\w.-]+
 )
-(?($s2)\s([^\]]+)\]) # (4) alias, close bracket if (2)
-(?($s1)\]\])         # close bracket if (1)
+(?($s1)\]\])  # close bracket
 EOD;
 	}
 	function get_count()
 	{
-		return 4;
+		return 3;
 	}
 	function set($arr,$page)
 	{
 		$arr = $this->splice($arr);
 		
 		$name = $arr[3];
-		$anchor = $arr[4];
-		$alias = $arr[1].$anchor;
-		
-		if ($alias == '')
-		{
-			$alias = $name;
-		}
+		$alias = htmlspecialchars(($arr[2] == '') ? $arr[3] : $arr[2]);
 		return parent::setParam($page,$name,'url',$alias);
 		
 	}
 	function toString()
 	{
-//		global $link_target;
+		return "<a href=\"{$this->name}\">{$this->alias}</a>";
+	}
+}
+// url (InterWiki definition type)
+class Link_url_interwiki extends Link
+{
+	function Link_url_interwiki($start)
+	{
+		parent::Link($start);
+	}
+	function get_pattern()
+	{
+		return <<<EOD
+\[       # open bracket
+(        # (1) url
+ (?:(?:https?|ftp|news):\/\/|\.\.?\/)[!~*'();\/?:\@&=+\$,%#\w.-]*
+)
+\s
+([^\]]+) # (2) alias
+\]       # close bracket
+EOD;
+	}
+	function get_count()
+	{
+		return 2;
+	}
+	function set($arr,$page)
+	{
+		$arr = $this->splice($arr);
 		
+		$name = $arr[1];
+		$alias = htmlspecialchars($arr[2]);
+
+		return parent::setParam($page,$name,'url',$alias);
+	}
+	function toString()
+	{
 		return "<a href=\"{$this->name}\">{$this->alias}</a>";
 	}
 }
@@ -381,7 +411,7 @@ EOD;
 		$arr = $this->splice($arr);
 		
 		$name = $arr[2];
-		$alias = ($arr[1] == '') ? $name : $arr[1];
+		$alias = htmlspecialchars(($arr[1] == '') ? $arr[2] : $arr[1]);
 		
 		return parent::setParam($page,$name,'mailto',$alias);
 	}
@@ -444,8 +474,8 @@ EOD;
 			$this->anchor = $matches[2];
 			$param = $matches[1];
 		}
-		$name = '[['.$arr[4].$param.']]';
-		$alias = ($arr[2] != '') ? $arr[2] : $arr[4].$arr[6];
+		$name = rawurlencode('[['.$arr[4].$param.']]');
+		$alias = htmlspecialchars(($arr[2] != '') ? $arr[2] : $arr[4].$arr[6]);
 		
 		return parent::setParam($page,$name,'InterWikiName',$alias);
 	}
@@ -453,8 +483,7 @@ EOD;
 	{
 		global $script; //,$interwiki_target;
 		
-		$r_name = rawurlencode($this->name);
-		return "<a href=\"$script?$r_name{$this->anchor}\">{$this->alias}</a>";
+		return "<a href=\"$script?{$this->name}{$this->anchor}\">{$this->alias}</a>";
 	}
 }
 // BracketName
