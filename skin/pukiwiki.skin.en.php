@@ -1,6 +1,10 @@
-<?php if (!defined('DATA_DIR')) { exit; } ?>
-<?php header('Content-Type: text/html; charset=iso-8859-1') ?>
-<?php echo '<?xml version="1.0" encoding="iso-8859-1"?>' ?>
+<?php
+if (!defined('DATA_DIR')) { exit; }
+header('Cache-control: no-cache');
+header('Pragma: no-cache');
+header('Content-Type: text/html; charset=iso-8859-1');
+echo '<?xml version="1.0" encoding="iso-8859-1"?>';
+?>
 
 <?php if ($html_transitional) { ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -85,7 +89,7 @@
  ]
 <?php
   if ($trackback) {
-    $tb_id = md5($_page);
+    $tb_id = tb_get_id($_page);
 ?>
  &nbsp;
  [ <a href="<?php echo "$script?plugin=tb&amp;__mode=view&amp;tb_id=$tb_id" ?>">TrackBack(<?php echo tb_count($_page) ?>)</a> ]
