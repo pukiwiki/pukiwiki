@@ -1,5 +1,5 @@
 <?php
-// $Id: template.inc.php,v 1.10 2003/04/13 04:38:51 arino Exp $
+// $Id: template.inc.php,v 1.11 2003/04/30 09:06:17 arino Exp $
 
 define('MAX_LEN',60);
 
@@ -13,11 +13,18 @@ function plugin_template_action()
 		return; 
 	}
 	
+	$lines = get_source($vars['refer']);
+	
+	// #freezeを削除
+	if (count($lines) and rtrim($lines[0]) == '#freeze')
+	{
+		array_shift($lines);
+	} 
+	
 	// edit
 	if (array_key_exists('begin',$vars) and is_numeric($vars['begin'])
 		and array_key_exists('end',$vars) and is_numeric($vars['end']))
 	{
-		$lines = get_source($vars['refer']);
 		
 		if ($vars['begin'] <= $vars['end'])
 		{
@@ -36,8 +43,6 @@ function plugin_template_action()
 	// input mb_strwidth()
 	else
 	{
-		$lines = get_source($vars['refer']);
-		
 		$begin_select = "開始行:<br /><select name=\"begin\" size=\"10\">\n";
 		for ($i = 0; $i < count($lines); $i++)
 		{
