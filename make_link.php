@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.61 2003/11/05 11:05:09 arino Exp $
+// $Id: make_link.php,v 1.62 2003/11/07 03:12:05 arino Exp $
 //
 
 // リンクを付加する
@@ -447,11 +447,10 @@ EOD;
 		{
 			list(,$this->param,$this->anchor) = $matches;
 		}
-		$this->url = get_interwiki_url($name,$this->param);
-		if ($this->url === FALSE)
-		{
-			$this->url = $script.'?'.rawurlencode('[['.$name.':'.$this->param.']]');
-		}
+		$url = get_interwiki_url($name,$this->param);
+		$this->url = ($url === FALSE) ?
+			$script.'?'.rawurlencode('[['.$name.':'.$this->param.']]') :
+			htmlspecialchars($url);
 		
 		return parent::setParam(
 			$page,
@@ -802,7 +801,7 @@ function get_interwiki_url($name,$param)
 		{
 			if (preg_match('/\[((?:(?:https?|ftp|news):\/\/|\.\.?\/)[!~*\'();\/?:\@&=+\$,%#\w.-]*)\s([^\]]+)\]\s?([^\s]*)/',$line,$matches))
 			{
-				$interwikinames[$matches[2]] = array(htmlspecialchars($matches[1]),$matches[3]);
+				$interwikinames[$matches[2]] = array($matches[1],$matches[3]);
 			}
 		}
 	}
@@ -821,7 +820,7 @@ function get_interwiki_url($name,$param)
 			{
 				$param = '[['.mb_convert_encoding($param,'SJIS',SOURCE_ENCODING).']]';
 			}
-			$param = htmlspecialchars($param);
+//			$param = htmlspecialchars($param);
 			break;
 		
 		// moin系
@@ -838,7 +837,7 @@ function get_interwiki_url($name,$param)
 		// URLエンコードしない
 		case 'asis':
 		case 'raw':
-			$param = htmlspecialchars($param);
+//			$param = htmlspecialchars($param);
 			break;
 		
 		default:

@@ -1,5 +1,5 @@
 <?php
-// $Id: lookup.inc.php,v 1.8 2003/02/28 03:19:55 panda Exp $
+// $Id: lookup.inc.php,v 1.9 2003/11/07 03:12:05 arino Exp $
 
 function plugin_lookup_convert()
 {
@@ -34,13 +34,15 @@ EOD;
 }
 function plugin_lookup_action()
 {
-	global $script,$vars;
+	global $vars;
 	
-	if (!$vars['inter'] or !$vars['page']) return;
+	$url = get_interwiki_url($vars['inter'],$vars['page']);
+	if ($url === FALSE)
+	{
+		return;
+	}
 	
-	$interwikiname = rawurlencode("[[{$vars['inter']}:{$vars['page']}]]");
-	
-	header("Location: $script?$interwikiname");
+	header("Location: $url");
 	die();
 }
 ?>
