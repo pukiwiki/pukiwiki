@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-//  $Id: attach.inc.php,v 1.71 2005/01/30 12:02:37 henoheno Exp $
+//  $Id: attach.inc.php,v 1.72 2005/02/27 07:38:15 henoheno Exp $
 //
 // File attach plugin
 
@@ -477,27 +477,27 @@ class AttachFile
 
 		if ($this->age) {
 			$msg_freezed = '';
-			$msg_delete  = '<input type="radio" name="pcmd" value="delete" />' .
-				$_attach_messages['msg_delete'] .
-				$_attach_messages['msg_require'] . '<br />';
+			$msg_delete  = '<input type="radio" name="pcmd" id="_p_attach_delete" value="delete" />' .
+				'<label for="_p_attach_delete">' .  $_attach_messages['msg_delete'] .
+				$_attach_messages['msg_require'] . '</label><br />';
 			$msg_freeze  = '';
 		} else {
 			if ($this->status['freeze']) {
 				$msg_freezed = "<dd>{$_attach_messages['msg_isfreeze']}</dd>";
 				$msg_delete  = '';
-				$msg_freeze  = '<input type="radio" name="pcmd" value="unfreeze" />' .
-					$_attach_messages['msg_unfreeze'] .
-					$_attach_messages['msg_require'] . '<br />';
+				$msg_freeze  = '<input type="radio" name="pcmd" id="_p_attach_unfreeze" value="unfreeze" />' .
+					'<label for="_p_attach_unfreeze">' .  $_attach_messages['msg_unfreeze'] .
+					$_attach_messages['msg_require'] . '</label><br />';
 			} else {
 				$msg_freezed = '';
-				$msg_delete = '<input type="radio" name="pcmd" value="delete" />' .
-					$_attach_messages['msg_delete'];
+				$msg_delete = '<input type="radio" name="pcmd" id="_p_attach_delete" value="delete" />' .
+					'<label for="_p_attach_delete">' . $_attach_messages['msg_delete'];
 				if (PLUGIN_ATTACH_DELETE_ADMIN_ONLY || $this->age)
 					$msg_delete .= $_attach_messages['msg_require'];
-				$msg_delete .= '<br />';
-				$msg_freeze  = '<input type="radio" name="pcmd" value="freeze" />' .
-					$_attach_messages['msg_freeze'] .
-					$_attach_messages['msg_require'] . '<br />';
+				$msg_delete .= '</label><br />';
+				$msg_freeze  = '<input type="radio" name="pcmd" id="_p_attach_freeze" value="freeze" />' .
+					'<label for="_p_attach_freeze">' .  $_attach_messages['msg_freeze'] .
+					$_attach_messages['msg_require'] . '</label><br />';
 			}
 		}
 		$info = $this->toString(TRUE, FALSE);
