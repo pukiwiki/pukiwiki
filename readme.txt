@@ -1,14 +1,17 @@
 NAME
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
-       PukiWiki 1.3.7 by
-        Copyright (C) 2001,2002,2003 by sng, PukiWiki Developers Team
+        PukiWiki 1.3.7
+        Copyright (C) 2001-2004 by sng, PukiWiki Developers Team
+	License is GNU/GPL.
+	Based on "PukiWiki" 1.3 by sng
         http://pukiwiki.org/
 
 SYNOPSIS
         http://pukiwiki.org/
 
 DESCRIPTION
+
     PukiWikiは参加者が自由にページを追加・削除・編集できる
     Webページ群を作るPHPスクリプトです。
     Webで動作する掲示板とちょっと似ていますが、
@@ -25,83 +28,73 @@ DESCRIPTION
     PukiWikiはフリーソフトです。 ご自由にお使いください。
 
 設置方法
+
   入手
 
     PukiWikiの最新版は、 http://pukiwiki.org/ から入手できます。
 
   インストール
 
-    1.  アーカイブを解く。
+    1.  アーカイブを解きます。
 
-    2.  必要に応じてpukiwiki.ini.phpの設定を確認します。
+    2.  必要に応じて設定ファイル(*.ini.php)の内容を確認します。
         1.11 から設定ファイルが別ファイルのpukiwiki.ini.phpになりました。
 
     3.  *.phpとpukiwiki.gifを同じところに設置します。
 
-    4.  *.phpと同じところにpukiwiki.ini.phpを設置します。
+    4.  pukiwiki.ini.php内で指定した以下のディレクトリを作成します。
 
-    5.  pukiwiki.ini.php内で指定したスキンファイルを設置します。
-        skinディレクトリ内に、pukiwiki.skin.ja.php(日本語)および
-        pukiwiki.skin.en.php(英語)が用意されています。
+        データの格納ディレクトリ               (デフォルトはwiki)
+        差分ファイル格納ディレクトリ           (デフォルトはdiff)
+        バックアップファイル格納ディレクトリ   (デフォルトはbackup)
+        キャッシュファイル格納ディレクトリ     (デフォルトはcache)
+        添付ファイル格納ディレクトリ           (デフォルトはattach)
+        カウンタファイル格納ディレクトリ       (デフォルトはcounter)
 
-    6.  pukiwiki.ini.php内で指定したデータファイルディレクトリを
-        属性 777 で作成する。(ディフォルトは wiki )
-        このディレクトリ以下にファイルがある場合には、そのファイルも
-        属性 666に変更してください。
+        ディレクトリ内にファイルがある場合には、そのファイルの属性を
+        666に変更してください。
 
-    7.  pukiwiki.ini.php内で指定した差分ファイルディレクトリを
-        属性 777 で作成する。(ディフォルトは diff )
+    5.  サーバ上のファイルおよびディレクトリのパーミッションを確認します。
+        ファイルのパーミッションについては次項を参照してください。
 
-    8.  自動バックアップ機能(ディフォルトでは off)を使う場合、
-        pukiwiki.ini.php内で指定した差分ファイルディレクトリを
-        属性 777 で作成する。(ディフォルトは backup )
+    6.  pukiwiki.phpにブラウザからアクセスします。
 
-    9.  attach.inc.php内で指定した添付ファイルディレクトリを
-        属性 777 で作成する。(ディフォルトは attach )
+    パーミッション
 
-    10. counter.inc.php内で指定したカウンターファイルディレクトリを
-        属性 777 で作成する。(ディフォルトは counter )
+        ディレクトリ   パーミッション
+        attach         777
+        backup         777
+        cache          777
+        counter        777
+        diff           777
+        face           755
+        image          755
+        plugin         755
+        skin           755
+        wiki           777
 
-    11. pukiwiki.phpにブラウザからアクセスします。
+        ファイル       パーミッション 転送モード
+        *.php          644            ASCII
+        *.lng          644            ASCII
+        pukiwiki.png   644            BINARY
 
-  パーミッション
+        cache/*        666            ASCII
+        face/*         644            BINARY
+        image/*        644            BINARY
+        plugin/*       644            ASCII
+        skin/*         644            ASCII
+        wiki/*         666            ASCII
 
-       ファイル                  パーミッション 転送モード
-       pukiwiki.php              644            ASCII
-       pukiwiki.ini.php          644            ASCII
-       en.lng                    644            ASCII
-       ja.lng                    644            ASCII
-       func.php                  644            ASCII
-       file.php                  644            ASCII
-       html.php                  644            ASCII
-       init.php                  644            ASCII
-       plugin.php                644            ASCII
-       template.php              644            ASCII
-       rss.php                   644            ASCII
-       backup.php                644            ASCII
-       make_link.php             644            ASCII
-       pukiwiki.gif              644            BINARY
-       skin/pukiwiki.skin.en.php 644            ASCII
-       skin/pukiwiki.skin.ja.php 644            ASCII
-       skin/default.ja.css       644            ASCII
-       skin/default.ja.css       644            ASCII
-       skin/default.js           644            ASCII
+データのバックアップ方法
 
-       ディレクトリ             パーミッション
-       attach                   777
-       backup                   777
-       counter                  777
-       diff                     777
-       plugin                   755
-       skin                     755
-       wiki                     777
+        データファイルディレクトリ以下をバックアップします。
+        (デフォルトディレクトリ名は wiki)
 
-   データのバックアップ方法
-
-            データファイルディレクトリ以下をバックアップします。
-            (ディフォルトディレクトリ名は wiki )
+        必要に応じて他のディレクトリの内容をバックアップします。
+        (デフォルトディレクトリ名は attach,backup,counter,cache,diff)
 
 新しいページの作り方
+
     1.  まず、適当なページ（例えばFrontPage）を選び、
         ページの下にある「編集」リンクをたどります。
 
@@ -119,6 +112,7 @@ DESCRIPTION
     5.  NewPageページができるとFrontPageの ? は消えて、リンクとなります。
 
 テキスト整形のルール
+
     *   連続した複数行はフィルされて表示されます。
 
     *   空行は段落`<p>'の区切りとなります。
@@ -226,83 +220,33 @@ DESCRIPTION
 
     *   その他、pukiwiki.php を編集することにより他のルールをスクリプト設置者が定義できます。
 
+
 InterWiki
-    1.11 からInterWikiが実装されました。
 
-    InterWiki とは、Wikiサーバーをつなげる機能です。最初はそうだったんで InterWiki という
-    名前なのだそうですが、今は、Wikiサーバーだけではなくて、いろんなサーバーを引けます。
-    なかなか便利です。そうなると InterWiki という名前はあまり機能を表していないことに
-    なります。 この機能は Tiki からほぼ完全に移植しています。
+        1.11 からInterWikiが実装されました。
 
-  サーバーリストへの追加
-    InterWikiName のページに以下のようにサーバの定義をする。 
+        InterWiki とは、Wikiサーバーをつなげる機能です。
+        最初はそうだったんで InterWiki という名前なのだそうですが、
+        今は、Wikiサーバーだけではなくて、いろんなサーバーを引けます。
+        なかなか便利です。そうなると InterWiki という名前はあまり機能を
+        表していないことになります。
+        この機能は Tiki からほぼ完全に移植しています。
 
-    *   [URL サーバ名] タイプ
-    *   [http://pukiwiki.org/index.php?read&page= pukiwiki] pw
+        詳細は [[InterWikiテクニカル]] ページを参照してください。
 
-
-  InterWikiNameの追加 
-    サーバ名:WikiNameをBracketNameで作ればInterWikiNameの完成 
-
-    *   [[サーバ名:WikiName]]
-    *   [[pukiwiki:FrontPage]]
-
-  WikiNameの挿入位置 
-    要求しようとするURLへのWikiNameの挿入位置を $1 で指定することができます。
-    省略するとお尻にくっつきます。 
-
-    *   [http://pukiwiki.org/index.php?backup&page=$1&age=1 pukiwiki] pw
-
-
-  文字コード変換タイプ 
-    PukiWikiページ以外にも飛ばせます。日本語をURLに含む可能性もあるのでその場合の
-    エンコーディングの指定をタイプとして指定できます。 
-
-    *   [http://pukiwiki.org/index.php?read&page=$1 pukiwiki] pw
-
-
-    *   std 省略時
-        *   内部文字エンコーディング(標準はSJIS)のままURLエンコードします。 
-
-    *   raw asis
-        *   URLエンコードしないでそのまま使用。 
-
-    *   sjis
-        *   文字列をSJISに変換し、URLエンコードします。(mb_stringのSJISへのエイリアスです) 
-
-    *   euc
-        *   文字列を日本語EUCに変換し、URLエンコードします。(mb_stringのEUC-JPへのエイリアスです) 
-
-    *   utf8
-        *   文字列をUTF-8に変換し、URLエンコードします。(mb_stringのUTF-8へのエイリアスです) 
-
-    *   yw
-        *   YukiWiki系へのエンコーディング。 
-
-    *   moin
-        *   MoinMoin用に変換します。 
-
-    *   その他、PHP4のmb_stringでサポートされている以下のエンコード文字が使用できます。 
-
-        *   UCS-4, UCS-4BE, UCS-4LE, UCS-2, UCS-2BE, UCS-2LE, UTF-32, UTF-32BE, UTF-32LE, UCS-2LE, UTF-16, UTF-16BE, UTF-16LE, UTF-8, UTF-7, ASCII, EUC-JP, SJIS, eucJP-win, SJIS-win, ISO-2022-JP, JIS, ISO-8859-1, ISO-8859-2, ISO-8859-3, ISO-8859-4, ISO-8859-5, ISO-8859-6, ISO-8859-7, ISO-8859-8, ISO-8859-9, ISO-8859-10, ISO-8859-13, ISO-8859-14, ISO-8859-15, byte2be, byte2le, byte4be, byte4le, BASE64, 7bit, 8bit, UTF7-IMAP 
-
-
-  YukiWiki系へのエンコーディング 
-
-    *   WikiNameのものへはそのままURLエンコード。 
-    *   BracketNameのものは[[ ]]を付加してURLエンコード。 
 
 RDF/RSS
-    1.2.1から、RecentChangesのRDF/RSSを出力できるようになりました。
-    実用できるかはわからないですが、将来何かに使えれば、と思ってます。
 
-  RSS 0.91 の出力方法の例
+        1.2.1から、RecentChangesのRDF/RSSを出力できるようになりました。
+        実用できるかはわからないですが、将来何かに使えれば、と思ってます。
 
-    *   http://pukiwiki/index.php?rss
+    *   RSS 0.91 の出力方法の例
 
-  RSS 1.0 の出力方法の例
+        *   http://pukiwiki/index.php?cmd=rss
 
-    *   http://pukiwiki.org/index.php?rss10
+    *   RSS 1.0 の出力方法の例
+
+        *   http://pukiwiki.org/index.php?cmd=rss10
 
 更新履歴
     *   2004-04-04 1.3.7 by PukiWiki Developers Team
