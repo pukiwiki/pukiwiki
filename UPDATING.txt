@@ -1,5 +1,5 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.1 2004/08/28 09:11:28 henoheno Exp $
+$Id: UPDATING.txt,v 1.2 2004/08/28 21:24:39 henoheno Exp $
 
 
 互換性に関する記述
@@ -49,6 +49,94 @@ PukiWiki/1.4.3との非互換点
 
 更新履歴
 ========
+
+    *   2004-09-04 1.4.4 by PukiWiki Developers Team
+
+        基礎コンテンツの修正および拡充
+            InterWikiName: YukiWiki、ウヰキエリアを現状にあわせ更新
+
+        BugTrack/509 ディレクトリの位置をハードコードしているファイルが多数ある
+        BugTrack/147 requireのパスチェックを修正してほしい
+        BugTrack/656 SKIN_FILEの定義
+            - 定義を追加: IMAGE_DIR (画像ファイル類:ブラウザから見える場所に置く)
+            - 定義を追加: LIB_DIR   (ライブラリ:複数のPukiWikiで共有する可能性がある)
+            - 定義を追加: DATA_HOME (PukiWiki一本ごとに固有のデータ)
+            - 定義を追加: LANG_DIR  (言語ファイルのある場所)
+            - 定義を追加: JCODE_DIR (mbstring.php)
+            - versionlistプラグイン:
+                - LIB_DIRやDATA_HOMEをフォローする
+                - versionlistの出力から冗長な '/' を削除 (開発日記/2004-07-24)
+
+        画像ファイルを一箇所(IMAGE_DIR)に集約
+            開発日記/2004-07-24 PukiWikiのシンボル画像
+            開発日記/2004-07-28 face 画像
+
+        PukiWiki一本ごとのデータ/共有可能なコード/Webサイトに露出する
+        プレゼンテーション部分を分離可能に
+            開発日記/2004-07-24 index.php を追加
+
+        携帯電話およびPDAなどのアクセスに対応 / 設定の集約
+            BugTrack/581 (au/TU-KA) EZweb およびWAP端末などからのアクセス
+            開発日記/2004-07-03 Vodafone の判定結果に端末IDが含まれない様に修正
+            開発日記/2004-07-03 keitai.ini.php に設定を集約
+            BugTrack/626 組み込みWebブラウザ「NetFront」「Compact NetFront」
+                およびゲーム機・PDA対応
+            BugTrack/628 DDIポケット AH-K3001V(Opera搭載)に対応を
+            BugTrack/637 携帯(Shift-JIS固定ブラウザ)から書き込むと文字化けする /
+                $_REQUESTは妥当かどうか / GET固定ブラウザの扱い
+
+        [CONTRIBUTION] 日本のフェイスマーク、日本の携帯電話向け絵文字および
+            PukiWiki向けface画像「汗」 (みこ) (See BugTrack/627 for detail)
+
+        コードの簡素化: チェックルーチンの整理 => チェック結果をまとめて報告する
+            [[cvs:init.php]] (v1.4:1.74-1.76, v1.3:1.20.2.12)
+
+        初期化処理の見直し: セキュリティ向上および軽量化 (init.php):
+            開発日記/2004-06-28
+                 cmd= パラメータに値が渡されているとき、plugin= に対する入力を
+                 暗黙に無視する
+            開発日記/2004-06-30 チェック前の文字列をメモリに残さない
+            開発日記/2004-07-03
+                - 不要なグローバル変数を徹底的に排除
+                - $_GET['msg']を禁止
+                - GETがPOSTと同じキーを持っていた場合、POSTの内容を優先させる
+            開発日記/2004-07-11
+                - $_GET['pass']を禁止
+                - $get, $post, $cookie は、グローバル変数を(コピーせず)参照する
+                - 'encoding_hints' の内容が空文字列かどうかをチェックする
+
+        スケーラビリティの向上
+            開発日記/2004-07-10 exist_plugin() の呼び出し回数を極小化
+
+        セキュリティの向上
+            開発日記/2004-07-11 index.html の追加
+            開発日記/2004-07-18 管理者パスワードのためのシステム関数を追加
+	        - 認証失敗時に2秒のウェイトをかけることで、攻撃者を妨害する
+            BugTrack/528 pcommentをネストした場合の脆弱性
+                - 無限ループを抑えるハックのみ追加
+
+        セキュリティ: XSS脆弱性の修正
+            BugTrack/586 edit_form() に XSS 脆弱性
+            BugTrack/364 ls2プラグインでlink指定時の挙動がおかしい
+
+        重要な問題の修正
+            BugTrack/577 renameプラグインでXTMLパースエラー
+            BugTrack/639 memoプラグイン: カンマ以降の文字が消える /
+               ダブルクォートで囲んだ場合、ダブルクォートが消える
+
+        ネットワーク関連の修正
+            BugTrack/635 proxy.php のバグ (過剰判定、かつ間違っている)
+            開発日記/2004-07-17 APOP before SMTP
+
+        軽微な問題の修正
+            BugTrack/638 TrackBack受信件数が多く表示される
+
+        コードの可読性を高めるための修正
+            開発日記/2004-07-18 内部関数名の変更: sanitize() => input_filter()
+            開発日記/2004-07-31 空白しか含まない行の空白を削除
+            - 関数の直前に空行を追加
+            - 冗長なコメントの削除、コメントの追加
+            - Please use abstruct method $vars, instead of $get or $post
 
 
     *   2004-04-04 1.4.3 by PukiWiki Developers Team
