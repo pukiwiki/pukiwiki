@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.115 2005/03/21 06:35:27 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.116 2005/03/21 08:29:18 henoheno Exp $
 //
 // PukiWiki main setting file
 
@@ -36,7 +36,7 @@ define('PKWK_QUERY_STRING_MAX', 640); // Bytes, 0 = OFF
 // LANG - Internal content encoding ('en', 'ja', or ...)
 define('LANG', 'ja');
 
-// UI_LANG - Content Language for buttons, menus,  etc
+// UI_LANG - Content encoding for buttons, menus,  etc
 define('UI_LANG', LANG); // 'en' for Internationalized wikisite
 
 /////////////////////////////////////////////////
@@ -84,8 +84,8 @@ default  :
 }
 
 /////////////////////////////////////////////////
-// Title of your Wikisite (Define this)
-// and also RSS feed's channel name
+// Title of your Wikisite (Name this)
+// Also used as RSS feed's channel name etc
 $page_title = 'PukiWiki';
 
 // Specify PukiWiki URL (default: auto)
@@ -121,7 +121,7 @@ $menubar      = 'MenuBar';       // Menu
 
 /////////////////////////////////////////////////
 
-// PKWK_ALLOW_JAVASCRIPT - Allow using JavaScript
+// PKWK_ALLOW_JAVASCRIPT - Allow / Prohibit using JavaScript
 define('PKWK_ALLOW_JAVASCRIPT', 0);
 
 /////////////////////////////////////////////////
@@ -130,7 +130,7 @@ define('PKWK_ALLOW_JAVASCRIPT', 0);
 // Enable Trackback
 $trackback = 0;
 
-// Show trackbacks with an another window
+// Show trackbacks with an another window (using JavaScript)
 $trackback_javascript = 0;
 
 /////////////////////////////////////////////////
@@ -144,8 +144,8 @@ $nowikiname = 0;
 /////////////////////////////////////////////////
 // AutoLink feature
 
-// AutoLink minimum bytes (0 = Disable)
-$autolink = 8;
+// AutoLink minimum length of page name
+$autolink = 8; // Bytes, 0 = OFF
 
 /////////////////////////////////////////////////
 // Enable Freeze / Unfreeze feature
@@ -157,7 +157,7 @@ $function_freeze = 1;
 $notimeupdate = 1;
 
 /////////////////////////////////////////////////
-// Wikisite admin password
+// Admin password for this Wikisite
 
 // CHANGE THIS
 $adminpass = '1a1dc91c907325c69271ddf0c944bc72'; // md5('pass')
@@ -247,7 +247,7 @@ $maxshow_deleted = 60;
 $cantedit = array( $whatsnew, $whatsdeleted );
 
 /////////////////////////////////////////////////
-// HTTP: Send Last-Modified header
+// HTTP: Output Last-Modified header
 $lastmod = 0;
 
 /////////////////////////////////////////////////
@@ -271,7 +271,7 @@ $do_backup = 1;
 $del_backup = 0;
 
 // Bacukp interval and generation
-$cycle  = 3;    // Wait N hours between backup (0 = no wait)
+$cycle  =   3; // Wait N hours between backup (0 = no wait)
 $maxage = 120; // Stock latest N backups
 
 // NOTE: $cycle x $maxage / 24 = Minimum days to lost your data
@@ -286,7 +286,7 @@ $update_exec = '';
 //$update_exec = '/usr/bin/mknmz --media-type=text/pukiwiki -O /var/lib/namazu/index/ -L ja -c -K /var/www/wiki/';
 
 /////////////////////////////////////////////////
-// Proxy setting (for TrackBack etc)
+// HTTP proxy setting (for TrackBack etc)
 
 // Use HTTP proxy server to get remote data
 $use_proxy = 0;
@@ -321,6 +321,7 @@ $notify_diff_only = 1;
 // SMTP server (Windows only. Usually specified at php.ini)
 $smtp_server = 'localhost';
 
+// Mail recipient (To:) and sender (From:)
 $notify_to   = 'to@example.com';	// To:
 $notify_from = 'from@example.com';	// From:
 
