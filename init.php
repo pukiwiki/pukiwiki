@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.26 2003/02/15 13:10:38 panda Exp $
+// $Id: init.php,v 1.27 2003/02/17 07:31:31 panda Exp $
 //
 
 /////////////////////////////////////////////////
@@ -25,6 +25,11 @@ Based on "PukiWiki" 1.3 by <a href="http://factage.com/sng/">sng</a>
 foreach (array('HTTP_USER_AGENT','PHP_SELF','SERVER_NAME','SERVER_SOFTWARE','SERVER_ADMIN') as $key) {
 	define($key,array_key_exists($key,$HTTP_SERVER_VARS) ? $HTTP_SERVER_VARS[$key] : '');
 }
+
+/////////////////////////////////////////////////
+// 初期設定 (グローバル変数)
+$vars = array();
+$foot_explain = array();
 
 /////////////////////////////////////////////////
 // 初期設定(時間)
@@ -60,6 +65,9 @@ if(!is_writable(DIFF_DIR)) {
 }
 if($do_backup && !is_writable(BACKUP_DIR)) {
 	die_message('BACKUP_DIR is not found or not writable.');
+}
+if(!is_writable(CACHE_DIR)) {
+	die_message('CACHE_DIR is not found or not writable.');
 }
 $wrong_ini_file = '';
 if (!isset($rss_max)) $wrong_ini_file .= '$rss_max ';
@@ -160,8 +168,6 @@ $NotePattern = '/\(\(((?:(?>(?:(?!\(\()(?!\)\)(?:[^\)]|$)).)+)|(?R))*)\)\)/ex';
 // 初期設定(その他のグローバル変数)
 // 現在時刻
 $now = format_date(UTIME);
-// 脚注
-$foot_explain = array();
 // 関連するページ
 $related = array();
 // skin内でDTD宣言を切り替えるのに使用。paint.inc.php対策

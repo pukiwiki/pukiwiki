@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.19 2003/02/15 14:04:21 panda Exp $
+// $Id: convert_html.php,v 1.20 2003/02/17 07:31:45 panda Exp $
 //
 function &convert_html(&$lines)
 {
@@ -341,6 +341,7 @@ class BQuote extends Block
 	{
 		if (is_a($obj, 'BQuote') and $obj->level == $this->level) {
 			if (is_a($this->last,'Paragraph')
+				and array_key_exists(0,$obj->elements[0])
 				and is_object($obj->elements[0]->elements[0])) {
 				$this->last->insert($obj->elements[0]->elements[0]);
 			} else {

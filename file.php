@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.5 2003/02/11 04:51:58 panda Exp $
+// $Id: file.php,v 1.6 2003/02/17 07:31:38 panda Exp $
 //
 
 // ソースを取得
@@ -93,8 +93,10 @@ function file_write($dir,$page,$str)
 function put_lastmodified()
 {
 	global $script,$post,$maxshow,$whatsnew,$non_list;
+	global $WikiName,$autolink,$nowikiname;
 
 	$pages = array();
+	$auto = array(); // for autolink
 	foreach(get_existpages() as $page) {
 		if ($page == $whatsnew or preg_match("/$non_list/",$page)) {
 			continue;
@@ -103,6 +105,12 @@ function put_lastmodified()
 		$time = get_filetime($page);
 		$s_page = htmlspecialchars($page);
 		$pages[$s_page] = $time;
+		
+		// for autolink
+		if (preg_match("/^$WikiName$/",$page) ? $nowikiname : strlen($page) >= $autolink) {
+			$pattern = '(?:'.preg_quote($page,'/').')';
+			$auto[$pattern] = strlen($pattern);
+		}
 	}
 	
 	arsort($pages); //時刻降順でソート
@@ -125,6 +133,17 @@ function put_lastmodified()
 	
 	fputs($fp,"#norelated\n"); // :)
 	flock($fp,LOCK_UN);
+	fclose($fp);
+	
+	// for autolink
+	arsort($auto,SORT_NUMERIC);
+	$auto = array_keys($auto);
+	if (!$nowikiname) {
+		array_push($auto,"(?:$WikiName)");
+	}
+	$fp = fopen(CACHE_DIR.'autolink.dat','w')
+		or die_message('cannot write autolink file '.CACHE_DIR.'/autolink.dat<br>maybe permission is not writable');
+	fputs($fp,join('|',$auto));
 	fclose($fp);
 }
 
@@ -160,29 +179,44 @@ function header_lastmod()
 }
 
 // 全ページ名を配列に
-function get_existpages($dir = DATA_DIR)
+function get_existpages($dir=DATA_DIR,$ext='.txt')
 {
 	$aryret = array();
 	
-	$dir = @opendir($dir) or die();
-	
-	while ($file = readdir($dir)) {
-		if (preg_match('/^([0-9A-F]+)/',$file,$matches)) {
+	$pattern = '^([0-9A-F]+)';
+	if ($ext != '') {
+		$pattern .= preg_quote($ext,'/').'$';
+	}
+	$dp = @opendir($dir) or die();
+	while ($file = readdir($dp)) {
+		if (preg_match("/$pattern/",$file,$matches)) {
 			$aryret[] = decode($matches[1]);
 		}
 	}
-	
-	closedir($dir);
-	
+	closedir($dp);
 	return $aryret;
 }
-
+//ファイル名の一覧を配列に(エンコード済み、拡張子を指定)
+function get_existfiles($dir,$ext)
+{
+	$aryret = array();
+	
+	$pattern = '^[0-9A-F]+'.preg_quote($ext).'$';
+	$dp = @opendir($dir) or die();
+	while ($file = readdir($dp)) {
+		if (preg_match("/$pattern/",$file)) {
+			$aryret[] = $dir.$file;
+		}
+	}
+	closedir($dp);
+	return $aryret;
+}	
 function links_update($page)
 {
 	global $vars;
 
 	// linkデータベースを更新
-	if (defined('LINK_DB') and exist_plugin_action('links')) {
+	if (exist_plugin_action('links')) {
 		// ちょっと姑息
 		$tmp = $vars['page'];
 		$vars['page'] = $page;
@@ -225,7 +259,14 @@ EOD;
 		}
 	}
 	else {
-		$links[$page] = array_merge($links[$page],do_search($page,'OR',1));
+//		$links[$page] = array_merge($links[$page],do_search($page,'OR',1));
+		$ref_name = CACHE_DIR.encode($page).'.ref';
+		if (file_exists($ref_name)) {
+			foreach (file($ref_name) as $line) {
+				list($_page,$time) = explode("\t",rtrim($line));
+				$links[$page][$_page] = $time;
+			}
+		}
 	}
 	
 	return $links[$page];

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.14 2003/02/14 07:09:22 panda Exp $
+// $Id: make_link.php,v 1.15 2003/02/17 07:31:25 panda Exp $
 //
 
 // リンクを付加する
@@ -143,24 +143,12 @@ class Link_auto extends Link
 	{
 		global $WikiName,$autolink,$nowikiname;
 		
-		if (!$autolink) {
+		if (!$autolink or !file_exists(CACHE_DIR.'autolink.dat')) {
 			return $nowikiname ? '(?!)' : $WikiName;
 		}
 		
-		$pages = get_existpages();
-		$arr = array();
-		foreach ($pages as $page) {
-			if (preg_match("/^$WikiName$/",$page) ? $nowikiname : strlen($page) >= $autolink) {
-				$pattern = '(?:'.preg_quote($page,'/').')';
-				$arr[$pattern] = strlen($pattern);
-			}
-		}
-		arsort($arr,SORT_NUMERIC);
-		$arr = array_keys($arr);
-		if (!$nowikiname) {
-			array_push($arr,"(?:$WikiName)");
-		}
-		return '('.join('|',$arr).')';
+		list($auto) = file(CACHE_DIR.'autolink.dat');
+		return "($auto)";
 	}
 	function get_count()
 	{
