@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.30 2002/07/28 16:41:58 masui Exp $
+// $Id: html.php,v 1.31 2002/07/30 08:47:44 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -412,7 +412,7 @@ function inline2($str)
 			($WikiName)
 		)/ex","make_link('$1')",$str);
 
-	$str = preg_replace("/#related/",make_related($vars["page"],TRUE),$str);
+	$str = preg_replace("/#related/e",'make_related($vars["page"],TRUE)',$str);
 
 	$str = make_user_rules($str);
 
