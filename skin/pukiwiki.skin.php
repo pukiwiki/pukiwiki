@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.13 2004/10/17 13:51:49 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.14 2004/10/30 07:02:46 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -55,13 +55,13 @@ if ($html_transitional) { ?>
  <meta http-equiv="content-type" content="application/xhtml+xml; charset=<?php echo CONTENT_CHARSET ?>" />
  <meta http-equiv="content-style-type" content="text/css" />
 <?php if (! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
-<?php if ($javascript) { ?> <meta http-equiv="Content-Script-Type" content="text/javascript" /><?php } ?>
+<?php if (PKWK_JAVASCRIPT && isset($javascript)) { ?> <meta http-equiv="Content-Script-Type" content="text/javascript" /><?php } ?>
 
  <title><?php echo "$title - $page_title" ?></title>
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>" type="text/css" media="screen" charset="<?php echo $css_charset ?>" />
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>&amp;media=print" type="text/css" media="print" charset="<?php echo $css_charset ?>" />
 
-<?php if ($trackback) { ?> <script type="text/javascript" src="skin/trackback.js"></script><?php } ?>
+<?php if (PKWK_JAVASCRIPT && $trackback_javascript) { ?> <script type="text/javascript" src="skin/trackback.js"></script><?php } ?>
 
 <?php echo $head_tag ?>
 </head>
@@ -80,13 +80,16 @@ if ($html_transitional) { ?>
 
 <div id="navigator">
 <?php
-function _navigator($key, $value = ''){
+function _navigator($key, $value = '', $javascript = ''){
 	$lang = $GLOBALS['_LANG']['skin'];
 	$link = $GLOBALS['_LINK'];
 	if (! isset($lang[$key])) { echo 'LANG NOT FOUND'; return FALSE; }
 	if (! isset($link[$key])) { echo 'LINK NOT FOUND'; return FALSE; }
+	if (! PKWK_JAVASCRIPT) $javascript = '';
 
-	echo '<a href="' . $link[$key] . '">' . (($value === '') ? $lang[$key] : $value) . '</a>';
+	echo '<a href="' . $link[$key] . '" ' . $javascript . '>' .
+		(($value === '') ? $lang[$key] : $value) .
+		'</a>';
 
 	return TRUE;
 }
@@ -120,7 +123,8 @@ function _navigator($key, $value = ''){
  ]
 
 <?php if ($trackback) { ?> &nbsp;
- [ <?php _navigator('trackback', $lang['trackback'] . '(' . tb_count($_page) . ')') ?> ]
+ [ <?php _navigator('trackback', $lang['trackback'] . '(' . tb_count($_page) . ')',
+ 	($trackback_javascript == 1) ? 'onClick="OpenTrackback(this.href); return false"' : '') ?> ]
 <?php } ?>
 <?php if ($referer)   { ?> &nbsp;
  [ <?php _navigator('refer') ?> ]

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.9 2004/10/17 13:51:49 henoheno Exp $
+// $Id: html.php,v 1.10 2004/10/30 07:02:46 henoheno Exp $
 //
 
 // 本文を出力
@@ -10,7 +10,8 @@ function catbody($title,$page,$body)
 {
 	global $script, $vars, $arg, $defaultpage, $whatsnew, $help_page, $hr;
 	global $related_link, $cantedit, $function_freeze, $search_word_color, $_msg_word;
-	global $foot_explain, $note_hr, $head_tags, $trackback, $referer, $javascript;
+	global $foot_explain, $note_hr, $head_tags;
+	global $trackback, $trackback_javascript, $referer, $javascript;
 	global $_LANG, $_LINK, $_IMAGE;
 
 	global $html_transitional; // FALSE:XHTML1.1 TRUE:XHTML1.0 Transitional
@@ -24,10 +25,9 @@ function catbody($title,$page,$body)
 
 	$_LINK = $_IMAGE = array();
 
-	// Add script header when ...
-	if ($trackback) {
-		$javascript = 1;
-	}
+	// Add JavaScript header when ...
+	if ($trackback && $trackback_javascript) $javascript = 1; // Set something If you want
+	if (! PKWK_ALLOW_JAVASCRIPT) unset($javascript);
 
 	$_page  = isset($vars['page']) ? $vars['page'] : '';
 	$r_page = rawurlencode($_page);

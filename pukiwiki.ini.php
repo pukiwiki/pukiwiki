@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.90 2004/10/21 13:10:32 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.91 2004/10/30 07:02:46 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -81,18 +81,21 @@ $interwiki    = 'InterWikiName';	// InterWikiName の一覧を書くページ
 $menubar      = 'MenuBar';	// メニューとして表示させる内容を書くページ
 
 /////////////////////////////////////////////////
+// Allow using JavaScript
+//   JavaScriptを使用するプラグインなどの
+//   機能を抑制します
+define('PKWK_ALLOW_JAVASCRIPT', 0);	// 0 or 1
+
+/////////////////////////////////////////////////
 // TrackBack機能を使用する
 $trackback = 0;
+
+// Show trackbacks with an another window
+$trackback_javascript = 0;
 
 /////////////////////////////////////////////////
 // Referer機能を使用する
 $referer = 0;
-
-/////////////////////////////////////////////////
-// ScriptにJavaScriptを使用する (常にヘッダを出力する)
-// $trackbackなど、いくつかの設定によっては
-// 自動的にonになります
-// $javascript = 0;
 
 /////////////////////////////////////////////////
 // WikiNameを *無効に* する
