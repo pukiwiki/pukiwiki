@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: rss.php,v 1.3 2002/07/19 01:52:01 masui Exp $
+// $Id: rss.php,v 1.4 2002/07/19 10:38:37 masui Exp $
 /////////////////////////////////////////////////
 
 // RecentChanges の RSS を出力
@@ -12,8 +12,9 @@ function catrss($rss)
 	header("Content-type: application/xml");
 
 
+	$page_title_utf8 = $page_title;
 	if(function_exists("mb_convert_encoding"))
-		$page_title_utf8 = mb_convert_encoding($page_title,"UTF-8","auto");
+		$page_title_utf8 = mb_convert_encoding($page_title_utf8,"UTF-8","auto");
 
 	$item = "";
 	$rdf_li = "";
