@@ -2,8 +2,9 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.39 2004/09/19 14:05:30 henoheno Exp $
+// $Id: ref.inc.php,v 1.40 2004/09/21 11:53:18 henoheno Exp $
 //
+// Include an attached image-file as an inline-image
 
 // UPLOAD_DIR のデータ(画像ファイルのみ)に直接アクセスさせる
 define('PLUGIN_REF_DIRECT_ACCESS', FALSE); // FALSE or TRUE
@@ -15,34 +16,8 @@ define('PLUGIN_REF_DIRECT_ACCESS', FALSE); // FALSE or TRUE
 // - ブラウザによってはインラインイメージの表示や、「インライン
 //   イメージだけを表示」させた時などに不具合が出る場合があります
 
-/*
-* プラグイン ref
-- ページに添付されたファイルを展開する
-- URLを展開する
-
-* Usage
- #ref(filename[,page][,parameters][,title])
-
-* パラメータ
-- filename -- 添付ファイル名、あるいはURL
--- 'ページ名/添付ファイル名'を指定すると、指定したページの添付ファイルを参照する
-- page    -- ファイルを添付したページ名(省略可)
-- Left|Center|Right -- 横の位置合わせ
-- Wrap|Nowrap -- テーブルタグで囲む/囲まない
-- Around  -- テキストの回り込み
-- noicon  -- アイコンを表示しない
-- nolink  -- 元ファイルへのリンクを張らない
-- noimg   -- 画像を展開しない
-- zoom    -- 縦横比を保持する
-- 999x999 -- サイズを指定(幅x高さ)
-- 999%    -- サイズを指定(拡大率)
-- その他の文字列 -- imgのalt/hrefのtitleとして使用
-ページ名やパラメータに見える文字列を使用するときは、#ref(hoge.png,,zoom)のように
-タイトルの前にカンマを余分に入れる
-*/
-
 // Usage
-define('PLUGIN_REF_USAGE', "(attached-file-name[,page-name][,parameters][,title])");
+define('PLUGIN_REF_USAGE', "([pagename/]attached-file-name[,parameters, ... ][,title])");
 
 // Image suffixes
 define('PLUGIN_REF_IMAGE', '/\.(gif|png|jpe?g)$/i');
