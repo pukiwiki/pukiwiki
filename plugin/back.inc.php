@@ -4,12 +4,12 @@
  * (C) 2003-2004 PukiWiki Developer Team
  * (C) 2002 Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
  *
- * $Id: back.inc.php,v 1.6 2004/11/27 09:51:52 henoheno Exp $
+ * $Id: back.inc.php,v 1.7 2004/12/02 12:46:05 henoheno Exp $
  */
 
 // Allow specifying back link by page name and anchor, or
 // by relative or site-abusolute path
-define('PLUGIN_BACK_ALLOW_PAGELINK', FALSE); // FALSE(Compat), TRUE, PKWK_SAFE_MODE
+define('PLUGIN_BACK_ALLOW_PAGELINK', PKWK_SAFE_MODE); // FALSE(Compat), TRUE
 
 // Allow JavaScript (Compat)
 define('PLUGIN_BACK_ALLOW_JAVASCRIPT', TRUE); // TRUE(Compat), FALSE, PKWK_ALLOW_JAVASCRIPT
