@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mbstring.php,v 1.2 2003/07/05 04:46:35 arino Exp $
+// $Id: mbstring.php,v 1.3 2003/07/05 05:18:06 arino Exp $
 //
 
 /*
@@ -57,10 +57,7 @@ function mb_convert_variables($to_encoding,$from_encoding,&$vars)
 	}   
 	if ($from_encoding != 'ASCII' and $from_encoding != SOURCE_ENCODING)
 	{
-		foreach ($vars as $key=>$value)
-		{
-			$vars[$key] = mb_convert_encoding($value,$to_encoding,$from_encoding);
-		}
+		$vars = mb_convert_encoding($vars,$to_encoding,$from_encoding);
 	}
 	return $from_encoding;
 }
