@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.24 2003/11/02 14:10:35 arino Exp $
+// $Id: ja.lng,v 1.25 2004/04/03 15:27:07 arino Exp $
 //
 // PukiWiki message file (japanese)
 
@@ -217,6 +217,9 @@ $_deleted_plugin_title_withfilename = '削除ページファイルの一覧';
 ///////////////////////////////////////
 // diff.inc.php
 $_title_diff = '$1 の変更点';
+$_title_diff_delete = '$1 の差分を削除';
+$_msg_diff_deleted = '$1 の差分を削除しました。';
+$_msg_diff_adminpass = '削除用のパスワードを入力してください。';
 
 ///////////////////////////////////////
 // filelist.inc.php (list.inc.php)

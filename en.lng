@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.25 2003/11/23 14:31:50 arino Exp $
+// $Id: en.lng,v 1.26 2004/04/03 15:27:07 arino Exp $
 //
 // PukiWiki message file (english)
 
@@ -215,6 +215,9 @@ $_deleted_plugin_title_withfilename = 'The list of deleted pages (with filename)
 ///////////////////////////////////////
 // diff.inc.php
 $_title_diff = 'Diff of  $1';
+$_title_diff_delete = 'Deleting diff of  $1';
+$_msg_diff_deleted = 'Diff of  $1 has been deleted.';
+$_msg_diff_adminpass = 'Please input the password for deleting.';
 
 ///////////////////////////////////////
 // filelist.inc.php (list.inc.php)
