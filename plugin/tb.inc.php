@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.11 2004/07/31 13:07:39 henoheno Exp $
+// $Id: tb.inc.php,v 1.12 2004/07/31 13:38:42 henoheno Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -82,13 +82,13 @@ function tb_save()
 	$data = tb_get($filename);
 
 	$items = array(UTIME);
-	foreach ($fields as $field)
+	foreach ($fields as $key)
 	{
-		$value = array_key_exists($field, $vars) ? $vars[$field] : '';
-		if (ereg("[,\"\n\r]", $value)) {
+		$value = isset($vars[$key]) ? $vars[$key] : '';
+		if (preg_match("/[,\"\n\r]/", $value)) {
 			$value = '"' . str_replace('"', '""', $value) . '"';
 		}
-		$items[$field] = $value;
+		$items[$key] = $value;
 	}
 	$data[rawurldecode($items['url'])] = $items;
 
