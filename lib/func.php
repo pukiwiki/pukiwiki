@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.24 2005/01/10 03:18:58 henoheno Exp $
+// $Id: func.php,v 1.25 2005/01/10 03:25:36 henoheno Exp $
 //
 // General functions
 
@@ -76,7 +76,9 @@ function is_freeze($page, $clearcache = FALSE)
 		return FALSE;
 	} else {
 		$fp     = fopen(get_filename($page), 'rb');
+		flock($fp, LOCK_SH);
 		$buffer = fgets($fp, 8);
+		flock($fp, LOCK_UN);
 		fclose($fp);
 
 		$is_freeze[$page] = ($buffer != FALSE && rtrim($buffer) == '#freeze');
