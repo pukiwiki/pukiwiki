@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.inc.php,v 1.9.2.2 2003/05/17 01:42:46 arino Exp $
+// $Id: comment.inc.php,v 1.9.2.3 2003/05/17 01:49:39 arino Exp $
 
 global $name_cols, $comment_cols, $msg_format, $name_format;
 global $msg_format, $now_format, $comment_format;
@@ -47,37 +47,31 @@ function plugin_comment_action()
 	
 	$post["msg"] = preg_replace("/\n/","",$post["msg"]);
 	
-	$postdata = "";
-	$postdata_old  = file(get_filename(encode($post["refer"])));
-	$comment_no = 0;
-	
-	if($post["name"])
-	{
-		$name = str_replace('$name',$post["name"],$name_format);
-	}
 	if(preg_match("/^(-{1,2})(.*)/",$post["msg"],$match))
 	{
 		$head = $match[1];
 		$post["msg"] = $match[2];
 	}
 	
-	$comment = str_replace("\x08MSG\x08",str_replace('$msg',$post["msg"],$msg_format),$comment_format);
-	$comment = str_replace("\x08NAME\x08",$name,$comment);
-
-	$now = ($post["nodate"] == "1") ? '' : str_replace('$now',$now,$now_format);
-	$comment = str_replace("\x08NOW\x08",$now,$comment);
+	$_msg  =                                 str_replace('$msg', $post["msg"], $msg_format);
+	$_name = ($post["name"] == '')    ? '' : str_replace('$name',$post["name"],$name_format);
+	$_now  = ($post["nodate"] == "1") ? '' : str_replace('$now', $now,         $now_format);
+	
+	$comment = str_replace("\x08MSG\x08", $_msg, $comment_format);
+	$comment = str_replace("\x08NAME\x08",$_name,$comment);
+	$comment = str_replace("\x08NOW\x08", $_now, $comment);
 	$comment = $head.$comment;
+	
+	$postdata = "";
+	$postdata_old  = file(get_filename(encode($post["refer"])));
+	$comment_no = 0;
 	
 	foreach($postdata_old as $line)
 	{
 		if(!$comment_ins) $postdata .= $line;
-		if(preg_match("/^#comment/",$line))
+		if(preg_match("/^#comment/",$line) and $comment_no++ == $post["comment_no"])
 		{
-			if($comment_no == $post["comment_no"])
-			{
-				$postdata .= "-$comment\n";
-			}
-			$comment_no++;
+			$postdata .= "-$comment\n";
 		}
 		if($comment_ins) $postdata .= $line;
 	}
