@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: links.inc.php,v 1.1 2003/01/27 05:38:46 panda Exp $
+// $Id: links.inc.php,v 1.2 2003/01/29 06:56:35 panda Exp $
 //
 function plugin_links_action()
 {
@@ -90,6 +90,4 @@ function plugin_links_action()
 	}
 	return array('msg'=>'Result','body'=>'<p>done.</p>');
 }
-
-
 ?>

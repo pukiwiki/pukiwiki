@@ -1,8 +1,10 @@
 <?php
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id:
+//
 /*
-Last-Update:2002-10-29 rev.11
- http://home.arino.jp/?map.inc.php
-
 プラグイン map
 
 サイトマップ(のようなもの)を表示

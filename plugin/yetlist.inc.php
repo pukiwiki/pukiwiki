@@ -1,9 +1,9 @@
 <?php
-// $Id: yetlist.inc.php,v 1.8 2003/01/27 05:38:47 panda Exp $
-
-// modified by PANDA <panda@arino.jp> http://home.arino.jp/
-// Last-Update:2002-10-29 rev.2
-
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id:
+//
 function plugin_yetlist_action()
 {
 	global $script;
@@ -12,12 +12,12 @@ function plugin_yetlist_action()
 	$ret['body'] = '';
 	
 	$refer = array();
-	foreach (get_existpages() as $_page) {
-		$source = join("\n",preg_replace('/^(\s|\/\/|#).*$/','',get_source($_page)));
-		$obj = new link_wrapper($_page);
-		foreach ($obj->get_link($source) as $_obj) {
-			if (($_obj->name != '') and ($_obj->type == 'WikiName') and !is_page($_obj->name)) {
-				$refer[$_obj->name][] = $_page;
+	foreach (get_existpages() as $page) {
+		$obj = new InlineConverter();
+		$source = join("\n",preg_replace('/^(\s|\/\/|#).*$/','',get_source($page)));
+		foreach ($obj->get_objects($source,$page) as $_obj) {
+			if (($_obj->name != '') and ($_obj->type == 'pagename') and !is_page($_obj->name)) {
+				$refer[$_obj->name][] = $page;
 			}
 		}
 	}

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.47 2003/01/27 05:38:41 panda Exp $
+// $Id: html.php,v 1.48 2003/01/29 06:56:35 panda Exp $
 //
 
 // 本文を出力
@@ -259,55 +259,11 @@ function make_user_rules($str)
 {
 	global $user_rules;
 	
-	$str = make_inline($str);
 	foreach($user_rules as $rule => $replace) {
 		$str = preg_replace("/$rule/","$replace",$str);
 	}
 	
 	return $str;
-}
-
-// インラインプラグインの置換
-function make_inline($body,$func='',$param='')
-{
-	static $pattern = '/
-		&amp;(\w+)
-		(?: \( ([^)]*) \) )?
-		(?: \{ (.*)    \} )?
-		;
-	/ex';
-	
-	if ($body != '') {
-		$body = preg_replace($pattern,'make_inline(stripslashes(\'$3\'),\'$1\',\'$2\')',$body);
-	}
-	
-	if ($func == '') {
-		return $body;
-	}
-	
-	//&hoge(){...}; &fuga(){...}; のbodyが'...}; &fuga(){...'となるので、前後に分ける
-	$after = '';
-	if (preg_match("/^ (.*) }; ( .+ &amp; \w+ (?: \( [^()]* \) )? { .+ ) $/x",$body,$matches)) {
-		$body = $matches[1];
-		$after = make_inline($matches[2].'};');
-	}
-	
-	// プラグイン呼び出し
-	if (exist_plugin_inline($func)) {
-		$str = do_plugin_inline($func,$param,$body);
-		if ($str !== FALSE) { //成功
-			return $str.$after;
-		}
-	}
-	
-	// プラグインが存在しないか、変換に失敗
-	if ($param != '') {
-		$param = "($param)";
-	}
-	if ($body != '') {
-		$body = "\{$body}";
-	}
-	return "&amp;{$func}$param$body;$after";
 }
 
 // HTMLタグを取り除く
