@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.27 2003/03/04 06:38:31 panda Exp $
+// $Id: convert_html.php,v 1.28 2003/03/22 15:22:48 panda Exp $
 //
 function convert_html($lines)
 {
@@ -614,7 +614,7 @@ class Pre extends Block
 	function Pre(&$root,$text)
 	{
 		parent::Block();
-		$this->elements[] = htmlspecialchars($text,ENT_NOQUOTES);
+		$this->elements[] = htmlspecialchars($text);
 	}
 	function canContain(&$obj)
 	{
