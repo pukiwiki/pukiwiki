@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.40 2003/05/28 04:48:49 arino Exp $
+// $Id: convert_html.php,v 1.41 2003/05/29 09:25:43 arino Exp $
 //
 function convert_html($lines)
 {
@@ -421,7 +421,17 @@ class TableCell extends Block
 			$this->tag = 'th';
 			$text = substr($text,1);
 		}
-		$this->last =& $this->insert(new Inline($text));
+		if ($text != '' and $text{0} == '#') {
+			// セル内容が'#'で始まるときはDivクラスを通してみる
+			$obj = new Div($this,$text);
+			if (is_a($obj,'Paragraph')) {
+				$obj = $obj->elements[0];
+			}
+		}
+		else {
+			$obj = new Inline($text);
+		}
+		$this->last =& $this->insert($obj);
 	}
 	function setStyle(&$style) {
 		foreach ($style as $key=>$value) {
