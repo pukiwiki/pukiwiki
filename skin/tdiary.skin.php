@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.17 2005/01/26 12:58:57 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.18 2005/02/05 07:19:05 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -387,9 +387,8 @@ if (isset($pkwk_dtd)) {
 <?php } // if ($menu && $sidebar == 'strict') ?>
 
 <!-- Navigation buttuns -->
-<div id="navigator">
 <?php if (PKWK_SKIN_SHOW_NAVBAR) { ?>
-<div class="adminmenu">
+<div class="adminmenu"><div id="navigator">
 <?php
 function _navigator($key, $value = '', $javascript = ''){
 	$lang = $GLOBALS['_LANG']['skin'];
@@ -443,9 +442,10 @@ function _navigator($key, $value = '', $javascript = ''){
 <?php if ($referer)   { ?> &nbsp;
    <?php _navigator('refer') ?>
 <?php } ?>
-</div>
+</div></div>
+<?php } else { ?>
+<div id="navigator"></div>
 <?php } // PKWK_SKIN_SHOW_NAVBAR ?>
-</div>
 
 <h1><?php echo $page_title ?></h1>
 
