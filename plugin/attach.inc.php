@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.18 2003/03/03 07:07:28 panda Exp $
+//  $Id: attach.inc.php,v 1.19 2003/03/03 08:47:13 panda Exp $
 //
 
 /*
@@ -218,9 +218,14 @@ function attach_info($err='')
 	global $_attach_messages;
 	
 	$retval = array();
-
+	
 	$obj = &new AttachFile($vars['refer'],$vars['file'],$vars['age']);
 	$obj->getstatus();
+	
+	if (!$obj->exist)
+	{
+		return array('msg' => $_attach_messages['err_notfound']);
+	}
 	
 	$s_file = htmlspecialchars($vars['file']);
 	$s_refer = htmlspecialchars($vars['refer']);
@@ -551,7 +556,7 @@ class AttachFile
 	{
 		$this->page = $page;
 		$this->file = $file;
-		$this->age = $age;
+		$this->age = is_numeric($age) ? $age : 0;
 		
 		$this->basename = UPLOAD_DIR.encode($page).'_'.encode($file);
 		$this->filename = $this->basename . ($age ? '.'.$age : '');
