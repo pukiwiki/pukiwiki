@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: source.inc.php,v 1.13 2004/11/28 08:52:29 henoheno Exp $
+// $Id: source.inc.php,v 1.14 2005/01/29 02:07:58 henoheno Exp $
 //
 // Source plugin
 
@@ -8,6 +8,8 @@
 function plugin_source_action()
 {
 	global $vars, $_source_messages;
+
+	if (PKWK_SAFE_MODE) die_message('PKWK_SAFE_MODE prohibits this');
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	$vars['refer'] = $page;
