@@ -1,5 +1,5 @@
 <?php
-// $Id: anchor.inc.php,v 1.3 2002/11/29 00:09:01 panda Exp $
+// $Id: anchor.inc.php,v 1.3.2.1 2003/06/22 05:42:48 arino Exp $
 
 function plugin_anchor_convert()
 {
@@ -25,6 +25,9 @@ function plugin_anchor_convert()
 	$page = strip_bracket($page);
 
 	if($wbn) $wbn = "$script?".rawurlencode($wbn);
+
+	$aname = rawurlencode($aname);
+	$page = htmlspecialchars($page);
 
 	return "<a href=\"$wbn#$aname\">$page</a>";
 }
