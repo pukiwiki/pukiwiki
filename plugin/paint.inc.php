@@ -66,19 +66,23 @@ function plugin_paint_action()
 	$retval['msg'] = $_paint_messages['msg_title'];
 	$retval['body'] = '';
 	
-	if (array_key_exists('attach_file',$HTTP_POST_FILES) and is_uploaded_file($HTTP_POST_FILES['attach_file']['tmp_name'])) {
+	if (array_key_exists('attach_file',$HTTP_POST_FILES) and is_uploaded_file($HTTP_POST_FILES['attach_file']['tmp_name']))
+	{
 		//BBSPaiter.jarは、shift-jisで内容を送ってくる。面倒なのでページ名はエンコードしてから送信させるようにした。
 		$vars['page'] = $vars['refer'] = decode($vars['refer']);
 		
 		$filename = $vars['filename'];
 		if (function_exists('mb_convert_encoding'))
+		{
 			$filename = mb_convert_encoding($filename,SOURCE_ENCODING,'auto');
+		}
 		
 		//ファイル名置換
 		$attachname = preg_replace('/^[^\.]+/', $filename, $HTTP_POST_FILES['attach_file']['name']);
 		//すでに存在した場合、 ファイル名に'_0','_1',...を付けて回避(姑息)
 		$count = '_0';
-		while (file_exists(PAINT_UPLOAD_DIR.encode($vars['refer']).'_'.encode($attachname))) {
+		while (file_exists(PAINT_UPLOAD_DIR.encode($vars['refer']).'_'.encode($attachname)))
+		{
 			$attachname = preg_replace('/^[^\.]+/', $filename.$count++, $HTTP_POST_FILES['attach_file']['name']);
 		}
 		
@@ -87,14 +91,17 @@ function plugin_paint_action()
 		$retval = do_plugin_action('attach');
 		$retval = insert_ref($HTTP_POST_FILES['attach_file']['name']);
 	}
-	else {
+	else
+	{
 		$message = '';
-		if (!function_exists('mb_convert_encoding')) {
+		if (!function_exists('mb_convert_encoding'))
+		{
 			$message = 'cannot use KANJI in filename.';
 		}
 		
 		$r_refer = $s_refer = '';
-		if (array_key_exists('refer',$vars)) {
+		if (array_key_exists('refer',$vars))
+		{
 			$r_refer = rawurlencode($vars['refer']);
 			$s_refer = htmlspecialchars($vars['refer']);
 		}
@@ -102,6 +109,17 @@ function plugin_paint_action()
 		
 		$w = PAINT_APPLET_WIDTH;
 		$h = PAINT_APPLET_HEIGHT;
+		
+		//ウインドウモード :)
+		if ($w < 50 and $h < 50)
+		{
+			$w = $h = 0;
+			$retval['msg'] = '';
+			$vars['page'] = $vars['refer'];
+			$vars['cmd'] = 'read';
+			$retval['body'] = convert_html(get_source($vars['refer']));
+			$link = '';
+		}
 		
 		//XSS脆弱性問題 - 外部から来た変数をエスケープ
 		$width = empty($vars['width']) ? PAINT_DEFAULT_WIDTH : $vars['width'];
@@ -113,14 +131,16 @@ function plugin_paint_action()
 		$f_no = (array_key_exists('paint_no',$vars) and is_numeric($vars['paint_no'])) ?
 			$vars['paint_no'] + 0 : 0;
 		
-		if ($f_w > PAINT_MAX_WIDTH) {
+		if ($f_w > PAINT_MAX_WIDTH)
+		{
 			$f_w = PAINT_MAX_WIDTH;
 		}
-		if ($f_h > PAINT_MAX_HEIGHT) {
+		if ($f_h > PAINT_MAX_HEIGHT)
+		{
 			$f_h = PAINT_MAX_HEIGHT;
 		}
 		
-		$retval['body'] = <<<EOD
+		$retval['body'] .= <<<EOD
  <div>
  $link
  $message
@@ -141,6 +161,7 @@ function plugin_paint_action()
  </applet>
  </div>
 EOD;
+		// XHTML 1.0 Transitional
 		$html_transitional = TRUE;
 	}
 	return $retval;
@@ -159,14 +180,17 @@ function plugin_paint_convert()
 	//文字列を取得
 	$width = $height = 0;
 	$args = func_get_args();
-	if (count($args) >= 2) {
+	if (count($args) >= 2)
+	{
 		$width = array_shift($args);
 		$height = array_shift($args);
 	}
-	if (!is_numeric($width) or $width <= 0) {
+	if (!is_numeric($width) or $width <= 0)
+	{
 		$width = PAINT_DEFAULT_WIDTH;
 	}
-	if (!is_numeric($height) or $height <= 0) {
+	if (!is_numeric($height) or $height <= 0)
+	{
 		$height = PAINT_DEFAULT_HEIGHT;
 	}
 	
@@ -201,12 +225,14 @@ function insert_ref($filename)
 	
 	$msg = sprintf(PAINT_FORMAT_MSG, rtrim($vars['msg']));
 	
-	if ($vars['yourname'] != '') {
+	if ($vars['yourname'] != '')
+	{
 		$name = sprintf(PAINT_FORMAT_NAME, $vars['yourname']);
 	}
 	$date = sprintf(PAINT_FORMAT_DATE, $now);
 	
-	if (function_exists('mb_convert_encoding')) {
+	if (function_exists('mb_convert_encoding'))
+	{
 		$msg = mb_convert_encoding($msg,SOURCE_ENCODING,'auto');
 		$name = mb_convert_encoding($name,SOURCE_ENCODING,'auto');
 	}
@@ -225,19 +251,23 @@ function insert_ref($filename)
 	$paint_no = 0; //'#paint'の出現回数
 	foreach ($postdata_old as $line)
 	{
-		if (!PAINT_INSERT_INS) {
+		if (!PAINT_INSERT_INS)
+		{
 			$postdata .= $line;
 		}
-		if (preg_match('/^#paint/',$line) and (++$paint_no == $vars['paint_no'])) {
+		if (preg_match('/^#paint/',$line) and (++$paint_no == $vars['paint_no']))
+		{
 				$postdata .= $msg;
 		}
-		if (PAINT_INSERT_INS) {
+		if (PAINT_INSERT_INS)
+		{
 			$postdata .= $line;
 		}
 	}
 	
 	// 更新の衝突を検出
-	if (md5(join('',$postdata_old)) != $vars['digest']) {
+	if (md5(join('',$postdata_old)) != $vars['digest'])
+	{
 		$ret['msg'] = $_paint_messages['msg_title_collided'];
 		$ret['body'] = $_paint_messages['msg_collided'];
 	}
