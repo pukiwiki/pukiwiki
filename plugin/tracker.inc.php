@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.14 2003/10/10 04:27:06 arino Exp $
+// $Id: tracker.inc.php,v 1.15 2003/10/24 06:46:34 arino Exp $
 //
 
 // tracker_listで表示しないページ名(正規表現で)
@@ -18,9 +18,10 @@ function plugin_tracker_convert()
 {
 	global $script,$vars;
 	
-	$page = $vars['page'];
+	$base = $refer = $vars['page'];
 	
 	$config_name = 'default';
+	$form = 'form';
 	$options = array();
 	if (func_num_args())
 	{
@@ -30,13 +31,14 @@ function plugin_tracker_convert()
 			case 3:
 				$options = array_splice($args,2);
 			case 2:
-				$_page = get_fullname($args[1],$page);
-				if (is_pagename($_page))
+				$_base = get_fullname($args[1],$base);
+				if (is_pagename($_base))
 				{
-					$page = $_page;
+					$base = $_base;
 				}
 			case 1:
 				$config_name = $args[0];
+				list($config_name,$_form) = array_pad(explode('/',$config_name,2),2,$form);
 		}
 	}
 	
@@ -49,9 +51,10 @@ function plugin_tracker_convert()
 	
 	$config->config_name = $config_name;
 	
-	$fields = plugin_tracker_get_fields($page,$config);
+	$fields = plugin_tracker_get_fields($base,$refer,$config);
 	
-	$retval = convert_html(plugin_tracker_get_source($config->page.'/form'));
+	$form = is_page($config->page.'/'.$_form) ? $_form : $form;
+	$retval = convert_html(plugin_tracker_get_source($config->page.'/'.$form));
 	$hiddens = '';
 	
 	foreach (array_keys($fields) as $name)
@@ -87,7 +90,7 @@ function plugin_tracker_action()
 	$config->config_name = $config_name;
 	$source = $config->page.'/page';
 	
-	$refer = array_key_exists('_refer',$post) ? $post['_refer'] : '';
+	$refer = array_key_exists('_refer',$post) ? $post['_refer'] : $post['_base'];
 	
 	if (!is_pagename($refer))
 	{
@@ -104,7 +107,7 @@ function plugin_tracker_action()
 		);
 	}
 	// ページ名を決定
-	$base = $post['_refer'];
+	$base = $post['_base'];
 	$num = 0;
 	$name = (array_key_exists('_name',$post)) ? $post['_name'] : '';
 	if (array_key_exists('_page',$post))
@@ -137,7 +140,7 @@ function plugin_tracker_action()
 	$_post['_real'] = $real;
 	// $_post['_refer'] = $_post['refer'];
 	
-	$fields = plugin_tracker_get_fields($page,$config);
+	$fields = plugin_tracker_get_fields($page,$refer,$config);
 	
 	foreach (array_keys($fields) as $key)
 	{
@@ -169,6 +172,7 @@ function plugin_tracker_action()
 	header("Location: $script?$r_page");
 	exit;
 }
+/*
 function plugin_tracker_inline()
 {
 	global $vars;
@@ -190,12 +194,13 @@ function plugin_tracker_inline()
 	
 	$config->config_name = $config_name;
 	
-	$fields = plugin_tracker_get_fields($vars['page'],$config);
+	$fields = plugin_tracker_get_fields($vars['page'],$vars['page'],$config);
 	$fields[$field]->default_value = $body;
 	return $fields[$field]->get_tag();
-}	
+}
+*/
 // フィールドオブジェクトを構築する
-function plugin_tracker_get_fields($page,&$config)
+function plugin_tracker_get_fields($base,$refer,&$config)
 {
 	global $now,$_tracker_messages;
 	
@@ -209,11 +214,12 @@ function plugin_tracker_get_fields($page,&$config)
 		'_name'=>'text',    // 指定されたページ名
 		'_real'=>'real',    // 実際のページ名
 		'_refer'=>'page',   // 参照元(フォームのあるページ)
+		'_base'=>'page',    // 基準ページ
 		'_submit'=>'submit' // 追加ボタン
 		) as $field=>$class)
 	{
 		$class = 'Tracker_field_'.$class;
-		$fields[$field] = &new $class(array($field,$_tracker_messages["btn$field"],'','20',''),$page,$config);
+		$fields[$field] = &new $class(array($field,$_tracker_messages["btn$field"],'','20',''),$base,$refer,$config);
 	}
 	
 	foreach ($config->get('fields') as $field)
@@ -226,7 +232,7 @@ function plugin_tracker_get_fields($page,&$config)
 			$field[2] = 'text';
 			$field[3] = '20';
 		}
-		$fields[$field[0]] = &new $class($field,$page,$config);
+		$fields[$field[0]] = &new $class($field,$base,$refer,$config);
 	}
 	return $fields;
 }
@@ -238,11 +244,12 @@ class Tracker_field
 	var $values;
 	var $default_value;
 	var $page;
+	var $refer;
 	var $config;
 	var $data;
 	var $sort_type = SORT_REGULAR;
 	
-	function Tracker_field($field,$page,&$config)
+	function Tracker_field($field,$page,$refer,&$config)
 	{
 		global $post;
 		
@@ -251,6 +258,7 @@ class Tracker_field
 		$this->values = explode(',',$field[3]);
 		$this->default_value = $field[4];
 		$this->page = $page;
+		$this->refer = $refer;
 		$this->config = &$config;
 		$this->data = array_key_exists($this->name,$post) ? $post[$this->name] : '';
 	}
@@ -345,9 +353,9 @@ class Tracker_field_format extends Tracker_field
 	var $styles = array();
 	var $formats = array();
 	
-	function Tracker_field_format($field,$page,&$config)
+	function Tracker_field_format($field,$page,$refer,&$config)
 	{
-		parent::Tracker_field($field,$page,$config);
+		parent::Tracker_field($field,$page,$refer,$config);
 		
 		foreach ($this->config->get($this->name) as $option)
 		{
@@ -510,12 +518,14 @@ class Tracker_field_submit extends Tracker_field
 	{
 		$s_title = htmlspecialchars($this->title);
 		$s_page = htmlspecialchars($this->page);
+		$s_refer = htmlspecialchars($this->refer);
 		$s_config = htmlspecialchars($this->config->config_name);
 		
 		return <<<EOD
 <input type="submit" value="$s_title" />
 <input type="hidden" name="plugin" value="tracker" />
-<input type="hidden" name="_refer" value="$s_page" />
+<input type="hidden" name="_refer" value="$s_refer" />
+<input type="hidden" name="_base" value="$s_page" />
 <input type="hidden" name="_config" value="$s_config" />
 EOD;
 	}
@@ -552,6 +562,7 @@ function plugin_tracker_list_convert()
 	$page = $vars['page'];
 	$field = '_page';
 	$order = '';
+	$list = 'list'; 
 	$limit = NULL;
 	if (func_num_args())
 	{
@@ -563,29 +574,31 @@ function plugin_tracker_list_convert()
 			case 3:
 				$order = $args[2];
 			case 2:
-				$page = is_pagename($args[1]) ? $args[1] : $page;
+				$page = $refer = is_pagename($args[1]) ? $args[1] : $page;
 			case 1:
 				$config = ($args[0] != '') ? $args[0] : $config;
+				list($config,$list) = array_pad(explode('/',$config,2),2,$list);
 		}
 	}
-	return plugin_tracker_getlist($page,$config,$order,$limit);
+	return plugin_tracker_getlist($page,$refer,$config,$list,$order,$limit);
 }
 function plugin_tracker_list_action()
 {
 	global $script,$vars,$_tracker_messages;
 	
-	$page = $vars['refer'];
+	$page = $refer = $vars['refer'];
 	$s_page = make_pagelink($page);
 	$config = $vars['config'];
+	$list = $vars['list'];
 	$order = array_key_exists('order',$vars) ? $vars['order'] : '_real:SORT_DESC';
 		
 	return array(
 		'msg' => $_tracker_messages['msg_list'],
 		'body'=> str_replace('$1',$s_page,$_tracker_messages['msg_back']).
-			plugin_tracker_getlist($page,$config,$order)
+			plugin_tracker_getlist($page,$refer,$config,$list,$order)
 	);
 }
-function plugin_tracker_getlist($page,$config_name,$order='',$limit=NULL)
+function plugin_tracker_getlist($page,$refer,$config_name,$list,$order='',$limit=NULL)
 {
 	$config = new Config('plugin/tracker/'.$config_name);
 	
@@ -594,7 +607,7 @@ function plugin_tracker_getlist($page,$config_name,$order='',$limit=NULL)
 		return "<p>config file '".htmlspecialchars($config_name)."' is not exist.";
 	}
 	$config->config_name = $config_name;
-	$list = &new Tracker_list($page,$config);
+	$list = &new Tracker_list($page,$refer,$config,$list);
 	$list->sort($order);
 	return $list->toString($limit);
 }
@@ -604,17 +617,19 @@ class Tracker_list
 {
 	var $page;
 	var $config;
+	var $list;
 	var $fields;
 	var $pattern;
 	var $pattern_fields;
 	var $rows;
 	var $order;
 	
-	function Tracker_list($page,&$config)
+	function Tracker_list($page,$refer,&$config,$list)
 	{
 		$this->page = $page;
 		$this->config = &$config;
-		$this->fields = plugin_tracker_get_fields($page,$config);
+		$this->list = is_page($config->page.'/'.$list) ? $list : 'list';
+		$this->fields = plugin_tracker_get_fields($page,$refer,$config);
 		
 		$pattern = join('',plugin_tracker_get_source($config->page.'/page'));
 		// ブロックプラグインをフィールドに置換
@@ -799,6 +814,7 @@ class Tracker_list
 		$title = $this->fields[$field]->title;
 		$r_page = rawurlencode($this->page);
 		$r_config = rawurlencode($this->config->config_name);
+		$r_list = rawurlencode($this->list);
 		$_order = array("$sort:$dir");
 		foreach ($order as $key=>$value)
 		{
@@ -806,7 +822,7 @@ class Tracker_list
 		}
 		$r_order = rawurlencode(join(';',$_order));
 		
-		return "[[$title$arrow>$script?plugin=tracker_list&refer=$r_page&config=$r_config&order=$r_order]]";
+		return "[[$title$arrow>$script?plugin=tracker_list&refer=$r_page&config=$r_config&list=$r_list&order=$r_order]]";
 	}
 	function toString($limit=NULL)
 	{
@@ -827,7 +843,7 @@ class Tracker_list
 		{
 			return '';
 		}
-		foreach (plugin_tracker_get_source($this->config->page.'/list') as $line)
+		foreach (plugin_tracker_get_source($this->config->page.'/'.$this->list) as $line)
 		{
 			if (preg_match('/^\|(.+)\|[hHfFcC]$/',$line))
 			{
