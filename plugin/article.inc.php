@@ -7,7 +7,7 @@
  http://www.dml.co.jp/~kawara/pukiwiki/pukiwiki.php
  kawara@dml.co.jp
  
- LANGUAGEファイルに下記の値を追加してからご使用ください
+ メッセージを変更したい場合はLANGUAGEファイルに下記の値を追加してからご使用ください
 	$_btn_name = 'お名前';
 	$_btn_article = '記事の投稿';
 	$_btn_subject = '題名: ';
@@ -20,6 +20,7 @@
  を設定の上、ご使用ください。
  
  */
+global $name_format, $subject_format, $no_subject, $_mailto;
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -68,13 +69,23 @@ $_mailto = array (
 );
 
 
+function plugin_article_init()
+{
+  $_plugin_article_messages = array(
+    '_btn_name' => 'お名前',
+    '_btn_article' => '記事の投稿',
+    '_btn_subject' => '題名: '
+    );
+  set_plugin_messages($_plugin_article_messages);
+}
+
 function plugin_article_action()
 {
 	global $post,$vars,$script,$cols,$rows,$del_backup,$do_backup,$now;
-	global $name_format, $subject_format, $no_subject;
+	global $name_format, $subject_format, $no_subject, $name, $subject, $article;
 	global $_title_collided,$_msg_collided,$_title_updated;
 	global $_mailto;
-
+	
 	if($post["msg"])
 	{
 		$postdata = "";
