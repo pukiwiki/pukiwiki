@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.skin.ja.php,v 1.9 2004/08/06 15:31:25 henoheno Exp $
+// $Id: keitai.skin.php,v 1.1 2004/09/30 12:29:51 henoheno Exp $
 //
 
 global $script, $vars, $page_title, $max_size, $accesskey, $menubar;

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.en.php,v 1.36 2004/09/30 12:24:47 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.4 2004/09/30 12:27:32 henoheno Exp $
 //
 if (!defined('DATA_DIR')) { exit; }
 

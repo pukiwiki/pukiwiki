@@ -1,0 +1,32 @@
+<?php
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: skin.en.lng,v 1.1 2004/09/30 12:24:47 henoheno Exp $
+//
+// PukiWiki message file (japanese)
+
+///////////////////////////////////////
+// pukiwiki.skin.php
+
+$_LANG['skin']['reload']    = 'Reload';
+$_LANG['skin']['new']       = 'New';
+$_LANG['skin']['edit']      = 'Edit';
+$_LANG['skin']['freeze']    = 'Freeze';
+$_LANG['skin']['unfreeze']  = 'Unfreeze';
+$_LANG['skin']['diff']      = 'Diff';
+$_LANG['skin']['upload']    = 'Upload';	// Attach a file
+$_LANG['skin']['top']       = 'Front page';	// Top page
+$_LANG['skin']['list']      = 'List of pages';
+$_LANG['skin']['filelist']  = 'List of page files';	// List of filenames
+$_LANG['skin']['copy']      = 'Copy';
+$_LANG['skin']['search']    = 'Search';
+$_LANG['skin']['rename']    = 'Rename';	// Rename a page (and related)
+$_LANG['skin']['recent']    = 'Recent changes';	// RecentChanges
+$_LANG['skin']['backup']    = 'Backup';
+$_LANG['skin']['help']      = 'Help';
+$_LANG['skin']['refer']     = 'Referer';	// Show list of referer
+$_LANG['skin']['trackback'] = 'Trackback';	// Show list of trackback
+$_LANG['skin']['rss']       = 'RSS of recent changes';
+
+?>
