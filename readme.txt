@@ -87,7 +87,7 @@ DESCRIPTION
             attach               777
             counter              777
             skin                 755
-            plug-in              755
+            plugin               755
 
    データのバックアップ方法
 

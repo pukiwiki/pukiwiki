@@ -1,5 +1,5 @@
-<?
-// $Id: img.inc.php,v 1.4 2002/07/02 05:38:17 masui Exp $
+<?php
+// $Id: img.inc.php,v 1.5 2002/11/29 00:09:01 panda Exp $
 function plugin_img_convert()
 {
 	if(func_num_args()!=2) {

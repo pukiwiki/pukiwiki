@@ -1,4 +1,4 @@
-<?
+<?php
 // pukiwiki.php - Yet another WikiWikiWeb clone.
 //
 // PukiWiki 1.3.* 
@@ -25,7 +25,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.15 2002/10/15 05:28:09 masui Exp $
+// $Id: pukiwiki.php,v 1.16 2002/11/29 00:09:00 panda Exp $
 /////////////////////////////////////////////////
 
 
@@ -174,7 +174,7 @@ else if(arg_check("preview") || $post["preview"] || $post["template"])
 	{
 		if($post["add_top"]) $checked_top = " checked=\"checked\"";
 		$addtag = '<input type="hidden" name="add" value="true" />';
-		$add_top = '<input type="checkbox" name="add_top" value="true"'.$checked_top.' /><span class="small">ページの上に追加</span>';
+		$add_top = '<input type="checkbox" name="add_top" value="true"'.$checked_top.' /><span class="small">$_btn_addtop</span>';
 	}
 	if($post["notimestamp"]) $checked_time = "checked=\"checked\"";
 
@@ -384,12 +384,12 @@ else if(arg_check("unfreeze") && $vars["page"] && $function_freeze)
 // 差分の表示
 else if(arg_check("diff"))
 {
-	$pagename = strip_bracket($get["page"]);
+	$pagename = htmlspecialchars(strip_bracket($get["page"]));
 	if(!is_page($get["page"]))
 	{
 		$title = htmlspecialchars($pagename);
 		$page = make_search($vars["page"]);
-		$body = "指定されたページは見つかりませんでした。";
+		$body = $_msg_notfound;
 	}
 	else
 	{

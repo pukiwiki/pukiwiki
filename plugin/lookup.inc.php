@@ -1,5 +1,5 @@
-<?
-// $Id: lookup.inc.php,v 1.5 2002/07/12 11:53:56 masui Exp $
+<?php
+// $Id: lookup.inc.php,v 1.6 2002/11/29 00:09:01 panda Exp $
 
 function plugin_lookup_convert()
 {

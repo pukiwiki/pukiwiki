@@ -1,6 +1,6 @@
-<?
+<?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.1 2002/06/21 05:21:46 masui Exp $
+// $Id: plugin.php,v 1.2 2002/11/29 00:09:00 panda Exp $
 /////////////////////////////////////////////////
 
 // プラグイン用に未定義の変数を設定

@@ -1,6 +1,6 @@
-<?
+<?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: rss.php,v 1.4 2002/07/19 10:38:37 masui Exp $
+// $Id: rss.php,v 1.5 2002/11/29 00:09:00 panda Exp $
 /////////////////////////////////////////////////
 
 // RecentChanges の RSS を出力
@@ -39,6 +39,8 @@ function catrss($rss)
 				$url = $match[1];
 			}
 			
+			$title = htmlspecialchars($title);
+			
 			$desc = date("D, d M Y H:i:s T",filemtime(get_filename(encode($match[1]))));
 			
 			if($rss==2)
@@ -59,7 +61,7 @@ function catrss($rss)
 	if($rss==1)
 	{
 ?>
-<?='<?xml version="1.0" encoding="UTF-8"?>'?>
+<?php echo '<?xml version="1.0" encoding="UTF-8"?>' ?>
 
 
 <!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"
@@ -68,20 +70,20 @@ function catrss($rss)
 <rss version="0.91">
 
 <channel>
-<title><?=$page_title_utf8?></title>
-<link><?="http://".SERVER_NAME.PHP_SELF."?$whatsnew"?></link>
+<title><?php echo $page_title_utf8 ?></title>
+<link><?php echo "http://".SERVER_NAME.PHP_SELF."?$whatsnew" ?></link>
 <description>PukiWiki RecentChanges</description>
 <language>ja</language>
 
-<?=$items?>
+<?php echo $items ?>
 </channel>
 </rss>
-<?
+<?php
 	}
 	else if($rss==2)
 	{
 ?>
-<?='<?xml version="1.0" encoding="utf-8"?>'?>
+<?php echo '<?xml version="1.0" encoding="utf-8"?>' ?>
 
 
 <rdf:RDF 
@@ -89,20 +91,20 @@ function catrss($rss)
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
   xml:lang="ja">
 
- <channel rdf:about="<?="http://".SERVER_NAME.PHP_SELF."?rss"?>">
-  <title><?=$page_title_utf8?></title>
-  <link><?="http://".SERVER_NAME.PHP_SELF."?$whatsnew"?></link>
+ <channel rdf:about="<?php echo "http://".SERVER_NAME.PHP_SELF."?rss" ?>">
+  <title><?php echo $page_title_utf8 ?></title>
+  <link><?php echo "http://".SERVER_NAME.PHP_SELF."?$whatsnew" ?></link>
   <description>PukiWiki RecentChanges</description>
   <items>
    <rdf:Seq>
-<?=$rdf_li?>
+<?php echo $rdf_li ?>
    </rdf:Seq>
   </items>
  </channel>
 
-<?=$items?>
+<?php echo $items ?>
 </rdf:RDF>
-<?
+<?php
 	}
 }
 ?>

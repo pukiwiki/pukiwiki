@@ -1,5 +1,5 @@
-<?
-// $Id: newpage.inc.php,v 1.3 2002/07/01 07:08:57 masui Exp $
+<?php
+// $Id: newpage.inc.php,v 1.4 2002/11/29 00:09:01 panda Exp $
 
 function plugin_newpage_init()
 {

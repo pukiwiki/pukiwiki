@@ -1,4 +1,4 @@
-<?
+<?php
 // Last-Update:2002-09-24 rev.1
 
 // リンクを付加する
@@ -149,21 +149,29 @@ class link
 }
 class link_url extends link
 {
-	var $is_image;
+	var $is_image,$image;
 	function link_url($name,$alias)
 	{
 		parent::link($name,'url',($alias == '') ? $name : $alias);
-		$this->is_image = preg_match("/\.(gif|png|jpeg|jpg)$/i",$name);
 		
+		if ($alias == '' and preg_match("/\.(gif|png|jpeg|jpg)$/i",$name)) {
+			$this->is_image = TRUE;
+			$this->image = "<img src=\"$name\" border=\"0\" alt=\"$alias\">";
+		} else if (preg_match("/\.(gif|png|jpeg|jpg)$/i",$alias)) {
+			$this->is_image = TRUE;
+			$this->image = "<img src=\"$alias\" border=\"0\" alt=\"$name\">";
+		} else {
+			$this->is_image = FALSE;
+			$this->image = '';
+		}
 	}
 	function toString()
 	{
 		global $link_target;
 
-		$body = $this->is_image ?
-			"<img src=\"{$this->name}\" border=\"0\" alt=\"{$this->alias}\">" : $this->alias;
-
-		return "<a href=\"{$this->name}\" target=\"$link_target\">$body</a>";
+		return "<a href=\"{$this->name}\" target=\"$link_target\">"
+			.($this->is_image ? $this->image : $this->alias)
+			.'</a>';
 	}
 }
 class link_mailto extends link
@@ -212,7 +220,7 @@ class link_wikiname extends link
 		$this->rawname = rawurlencode($name);
 		$this->rawrefer = rawurlencode($refer);
 
-		if ($vars['page'] != $name)
+		if ($vars['page'] != $name and is_page($name))
 			$related['t'.filemtime(get_filename(encode($name)))] = "<a href=\"$script?{$this->rawname}\">{$this->special}</a>".$this->passage();
 	}
 

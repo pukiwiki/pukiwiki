@@ -1,5 +1,5 @@
-<?
-// $Id: calendar2.inc.php,v 1.10 2002/09/04 06:49:13 masui Exp $
+<?php
+// $Id: calendar2.inc.php,v 1.11 2002/11/29 00:09:01 panda Exp $
 
 function plugin_calendar2_convert()
 {

@@ -1,4 +1,4 @@
-<?
+<?php
  /*
  
  PukiWiki BBS風プラグイン
@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.5 2002/07/02 04:20:20 masui Exp $
+ $Id: article.inc.php,v 1.6 2002/11/29 00:09:01 panda Exp $
  
  */
 

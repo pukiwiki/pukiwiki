@@ -1,11 +1,11 @@
-<?
+<?php
 /*
  * PukiWiki カウンタープラグイン
  *
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: counter.inc.php,v 1.3 2002/07/01 07:08:57 masui Exp $
+ * $Id: counter.inc.php,v 1.4 2002/11/29 00:09:01 panda Exp $
  */
 
 // counter file

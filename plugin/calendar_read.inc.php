@@ -1,5 +1,5 @@
-<?
-// $Id: calendar_read.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
+<?php
+// $Id: calendar_read.inc.php,v 1.4 2002/11/29 00:09:01 panda Exp $
 
 function plugin_calendar_read_convert()
 {

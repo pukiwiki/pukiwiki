@@ -1,5 +1,5 @@
-<?
-// $Id: yetlist.inc.php,v 1.6 2002/10/15 05:28:09 masui Exp $
+<?php
+// $Id: yetlist.inc.php,v 1.7 2002/11/29 00:09:01 panda Exp $
 
 // modified by PANDA <panda@arino.jp> http://home.arino.jp/
 // Last-Update:2002-09-12 rev.1

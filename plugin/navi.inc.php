@@ -1,30 +1,37 @@
-<?
-// プラグイン navi
+<?php
+/*
+Last-Update:2002-10-15 rev.2
 
-// http://home.arino.jp/index.php?%5B%5Bnavi.inc.php%5D%5D
+*プラグイン navi
 
-// DobBook風のナビゲーションバーを表示する
+http://home.arino.jp/index.php?%5B%5Bnavi.inc.php%5D%5D
 
-// Usage
-// #navi(page)
-//
-// page : HOMEとなるページ。省略すると自ページを目次とする。
+DobBook風のナビゲーションバーを表示する
 
-// 1回目の参照(HOME) : ページ一覧をls.inc.php風に表示する
-//
-// 1回目の参照(HOME以外)
-// header : ヘッダ風
-//  prev       next
-// -----------------
+*Usage
+ #navi(page)
 
-// 2回目の参照
-// footer : フッタ風
-// ------------------
-//  prev  home  next
-//  title  up  title
+*パラメータ
+-page~
+ HOMEとなるページ。省略すると自ページをHOMEとする。
 
-// 1ページで2回呼ばれることを考慮して、関連変数はグローバルに持つ。
+*動作
 
+1ページで2回呼ばれることを考慮して、関連変数はグローバルに持つ。
+
+-1回目の参照(HOME)~
+ ページ一覧をls.inc.php風に表示する
+-1回目の参照(HOME以外)
+ header : ヘッダ風
+  prev       next
+ -----------------
+-2回目の参照
+ footer : フッタ風
+ ------------------
+  prev  home  next
+  title  up  title
+
+*/
 function plugin_navi_convert() {
 	global $vars, $script;
 	global $_navi_pages;
@@ -112,7 +119,7 @@ EOD;
 		$ret .= "<ul>";
 		foreach ($pages as $page) {
 			if (strip_bracket($page) == strip_bracket($home)) { continue; }
-			$ret .= "<li>".make_link("[[$page]]");
+			$ret .= "<li>".make_link("[[$page]]")."</li>";
 		}
 		$ret .= "</ul>";
 	} else {

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Last-Update:2002-09-12 rev.15
 

@@ -1,5 +1,5 @@
-<?
-// $Id: aname.inc.php,v 1.4 2002/08/21 17:32:04 masui Exp $
+<?php
+// $Id: aname.inc.php,v 1.5 2002/11/29 00:09:01 panda Exp $
 
 function plugin_aname_convert()
 {

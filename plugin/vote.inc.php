@@ -1,5 +1,5 @@
-<?
-// $Id: vote.inc.php,v 1.7 2002/07/02 05:02:51 masui Exp $
+<?php
+// $Id: vote.inc.php,v 1.8 2002/11/29 00:09:01 panda Exp $
 
 function plugin_vote_init()
 {
@@ -123,7 +123,7 @@ function plugin_vote_convert()
 		. "<input type=\"hidden\" name=\"vote_no\" value=\"".htmlspecialchars($vote_no)."\" />\n"
 		. "<input type=\"hidden\" name=\"digest\" value=\"".htmlspecialchars($digest)."\" />\n"
 		. "</td>\n"
-		. "<td align=\"center\" class=\"vote_label\"><strong>$_votes_plugin_votes</strong></td>\n"
+		. "<td align=\"center\" class=\"vote_label\"><strong>$_vote_plugin_votes</strong></td>\n"
 		. "</tr>\n";
 
 	$tdcnt = 0;
@@ -143,7 +143,7 @@ function plugin_vote_convert()
 		else           $cls = "vote_td2";
 
 		$string .= "<tr>"
-			.  "<td align=\"left\" class=\"$cls\" style=\"padding-left:1em;padding-right:1em;nowrap=\"nowrap\">$link</td>"
+			.  "<td align=\"left\" class=\"$cls\" style=\"padding-left:1em;padding-right:1em;\" nowrap=\"nowrap\">$link</td>"
 			.  "<td align=\"right\" class=\"$cls\" nowrap=\"nowrap\">$cnt&nbsp;&nbsp;<input type=\"submit\" name=\"vote_".htmlspecialchars($arg)."\" value=\"$_vote_plugin_votes\" class=\"submit\" /></td>"
 			.  "</tr>\n";
 	}

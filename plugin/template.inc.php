@@ -1,5 +1,5 @@
-<?
-// $Id: template.inc.php,v 1.4 2002/07/01 07:08:57 masui Exp $
+<?php
+// $Id: template.inc.php,v 1.5 2002/11/29 00:09:01 panda Exp $
 
 define("MAX_LEN",60);
 function plugin_template_action()

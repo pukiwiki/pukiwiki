@@ -1,5 +1,5 @@
-<?
-// $Id: memo.inc.php,v 1.3 2002/07/01 07:08:57 masui Exp $
+<?php
+// $Id: memo.inc.php,v 1.4 2002/11/29 00:09:01 panda Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -114,10 +114,12 @@ function plugin_memo_convert()
 	if((arg_check("read")||$vars["cmd"] == ""||arg_check("unfreeze")||arg_check("freeze")||$vars["write"]||$vars["memo"]))
 		$button = "<input type=\"submit\" name=\"memo\" value=\"$_btn_memo_update\" />\n";
 
+	$s_page = htmlspecialchars($vars['page']);
+	
 	$string = "<form action=\"$script\" method=\"post\" class=\"memo\">\n"
 		 ."<div>\n"
 		 ."<input type=\"hidden\" name=\"memo_no\" value=\"$memo_no\" />\n"
-		 ."<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n"
+		 ."<input type=\"hidden\" name=\"refer\" value=\"$s_page\" />\n"
 		 ."<input type=\"hidden\" name=\"plugin\" value=\"memo\" />\n"
 		 ."<input type=\"hidden\" name=\"digest\" value=\"$digest\" />\n"
 		 ."<textarea name=\"msg\" rows=\"".MEMO_ROWS."\" cols=\"".MEMO_COLS."\">\n$data</textarea><br />\n"

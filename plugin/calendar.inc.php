@@ -1,5 +1,5 @@
-<?
-// $Id: calendar.inc.php,v 1.8 2002/09/15 07:05:52 masui Exp $
+<?php
+// $Id: calendar.inc.php,v 1.9 2002/11/29 00:09:01 panda Exp $
 
 function plugin_calendar_convert()
 {
@@ -130,7 +130,7 @@ function plugin_calendar_convert()
 		{
 			for($i=0;$i<$wday;$i++)
 			{ // Blank 
-				$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nobr;</td>\n"; 
+				$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n"; 
 			} 
 		$fweek=false;
 		}
@@ -164,7 +164,7 @@ function plugin_calendar_convert()
 	{
 		while($wday < 7)
 		{ // Blank 
-			$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nobr;</td>\n";
+			$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n";
 		$wday++;
 		} 
 	}

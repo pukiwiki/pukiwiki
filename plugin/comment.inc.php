@@ -1,5 +1,5 @@
-<?
-// $Id: comment.inc.php,v 1.8 2002/07/16 11:26:55 masui Exp $
+<?php
+// $Id: comment.inc.php,v 1.9 2002/11/29 00:09:01 panda Exp $
 
 global $name_cols, $comment_cols, $msg_format, $name_format;
 global $msg_format, $now_format, $comment_format;
