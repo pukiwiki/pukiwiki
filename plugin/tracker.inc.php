@@ -2,8 +2,17 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.13 2003/10/09 14:05:23 arino Exp $
+// $Id: tracker.inc.php,v 1.14 2003/10/10 04:27:06 arino Exp $
 //
+
+// tracker_listで表示しないページ名(正規表現で)
+// 'SubMenu'ページ および '/'を含むページを除外する
+define('TRACKER_LIST_EXCLUDE_PATTERN','#^SubMenu$|/#');
+// 制限しない場合はこちら
+//define('TRACKER_LIST_EXCLUDE_PATTERN','#(?!)#');
+
+// 項目の取り出しに失敗したページを一覧に表示する
+define('TRACKER_LIST_SHOW_ERROR_PAGE',TRUE);
 
 function plugin_tracker_convert()
 {
@@ -632,9 +641,13 @@ class Tracker_list
 		$pattern_len = strlen($pattern);
 		foreach (get_existpages() as $_page)
 		{
-			if (strpos($_page,$pattern) === 0
-				and strpos($name = substr($_page,$pattern_len),'/') === FALSE)
+			if (strpos($_page,$pattern) === 0)
 			{
+				$name = substr($_page,$pattern_len);
+				if (preg_match(TRACKER_LIST_EXCLUDE_PATTERN,$name))
+				{
+					continue;
+				}
 				$this->add($_page,$name);
 			}
 		}
@@ -670,7 +683,7 @@ class Tracker_list
 			'_update'=> get_filetime($page),
 			'_past'  => get_filetime($page)
 		);
-		if (preg_match("/{$this->pattern}/s",$source,$matches))
+		if ($this->rows[$name]['_match'] = preg_match("/{$this->pattern}/s",$source,$matches))
 		{
 			array_shift($matches);
 			foreach ($this->pattern_fields as $key=>$field)
@@ -827,6 +840,10 @@ class Tracker_list
 		}
 		foreach ($this->rows as $key=>$row)
 		{
+			if (!TRACKER_LIST_SHOW_ERROR_PAGE and !$row['_match'])
+			{
+				continue;
+			} 
 			$this->items = $row;
 			foreach ($body as $line)
 			{
