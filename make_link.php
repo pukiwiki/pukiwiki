@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.6.2.1 2004/03/21 13:05:26 arino Exp $
+// $Id: make_link.php,v 1.6.2.2 2004/05/27 13:42:53 arino Exp $
 //
 
 // リンクを付加する
@@ -217,9 +217,16 @@ class link_interwiki extends link
 	}
 	function toString()
 	{
-		global $script,$interwiki_target;
+		global $interwiki_target;
 
-		return "<a href=\"$script?$this->rawname\" target=\"$interwiki_target\">{$this->alias}</a>";
+		preg_match("/([^:]+):(.+)/",$this->alias,$match);
+		$url = get_interwiki_url($match[1],$match[2]);
+
+		if($url == FALSE){
+			return "{$this->alias}";
+		} else {
+			return "<a href=\"$url\" target=\"$interwiki_target\">{$this->alias}</a>";
+		}
 	}
 }
 class link_wikiname extends link
@@ -267,5 +274,89 @@ class link_wikiname extends link
 			return "<span class=\"noexists\">$this->alias<a href=\"$script?cmd=edit&amp;page={$this->rawname}&amp;refer=$rawrefer\">?</a></span>";
 		}
 	}
+}
+
+// InterWikiNameを展開
+// (pukiwiki.php内のコードを移植。関数名およびインターフェースは1.4のスタイルに合わせた)
+// [[$name:$param]]
+function get_interwiki_url($name,$param)
+{
+	global $WikiName;
+	static $interwikis, $mb;
+
+	if (!isset($interwikis))
+	{
+		$interwikis = open_interwikiname_list();
+	}
+
+	if(!$interwikis[$name]["url"])
+	{
+		return FALSE;
+	}
+
+	if(!isset($mb))
+	{
+		if(function_exists("mb_convert_encoding"))
+		{
+			$mb = 1;
+		} else {
+			$mb = 0;
+		}
+	}
+
+	// 文字エンコーディング
+	if($interwikis[$name]["opt"] == "yw")
+	{
+		// YukiWiki系
+		if(!preg_match("/$WikiName/",$param))
+		{
+			if($mb){
+				$param = "[[".mb_convert_encoding($param,"SJIS","EUC-JP")."]]";
+			} else {
+				return "Not support mb_jstring.";
+			}
+		}
+	}
+	else if($interwikis[$name]["opt"] == "moin")
+	{
+		// moin系
+		$param = rawurlencode($param);
+		$param = str_replace("%","_",$param);
+	}
+	else if($interwikis[$name]["opt"] == "" || $interwikis[$name]["opt"] == "std")
+	{
+		// 内部文字エンコーディングのままURLエンコード
+		$param = rawurlencode($param);
+	}
+	else if($interwikis[$name]["opt"] == "asis" || $interwikis[$name]["opt"] == "raw")
+	{
+		// URLエンコードしない
+		; //$param = $param;
+	}
+	else if($interwikis[$name]["opt"] != "")
+	{
+		// エイリアスの変換
+		if($interwikis[$name]["opt"] == "sjis")
+			$interwikis[$name]["opt"] = "SJIS";
+		else if($interwikis[$name]["opt"] == "euc")
+			$interwikis[$name]["opt"] = "EUC-JP";
+		else if($interwikis[$name]["opt"] == "utf8")
+			$interwikis[$name]["opt"] = "UTF-8";
+
+		// その他、指定された文字コードへエンコードしてURLエンコード
+		if($mb){
+			$param = rawurlencode(mb_convert_encoding($param,$interwikis[$name]["opt"],"EUC-JP"));
+		} else {
+			return "Not support mb_jstring.";
+		}
+	}
+
+	// パラメータを置換
+	if(strpos($interwikis[$name]["url"],'$1') !== FALSE)
+		$url = str_replace('$1',$param,$interwikis[$name]["url"]);
+	else
+		$url = $interwikis[$name]["url"] . $param;
+
+	return $url;
 }
 ?>

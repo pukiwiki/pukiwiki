@@ -25,7 +25,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.16.2.5 2003/03/08 13:33:44 panda Exp $
+// $Id: pukiwiki.php,v 1.16.2.6 2004/05/27 13:42:53 arino Exp $
 /////////////////////////////////////////////////
 
 
@@ -640,77 +640,9 @@ else if((arg_check("read") && $vars["page"] != "") || (!arg_check("read") && $ar
 	}
 	else if(preg_match("/($InterWikiName)/",$get["page"],$match))
 	{
-	// InterWikiNameの判別とページの表示
-		$interwikis = open_interwikiname_list();
-		
-		if(!$interwikis[$match[2]]["url"])
-		{
-			$title = $page = $_title_invalidiwn;
-			$body = str_replace('$1',htmlspecialchars(strip_bracket($get["page"])),str_replace('$2',"<a href=\"$script?InterWikiName\">InterWikiName</a>",$_msg_invalidiwn));
-		}
-		else
-		{
-			// 文字エンコーディング
-			if($interwikis[$match[2]]["opt"] == "yw")
-			{
-				// YukiWiki系
-				if(!preg_match("/$WikiName/",$match[3]))
-					$match[3] = "[[".mb_convert_encoding($match[3],"SJIS","EUC-JP")."]]";
-			}
-			else if($interwikis[$match[2]]["opt"] == "moin")
-			{
-				// moin系
-				if(function_exists("mb_convert_encoding"))
-				{
-					$match[3] = rawurlencode($match[3]);
-					$match[3] = str_replace("%","_",$match[3]);
-				}
-				else
-					$not_mb = 1;
-			}
-			else if($interwikis[$match[2]]["opt"] == "" || $interwikis[$match[2]]["opt"] == "std")
-			{
-				// 内部文字エンコーディングのままURLエンコード
-				$match[3] = rawurlencode($match[3]);
-			}
-			else if($interwikis[$match[2]]["opt"] == "asis" || $interwikis[$match[2]]["opt"] == "raw")
-			{
-				// URLエンコードしない
-				$match[3] = $match[3];
-			}
-			else if($interwikis[$match[2]]["opt"] != "")
-			{
-				// エイリアスの変換
-				if($interwikis[$match[2]]["opt"] == "sjis")
-					$interwikis[$match[2]]["opt"] = "SJIS";
-				else if($interwikis[$match[2]]["opt"] == "euc")
-					$interwikis[$match[2]]["opt"] = "EUC-JP";
-				else if($interwikis[$match[2]]["opt"] == "utf8")
-					$interwikis[$match[2]]["opt"] = "UTF-8";
-
-				// その他、指定された文字コードへエンコードしてURLエンコード
-				if(function_exists("mb_convert_encoding"))
-					$match[3] = rawurlencode(mb_convert_encoding($match[3],$interwikis[$match[2]]["opt"],"EUC-JP"));
-				else
-					$not_mb = 1;
-			}
-
-			if(strpos($interwikis[$match[2]]["url"],'$1') !== FALSE)
-				$url = str_replace('$1',$match[3],$interwikis[$match[2]]["url"]);
-			else
-				$url = $interwikis[$match[2]]["url"] . $match[3];
-
-			if($not_mb)
-			{
-				$title = $page = "Not support mb_jstring.";
-				$body = "This server's PHP does not have \"mb_jstring\" module.Cannot convert encoding.";
-			}
-			else
-			{
-				header("Location: $url");
-				die();
-			}
-		}
+		// InterWikiName は表示の際にレンダリングされるため、もはやここに到達しない
+		$title = $page = $_title_invalidiwn;
+		$body = str_replace('$1',htmlspecialchars(strip_bracket($get["page"])),str_replace('$2',"<a href=\"$script?InterWikiName\">InterWikiName</a>",$_msg_invalidiwn));
 	}
 	// WikiName、BracketNameが見つからず、InterWikiNameでもない場合
 	else
