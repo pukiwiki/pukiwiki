@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.50 2003/09/12 00:34:18 arino Exp $
+// $Id: func.php,v 1.51 2003/09/12 06:43:04 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -284,12 +284,17 @@ function page_list($pages, $cmd = 'read', $withfilename=FALSE)
 {
 	global $script,$list_index,$top;
 	global $_msg_symbol,$_msg_other;
+	global $pagereading_enable;
 	
 	// ソートキーを決定する。 ' ' < '[a-zA-Z]' < 'zz'という前提。
 	$symbol = ' ';
 	$other = 'zz';
 	
 	$retval = '';
+	
+	if($pagereading_enable) {
+		$readings = get_readings($pages);
+	}
 	
 	$list = array();
 	foreach($pages as $file=>$page)
@@ -307,8 +312,21 @@ function page_list($pages, $cmd = 'read', $withfilename=FALSE)
 		}
 		$str .= "</li>";
 		
-		$head = (preg_match('/^([A-Za-z])/',$page,$matches)) ? $matches[1] :
-			(preg_match('/^([ -~0-9])/',$page,$matches) ? $symbol : $other);
+		if($pagereading_enable) {
+			if(mb_ereg('^([A-Za-zァ-ヶ])',$readings[$page],$matches)) {
+				$head = $matches[1];
+			}
+			elseif (mb_ereg('^[ -~]|[^ぁ-ん亜-熙]',$page)) {
+				$head = $symbol;
+			}
+			else {
+				$head = $other;
+			}
+		}
+		else {
+			$head = (preg_match('/^([A-Za-z])/',$page,$matches)) ? $matches[1] :
+				(preg_match('/^([ -~])/',$page,$matches) ? $symbol : $other);
+		}
 		
 		$list[$head][$page] = $str;
 	}

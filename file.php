@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.30 2003/09/03 04:05:38 arino Exp $
+// $Id: file.php,v 1.31 2003/09/12 06:43:04 arino Exp $
 //
 
 // ソースを取得
@@ -265,6 +265,110 @@ function get_existpages($dir=DATA_DIR,$ext='.txt')
 	}
 	closedir($dp);
 	return $aryret;
+}
+// ページ名の読みを配列に
+function get_readings()
+{
+	global $pagereading_enable, $pagereading_kanji2kana_converter;
+	global $pagereading_kanji2kana_encoding, $pagereading_chasen_path;
+	global $pagereading_kakasi_path, $pagereading_config_page;
+	
+	$pages = get_existpages();
+	
+	$readings = array();
+	foreach ($pages as $page) {
+		$readings[$page] = '';
+	}
+	foreach (get_source($pagereading_config_page) as $line) {
+		$line = preg_replace('/[\s\r\n]+$/', '', $line);
+		if(preg_match('/^-\[\[([^]]+)\]\]\s(.+)$/', $line, $matches)
+		   and isset($readings[$matches[1]])) {
+			$readings[$matches[1]] = $matches[2];
+		}
+	}
+	if($pagereading_enable) {
+		// ChaSen/KAKASI 呼び出しが有効に設定されている場合
+		
+		// 読みが不明のページがあるかチェック
+		foreach ($readings as $page => $reading) {
+			if($reading=='') {
+				$unknownPage = TRUE;
+				break;
+			}
+		}
+		if($unknownPage) {
+			// 読みが不明のページがある場合
+			//			$tmpfname = tempnam(CACHE_DIR, 'PageReading');
+			$tmpfname = tempnam(CACHE_DIR, 'PageReading');
+			$fp = fopen($tmpfname, "w")
+				or die_message("cannot write temporary file '$tmpfname'.\n");
+			foreach ($readings as $page => $reading) {
+				if($reading=='') {
+					fputs($fp, mb_convert_encoding("$page\n", $pagereading_kanji2kana_encoding, SOURCE_ENCODING));
+				}
+			}
+			fclose($fp);
+			// ChaSen/KAKASI を実行
+			switch(strtolower($pagereading_kanji2kana_converter)) {
+			case 'chasen':
+				if(!file_exists($pagereading_chasen_path)) {
+					unlink($tmpfname);
+					die_message("CHASEN not found: $pagereading_chasen_path");
+				}
+				$fp = popen("$pagereading_chasen_path -F %y $tmpfname", "r");
+				if(!$fp) {
+					unlink($tmpfname);
+					die_message("ChaSen execution failed: $pagereading_chasen_path -F %y $tmpfname");
+				}
+				break;
+			case 'kakasi':
+			case 'kakashi':
+				if(!file_exists($pagereading_kakasi_path)) {
+					unlink($tmpfname);
+					die_message("KAKASI not found: $pagereading_kakasi_path");
+				}					
+				$fp = popen("$pagereading_kakasi_path -kK -HK -JK <$tmpfname", "r");
+				if(!$fp) {
+					unlink($tmpfname);
+					die_message("KAKASI execution failed: $pagereading_kakasi_path -kK -HK -JK <$tmpfname");
+				}
+				break;
+			default:
+				die_message("unknown kanji-kana converter: $pagereading_kanji2kana_converter.");
+				break;
+			}
+			foreach ($readings as $page => $reading) {
+				if($reading=='') {
+					$line = fgets($fp);
+					$line = mb_convert_encoding($line, SOURCE_ENCODING, $pagereading_kanji2kana_encoding);
+					$line = preg_replace('/[\s\r\n]+$/', '', $line);
+					$readings[$page] = $line;
+				}
+			}
+			pclose($fp);
+			unlink($tmpfname) or die_message("temporary file can not be removed: $tmpfname");
+			// 読みでソート
+			asort($readings);
+			
+			// ページを書き込み
+			$body = '';
+			foreach ($readings as $page => $reading) {
+				$body .= "-[[$page]] $reading\n";
+			}
+			page_write($pagereading_config_page, $body);
+		}
+	}
+	
+	// 読み不明のページは、そのままページ名を返す (ChaSen/KAKASI 呼
+	// び出しが無効に設定されている場合や、ChaSen/KAKASI 呼び出しに
+	// 失敗した時の為)
+	foreach ($pages as $page) {
+		if($readings[$page]=='') {
+			$readings[$page] = $page;
+		}
+	}
+	
+	return $readings;
 }
 //ファイル名の一覧を配列に(エンコード済み、拡張子を指定)
 function get_existfiles($dir,$ext)

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.45 2003/09/11 03:55:49 arino Exp $
+// $Id: pukiwiki.ini.php,v 1.46 2003/09/12 06:43:04 arino Exp $
 //
 // PukiWiki setting file
 
@@ -85,6 +85,23 @@ $function_freeze = 1;
 // $adminpass = md5("pass");
 // 以下は pass のMD5パスワードになってます。
 $adminpass = '1a1dc91c907325c69271ddf0c944bc72';
+
+/////////////////////////////////////////////////
+// ChaSen, KAKASI による、ページ名の読みの取得 (0:無効,1:有効)
+$pagereading_enable = 0;
+// ChaSen or KAKASI
+//$pagereading_kanji2kana_converter = 'chasen';
+$pagereading_kanji2kana_converter = 'kakasi';
+// ChaSen/KAKASI との受け渡しに使う漢字コード (UNIX系は EUC、Win系は SJIS が基本)
+$pagereading_kanji2kana_encoding = 'EUC';
+//$pagereading_kanji2kana_encoding = 'SJIS';
+// ChaSen/KAKASI の実行ファイル (各自の環境に合わせて設定)
+$pagereading_chasen_path = '/usr/local/bin/chasen';
+//$pagereading_chasen_path = 'c:\progra~1\chasen21\chasen.exe';
+$pagereading_kakasi_path = '/usr/local/bin/kakasi';
+//$pagereading_kakasi_path = 'c:\kakasi\bin\kakasi.exe';
+// ページ名読みを格納したページの名前
+$pagereading_config_page = ':config/PageReading';
 
 /////////////////////////////////////////////////
 // ユーザ定義
