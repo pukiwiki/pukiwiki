@@ -1,9 +1,9 @@
 <?
-// $Id: yetlist.inc.php,v 1.4 2002/07/01 07:08:57 masui Exp $
+// $Id: yetlist.inc.php,v 1.5 2002/07/29 01:47:24 masui Exp $
 
 function plugin_yetlist_action()
 {
-	global $script,$InterWikiName,$WikiName,$BracketName,$defaultpage,$_gwbn;
+	global $script,$InterWikiName,$WikiName,$BracketName,$defaultpage;
 	
 	if ($dir = @opendir(DATA_DIR))
 	{
@@ -42,17 +42,21 @@ function plugin_yetlist_action()
 			($BracketName)
 			|
 			($WikiName)
-		)/ex","check_link('$1','$name')",$line);
+		)/ex","check_link('$1',\$name,\$_gwbn)",$line);
 	}
 	
-	foreach($_gwbn as $tmp)
+	foreach($_gwbn as $wbn => $refs_arr)
 	{
-		$wbn = $tmp["name"];
-		$name = $tmp["refer"];
-	
+
+		foreach (array_unique($refs_arr) as $name)
+		{
+
 		if(preg_match("/^[^>]+>([^\]]+)/",$wbn,$match))
 		{
 			$wbn = $match[1];
+			//閉じブラケットの補充。/^\[\[/でも必要十分だが念のため
+			if(preg_match("/^\[\[[^\]]+$/",$wbn))
+				$wbn = "$wbn]]";
 			if(!preg_match("/($WikiName)|($BracketName)/",$wbn))
 				$wbn = "[[$wbn]]";
 		}
@@ -91,21 +95,21 @@ function plugin_yetlist_action()
 
 		if(!is_page($wbn))
 		{
-			$lists[strip_bracket($wbn)] = strip_bracket($wbn);
-			$refer[strip_bracket($wbn)][$name] = $name;
+			$refer[$wbn][] = $name;
+		}
+
+			$wbn = $keep; //ひー ^^;)
 		}
 	}
 
-	ksort($lists);
-	foreach($lists as $wbn)
+	ksort($refer);
+	foreach($refer as $wbn => $refs_arr)
 	{
-		$url = $wbn;
-		if(!preg_match("/($WikiName)|($BracketName)/",$url))
-			$url = "[[$url]]";
-		$url = rawurlencode($url);
+		$url = rawurlencode($wbn);
+		$name = strip_bracket($wbn);
 		
 		$link_ref = "";
-		foreach($refer[$wbn] as $refs)
+		foreach(array_unique($refs_arr) as $refs)
 		{
 			$ref = strip_bracket($refs);
 			$refurl = rawurlencode($refs);
@@ -114,7 +118,7 @@ function plugin_yetlist_action()
 		}
 		$link_ref = trim($link_ref);
 		
-		$ret["body"] .= "<li><a href=\"$script?cmd=edit&amp;page=$url&amp;refer=$refurl\">$wbn</a> <em>($link_ref)</em></li>\n";
+		$ret["body"] .= "<li><a href=\"$script?cmd=edit&amp;page=$url&amp;refer=$refurl\">$name</a> <em>($link_ref)</em></li>\n";
 	}
 
 
@@ -125,9 +129,9 @@ function plugin_yetlist_action()
 	return $ret;
 }
 
-function check_link($name,$refer)
+function check_link($name,$refer,&$_gwbn)
 {
-	global $BracketName,$WikiName,$InterWikiName,$_gwbn;
+	global $BracketName,$WikiName,$InterWikiName;
 
 	if(preg_match("/^\[\[([^\]]+)\:((https?|ftp|news)([^\]]+))\]\]$/",$name))
 	{
@@ -155,13 +159,9 @@ function check_link($name,$refer)
 	}
 	else if(preg_match("/^($BracketName)|($WikiName)$/",$name))
 	{
-		$_gwbn[$name]["name"] = $name;
-		$_gwbn[$name]["refer"] = $refer;
+		$_gwbn[$name][] = $refer;
 		return;
 	}
-	else
-	{
-		return;
-	}
+	return;
 }
 ?>
