@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: config.php,v 1.1 2003/03/07 06:45:26 panda Exp $
+// $Id: config.php,v 1.2 2003/03/10 11:32:23 panda Exp $
 //
 /*
  * プラグインの設定をPukiWikiのページに記述する
@@ -47,26 +47,62 @@ class Config
 	function read()
 	{
 		$this->objs = array();
-		$title = '';
-		$obj = &$this->get_object($title);
+		$obj = &new ConfigTable();
 		foreach (get_source($this->page) as $line)
 		{
-			if ($line != '' and $line{0} == '|' and preg_match('/^\|(.+)\|\s*$/',$line,$matches))
+			if ($line == '')
 			{
-				$obj->add_value(explode('|',$matches[1]));
+				continue;
 			}
-			else if ($line != '' and $line{0} == '*')
+			
+			$head = $line{0};
+			$level = strspn($line,$head);
+			
+			if ($level > 3)
 			{
-				$level = strspn($line,'*');
-				$title = trim(substr($line,$level));
-				$obj = &$this->get_object($title,$level);
+				$obj->add_line($line);
+				continue;
+			}
+			
+			if ($head == '*')
+			{
+				if ($level == 1)
+				{
+					$this->objs[$obj->title] = &$obj;
+					$obj = &new ConfigTable();
+					$obj->add_line($line);
+				}
+				else
+				{
+					if (!is_a($obj,'ConfigTable_Direct'))
+					{
+						$obj = &new ConfigTable_Direct($obj->after);
+					}
+					$obj->set_key($line);
+				}
+			}
+			else if ($head == '-' and $level > 1)
+			{
+				if (!is_a($obj,'ConfigTable_Direct'))
+				{
+					$obj = &new ConfigTable_Direct($obj->after);
+				}
+				$obj->add_value($line);
+			}
+			else if ($head == '|' and preg_match('/^\|(.+)\|\s*$/',$line,$matches))
+			{
+				if (!is_a($obj,'ConfigTable_Sequential'))
+				{
+					$obj = &new ConfigTable_Sequential($obj->after);
+				}
+				$obj->add_value(explode('|',$matches[1]));
 			}
 			else
 			{
 				$obj->add_line($line);
 			}
 		}
-		$this->objs[$title] = &$obj;
+		$this->objs[$obj->title] = &$obj;
 	}
 	// 配列を取得する
 	function &get($title)
@@ -87,11 +123,11 @@ class Config
 		$obj->values[] = $value;
 	}
 	// オブジェクトを取得する(ないときは作る)
-	function &get_object($title,$level=1)
+	function &get_object($title)
 	{
 		if (!array_key_exists($title,$this->objs))
 		{
-			$this->objs[$title] = &new ConfigTable(str_repeat('*',$level).$title."\n");
+			$this->objs[$title] = &new ConfigTable(array('*'.trim($title)."\n"));
 		}
 		return $this->objs[$title];
 	}
@@ -114,29 +150,44 @@ class Config
 //配列値を保持するクラス
 class ConfigTable
 {
+	// テーブルの名前
+	var $title = '';
+	// ページの内容(テーブル以外の部分)
+	var $before = array();
 	// 取得した値の配列
 	var $values = array();
 	// ページの内容(テーブル以外の部分)
-	var $line;
+	var $after = array();
 	
-	function ConfigTable($title)
+	function ConfigTable($lines=NULL)
 	{
-		$this->line = $title;
+		if ($lines !== NULL)
+		{
+			$this->title = trim(substr($lines[0],strspn($lines[0],'*')));
+			$this->before = $lines;
+		}
 	}
+	// 説明の追加
+	function add_line($line)
+	{
+		$this->after[] = $line;
+	}
+	function toString()
+	{
+		return join('',$this->before).join('',$this->after);
+	}
+}
+class ConfigTable_Sequential extends ConfigTable
+{
 	// 行の追加
 	function add_value($value)
 	{
 		$this->values[] = (count($value) == 1) ? $value[0] : $value;
 	}
-	// 説明の追加
-	function add_line($line)
-	{
-		$this->line .= $line;
-	}
 	// 書式化
 	function toString()
 	{
-		$retval = $this->line;
+		$retval = join('',$this->before);
 		if (is_array($this->values))
 		{
 			foreach ($this->values as $value)
@@ -145,9 +196,53 @@ class ConfigTable
 				$retval .= "|$value|\n";
 			}
 		}
-		$retval .= "\n"; // 空行 :)
-		
-		return $retval;
+		return $retval.join('',$this->after);
+	}
+}
+class ConfigTable_Direct extends ConfigTable
+{
+	// 取得したキーの配列。初期化時に使用する。
+	var $_keys = array();
+	
+	// キーの設定
+	function set_key($line)
+	{
+		$level = strspn($line,'*');
+		$this->_keys[$level] = trim(substr($line,$level));
+	}
+	// 行の追加
+	function add_value($line)
+	{
+		$level = strspn($line,'-');
+		$arr = &$this->values;
+		for ($n = 2; $n <= $level; $n++)
+		{
+			$arr = &$arr[$this->_keys[$n]];
+		}
+		$arr[] = trim(substr($line,$level));
+	}
+	// 書式化
+	function toString($values = NULL,$level = 2)
+	{
+		$retval = join('',$this->before);
+		if ($values == NULL)
+		{
+			$retval = parent::toString();
+			$values = &$this->values;
+		}
+		foreach ($values as $key=>$value)
+		{
+			if (is_array($value))
+			{
+				$retval .= str_repeat('*',$level).$key."\n";
+				$retval .= $this->toString($value,$level + 1);
+			}
+			else
+			{
+				$retval .= str_repeat('-',$level).$value."\n";
+			}
+		}
+		return $retval.join('',$this->after);
 	}
 }
 ?>
