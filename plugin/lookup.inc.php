@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: lookup.inc.php,v 1.11 2004/11/23 09:09:10 henoheno Exp $
+// $Id: lookup.inc.php,v 1.12 2004/11/23 09:16:32 henoheno Exp $
 //
 // Lookup plugin
 
@@ -42,7 +42,8 @@ function plugin_lookup_action()
 
 	$page  = isset($post['page'])  ? $post['page']  : '';
 	$inter = isset($post['inter']) ? $post['inter'] : '';
-	if ($page == '' || $inter == '') return array(msg=>'Invalid access', body=>'');
+	if ($page == '') return FALSE; // Do nothing
+	if ($inter == '') return array(msg=>'Invalid access', body=>'');
 
 	$url = get_interwiki_url($inter, $page);
 	if ($url === FALSE) {
