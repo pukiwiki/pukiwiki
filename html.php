@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.55 2003/02/20 12:26:36 panda Exp $
+// $Id: html.php,v 1.56 2003/02/23 02:14:22 panda Exp $
 //
 
 // 本文を出力
@@ -66,11 +66,6 @@ function catbody($title,$page,$body)
 	
 	$longtaketime = getmicrotime() - MUTIME;
 	$taketime = sprintf('%01.03f',$longtaketime);
-	
-	$_server = ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://')
-		. $_SERVER['SERVER_NAME']
-		.($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT']);
-	$htmllint = '/cgi-bin/htmllint/htmllint.cgi?Stat=on&amp;Method=URL&amp;ViewSource=on&amp;URL='.$_server.rawurlencode($_SERVER['REQUEST_URI']);
 	
 	if (!file_exists(SKIN_FILE)||!is_readable(SKIN_FILE)) {
 		die_message(SKIN_FILE.'(skin file) is not found.');
