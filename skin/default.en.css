@@ -208,6 +208,12 @@ a.note_super
 	vertical-align:super;
 }
 
+div.jumpmenu
+{
+	font-size:60%; 
+	text-align:right;
+}
+
 hr.full_hr
 {
 	border-style:ridge;
