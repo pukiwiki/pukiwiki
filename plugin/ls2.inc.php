@@ -1,6 +1,6 @@
 <?php
 /*
-$Id: ls2.inc.php,v 1.4 2003/02/26 08:54:23 panda Exp $
+$Id: ls2.inc.php,v 1.5 2003/02/27 00:48:37 panda Exp $
 
 *プラグイン ls2
 配下のページの見出し(*,**,***)の一覧を表示する
@@ -34,7 +34,7 @@ function plugin_ls2_init() {
 		'msg_title' => '\'$1\'で始まるページの一覧',
 		'msg_go' => '<span class="small">...</span>',
 	));
-  set_plugin_messages($messages);
+	set_plugin_messages($messages);
 }
 function plugin_ls2_action() {
 	global $vars;
@@ -132,29 +132,30 @@ function ls2_get_headings($page,&$params,$level,$include = FALSE)
 		$params["page_$page"] = ++$_ls2_anchor;
 	}
 	
-	$name = strip_bracket($page);
-	$title = $name.' '.get_pg_passage($page,FALSE);
-	$href = $script.'?cmd=read&amp;page='.rawurlencode($page);
+	$r_page = rawurlencode($page);
+	$s_page = htmlspecialchars($page);
+	$title = $s_page.' '.get_pg_passage($page,FALSE);
+	$href = $script.'?cmd=read&amp;page='.$r_page;
 	
 	ls2_list_push($params,$level);
 	$ret = $include ? '<li>include ' : '<li>';
 	if ($params['title'] and $is_done) {
-		$ret .= "<a href=\"$href\" title=\"$title\">$name</a> ";
+		$ret .= "<a href=\"$href\" title=\"$title\">$s_page</a> ";
 		$ret .= "<a href=\"#list_{$params["page_$page"]}\"><sup>&uarr;</sup></a>";
 		array_push($params['result'],$ret);
 		return;
 	}
 	else {
-		$ret .= "<a id=\"list_{$params["page_$page"]}\" href=\"$href\" title=\"$title\">$name</a>";
+		$ret .= "<a id=\"list_{$params["page_$page"]}\" href=\"$href\" title=\"$title\">$s_page</a>";
 		array_push($params['result'],$ret);
 	}
 	
 	$anchor = LS2_ANCHOR_ORIGIN;
 	foreach (get_source($page) as $line) {
 		if ($params['title'] and preg_match('/^(\*+)\s*(.*)$/',$line,$matches)) {
-			$special = inline2(preg_replace($note_rules,'',htmlspecialchars($matches[2])));
+			$s_title = strip_htmltag(inline2(inline($matches[2],TRUE)));
 			ls2_list_push($params,$level + strlen($matches[1]));
-			array_push($params['result'], '<li>'.$special
+			array_push($params['result'], '<li>'.$s_title
 				.'<a href="'.$href.LS2_CONTENT_HEAD.$anchor.'">'.$_ls2_messages['msg_go'].'</a>'
 			);
 			$anchor++;
