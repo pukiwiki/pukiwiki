@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss.inc.php,v 1.2 2003/02/20 12:21:07 panda Exp $
+// $Id: rss.inc.php,v 1.3 2003/05/16 05:58:19 arino Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss_action()
@@ -10,26 +10,22 @@ function plugin_rss_action()
 	global $script,$rss_max,$page_title,$whatsnew;
 
 	$self = 'http://'.SERVER_NAME.PHP_SELF.'?';
-
-	$page_title_utf8 = $page_title;
-	if (function_exists('mb_convert_encoding')) {
-		$page_title_utf8 = mb_convert_encoding($page_title_utf8,'UTF-8',SOURCE_ENCODING);
-	}
-
+	
+	$page_title_utf8 = mb_convert_encoding($page_title,'UTF-8',SOURCE_ENCODING);
+	
 	$items = '';
-
-	if (!file_exists(CACHE_DIR.'recent.dat')) {
+	
+	if (!file_exists(CACHE_DIR.'recent.dat'))
+	{
 		return '';
 	}
 	$recent = file(CACHE_DIR.'recent.dat');
 	$lines = array_splice($recent,0,$rss_max);
-	foreach ($lines as $line) {
+	foreach ($lines as $line)
+	{
 		list($time,$page) = explode("\t",rtrim($line));
 		$r_page = rawurlencode($page);
-		$title = $page;
-		if (function_exists('mb_convert_encoding')) {
-			$title = mb_convert_encoding($title,'UTF-8',SOURCE_ENCODING);
-		}
+		$title = mb_convert_encoding($page,'UTF-8',SOURCE_ENCODING);
 		$desc = get_date('D, d M Y H:i:s T',$time);
 		$items .= <<<EOD
 <item>

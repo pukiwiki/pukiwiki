@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: interwiki.inc.php,v 1.4 2003/05/13 05:05:25 arino Exp $
+// $Id: interwiki.inc.php,v 1.5 2003/05/16 05:53:38 arino Exp $
 //
 // InterWikiNameの判別とページの表示
 
@@ -56,15 +56,13 @@ function plugin_interwiki_action()
 		return $retvars;
 	}
 	
-	$b_mb = function_exists('mb_convert_encoding');
-	
 	// 文字エンコーディング
 	if ($opt == 'yw')
 	{
 		// YukiWiki系
 		if (!preg_match("/$WikiName/",$param))
 		{
-			$param = $b_mb ? '[['.mb_convert_encoding($param,'SJIS',SOURCE_ENCODING).']]' : FALSE;
+			$param = '[['.mb_convert_encoding($param,'SJIS',SOURCE_ENCODING).']]';
 		}
 	}
 	else if ($opt == 'moin')
@@ -98,17 +96,10 @@ function plugin_interwiki_action()
 			$opt = 'UTF-8';
 		}
 
-		// その他、指定された文字コードへエンコードしてURLエンコード
-		$param = $b_mb ? rawurlencode(mb_convert_encoding($param,$opt,'auto')) : FALSE;
+		// 指定された文字コードへエンコードしてURLエンコード
+		$param = rawurlencode(mb_convert_encoding($param,$opt,'auto'));
 	}
-
-	if ($param === FALSE)
-	{
-		$retvars['msg'] = 'Not support mb_convert_encoding.';
-		$retvars['body'] = 'This server\'s PHP does not have "mb_jstring" module. Cannot convert encoding.';
-		return $retvars;
-	}
-
+	
 	if (strpos($url,'$1') !== FALSE)
 	{
 		$url = str_replace('$1',$param,$url);

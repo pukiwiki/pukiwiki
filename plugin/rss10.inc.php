@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss10.inc.php,v 1.3 2003/02/24 10:09:43 panda Exp $
+// $Id: rss10.inc.php,v 1.4 2003/05/16 05:58:19 arino Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss10_action()
@@ -10,26 +10,22 @@ function plugin_rss10_action()
 	global $script,$rss_max,$page_title,$whatsnew;
 	
 	$self = $script.'?';
-
-	$page_title_utf8 = $page_title;
-	if (function_exists('mb_convert_encoding')) {
-		$page_title_utf8 = mb_convert_encoding($page_title_utf8,'UTF-8',SOURCE_ENCODING);
-	}
-
+	
+	$page_title_utf8 = mb_convert_encoding($page_title,'UTF-8',SOURCE_ENCODING);
+	
 	$items = $rdf_li = '';
-
-	if (!file_exists(CACHE_DIR.'recent.dat')) {
+	
+	if (!file_exists(CACHE_DIR.'recent.dat'))
+	{
 		return '';
 	}
 	$recent = file(CACHE_DIR.'recent.dat');
 	$lines = array_splice($recent,0,$rss_max);
-	foreach ($lines as $line) {
+	foreach ($lines as $line)
+	{
 		list($time,$page) = explode("\t",rtrim($line));
 		$r_page = rawurlencode($page);
-		$title = $page;
-		if (function_exists('mb_convert_encoding')) {
-			$title = mb_convert_encoding($title,'UTF-8',SOURCE_ENCODING);
-		}
+		$title = mb_convert_encoding($page,'UTF-8',SOURCE_ENCODING);
 		// 'O'が出力する時刻を'+09:00'の形に整形
 		$dcdate = substr_replace(get_date('Y-m-d\TH:i:sO',$time),':',-2,0);
 		
