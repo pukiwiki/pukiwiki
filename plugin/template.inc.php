@@ -1,5 +1,5 @@
 <?php
-// $Id: template.inc.php,v 1.20 2005/01/23 08:25:16 henoheno Exp $
+// $Id: template.inc.php,v 1.21 2005/02/27 08:06:48 henoheno Exp $
 //
 // Load template plugin
 
@@ -70,7 +70,8 @@ function plugin_template_action()
   <input type="hidden" name="refer"  value="$s_refer" />
   $_msg_template_start <select name="begin" size="10">$begin_select</select><br /><br />
   $_msg_template_end   <select name="end"   size="10">$end_select</select><br /><br />
-  $_msg_template_refer <input type="text" name="page" value="$s_page" />
+  <label for="_p_template_refer">$_msg_template_refer</label>
+  <input type="text" name="page" id="_p_template_refer" value="$s_page" />
   <input type="submit" name="submit" value="$_btn_template_create" /> $tag
  </div>
 </form>
