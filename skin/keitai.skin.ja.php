@@ -2,10 +2,10 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.skin.ja.php,v 1.7 2004/08/06 12:47:19 henoheno Exp $
+// $Id: keitai.skin.ja.php,v 1.8 2004/08/06 12:51:17 henoheno Exp $
 //
 
-global $script, $vars, $page_title, $max_size, $accesskey;
+global $script, $vars, $page_title, $max_size, $accesskey, $menubar;
 
 if (! defined('DATA_DIR')) exit;
 
@@ -43,7 +43,7 @@ if ($is_read and $function_freeze) {
 		$navi[] = "<a href=\"$link_freeze\" $accesskey=\"3\">3.Freeze</a>";
 	}
 }
-$navi[] = "<a href=\"$script?MenuBar\" $accesskey=\"4\">4.Menu</a>";
+$navi[] = "<a href=\"$script?$menubar\" $accesskey=\"4\">4.Menu</a>";
 $navi[] = "<a href=\"$link_whatsnew\" $accesskey=\"5\">5.Recent</a>";
 
 // 前/次のブロック
