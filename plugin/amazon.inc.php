@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: amazon.inc.php,v 1.12 2005/02/06 14:21:40 henoheno Exp $
+// $Id: amazon.inc.php,v 1.13 2005/02/08 14:27:16 henoheno Exp $
 // Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 閑舎
 //
 // Amazon plugin: Book-review maker via amazon.com/amazon.jp
@@ -116,10 +116,15 @@ function plugin_amazon_convert()
 	global $script, $vars, $asin, $asin_all;
 
 	if (func_num_args() > 3) {
+		if (PKWK_READONLY) return ''; // Show nothing
+
 		return '#amazon([ASIN-number][,left|,right]' .
 			'[,book-title|,image|,delimage|,deltitle|,delete])';
+
 	} else if (func_num_args() == 0) {
 		// レビュー作成
+		if (PKWK_READONLY) return ''; // Show nothing
+
 		$s_page = htmlspecialchars($vars['page']);
 		if ($s_page == '') $s_page = isset($vars['refer']) ? $vars['refer'] : '';
 		$ret = <<<EOD
@@ -185,6 +190,8 @@ function plugin_amazon_action()
 {
 	global $vars, $script, $edit_auth, $edit_auth_users;
 	global $amazon_body, $asin, $asin_all;
+
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
 	$asin_all = isset($vars['asin']) ?
 		htmlspecialchars(rawurlencode(strip_bracket($vars['asin']))) : '';
