@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.12 2003/03/07 00:24:59 panda Exp $
+// $Id: ref.inc.php,v 1.13 2003/03/16 13:53:29 panda Exp $
 //
 
 /*
@@ -203,8 +203,12 @@ function plugin_ref_body($args,$page)
 	}
 	
 	//パラメータ
-	$params = array('left'=>FALSE,'center'=>FALSE,'right'=>FALSE,'wrap'=>FALSE,'nowrap'=>FALSE,'around'=>FALSE,'noicon'=>FALSE,
-		'zoom'=>FALSE,'size'=>FALSE,'w'=>0,'h'=>0,'%'=>0,'_args'=>array(),'_done'=>FALSE,'_error'=>'');
+	$params = array('left'=>FALSE,'center'=>FALSE,'right'=>FALSE,
+		'wrap'=>FALSE,'nowrap'=>FALSE,'around'=>FALSE,
+		'noicon'=>FALSE,'nolink'=>FALSE,
+		'zoom'=>FALSE,'size'=>FALSE,'w'=>0,'h'=>0,'%'=>0,
+		'_args'=>array(),'_done'=>FALSE,'_error'=>''
+	);
 	
 	if (count($args) > 0)
 	{
@@ -234,24 +238,8 @@ function plugin_ref_body($args,$page)
 		}
 		if (count($_title))
 		{
-			$title2 = $title;
 			$title = join(',', $_title);
-			if ($is_image)
-			{
-				if (is_url($title))
-				{
-					$url2 = $title;
-					$title = $title2;
-				}
-				else
-				{
-					$title = htmlspecialchars($title);
-				}
-			}
-			else
-			{
-				$title = make_line_rules($title);
-			}
+			$title = $is_image ? htmlspecialchars($title) : make_line_rules($title);
 		}
 	}
 	//画像サイズ調整
@@ -315,7 +303,7 @@ function plugin_ref_body($args,$page)
 	if ($is_image)	// 画像
 	{
 		$_url = "<img src=\"$url\" alt=\"$title\" title=\"$title\" $info />";
-		if ($url2)
+		if (!$params['nolink'] and $url2)
 		{
 			$_url = "<a href=\"$url2\" title=\"$title\">$_url</a>";
 		}
