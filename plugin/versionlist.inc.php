@@ -5,7 +5,7 @@
  * CopyRight 2002 S.YOSHIMURA GPL2
  * http://masui.net/pukiwiki/ yosimura@excellence.ac.jp
  *
- * $Id: versionlist.inc.php,v 1.4 2003/03/02 06:56:56 panda Exp $
+ * $Id: versionlist.inc.php,v 1.5 2003/03/02 07:25:20 panda Exp $
  */
 
 function plugin_versionlist_init()
@@ -57,7 +57,7 @@ function plugin_versionlist_convert()
 			}
 			$data = join('',file($sdir.$file));
 			$comment = array('file'=>htmlspecialchars($sdir.$file),'rev'=>'','date'=>'');
-			if (preg_match('/\$Id: versionlist.inc.php,v 1.4 2003/03/02 06:56:56 panda Exp $data,$matches))
+			if (preg_match('/\$'.'Id: (.+),v (\d+\.\d+) (\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})/',$data,$matches))
 			{
 //				$comment['file'] = htmlspecialchars($sdir.$matches[1]);
 				$comment['rev'] = htmlspecialchars($matches[2]);
