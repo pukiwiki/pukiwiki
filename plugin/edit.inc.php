@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.26 2004/11/23 12:19:14 henoheno Exp $
+// $Id: edit.inc.php,v 1.27 2004/11/24 12:29:21 henoheno Exp $
 //
 
 // Edit plugin
@@ -113,7 +113,7 @@ function plugin_edit_inline()
 		$icon = '<img src="' . IMAGE_DIR . 'paraedit.png' .
 			'" width="9" height="9" alt="' .
 			$short . '" title="' . $title . '" /> ';
-		$class = 'anchor_super';
+		$class = ' class="anchor_super"';
 	} else {
 		// Normal editing / unfreeze
 		$id    = '';
@@ -152,7 +152,7 @@ function plugin_edit_inline()
 		}
 		$url  = $script . '?cmd=edit&amp;page=' . rawurlencode($s_page) . $s_id;
 	}
-	$atag  = '<a class="' . $class . '" href="' . $url . '" title="' . $title . '">';
+	$atag  = '<a' . $class . ' href="' . $url . '" title="' . $title . '">';
 	static $atags = '</a>';
 
 	if ($ispage) {
