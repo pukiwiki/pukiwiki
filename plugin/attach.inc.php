@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.63 2004/11/11 13:27:39 henoheno Exp $
+//  $Id: attach.inc.php,v 1.64 2004/11/27 10:59:42 henoheno Exp $
 //
 
 /*
@@ -613,6 +613,12 @@ EOD;
 		header('Content-Disposition: inline; filename="' . $filename . '"');
 		header('Content-Length: ' . $this->size);
 		header('Content-Type: '   . $this->type);
+
+		if(ini_get('zlib.output_compression')) {
+			header('Content-Encoding: gzip');
+			header('Vary: Accept-Encoding');
+		}
+
 		@readfile($this->filename);
 		exit;
 	}
