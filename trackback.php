@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.10 2003/08/06 05:51:50 arino Exp $
+// $Id: trackback.php,v 1.11 2003/08/06 08:23:13 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -296,16 +296,10 @@ function ref_save($page)
 	
 	$url = $_SERVER['HTTP_REFERER'];
 	
+	// URI の妥当性評価
 	// 自サイト内の場合は処理しない
 	$parse_url = parse_url($url);
 	if (empty($parse_url['host']) or $parse_url['host'] == $_SERVER['HTTP_HOST'])
-	{
-		return;
-	}
-	
-	// URI の妥当性評価
-	$arr = parse_url($url);
-	if (!isset($arr['host']))
 	{
 		return;
 	}
