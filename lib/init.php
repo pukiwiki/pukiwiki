@@ -2,11 +2,12 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.17 2004/10/29 23:53:41 henoheno Exp $
+// $Id: init.php,v 1.18 2004/10/31 03:45:52 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
-// バージョン / 著作権
+// PukiWiki version / Copyright / Licence
+
 define('S_VERSION', '1.4.4');
 define('S_COPYRIGHT',
 	'<strong>PukiWiki ' . S_VERSION . '</strong>' .
@@ -17,7 +18,8 @@ define('S_COPYRIGHT',
 );
 
 /////////////////////////////////////////////////
-// 初期設定 (サーバ変数)
+// Init server variables
+
 foreach (array('SCRIPT_NAME', 'SERVER_ADMIN', 'SERVER_NAME',
 	'SERVER_PORT', 'SERVER_SOFTWARE') as $key) {
 	define($key, isset($_SERVER[$key]) ? $_SERVER[$key] : '');
@@ -25,23 +27,23 @@ foreach (array('SCRIPT_NAME', 'SERVER_ADMIN', 'SERVER_NAME',
 }
 
 /////////////////////////////////////////////////
-// 初期設定 (グローバル変数)
+// Init grobal variables
 
-$foot_explain = array();	// 脚注
-$related      = array();	// 関連するページ
-$head_tags    = array();	// <head>内に追加するタグ
+$foot_explain = array();	// Footnotes
+$related      = array();	// Related pages
+$head_tags    = array();	// XHTML tags in <head></head>
 
 /////////////////////////////////////////////////
-// 初期設定(時間)
+// Time settings
+
 define('LOCALZONE', date('Z'));
 define('UTIME', time() - LOCALZONE);
 define('MUTIME', getmicrotime());
 
 /////////////////////////////////////////////////
-// 初期設定(設定ファイルの場所)
-define('INI_FILE',  DATA_HOME . 'pukiwiki.ini.php');
+// Require INI_FILE
 
-// ファイル読み込み
+define('INI_FILE',  DATA_HOME . 'pukiwiki.ini.php');
 $die = '';
 if (! file_exists(INI_FILE) || ! is_readable(INI_FILE)) {
 	$die = "${die}File is not found. (INI_FILE)\n";
@@ -80,32 +82,38 @@ mb_http_output('pass');
 mb_detect_order('auto');
 
 /////////////////////////////////////////////////
-// INI_FILE: UI_LANG 初期設定(言語ファイルの場所)
-define('LANG_FILE', DATA_HOME . UI_LANG . '.lng.php');
+// INI_FILE: Require LANG_FILE
 
-// ファイル読み込み
+define('LANG_FILE_HINT', DATA_HOME . LANG . '.lng.php');	// For encoding hint
+define('LANG_FILE',      DATA_HOME . UI_LANG . '.lng.php');	// For UI resource
 $die = '';
-if (! file_exists(LANG_FILE) || ! is_readable(LANG_FILE)) {
-	$die = "${die}File is not found. (LANG_FILE)\n";
-} else {
-	require(LANG_FILE);
+foreach (array('LANG_FILE_HINT', 'LANG_FILE') as $langfile) {
+	if (! file_exists(constant($langfile)) || ! is_readable(constant($langfile))) {
+		$die = "${die}File is not found or not readable. ($langfile)\n";
+	} else {
+		require_once(constant($langfile));
+	}
 }
 if ($die) die_message(nl2br("\n\n" . $die));
 
 /////////////////////////////////////////////////
-// LANG_FILE: 曜日配列
+// LANG_FILE: Init encoding hint
+
+define('PKWK_ENCODING_HINT', isset($_LANG['encode_hint'][LANG]) ? $_LANG['encode_hint'][LANG] : '');
+unset($_LANG['encode_hint']);
+
+/////////////////////////////////////////////////
+// LANG_FILE: Init severn days of the week
 
 $weeklabels = $_msg_week;
 
 /////////////////////////////////////////////////
-// INI_FILE: $script: 初期設定
+// INI_FILE: Init $script
 
 if (isset($script)) {
-	// Init manually
-	get_script_uri($script);
+	get_script_uri($script); // Init manually
 } else {
-	// Init automatically
-	$script = get_script_uri();
+	$script = get_script_uri(); // Init automatically
 }
 
 /////////////////////////////////////////////////
@@ -202,7 +210,7 @@ $_COOKIE = input_filter($_COOKIE);
 // POST method は常に form 経由なので、必ず変換する
 //
 if (isset($_POST['encode_hint']) && $_POST['encode_hint'] != '') {
-	// html.php の中で、<form> に encode_hint を仕込んでいるので、
+	// do_plugin_xxx() の中で、<form> に encode_hint を仕込んでいるので、
 	// encode_hint を用いてコード検出する。
 	// 全体を見てコード検出すると、機種依存文字や、妙なバイナリ
 	// コードが混入した場合に、コード検出に失敗する恐れがある。

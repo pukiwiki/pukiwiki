@@ -2,11 +2,14 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng.php,v 1.1 2004/10/29 23:53:41 henoheno Exp $
+// $Id: en.lng.php,v 1.2 2004/10/31 03:45:52 henoheno Exp $
 //
 // PukiWiki message file (english)
 
 // NOTE: Encoding of this file, must equal to encoding setting
+
+// Encoding hint
+$_LANG['encode_hint']['en'] = '';
 
 ///////////////////////////////////////
 // Page titles

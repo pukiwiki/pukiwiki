@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: plugin.php,v 1.3 2004/08/09 14:09:42 henoheno Exp $
+// $Id: plugin.php,v 1.4 2004/10/31 03:45:52 henoheno Exp $
 //
 
 // プラグイン用に未定義のグローバル変数を設定
@@ -72,10 +72,13 @@ function do_plugin_action($name)
 
 	$retvar = call_user_func('plugin_' . $name . '_action');
 
-	// 文字エンコーディング検出用 hidden フィールドを挿入
-	return preg_replace('/(<form[^>]*>)/',
-		"$1\n" . '<div><input type="hidden" name="encode_hint" value="ぷ" /></div>',
-		$retvar);
+	// Insert a hidden field, supports idenrtifying text enconding
+	if (PKWK_ENCODING_HINT != '')
+		$retvar =  preg_replace('/(<form[^>]*>)/', "$1\n" .
+			'<div><input type="hidden" name="encode_hint" value="' . PKWK_ENCODING_HINT . '" /></div>',
+			$retvar);
+
+	return $retvar;
 }
 
 //プラグイン(convert)を実行
@@ -97,13 +100,16 @@ function do_plugin_convert($name, $args = '')
 	$digest  = $_digest; // 復元
 
 	if ($retvar === FALSE) {
-		return htmlspecialchars('#' . $name . ($args ? "($args)" : ''));
-	} else {
-		// 文字エンコーディング検出用 hidden フィールドを挿入
-		return preg_replace('/(<form[^>]*>)/',
-			"$1\n" . '<div><input type="hidden" name="encode_hint" value="ぷ" /></div>',
+		$retvar =  htmlspecialchars('#' . $name . ($args != '' ? "($args)" : ''));
+	} else if (PKWK_ENCODING_HINT != '') {
+		// Insert a hidden field, supports idenrtifying text enconding
+		$retvar =  preg_replace('/(<form[^>]*>)/', "$1\n" .
+			'<div><input type="hidden" name="encode_hint" value="' . PKWK_ENCODING_HINT . '" /></div>',
 			$retvar);
+
 	}
+
+	return $retvar;
 }
 
 //プラグイン(inline)を実行

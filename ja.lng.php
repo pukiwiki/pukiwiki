@@ -2,12 +2,15 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng.php,v 1.1 2004/10/29 23:53:41 henoheno Exp $
+// $Id: ja.lng.php,v 1.2 2004/10/31 03:45:52 henoheno Exp $
 //
 // PukiWiki message file (japanese)
 
 // ※このファイルの文字コードは、エンコーディングの設定と一致
 //   している必要があります
+
+// Encoding hint
+$_LANG['encode_hint']['ja'] = 'ぷ';
 
 ///////////////////////////////////////
 // Page titles
