@@ -1,5 +1,5 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.9 2004/08/30 12:53:13 henoheno Exp $
+$Id: UPDATING.txt,v 1.10 2004/08/30 13:45:11 henoheno Exp $
 
 
 互換性に関する記述
@@ -91,18 +91,19 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
                 - 定義を追加: DATA_HOME (PukiWikiごとに固有のデータ)
                 - 定義を追加: LANG_DIR  (言語ファイルのある場所)
                 - 定義を追加: JCODE_DIR (mbstring.phpが必要とするjcode.phpの場所)
-             versionlistプラグイン:
+            versionlistプラグイン:
                 - LIB_DIRやDATA_HOMEをフォローする
                 - versionlistの出力から冗長な '/' を削除 (開発日記/2004-07-24)
-             開発日記/2004-08-01 ライブラリとして使われうるファイルをLIB_DIRに移動
+            refプラグイン: UPLOAD_DIRの位置によらずインラインイメージの出力が
+	        可能となる様に plugin_ref_action() を追加 (BugTrack/658)
+            開発日記/2004-08-01 ライブラリとして使われうるファイルをLIB_DIRに移動
 
         携帯電話およびPDAなどからのアクセスに対応 / 設定の集約 (keitai.ini.php)
             各種組み込みWebブラウザ向けのユーザーエージェント文字列を追加
-                PlayStation BB Navigator, i-mode and FOMA, Vodafone, EZweb,
-                WAP phone, ACCESS "NetFront" / "Compact NetFront" and thier
-                OEM, Opera(for embedded), Planetweb, DreamPassport, Palm
-                "Web Pro",  ilinx "Palmscape" / "Xiino", Sharp PDA Browser,
-                Windows CE, WebTV
+                PlayStation BB Navigator, i-mode and FOMA, Vodafone, EZweb, WAP
+                phone, ACCESS "NetFront" / "Compact NetFront" and thier OEM,
+                Opera(for embedded), Planetweb, DreamPassport, Palm "Web Pro",
+                ilinx "Palmscape" / "Xiino", Sharp PDA Browser, Windows CE, WebTV
             BugTrack/581 (au/TU-KA) EZweb およびWAP端末などからのアクセス
             開発日記/2004-07-03 Vodafone の判定結果に端末IDが含まれない様に修正
             BugTrack/626 組み込みWebブラウザ「NetFront」「Compact NetFront」
@@ -124,6 +125,11 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
                 - 認証失敗の度に2秒のウェイトをかけることで、攻撃者を妨害する
             BugTrack/528 pcommentをネストした場合の脆弱性
                 - 無限ループを抑えるハックを追加
+            開発日記/2004-08-09 includeプラグインにリミッターを追加 (4ページまで)
+            BugTrack/666 calendar_viewerにリミッターを追加 (1テーマ1回まで)
+	    BugTrack/652 .htaccess の追加 (Apache限定: 意図しないアクセスを禁止)
+	    BugTrack/654 attach.inc.php プラグインで、存在しないページにファイル
+	        を添付できてしまう
 
         セキュリティの向上: XSS脆弱性の修正
             BugTrack/586 edit_form() に XSS 脆弱性
@@ -146,6 +152,8 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
         重要な問題の修正
             BugTrack/639 memoプラグイン: カンマ以降の文字が消える /
                ダブルクォートで囲んだ場合、ダブルクォートが消える
+            BugTrack/655 attach.inc.php プラグインで、ATTACH_PASSWORD_REQUIREを
+	        有効にした時に、添付したファイルが削除できなくなる
 
         ネットワーク関連の修正
             BugTrack/635 proxy.php のバグ (過剰判定、かつ間違っている)
@@ -162,6 +170,19 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
             refプラグイン/attachプラグイン: KBをより正確に表示する (1024バイト換算に)
             menuプラグイン: サブメニューの名前を容易に変更できる様に、define
                 'MENU_SUBMENUBAR' を追加
+            BugTrack/653 topicpathプラグイン: １つ親のページへのリンクを外すことが
+	        できてしまう (versionlistプラグインでtopicpathのバージョンがでない)
+
+        ユーザーインターフェースの修正
+	    積極的にUsageおよびエラーを表示する (現状は一部のプラグインのみ)
+	      例:
+	        #img(): Usage: (URI-to-image[,right[,clear]])
+	        #include(): Included already: [[include_test]]
+                #calendar_viewer(): You already view: 数百件あるカレンダー
+	    imgプラグイン:
+	        - URIを一つ与えるだけで動作する (従来は引数が2つ必要)
+		- 3つ目の引数に 'clear' とすると、画像と同時に回り込みを解除する
+                  コードを挿入する
 
         コードの可読性を高めるための修正
             開発日記/2004-07-18 内部関数名の変更: sanitize() => input_filter()
@@ -170,7 +191,7 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
             - 冗長なコメントの削除、コメントの追加
             - グローバル変数 $get / $post の代わりに $vars を使用する様に修正
 
-        基礎コンテンツの修正および拡充
+        基礎コンテンツの修正および拡充 (BugTrack/644, 開発日記/2004-08-16 など)
             - pukiwiki.ini.php のコメントを整理／追加
             - InterWikiName: YukiWiki、ウヰキエリアを現状にあわせ更新
             - 冗長なコンテンツを削除・マージ
