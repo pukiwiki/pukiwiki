@@ -5,7 +5,7 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: counter.inc.php,v 1.11 2003/11/05 10:40:48 arino Exp $
+ * $Id: counter.inc.php,v 1.12 2003/12/02 09:21:36 arino Exp $
  */
 
 // counter file
@@ -65,8 +65,7 @@ function plugin_counter_get_count($page)
 	{
 		$default = array(
 			'total'     => 0,
-			'date'      => get_date('Y/m/d'), // PukiWiki/1.4
-//			'date'      => date('Y/m/d'), // PukiWiki/1.3.x
+			'date'      => get_date('Y/m/d'),
 			'today'     => 0,
 			'yesterday' => 0,
 			'ip'        => ''
@@ -104,9 +103,10 @@ function plugin_counter_get_count($page)
 	if ($counters[$page]['date'] != $default['date'])
 	{
 		$modify = TRUE;
+		$is_yesterday = ($counters[$page]['date'] == get_date('Y/m/d',strtotime('yesterday',UTIME)));
 		$counters[$page]['ip']        = $_SERVER['REMOTE_ADDR'];
 		$counters[$page]['date']      = $default['date'];
-		$counters[$page]['yesterday'] = $counters[$page]['today'];
+		$counters[$page]['yesterday'] = $is_yesterday ? $counters[$page]['today'] : 0;
 		$counters[$page]['today']     = 1;
 		$counters[$page]['total']++;
 	}
