@@ -123,7 +123,7 @@ $_msg_newpage = 'ページ新規作成';
 
 ///////////////////////////////////////
 // recent
-$_recent_plugin_frame = '<h5 class="side_label">最新の%d件</h5><span class=\"small\">%s</span>';
+$_recent_plugin_frame = '<h5 class="side_label">最新の%d件</h5><span class="small">%s</span>';
 $_recent_plugin_li = '・';
 
 ///////////////////////////////////////
