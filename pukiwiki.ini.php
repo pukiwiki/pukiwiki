@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.95 2004/11/23 02:01:29 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.96 2004/11/23 03:30:59 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -66,6 +66,12 @@ $page_title = 'PukiWiki';
 // index.php などに変更した場合のスクリプト名の設定
 // とくに設定しなくても問題なし
 //$script = 'http://example.com/pukiwiki/';
+
+// $script からファイル名をカットする (URLを短くする)
+// Webサーバー側の設定で、ディレクトリを指定したときに
+// 表示するデフォルトのファイル名の候補にここで指定する
+// ファイル名が含まれている必要があります
+//$script_directory_index = 'index.php';
 
 // 編集者の名前(修正してください)
 $modifier = 'anonymous';

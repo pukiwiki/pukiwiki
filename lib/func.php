@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.10 2004/11/23 02:35:57 henoheno Exp $
+// $Id: func.php,v 1.11 2004/11/23 03:30:59 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -42,7 +42,7 @@ function is_pagename($str)
 function is_url($str, $only_http = FALSE)
 {
 	$scheme = $only_http ? 'https?' : 'https?|ftp|news';
-	return preg_match('/^('.$scheme.')(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]*)$/', $str);
+	return preg_match('/^(' . $scheme . ')(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]*)$/', $str);
 }
 
 // ページが存在するか
@@ -518,6 +518,7 @@ function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 // pukiwiki.phpスクリプトのabsolute-uriを生成
 function get_script_uri($init_uri = '')
 {
+	global $script_directory_index;
 	static $script;
 
 	if ($init_uri == '') {
@@ -526,6 +527,7 @@ function get_script_uri($init_uri = '')
 
 		// Set automatically
 		$msg     = 'get_script_uri() failed: Please set $script at INI_FILE manually';
+
 		$script  = (SERVER_PORT == 443 ? 'https://' : 'http://'); // scheme
 		$script .= SERVER_NAME;	// host
 		$script .= (SERVER_PORT == 80 ? '' : ':' . SERVER_PORT);  // port
@@ -543,9 +545,11 @@ function get_script_uri($init_uri = '')
 
 			$path = $parse_url['path'];
 		}
-		$script .= $path; // path
+		$script .= $path;
+
 		if (! is_url($script, TRUE) && php_sapi_name() == 'cgi')
 			die_message($msg);
+		unset($msg);
 
 	} else {
 		// Set manually
@@ -553,6 +557,17 @@ function get_script_uri($init_uri = '')
 		if (! is_url($init_uri, TRUE)) die_message('$script: Invalid URI');
 		$script = $init_uri;
 	}
+
+	// Cut filename or not
+	if (isset($script_directory_index)) {
+		if (! file_exists($script_directory_index))
+			die_message('Directory index file not found: ' .
+				htmlspecialchars($script_directory_index));
+		$matches = array();
+		if (preg_match('#^(.+/)' . quotemeta($script_directory_index) . '$#',
+			$script, $matches)) $script = $matches[1];
+	}
+
 	return $script;
 }
 
