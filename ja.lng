@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.16 2003/06/22 06:37:19 arino Exp $
+// $Id: ja.lng,v 1.17 2003/06/23 13:24:01 arino Exp $
 //
 // PukiWiki message file (japanese)
 
@@ -76,7 +76,6 @@ $_msg_other = '日本語';
 $_msg_help = 'テキスト整形のルールを表示する';
 $_msg_week = array('日','月','火','水','木','金','土');
 $_msg_content_back_to_top = '<div class="jumpmenu"><a href="#navigator">&uarr;</a></div>';
-$_msg_auth = 'Page Edit.';
 $_msg_word = 'これらのキーワードがハイライトされています：';
 $_msg_backup_deleted = '$1 のバックアップを削除しました。';
 $_msg_backup_adminpass = '削除用のパスワードを入力してください。';

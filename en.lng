@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.14 2003/06/22 06:37:19 arino Exp $
+// $Id: en.lng,v 1.15 2003/06/23 13:24:01 arino Exp $
 //
 // PukiWiki message file (english)
 
@@ -72,7 +72,6 @@ $_msg_other = 'Others';
 $_msg_help = 'View rules of text formatting';
 $_msg_week = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 $_msg_content_back_to_top = '<div class="jumpmenu"><a href="#navigator">&uarr;</a></div>';
-$_msg_auth = 'Page Edit.';
 $_msg_word = 'These search terms have been highlighted:';
 $_msg_backup_deleted = 'Backup of $1 is deleted.';
 $_msg_backup_adminpass = 'Please input the password for deleting.';
