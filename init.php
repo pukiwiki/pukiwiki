@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.59 2003/07/29 09:57:14 arino Exp $
+// $Id: init.php,v 1.60 2003/08/06 05:51:05 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -154,11 +154,21 @@ if (array_key_exists('encode_hint',$post))
 	$encode = mb_detect_encoding($post['encode_hint']);
 	mb_convert_variables(SOURCE_ENCODING,$encode,$post);
 }
+else if (array_key_exists('charset',$post))
+{
+	// TrackBack Pingに含まれていることがある
+	// 指定された場合は、その内容で変換を試みる
+	if (mb_convert_variables(SOURCE_ENCODING,$post['charset'],$post) !== $post['charset'])
+	{
+		// うまくいかなかった場合はコード検出の設定で変換しなおし
+		mb_convert_variables(SOURCE_ENCODING,'auto',$post);
+	}
+}
 else if (count($post) > 0)
 {
 	// encode_hint が無いということは、無いはず。
 	// デバッグ用に、取りあえず、警告メッセージを出しておきます。
-	echo "<p>Warning: 'encode_hint' field is not found in the posted data.</p>\n";
+// 	echo "<p>Warning: 'encode_hint' field is not found in the posted data.</p>\n";
 	// 全部まとめて、コード検出、変換
 	mb_convert_variables(SOURCE_ENCODING,'auto',$post);
 }
