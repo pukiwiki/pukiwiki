@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.79 2004/06/30 13:36:45 henoheno Exp $
+// $Id: init.php,v 1.80 2004/06/30 14:20:29 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -62,16 +62,15 @@ define('MUTIME',getmicrotime());
 
 /////////////////////////////////////////////////
 // ファイル読み込み
-$die = FALSE; $message = '';
+$die = '';
 foreach(array('LANG_FILE', 'INI_FILE') as $file){
 	if (!file_exists(constant($file)) || !is_readable(constant($file))) {
-		$die = TRUE;
-		$message = "${message}File is not found. ($file)\n";
+		$die = "${die}File is not found. ($file)\n";
 	} else {
 		require(constant($file));
 	}
 }
-if ($die) { die_message(nl2br("\n\n" . $message . "\n")); }
+if ($die) { die_message(nl2br("\n\n" . $die)); }
 
 /////////////////////////////////////////////////
 // INI_FILE: $script: 初期設定
@@ -100,15 +99,13 @@ require(UA_INI_FILE);
 
 /////////////////////////////////////////////////
 // ディレクトリのチェック
-$die = FALSE; $message = $temp = '';
 
+$die = '';
 foreach(array('DATA_DIR', 'DIFF_DIR', 'BACKUP_DIR', 'CACHE_DIR') as $dir){
 	if(!is_writable(constant($dir))) {
-		$die = TRUE;
-		$temp = "${temp}Directory is not found or not writable ($dir)\n";
+		$die = "${die}Directory is not found or not writable ($dir)\n";
 	}
 }
-if ($temp) { $message = "$temp\n"; }
 
 // 設定ファイルの変数チェック
 $temp = '';
@@ -117,8 +114,8 @@ foreach(array('rss_max', 'page_title', 'note_hr', 'related_link', 'show_passage'
 	if (!isset(${$var})) { $temp .= "\$$var\n"; }
 }
 if ($temp) {
-	$die = TRUE;
-	$message = "${message}Variable(s) not found: (Maybe the old *.ini.php?)\n" . $temp . "\n";
+	if ($die) { $die .= "\n"; }	// A breath
+	$die = "${die}Variable(s) not found: (Maybe the old *.ini.php?)\n" . $temp;
 }
 
 $temp = '';
@@ -126,16 +123,17 @@ foreach(array('LANG', 'PLUGIN_DIR') as $def){
 	if (!defined($def)) $temp .= "$def\n";
 }
 if ($temp) {
-	$die = TRUE;
-	$message = "${message}Define(s) not found: (Maybe the old *.ini.php?)\n" . $temp . "\n";
+	if ($die) { $die .= "\n"; }	// A breath
+	$die = "${die}Define(s) not found: (Maybe the old *.ini.php?)\n" . $temp;
 }
 
-if($die){ die_message(nl2br("\n\n" . $message)); }
+if($die){ die_message(nl2br("\n\n" . $die)); }
+unset($die, $temp);
 
 /////////////////////////////////////////////////
 // 必須のページが存在しなければ、空のファイルを作成する
-$pages = array($defaultpage, $whatsnew, $interwiki);
-foreach($pages as $page){
+
+foreach(array($defaultpage, $whatsnew, $interwiki) as $page){
 	if (!is_page($page)) { touch(get_filename($page)); }
 }
 
