@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.50 2003/02/03 12:46:56 panda Exp $
+// $Id: html.php,v 1.51 2003/02/04 01:33:34 panda Exp $
 //
 
 // 本文を出力
@@ -192,7 +192,7 @@ function make_related($page,$tag='')
 	
 	$links = links_get_related($page);
 	
-	if ($_isrule) {
+	if ($tag) {
 		ksort($links);
 	}
 	else {
