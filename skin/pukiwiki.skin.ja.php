@@ -1,4 +1,5 @@
 <?php if (!defined('DATA_DIR')) { exit; } ?>
+<?php $is_print = array_key_exists('prn',$vars); ?>
 <?php header('Content-Type: text/html; charset=EUC-JP') ?>
 <?php echo '<?xml version="1.0" encoding="EUC-JP"?>' ?>
 
@@ -13,18 +14,22 @@
  <meta http-equiv="content-type" content="application/xhtml+xml; charset=EUC-JP" />
  <meta http-equiv="content-style-type" content="text/css" />
 
-<?php if (!$is_read) { ?>
+<?php if (!$is_read or $is_print) { ?>
  <meta name="robots" content="NOINDEX,NOFOLLOW" />
 <?php } ?>
 
  <title><?php echo "$title - $page_title" ?></title>
+<?php if ($is_print) { ?>
+ <link rel="stylesheet" href="skin/print.ja.css" type="text/css" media="screen,print" charset="Shift_JIS" />
+<?php } else { ?>
  <link rel="stylesheet" href="skin/default.ja.css" type="text/css" media="screen" charset="Shift_JIS" />
+<?php } ?>
 <?php echo $head_tag ?>
 </head>
 <body>
 
 <div id="header">
- <a href="<?php echo $modifierlink ?>"><img id="logo" src="pukiwiki.png" width="80" height="80" alt="[PukiWiki]" /></a>
+ <a href="<?php echo $modifierlink ?>"><img id="logo" src="pukiwiki.png" width="80" height="80" alt="[PukiWiki]" title="[PukiWiki]" /></a>
  <h1 class="title"><?php echo $page ?></h1>
 
 <?php if ($is_page) { ?>
@@ -41,7 +46,9 @@
  &nbsp;
  [ <a href="<?php echo "$script?plugin=newpage&amp;refer=$r_page" ?>">新規</a>
  | <a href="<?php echo $link_edit ?>">編集</a>
-
+<?php   if (!$is_print) { ?>
+ | <a href="<?php echo "$script?cmd=read&amp;page=$r_page&amp;prn=on" ?>">印刷用</a>
+<?php   } ?>
 <?php   if ($is_read and $function_freeze) { ?>
 <?php     if ($is_freeze) { ?>
  | <a href="<?php echo $link_unfreeze ?>">凍結解除</a>
@@ -76,11 +83,11 @@
 
  | <a href="<?php echo $link_help ?>">ヘルプ</a>
  ]
-<?php echo $hr ?>
 </div>
+<?php echo $hr ?>
 
 
-<?php if (arg_check('read') and is_page('MenuBar')) { ?>
+<?php if (!$is_print and arg_check('read') and is_page('MenuBar')) { ?>
 <table border="0" width="100%">
 <tr><td valign="top" style="width:120px;word-break:break-all;padding:4px;">
 <div id="menubar"><?php echo preg_replace('/<ul[^>]*>/','<ul>',convert_html(get_source('MenuBar'))) ?></div>
@@ -108,35 +115,37 @@
 <?php } ?>
 
 
+<?php echo $hr ?>
 <div id="toolbar">
 
-<?php echo $hr ?>
-
 <?php if ($is_page) { ?>
- <a href="<?php echo "$script?$r_page" ?>"><img src="./image/reload.png" width="20" height="20" alt="リロード" /></a>
+ <a href="<?php echo "$script?$r_page" ?>"><img src="./image/reload.png" width="20" height="20" alt="リロード" title="リロード" /></a>
  &nbsp;
- <a href="<?php echo $script ?>?plugin=newpage"><img src="./image/new.png" width="20" height="20" alt="新規" /></a>
- <a href="<?php echo $link_edit ?>"><img src="./image/edit.png" width="20" height="20" alt="編集" /></a>
- <a href="<?php echo $link_diff ?>"><img src="./image/diff.png" width="20" height="20" alt="差分" /></a>
+ <a href="<?php echo $script ?>?plugin=newpage"><img src="./image/new.png" width="20" height="20" alt="新規" title="新規" /></a>
+ <a href="<?php echo $link_edit ?>"><img src="./image/edit.png" width="20" height="20" alt="編集" title="編集" /></a>
+<?php   if (!$is_print) { ?>
+ <a href="<?php echo "$script?cmd=read&amp;page=$r_page&amp;prn=on" ?>"><img src="./image/print.png" width="20" height="20" alt="印刷用" title="印刷用" /></a>
+<?php   } ?>
+ <a href="<?php echo $link_diff ?>"><img src="./image/diff.png" width="20" height="20" alt="差分" title="差分" /></a>
 <?php   if ((bool)ini_get('file_uploads')) { ?>
- <a href="<?php echo $link_upload ?>"><img src="./image/file.png" width="20" height="20" alt="添付" /></a>
+ <a href="<?php echo $link_upload ?>"><img src="./image/file.png" width="20" height="20" alt="添付" title="添付" /></a>
 <?php   } ?>
  &nbsp;
 <?php } ?>
 
- <a href="<?php echo $link_top ?>"><img src="./image/top.png" width="20" height="20" alt="トップ" /></a>
- <a href="<?php echo $link_list ?>"><img src="./image/list.png" width="20" height="20" alt="一覧" /></a>
- <a href="<?php echo $link_search ?>"><img src="./image/search.png" width="20" height="20" alt="検索" /></a>
- <a href="<?php echo $link_whatsnew ?>"><img src="./image/recentchanges.png" width="20" height="20" alt="最終更新" /></a>
+ <a href="<?php echo $link_top ?>"><img src="./image/top.png" width="20" height="20" alt="トップ" title="トップ" /></a>
+ <a href="<?php echo $link_list ?>"><img src="./image/list.png" width="20" height="20" alt="一覧" title="一覧" /></a>
+ <a href="<?php echo $link_search ?>"><img src="./image/search.png" width="20" height="20" alt="検索" title="検索" /></a>
+ <a href="<?php echo $link_whatsnew ?>"><img src="./image/recentchanges.png" width="20" height="20" alt="最終更新" title="最終更新" /></a>
 
 <?php if ($do_backup) { ?>
- <a href="<?php echo $link_backup ?>"><img src="./image/backup.png" width="20" height="20" alt="バックアップ" /></a>
+ <a href="<?php echo $link_backup ?>"><img src="./image/backup.png" width="20" height="20" alt="バックアップ" title="バックアップ"/></a>
 <?php } ?>
 
  &nbsp;
- <a href="<?php echo $link_help ?>"><img src="./image/help.png" width="20" height="20" alt="ヘルプ" /></a>
+ <a href="<?php echo $link_help ?>"><img src="./image/help.png" width="20" height="20" alt="ヘルプ" title="ヘルプ" /></a>
  &nbsp;
- <a href="<?php echo $link_rss ?>"><img src="./image/rss.png" width="36" height="14" alt="最終更新のRSS" /></a>
+ <a href="<?php echo $link_rss ?>"><img src="./image/rss.png" width="36" height="14" alt="最終更新のRSS" title="最終更新のRSS" /></a>
 </div>
 
 
