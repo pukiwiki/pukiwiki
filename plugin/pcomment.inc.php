@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.15 2003/05/14 10:14:42 arino Exp $
+// $Id: pcomment.inc.php,v 1.16 2003/05/16 05:56:23 arino Exp $
 //
 
 /*
@@ -30,10 +30,6 @@
 */
 // ページ名のデフォルト(%sに$vars['page']が入る)
 define('PCMT_PAGE','[[コメント/%s]]');
-//
-// ページのカテゴリ(新規作成時に挿入)
-//define('PCMT_CATEGORY','[[:Comment]]');
-define('PCMT_CATEGORY','');
 //
 // 表示するコメント数のデフォルト
 define('PCMT_NUM_COMMENTS',10);
@@ -219,7 +215,7 @@ function pcmt_insert()
 	
 	if (!is_page($page))
 	{
-		$postdata = PCMT_CATEGORY.' [['.htmlspecialchars(strip_bracket($post['refer']))."]]\n\n-$msg\n";
+		$postdata = '[['.htmlspecialchars(strip_bracket($post['refer']))."]]\n\n-$msg\n";
 	}
 	else
 	{
