@@ -142,6 +142,21 @@ INCOMPATIBILIY BETWEEN 1.3 AND 1.4
 
 CHANGELOG
 
+    *   2003-11-17 1.4.2 by PukiWiki Developers Team
+
+         Fixed BugTrack/487 (AutoLink probrem)
+             [[cvs:func.php]](v1.4:r1.54)
+         Fixed BugTrack/488 (mb_substr() implementation)
+             [[cvs:mbsring.php]](v1.4:r1.9)
+         Fixed function name conflict
+             [[cvs:convert_html.php]](v1.4:r1.57)
+         Update plugin/tracker.inc.php
+             [[cvs:plugin/tracker.inc.php]](v1.4:r1.18)
+         Fixed parameter error handling
+             [[cvs:plugin/template.inc.php]](v1.4:r1.16)
+         Fixed variable name mismatch
+             [[cvs:plugin/rename.inc.php]](v1.4:r1.9)
+
     *   2003-11-10 1.4.1 by PukiWiki Developers Team
 
          Fixed BugTrack/478

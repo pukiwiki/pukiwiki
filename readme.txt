@@ -166,6 +166,21 @@ PukiWiki/1.3.xとの非互換点
 
 更新履歴
 
+    *   2003-11-17 1.4.2 by PukiWiki Developers Team
+        BugTrack/487 autolinkで文字化け
+            [[cvs:func.php]](v1.4:r1.54)
+        BugTrack/488 mbstring無しの状態でAutoLinkを設定するとページが化ける
+            [[cvs:mbstring.php]](v1.4:r1.9)
+        関数名がコンストラクタと衝突
+            [[cvs:convert_html.php]](v1.4:r1.57)
+        tracker_list()の第2引数でページ名の相対指定が使えるように
+        tracker()の第1引数が省略されたときに'default'を使う
+            [[cvs:plugin/tracker.inc.php]](v1.4:r1.18)
+        エラー処理を調整
+            [[cvs:plugin/template.inc.php]](v1.4:r1.16)
+        変数名間違い
+            [[cvs:plugin/rename.inc.php]](v1.4:r1.9)
+
     *   2003-11-10 1.4.1 by PukiWiki Developers Team
 
         BugTrack/478    リストの子要素の段落が正しく出力されない
