@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.26 2003/06/06 08:01:49 arino Exp $
+//  $Id: attach.inc.php,v 1.27 2003/06/10 14:00:58 arino Exp $
 //
 
 /*
@@ -736,10 +736,10 @@ class AttachPages
 		$dir = opendir(UPLOAD_DIR)
 			or die('directory '.UPLOAD_DIR.' is not exist or not readable.');
 		
-		$page_pattern = ($page == '') ? '[0-9A-F]+' : preg_quote(encode($page),'/');
+		$page_pattern = ($page == '') ? '(?:[0-9A-F]{2})+' : preg_quote(encode($page),'/');
 		$age_pattern = ($age === NULL) ?
 			'(?:\.([0-9]+))?' : ($age ?  "\.($age)" : '');
-		$pattern = "/^({$page_pattern})_([0-9A-F]+){$age_pattern}$/";
+		$pattern = "/^({$page_pattern})_((?:[0-9A-F]{2})+){$age_pattern}$/";
 		
 		while ($file = readdir($dir))
 		{
