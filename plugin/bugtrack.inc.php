@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.21 2005/01/23 07:17:37 henoheno Exp $
+ * $Id: bugtrack.inc.php,v 1.22 2005/03/02 13:16:49 henoheno Exp $
  */
 
 function plugin_bugtrack_init()
@@ -71,6 +71,9 @@ function plugin_bugtrack_print_form($base, $category)
 	global $_bugtrack_plugin_pagename, $_bugtrack_plugin_pagename_comment;
 	global $_bugtrack_plugin_version_comment;
 	global $script;
+	static $id = 0;
+
+	++$id;
 
 	$select_priority = '';
 	for ($i = 0; $i < count($_bugtrack_plugin_priority_list); ++$i) {
@@ -89,9 +92,10 @@ function plugin_bugtrack_print_form($base, $category)
 			$_bugtrack_plugin_state_list[$i] . '</option>' . "\n";
 
 	if (empty($category)) {
-		$encoded_category = '<input name="category" type="text" />';
+		$encoded_category = '<input name="category" id="_p_bugtrack_category_' . $id .
+			'" type="text" />';
 	} else {
-		$encoded_category = '<select name="category">';
+		$encoded_category = '<select name="category" id="_p_bugtrack_category_' . $id . '">';
 		foreach ($category as $_category) {
 			$s_category = htmlspecialchars($_category);
 			$encoded_category .= '<option value="' . $s_category . '">' .
@@ -106,36 +110,38 @@ function plugin_bugtrack_print_form($base, $category)
 <form action="$script" method="post">
  <table border="0">
   <tr>
-   <th>$_bugtrack_plugin_name</th>
-   <td><input name="name" size="20" type="text" /></td>
+   <th><label for="_p_bugtrack_name_$id">$_bugtrack_plugin_name</label></th>
+   <td><input  id="_p_bugtrack_name_$id" name="name" size="20" type="text" /></td>
   </tr>
   <tr>
-   <th>$_bugtrack_plugin_category</th>
+   <th><label for="_p_bugtrack_category_$id">$_bugtrack_plugin_category</label></th>
    <td>$encoded_category</td>
   </tr>
   <tr>
-   <th>$_bugtrack_plugin_priority</th>
-   <td><select name="priority">$select_priority</select></td>
+   <th><label for="_p_bugtrack_priority_$id">$_bugtrack_plugin_priority</label></th>
+   <td><select id="_p_bugtrack_priority_$id" name="priority">$select_priority</select></td>
   </tr>
   <tr>
-   <th>$_bugtrack_plugin_state</th>
-   <td><select name="state">$select_state</select></td>
+   <th><label for="_p_bugtrack_state_$id">$_bugtrack_plugin_state</label></th>
+   <td><select id="_p_bugtrack_state_$id" name="state">$select_state</select></td>
   </tr>
   <tr>
-   <th>$_bugtrack_plugin_pagename</th>
-   <td><input name="pagename" size="20" type="text" />$_bugtrack_plugin_pagename_comment</td>
+   <th><label for="_p_bugtrack_pagename_$id">$_bugtrack_plugin_pagename</label></th>
+   <td><input  id="_p_bugtrack_pagename_$id" name="pagename" size="20" type="text" />
+    $_bugtrack_plugin_pagename_comment</td>
   </tr>
   <tr>
-   <th>$_bugtrack_plugin_version</th>
-   <td><input name="version" size="10" type="text" />$_bugtrack_plugin_version_comment</td>
+   <th><label for="_p_bugtrack_version_$id">$_bugtrack_plugin_version</label></th>
+   <td><input  id="_p_bugtrack_version_$id" name="version" size="10" type="text" />
+    $_bugtrack_plugin_version_comment</label></td>
   </tr>
   <tr>
-   <th>$_bugtrack_plugin_summary</th>
-   <td><input name="summary" size="60" type="text" /></td>
+   <th><label for="_p_bugtrack_summary_$id">$_bugtrack_plugin_summary</label></th>
+   <td><input  id="_p_bugtrack_summary_$id" name="summary" size="60" type="text" /></td>
   </tr>
   <tr>
-   <th>$_bugtrack_plugin_body</th>
-   <td><textarea name="body" cols="60" rows="6"></textarea></td>
+   <th><label   for="_p_bugtrack_body_$id">$_bugtrack_plugin_body</label></th>
+   <td><textarea id="_p_bugtrack_body_$id" name="body" cols="60" rows="6"></textarea></td>
   </tr>
   <tr>
    <td colspan="2" align="center">
