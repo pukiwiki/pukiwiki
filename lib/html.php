@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.12 2004/11/07 12:18:14 henoheno Exp $
+// $Id: html.php,v 1.13 2004/11/07 13:09:37 henoheno Exp $
 //
 
 // 本文を出力
@@ -49,6 +49,8 @@ function catbody($title,$page,$body)
 	$_LINK['reload']   = "$script?$r_page";
 	$_LINK['rename']   = "$script?plugin=rename&amp;refer=$r_page";
 	$_LINK['rss']      = "$script?cmd=rss";
+	$_LINK['rss10']    = "$script?cmd=rss&amp;ver=1.0"; // Same as 'rdf'
+	$_LINK['rss20']    = "$script?cmd=rss&amp;ver=2.0";
 	$_LINK['search']   = "$script?cmd=search";
 	$_LINK['top']      = "$script?" . rawurlencode($defaultpage);
 	if ($trackback) {
@@ -73,6 +75,8 @@ function catbody($title,$page,$body)
 	$link_trackback = & $_LINK['trackback'];	// New!
 	$link_rdf       = & $_LINK['rdf'];		// New!
 	$link_rss       = & $_LINK['rss'];
+	$link_rss10     = & $_LINK['rss10'];		// New!
+	$link_rss20     = & $_LINK['rss20'];		// New!
 	$link_freeze    = & $_LINK['freeze'];
 	$link_unfreeze  = & $_LINK['unfreeze'];
 	$link_upload    = & $_LINK['upload'];
