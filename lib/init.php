@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.11 2004/10/10 03:36:27 henoheno Exp $
+// $Id: init.php,v 1.12 2004/10/11 03:13:09 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -79,10 +79,13 @@ $weeklabels = $_msg_week;
 
 /////////////////////////////////////////////////
 // INI_FILE: $script: 初期設定
-if (! isset($script) || $script == '') {
+
+if (isset($script)) {
+	// Init manually
+	get_script_uri($script);
+} else {
+	// Init automatically
 	$script = get_script_uri();
-	if ($script === FALSE || (php_sapi_name() == 'cgi' && ! is_url($script, TRUE)))
-		die_message('get_script_uri() failed: Please set $script at INI_FILE manually.');
 }
 
 /////////////////////////////////////////////////

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.8 2004/10/10 10:20:59 henoheno Exp $
+// $Id: func.php,v 1.9 2004/10/11 03:13:09 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -516,31 +516,47 @@ function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 }
 
 // pukiwiki.phpスクリプトのabsolute-uriを生成
-function get_script_uri()
+function get_script_uri($init_uri = '')
 {
 	static $script;
 
-	if (isset($script)) return $script;
+	if ($init_uri == '') {
+		if (isset($script)) return $script;
 
-	$script  = (SERVER_PORT == 443 ? 'https://' : 'http://');	// scheme
-	$script .= SERVER_NAME;	// host
-	$script .= (SERVER_PORT == 80 ? '' : ':' . SERVER_PORT); // port
+		// Init automatically
+		$msg     = 'get_script_uri() failed: Please set $script at INI_FILE manually';
+		$script  = (SERVER_PORT == 443 ? 'https://' : 'http://'); // scheme
+		$script .= SERVER_NAME;	// host
+		$script .= (SERVER_PORT == 80 ? '' : ':' . SERVER_PORT);  // port
 
-	// SCRIPT_NAME が'/'で始まっていない場合(cgiなど) REQUEST_URIを使ってみる
-	$path    = SCRIPT_NAME;
-	if ($path{0} != '/') {
-		if (! isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI']{0} != '/')
-			return FALSE;
+		// SCRIPT_NAME が'/'で始まっていない場合(cgiなど) REQUEST_URIを使ってみる
+		$path    = SCRIPT_NAME;
+		if ($path{0} != '/') {
+			if (! isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI']{0} != '/')
+				die_message($msg);
 
-		// REQUEST_URIをパースし、path部分だけを取り出す
-		$parse_url = parse_url($script.$_SERVER['REQUEST_URI']);
-		if (! isset($parse_url['path']) || $parse_url['path']{0} != '/')
-			return FALSE;
+			// REQUEST_URIをパースし、path部分だけを取り出す
+			$parse_url = parse_url($script . $_SERVER['REQUEST_URI']);
+			if (! isset($parse_url['path']) || $parse_url['path']{0} != '/')
+				die_message($msg);
 
-		$path = $parse_url['path'];
+			$path = $parse_url['path'];
+		}
+		$script .= $path; // path
+		if (! is_url($script, TRUE) && php_sapi_name() == 'cgi')
+			die_message($msg);
+
+	} else {
+		// Init manually
+		if (isset($script))
+			die_message('$script: Already init');
+
+		if(is_url($init_uri, TRUE)) {
+			$script = $uri;
+		} else {
+			die_message('$script: Invalid URI');
+		}
 	}
-	$script .= $path;	// path
-
 	return $script;
 }
 
