@@ -1,7 +1,7 @@
 NAME
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
-       PukiWiki 1.3.5 by
+       PukiWiki 1.3.7 by
         Copyright (C) 2001,2002,2003 by sng, PukiWiki Developers Team
         http://pukiwiki.org/
 
@@ -305,6 +305,23 @@ RDF/RSS
     *   http://pukiwiki.org/index.php?rss10
 
 更新履歴
+    *   2004-04-04 1.3.7 by PukiWiki Developers Team
+        BugTrack/547 renameプラグインが正常に動作しない?
+            [[cvs:plugin/rename.inc.php]](v1.3:r1.1.2.1)
+        BugTrack/566 [cvs] $Id が無い/二つある (マイグレーション作業向け) 
+            [[cvs:skin/default.en.css]](v1.3:r1.13.2.1)
+            [[cvs:skin/default.ja.css]](v1.3:r1.14.2.1)
+            [[cvs:skin/default.js]](v1.3:r1.1.2.1)
+            [[cvs:skin/pukiwiki.skin.en.php]](v1.3:r1.14.2.4)
+            [[cvs:skin/pukiwiki.skin.ja.php]](v1.3:r1.15.2.4)
+            [[cvs:plugin/recent.inc.php]](v1.3:r1.5.2.1)
+            [[cvs:plugin/showrss.inc.php]](v1.3:r1.1.2.2)
+            [[cvs:en.lng]](v1.3:r1.8.2.2)
+            [[cvs:ja.lng]](v1.3:r1.10.2.1)
+            [[cvs:make_link.php]](v1.3:r1.6.2.1)
+        デフォルトの$adminpassが md5("pass") ではなかった 
+            [[cvs:pukiwiki.ini.php]](v1.3:r1.16.2.2)
+
     *   2003-11-10 1.3.6 by PukiWiki Developers Team
         BugTrack/278 配布ファイル展開だけで必須ディレクトリを作成する
         BugTrack/351 imgプラグインでインライン要素のタグにclear属性が
