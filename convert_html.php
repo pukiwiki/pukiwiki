@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.6 2003/01/31 07:04:58 panda Exp $
+// $Id: convert_html.php,v 1.7 2003/01/31 09:49:03 panda Exp $
 //
 
 function &convert_html(&$lines)
@@ -318,7 +318,8 @@ class ListElement extends Block
 		$this->level = $level;
 		$this->head = $head;
 		$this->insert($obj);
-		if (is_object($obj->last)) {
+		$this->last = NULL;
+		if (isset($obj->last) and is_object($obj->last)) {
 			$this->last =& $obj->last;
 		}
 	}
