@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ls2.inc.php,v 1.16 2004/07/24 00:38:15 henoheno Exp $
+// $Id: ls2.inc.php,v 1.17 2004/07/24 00:43:28 henoheno Exp $
 //
 
 /*
@@ -93,7 +93,7 @@ function plugin_ls2_convert()
 	if ($params['link'])
 	{
 		$tmp = array();
-		$tmp[] = 'plugin=ls2&prefix=' . $prefix;
+		$tmp[] = 'plugin=ls2&prefix=' . rawurlencode($prefix);
 		if (isset($params['title']))
 		{
 			$tmp[] = 'title=1';
