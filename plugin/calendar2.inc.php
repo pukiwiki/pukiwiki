@@ -1,9 +1,9 @@
 <?
-// $Id: calendar2.inc.php,v 1.5 2002/07/01 07:08:57 masui Exp $
+// $Id: calendar2.inc.php,v 1.6 2002/07/03 08:46:19 masui Exp $
 
 function plugin_calendar2_convert()
 {
-	global $script,$weeklabels,$vars,$command,$WikiName,$BracketName;
+	global $script,$weeklabels,$vars,$command,$WikiName,$BracketName,$post,$get;
 	
 	$args = func_get_args();
 	
@@ -206,8 +206,11 @@ function plugin_calendar2_convert()
 	$page = sprintf("[[%s%4d-%02d-%02d]]", $prefix, $today[year], $today[mon], $today[mday]);
 	$page_url = rawurlencode($page);
 	if(is_page($page)) {
+		$page_ = $vars['page'];
+		$get['page'] = $post['page'] = $vars['page'] = $page;
 		$str = convert_html(join("",file(get_filename(encode($page)))));
 		$str .= "<hr /><a class=\"small\" href=\"$script?cmd=edit&amp;page=$page\">[この日記を編集]</a>";
+		$get['page'] = $post['page'] = $vars['page'] = $page_;
 	}
 	else {
 		$str = make_link(sprintf('[[%s%4d-%02d-%02d]]',$prefix, $today[year], $today[mon], $today[mday])).'は空です。';
