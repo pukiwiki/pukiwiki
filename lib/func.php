@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.20 2004/12/25 00:14:52 henoheno Exp $
+// $Id: func.php,v 1.21 2004/12/30 07:30:55 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -242,7 +242,9 @@ function arg_check($str)
 // ページ名のエンコード
 function encode($key)
 {
-	return ($key == '') ? '' : strtoupper(join('', unpack('H*0', $key)));
+	return ($key == '') ? '' : strtoupper(bin2hex($key));
+	// Equal to strtoupper(join('', unpack('H*0', $key)));
+	// But PHP 4.3.10 says 'Warning: unpack(): Type H: outside of string in ...'
 }
 
 // ページ名のデコード
