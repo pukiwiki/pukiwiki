@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: aname.inc.php,v 1.13 2003/04/30 08:42:55 arino Exp $
+// $Id: aname.inc.php,v 1.14 2003/07/03 05:09:34 arino Exp $
 //
 
 function plugin_aname_inline()
@@ -29,16 +29,9 @@ function plugin_aname_convert()
 	
 	$body = count($args) ? preg_replace('/<\/?a[^>]*>/','',array_pop($args)) : '';
 	
-	// Prior to PHP 4.2.0, array_search() returns NULL on failure instead of FALSE.
-	
-	$b_super = array_search('super',$args);
-	$class = ($b_super !== FALSE and $b_super !== NULL) ? 'anchor_super' : 'anchor';
-	
-	$b_full = array_search('full',$args);
-	$url = ($b_full !== FALSE and $b_full !== NULL) ? "$script?".rawurlencode($vars['page']) : '';
-	
-	$b_noid = array_search('noid',$args);
-	$attr_id = ($b_noid !== FALSE and $b_noid !== NULL) ? '' : " id=\"$id\"";
+	$class   = in_array('super',$args) ? 'anchor_super' : 'anchor';
+	$url     = in_array('full',$args)  ? "$script?".rawurlencode($vars['page']) : '';
+	$attr_id = in_array('noid',$args)  ? '' : " id=\"$id\"";
 	
 	return "<a class=\"$class\"$attr_id href=\"$url#$id\" title=\"$id\">$body</a>";
 }
