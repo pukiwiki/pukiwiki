@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.18 2003/02/15 14:00:09 panda Exp $
+// $Id: convert_html.php,v 1.19 2003/02/15 14:04:21 panda Exp $
 //
 function &convert_html(&$lines)
 {
@@ -421,7 +421,7 @@ class TableCell extends Block
 		if (count($this->style)) {
 			$param .= ' style="'.join(' ',$this->style).'"';
 		}
-		return "\n<{$this->tag}$param>".parent::toString()."</{$this->tag>\n";
+		return "\n<{$this->tag}$param>".parent::toString()."</{$this->tag}>\n";
 	}
 }
 class Table extends Block
