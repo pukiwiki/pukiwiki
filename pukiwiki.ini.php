@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.16.2.4 2004/06/19 14:26:43 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.16.2.5 2004/06/24 13:59:21 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -41,15 +41,15 @@ define('IMAGE_DIR','./image/');
 
 /////////////////////////////////////////////////
 // Language
-define("LANG","ja");
+define("LANG", 'ja');	// Select 'ja' or 'en'
 
 /////////////////////////////////////////////////
-// スキンファイルの場所。
+// 言語ファイルの場所
+define('LANG_FILE', LANG . '.lng');
+
+/////////////////////////////////////////////////
+// スキンファイルの場所
 define("SKIN_FILE","./skin/pukiwiki.skin.".LANG.".php");
-
-/////////////////////////////////////////////////
-// 言語ファイルの読み込み(編集しないでください)
-require(LANG.".lng");
 
 /////////////////////////////////////////////////
 // index.php などに変更した場合のスクリプト名の設定

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.20.2.11 2004/04/03 17:55:33 arino Exp $
+// $Id: init.php,v 1.20.2.12 2004/06/24 13:59:21 henoheno Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -10,21 +10,29 @@ define("INI_FILE","./pukiwiki.ini.php");
 
 ini_set('error_reporting', 5);
 define("S_VERSION","1.3.7");
-define("S_COPYRIGHT","<strong>\"PukiWiki\" ".S_VERSION."</strong> Copyright &copy; 2001,2002,2003 <a href=\"http://pukiwiki.org\">PukiWiki Developers Team</a>. License is <a href=\"http://www.gnu.org/\">GNU/GPL</a>.<BR>Based on \"PukiWiki\" 1.3 by <a href=\"http://factage.com/sng/\">sng</a>");
+define("S_COPYRIGHT","<strong>\"PukiWiki\" ".S_VERSION."</strong> Copyright &copy; 2001-2004 <a href=\"http://pukiwiki.org\">PukiWiki Developers Team</a>. License is <a href=\"http://www.gnu.org/\">GNU/GPL</a>.<BR>Based on \"PukiWiki\" 1.3 by <a href=\"http://factage.com/sng/\">sng</a>");
 define("UTIME",time());
-define("HTTP_USER_AGENT",$HTTP_SERVER_VARS["HTTP_USER_AGENT"]);
-define("PHP_SELF",$HTTP_SERVER_VARS["PHP_SELF"]);
-define("SERVER_NAME",$HTTP_SERVER_VARS["SERVER_NAME"]);
+
+/////////////////////////////////////////////////
+// 初期設定 (サーバ変数)
+foreach (array('HTTP_USER_AGENT','PHP_SELF','SERVER_NAME','SERVER_SOFTWARE','SERVER_ADMIN') as $key) {
+	define($key, array_key_exists($key,$HTTP_SERVER_VARS) ? $HTTP_SERVER_VARS[$key] : '');
+}
 
 define("MUTIME",getmicrotime());
 
 if($script == "") {
 	$script = get_script_uri();
+	if ($script === FALSE or (php_sapi_name() == 'cgi' and !is_url($script,TRUE))) {
+		die_message("get_script_uri() failed: Please set \$script at INI_FILE manually.");
+	}
 }
 
 $WikiName = '[A-Z][a-z]+(?:[A-Z][a-z]+)+';
+
 //$BracketName = '\[\[(:?[^\s\]#&<>":]+:?)\]\]';
 $BracketName = '\[\[(?!\/|\.\/|\.\.\/)(:?[^\s\]#&<>":]+:?)\]\](?<!\/\]\])';
+
 $InterWikiName = "\[\[(\[*[^\s\]]+?\]*):(\[*[^>\]]+?\]*)\]\]";
 
 $LinkPattern = "/( (?# <1>:all)
@@ -112,55 +120,73 @@ $arg = sanitize_null_character($arg);
 $update_exec = "";
 $content_id = 0;
 
-// 設定ファイルの読込
-if(!file_exists(INI_FILE)||!is_readable(INI_FILE))
-	die_message(INI_FILE." is not found.");
-require(INI_FILE);
-
-if(!file_exists(LANG.".lng")||!is_readable(LANG.".lng"))
-	die_message(LANG.".lng(language file) is not found.");
-
-
-if($usefacemark) {
-  $line_rules = array_merge($line_rules,$facemark_rules);
+// ファイル読み込み
+$die = FALSE; $message = '';
+foreach(array('INI_FILE', 'LANG_FILE') as $file){
+	if (!file_exists(constant($file)) || !is_readable(constant($file))) {
+		$die = TRUE;
+		$message = "${message}File is not found. ($file)\n";
+	} else {
+		require(constant($file));
+	}
 }
+if ($die) { die_message(nl2br("\n\n" . $message . "\n")); }
+
+
+// フェイスマークを$line_rulesに加える
+if ($usefacemark) { $line_rules += $facemark_rules; }
+
 $user_rules = array_merge($str_rules,$line_rules);
 
 $note_id = 1;
 $foot_explain = array();
 
-// 変数のチェック
-if(php_sapi_name()=='cgi' && !preg_match("/^https?:\/\/[-a-zA-Z0-9\@:;_.]+\//",$script))
-	die_message("please set '\$script' in ".INI_FILE);
+// INI_FILE: $script: 初期設定
+if (!isset($script) or $script == '') {
+	$script = get_script_uri();
+	if ($script === FALSE or (php_sapi_name() == 'cgi' and !is_url($script,TRUE))) {
+		die_message("get_script_uri() failed: Please set \$script at INI_FILE manually.");
+	}
+}
 
+// ディレクトリのチェック
+$die = FALSE; $message = $temp = '';
+
+foreach(array('DATA_DIR', 'DIFF_DIR', 'BACKUP_DIR', 'CACHE_DIR') as $dir){
+        if(!is_writable(constant($dir))) {
+                $die = TRUE;
+                $temp = "${temp}Directory is not found or not writable ($dir)\n";
+        }
+}
+if ($temp) { $message = "$temp\n"; }
 
 // 設定ファイルの変数チェック
-$wrong_ini_file = "";
-if(!isset($rss_max)) $wrong_ini_file .= '$rss_max ';
-if(!isset($page_title)) $wrong_ini_file .= '$page_title ';
-if(!isset($note_hr)) $wrong_ini_file .= '$note_hr ';
-if(!isset($related_link)) $wrong_ini_file .= '$related_link ';
-if(!isset($show_passage)) $wrong_ini_file .= '$show_passage ';
-if(!isset($rule_related_str)) $wrong_ini_file .= '$rule_related_str ';
-if(!isset($load_template_func)) $wrong_ini_file .= '$load_template_func ';
-if(!defined("LANG")) $wrong_ini_file .= 'LANG ';
-if(!defined("PLUGIN_DIR")) $wrong_ini_file .= 'PLUGIN_DIR ';
+$temp = '';
+foreach(array('rss_max', 'page_title', 'note_hr', 'related_link', 'show_passage',
+        'rule_related_str', 'load_template_func') as $var){
+        if (!isset(${$var})) { $temp .= "\$$var\n"; }
+}
+if ($temp) {
+        $die = TRUE;
+        $message = "${message}Variable(s) not found: (Maybe the old *.ini.php?)\n" . $temp . "\n";
+}
 
-if(!is_writable(DATA_DIR))
-	die_message("DATA_DIR is not found or not writable.");
-if(!is_writable(DIFF_DIR))
-	die_message("DIFF_DIR is not found or not writable.");
-if($do_backup && !is_writable(BACKUP_DIR))
-	die_message("BACKUP_DIR is not found or not writable.");
-if($wrong_ini_file)
-	die_message("The setting file runs short of information.<br>The version of a setting file may be old.<br><br>These option are not found : $wrong_ini_file");
+$temp = '';
+foreach(array('LANG', 'PLUGIN_DIR') as $def){
+        if (!defined($def)) $temp .= "$def\n";
+}
+if ($temp) {
+        $die = TRUE;
+        $message = "${message}Define(s) not found: (Maybe the old *.ini.php?)\n" . $temp . "\n";
+}
 
-if(!file_exists(get_filename(encode($defaultpage))))
-	touch(get_filename(encode($defaultpage)));
-if(!file_exists(get_filename(encode($whatsnew))))
-	touch(get_filename(encode($whatsnew)));
-if(!file_exists(get_filename(encode($interwiki))))
-	touch(get_filename(encode($interwiki)));
+if($die){ die_message(nl2br("\n\n" . $message)); }
+
+// 必須のページが存在しなければ、空のファイルを作成する
+$pages = array($defaultpage, $whatsnew, $interwiki);
+foreach($pages as $page){
+	if (!file_exists(get_filename(encode($page)))) { touch(get_filename(encode($page))); }
+}
 
 $ins_date = date($date_format,UTIME);
 $ins_time = date($time_format,UTIME);
