@@ -1,8 +1,8 @@
 <?php
-// $Id: online.inc.php,v 1.4 2002/11/29 00:09:01 panda Exp $
+// $Id: online.inc.php,v 1.4.2.1 2004/06/20 05:46:09 henoheno Exp $
 
 // user list file
-define(USR_LST, "counter/user.dat");
+define('USR_LST', COUNTER_DIR.'user.dat');
 // time out sec
 define(TIMEOUT, 300);
 

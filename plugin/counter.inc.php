@@ -5,11 +5,8 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: counter.inc.php,v 1.5.2.1 2003/01/27 04:13:29 panda Exp $
+ * $Id: counter.inc.php,v 1.5.2.2 2004/06/20 05:42:36 henoheno Exp $
  */
-
-// counter file
-define(COUNTER_DIR, "./counter/");
 
 function plugin_counter_convert()
 {
