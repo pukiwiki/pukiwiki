@@ -12,7 +12,7 @@
  *  2002.06.17: plugin_recent_init()を設定
  *  2002.07.02: <ul>による出力に変更し構造化
  *
- * $Id: recent.inc.php,v 1.12 2004/09/04 14:16:30 henoheno Exp $
+ * $Id: recent.inc.php,v 1.13 2004/09/04 14:26:52 henoheno Exp $
  */
 
 // RecentChangesのキャッシュ
@@ -20,7 +20,7 @@ define('PLUGIN_RECENT_CACHE', CACHE_DIR . 'recent.dat');
 
 function plugin_recent_convert()
 {
-	global $script, $date_format;
+	global $script, $vars, $date_format;
 	global $_recent_plugin_frame;
 
 	if (! file_exists(PLUGIN_RECENT_CACHE)) return '';
@@ -48,7 +48,12 @@ function plugin_recent_convert()
 		$s_page = htmlspecialchars($page);
 		$r_page = rawurlencode($page);
 		$pg_passage = get_pg_passage($page, FALSE);
-		$items .=" <li><a href=\"$script?$r_page\" title=\"$s_page $pg_passage\">$s_page</a></li>\n";
+		if($page == $vars['page']) {
+			// No need to link itself, notifies where you just read
+			$items .= " <li><span title=\"$s_page $pg_passage\">$s_page</span></li>\n";
+		} else {
+			$items .= " <li><a href=\"$script?$r_page\" title=\"$s_page $pg_passage\">$s_page</a></li>\n";
+		}
 	}
 	if (! empty($lines)) $items .= "</ul>\n";
 
