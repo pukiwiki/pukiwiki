@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.38 2003/05/14 10:13:30 arino Exp $
+// $Id: make_link.php,v 1.39 2003/05/17 11:12:10 arino Exp $
 //
 
 // リンクを付加する
@@ -745,6 +745,7 @@ class Link_rules extends Link
 function make_pagelink($page,$alias='',$anchor='',$refer='')
 {
 	global $script,$vars,$show_title,$show_passage,$link_compact,$related;
+	global $_symbol_noexists;
 	
 	$s_page = htmlspecialchars(strip_bracket($page));
 	$s_alias = ($alias == '') ? $s_page : $alias;
@@ -770,9 +771,12 @@ function make_pagelink($page,$alias='',$anchor='',$refer='')
 	}
 	else
 	{
-		return $link_compact ?
-			"$s_alias<a href=\"$script?cmd=edit&amp;page=$r_page$r_refer\">?</a>" :
-			"<span class=\"noexists\">$s_alias<a href=\"$script?cmd=edit&amp;page=$r_page$r_refer\">?</a></span>";
+		$retval = "$s_alias<a href=\"$script?cmd=edit&amp;page=$r_page$r_refer\">$_symbol_noexists</a>";
+		if (!$link_compact)
+		{
+			$retval = "<span class=\"noexists\">$retval</span>";
+		}
+		return $retval;
 	}
 }
 // 相対参照を展開
