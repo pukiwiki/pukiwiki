@@ -1,18 +1,24 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.8 2005/01/13 13:42:21 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.9 2005/01/15 03:58:07 henoheno Exp $
 //
 // tDiary-wrapper skin
 
 // Select theme
 if (! defined('TDIARY_THEME')) define('TDIARY_THEME', 'loose-leaf'); // Default
 
-// Show someting with <div class="calendar"> design
-//   1    = Show reload URL
-//   0    = Show topicpath
+// Show link(s) at your choice, with <div class="calendar"> design
+// NOTE: Some theme become looking worse with this!
 //   NULL = Show nothing
+//   0    = Show topicpath
+//   1    = Show reload URL
 if (! defined('TDIARY_CALENDAR_DESIGN'))
-	define('TDIARY_CALENDAR_DESIGN', NULL);
+	define('TDIARY_CALENDAR_DESIGN', NULL); // NULL, 0, 1
+
+// Show toolbar at your choice, with <div class="footer"> design
+// NOTE: Some theme become looking worse with this!
+if (! defined('PKWK_SKIN_SHOW_TOOLBAR'))
+	define('PKWK_SKIN_SHOW_TOOLBAR', 0); // 0, 1
 
 // --------
 // Prohibit direct access
@@ -482,13 +488,84 @@ if ($disable_reverse_link === TRUE) {
 <?php } // if ($menu && $sidebar == 'bottom') ?>
 
 
-<!-- Copyright etc -->
 <div class="footer">
+<?php if (PKWK_SKIN_SHOW_TOOLBAR) { ?>
+<!-- Toolbar -->
+<?php
+
+// Set skin-specific images
+$_IMAGE['skin']['logo']     = 'pukiwiki.png';
+$_IMAGE['skin']['reload']   = 'reload.png';
+$_IMAGE['skin']['new']      = 'new.png';
+$_IMAGE['skin']['edit']     = 'edit.png';
+$_IMAGE['skin']['freeze']   = 'freeze.png';
+$_IMAGE['skin']['unfreeze'] = 'unfreeze.png';
+$_IMAGE['skin']['diff']     = 'diff.png';
+$_IMAGE['skin']['upload']   = 'file.png';
+$_IMAGE['skin']['copy']     = 'copy.png';
+$_IMAGE['skin']['rename']   = 'rename.png';
+$_IMAGE['skin']['top']      = 'top.png';
+$_IMAGE['skin']['list']     = 'list.png';
+$_IMAGE['skin']['search']   = 'search.png';
+$_IMAGE['skin']['recent']   = 'recentchanges.png';
+$_IMAGE['skin']['backup']   = 'backup.png';
+$_IMAGE['skin']['help']     = 'help.png';
+$_IMAGE['skin']['rss']      = 'rss.png';
+$_IMAGE['skin']['rss10']    = & $_IMAGE['skin']['rss'];
+$_IMAGE['skin']['rss20']    = 'rss20.png';
+$_IMAGE['skin']['rdf']      = 'rdf.png';
+
+function _toolbar($key, $x = 20, $y = 20){
+	$lang  = $GLOBALS['_LANG']['skin'];
+	$link  = $GLOBALS['_LINK'];
+	$image = $GLOBALS['_IMAGE']['skin'];
+	if (! isset($lang[$key]) ) { echo 'LANG NOT FOUND';  return FALSE; }
+	if (! isset($link[$key]) ) { echo 'LINK NOT FOUND';  return FALSE; }
+	if (! isset($image[$key])) { echo 'IMAGE NOT FOUND'; return FALSE; }
+
+	echo '<a href="' . $link[$key] . '">' .
+		'<img src="' . IMAGE_DIR . $image[$key] . '" width="' . $x . '" height="' . $y . '" ' .
+			'alt="' . $lang[$key] . '" title="' . $lang[$key] . '" />' .
+		'</a>';
+	return TRUE;
+}
+?>
+ <?php _toolbar('top') ?>
+
+<?php if ($is_page) { ?>
+ &nbsp;
+ <?php _toolbar('edit') ?>
+ <?php if ($is_read && $function_freeze) { ?>
+  <?php if (! $is_freeze) { _toolbar('freeze'); } else { _toolbar('unfreeze'); } ?>
+ <?php } ?>
+ <?php _toolbar('diff') ?>
+<?php if ($do_backup) { ?>
+  <?php _toolbar('backup') ?>
+<?php } ?>
+ <?php if ((bool)ini_get('file_uploads')) { ?>
+  <?php _toolbar('upload') ?>
+ <?php } ?>
+ <?php _toolbar('copy') ?>
+ <?php _toolbar('rename') ?>
+ <?php _toolbar('reload') ?>
+<?php } ?>
+ &nbsp;
+ <?php _toolbar('new')    ?>
+ <?php _toolbar('list')   ?>
+ <?php _toolbar('search') ?>
+ <?php _toolbar('recent') ?>
+ &nbsp; <?php _toolbar('help') ?>
+ &nbsp; <?php _toolbar('rss10', 36, 14) ?>
+ <br/>
+<?php } // PKWK_SKIN_SHOW_TOOLBAR ?>
+
+<!-- Copyright etc -->
  Site admin: <a href="<?php echo $modifierlink ?>"><?php echo $modifier ?></a><p />
  <?php echo S_COPYRIGHT ?>.
  Powered by PHP <?php echo PHP_VERSION ?><br />
  HTML convert time: <?php echo $taketime ?> sec.
-</div>
+
+</div><!-- class="footer" -->
 
 <?php if ($menu && ($sidebar != 'top' && $sidebar != 'bottom')) { ?>
 </div><!-- class="main" -->
