@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.11 2003/02/03 12:46:56 panda Exp $
+// $Id: convert_html.php,v 1.12 2003/02/04 01:15:40 panda Exp $
 //
 
 function &convert_html(&$lines)
@@ -575,10 +575,6 @@ class Pre extends Block
 	function Pre($text)
 	{
 		parent::Block();
-		$tab = 8;
-		while (preg_match('/^([^\t]*)(\t+)(.+)$/',$text,$m)) {
-			$text = $m[1].str_repeat(' ',strlen($m[2]) * $tab - strlen($m[1]) % $tab).$m[3];
-		}
 		$this->elements[] = htmlspecialchars($text,ENT_NOQUOTES);
 	}
 	function canContain(&$obj)
@@ -610,12 +606,12 @@ class Div extends Block
 	}
 	function toString()
 	{
-		if (preg_match("/^\#([^\(]+)(.*)$/",$this->text,$out) and exist_plugin_convert($out[1])) {
+		if (preg_match("/^\#([^\(]+)(.*)/",$this->text,$out) and exist_plugin_convert($out[1])) {
 			if ($out[2]) {
-				$_plugin = preg_replace("/^\#([^\(]+)\((.*)\)$/ex","do_plugin_convert('$1','$2')",$this->text);
+				$_plugin = preg_replace("/^\#([^\(]+)\((.*)\)/ex","do_plugin_convert('$1','$2')",$this->text);
 			}
 			else {
-				$_plugin = preg_replace("/^\#([^\(]+)$/ex","do_plugin_convert('$1','$2')",$this->text);
+				$_plugin = preg_replace("/^\#([^\(]+)/ex","do_plugin_convert('$1','$2')",$this->text);
 			}
 			$text = "\t$_plugin";
 		}
@@ -674,11 +670,10 @@ class Body extends Block
 		$last =& $this;
 		
 		foreach ($lines as $line) {
+			
 			if (substr($line,0,2) == '//') { //コメントは処理しない
 				continue;
 			}
-			
-			$line = rtrim($line);
 			
 			$align = '';
 			if (preg_match('/^(LEFT|CENTER|RIGHT):(.*)$/',$line,$matches)) {
@@ -688,6 +683,8 @@ class Body extends Block
 				}
 				$line = $matches[2];
 			}
+			
+			$line = preg_replace("/[\r\n]*$/",'',$line);
 			
 			// 行頭文字
 			$head = substr($line,0,1);
@@ -706,7 +703,7 @@ class Body extends Block
 			}
 			else {
 				if (substr($line,-1) == '~') {
-					$line .= "\r";
+					$line = substr($line,0,-1)."\r";
 				}
 				if      ($head == '-') { // UList
 					$last =& $last->add(new UList($line)); // inline
@@ -770,7 +767,6 @@ class Body extends Block
 		// 関連するページ
 		// <p>のときは行頭から、<del>のときは他の要素の子要素として存在
 		$text = preg_replace('/<(p|del)>#related<\/\1>/e','make_related($vars[\'page\'],\'$1\')',$text);
-		
 		return $text;
 	}
 }
