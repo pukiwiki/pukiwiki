@@ -5,7 +5,7 @@
  * CopyRight 2002 S.YOSHIMURA GPL2
  * http://masui.net/pukiwiki/ yosimura@excellence.ac.jp
  *
- * $Id: versionlist.inc.php,v 1.10 2004/06/20 06:31:02 henoheno Exp $
+ * $Id: versionlist.inc.php,v 1.11 2004/07/24 09:45:38 henoheno Exp $
  */
 
 function plugin_versionlist_action()
@@ -21,8 +21,10 @@ function plugin_versionlist_action()
 function plugin_versionlist_convert()
 {
 	/* 探索ディレクトリ設定 */
-	$SCRIPT_DIR = array(SUB_DIR, PLUGIN_DIR, SKIN_DIR);
-	if (SUB_DIR != './'){ array_unshift($SCRIPT_DIR, './'); }
+	$SCRIPT_DIR = array('./');
+	if (SUB_DIR   != './') array_push($SCRIPT_DIR, SUB_DIR);
+	if (DATA_HOME != './' && DATA_HOME != SUB_DIR) array_push($SCRIPT_DIR, DATA_HOME);
+	array_push($SCRIPT_DIR, PLUGIN_DIR, SKIN_DIR);
 
 	$comments = array();
 
