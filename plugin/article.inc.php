@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.15 2003/07/03 05:35:14 arino Exp $
+ $Id: article.inc.php,v 1.16 2003/07/10 03:21:12 arino Exp $
  
  */
 
@@ -43,9 +43,6 @@ define('NAME_FORMAT','[[$name]]');
 /////////////////////////////////////////////////
 // 題名の挿入フォーマット
 define('SUBJECT_FORMAT','**$subject');
-/////////////////////////////////////////////////
-// 題名が未記入の場合の表記 
-define('NO_SUBJECT','無題');
 /////////////////////////////////////////////////
 // 挿入する位置 1:欄の前 0:欄の後
 define('ARTICLE_INS',0);
@@ -75,22 +72,16 @@ function plugin_article_action()
 {
 	global $script,$post,$vars,$cols,$rows,$now;
 	global $_title_collided,$_msg_collided,$_title_updated;
-	global $_mailto;
+	global $_mailto,$_no_subject,$_no_name;
 	
 	if ($post['msg'] == '') {
-		return;
+		return array('msg'=>'','body'=>'');
 	}
 	
-	$postdata = '';
-	$postdata_old  = get_source($post['refer']);
-	$article_no = 0;
-	
-	if ($post['name'] != '') {
-		$name = str_replace('$name',$post['name'],NAME_FORMAT);
-	}
-	
-	$subject = str_replace('$subject',$post['subject'] == '' ? NO_SUBJECT : $post['subject'],SUBJECT_FORMAT);
-	
+	$name = ($post['name'] == '') ? $_no_name : $post['name'];
+	$name = ($name == '') ? '' : str_replace('$name',$name,NAME_FORMAT);
+	$subject = ($post['subject'] == '') ? $_no_subject : $post['subject'];
+	$subject = ($subject == '') ? '' : str_replace('$subject',$subject,SUBJECT_FORMAT);
 	$article  = "$subject\n>$name ($now)~\n~\n";
 	
 	$msg = rtrim($post['msg']);
@@ -104,6 +95,10 @@ function plugin_article_action()
 	if (ARTICLE_COMMENT) {
 		$article .= "\n\n#comment\n";
 	}
+	
+	$postdata = '';
+	$postdata_old  = get_source($post['refer']);
+	$article_no = 0;
 	
 	foreach($postdata_old as $line) {
 		if (!ARTICLE_INS) {

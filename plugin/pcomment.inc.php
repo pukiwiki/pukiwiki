@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.22 2003/07/04 09:20:20 arino Exp $
+// $Id: pcomment.inc.php,v 1.23 2003/07/10 03:21:12 arino Exp $
 //
 
 /*
@@ -91,8 +91,7 @@ function plugin_pcomment_convert()
 		'below' =>FALSE,
 		'above' =>FALSE,
 		'reply' =>FALSE,
-		'_args' =>array(),
-		'_done' =>FALSE
+		'_args' =>array()
 	);
 	array_walk(func_get_args(), 'pcmt_check_arg', &$params);
 	
@@ -183,7 +182,7 @@ EOD;
 function pcmt_insert()
 {
 	global $script,$vars,$post,$now;
-	global $_title_updated,$_pcmt_messages;
+	global $_title_updated,$_no_name,$_pcmt_messages;
 	
 	$page = $post['page'];
 	if (!is_pagename($page))
@@ -199,9 +198,10 @@ function pcmt_insert()
 	);
 	
 	//コメントフォーマットを適用
-	$msg = sprintf(PCMT_FORMAT_MSG, rtrim($post['msg']));
-	$name = ($post['name'] == '') ? '' :  sprintf(PCMT_FORMAT_NAME, $post['name']);
-	$date = ($post['nodate'] == '1') ? '' : sprintf(PCMT_FORMAT_DATE, $now);
+	$msg = sprintf(PCMT_FORMAT_MSG,rtrim($post['msg']));
+	$name = $post['name'] == '' ? $_no_name : $post['name'];
+	$name = ($name == '') ? '' : sprintf(PCMT_FORMAT_NAME,$name);
+	$date = ($post['nodate'] == '1') ? '' : sprintf(PCMT_FORMAT_DATE,$now);
 	if ($date != '' or $name != '')
 	{
 		$msg = str_replace("\x08MSG\x08", $msg,  PCMT_FORMAT);

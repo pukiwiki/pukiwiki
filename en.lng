@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.19 2003/07/03 06:39:17 arino Exp $
+// $Id: en.lng,v 1.20 2003/07/10 03:21:12 arino Exp $
 //
 // PukiWiki message file (english)
 
@@ -83,6 +83,13 @@ $_tb_header_Excerpt = 'Excerpt:';
 $_tb_header_Weblog = 'Weblog:';
 $_tb_header_Tracked = 'Tracked:';
 $_tb_date = 'F j, Y, g:i A';
+
+/////////////////////////////////////////////////
+// no subject (article)
+$_no_subject = 'no subject';
+/////////////////////////////////////////////////
+// no name (article,comment,pcomment)
+$_no_name = '';
 
 ///////////////////////////////////////
 // plug-in message

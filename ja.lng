@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.19 2003/07/03 06:14:20 arino Exp $
+// $Id: ja.lng,v 1.20 2003/07/10 03:21:12 arino Exp $
 //
 // PukiWiki message file (japanese)
 
@@ -83,6 +83,13 @@ $_tb_header_Excerpt = '要約:';
 $_tb_header_Weblog = 'Weblog:';
 $_tb_header_Tracked = '日時:';
 $_tb_date = 'Y年n月j日 H:i:s';
+
+/////////////////////////////////////////////////
+// 題名が未記入の場合の表記 (article)
+$_no_subject = '無題';
+/////////////////////////////////////////////////
+// 名前が未記入の場合の表記 (article,comment,pcomment)
+$_no_name = '';
 
 ///////////////////////////////////////
 // plug-in message
