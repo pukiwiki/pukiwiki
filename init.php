@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.89 2004/07/11 11:11:13 henoheno Exp $
+// $Id: init.php,v 1.90 2004/07/18 09:25:13 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -169,9 +169,9 @@ foreach (array('msg', 'pass') as $key) {
 	if (isset($_GET[$key])) die_message("Sorry, already reserved: $key=");
 }
 
-$_GET    = sanitize($_GET);    $get    = & $_GET;
-$_POST   = sanitize($_POST);   $post   = & $_POST;
-$_COOKIE = sanitize($_COOKIE); $cookie = & $_COOKIE;
+$_GET    = input_filter($_GET);    $get    = & $_GET;
+$_POST   = input_filter($_POST);   $post   = & $_POST;
+$_COOKIE = input_filter($_COOKIE); $cookie = & $_COOKIE;
 
 // Expire risk
 unset($HTTP_GET_VARS, $HTTP_POST_VARS);	//, 'SERVER', 'ENV', 'SESSION', ...
@@ -230,7 +230,7 @@ if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING']) {
 	$arg = $_SERVER['argv'][0];
 }
 // \0 除去
-$arg = sanitize($arg);
+$arg = input_filter($arg);
 
 // unset QUERY_STRINGs
 foreach (array('QUERY_STRING', 'argv', 'argc') as $key) {
@@ -259,7 +259,7 @@ unset($matches);
 /////////////////////////////////////////////////
 // GET + POST = $vars
 
-$_REQUEST = sanitize($_REQUEST);
+$_REQUEST = input_filter($_REQUEST);
 $vars = & $_REQUEST;
 
 // 入力チェック: cmd, plugin の文字列は英数字以外ありえない
@@ -302,7 +302,7 @@ if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars))
 	}		
 	$arg = rawurldecode($arg);
 	$arg = strip_bracket($arg);
-	$arg = sanitize($arg);
+	$arg = input_filter($arg);
 
 	$get['cmd']  = $post['cmd']  = $vars['cmd']  = 'read';
 	$get['page'] = $post['page'] = $vars['page'] = $arg;
