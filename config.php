@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: config.php,v 1.6 2003/07/06 03:13:48 arino Exp $
+// $Id: config.php,v 1.7 2003/08/02 02:02:44 arino Exp $
 //
 /*
  * プラグインの設定をPukiWikiのページに記述する
@@ -37,7 +37,7 @@ class Config
 	// ページ名
 	var $name,$page;
 	// 要素
-	var $objs;
+	var $objs = array();
 	
 	function Config($name)
 	{
