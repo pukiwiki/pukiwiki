@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.95 2003/09/03 02:01:02 arino Exp $
+// $Id: html.php,v 1.96 2003/10/27 06:26:54 arino Exp $
 //
 
 // 本文を出力
@@ -35,6 +35,8 @@ function catbody($title,$page,$body)
 	$link_freeze   = "$script?cmd=freeze&amp;page=$r_page";
 	$link_unfreeze = "$script?cmd=unfreeze&amp;page=$r_page";
 	$link_upload   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
+	$link_template = "$script?plugin=template&amp;refer=$r_page";
+	$link_rename   = "$script?plugin=rename&amp;refer=$r_page";
 	
 	// ページの表示時TRUE(バックアップの表示、RecentChangesの表示を除く)
 	$is_page = (is_pagename($_page) and !arg_check('backup') and $_page != $whatsnew);

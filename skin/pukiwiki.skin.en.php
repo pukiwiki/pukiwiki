@@ -142,10 +142,19 @@
  &nbsp;
  <a href="<?php echo $script ?>?plugin=newpage"><img src="./image/new.png" width="20" height="20" alt="New" title="New" /></a>
  <a href="<?php echo $link_edit ?>"><img src="./image/edit.png" width="20" height="20" alt="Edit" title="Edit" /></a>
+<?php   if ($is_read and $function_freeze) { ?>
+<?php     if ($is_freeze) { ?>
+ <a href="<?php echo $link_unfreeze ?>"><img src="./image/unfreeze.png" width="20" height="20" alt="Unfreeze" title="Unfreeze" /></a>
+<?php     } else { ?>
+ <a href="<?php echo $link_freeze ?>"><img src="./image/freeze.png" width="20" height="20" alt="Freeze" title="Freeze" /></a>
+<?php     } ?>
+<?php   } ?>
  <a href="<?php echo $link_diff ?>"><img src="./image/diff.png" width="20" height="20" alt="Diff" title="Diff" /></a>
 <?php   if ((bool)ini_get('file_uploads')) { ?>
  <a href="<?php echo $link_upload ?>"><img src="./image/file.png" width="20" height="20" alt="Upload" title="Upload" /></a>
 <?php   } ?>
+ <a href="<?php echo $link_template ?>"><img src="./image/copy.png" width="20" height="20" alt="Copy" title="Copy" /></a>
+ <a href="<?php echo $link_rename ?>"><img src="./image/rename.png" width="20" height="20" alt="Rename" title="Rename" /></a>
  &nbsp;
 <?php } ?>
 
