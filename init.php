@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.71 2004/03/13 13:43:46 arino Exp $
+// $Id: init.php,v 1.72 2004/03/18 09:22:47 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -240,6 +240,12 @@ if (!array_key_exists('page',$vars))
 if (array_key_exists('md5',$vars) and $vars['md5'] != '')
 {
 	$vars['cmd'] = 'md5';
+}
+
+// TrackBack Ping
+if (array_key_exists('tb_id',$vars) and $vars['tb_id'] != '')
+{
+	$vars['cmd'] = 'tb';
 }
 
 // cmdもpluginも指定されていない場合は、QUERY_STRINGをページ名かInterWikiNameであるとみなす

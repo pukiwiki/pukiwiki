@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.8 2004/02/29 08:20:38 arino Exp $
+// $Id: tb.inc.php,v 1.9 2004/03/18 09:21:54 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -14,10 +14,10 @@
 
 function plugin_tb_action()
 {
-	global $script,$vars,$post,$trackback;
+	global $script,$vars,$trackback;
 	
 	// POST: TrackBack Ping を保存する
-	if (!empty($post['url']))
+	if (!empty($vars['url']))
 	{
 		tb_save();
 	}
@@ -50,7 +50,7 @@ function plugin_tb_action()
 // TrackBack Ping データ保存(更新)
 function tb_save()
 {
-	global $script,$post,$vars,$trackback;
+	global $script,$vars,$trackback;
 	static $fields = array(/* UTIME, */'url','title','excerpt','blog_name');
 	
 	// 許可していないのに呼ばれた場合の対応
@@ -59,7 +59,7 @@ function tb_save()
 		tb_xml_msg(1,'Feature inactive.');
 	}
 	// TrackBack Ping における URL パラメータは必須である。
-	if (empty($post['url']))
+	if (empty($vars['url']))
 	{
 		tb_xml_msg(1,'It is an indispensable parameter. URL is not set up.');
 	}
@@ -69,7 +69,7 @@ function tb_save()
 		tb_xml_msg(1,'TrackBack Ping URL is inaccurate.');
 	}
 	
-	$url = $post['url'];
+	$url = $vars['url'];
 	$tb_id = $vars['tb_id'];
 	
 	// ページ存在チェック
@@ -103,7 +103,7 @@ function tb_save()
 	$items = array(UTIME);
 	foreach ($fields as $field)
 	{
-		$value = array_key_exists($field,$post) ? $post[$field] : '';
+		$value = array_key_exists($field,$vars) ? $vars[$field] : '';
 		if (ereg("[,\"\n\r]",$value))
 		{
 			$value = '"'.str_replace('"', '""', $value).'"';
@@ -113,7 +113,9 @@ function tb_save()
 	$data[rawurldecode($items['url'])] = $items;
 	
 	$fp = fopen($filename,'w');
+	set_file_buffer($fp, 0);
 	flock($fp,LOCK_EX);
+	rewind($fp);
 	foreach ($data as $line)
 	{
 		fwrite($fp,join(',',$line)."\n");
@@ -254,7 +256,7 @@ EOD;
  <div class="blog">
   <div class="trackback-url">
    $_tb_entry<br />
-   $script?plugin=tb&amp;tb_id=$tb_id<br /><br />
+   $script?tb_id=$tb_id<br /><br />
    $tb_refer
   </div>
   $tb_body
