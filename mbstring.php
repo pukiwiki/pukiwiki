@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mbstring.php,v 1.5 2003/07/27 13:50:49 arino Exp $
+// $Id: mbstring.php,v 1.6 2003/08/08 07:29:56 arino Exp $
 //
 
 /*
@@ -33,7 +33,23 @@ if (is_readable('jcode_1.34/jcode_wrapper.php'))
 }
 if (!function_exists('jcode_convert_encoding'))
 {
-	die_message('Multibyte functions cannot be used. Please read "mbstring.php" for an additional installation procedure.');
+//	die_message('Multibyte functions cannot be used. Please read "mbstring.php" for an additional installation procedure.');
+	function jstrlen($str)
+	{
+		return strlen($str);
+	}
+	function jsubstr($str,$start,$length)
+	{
+		return substr($str,$start,$length);
+	}
+	function AutoDetect($str)
+	{
+		return 0;
+	}
+	function jcode_convert_encoding($str,$to_encoding,$from_encoding)
+	{
+		return $str;
+	}
 }
 
 // mb_convert_encoding -- 文字エンコーディングを変換する
