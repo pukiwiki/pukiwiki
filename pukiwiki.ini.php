@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.16.2.1 2003/02/14 07:41:23 panda Exp $
+// $Id: pukiwiki.ini.php,v 1.16.2.2 2004/03/18 09:12:09 arino Exp $
 //
 // PukiWiki setting file
 
@@ -68,7 +68,7 @@ $function_freeze = 1;
 // MD5にしてからどうぞ。面倒なら以下のように。
 // $adminpass = md5("pass");
 // 以下は pass のMD5パスワードになってます。
-$adminpass = "21232f297a57a5a743894a0e4a801fc3";
+$adminpass = "1a1dc91c907325c69271ddf0c944bc72";
 
 /////////////////////////////////////////////////
 // 更新履歴を表示するときの最大件数
