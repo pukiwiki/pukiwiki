@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: default.ini.php,v 1.10 2004/07/28 11:38:48 henoheno Exp $
+// $Id: default.ini.php,v 1.11 2004/08/08 03:34:33 henoheno Exp $
 //
 // PukiWiki setting file (user agent:default)
 
@@ -87,12 +87,12 @@ $usefacemark = 1;
 /////////////////////////////////////////////////
 // ユーザ定義ルール(コンバート時に置換)
 $line_rules = array(
-	"COLOR\(([^\(\)]*)\){([^}]*)}"	=> '<span style="color:$1">$2</span>',
-	"SIZE\(([^\(\)]*)\){([^}]*)}"	=> '<span style="font-size:$1px">$2</span>',
-	"COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)"	=> '<span style="color:$1">$2</span>',
-	"SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)"	=> '<span class="size$1">$2</span>',
-	"%%%(?!%)((?:(?!%%%).)*)%%%"	=> '<ins>$1</ins>',
-	"%%(?!%)((?:(?!%%).)*)%%"	=> '<del>$1</del>',
+	'COLOR\(([^\(\)]*)\){([^}]*)}'	=> '<span style="color:$1">$2</span>',
+	'SIZE\(([^\(\)]*)\){([^}]*)}'	=> '<span style="font-size:$1px">$2</span>',
+	'COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)'	=> '<span style="color:$1">$2</span>',
+	'SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)'	=> '<span class="size$1">$2</span>',
+	'%%%(?!%)((?:(?!%%%).)*)%%%'	=> '<ins>$1</ins>',
+	'%%(?!%)((?:(?!%%).)*)%%'	=> '<del>$1</del>',
 	"'''(?!')((?:(?!''').)*)'''"	=> '<em>$1</em>',
 	"''(?!')((?:(?!'').)*)''"	=> '<strong>$1</strong>',
 	'&amp;br;'	=> '<br />',
@@ -117,7 +117,7 @@ $facemark_rules = array(
 	'\s(;\()'	=> ' <img alt="$1" src="image/face/sad.png" />',
 	'\s(\:\()'	=> ' <img alt="$1" src="image/face/sad.png" />',
 	'&amp;(smile);'	=> ' <img alt="[$1]" src="image/face/smile.png" />',
-	'&amp;(bigsmile);'=> ' <img alt="[$1]" src="image/face/bigsmile.png" />',
+	'&amp;(bigsmile);'=>' <img alt="[$1]" src="image/face/bigsmile.png" />',
 	'&amp;(huh);'	=> ' <img alt="[$1]" src="image/face/huh.png" />',
 	'&amp;(oh);'	=> ' <img alt="[$1]" src="image/face/oh.png" />',
 	'&amp;(wink);'	=> ' <img alt="[$1]" src="image/face/wink.png" />',
@@ -154,9 +154,8 @@ $facemark_rules = array(
 	'&amp;(mail);'	=> '[mail]',
 	'&amp;(mailto);'=> '[mailto]',
 	'&amp;(phone);'	=> '[phone]',
-	'&amp;(phoneto);'=> '[phoneto]',
+	'&amp;(phoneto);'=>'[phoneto]',
 	'&amp;(faxto);'	=> '[faxto]',
-
 );
 
 ?>
