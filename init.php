@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.50 2003/06/13 01:34:53 arino Exp $
+// $Id: init.php,v 1.51 2003/06/13 03:38:23 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -219,11 +219,12 @@ if ($usefacemark)
 {
 	$line_rules += $facemark_rules;
 }
-// 実体参照パターン
+// 実体参照パターンおよびシステムで使用するパターンを$line_rulesに加える
 //$entity_pattern = '[a-zA-Z0-9]{2,8}';
 $entity_pattern = trim(join('',file(CACHE_DIR.'entities.dat')));
-$line_rules['&amp;(#[0-9]+|#x[0-9a-f]+|'.$entity_pattern.');'] = '&$1;';
-// システムで使用するパターン
-$line_rules["\r"] = "<br />\n"; /* 行末にチルダは改行 */
-$line_rules['#related'] = '<del>#related</del>';
+$line_rules = array_merge(array(
+	'&amp;(#[0-9]+|#x[0-9a-f]+|'.$entity_pattern.');'=>'&$1;',
+	"\r"=>"<br />\n", /* 行末にチルダは改行 */
+	'#related'=>'<del>#related</del>'
+),$line_rules);
 ?>
