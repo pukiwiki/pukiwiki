@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar2.inc.php,v 1.16 2003/01/31 01:49:35 panda Exp $
+// $Id: calendar2.inc.php,v 1.17 2003/03/03 07:30:42 panda Exp $
 // *引数にoffと書くことで今日の日記を表示しないようにした。
 function plugin_calendar2_convert()
 {
@@ -168,19 +168,23 @@ function plugin_calendar2_action()
 	
 	$page = strip_bracket($vars['page']);
 	$vars['page'] = '*';
-	if ($vars['file']) {
+	if ($vars['file'])
+	{
 		$vars['page'] = $vars['file'];
 	}
 	
 	$date = $vars['date'];
 	
-	if ($date == '') {
+	if ($date == '')
+	{
 		$date = date("Ym");
 	}
 	$yy = sprintf("%04d.%02d",substr($date,0,4),substr($date,4,2));
 	
 	$aryargs = array($vars['page'],$date);
-	$ret['msg'] = "calendar {$vars['page']}/$yy";
+	$s_page = htmlspecialchars($vars['page']);
+	
+	$ret['msg'] = "calendar $s_page/$yy";
 	$ret['body'] = call_user_func_array('plugin_calendar2_convert',$aryargs);
 	
 	$vars['page'] = $page;
