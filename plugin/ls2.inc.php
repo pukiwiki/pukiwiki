@@ -2,40 +2,46 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ls2.inc.php,v 1.18 2004/08/06 16:10:50 henoheno Exp $
+// $Id: ls2.inc.php,v 1.19 2004/08/11 22:56:04 henoheno Exp $
 //
 
 /*
-*プラグイン ls2
+* プラグイン ls2
 配下のページの見出し(*,**,***)の一覧を表示する
 
-*Usage
+* Usage
  #ls2(パターン[,パラメータ])
 
-*パラメータ
--パターン(最初に指定)~
+* パラメータ
+
+- パターン(最初に指定)
 省略するときもカンマが必要
--title~
+
+- title
 見出しの一覧を表示する
--include~
+
+-include
 インクルードしているページの見出しを再帰的に列挙する
--link~
+
+-link
 actionプラグインを呼び出すリンクを表示
--reverse~
+
+-reverse
 ページの並び順を反転し、降順にする
--compact~
+
+- compact
 見出しレベルを調整する
 LS2_LIST_COMPACTがTRUEの時は無効(変化しない)
 */
 
 //見出しアンカーの書式
-define('LS2_CONTENT_HEAD','#content_1_');
+define('LS2_CONTENT_HEAD', '#content_1_');
 
 //見出しアンカーの開始番号
-define('LS2_ANCHOR_ORIGIN',0);
+define('LS2_ANCHOR_ORIGIN', 0);
 
 //見出しレベルを調整する(デフォルト値)
-define('LS2_LIST_COMPACT',FALSE);
+define('LS2_LIST_COMPACT', FALSE);
 
 function plugin_ls2_action()
 {
