@@ -1,12 +1,12 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.31 2005/02/20 12:59:37 henoheno Exp $
+// $Id: edit.inc.php,v 1.32 2005/03/10 17:41:09 teanan Exp $
 //
 // Edit plugin
 // cmd=edit
 
 // Remove #freeze written by hand
-define('PLUGIN_EDIT_FREEZE_REGEX', '/^#freeze(?:\(.*\))?[\s;]*/im');
+define('PLUGIN_EDIT_FREEZE_REGEX', '/^(?:#freeze(?!\w)\s*)+/im');
 
 function plugin_edit_action()
 {
