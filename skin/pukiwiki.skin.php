@@ -2,20 +2,11 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.12 2004/10/17 13:29:52 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.13 2004/10/17 13:51:49 henoheno Exp $
 //
 
 // Prohibit direct access
 if (! defined('UI_LANG')) exit;
-
-// Load language resources
-$skin_lang = 'skin.' . UI_LANG . '.lng';
-$lang = array();
-if (! file_exists(SKIN_DIR . $skin_lang)) {
-	die($skin_lang . ' is not found');  // die_message() causes a loop!
-} else {
-	require_once(SKIN_DIR . $skin_lang);
-}
 
 // Set skin-specific images
 $_IMAGE['skin']['logo']     = 'pukiwiki.png';

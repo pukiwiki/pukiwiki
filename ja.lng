@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.30 2004/10/17 13:19:23 henoheno Exp $
+// $Id: ja.lng,v 1.31 2004/10/17 13:51:49 henoheno Exp $
 //
 // PukiWiki message file (japanese)
 
@@ -97,6 +97,31 @@ $_no_subject = '無題';
 /////////////////////////////////////////////////
 // 名前が未記入の場合の表記 (article, comment, pcomment)
 $_no_name = '';
+
+/////////////////////////////////////////////////
+// Skin
+/////////////////////////////////////////////////
+
+$_LANG['skin']['add']       = '追加';
+$_LANG['skin']['backup']    = 'バックアップ';
+$_LANG['skin']['copy']      = '複製';
+$_LANG['skin']['diff']      = '差分';
+$_LANG['skin']['edit']      = '編集';
+$_LANG['skin']['filelist']  = 'ファイル名一覧';	// List of filenames
+$_LANG['skin']['freeze']    = '凍結';
+$_LANG['skin']['help']      = 'ヘルプ';
+$_LANG['skin']['list']      = '一覧';	// List of pages
+$_LANG['skin']['new']       = '新規';
+$_LANG['skin']['recent']    = '最終更新';	// RecentChanges
+$_LANG['skin']['refer']     = 'リンク元';	// Show list of referer
+$_LANG['skin']['reload']    = 'リロード';
+$_LANG['skin']['rename']    = '名前変更';	// Rename a page (and related)
+$_LANG['skin']['rss']       = '最終更新のRSS';	// RSS of RecentChanges
+$_LANG['skin']['search']    = '単語検索';
+$_LANG['skin']['top']       = 'トップ';	// Top page
+$_LANG['skin']['trackback'] = 'Trackback';	// Show list of trackback
+$_LANG['skin']['unfreeze']  = '凍結解除';
+$_LANG['skin']['upload']    = '添付';	// Attach a file
 
 ///////////////////////////////////////
 // Plug-in message
