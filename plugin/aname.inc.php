@@ -1,9 +1,8 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: aname.inc.php,v 1.17 2005/01/23 07:00:16 henoheno Exp $
 //
-// $Id: aname.inc.php,v 1.16 2004/08/09 14:03:42 henoheno Exp $
-//
+// aname plugin - Set an anchor <a name="key"> to link
 
 function plugin_aname_inline()
 {
@@ -18,17 +17,16 @@ function plugin_aname_convert()
 	if (func_num_args() < 1) return FALSE;
 
 	$args = func_get_args();
-	$id = array_shift($args);
+	$id   = array_shift($args);
+	if (! preg_match('/^[A-Za-z][\w\-]*$/', $id)) return FALSE;
 
-	if (! preg_match('/^[A-Za-z][\w\-]*$/', $id))
-		return FALSE;
-
-	$body = count($args) ? preg_replace('/<\/?a[^>]*>/', '', array_pop($args)) : '';
+	$body = ! empty($args) ? preg_replace('/<\/?a[^>]*>/', '', array_pop($args)) : '';
 
 	$class   = in_array('super', $args) ? 'anchor_super' : 'anchor';
-	$url     = in_array('full',  $args) ? "$script?" . rawurlencode($vars['page']) : '';
-	$attr_id = in_array('noid',  $args) ? '' : " id=\"$id\"";
+	$url     = in_array('full',  $args) ? $script . '?' . rawurlencode($vars['page']) : '';
+	$attr_id = in_array('noid',  $args) ? '' : ' id="' . $id . '"';
 
-	return "<a class=\"$class\"$attr_id href=\"$url#$id\" title=\"$id\">$body</a>";
+	return '<a class="' . $class . '"' . $attr_id . ' href="' . $url . '#' . $id .
+		'" title="' . $id . '">' . $body . '</a>';
 }
 ?>
