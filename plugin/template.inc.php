@@ -1,5 +1,5 @@
 <?php
-// $Id: template.inc.php,v 1.11 2003/04/30 09:06:17 arino Exp $
+// $Id: template.inc.php,v 1.12 2003/05/16 06:19:15 arino Exp $
 
 define('MAX_LEN',60);
 
@@ -25,12 +25,12 @@ function plugin_template_action()
 	if (array_key_exists('begin',$vars) and is_numeric($vars['begin'])
 		and array_key_exists('end',$vars) and is_numeric($vars['end']))
 	{
-		
+		$postdata = '';
 		if ($vars['begin'] <= $vars['end'])
 		{
-			for($i = $vars['begin']; $i <= $vars['end']; $i++)
+			for ($i = $vars['begin']; $i <= $vars['end']; $i++)
 			{
-				$postdata.= $lines[$i];
+				$postdata .= $lines[$i];
 			}
 		}
 		
