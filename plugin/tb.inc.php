@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.2 2003/07/27 13:54:58 arino Exp $
+// $Id: tb.inc.php,v 1.3 2003/08/06 05:49:50 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -90,13 +90,10 @@ function tb_save()
 	$filename = TRACKBACK_DIR.$tb_id.'.txt';
 	$data = tb_get($filename);
 	
-	$charset = empty($post['charset']) ? 'auto' : $post['charset'];
-	
 	$items = array(UTIME);
 	foreach ($fields as $field)
 	{
 		$value = array_key_exists($field,$post) ? $post[$field] : '';
-		$value = mb_convert_encoding($value,SOURCE_ENCODING,$charset);
 		if (ereg("[,\"\n\r]",$value))
 		{
 			$value = '"'.str_replace('"', '""', $value).'"';
@@ -214,6 +211,10 @@ function tb_mode_view($tb_id)
 	foreach ($data as $x)
 	{
 		list ($time,$url,$title,$excerpt,$blog_name) = $x;
+		if ($title == '')
+		{
+			$title = 'no title';
+		}
 		$time = date($_tb_date, $time + LOCALZONE); // May 2, 2003 11:25 AM
 		$tb_body .= <<<EOD
 <div class="trackback-body">
