@@ -1,5 +1,5 @@
 <?php
-// $Id: referer.inc.php,v 1.2 2003/07/27 13:54:58 arino Exp $
+// $Id: referer.inc.php,v 1.3 2003/08/03 13:52:56 arino Exp $
 /*
  * PukiWiki Referer プラグイン(リンク元表示プラグイン)
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -62,31 +62,31 @@ function referer_body($page,$sort)
 //			$sort_last = '0d';
 			break;
 		case '1d': // 1d 初回登録日時(新着順)
-			usort($data,create_function('$a,$b','return $b[2] - $a[2];'));
+			usort($data,create_function('$a,$b','return $b[1] - $a[1];'));
 			$color_1st = $bg['cur'];
 			$arrow_1st = $_referer_msg['msg_Chr_darr'];
 			$sort_1st = '1a';
 			break;
 		case '1a': // 1a 初回登録日時(日付順)
-			usort($data,create_function('$a,$b','return $a[2] - $b[2];'));
+			usort($data,create_function('$a,$b','return $a[1] - $b[1];'));
 			$color_1st = $bg['cur'];
 			$arrow_1st = $_referer_msg['msg_Chr_uarr'];
 //			$sort_1st = '1d';
 			break;
 		case '2d': // 2d カウンタ(大きい順)
-			usort($data,create_function('$a,$b','return $b[3] - $a[3];'));
+			usort($data,create_function('$a,$b','return $b[2] - $a[2];'));
 			$color_ctr = $bg['cur'];
 			$arrow_ctr = $_referer_msg['msg_Chr_darr'];
 			$sort_ctr = '2a';
 			break;
 		case '2a': // 2a カウンタ(小さい順)
-			usort($data,create_function('$a,$b','return $a[3] - $b[3];'));
+			usort($data,create_function('$a,$b','return $a[2] - $b[2];'));
 			$color_ctr = $bg['cur'];
 			$arrow_ctr = $_referer_msg['msg_Chr_uarr'];
 //			$sort_ctr = '2d';
 			break;
 		case '3': // 3 Referer
-			usort($data,create_function('$a,$b','return ($a[1] == $b[1]) ? 0 : (($a[1] > $b[1]) ? 1 : -1);'));
+			usort($data,create_function('$a,$b','return ($a[3] == $b[3]) ? 0 : (($a[3] > $b[3]) ? 1 : -1);'));
 			$color_ref = $bg['cur'];
 			break;
 	}
