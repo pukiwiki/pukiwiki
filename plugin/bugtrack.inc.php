@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.2.2.2 2003/02/25 03:58:47 panda Exp $
+ * $Id: bugtrack.inc.php,v 1.2.2.3 2003/02/25 06:21:59 panda Exp $
  */
 
 function plugin_bugtrack_init()
@@ -194,7 +194,11 @@ function plugin_bugtrack_convert()
         $category = array();
 	if(func_num_args() > 0)
 	  {
-	    $base = $args[0];
+	    $_base = get_fullname($args[0],$base);
+		if (preg_match("/^(($BracketName)|($WikiName))$/",$_base))
+		{
+			$base = $_base;
+		}	    
             $category = $args;
             array_shift($category);
 	  }
@@ -242,11 +246,16 @@ function plugin_bugtrack_list_convert()
   global $_bugtrack_plugin_priority, $_bugtrack_plugin_state, $_bugtrack_plugin_name;
   global $_bugtrack_plugin_date, $_bugtrack_plugin_category, $_bugtrack_plugin_summary;
   global $_bugtrack_plugin_state_sort,$_bugtrack_plugin_state_list,$_bugtrack_plugin_state_bgcolor;
+  global $WikiName,$BracketName;
   
   $page = $vars['page'];
   if(func_num_args()) {
     $aryargs = func_get_args();
-    $page = $aryargs[0];
+    $_page = get_fullname($aryargs[0],$page);
+	if (preg_match("/^(($BracketName)|($WikiName))$/",$_page))
+	{
+		$page = $_page;
+	}
   }
   
   $data = array();
