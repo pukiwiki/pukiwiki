@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: paint.inc.php,v 1.14 2004/07/31 03:09:20 henoheno Exp $
+// $Id: paint.inc.php,v 1.15 2004/08/23 11:49:04 henoheno Exp $
 //
 
 /*
@@ -229,8 +229,10 @@ function paint_insert_ref($filename)
 		str_replace("\x08MSG\x08", $msg, PAINT_FORMAT);
 	$msg = str_replace("\x08NAME\x08",$name, $msg);
 	$msg = str_replace("\x08NOW\x08",$now, $msg);
-	//ブロックに食われないように、#imgの直前に\nを2個書いておく。
-	$msg = "#ref($filename,wrap,around)\n".trim($msg)."\n\n#img(,clear)\n";
+
+	//ブロックに食われないように、#clearの直前に\nを2個書いておく
+	$msg = "#ref($filename,wrap,around)\n" . trim($msg) . "\n\n" .
+		"#clear\n";
 
 	$postdata_old = get_source($vars['refer']);
 	$postdata = '';
