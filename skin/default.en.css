@@ -453,18 +453,17 @@ div#navigator
 	padding:4px 0px 0px 0px;
 	margin:0px;
 }
- 
+
 td.menubar
 {
-	width:130px;
+	width:9em;
+	vertical-align:top;
 }
 
 div#menubar
 {
-	float:left;
-	height:100%;
 	padding:4px;
-	margin:0px 10px 0px 0px;
+	margin:0px;
 	word-break:break-all;
 	font-size:90%;
 	overflow:hidden;
@@ -486,16 +485,10 @@ div#menubar h4
 	font-size:110%;
 }
 
-div#bodywithmenu
-{
-	padding:0px;
-	margin-left:130px;
-}
-
 div#body
 {
 	padding:0px;
-	margin:0px;
+	margin:0px 0px 0px .5em;
 }
 
 div#note
