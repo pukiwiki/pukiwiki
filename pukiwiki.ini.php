@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.114 2005/03/19 03:03:03 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.114.2.1 2005/03/19 17:51:20 teanan Exp $
 //
 // PukiWiki main setting file
 
@@ -105,6 +105,7 @@ $defaultpage  = 'FrontPage';     // Top / Default page
 $whatsnew     = 'RecentChanges'; // Modified page list
 $whatsdeleted = 'RecentDeleted'; // Removeed page list
 $interwiki    = 'InterWikiName'; // Set InterWiki definition here
+$autoalias    = 'AutoAliasName'; // Set AutoAlias definition here
 $menubar      = 'MenuBar';       // Menu
 
 /////////////////////////////////////////////////
@@ -146,6 +147,12 @@ $nowikiname = 0;
 
 // AutoLink minimum bytes (0 = Disable)
 $autolink = 8;
+
+// Enable AutoAlias (1:Enable, 0:Disable)
+$autoalias_enable = 1;
+
+// Maximum number of words which AutoAlias replace
+$autoalias_max = 50;
 
 /////////////////////////////////////////////////
 // Enable Freeze / Unfreeze feature

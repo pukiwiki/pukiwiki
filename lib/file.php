@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.13 2005/01/29 13:29:34 henoheno Exp $
+// $Id: file.php,v 1.13.2.1 2005/03/19 17:51:30 teanan Exp $
 //
 // File related functions
 
@@ -90,6 +90,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	global $notify, $notify_diff_only, $notify_to, $notify_subject, $notify_header;
 	global $smtp_server, $smtp_auth;
 	global $whatsdeleted, $maxshow_deleted;
+	global $autolink, $autoalias_enable, $autoalias;
 
 	if (PKWK_READONLY) return; // Do nothing
 
@@ -151,6 +152,16 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 
 		if ($smtp_auth) pop_before_smtp();
  		mb_send_mail($notify_to, $subject, $str, $notify_header);
+	}
+	// for AutoAlias
+	if ($autoalias_enable!=0 && $autolink && $page==$autoalias) {
+		// AutoAliasName is updated
+		$pages = array_keys(get_autoaliases());
+		if(count($pages)>0) {
+			autolink_pattern_write(CACHE_DIR . 'autoalias.dat', $pages);
+		} else {
+			@unlink(CACHE_DIR . 'autoalias.dat');
+		}
 	}
 }
 
@@ -244,22 +255,27 @@ function put_lastmodified()
 
 	// For AutoLink
 	if ($autolink) {
-		list($pattern, $pattern_a, $forceignorelist) =
-			get_autolink_pattern($pages);
-
-		$fp = fopen(CACHE_DIR . 'autolink.dat', 'w') or
-			die_message('Cannot write autolink file ' .
-			CACHE_DIR . '/autolink.dat' .
-			'<br />Maybe permission is not writable');
-		set_file_buffer($fp, 0);
-		flock($fp, LOCK_EX);
-		rewind($fp);
-		fputs($fp, $pattern   . "\n");
-		fputs($fp, $pattern_a . "\n");
-		fputs($fp, join("\t", $forceignorelist) . "\n");
-		flock($fp, LOCK_UN);
-		fclose($fp);
+		autolink_pattern_write(CACHE_DIR . 'autolink.dat', $pages);
 	}
+}
+
+// update autolink data
+function autolink_pattern_write($filename, & $pages)
+{
+	list($pattern, $pattern_a, $forceignorelist) =
+		get_autolink_pattern($pages);
+
+	$fp = fopen($filename, 'w') or
+		die_message("Cannot write autolink file $filename<br />" .
+			'Maybe permission is not writable');
+	set_file_buffer($fp, 0);
+	flock($fp, LOCK_EX);
+	rewind($fp);
+	fputs($fp, $pattern   . "\n");
+	fputs($fp, $pattern_a . "\n");
+	fputs($fp, join("\t", $forceignorelist) . "\n");
+	flock($fp, LOCK_UN);
+	fclose($fp);
 }
 
 // Get elapsed date of the pate

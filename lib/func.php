@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.33 2005/03/17 17:57:24 teanan Exp $
+// $Id: func.php,v 1.33.2.1 2005/03/19 17:51:30 teanan Exp $
 //
 // General functions
 
@@ -517,6 +517,32 @@ function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 	if ($x)               $result .= '?';
 
 	return $result;
+}
+
+// get pagelist for AutoAlias
+function get_autoaliases()
+{
+	global $autoalias, $autoalias_max;
+
+	$aliaspages = array();
+	$pattern = <<<EOD
+\[\[                # open bracket
+((?:(?!\]\]).)+)>   # (1) alias name
+ (?:(?!\]\]).)+     # alias link
+\]\]                # close bracket
+EOD;
+
+	$postdata = join('', get_source($autoalias));
+	$matches = array();
+	if(preg_match_all("/$pattern/x", $postdata, $matches, PREG_SET_ORDER)) {
+		foreach($matches as $match) {
+			$aliaspages[$match[1]] = trim($match[0]);
+		}
+	}
+	// fail safe
+	$aliaspages = array_slice($aliaspages, 0, $autoalias_max);
+
+	return $aliaspages;
 }
 
 // pukiwiki.phpスクリプトのabsolute-uriを生成
