@@ -6,10 +6,10 @@ NAME
     PukiWiki - PHP scripts for Web pages which can be edited by anyone, 
                                                               at any time, from anywhere. 
 
-        PukiWiki 1.4
-        Copyright (C) 2001,2002,2003 PukiWiki Developers Team.
-        License is GNU/GPL.
-        Based on "PukiWiki" 1.3 by sng.
+        PukiWiki 1.4.5_alpha
+        Copyright (C) 2001-2004 PukiWiki Developers Team
+        License: GPL
+        Based on "PukiWiki" 1.3 by yu-ji
         http://pukiwiki.org/
 
 SYNOPSIS
@@ -26,7 +26,7 @@ DESCRIPTION
 
     PukiWiki is a unique Wiki-Engine which is based on the YukiWiki specification 
      created by Mr. Hiroshi Yuki.
-    Mr. sng continued its development until the release of PukiWiki 1.3, and 
+    Mr. yu-ji continued its development until the release of PukiWiki 1.3, and 
     PukiWiki Developers Team inherited the development from him after 1.3.1b.
 
     PukiWiki is written in PHP, so it's relatively easy to install
@@ -127,12 +127,12 @@ RDF/RSS
 
     Since version 1.2.1, the function to create RDF/RSS from RecentChanges 
     has been supported.
+    Since version 1.4.5, RSS 2.0 has been supported.
 
-    * RSS 0.91 output example
-       http://pukiwiki/index.php?cmd=rss
-
-    * RSS 1.0 (RDF) output example
-       http://pukiwiki.org/index.php?cmd=rss10
+    * Output example:
+      RSS 0.91 http://path/to/pukiwiki/index.php?plugin=rss
+      RSS 1.0  http://path/to/pukiwiki/index.php?plugin=rss&ver=1.0
+      RSS 2.0  http://path/to/pukiwiki/index.php?plugin=rss&ver=2.0
 
 TODO
 
@@ -140,9 +140,8 @@ TODO
 
 AUTHOR
 
-    PukiWiki Developers Team.  
-      http://pukiwiki.sourceforge.jp/dev/
-    Based on "PukiWiki" 1.3 by sng
+    PukiWiki Developers Team http://pukiwiki.sourceforge.jp/dev/
+    Based on "PukiWiki" 1.3 by yu-ji
 
     Please send questions, opinions and bug reports to http://pukiwiki.org/ 
 
@@ -155,18 +154,18 @@ ACKNOWLEDGEMENT
 
     First of all, thanks so much to the users of PukiWiki and the members of
     PukiWiki Developers Team. 
-    Special thanks to Mr. sng who developed the first PukiWiki.
+    Special thanks to Mr. yu-ji(aka sng) who developed the first PukiWiki.
     And also thanks to Mr. Hiroshi Yuki who was willing to accept our cloning
     YukiWiki and 
     Cunningham & Cunningham, Inc. who created the original WikiWikiWeb.
 
 REFERENCE
 
-    *   PukiWiki Web Site http://pukiwiki.org/
-    *   PukiWiki Developer's Site http://pukiwiki.sourceforge.jp/dev/
-    *   sng's Web Site http://factage.com/sng/ 
-    *   Hiroshi Yuki 's Web Site  http://www.hyuki.com/ 
-    *   YukiWiki http://www.hyuki.com/yukiwiki/ 
-    *   Tiki http://todo.org/cgi-bin/jp/tiki.cgi 
-    *   Original WikiWikiWeb http://c2.com/cgi/wiki?WikiWikiWeb 
-    *   Author of WikiWikiWeb(Cunningham & Cunningham, Inc.) http://c2.com/
+    * PukiWiki Web Site         http://pukiwiki.org/
+    * PukiWiki Developer's Site http://pukiwiki.sourceforge.jp/dev/
+    * yu-ji's Web Site          http://factage.com/yu-ji/ 
+    * Hiroshi Yuki 's Web Site  http://www.hyuki.com/ 
+    * YukiWiki                  http://www.hyuki.com/yukiwiki/ 
+    * Tiki                      http://todo.org/cgi-bin/jp/tiki.cgi 
+    * Original WikiWikiWeb      http://c2.com/cgi/wiki?WikiWikiWeb 
+    * Author of WikiWikiWeb(Cunningham & Cunningham, Inc.) http://c2.com/
