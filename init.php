@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.20.2.21 2004/07/01 13:57:19 henoheno Exp $
+// $Id: init.php,v 1.20.2.22 2004/07/31 03:52:20 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -22,7 +22,7 @@ define("INI_FILE","./pukiwiki.ini.php");
 /////////////////////////////////////////////////
 // 初期設定 (バージョン/著作権)
 define("S_VERSION","1.3.7");
-define("S_COPYRIGHT","<strong>\"PukiWiki\" ".S_VERSION."</strong> Copyright &copy; 2001-2004 <a href=\"http://pukiwiki.org\">PukiWiki Developers Team</a>. License is <a href=\"http://www.gnu.org/\">GNU/GPL</a>.<BR>Based on \"PukiWiki\" 1.3 by <a href=\"http://factage.com/sng/\">sng</a>");
+define("S_COPYRIGHT","<strong>\"PukiWiki\" ".S_VERSION."</strong> Copyright &copy; 2001-2004 <a href=\"http://pukiwiki.org\">PukiWiki Developers Team</a>. License is <a href=\"http://www.gnu.org/\">GNU/GPL</a>.<BR>Based on \"PukiWiki\" 1.3 by <a href=\"http://factage.com/yu-ji/\">yu-ji</a>");
 define("UTIME",time());
 
 /////////////////////////////////////////////////
