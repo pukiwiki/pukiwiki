@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.15 2003/10/24 06:46:34 arino Exp $
+// $Id: tracker.inc.php,v 1.16 2003/11/02 14:03:30 arino Exp $
 //
 
 // tracker_listで表示しないページ名(正規表現で)
@@ -559,7 +559,7 @@ function plugin_tracker_list_convert()
 	global $vars;
 	
 	$config = 'default';
-	$page = $vars['page'];
+	$page = $refer = $vars['page'];
 	$field = '_page';
 	$order = '';
 	$list = 'list'; 
@@ -574,7 +574,7 @@ function plugin_tracker_list_convert()
 			case 3:
 				$order = $args[2];
 			case 2:
-				$page = $refer = is_pagename($args[1]) ? $args[1] : $page;
+				$page = is_pagename($args[1]) ? $args[1] : $page;
 			case 1:
 				$config = ($args[0] != '') ? $args[0] : $config;
 				list($config,$list) = array_pad(explode('/',$config,2),2,$list);
@@ -589,7 +589,7 @@ function plugin_tracker_list_action()
 	$page = $refer = $vars['refer'];
 	$s_page = make_pagelink($page);
 	$config = $vars['config'];
-	$list = $vars['list'];
+	$list = array_key_exists('list',$vars) ? $vars['list'] : 'list';
 	$order = array_key_exists('order',$vars) ? $vars['order'] : '_real:SORT_DESC';
 		
 	return array(
@@ -717,7 +717,7 @@ class Tracker_list
 		$this->order = array();
 		foreach (explode(';',$order) as $item)
 		{
-			list($key,$dir) = explode(':',$item);
+			list($key,$dir) = array_pad(explode(':',$item),1,'ASC');
 			if (!array_key_exists($key,$names))
 			{
 				continue;
