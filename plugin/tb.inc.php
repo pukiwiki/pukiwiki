@@ -1,93 +1,84 @@
 <?php
-// $Id: tb.inc.php,v 1.14 2004/12/02 11:34:25 henoheno Exp $
+// $Id: tb.inc.php,v 1.15 2004/12/12 15:03:24 henoheno Exp $
 /*
- * PukiWiki TrackBack プログラム
+ * PukiWiki/TrackBack: TrackBack Ping receiver and viewer
+ * (C) 2003-2004 PukiWiki Developer Team
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
  * License: GPL
  *
  * plugin_tb_action()    action
- * tb_save()             TrackBack Ping データ保存(更新)
- * tb_xml_msg($rc, $msg) XML 結果出力
- * tb_mode_rss($tb_id)   ?__mode=rss 処理
- * tb_mode_view($tb_id)  ?__mode=view 処理
+ * plugin_tb_save($url, $tb_id) Save or update TrackBack Ping data
+ * plugin_tb_return($rc, $msg)  Return TrackBack ping via HTTP/XML
+ * plugin_tb_mode_rss($tb_id)   ?__mode=rss
+ * plugin_tb_mode_view($tb_id)  ?__mode=view
  */
+
+switch(LANG){
+case 'ja': define('PLUGIN_TB_LANGUAGE', 'ja-Jp'); break;
+default  : define('PLUGIN_TB_LANGUAGE', 'en-us'); break;
+}
 
 function plugin_tb_action()
 {
 	global $vars, $trackback;
 
-	// POST: TrackBack Ping を保存する
-	if (!empty($vars['url']))
-		tb_save();
+	if (isset($vars['url'])) {
+		// Receive and save a TrackBack Ping (both GET and POST)
+		$url   = $vars['url'];
+		$tb_id = isset($vars['tb_id']) ? $vars['tb_id'] : '';
+		plugin_tb_save($url, $tb_id); // Send a response (and exit)
 
-	if ($trackback and !empty($vars['__mode']) and !empty($vars['tb_id'])) {
-		switch ($vars['__mode']) {
-			case 'rss':  tb_mode_rss($vars['tb_id']);  break;
-			case 'view': tb_mode_view($vars['tb_id']); break;
-		}
-	}
-	$pages = get_existpages(TRACKBACK_DIR, '.txt');
-
-	if (count($pages) == 0) {
-		return array('msg'=>'', 'body'=>'');
 	} else {
-		return array('msg'=>'trackback list', 'body'=>page_list($pages, 'read', FALSE));
+		if ($trackback && isset($vars['__mode']) && isset($vars['tb_id'])) {
+			// Show TrackBacks received (and exit)
+			switch ($vars['__mode']) {
+			case 'rss' : plugin_tb_mode_rss($vars['tb_id']);  break;
+			case 'view': plugin_tb_mode_view($vars['tb_id']); break;
+			}
+		}
+
+		// Show List of pages that TrackBacks reached
+		$pages = get_existpages(TRACKBACK_DIR, '.txt');
+		if (! empty($pages)) {
+			return array('msg'=>'trackback list',
+				'body'=>page_list($pages, 'read', FALSE));
+		} else {
+			return array('msg'=>'', 'body'=>'');
+		}
 	}
 }
 
-// TrackBack Ping データ保存(更新)
-function tb_save()
+// Save or update TrackBack Ping data
+function plugin_tb_save($url, $tb_id)
 {
-	global $script, $vars, $trackback;
+	global $vars, $trackback;
 	static $fields = array( /* UTIME, */ 'url', 'title', 'excerpt', 'blog_name');
 
-	// 許可していないのに呼ばれた場合の対応
-	if (!$trackback) {
-		tb_xml_msg(1, 'Feature inactive.');
-	}
-	// TrackBack Ping における URL パラメータは必須である。
-	if (empty($vars['url'])) {
-		tb_xml_msg(1, 'It is an indispensable parameter. URL is not set up.');
-	}
-	// Query String を得る
-	if (empty($vars['tb_id'])) {
-		tb_xml_msg(1, 'TrackBack Ping URL is inaccurate.');
-	}
+	$die = '';
+	if (! $trackback) $die .= 'TrackBack feature disabled. ';
+	if ($url   == '') $die .= 'URL parameter is not set. ';
+	if ($tb_id == '') $die .= 'TrackBack Ping ID is not set. ';
+	if ($die != '') plugin_tb_return(1, $die);
 
-	$url   = $vars['url'];
-	$tb_id = $vars['tb_id'];
+	if (! file_exists(TRACKBACK_DIR)) plugin_tb_return(1, 'No such directory: TRACKBACK_DIR');
+	if (! is_writable(TRACKBACK_DIR)) plugin_tb_return(1, 'Permission denied: TRACKBACK_DIR');
 
-	// ページ存在チェック
 	$page = tb_id2page($tb_id);
-	if ($page === FALSE) {
-		tb_xml_msg(1, 'TrackBack ID is invalid.');
-	}
+	if ($page === FALSE) plugin_tb_return(1, 'TrackBack ID is invalid.');
 
 	// URL 妥当性チェック (これを入れると処理時間に問題がでる)
 	$result = http_request($url, 'HEAD');
-	if ($result['rc'] !== 200) {
-		tb_xml_msg(1, 'URL is fictitious.');
-	}
-
-	// TRACKBACK_DIR の存在と書き込み可能かの確認
-	if (!file_exists(TRACKBACK_DIR)) {
-		tb_xml_msg(1, 'No such directory');
-	}
-	if (!is_writable(TRACKBACK_DIR)) {
-		tb_xml_msg(1, 'Permission denied');
-	}
+	if ($result['rc'] !== 200) plugin_tb_return(1, 'URL is fictitious.');
 
 	// TrackBack Ping のデータを更新
 	$filename = tb_get_filename($page);
-	$data = tb_get($filename);
+	$data     = tb_get($filename);
 
 	$items = array(UTIME);
-	foreach ($fields as $key)
-	{
+	foreach ($fields as $key) {
 		$value = isset($vars[$key]) ? $vars[$key] : '';
-		if (preg_match("/[,\"\n\r]/", $value)) {
+		if (preg_match("/[,\"\n\r]/", $value))
 			$value = '"' . str_replace('"', '""', $value) . '"';
-		}
 		$items[$key] = $value;
 	}
 	$data[rawurldecode($items['url'])] = $items;
@@ -103,41 +94,35 @@ function tb_save()
 	flock($fp, LOCK_UN);
 	fclose($fp);
 
-	tb_xml_msg(0, '');
+	plugin_tb_return(0); // Return OK
 }
 
-// XML 結果出力
-function tb_xml_msg($rc, $msg)
+// Return TrackBack ping via HTTP/XML
+function plugin_tb_return($rc, $msg = '')
 {
 	pkwk_headers_sent();
 	header('Content-Type: text/xml');
 	echo '<?xml version="1.0" encoding="iso-8859-1"?>';
-	echo <<<EOD
-
-<response>
- <error>$rc</error>
- <message>$msg</message>
-</response>
-EOD;
-	die;
+	echo '<response>';
+	echo ' <error>' . $rc . '</error>';
+	if ($rc !== 0) echo '<message>' . $msg . '</message>';
+	echo '</response>';
+	exit;
 }
 
-// ?__mode=rss 処理
-function tb_mode_rss($tb_id)
+// ?__mode=rss
+function plugin_tb_mode_rss($tb_id)
 {
 	global $script, $vars, $entity_pattern;
 
 	$page = tb_id2page($tb_id);
-	if ($page === FALSE) {
-		return FALSE;
-	}
+	if ($page === FALSE) return FALSE;
 
 	$items = '';
-	foreach (tb_get(tb_get_filename($page)) as $arr)
-	{
-		// $utime and $blog_name is not used
-		$utime = array_shift($arr);
-		list ($url, $title, $excerpt, $blog_name) = array_map(
+	foreach (tb_get(tb_get_filename($page)) as $arr) {
+		// _utime_, title, excerpt, _blog_name_
+		array_shift($arr); // Cut utime
+		list ($url, $title, $excerpt) = array_map(
 			create_function('$a', 'return htmlspecialchars($a);'), $arr);
 		$items .= <<<EOD
 
@@ -150,14 +135,15 @@ EOD;
 	}
 
 	$title = htmlspecialchars($page);
-	$link = "$script?" . rawurlencode($page);
+	$link  = $script . '?' . rawurlencode($page);
 	$vars['page'] = $page;
 	$excerpt = strip_htmltag(convert_html(get_source($page)));
 	$excerpt = preg_replace("/&$entity_pattern;/", '', $excerpt);
 	$excerpt = mb_strimwidth(preg_replace("/[\r\n]/", ' ', $excerpt), 0, 255, '...');
+	$lang    = PLUGIN_TB_LANGUAGE;
 
 	$rc = <<<EOD
-
+<?xml version="1.0" encoding="utf-8" ?>
 <response>
  <error>0</error>
  <rss version="0.91">
@@ -165,37 +151,33 @@ EOD;
    <title>$title</title>
    <link>$link</link>
    <description>$excerpt</description>
-   <language>ja-Jp</language>$items
+   <language>$lang</language>$items
   </channel>
  </rss>
 </response>
 EOD;
-	$rc = mb_convert_encoding($rc, 'UTF-8', SOURCE_ENCODING);
 
 	pkwk_headers_sent();
 	header('Content-Type: text/xml');
-	echo '<?xml version="1.0" encoding="utf-8" ?>';
-	echo $rc;
-	die;
+	echo mb_convert_encoding($rc, 'UTF-8', SOURCE_ENCODING);
+	exit;
 }
 
-// ?__mode=view 処理
-function tb_mode_view($tb_id)
+// ?__mode=view
+function plugin_tb_mode_view($tb_id)
 {
 	global $script, $page_title;
 	global $_tb_title, $_tb_header, $_tb_entry, $_tb_refer, $_tb_date;
 	global $_tb_header_Excerpt, $_tb_header_Weblog, $_tb_header_Tracked;
 
-	// TrackBack ID からページ名を取得
 	$page = tb_id2page($tb_id);
-	if ($page === FALSE) {
-		return FALSE;
-	}
+	if ($page === FALSE) return FALSE;
+
 	$r_page = rawurlencode($page);
 
 	$tb_title = sprintf($_tb_title, $page);
-	$tb_refer = sprintf($_tb_refer, "<a href=\"$script?$r_page\">'$page'</a>", "<a href=\"$script\">$page_title</a>");
-
+	$tb_refer = sprintf($_tb_refer, '<a href="' . $script . '?' . $r_page .
+		'">\'' . $page . '\'</a>', '<a href="' . $script . '">' . $page_title . '</a>');
 
 	$data = tb_get(tb_get_filename($page));
 
@@ -203,15 +185,12 @@ function tb_mode_view($tb_id)
 	usort($data, create_function('$a,$b', 'return $b[0] - $a[0];'));
 
 	$tb_body = '';
-	foreach ($data as $x)
-	{
-		if (count($x) != 5) {
-			continue; // record broken
-		}
+	foreach ($data as $x) {
+		if (count($x) != 5) continue; // Ignore incorrect record
+
 		list ($time, $url, $title, $excerpt, $blog_name) = $x;
-		if ($title == '') {
-			$title = 'no title';
-		}
+		if ($title == '') $title = 'no title';
+
 		$time = date($_tb_date, $time + LOCALZONE); // May 2, 2003 11:25 AM
 		$tb_body .= <<<EOD
 <div class="trackback-body">
@@ -224,6 +203,7 @@ function tb_mode_view($tb_id)
 EOD;
 	}
 	$msg = <<<EOD
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
 <head>
@@ -244,11 +224,16 @@ EOD;
 </body>
 </html>
 EOD;
-	// BugTrack/466 エンコード誤認対策
-	pkwk_headers_sent();
-	header('Content-type: text/html; charset=UTF-8');
-	echo '<?xml version="1.0" encoding="UTF-8"?>';
+
+	pkwk_headers_sent(); // Check before header()
+
+	// BugTrack/466 Care for MSIE trouble
+	// Logically correct, but MSIE will treat the data like 'file downloading'
+	//header('Content-type: application/xhtml+xml; charset=UTF-8');
+
+	header('Content-type: text/html; charset=UTF-8'); // Works well
+
 	echo mb_convert_encoding($msg, 'UTF-8', SOURCE_ENCODING);
-	die;
+	exit;
 }
 ?>
