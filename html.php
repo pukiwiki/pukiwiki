@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.83 2003/06/30 00:30:04 arino Exp $
+// $Id: html.php,v 1.84 2003/06/30 00:38:22 arino Exp $
 //
 
 // 本文を出力
@@ -244,16 +244,12 @@ function make_related($page,$tag='')
 			"<a href=\"$script?$r_page\">$s_page</a>$passage";
 	}
 	
-	if ($tag) {
-		$retval = join($rule_related_str,$_links);
-		if ($tag == 'p') {
-			$margin = $_ul_left_margin + $_ul_margin;
-			$style = sprintf($_list_pad_str,1,$margin,$margin);
-			$retval =  "\n<ul class=\"list1\" style=\"$style\">\n<li>$retval</li>\n</ul>\n";
-		}
-	}
-	else {
-		$retval = join($related_str,$_links);
+	$retval = join($rule_related_str,$_links);
+	if ($tag == 'p')
+	{
+		$margin = $_ul_left_margin + $_ul_margin;
+		$style = sprintf($_list_pad_str,1,$margin,$margin);
+		$retval =  "\n<ul $style>\n<li>$retval</li>\n</ul>\n";
 	}
 	return $retval;
 }
