@@ -1,5 +1,5 @@
 <?php
-// $Id: memo.inc.php,v 1.8 2003/04/13 06:32:45 arino Exp $
+// $Id: memo.inc.php,v 1.9 2004/07/19 02:31:58 henoheno Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -10,25 +10,25 @@ define('MEMO_ROWS',5);
 
 function plugin_memo_action()
 {
-	global $script,$post,$vars,$cols,$rows;
-	global $_title_collided,$_msg_collided,$_title_updated;
+	global $script, $vars, $cols, $rows;
+	global $_title_collided, $_msg_collided, $_title_updated;
 	
-	if ($post['msg'] == '') { return; }
+	if (! isset($vars['msg']) || $vars['msg'] == '') return;
 	
-	$post["msg"] = preg_replace("/\r/",'',$post["msg"]);
-	$post["msg"] = str_replace("\n","\\n",$post["msg"]);
+	$vars['msg'] = preg_replace("/\r/", '', $vars['msg']);
+	$vars['msg'] = str_replace("\n", "\\n", $vars['msg']);
 
 	$postdata = "";
-	$postdata_old  = get_source($post["refer"]);
+	$postdata_old  = get_source($vars['refer']);
 	$memo_no = 0;
 
-	$memo_body = $post["msg"];
+	$memo_body = $vars['msg'];
 
 	foreach($postdata_old as $line)
 	{
 		if (preg_match("/^#memo\(?.*\)?$/",$line))
 		{
-			if ($memo_no == $post["memo_no"] && $post["msg"]!="")
+			if ($memo_no == $vars['memo_no'] && $vars['msg'] != "")
 			{
 				$postdata .= "#memo($memo_body)\n";
 				$line = "";
@@ -40,14 +40,14 @@ function plugin_memo_action()
 	
 	$postdata_input = "$memo_body\n";
 	
-	if (md5(@join('',get_source($post["refer"]))) != $post['digest'])
+	if (md5(@join('', get_source($vars['refer']))) != $vars['digest'])
 	{
 		$title = $_title_collided;
 		
 		$body = "$_msg_collided\n";
 
-		$s_refer = htmlspecialchars($post['refer']);
-		$s_digest = htmlspecialchars($post['digest']);
+		$s_refer  = htmlspecialchars($vars['refer']);
+		$s_digest = htmlspecialchars($vars['digest']);
 		$s_postdata_input = htmlspecialchars($postdata_input);
 		
 		$body .= <<<EOD
@@ -62,24 +62,24 @@ EOD;
 	}
 	else
 	{
-		page_write($post['refer'],$postdata);
+		page_write($vars['refer'], $postdata);
 		
 		$title = $_title_updated;
 	}
-	$retvars["msg"] = $title;
-	$retvars["body"] = $body;
+	$retvars['msg'] = $title;
+	$retvars['body'] = $body;
 	
-	$post['page'] = $vars['page'] = $post['refer'];
+	$vars['page'] = $vars['refer'];
 	
 	return $retvars;
 }
 function plugin_memo_convert()
 {
-	global $script,$vars,$digest;
+	global $script, $vars, $digest;
 	global $_btn_memo_update;
 	static $numbers = array();
 	
-	if (!array_key_exists($vars['page'],$numbers))
+	if (! isset($numbers[$vars['page']]))
 	{
 		$numbers[$vars['page']] = 0;
 	}
@@ -92,7 +92,7 @@ function plugin_memo_convert()
 	
 	$data = htmlspecialchars(str_replace("\\n","\n",$data));
 	
-	$s_page = htmlspecialchars($vars['page']);
+	$s_page   = htmlspecialchars($vars['page']);
 	$s_digest = htmlspecialchars($digest);
 	$s_cols = MEMO_COLS;
 	$s_rows = MEMO_ROWS;
