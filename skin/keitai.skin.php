@@ -1,12 +1,11 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: keitai.skin.php,v 1.5 2005/01/08 04:07:11 henoheno Exp $
 //
-// $Id: keitai.skin.php,v 1.4 2004/12/06 13:10:59 henoheno Exp $
-//
+// Skin for Embedded devices
 
 // Prohibit direct access
-if (! defined('UI_LANG')) exit;
+if (! defined('UI_LANG')) die('UI_LANG is not set');
 
 global $max_size, $accesskey, $menubar;
 $link = $_LINK;
