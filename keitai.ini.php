@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.ini.php,v 1.7 2004/07/23 14:48:19 henoheno Exp $
+// $Id: keitai.ini.php,v 1.8 2004/07/24 04:37:33 henoheno Exp $
 //
 // PukiWiki setting file (Cell phones, PDAs and other thin clients)
 
@@ -202,13 +202,13 @@ switch ($ua_name) {
 	'&amp;(worried);'=>	'&#xE722;',
 
 	// Face marks, Japanese style
-	'(\(\^\^\))'	=>	'&#63893;',	// smile
-	'(\(\^-\^)'	=>	'&#63893;',	// smile
-	'(\(\.\.;)'	=>	'&#63895;',	// oh
-	'(\(\^_-\))'	=>	'&#xE729;',	// wink
-	'(\(--;)'	=>	'&#63894;',	// sad
-	'(\(\^\^;\))'	=>	'&#xE722;',	// worried
-	'(\(\^\^;)'	=>	'&#xE722;',	// worried
+	'\s(\(\^\^\))'	=>	'&#63893;',	// smile
+	'\s(\(\^-\^)'	=>	'&#63893;',	// smile
+	'\s(\(\.\.;)'	=>	'&#63895;',	// oh
+	'\s(\(\^_-\))'	=>	'&#xE729;',	// wink
+	'\s(\(--;)'	=>	'&#63894;',	// sad
+	'\s(\(\^\^;\))'	=>	'&#xE722;',	// worried
+	'\s(\(\^\^;)'	=>	'&#xE722;',	// worried
 
 	// Push buttons, 0-9 and sharp
 	'&amp;(pb1);'	=>	'&#63879;',
@@ -260,13 +260,13 @@ switch ($ua_name) {
 	'&amp;(worried);'=>	chr(27).'$E('.chr(15),	// '&#57608;',
 
 	// Face marks, Japanese style
-	'(\(\^\^\))'	=>	chr(27).'$Gv'.chr(15),	// smile
-	'(\(\^-\^)'	=>	chr(27).'$Gv'.chr(15),	// smile
-	'(\(\.\.;)'	=>	chr(27).'$Gx'.chr(15),	// oh
-	'(\(\^_-\))'	=>	chr(27).'$E&'.chr(15),	// winkじゃないけどね(^^; (※目がハート)
-	'(\(--;)'	=>	chr(27).'$E&'.chr(15),	// sad
-	'(\(\^\^;\))'	=>	chr(27).'$E('.chr(15),	// worried
-	'(\(\^\^;)'	=>	chr(27).'$E('.chr(15),	// worried
+	'\s(\(\^\^\))'	=>	chr(27).'$Gv'.chr(15),	// smile
+	'\s(\(\^-\^)'	=>	chr(27).'$Gv'.chr(15),	// smile
+	'\s(\(\.\.;)'	=>	chr(27).'$Gx'.chr(15),	// oh
+	'\s(\(\^_-\))'	=>	chr(27).'$E&'.chr(15),	// winkじゃないけどね(^^; (※目がハート)
+	'\s(\(--;)'	=>	chr(27).'$E&'.chr(15),	// sad
+	'\s(\(\^\^;\))'	=>	chr(27).'$E('.chr(15),	// worried
+	'\s(\(\^\^;)'	=>	chr(27).'$E('.chr(15),	// worried
 
 	// Push buttons, 0-9 and sharp
 	'&amp;(pb1);'	=>	chr(27).'$F<'.chr(15),	// '&#57884;',
@@ -328,13 +328,13 @@ switch ($ua_name) {
 	'&amp;(worried);'=>	'<img localsrc="351">',
 
 	// Face marks, Japanese style
-	'(\(\^\^\))'	=>	'<img localsrc="68">',	// smile
-	'(\(\^-\^)'	=>	'<img localsrc="68">',	// smile
-	'(\(\.\.;)'	=>	'<img localsrc="260">',	// oh
-	'(\(\^_-\))'	=>	'<img localsrc="348">',	// wink
-	'(\(--;)'	=>	'<img localsrc="259">',	// sad
-	'(\(\^\^;\))'	=>	'<img localsrc="351">',	// worried
-	'(\(\^\^;)'	=>	'<img localsrc="351">',	// worried
+	'\s(\(\^\^\))'	=>	'<img localsrc="68">',	// smile
+	'\s(\(\^-\^)'	=>	'<img localsrc="68">',	// smile
+	'\s(\(\.\.;)'	=>	'<img localsrc="260">',	// oh
+	'\s(\(\^_-\))'	=>	'<img localsrc="348">',	// wink
+	'\s(\(--;)'	=>	'<img localsrc="259">',	// sad
+	'\s(\(\^\^;\))'	=>	'<img localsrc="351">',	// worried
+	'\s(\(\^\^;)'	=>	'<img localsrc="351">',	// worried
 
 	// Push buttons, 0-9 and sharp
 	'&amp;(pb1);'	=>	'<img localsrc="180">',
