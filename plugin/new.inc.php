@@ -1,17 +1,14 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: new.inc.php,v 1.5 2004/12/18 06:52:57 henoheno Exp $
 //
-// $Id: new.inc.php,v 1.4 2004/07/31 03:09:20 henoheno Exp $
-//
+// New! plugin
 
 // 全体の表示フォーマット
-define('NEW_MESSAGE','<span class="comment_date">%s</span>');
+define('PLUGIN_NEW_FORMAT', '<span class="comment_date">%s</span>');
 
 function plugin_new_init()
 {
-	global $_plugin_new_elapses;
-
 	// 経過秒数 => 新着表示タグ
 	$messages = array(
 		'_plugin_new_elapses' => array(
@@ -21,61 +18,49 @@ function plugin_new_init()
 	);
 	set_plugin_messages($messages);
 }
+
 function plugin_new_inline()
 {
-	global $vars,$_plugin_new_elapses;
+	global $vars, $_plugin_new_elapses;
 
-	if (func_num_args() < 1)
-	{
-		return FALSE;
-	}
+	if (func_num_args() < 1) return FALSE;
+
 	$retval = '';
 	$args = func_get_args();
 	$date = strip_htmltag(array_pop($args)); // {}部分の引数
-	if ($date != '' and ($timestamp = strtotime($date)) !== -1)
-	{
-		$nodate = in_array('nodate',$args);
+	if ($date != '' && ($timestamp = strtotime($date)) !== -1) {
 		$timestamp -= ZONETIME;
+		$nodate = in_array('nodate', $args);
 		$retval = $nodate ? '' : htmlspecialchars($date);
-	}
-	else
-	{
-		$name = strip_bracket(count($args) ? array_shift($args) : $vars['page']);
-		$page = get_fullname($name,$vars['page']);
-		$nolink = in_array('nolink',$args);
+	} else {
 		$timestamp = 0;
-		if (substr($page,-1) == '/')
-		{
-			foreach (preg_grep('/^'.preg_quote($page,'/').'/',get_existpages()) as $page)
-			{
+		$name = strip_bracket(! empty($args) ? array_shift($args) : $vars['page']);
+		$page = get_fullname($name, $vars['page']);
+		$nolink = in_array('nolink', $args);
+		if (substr($page, -1) == '/') {
+			foreach (preg_grep('/^' . preg_quote($page, '/') . '/',
+			    get_existpages()) as $page) {
 				$_timestamp = get_filetime($page);
-				if ($timestamp < $_timestamp)
-				{
-					$retval = $nolink ? '' : make_pagelink($page); // 最も新しいページを表示
+				if ($timestamp < $_timestamp) {
+					// 最も新しいページを表示
+					$retval    = $nolink ? '' : make_pagelink($page);
 					$timestamp = $_timestamp;
 				}
 			}
-		}
-		else if (is_page($page))
-		{
-			$retval = $nolink ? '' : make_pagelink($page,$name);
+		} else if (is_page($page)) {
+			$retval    = $nolink ? '' : make_pagelink($page, $name);
 			$timestamp = get_filetime($page);
 		}
-		if ($timestamp == 0)
-		{
-			return '';
-		}
+		if ($timestamp == 0) return '';
 	}
 
 	$erapse = UTIME - $timestamp;
-	foreach ($_plugin_new_elapses as $limit=>$tag)
-	{
-		if ($erapse <= $limit)
-		{
-			$retval .= sprintf($tag,get_passage($timestamp));
+	foreach ($_plugin_new_elapses as $limit=>$tag) {
+		if ($erapse <= $limit) {
+			$retval .= sprintf($tag, get_passage($timestamp));
 			break;
 		}
 	}
-	return sprintf(NEW_MESSAGE,$retval);
+	return sprintf(PLUGIN_NEW_FORMAT, $retval);
 }
 ?>
