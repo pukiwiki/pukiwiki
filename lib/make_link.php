@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.10 2005/01/15 03:16:22 henoheno Exp $
+// $Id: make_link.php,v 1.11 2005/01/16 13:27:55 henoheno Exp $
 //
 // Hyperlink-related functions
 
@@ -310,9 +310,9 @@ EOD;
 <br />
 EOD;
 		// A hyperlink, content-body to footnote
-		$name = '<a id="notetext_' . $id . '" href="' .
-			$script . '?' . $page . '#notefoot_' . $id .
-			'" class="note_super">*' . $id . '</a>';
+		$name = '<a id="notetext_' . $id . '" href="' . $script . '?' . $page .
+			'#notefoot_' . $id . '" class="note_super" title="' .
+			htmlspecialchars(strip_tags($note)) . '">*' . $id . '</a>';
 
 		return parent::setParam($page, $name, $body);
 	}
