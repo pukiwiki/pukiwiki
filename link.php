@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: link.php,v 1.5 2003/04/17 14:51:51 arino Exp $
+// $Id: link.php,v 1.6 2003/07/29 09:09:20 arino Exp $
 //
 
 /*
@@ -37,7 +37,7 @@ function links_update($page)
 {
 	set_time_limit(0);
 	
-	$time = is_page($page) ? get_filetime($page) : 0;
+	$time = is_page($page,TRUE) ? get_filetime($page) : 0;
 	
 	$rel_old = array();
 	$rel_file = CACHE_DIR.encode($page).'.rel';
