@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.32 2003/03/28 15:13:02 panda Exp $
+// $Id: make_link.php,v 1.33 2003/04/23 08:05:16 arino Exp $
 //
 
 // リンクを付加する
@@ -213,7 +213,7 @@ EOD;
 		
 		$name = $arr[1];
 		$this->param = $arr[2];
-		$this->body = ($arr[3] == '') ? '' : make_link($arr[3]);
+		$this->body = $arr[3];
 		
 		if (!exist_plugin_inline($name))
 		{
@@ -230,7 +230,8 @@ EOD;
 	{
 		//&hoge(){...}; &fuga(){...}; のbodyが'...}; &fuga(){...'となるので、前後に分ける
 		$after = '';
-		if (preg_match("/^ ((?!};).*?) }; (.*?) &amp; (\w+) (?: \( ([^()]*) \) )? { (.+)$/x",$body,$matches)) {
+		if (preg_match("/^ ((?!};).*?) }; (.*?) &amp; (\w+) (?: \( ([^()]*) \) )? { (.+)$/x",$body,$matches))
+		{
 			$body = $matches[1];
 			$after = $matches[2].$this->make_inline($matches[3],$matches[4],$matches[5]);
 		}
@@ -239,7 +240,8 @@ EOD;
 		if (exist_plugin_inline($func))
 		{
 			$str = do_plugin_inline($func,$param,$body);
-			if ($str !== FALSE) { //成功
+			if ($str !== FALSE) //成功
+			{
 				return $str.$after;
 			}
 		}
@@ -391,6 +393,8 @@ EOD;
 //InterWikiName
 class Link_interwikiname extends Link
 {
+	var $anchor = '';
+	
 	function Link_interwikiname($start)
 	{
 		parent::Link($start);
@@ -434,8 +438,14 @@ EOD;
 	{
 		$arr = $this->splice($arr);
 		
-		$name = '[['.$arr[4].$arr[6].']]';
-		$alias = ($arr[2] != '') ? $arr[2] : strip_bracket($name);
+		$param = $arr[6];
+		if (preg_match('/^([^#]+)(#[A-Za-z][\w-]*)$/',$param,$matches))
+		{
+			$this->anchor = $matches[2];
+			$param = $matches[1];
+		}
+		$name = '[['.$arr[4].$param.']]';
+		$alias = ($arr[2] != '') ? $arr[2] : $arr[4].$arr[6];
 		
 		return parent::setParam($page,$name,'InterWikiName',$alias);
 	}
@@ -444,7 +454,7 @@ EOD;
 		global $script; //,$interwiki_target;
 		
 		$r_name = rawurlencode($this->name);
-		return "<a href=\"$script?$r_name\">{$this->alias}</a>";
+		return "<a href=\"$script?$r_name{$this->anchor}\">{$this->alias}</a>";
 	}
 }
 // BracketName
