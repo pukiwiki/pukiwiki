@@ -32,7 +32,7 @@
 	</table>
 	<br />
 	<?php if($is_page) { ?>
-		[ <a href="<?php echo $script ?>?<?php echo rawurlencode($vars[page]) ?>">Reload</a> ]
+		[ <a href="<?php echo "$script?".rawurlencode($vars[page]) ?>">Reload</a> ]
 		&nbsp;
 		[ <a href="<?php echo $script ?>?plugin=newpage">New</a>
 		| <a href="<?php echo $link_edit ?>">Edit</a>
