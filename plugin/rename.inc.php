@@ -2,23 +2,23 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rename.inc.php,v 1.3 2003/03/03 07:07:28 panda Exp $
+// $Id: rename.inc.php,v 1.4 2003/03/15 04:25:53 panda Exp $
 //
 
 /*
-*プラグイン rename
-ページの名前を変える
+ * プラグイン rename
+ * ページの名前を変える
+ * 
+ * Usage
+ *  http:.../pukiwiki.php?plugin=rename(&refer=ページ名)
+ *
+ * パラメータ
+ * &refer=ページ名
+ * ページを指定
+ *
+ */
 
-*Usage
- http:.../pukiwiki.php?plugin=rename(&refer=ページ名)
-
-*パラメータ
--&refer=ページ名~
- ページを指定
-
-*/
-
-define('RENAME_LOGPAGE','RenameLog');
+define('RENAME_LOGPAGE',':RenameLog');
 
 function plugin_rename_init()
 {
@@ -52,65 +52,69 @@ function plugin_rename_init()
 	);
 	set_plugin_messages($messages);
 }
-
 function plugin_rename_action()
 {
-	global $vars,$adminpass,$whatsnew,$WikiName,$BracketName;
+	global $adminpass,$whatsnew,$WikiName,$BracketName;
 	global $_rename_messages;
-
-	// XSS
-	foreach (array('refer','page','src','dst','method','related') as $var)
-	{
-		$s_vars[$var] = array_key_exists($var,$vars) ? htmlspecialchars($vars[$var]) : '';
-	}
-
+	
 	set_time_limit(60);
-
-	$method = empty($vars['method']) ? '' : $vars['method'];
+	
+	$method = rename_getvar('method');
 	if ($method == 'regex')
 	{
-		if ($vars['src'] == '')
+		$src = rename_getvar('src');
+		$dst = rename_getvar('dst');
+		if ($src == '')
 		{
-			return rename_phase1($s_vars);
+			return rename_phase1();
 		}
-		$pages = get_existpages();
-		$arr0 = preg_grep('/'.str_replace(array('(',')'),'',$vars['src']).'/',$pages);
+		$src_pattern = '/'.preg_quote($src,'/').'/';
+		$arr0 = preg_grep($src_pattern,get_existpages());
 		if (!is_array($arr0) or count($arr0) == 0)
 		{
-			return rename_phase1($s_vars,'nomatch');
+			return rename_phase1('nomatch');
 		}
-		$arr1 = preg_replace("/{$vars['src']}/",$vars['dst'],$arr0);
-		$arr2 = preg_grep("/^($WikiName|$BracketName)$/",$arr1);
+		$arr1 = preg_replace($src_pattern,$dst,$arr0);
+		$arr2 = preg_grep("/^$BracketName$/",$arr1);
 		if (count($arr2) != count($arr1))
 		{
-			return rename_phase1($s_vars,'notvalid');
+			return rename_phase1('notvalid');
 		}
-		return rename_regex($s_vars,$arr0,$arr1);
+		return rename_regex($arr0,$arr1);
 	}
-	else // $vars['method'] = 'page'
+	else // $method == 'page'
 	{
-		if (!array_key_exists('refer',$vars) or $vars['refer'] == '')
+		$page = rename_getvar('page');
+		$refer = rename_getvar('refer');
+		if ($refer == '')
 		{
 			return rename_phase1($s_vars);
 		}
-		if (!is_page($vars['refer']))
+		if (!is_page($refer))
 		{
-			return rename_phase1($s_vars,'notpage',$s_vars['refer']);
+			return rename_phase1('notpage',$refer);
 		}
-		if ($vars['refer'] == $whatsnew)
+		if ($refer == $whatsnew)
 		{
-			return rename_phase1($s_vars,'norename',$s_vars['refer']);
+			return rename_phase1('norename',$refer);
 		}
-		if ($vars['page'] == '' or $vars['page'] == $vars['refer'])
+		if ($page == '' or $page == $refer)
 		{
-			return rename_phase2($s_vars);
+			return rename_phase2();
 		}
-		if (!preg_match("/^$WikiName|$BracketName$/",$vars['page']))
+		if (!preg_match("/^$BracketName$/",$page))
 		{
-			return rename_phase2($s_vars,'notvalid');
+			return rename_phase2('notvalid');
 		}
-		return rename_refer($s_vars);
+		return rename_refer();
 	}
+}
+// 変数を取得する
+function rename_getvar($key)
+{
+	global $vars;
+	
+	return array_key_exists($key,$vars) ? $vars[$key] : '';
 }
 // エラーメッセージを作る
 function rename_err($err,$page='')
@@ -138,26 +142,17 @@ function rename_err($err,$page='')
 	$msg = sprintf($_rename_messages['err'],$body);
 	return $msg;
 }
-// From->Toメッセージを作る
-function rename_arrow($from,$to)
-{
-	global $_rename_messages;
-	
-	return "$from{$_rename_messages['msg_arrow']}$to";
-}
 //第一段階:ページ名または正規表現の入力
-function &rename_phase1(&$s_vars,$err='',$page='')
+function rename_phase1($err='',$page='')
 {
-	global $script,$vars,$_rename_messages;
+	global $script,$_rename_messages;
 	
-	if (!array_key_exists('refer',$vars))
-	{
-		return FALSE;
-	}
 	$msg = rename_err($err,$page);
+	$refer = rename_getvar('refer');
+	$method = rename_getvar('method');
 
 	$radio_regex = $radio_page = '';
-	if (array_key_exists('method',$vars) and $vars['method'] == 'regex')
+	if ($method == 'regex')
 	{
 		$radio_regex =' checked'; 
 	}
@@ -165,8 +160,11 @@ function &rename_phase1(&$s_vars,$err='',$page='')
 	{
 		$radio_page = ' checked'; 
 	}
-	$select_refer = rename_getselecttag($vars['refer']);
-
+	$select_refer = rename_getselecttag($refer);
+	
+	$s_src = htmlspecialchars(rename_getvar('src'));
+	$s_dst = htmlspecialchars(rename_getvar('dst'));
+	
 	$ret['msg'] = $_rename_messages['msg_title'];
 	$ret['body'] = <<<EOD
 $msg
@@ -178,9 +176,9 @@ $msg
   <input type="radio" name="method" value="regex"$radio_regex />
   {$_rename_messages['msg_regex']}:<br />
   From:<br />
-  <input type="text" name="src" size="80" value="{$s_vars['src']}" /><br />
+  <input type="text" name="src" size="80" value="$s_src" /><br />
   To:<br>
-  <input type="text" name="dst" size="80" value="{$s_vars['dst']}" /><br />
+  <input type="text" name="dst" size="80" value="$s_dst" /><br />
   <input type="submit" value="{$_rename_messages['btn_next']}" /><br />
  </div>
 </form>
@@ -188,71 +186,77 @@ EOD;
 	return $ret;
 }
 //第二段階:新しい名前の入力
-function &rename_phase2(&$s_vars,$err='')
+function rename_phase2($err='')
 {
-	global $script,$vars,$_rename_messages;
+	global $script,$_rename_messages;
 	
 	$msg = rename_err($err);
-
-	$related = rename_getrelated($vars['refer']);
-	sort($related);
+	$page = rename_getvar('page');
+	$refer = rename_getvar('refer');
+	if ($page == '')
+	{
+		$page = $refer;
+	}
+	
+	$related = rename_getrelated($refer);
+	$msg_related = '';
 	if (count($related) > 0)
 	{
-		$rename_related = $_rename_messages['msg_do_related'].
+		$msg_related = $_rename_messages['msg_do_related'].
 			'<input type="checkbox" name="related" value="1" checked="checked" /><br />';
 	}
-	if ($s_vars['page'] == '')
-	{
-		$s_vars['page'] = $s_vars['refer'];
-	}
-	$msg_rename = sprintf($_rename_messages['msg_rename'],make_link($vars['refer']));
-
+	$msg_rename = sprintf($_rename_messages['msg_rename'],make_pagelink($refer));
+	
+	$s_page = htmlspecialchars($page);
+	$s_refer = htmlspecialchars($refer);
+	
 	$ret['msg'] = $_rename_messages['msg_title'];
 	$ret['body'] = <<<EOD
 $msg
 <form action="$script" method="post">
  <div>
   <input type="hidden" name="plugin" value="rename" />
-  <input type="hidden" name="refer" value="{$s_vars['refer']}" />
+  <input type="hidden" name="refer" value="$s_refer" />
   $msg_rename<br />
-  {$_rename_messages['msg_newname']}:<input type="text" name="page" size="80" value="{$s_vars['page']}" /><br />
+  {$_rename_messages['msg_newname']}:<input type="text" name="page" size="80" value="$s_page" /><br />
   $rename_related
   <input type="submit" value="{$_rename_messages['btn_next']}" /><br />
  </div>
 </form>
 EOD;
-
 	if (count($related) > 0)
 	{
 		$ret['body'].= "<hr /><p>{$_rename_messages['msg_related']}</p><ul>";
-		foreach ($related as $name) { $ret['body'].= '<li>'.make_link($name).'</li>'; }
+		sort($related);
+		foreach ($related as $name)
+		{
+			$ret['body'].= '<li>'.make_pagelink($name).'</li>'; 
+		}
 		$ret['body'].= '</ul>';
 	}
 	return $ret;
 }
 //ページ名と関連するページを列挙し、phase3へ
-function &rename_refer(&$s_vars)
+function rename_refer()
 {
-	global $vars;
-
-	$pages[encode($vars['refer'])] = encode($vars['page']);
-	if ($vars['related'])
+	$page = rename_getvar('page');
+	$refer = rename_getvar('refer');
+	
+	$pages[encode($refer)] = encode($page);
+	if (rename_getvar('related') != '')
 	{
-		$from = strip_bracket($vars['refer']);
-		$to =   strip_bracket($vars['page']);
-		$related = rename_getrelated($vars['refer']);
-		foreach ($related as $page)
+		$from = strip_bracket($refer);
+		$to =   strip_bracket($page);
+		foreach (rename_getrelated($refer) as $_page)
 		{
-			$pages[encode($page)] = encode(str_replace($from,$to,$page));
+			$pages[encode($_page)] = encode(str_replace($from,$to,$_page));
 		}
 	}
-	return rename_phase3($s_vars,$pages);
+	return rename_phase3($pages);
 }
 //正規表現でページを置換
-function &rename_regex(&$s_vars,&$arr_from,&$arr_to)
+function rename_regex($arr_from,$arr_to)
 {
-	global $vars;
-
 	$exists = array();
 	foreach ($arr_to as $page)
 	{
@@ -261,81 +265,94 @@ function &rename_regex(&$s_vars,&$arr_from,&$arr_to)
 			$exists[] = $page;
 		}
 	}
-	if (count($exists) > 0) {
-		return rename_phase1($s_vars,'already',$exists);
+	if (count($exists) > 0)
+	{
+		return rename_phase1('already',$exists);
 	}
-
+	
 	$pages = array();
 	foreach ($arr_from as $refer)
 	{
 		$pages[encode($refer)] = encode(array_shift($arr_to));
 	}
-	return rename_phase3($s_vars,$pages);
+	return rename_phase3($pages);
 }
-function &rename_phase3(&$s_vars,&$pages)
+function rename_phase3($pages)
 {
-	global $script,$vars,$_rename_messages,$adminpass;
-
+	global $script,$adminpass,$_rename_messages;
+	
+	$msg = $input = '';
 	$files = rename_get_files($pages);
-
+	
 	$exists = array();
 	foreach ($files as $_page=>$arr)
 	{
 		foreach ($arr as $old=>$new)
 		{
-			if (is_readable($new)) {
+			if (file_exists($new))
+			{
 				$exists[$_page][$old] = $new;
 			}
 		}
 	}
-
-	if ($vars['pass'] != '')
+	$pass = rename_getvar('pass');
+	if (md5($pass) == $adminpass)
 	{
-		if (md5($vars['pass']) == $adminpass)
-		{
-			return rename_proceed($s_vars,$pages,$files,$exists);
-		}
-		else
-		{
-			$msg = rename_err('adminpass');
-		}
+		return rename_proceed($pages,$files,$exists);
 	}
-
-	if ($s_vars['method'] == "regex")
+	else if ($pass != '')
 	{
+		$msg = rename_err('adminpass');
+	}
+	$method = rename_getvar('method');
+	if ($method == 'regex')
+	{
+		$s_src = htmlspecialchars(rename_getvar('src'));
+		$s_dst = htmlspecialchars(rename_getvar('dst'));
 		$msg .= $_rename_messages['msg_regex']."<br />";
 		$input .= "<input type=\"hidden\" name=\"method\" value=\"regex\" />";
-		$input .= "<input type=\"hidden\" name=\"src\" value=\"{$s_vars['src']}\" />";
-		$input .= "<input type=\"hidden\" name=\"dst\" value=\"{$s_vars['dst']}\" />";
+		$input .= "<input type=\"hidden\" name=\"src\" value=\"$s_src\" />";
+		$input .= "<input type=\"hidden\" name=\"dst\" value=\"$s_dst\" />";
 	}
 	else
 	{
+		$s_refer = htmlspecialchars(rename_getvar('refer'));
+		$s_page = htmlspecialchars(rename_getvar('page'));
+		$s_related = htmlspecialchars(rename_getvar('related'));
 		$msg .= $_rename_messages['msg_page']."<br />";
 		$input .= "<input type=\"hidden\" name=\"method\" value=\"page\" />";
-		$input .= "<input type=\"hidden\" name=\"refer\" value=\"{$s_vars['refer']}\" />";
-		$input .= "<input type=\"hidden\" name=\"page\" value=\"{$s_vars['page']}\" />";
-		$input .= "<input type=\"hidden\" name=\"related\" value=\"{$s_vars['related']}\" />";
+		$input .= "<input type=\"hidden\" name=\"refer\" value=\"$s_refer\" />";
+		$input .= "<input type=\"hidden\" name=\"page\" value=\"$s_page\" />";
+		$input .= "<input type=\"hidden\" name=\"related\" value=\"$s_related\" />";
 	}
-
+	
 	if (count($exists) > 0)
 	{
 		$msg .= $_rename_messages['err_already_below']."<ul>";
 		foreach ($exists as $page=>$arr)
 		{
-			$msg .= "<li>".rename_arrow(make_link(decode($page)),decode($pages[$page]))."<ul>\n";
-			foreach ($arr as $ofile=>$nfile)
+			$msg .= '<li>';
+			$msg .= make_pagelink(decode($page));
+			$msg .= $_rename_messages['msg_arrow'];
+			$msg .= htmlspecialchars(decode($pages[$page]));
+			if (count($arr) > 0)
 			{
-				$msg .= "<li>".rename_arrow($ofile,$nfile)."</li>\n";
+				$msg .= "<ul>\n";
+				foreach ($arr as $ofile=>$nfile)
+				{
+					$msg .= '<li>'.$ofile.$_rename_messages['msg_arrow'].$nfile."</li>\n";
+				}
+				$msg .= '</ul>';
 			}
-			$msg .= "</ul></li>\n";
+			$msg .= "</li>\n";
 		}
-		$msg .= "</ul><hr />";
-
+		$msg .= "</ul><hr />\n";
+	
 		$input .= '<input type="radio" name="exist" value="0" checked />'.$_rename_messages['msg_exist_none'].'<br />';
 		$input .= '<input type="radio" name="exist" value="1" />'.$_rename_messages['msg_exist_overwrite'].'<br />';
 	}
 	$ret['msg'] = $_rename_messages['msg_title'];
-	$ret['body'] .= <<<EOD
+	$ret['body'] = <<<EOD
 <p>$msg</p>
 <form action="$script" method="post">
  <div>
@@ -348,18 +365,21 @@ function &rename_phase3(&$s_vars,&$pages)
 </form>
 <p>{$_rename_messages['msg_confirm']}</p>
 EOD;
-
+	
 	ksort($pages);
 	$ret['body'] .= "<ul>\n";
 	foreach ($pages as $old=>$new)
 	{
-		$ret['body'] .= "<li>".rename_arrow(make_link(decode($old)),decode($new))."</li>\n";
+		$ret['body'] .= "<li>".
+			make_pagelink(decode($old)).
+			$_rename_messages['msg_arrow'].
+			htmlspecialchars(decode($new)).
+			"</li>\n";
 	}
 	$ret['body'] .= "</ul>\n";
 	return $ret;
 }
-
-function &rename_get_files(&$pages)
+function rename_get_files($pages)
 {
 	$files = array();
 	$dirs = array(BACKUP_DIR,DIFF_DIR,DATA_DIR);
@@ -372,7 +392,7 @@ function &rename_get_files(&$pages)
 		$dirs[] = COUNTER_DIR;
 	}
 	// and more ...
-
+	
 	foreach ($dirs as $path)
 	{
 		if (!$dir = opendir($path))
@@ -399,19 +419,18 @@ function &rename_get_files(&$pages)
 	}
 	return $files;
 }
-
-function rename_proceed(&$s_vars,&$pages,&$files,&$exists)
+function rename_proceed($pages,$files,$exists)
 {
-	global $script,$vars,$_rename_messages,$now;
-
-	if (!$vars['exist'])
+	global $script,$now,$_rename_messages;
+	
+	if (rename_getvar('exist') == '')
 	{
 		foreach ($exists as $key=>$arr)
 		{
 			unset($files[$key]); 
 		}
 	}
-
+	
 	set_time_limit(0);
 	foreach ($files as $page=>$arr)
 	{
@@ -424,55 +443,61 @@ function rename_proceed(&$s_vars,&$pages,&$files,&$exists)
 			rename($old,$new);
 		}
 	}
-
+	
 	$postdata = get_source(RENAME_LOGPAGE);
 	$postdata[] = '*'.$now."\n";
-	if ($vars['method'] == 'regex')
+	if (rename_getvar('method') == 'regex')
 	{
 		$postdata[] = '-'.$_rename_messages['msg_regex']."\n";
-		$postdata[] = '--From:'.$s_vars['src']."\n";
-		$postdata[] = '--To:'.$s_vars['dst']."\n";
+		$postdata[] = '--From:[['.rename_getvar('src')."]]\n";
+		$postdata[] = '--To:[['.rename_getvar('dst')."]]\n";
 	}
 	else
 	{
 		$postdata[] = '-'.$_rename_messages['msg_page']."\n";
-		$postdata[] = '--From:'.$s_vars['refer']."\n";
-		$postdata[] = '--To:'.$s_vars['page']."\n";
+		$postdata[] = '--From:[['.rename_getvar('refer')."]]\n";
+		$postdata[] = '--To:[['.rename_getvar('page')."]]\n";
 	}
 	if (count($exists) > 0)
 	{
 		$postdata[] = "\n".$_rename_messages['msg_result']."\n";
 		foreach ($exists as $page=>$arr)
 		{
-			$postdata[] = '-'.rename_arrow(decode($page),decode($pages[$page]))."\n";
+			$postdata[] = '-'.decode($page).
+				$_rename_messages['msg_arrow'].decode($pages[$page])."\n";
 			foreach ($arr as $ofile=>$nfile)
 			{
-				$postdata[] = '--'.rename_arrow($ofile,$nfile)."\n";
+				$postdata[] = '--'.$ofile.
+					$_rename_messages['msg_arrow'].$nfile."\n";
 			}
 		}
 		$postdata[] = "----\n";
 	}
 	foreach ($pages as $old=>$new)
 	{
-		$postdata[] = '-'.rename_arrow(decode($old),decode($new))."\n";
+		$postdata[] = '-'.decode($old).
+			$_rename_messages['msg_arrow'].decode($new)."\n";
 	}
-
+	
 	// 更新の衝突はチェックしない。
-
+	
 	// ファイルの書き込み
 	page_write(RENAME_LOGPAGE, join('',$postdata));
-
+	
 	//リダイレクト
-	$page = rawurlencode(($vars['page'] == '') ? RENAME_LOGPAGE : $vars['page']);
-	header("Location: $script?$page");
+	$page = rename_getvar('page');
+	if ($page == '')
+	{
+		$page = RENAME_LOGPAGE;
+	}
+	header("Location: $script?".rawurlencode($page));
 	die();
 }
-
-function &rename_getrelated($page)
+function rename_getrelated($page)
 {
 	$related = array();
 	$pages = get_existpages();
-	$pattern = '/(?:^|\/)'.str_replace('/','\/',strip_bracket($page)).'(?:\/|$)/';
+	$pattern = '/(?:^|\/)'.preg_quote(strip_bracket($page),'/').'(?:\/|$)/';
 	foreach ($pages as $name)
 	{
 		if ($name == $page)
@@ -486,10 +511,10 @@ function &rename_getrelated($page)
 	}
 	return $related;
 }
-function &rename_getselecttag($page)
+function rename_getselecttag($page)
 {
 	global $whatsnew;
-
+	
 	$pages =array();
 	foreach (get_existpages() as $_page)
 	{
@@ -498,7 +523,8 @@ function &rename_getselecttag($page)
 			continue; 
 		}
 		$selected = ($_page == $page) ? ' selected' : '';
-		$pages[$_page] = "<option value=\"$_page\"$selected>$_page</option>";
+		$s_page = htmlspecialchars($_page);
+		$pages[$_page] = "<option value=\"$s_page\"$selected>$s_page</option>";
 	}
 	ksort($pages);
 	$list = join("\n ",$pages);
