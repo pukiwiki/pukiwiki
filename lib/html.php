@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.29 2005/03/06 02:24:53 henoheno Exp $
+// $Id: html.php,v 1.30 2005/03/13 17:29:02 teanan Exp $
 //
 // HTML-publishing related functions
 
@@ -147,6 +147,7 @@ function edit_form($page, $postdata, $digest = 0, $b_template = TRUE)
 	global $_btn_addtop, $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel,
 		$_msg_help, $_btn_notchangetimestamp;
 	global $whatsnew, $_btn_template, $_btn_load, $non_list, $load_template_func;
+	global $notimeupdate;
 
 	$refer = $template = $addtag = $add_top = '';
 
@@ -195,6 +196,22 @@ EOD;
 	$b_preview   = isset($vars['preview']); // TRUE when preview
 	$btn_preview = $b_preview ? $_btn_repreview : $_btn_preview;
 
+	$add_notimestamp = '';
+	if ( $notimeupdate != 0 ) {
+		// enable 'do not change timestamp'
+		$add_notimestamp = <<<EOD
+  <input type="checkbox" name="notimestamp" id="_edit_form_notimestamp" value="true"$checked_time />
+  <label for="_edit_form_notimestamp"><span class="small">$_btn_notchangetimestamp</span></label>
+EOD;
+		if ( $notimeupdate == 2 ) {
+			// enable only administrator
+			$add_notimestamp .= <<<EOD
+  <input type="password" name="pass" size="12" />
+EOD;
+		}
+		$add_notimestamp .= '&nbsp;';
+	}
+
 	$body = <<<EOD
 <form action="$script" method="post">
  <div class="edit_form">
@@ -208,8 +225,7 @@ $template
   <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
   <input type="submit" name="write"   value="$_btn_update" accesskey="s" />
   $add_top
-  <input type="checkbox" name="notimestamp" id="_edit_form_notimestamp" value="true"$checked_time />
-  <label for="_edit_form_notimestamp"><span class="small">$_btn_notchangetimestamp</span></label> &nbsp;
+  $add_notimestamp
   <input type="submit" name="cancel"  value="$_btn_cancel" accesskey="c" />
   <textarea name="original" rows="1" cols="1" style="display:none">$s_original</textarea>
  </div>
