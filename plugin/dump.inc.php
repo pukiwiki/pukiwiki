@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.8 2004/09/25 12:44:47 henoheno Exp $
+// $Id: dump.inc.php,v 1.9 2004/09/25 13:27:15 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -37,7 +37,7 @@ define('PLUGIN_DUMP_RESTORE', 'restore'); // Upload & restore
 define('PLUGIN_DUMP_SFX_TAR' , '.tar');
 define('PLUGIN_DUMP_SFX_GZIP', '.tar.gz');
 
-define('ARCFILE_GZIP', 0);
+define('ARCFILE_TAR_GZ', 0);
 define('ARCFILE_TAR',  1);
 
 
@@ -86,7 +86,7 @@ function plugin_dump_download()
 	global $vars;
 
 	// アーカイブの種類
-	$arc_kind = ($vars['pcmd'] == 'tar') ? ARCFILE_TAR : ARCFILE_GZIP;
+	$arc_kind = ($vars['pcmd'] == 'tar') ? ARCFILE_TAR : ARCFILE_TAR_GZ;
 
 	// ページ名に変換する
 	$namedecode = isset($vars['namedecode']) ? TRUE : FALSE;
@@ -132,11 +132,20 @@ function plugin_dump_upload()
 	$code = FALSE;
 	$msg  = '';
 
-	// アーカイブの種類
-	$arc_kind = ($vars['pcmd'] == 'tar') ? ARCFILE_TAR : ARCFILE_GZIP;
-
 	$filename = $_FILES['upload_file']['name'];
-
+	$matches = array();
+	$arc_kind = FALSE;
+	if(! preg_match('/((?:\.[a-zA-Z]+){1,2})$/', $filename, $matches)){
+		die_message("Invalid file suffix");
+	} else { 
+		$matches[1] = strtolower($matches[1]);
+		switch ($matches[1]) {
+		case '.tar':    $arc_kind = ARCFILE_TAR;  break;
+		case '.tgz':    $arc_kind = ARCFILE_TAR_GZ; break;
+		case '.tar.gz': $arc_kind = ARCFILE_TAR_GZ; break;
+		default: die_message("Invalid file suffix: " . $matches[1]);
+		}
+	}
 
 	// アップロードファイル
 	$uploadfile = tempnam(CACHE_DIR, 'upload' );
@@ -193,7 +202,7 @@ function download_tarfile($name, $arc_kind)
 	// ファイル名
 	$filename = strftime('tar%Y%m%d', time()) . $file_ext;
 
-	if ($arc_kind == ARCFILE_GZIP) {
+	if ($arc_kind == ARCFILE_TAR_GZ) {
 		$filename .= PLUGIN_DUMP_SFX_GZIP;
 	} else {
 		$filename .= PLUGIN_DUMP_SFX_TAR;
@@ -244,7 +253,7 @@ TARファイルバックアップ / リストアプラグイン
 </p>
 <p><strong>オプション</strong>
 <br />
-  <input type="checkbox" name="namedecode" /> ファイル名をページ名に変換 (※リストアに使うことはできなくなります)<br />
+  <input type="checkbox" name="namedecode" /> ページ名をディレクトリ階層つきのファイルにデコード (※リストアに使うことはできなくなります。また、一部の文字は '_' に置換されます)<br />
 </p>
 <p><strong>管理者パスワード</strong>
   <input type="password" name="pass" size="12" />
@@ -265,11 +274,6 @@ TARファイルバックアップ / リストアプラグイン
 アップロード可能な最大ファイルサイズは、$maxsizekb KByte までです。<br />
 </span>
   ファイル: <input type="file" name="upload_file" size="40" />
-</p>
-<p><strong>アーカイブの形式</strong>
-<br />
-  <input type="radio" name="pcmd" value="tgz" checked="checked" /> 〜.tar.gz 形式<br />
-  <input type="radio" name="pcmd" value="tar" /> 〜.tar 形式
 </p>
 <p><strong>管理者パスワード</strong>
   <input type="password" name="pass" size="12" />
@@ -327,7 +331,7 @@ class tarlib
 		$this->filename = $name;
 		$this->fp       = FALSE;
 		$this->status   = TARLIB_STATUS_INIT;
-		$arc_kind       = ARCFILE_GZIP;
+		$arc_kind       = ARCFILE_TAR_GZ;
 	}
 	
 	////////////////////////////////////////////////////////////
@@ -337,12 +341,12 @@ class tarlib
 	// 返り値: TRUE .. 成功 , FALSE .. 失敗
 	//
 	////////////////////////////////////////////////////////////
-	function open($name = '', $kind = ARCFILE_GZIP)
+	function open($name = '', $kind = ARCFILE_TAR_GZ)
 	{
 		if ($name != '') $this->filename = $name;
 
-		if ($kind == ARCFILE_GZIP) {
-			$this->arc_kind = ARCFILE_GZIP;
+		if ($kind == ARCFILE_TAR_GZ) {
+			$this->arc_kind = ARCFILE_TAR_GZ;
 			$this->fp = gzopen($this->filename, 'rb');
 		} else {
 			$this->arc_kind = ARCFILE_TAR;
@@ -365,12 +369,12 @@ class tarlib
 	// 返り値: TRUE .. 成功 , FALSE .. 失敗
 	//
 	////////////////////////////////////////////////////////////
-	function create($odir, $kind = ARCFILE_GZIP)
+	function create($odir, $kind = ARCFILE_TAR_GZ)
 	{
 		$tname = tempnam($odir, 'tar');
 
-		if ($kind == ARCFILE_GZIP) {
-			$this->arc_kind = ARCFILE_GZIP;
+		if ($kind == ARCFILE_TAR_GZ) {
+			$this->arc_kind = ARCFILE_TAR_GZ;
 			$this->fp = gzopen($tname, 'wb');
 		} else {
 			$this->arc_kind = ARCFILE_TAR;
@@ -407,7 +411,7 @@ class tarlib
 			flock($this->fp, LOCK_UN);
 
 			// ファイルを閉じる
-			if ($this->arc_kind == ARCFILE_GZIP) {
+			if ($this->arc_kind == ARCFILE_TAR_GZ) {
 				gzclose($this->fp);
 			} else {
 				 fclose($this->fp);
@@ -415,7 +419,7 @@ class tarlib
 		}
 		else if ($this->status = TARLIB_STATUS_OPEN)
 		{
-			if ($this->arc_kind == ARCFILE_GZIP) {
+			if ($this->arc_kind == ARCFILE_TAR_GZ) {
 				gzclose($this->fp);
 			} else {
 				 fclose($this->fp);
