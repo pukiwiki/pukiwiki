@@ -190,19 +190,15 @@ $line_breakの設定に因らず改行をどのように扱うかを指定できるようになります。
  [[Top>FrontPage]]/[[PukiWiki>PukiWiki]]/[[ツアー>PukiWiki/ツアー]]
 ~基本的には以下の２通りの使い方を想定しています。
 ++「ほげ/ふが/げほ」など、２〜３階層以上の深いページでページの行き来をしやすくするために表示する
-++skin/pukiwiki.skin.ja.php に組み込み、ページタイトル下のURLの代わりに表示する
-~スキンに組み込む例（pukiwiki.skin.ja.php の30行目あたり）
- <?php if ($is_page) { ?>
- <span class="small"><?php
-      require_once(PLUGIN_DIR.'topicpath.inc.php');
-      echo plugin_topicpath_convert(); ?></span>
- <?php } ?>
+++スキンに組み込み、ページタイトル下のURLの代わりに全てのページで表示する
 :プラグイン内設定|~
 --PLUGIN_TOPICPATH_TOP_DISPLAY　defaultpageを一番最初に表示するかどうか。
 --PLUGIN_TOPICPATH_TOP_LABEL　$defaultpageに対するラベル
 --PLUGIN_TOPICPATH_TOP_SEPARATOR　階層を区切るセパレータ
 --PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY　現在表示中のページに対するリンクを表示するかどうか
 --PLUGIN_TOPICPATH_THIS_PAGE_LINK　現在表示中のページに対してリンクするかどうか
+:備考|
+~スキンに組み込む場合は、pukiwiki.skin.php の SKIN_DEFAULT_DISABLE_TOPICPATH に 1を指定して下さい。
 
 
 **touchgraph [#p93402bd]
