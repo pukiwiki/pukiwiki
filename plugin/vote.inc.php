@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: vote.inc.php,v 1.17 2004/08/15 01:29:19 henoheno Exp $
+// $Id: vote.inc.php,v 1.18 2004/10/09 07:36:33 henoheno Exp $
 //
 
 function plugin_vote_action()
@@ -18,8 +18,9 @@ function plugin_vote_action()
 	$matches = array();
 	foreach($postdata_old as $line) {
 
-		if (preg_match("/^#vote\((.*)\)\s*$/", $line, $matches)) {
-			$args = explode(',', $matches[1]);
+		if (preg_match("/^#vote\((.*)\)(.*)$/i", $line, $matches)) {
+			$args  = explode(',', $matches[1]);
+			$lefts = isset($matches[2]) ? $matches[2] : '';
 		} else {
 			$postdata .= $line;
 			continue;
@@ -37,13 +38,13 @@ function plugin_vote_action()
 				$cnt = $matches[2];
 			}
 			$e_arg = encode($arg);
-			if (! empty($vars["vote_$e_arg"]) and $vars["vote_$e_arg"] == $_vote_plugin_votes)
+			if (! empty($vars["vote_$e_arg"]) && $vars["vote_$e_arg"] == $_vote_plugin_votes)
 				++$cnt;
 
 			$votes[] = $arg . '[' . $cnt . ']';
 		}
 
-		$vote_str = '#vote(' . @join(',', $votes) . ")\n";
+		$vote_str       = '#vote(' . @join(',', $votes) . ")$lefts\n";
 		$postdata_input = $vote_str;
 		$postdata      .= $vote_str;
 	}
@@ -51,8 +52,8 @@ function plugin_vote_action()
 	if (md5(@join('', get_source($vars['refer']))) != $vars['digest']) {
 		$title = $_title_collided;
 
-		$s_refer  = htmlspecialchars($vars['refer']);
-		$s_digest = htmlspecialchars($vars['digest']);
+		$s_refer          = htmlspecialchars($vars['refer']);
+		$s_digest         = htmlspecialchars($vars['digest']);
 		$s_postdata_input = htmlspecialchars($postdata_input);
 		$body = <<<EOD
 $_msg_collided
