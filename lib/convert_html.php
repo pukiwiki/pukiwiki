@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.4 2004/11/16 11:32:14 henoheno Exp $
+// $Id: convert_html.php,v 1.5 2004/11/23 11:27:25 henoheno Exp $
 //
 
 function convert_html($lines)
@@ -892,14 +892,15 @@ class Body extends Element
 	{
 		global $top, $_symbol_anchor;
 
-		$anchor = (($id = make_heading($text, FALSE)) == '') ?
-			'' : " &aname($id,super,full)\{$_symbol_anchor};";
+		$id = make_heading($text, FALSE); // Cut fixed-anchor from $text
+		$anchor = ($id == '') ?  '' : " &aname($id,super,full)\{$_symbol_anchor};";
+
 		$text = ' ' . $text;
 		$id = "content_{$this->id}_{$this->count}";
 		$this->count++;
 		$this->contents_last = & $this->contents_last->add(new Contents_UList($text, $level, $id));
 
-		return array($text. $anchor, $this->count > 1 ? "\n$top" : '', $id);
+		return array($text . $anchor, $this->count > 1 ? "\n$top" : '', $id);
 	}
 
 	function & insert(& $obj)
