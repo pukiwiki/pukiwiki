@@ -289,10 +289,6 @@ function plugin_ref_body($args,$page)
 }
 
 //-----------------------------------------------------------------------------
-// URLかどうか
-function is_url($text) {
-	return preg_match('/^(https?|ftp|news)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/', $text);
-}
 //オプションを解析する
 function ref_check_arg($val, $_key, &$params) {
 	if ($val == '') {
