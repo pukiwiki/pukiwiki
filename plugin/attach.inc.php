@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.40 2004/06/22 11:56:25 henoheno Exp $
+//  $Id: attach.inc.php,v 1.41 2004/07/18 12:52:21 henoheno Exp $
 //
 
 /*
@@ -108,8 +108,8 @@ function plugin_attach_action()
 	// Upload
 	if (array_key_exists('attach_file',$_FILES))
 	{
-		$pass = array_key_exists('pass',$vars) ? md5($vars['pass']) : NULL;
-		return attach_upload($_FILES['attach_file'],$vars['refer'],$pass);
+		$pass = isset($vars['pass']) ? $vars['pass'] : NULL;
+		return attach_upload($_FILES['attach_file'], $vars['refer'], $pass);
 	}
 	
 	switch ($pcmd)
@@ -148,7 +148,7 @@ function attach_upload($file,$page,$pass=NULL)
 {
 // $pass=NULL : パスワードが指定されていない
 // $pass=TRUE : アップロード許可
-	global $adminpass,$_attach_messages;
+	global $_attach_messages;
 	
 	if ($file['tmp_name'] == '' or !is_uploaded_file($file['tmp_name']))
 	{
@@ -163,7 +163,7 @@ function attach_upload($file,$page,$pass=NULL)
 		return array('result'=>FALSE,'msg'=>$_attach_messages['err_noparm']);
 	}
 	if (ATTACH_UPLOAD_ADMIN_ONLY and $pass !== TRUE
-		and ($pass === NULL or $pass != $adminpass))
+		and ($pass === NULL or ! pkwk_login($pass)))
 	{
 		return array('result'=>FALSE,'msg'=>$_attach_messages['err_adminpass']);
 	}
@@ -551,14 +551,14 @@ EOD;
 	}
 	function delete($pass)
 	{
-		global $adminpass,$_attach_messages;
+		global $_attach_messages;
 				
 		if ($this->status['freeze'])
 		{
 			return attach_info('msg_isfreeze');
 		}
 		
-		if (md5($pass) != $adminpass)
+		if (! pkwk_login($pass))
 		{
 			if (ATTACH_DELETE_ADMIN_ONLY or $this->age)
 			{
@@ -602,9 +602,7 @@ EOD;
 	}
 	function freeze($freeze,$pass)
 	{
-		global $adminpass;
-		
-		if (md5($pass) != $adminpass)
+		if (! pkwk_login($pass))
 		{
 			return attach_info('err_adminpass');
 		}
