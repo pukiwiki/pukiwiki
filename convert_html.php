@@ -2,11 +2,12 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.63 2004/04/04 14:17:18 arino Exp $
+// $Id: convert_html.php,v 1.64 2004/07/04 13:28:16 henoheno Exp $
 //
+
 function convert_html($lines)
 {
-	global $script, $vars, $digest;
+	global $vars, $digest;
 	static $contents_id = 0;
 	
 	if (!is_array($lines))
@@ -34,10 +35,12 @@ class Element
 		$this->elements = array();
 		$this->last = &$this;
 	}
+
 	function setParent(&$parent)
 	{
 		$this->parent = &$parent;
 	}
+
 	function &add(&$obj)
 	{
 		if ($this->canContain($obj))
@@ -47,6 +50,7 @@ class Element
 		
 		return $this->parent->add($obj);
 	}
+
 	function &insert(&$obj)
 	{
 		$obj->setParent($this);
@@ -58,10 +62,12 @@ class Element
 	{
 		return TRUE;
 	}
+
 	function wrap($string, $tag, $param = '', $canomit = TRUE)
 	{
 		return ($canomit and $string == '') ? '' : "<$tag$param>$string</$tag>";
 	}
+
 	function toString()
 	{
 		$ret = array();
@@ -72,6 +78,7 @@ class Element
 		
 		return join("\n",$ret);
 	}
+
 	function dump($indent = 0)
 	{
 		$ret = str_repeat(' ', $indent).get_class($this)."\n";
@@ -88,8 +95,10 @@ class Element
 		return $ret;
 	}
 }
+
 class Inline extends Element
 { // インライン要素
+
 	function Inline($text)
 	{
 		parent::Element();
@@ -103,22 +112,26 @@ class Inline extends Element
 		}
 		$this->elements[] = trim((substr($text, 0, 1) == "\n") ? $text : make_link($text));
 	}
+
 	function &insert(&$obj)
 	{
 		$this->elements[] = $obj->elements[0];
 		
 		return $this;
 	}
+
 	function canContain($obj)
 	{
 		return is_a($obj,'Inline');
 	}
+
 	function toString()
 	{
 		global $line_break;
 		
 		return join($line_break ? "<br />\n" : "\n",$this->elements);
 	}
+
 	function &toPara($class = '')
 	{
 		$obj = &new Paragraph('', $class);
@@ -126,6 +139,7 @@ class Inline extends Element
 		return $obj;
 	}
 }
+
 class Paragraph extends Element
 { // 段落
 	var $param;
@@ -145,10 +159,12 @@ class Paragraph extends Element
 		}
 		$this->insert(new Inline($text));
 	}
+
 	function canContain($obj)
 	{
 		return is_a($obj,'Inline');
 	}
+
 	function toString()
 	{
 		return $this->wrap(parent::toString(), 'p', $this->param);
@@ -170,30 +186,37 @@ class Heading extends Element
 		$this->insert(new Inline($text));
 		$this->level++; // h2,h3,h4
 	}
+
 	function &insert(&$obj)
 	{
 		parent::insert($obj);
 		return $this->last = &$this;
 	}
+
 	function canContain(&$obj)
 	{
 		return FALSE;
 	}
+
 	function toString()
 	{
 		return $this->msg_top.$this->wrap(parent::toString(), 'h'.$this->level, " id=\"{$this->id}\"");
 	}
 }
+
 class HRule extends Element
 { // ----
+
 	function HRule(&$root, $text)
 	{
 		parent::Element();
 	}
+
 	function canContain(&$obj)
 	{
 		return FALSE;
 	}
+
 	function toString()
 	{
 		global $hr;
@@ -201,6 +224,7 @@ class HRule extends Element
 		return $hr;
 	}
 }
+
 class ListContainer extends Element
 {
 	var $tag;
@@ -239,6 +263,7 @@ class ListContainer extends Element
 		return (!is_a($obj, 'ListContainer')
 			or ($this->tag == $obj->tag and $this->level == $obj->level));
 	}
+
 	function setParent(&$parent)
 	{
 		global $_list_pad_str;
@@ -257,6 +282,7 @@ class ListContainer extends Element
 		}
 		$this->style = sprintf($_list_pad_str, $this->level, $margin, $margin);
 	}
+
 	function &insert(&$obj)
 	{
 		if (!is_a($obj, get_class($this)))
@@ -277,11 +303,13 @@ class ListContainer extends Element
 		
 		return $this->last;
 	}
+
 	function toString()
 	{
 		return $this->wrap(parent::toString(), $this->tag, $this->style);
 	}
 }
+
 class ListElement extends Element
 {
 	function ListElement($level, $head)
@@ -290,15 +318,18 @@ class ListElement extends Element
 		$this->level = $level;
 		$this->head = $head;
 	}
+
 	function canContain(&$obj)
 	{
 		return (!is_a($obj, 'ListContainer') or ($obj->level > $this->level));
 	}
+
 	function toString()
 	{
 		return $this->wrap(parent::toString(), $this->head);
 	}
 }
+
 class UList extends ListContainer
 { // -
 	function UList(&$root, $text)
@@ -306,6 +337,7 @@ class UList extends ListContainer
 		parent::ListContainer('ul', 'li', '-', $text);
 	}
 }
+
 class OList extends ListContainer
 { // +
 	function OList(&$root, $text)
@@ -313,6 +345,7 @@ class OList extends ListContainer
 		parent::ListContainer('ol', 'li', '+', $text);
 	}
 }
+
 class DList extends ListContainer
 { // :
 	function DList(&$root, $text)
@@ -334,6 +367,7 @@ class DList extends ListContainer
 		}
 	}
 }
+
 class BQuote extends Element
 { // >
 	var $level;
@@ -361,10 +395,12 @@ class BQuote extends Element
 			$this->insert(new Inline($text));
 		}
 	}
+
 	function canContain(&$obj)
 	{
 		return (!is_a($obj, get_class($this)) or $obj->level >= $this->level);
 	}
+
 	function &insert(&$obj)
 	{
         // BugTrack/521, BugTrack/545
@@ -381,10 +417,12 @@ class BQuote extends Element
 		}
 		return parent::insert($obj);
 	}
+
 	function toString()
 	{
 		return $this->wrap(parent::toString(), 'blockquote');
 	}
+
 	function &end(&$root, $level)
 	{
 		$parent = &$root->last;
@@ -400,6 +438,7 @@ class BQuote extends Element
 		return $this;
 	}
 }
+
 class TableCell extends Element
 {
 	var $tag = 'td'; // {td|th}
@@ -410,8 +449,8 @@ class TableCell extends Element
 	function TableCell($text, $is_template = FALSE)
 	{
 		parent::Element();
-		$this->style = array();
-		
+		$this->style = $matches = array();
+	
 		while (preg_match('/^(?:(LEFT|CENTER|RIGHT)|(BG)?COLOR\(([#\w]+)\)|SIZE\((\d+)\)):(.*)$/',$text,$matches))
 		{
 			if ($matches[1])
@@ -463,6 +502,7 @@ class TableCell extends Element
 		}
 		$this->insert($obj);
 	}
+
 	function setStyle(&$style)
 	{
 		foreach ($style as $key=>$value)
@@ -473,6 +513,7 @@ class TableCell extends Element
 			}
 		}
 	}
+
 	function toString()
 	{
 		if ($this->rowspan == 0 or $this->colspan == 0)
@@ -497,6 +538,7 @@ class TableCell extends Element
 		return $this->wrap(parent::toString(), $this->tag, $param, FALSE);
 	}
 }
+
 class Table extends Element
 { // |
 	var $type;
@@ -507,6 +549,7 @@ class Table extends Element
 	{
 		parent::Element();
 		
+		$out = array();
 		if (!preg_match("/^\|(.+)\|([hHfFcC]?)$/", $text, $out))
 		{
 			$this = new Inline($text);
@@ -526,10 +569,12 @@ class Table extends Element
 		}
 		$this->elements[] = $row;
 	}
+
 	function canContain(&$obj)
 	{
 		return is_a($obj, 'Table') and ($obj->col == $this->col);
 	}
+
 	function &insert(&$obj)
 	{
 		$this->elements[] = $obj->elements[0];
@@ -537,6 +582,7 @@ class Table extends Element
 		
 		return $this;
 	}
+
 	function toString()
 	{
 		static $parts = array('h'=>'thead', 'f'=>'tfoot', ''=>'tbody');
@@ -615,6 +661,7 @@ class Table extends Element
 		return $this->wrap($string, 'div', ' class="ie5"');
 	}
 }
+
 class YTable extends Element
 { // ,
 	var $col;
@@ -631,8 +678,7 @@ class YTable extends Element
 			
 			return;
 		}
-		$align = array();
-		$value = array();
+		$align = $value = $matches = array();
 		foreach($_value as $val)
 		{
 			if (preg_match('/^(\s+)?(.+?)(\s+)?$/', $val, $matches))
@@ -670,16 +716,19 @@ class YTable extends Element
 		}
 		$this->elements[] = $str;
 	}
+
 	function canContain(&$obj)
 	{
 		return is_a($obj, 'YTable') and ($obj->col == $this->col);
 	}
+
 	function &insert(&$obj)
 	{
 		$this->elements[] = $obj->elements[0];
 		
 		return $this;
 	}
+
 	function toString()
 	{
 		$rows = '';
@@ -691,6 +740,7 @@ class YTable extends Element
 		return $this->wrap($rows, 'div', ' class="ie5"');
 	}
 }
+
 class Pre extends Element
 { // ' '
 	function Pre(&$root,$text)
@@ -702,21 +752,25 @@ class Pre extends Element
 			(!$preformat_ltrim or $text == '' or $text{0} != ' ') ? $text : substr($text, 1)
 		);
 	}
+
 	function canContain(&$obj)
 	{
 		return is_a($obj, 'Pre');
 	}
+
 	function &insert(&$obj)
 	{
 		$this->elements[] = $obj->elements[0];
 		
 		return $this;
 	}
+
 	function toString()
 	{
 		return $this->wrap(join("\n", $this->elements), 'pre');
 	}
 }
+
 class Div extends Element
 { // #
 	var $name;
@@ -735,15 +789,18 @@ class Div extends Element
 		}
 		list(, $this->name, $this->param) = array_pad($out,3,'');
 	}
+
 	function canContain(&$obj)
 	{
 		return FALSE;
 	}
+
 	function toString()
 	{
 		return do_plugin_convert($this->name,$this->param);
 	}
 }
+
 class Align extends Element
 { // LEFT:/CENTER:/RIGHT:
 	var $align;
@@ -754,15 +811,18 @@ class Align extends Element
 		
 		$this->align = $align;
 	}
+
 	function canContain(&$obj)
 	{
 		return is_a($obj, 'Inline');
 	}
+
 	function toString()
 	{
 		return $this->wrap(parent::toString(), 'div', ' style="text-align:'.$this->align.'"');
 	}
 }
+
 class Body extends Element
 { // Body
 	var $id;
@@ -787,6 +847,7 @@ class Body extends Element
 		$this->contents_last = &$this->contents;
 		parent::Element();
 	}
+
 	function parse(&$lines)
 	{
 		$this->last = &$this;
@@ -800,7 +861,6 @@ class Body extends Element
 				continue;
 			}
 			
-			$align = '';
 			if (preg_match('/^(LEFT|CENTER|RIGHT):(.*)$/',$line,$matches))
 			{
 				$this->last = &$this->last->add(new Align(strtolower($matches[1]))); // <div style="text-align:...">
@@ -857,6 +917,7 @@ class Body extends Element
 			$this->last = &$this->last->add(new Inline($line));
 		}
 	}
+
 	function getAnchor($text,$level)
 	{
 		global $top,$_symbol_anchor;
@@ -870,6 +931,7 @@ class Body extends Element
 		
 		return array($text. $anchor, $this->count > 1 ? "\n$top" : '', $id);
 	}
+
 	function &insert(&$obj)
 	{
 		if (is_a($obj, 'Inline'))
@@ -878,6 +940,7 @@ class Body extends Element
 		}
 		return parent::insert($obj);
 	}
+
 	function toString()
 	{
 		global $vars;
@@ -893,6 +956,7 @@ class Body extends Element
 		$text = preg_replace('/<del>#related<\/del>/',make_related($vars['page'],'del'),$text);
 		return "$text\n";
 	}
+
 	function replace_contents($arr)
 	{
 		$contents  = "<div class=\"contents\">\n";
@@ -903,6 +967,7 @@ class Body extends Element
 		
 		return ($arr[1] != '') ? $contents.join('',$arr) : $contents;
 	}
+
 	function replace_related($arr)
 	{
 		global $vars;
@@ -917,6 +982,7 @@ class Body extends Element
 		return ($arr[1] != '') ? $related.join('',$arr) : $related;
 	}
 }
+
 class Contents_UList extends ListContainer
 {
 	function Contents_UList($text,$level,$id)
@@ -928,6 +994,7 @@ class Contents_UList extends ListContainer
 		parent::ListContainer('ul', 'li', '-', str_repeat('-',$level));
 		$this->insert(new Inline($text));
 	}
+
 	function setParent(&$parent)
 	{
 		global $_list_pad_str;
