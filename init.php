@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.14 2002/08/28 17:15:15 masui Exp $
+// $Id: init.php,v 1.15 2002/08/28 18:10:15 masui Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -66,8 +66,14 @@ $update_exec = "";
 $content_id = 0;
 
 // 設定ファイルの読込
-@require(INI_FILE);
-@require(LANG.".lng");
+if(!file_exists(INI_FILE)||!is_readable(INI_FILE))
+	die_message(INI_FILE." is not found.");
+require(INI_FILE);
+
+if(!file_exists(LANG.".lng")||!is_readable(LANG.".lng"))
+	die_message(LANG.".lng(language file) is not found.");
+require(LANG.".lng");
+
 
 if($usefacemark) {
   $line_rules = array_merge($line_rules,$facemark_rules);
@@ -100,16 +106,8 @@ if(!is_writable(DIFF_DIR))
 	die_message("DIFF_DIR is not found or not writable.");
 if($do_backup && !is_writable(BACKUP_DIR))
 	die_message("BACKUP_DIR is not found or not writable.");
-if(!file_exists(INI_FILE))
-	die_message("INI_FILE is not found.");
 if($wrong_ini_file)
 	die_message("The setting file runs short of information.<br>The version of a setting file may be old.<br><br>These option are not found : $wrong_ini_file");
-//if(ini_get("register_globals") !== "0")
-//	die_message("Wrong PHP4 setting in 'register_globals',set value 'Off' to httpd.conf or .htaccess.");
-if(!file_exists(SKIN_FILE))
-	die_message("SKIN_FILE is not found.");
-if(!file_exists(LANG.".lng"))
-	die_message(LANG.".lng(language file) is not found.");
 
 if(!file_exists(get_filename(encode($defaultpage))))
 	touch(get_filename(encode($defaultpage)));

@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.36 2002/08/21 17:32:04 masui Exp $
+// $Id: html.php,v 1.37 2002/08/28 18:10:15 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -63,6 +63,8 @@ function catbody($title,$page,$body)
 	if ($foot_explain)
 		$body .= "\n$note_hr\n".join("\n",inline2($foot_explain));
 
+	if(!file_exists(SKIN_FILE)||!is_readable(SKIN_FILE))
+	  die_message(SKIN_FILE."(skin file) is not found.");
 	require(SKIN_FILE);
 }
 

@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.6 2002/07/18 15:48:55 masui Exp $
+// $Id: func.php,v 1.7 2002/08/28 18:10:15 masui Exp $
 /////////////////////////////////////////////////
 
 // 検索
@@ -212,8 +212,22 @@ function die_message($msg)
 	$body = "<h3>Runtime error</h3>\n";
 	$body .= "<strong>Error message : $msg</strong>\n";
 
-	catbody($title,$page,$body);
-
+	if(defined(SKIN_FILE) && file_exists(SKIN_FILE) && is_readable(SKIN_FILE)) {
+	  catbody($title,$page,$body);
+	}
+	else {
+	  header("Content-Type: text/html; charset=euc-jp");
+	  print <<<__TEXT__
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>$title</title>
+<meta http-equiv="content-type" content="text/html; charset=euc-jp">
+</head>
+<body>$body</body>
+</html>
+__TEXT__;
+	}
 	die();
 }
 
