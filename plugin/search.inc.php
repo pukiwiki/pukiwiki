@@ -1,8 +1,12 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: search.inc.php,v 1.4 2005/01/02 05:47:52 henoheno Exp $
+// $Id: search.inc.php,v 1.5 2005/01/09 03:13:41 henoheno Exp $
 //
 // Search plugin
+
+// Allow search via GET method 'index.php?plugin=search&word=keyword'
+// NOTE: Also allows DoS to your site more easily by SPAMbot or worm or ...
+define('PLUGIN_SEARCH_DISABLE_GET_ACCESS', 1); // 1, 0
 
 define('PLUGIN_SEARCH_MAX_LENGTH', 80);
 
@@ -11,27 +15,30 @@ function plugin_search_action()
 	global $script, $post, $vars, $_title_result, $_title_search;
 	global $_msg_searching, $_btn_and, $_btn_or, $_btn_search;
 
-	$s_word = isset($post['word']) ? htmlspecialchars($post['word']) : '';
-	if (strlen($s_word) > PLUGIN_SEARCH_MAX_LENGTH) {
-		unset($vars['word']);
-		die_message('Search words too long');
-	}
-
 	$type   = isset($vars['type']) ? $vars['type'] : '';
-
-	if ($s_word == '') {
-		$msg  = $_title_search;
-		$body = '<br />' . "\n" . $_msg_searching . "\n";
-	} else {
-		$msg  = str_replace('$1', $s_word, $_title_result);
-		$body = do_search($vars['word'], $type);
-	}
-
 	$and_check = $or_check = '';
 	if ($type == 'OR') {
 		$or_check  = ' checked="checked"';
 	} else {
 		$and_check = ' checked="checked"';
+	}
+
+	if (PLUGIN_SEARCH_DISABLE_GET_ACCESS) {
+		$s_word = isset($post['word']) ? htmlspecialchars($post['word']) : '';
+	} else {
+		$s_word = isset($vars['word']) ? htmlspecialchars($vars['word']) : '';
+	}
+	if (strlen($s_word) > PLUGIN_SEARCH_MAX_LENGTH) {
+		unset($vars['word']); // Stop using $_msg_word at lib/html.php
+		die_message('Search words too long');
+	}
+	if ($s_word == '') {
+		unset($vars['word']); // Stop using $_msg_word at lib/html.php
+		$msg  = $_title_search;
+		$body = '<br />' . "\n" . $_msg_searching . "\n";
+	} else {
+		$msg  = str_replace('$1', $s_word, $_title_result);
+		$body = do_search($vars['word'], $type);
 	}
 
 	$body .= <<<EOD
