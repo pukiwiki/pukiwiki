@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.23 2004/11/20 07:03:54 henoheno Exp $
+// $Id: edit.inc.php,v 1.24 2004/11/23 12:12:08 henoheno Exp $
 //
 
 // Edit plugin
@@ -81,25 +81,22 @@ function plugin_edit_inline()
 {
 	static $usage = '&edit(pagename#anchor[[,noicon],nolabel])[{label}];';
 
-	global $script, $vars;
-	global $_symbol_paraedit, $fixed_heading_anchor_edit;
+	global $script, $vars, $fixed_heading_anchor_edit;
 
 	// Arguments
 	$args = func_get_args();
 	$s_label = array_pop($args); // {label}
 	$page    = array_shift($args);
 	if($page == NULL) $page = '';
-	$_noicon = $_nolabel = $_paraedit = FALSE;
+	$_noicon = $_nolabel = FALSE;
 	foreach($args as $arg){
 		switch($arg){
 		case '': break;
-		case 'paraedit': $_paraedit = TRUE; break; // Paragraph-edit
 		case 'nolabel':  $_nolabel  = TRUE; break;
 		case 'noicon':   $_noicon   = TRUE; break;
 		default: return $usage;
 		}
 	}
-	if($_paraedit) $_nolabel = TRUE;
 
 	// Separate a page-name and a fixed anchor
 	list($s_page, $id, $editable) = anchor_explode($page, TRUE);
@@ -135,7 +132,7 @@ function plugin_edit_inline()
 			$short . '" title="' . $title . '" />';
 		$class = '';
 	}
-	if ($_noicon || $_paraedit) $icon = ''; // No more icon
+	if ($_noicon) $icon = ''; // No more icon
 	if ($_nolabel) {
 		if (!$_noicon) {
 			$s_label = '';     // No label with an icon
@@ -200,7 +197,7 @@ function plugin_edit_write()
 		$retvars['msg'] = $_title_collided;
 		list($postdata_input, $auto) = do_update_diff($oldpagesrc, $postdata_input, $vars['original']);
 
-		$retvars['body'] = ($auto ? $_msg_collided_auto : $_msg_collided)."\n";
+		$retvars['body'] = ($auto ? $_msg_collided_auto : $_msg_collided) . "\n";
 
 		if (TRUE) {
 			global $do_update_diff_table;
