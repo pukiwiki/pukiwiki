@@ -1,12 +1,9 @@
 <?php
-// PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.20.2.15 2004/06/27 13:36:59 henoheno Exp $
 /////////////////////////////////////////////////
-
-// 設定ファイルの場所
-define("INI_FILE","./pukiwiki.ini.php");
-
-//** 初期設定 **
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: init.php,v 1.20.2.16 2004/06/27 13:45:51 henoheno Exp $
+//
 
 /////////////////////////////////////////////////
 // 初期設定 (エラー出力レベル)
@@ -15,7 +12,16 @@ error_reporting(E_ERROR | E_PARSE);
 error_reporting(E_ALL);
 
 /////////////////////////////////////////////////
+// 初期設定 (文字エンコード、言語)
+define('LANG','ja');    // Select 'ja' or 'en'
 
+/////////////////////////////////////////////////
+// 初期設定(設定ファイルの場所)
+define('LANG_FILE', LANG.'.lng');
+define("INI_FILE","./pukiwiki.ini.php");
+
+/////////////////////////////////////////////////
+// 初期設定 (バージョン/著作権)
 define("S_VERSION","1.3.7");
 define("S_COPYRIGHT","<strong>\"PukiWiki\" ".S_VERSION."</strong> Copyright &copy; 2001-2004 <a href=\"http://pukiwiki.org\">PukiWiki Developers Team</a>. License is <a href=\"http://www.gnu.org/\">GNU/GPL</a>.<BR>Based on \"PukiWiki\" 1.3 by <a href=\"http://factage.com/sng/\">sng</a>");
 define("UTIME",time());
@@ -143,7 +149,7 @@ $content_id = 0;
 /////////////////////////////////////////////////
 // ファイル読み込み
 $die = FALSE; $message = '';
-foreach(array('INI_FILE', 'LANG_FILE') as $file){
+foreach(array('LANG_FILE', 'INI_FILE') as $file){
 	if (!file_exists(constant($file)) || !is_readable(constant($file))) {
 		$die = TRUE;
 		$message = "${message}File is not found. ($file)\n";
