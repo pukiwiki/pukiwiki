@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.59 2003/02/26 11:29:47 panda Exp $
+// $Id: html.php,v 1.60 2003/02/26 12:24:53 panda Exp $
 //
 
 // 本文を出力
@@ -61,7 +61,7 @@ function catbody($title,$page,$body)
 	
 	// 1.3.x compat
 	// ページの最終更新時刻(UNIX timestamp)
-	$fmt = $is_read ? get_filetime($_page) + LOCALTIME : 0;
+	$fmt = $is_read ? get_filetime($_page) + LOCALZONE : 0;
 
 	//単語検索
 	if ($search_word_color and array_key_exists('word',$vars)) {
