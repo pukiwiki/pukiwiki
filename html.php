@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.5 2002/06/24 07:03:09 masui Exp $
+// $Id: html.php,v 1.6 2002/06/24 09:06:09 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -292,10 +292,6 @@ function inline2($str)
 		  }
 		}
 	}
-
-	$str = preg_replace("/'''([^']+?)'''/s","<i>$1</i>",$str);	// Italic
-
-	$str = preg_replace("/''([^']+?)''/s","<b>$1</b>",$str);	// Bold
 
 	$str = preg_replace("/
 		(

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.4 2002/06/22 17:02:43 masui Exp $
+// $Id: pukiwiki.ini.php,v 1.5 2002/06/24 09:06:09 masui Exp $
 //
 // PukiWiki setting file
 
@@ -196,7 +196,9 @@ $line_rules = array(
 "CENTER:((?:(?!CENTER\:).)*)" => "<div align=\"center\">\\1</div>",
 "RIGHT:((?:(?!RIGHT\:).)*)" => "<div align=\"right\">\\1</div>",
 "%%((?:(?!%%).)*)%%" => "<strike>\\1</strike>",
-"~$" => "<br>", /* 行末にチルダは改行 */
+"'''((?:(?!''').)*)'''" => "<i>\\1</i>",
+"''((?:(?!'').)*)''" => "<strong>\\1</strong>",
+"~((?:<\\/[a-zA-Z]+>)*)$" => "<br>", /* 行末にチルダは改行 */
 "\s\:\)" => " <img src=\"./face/smile.gif\">",
 "\s\:D" => " <img src=\"./face/bigsmile.gif\">",
 "\s\:p" => " <img src=\"./face/huh.gif\">",
