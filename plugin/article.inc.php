@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.16 2003/07/10 03:21:12 arino Exp $
+ $Id: article.inc.php,v 1.17 2004/07/24 04:55:16 henoheno Exp $
  
  */
 
@@ -27,41 +27,41 @@ global $_mailto;
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
-define('article_COLS',70);
+define('article_COLS', 70);
 /////////////////////////////////////////////////
 // テキストエリアの行数
-define('article_ROWS',5);
+define('article_ROWS', 5);
 /////////////////////////////////////////////////
 // 名前テキストエリアのカラム数
-define('NAME_COLS',24);
+define('NAME_COLS', 24);
 /////////////////////////////////////////////////
 // 題名テキストエリアのカラム数
-define('SUBJECT_COLS',60);
+define('SUBJECT_COLS', 60);
 /////////////////////////////////////////////////
 // 名前の挿入フォーマット
-define('NAME_FORMAT','[[$name]]');
+define('NAME_FORMAT', '[[$name]]');
 /////////////////////////////////////////////////
 // 題名の挿入フォーマット
-define('SUBJECT_FORMAT','**$subject');
+define('SUBJECT_FORMAT', '**$subject');
 /////////////////////////////////////////////////
 // 挿入する位置 1:欄の前 0:欄の後
-define('ARTICLE_INS',0);
+define('ARTICLE_INS', 0);
 /////////////////////////////////////////////////
 // 書き込みの下に一行コメントを入れる 1:入れる 0:入れない
-define('ARTICLE_COMMENT',1);
+define('ARTICLE_COMMENT', 1);
 /////////////////////////////////////////////////
 // 改行を自動的変換 1:する 0:しない
-define('ARTICLE_AUTO_BR',1);
+define('ARTICLE_AUTO_BR', 1);
 
 /////////////////////////////////////////////////
 // 投稿内容のメール自動配信 1:する 0:しない
-define('MAIL_AUTO_SEND',0);
+define('MAIL_AUTO_SEND', 0);
 /////////////////////////////////////////////////
 // 投稿内容のメール送信時の送信者メールアドレス
-define('MAIL_FROM','');
+define('MAIL_FROM', '');
 /////////////////////////////////////////////////
 // 投稿内容のメール送信時の題名
-define('MAIL_SUBJECT_PREFIX','[someone\'sPukiWiki]');
+define('MAIL_SUBJECT_PREFIX', '[someone\'sPukiWiki]');
 /////////////////////////////////////////////////
 // 投稿内容のメール自動配信先
 $_mailto = array (
@@ -70,25 +70,25 @@ $_mailto = array (
 
 function plugin_article_action()
 {
-	global $script,$post,$vars,$cols,$rows,$now;
-	global $_title_collided,$_msg_collided,$_title_updated;
-	global $_mailto,$_no_subject,$_no_name;
+	global $script, $post, $vars, $cols, $rows, $now;
+	global $_title_collided, $_msg_collided, $_title_updated;
+	global $_mailto, $_no_subject, $_no_name;
 	
 	if ($post['msg'] == '') {
 		return array('msg'=>'','body'=>'');
 	}
 	
 	$name = ($post['name'] == '') ? $_no_name : $post['name'];
-	$name = ($name == '') ? '' : str_replace('$name',$name,NAME_FORMAT);
+	$name = ($name == '') ? '' : str_replace('$name', $name, NAME_FORMAT);
 	$subject = ($post['subject'] == '') ? $_no_subject : $post['subject'];
-	$subject = ($subject == '') ? '' : str_replace('$subject',$subject,SUBJECT_FORMAT);
+	$subject = ($subject == '') ? '' : str_replace('$subject', $subject, SUBJECT_FORMAT);
 	$article  = "$subject\n>$name ($now)~\n~\n";
 	
 	$msg = rtrim($post['msg']);
 	if (ARTICLE_AUTO_BR) {
 		//改行の取り扱いはけっこう厄介。特にURLが絡んだときは…
 		//コメント行、整形済み行には~をつけないように arino
-		$msg = join("\n",preg_replace('/^(?!\/\/)(?!\s)(.*)$/','$1~',explode("\n",$msg)));
+		$msg = join("\n", preg_replace('/^(?!\/\/)(?!\s)(.*)$/', '$1~', explode("\n", $msg)));
 	}
 	$article .= "$msg\n\n//";
 	
@@ -101,10 +101,10 @@ function plugin_article_action()
 	$article_no = 0;
 	
 	foreach($postdata_old as $line) {
-		if (!ARTICLE_INS) {
+		if (! ARTICLE_INS) {
 			$postdata .= $line;
 		}
-		if (preg_match('/^#article/',$line)) {
+		if (preg_match('/^#article/', $line)) {
 			if ($article_no == $post['article_no'] && $post['msg'] != '') {
 				$postdata .= "$article\n";
 			}
@@ -118,7 +118,7 @@ function plugin_article_action()
 	$postdata_input = "$article\n";
 	$body = '';
 	
-	if (md5(@join('',get_source($post['refer']))) != $post['digest']) {
+	if (md5(@join('', get_source($post['refer']))) != $post['digest']) {
 		$title = $_title_collided;
 		
 		$body = "$_msg_collided\n";
@@ -137,25 +137,25 @@ function plugin_article_action()
 EOD;
 	}
 	else {
-		page_write($post['refer'],trim($postdata));
+		page_write($post['refer'], trim($postdata));
 		
 		// 投稿内容のメール自動送信
 		if (MAIL_AUTO_SEND) {
-			$mailaddress = implode(',' ,$_mailto);
-			$mailsubject = MAIL_SUBJECT_PREFIX.' '.str_replace('**','',$subject);
+			$mailaddress = implode(',', $_mailto);
+			$mailsubject = MAIL_SUBJECT_PREFIX . ' ' . str_replace('**', '', $subject);
 			if ($post['name']) {
-				$mailsubject .= '/'.$post['name'];
+				$mailsubject .= '/' . $post['name'];
 			}
 			$mailsubject = mb_encode_mimeheader($mailsubject);
 			
 			$mailbody = $post['msg'];
 			$mailbody .= "\n\n---\n";
-			$mailbody .= $_msg_article_mail_sender.$post['name']." ($now)\n";
-			$mailbody .= $_msg_article_mail_page.$post['refer']."\n";
-			$mailbody .= "　 URL: ".$script.'?'.rawurlencode($post['refer'])."\n";
+			$mailbody .= $_msg_article_mail_sender . $post['name'] . " ($now)\n";
+			$mailbody .= $_msg_article_mail_page . $post['refer'] . "\n";
+			$mailbody .= '　 URL: ' . $script . '?' . rawurlencode($post['refer']) . "\n";
 			$mailbody = mb_convert_encoding( $mailbody, "JIS" );
 			
-			$mailaddheader = "From: ".MAIL_FROM;
+			$mailaddheader = "From: " . MAIL_FROM;
 			
 			mail($mailaddress, $mailsubject, $mailbody, $mailaddheader);
 		}
@@ -170,13 +170,14 @@ EOD;
 	
 	return $retvars;
 }
+
 function plugin_article_convert()
 {
-	global $script,$vars,$digest;
-	global $_btn_article,$_btn_name,$_btn_subject;
+	global $script, $vars, $digest;
+	global $_btn_article, $_btn_name, $_btn_subject;
 	static $numbers = array();
 	
-	if (!array_key_exists($vars['page'],$numbers))
+	if (! array_key_exists($vars['page'], $numbers))
 	{
 		$numbers[$vars['page']] = 0;
 	}
