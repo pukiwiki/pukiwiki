@@ -1,101 +1,76 @@
 <?php
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: config.php,v 1.3 2004/12/23 02:04:14 henoheno Exp $
-//
+// $Id: config.php,v 1.4 2004/12/23 02:59:05 henoheno Exp $
 /*
- * プラグインの設定をPukiWikiのページに記述する
+ * Parse a PukiWiki page as a configuration page
  *
- * // オブジェクト生成
- * $obj = new Config('plugin/プラグイン名/')
- *
- * // 読み出し
+ * $obj = new Config('plugin/plugin_name/')
  * $obj->read();
- *
- * // 配列取得
  * $array = & $obj->get($title);
- *
- * // 追加 - 直接
- * $array[] = array(4, 5, 6);
- *
- * // 追加 - Configオブジェクトのメソッド
- * $obj->add($title, array(4, 5, 6));
- *
- * // 置換 - 直接
- * $array = array(1=>array(1, 2, 3));
- *
- * // 置換 - Configオブジェクトのメソッド
- * $obj->put($title, array(1=>array(1, 2, 3));
- *
- * // 消去
- * $obj->put_values($title, NULL);
- *
- * // 書き込み
+ * $array[] = array(4, 5, 6);		// Add - directly
+ * $obj->add($title, array(4, 5, 6));	// Add - method of Config object
+ * $array = array(1=>array(1, 2, 3));		// Replace - directly
+ * $obj->put($title, array(1=>array(1, 2, 3));	// Replace - method of Config object
+ * $obj->put_values($title, NULL);	// Delete
  * $obj->write();
- *
  */
 
-// ページ名のプレフィクス
-define('CONFIG_BASE', ':config/');
+// Fixed prefix of configuration-page's name
+define('PKWK_CONFIG_PREFIX', ':config/');
 
-// 設定ページ管理
+// Configuration-page manager
 class Config
 {
-	// ページ名
-	var $name, $page;
-
-	// 要素
+	var $name, $page; // Page name
 	var $objs = array();
 
 	function Config($name)
 	{
 		$this->name = $name;
-		$this->page = CONFIG_BASE . $name;
+		$this->page = PKWK_CONFIG_PREFIX . $name;
 	}
 
-	// ページを読み込む
+	// Load the configuration-page
 	function read()
 	{
 		if (! is_page($this->page)) return FALSE;
 
 		$this->objs = array();
 		$obj        = & new ConfigTable('');
+		$matches = array();
+
 		foreach (get_source($this->page) as $line) {
 			if ($line == '') continue;
 
-			$head  = $line{0};
+			$head  = $line{0};	// The first letter
 			$level = strspn($line, $head);
 
 			if ($level > 3) {
 				$obj->add_line($line);
-				continue;
-			}
 
-			if ($head == '*') {
-				// 見出しの固有ID部を削除
+			} else if ($head == '*') {
+				// Cut fixed-heading anchors
 				$line = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/', '$1$2', $line);
 
 				if ($level == 1) {
 					$this->objs[$obj->title] = $obj;
 					$obj = & new ConfigTable($line);
 				} else {
-					if (! is_a($obj, 'ConfigTable_Direct')) {
+					if (! is_a($obj, 'ConfigTable_Direct'))
 						$obj = & new ConfigTable_Direct('', $obj);
-					}
 					$obj->set_key($line);
 				}
 				
 			} else if ($head == '-' && $level > 1) {
-				if (! is_a($obj, 'ConfigTable_Direct')) {
+				if (! is_a($obj, 'ConfigTable_Direct'))
 					$obj = & new ConfigTable_Direct('', $obj);
-				}
 				$obj->add_value($line);
 
 			} else if ($head == '|' && preg_match('/^\|(.+)\|\s*$/', $line, $matches)) {
-				if (! is_a($obj, 'ConfigTable_Sequential')) {
+				// Table row
+				if (! is_a($obj, 'ConfigTable_Sequential'))
 					$obj = & new ConfigTable_Sequential('', $obj);
-				}
 				// Trim() each table cell
 				$obj->add_value(array_map('trim', explode('|', $matches[1])));
 			} else {
@@ -107,34 +82,32 @@ class Config
 		return TRUE;
 	}
 
-	// 配列を取得する
+	// Get an array
 	function & get($title)
 	{
 		$obj = & $this->get_object($title);
 		return $obj->values;
 	}
 
-	// 配列を設定する(上書き)
+	// Set an array (Override)
 	function put($title, $values)
 	{
 		$obj         = & $this->get_object($title);
 		$obj->values = $values;
 	}
 
-	// 行を追加する
+	// Add a line
 	function add($title, $value)
 	{
 		$obj = & $this->get_object($title);
 		$obj->values[] = $value;
 	}
 
-	// オブジェクトを取得する(ないときは作る)
+	// Get an object (or create it)
 	function & get_object($title)
 	{
 		if (! isset($this->objs[$title]))
-		{
 			$this->objs[$title] = & new ConfigTable('*' . trim($title) . "\n");
-		}
 		return $this->objs[$title];
 	}
 
@@ -146,27 +119,19 @@ class Config
 	function toString()
 	{
 		$retval = '';
-		foreach ($this->objs as $title=>$obj) {
+		foreach ($this->objs as $title=>$obj)
 			$retval .= $obj->toString();
-		}
 		return $retval;
 	}
 }
 
-//配列値を保持するクラス
+// Class holds array values
 class ConfigTable
 {
-	// テーブルの名前
-	var $title = '';
-
-	// ページの内容(テーブル以外の部分)
-	var $before = array();
-
-	// 取得した値の配列
-	var $values = array();
-
-	// ページの内容(テーブル以外の部分)
-	var $after = array();
+	var $title  = '';	// Table title
+	var $before = array();	// Page contents (except table ones)
+	var $after  = array();	// Page contents (except table ones)
+	var $values = array();	// Table contents
 
 	function ConfigTable($title, $obj = NULL)
 	{
@@ -179,7 +144,7 @@ class ConfigTable
 		}
 	}
 
-	// 説明の追加
+	// Addi an  explanation
 	function add_line($line)
 	{
 		$this->after[] = $line;
@@ -193,7 +158,7 @@ class ConfigTable
 
 class ConfigTable_Sequential extends ConfigTable
 {
-	// 行の追加
+	// Add a line
 	function add_value($value)
 	{
 		$this->values[] = (count($value) == 1) ? $value[0] : $value;
@@ -205,7 +170,7 @@ class ConfigTable_Sequential extends ConfigTable
 		if (is_array($this->values)) {
 			foreach ($this->values as $value) {
 				$value   = is_array($value) ? join('|', $value) : $value;
-				$retval .= "|$value|\n";
+				$retval .= '|' . $value . '|' . "\n";
 			}
 		}
 		$retval .= join('', $this->after);
@@ -215,17 +180,15 @@ class ConfigTable_Sequential extends ConfigTable
 
 class ConfigTable_Direct extends ConfigTable
 {
-	// 取得したキーの配列。初期化時に使用する。
-	var $_keys = array();
+	var $_keys = array();	// Used at initialization phase
 
-	// キーの設定
 	function set_key($line)
 	{
 		$level = strspn($line, '*');
 		$this->_keys[$level] = trim(substr($line, $level));
 	}
 
-	// 行の追加
+	// Add a line
 	function add_value($line)
 	{
 		$level = strspn($line, '-');
@@ -238,7 +201,7 @@ class ConfigTable_Direct extends ConfigTable
 	function toString($values = NULL, $level = 2)
 	{
 		$retval = '';
-		$root = ($values === NULL);
+		$root   = ($values === NULL);
 		if ($root) {
 			$retval = join('', $this->before);
 			$values = & $this->values;
