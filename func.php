@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.47 2003/07/14 03:56:32 arino Exp $
+// $Id: func.php,v 1.48 2003/07/14 06:49:31 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -433,11 +433,11 @@ function format_date($val, $paren = FALSE)
 }
 
 // 経過時刻文字列を作る
-function get_passage($time)
+function get_passage($time, $paren = TRUE)
 {
-	static $units = array('s'=>60,'m'=>60,'h'=>24,'d'=>1);
+	static $units = array('m'=>60,'h'=>24,'d'=>1);
 	
-	$time = UTIME - $time;
+	$time = max(0,(UTIME - $time) / 60); //minutes
 	
 	foreach ($units as $unit=>$card)
 	{
@@ -447,9 +447,9 @@ function get_passage($time)
 		}
 		$time /= $card;
 	}
-	$time = floor($time);
+	$time = floor($time).$unit;
 	
-	return "($time$unit)";
+	return $paren ? "($time)" : $time;
 }
 
 //<input type="(submit|button|image)"...>を隠す
@@ -610,6 +610,7 @@ if (!function_exists('array_fill'))
 		return $ret;
 	}
 }
+
 //md5_file
 //(PHP 4 >= 4.2.0)
 //
