@@ -108,7 +108,7 @@ $_msg_maxsize = 'Maximum file size is $1.';
 $_msg_delete = 'Delete \'$1\'';
 $_msg_exceed = 'File size is too big to $1';
 $_msg_attachfile = 'Attach file';
-$_msg_confirm_delete = '<div style="text-align:center">comfirm Delete '%s'<br />%s</div>';
+$_msg_confirm_delete = '<div style="text-align:center">comfirm Delete \'%s\'<br />%s</div>';
 $_btn_upload = 'Upload';
 $_btn_delete = 'Del';
 
