@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: proxy.php,v 1.3 2003/09/24 00:41:38 arino Exp $
+// $Id: proxy.php,v 1.4 2003/10/01 05:38:47 arino Exp $
 //
 
 /*
@@ -12,9 +12,14 @@
  * $method  : GET, POST, HEADのいずれか(デフォルトはGET)
  * $headers : 任意の追加ヘッダ
  * $post    : POSTの時に送信するデータを格納した配列('変数名'=>'値')
+ * $redirect_max : HTTP redirectの回数制限
 */
 
-function http_request($url,$method='GET',$headers='',$post=array())
+// リダイレクト回数制限の初期値
+define('HTTP_REQUEST_URL_REDIRECT_MAX',10);
+
+function http_request($url,$method='GET',$headers='',$post=array(),
+	$redirect_max=HTTP_REQUEST_URL_REDIRECT_MAX)
 {
 	global $use_proxy,$proxy_host,$proxy_port;
 	global $need_proxy_auth,$proxy_auth_user,$proxy_auth_pass;
@@ -29,9 +34,9 @@ function http_request($url,$method='GET',$headers='',$post=array())
 	// port
 	$arr['port'] = isset($arr['port']) ? $arr['port'] : 80;
 	
-	$url = $via_proxy ? $arr['scheme'].'://'.$arr['host'].':'.$arr['port'] : '';
-	$url .= isset($arr['path']) ? $arr['path'] : '/';
-	$url .= $arr['query'];
+	$url_base = $arr['scheme'].'://'.$arr['host'].':'.$arr['port'];
+	$url_path = isset($arr['path']) ? $arr['path'] : '/';
+	$url = ($via_proxy ? $url_base : '').$url_path.$arr['query'];
 	
 	$query = $method.' '.$url." HTTP/1.0\r\n";
 	$query .= "Host: ".$arr['host']."\r\n";
@@ -96,11 +101,36 @@ function http_request($url,$method='GET',$headers='',$post=array())
 	
 	$resp = explode("\r\n\r\n",$response,2);
 	$rccd = explode(' ',$resp[0],3); // array('HTTP/1.1','200','OK\r\n...')
+	$rc = (integer)$rccd[1];
+	
+	// Redirect
+	switch ($rc)
+	{
+		case 302: // Moved Temporarily
+		case 301: // Moved Permanently
+			if (preg_match('/^Location: (.+)$/m',$resp[0],$matches)
+				and --$redirect_max > 0)
+			{
+				$url = trim($matches[1]);
+				if (!preg_match('/^https?:\//',$url)) // no scheme
+				{
+					if ($url{0} != '/') // Relative path
+					{
+						// to Absolute path
+						$url = substr($url_path,0,strrpos($url_path,'/')).'/'.$url;
+					}
+					// add sheme,host
+					$url = $url_base.$url;
+				} 
+				return http_request($url,$method,$headers,$post,$redirect_max);
+			}
+	}
+	
 	return array(
-		'query'  => $query,             // Query String
-		'rc'     => (integer)$rccd[1], // Response Code
-		'header' => $resp[0],           // Header
-		'data'   => $resp[1]            // Data
+		'query'  => $query,   // Query String
+		'rc'     => $rc,      // Response Code
+		'header' => $resp[0], // Header
+		'data'   => $resp[1]  // Data
 	);
 }
 // プロキシを経由する必要があるかどうか判定
