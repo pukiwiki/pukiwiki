@@ -1,7 +1,7 @@
 NAME
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
-       PukiWiki 1.3.2 by
+       PukiWiki 1.3.3 by
         Copyright (C) 2001,2002 by sng, PukiWiki Developers Team
         http://pukiwiki.org/
 
@@ -79,6 +79,7 @@ DESCRIPTION
        template.php              644            ASCII
        rss.php                   644            ASCII
        backup.php                644            ASCII
+       make_link.php             644            ASCII
        pukiwiki.gif              644            BINARY
        skin/pukiwiki.skin.en.php 644            ASCII
        skin/pukiwiki.skin.ja.php 644            ASCII
@@ -304,6 +305,14 @@ RDF/RSS
     *   http://pukiwiki.org/index.php?rss10
 
 更新履歴
+    *   2002-12-04 1.3.3 by PukiWiki Developers Team
+
+        make_link()を独立
+        LEFT:/CENTER:/RIGHT:書式をconvert_html()内で処理
+        以前のリリースに含まれていたXSS脆弱性を修正。
+        その他多数のバグを修正
+        いくつかのプラグインを同梱
+
     *   2002-07-15 1.3.2 by PukiWiki Developers Team
 
         開発をPukiWiki Developers Team (http://pukiwiki.org/)に移行して初めてのリリース。
@@ -384,7 +393,7 @@ TODO
         - http://pukiwiki.org/?BugTrack
 
 作者
-        PukiWiki 1.3.2 by PukiWiki Developers Team
+        PukiWiki 1.3.3 by PukiWiki Developers Team
          Copyright (C) 2002 by sng & PukiWiki Developers Team
          http://pukiwiki.org/
 
