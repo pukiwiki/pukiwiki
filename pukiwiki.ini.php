@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.40 2003/06/22 06:37:19 arino Exp $
+// $Id: pukiwiki.ini.php,v 1.41 2003/07/03 04:49:40 arino Exp $
 //
 // PukiWiki setting file
 
@@ -57,6 +57,10 @@ $page_title = 'PukiWiki';
 /////////////////////////////////////////////////
 // TrackBack機能を使用する
 $trackback = 0;
+
+/////////////////////////////////////////////////
+// Referer機能を使用する
+$referer = 0;
 
 /////////////////////////////////////////////////
 // WikiNameを*無効に*する

@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.4 2003/06/22 05:39:07 arino Exp $
+// $Id: trackback.php,v 1.5 2003/07/03 04:50:57 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -8,7 +8,7 @@
  * http://localhost/pukiwiki/pukiwiki.php?FrontPage と明確に指定しないと
  * TrackBack ID の取得はできない
  *
- * tb_count($page)		TrackBack Ping データ個数取得 // pukiwiki.skin.LANG.php
+ * tb_count($page, $ext)	TrackBack Ping データ個数取得 // pukiwiki.skin.LANG.php
  * tb_send($page,$data)		TrackBack Ping 送信 // file.php
  * tb_ScanLink($data)		convert_html() 変換結果の <a> タグから URL 抽出
  * tb_PageInfo($page)		ページ情報取得
@@ -30,6 +30,9 @@
  * tb_startElementHandler_GetId($parser, $name, $attribs)
  *				xml_set_element_handler関数でセットした startElementHandler
  * tb_xg_dummy($parser, $name)	xml_set_element_handler関数でセットした EndElementHandler
+ * == Referer 対応分 ==
+ * ref_save($page)		Referer データ保存(更新)
+ * ref_put($url,$file,$data)	Referer データ出力
  *
  */
 
@@ -38,10 +41,11 @@ if (!defined('TRACKBACK_DIR')) {
 }
 
 // TrackBack Ping データ個数取得
-function tb_count($page) {
+// 拡張子 .ref の場合は、Referer 個数
+function tb_count($page, $ext=".txt") {
 
   $page_enc = md5($page);
-  $file = TRACKBACK_DIR.$page_enc.".txt";
+  $file = TRACKBACK_DIR.$page_enc.$ext;
 
   // TRACKBACK_DIR の存在と書き込み可能かの確認
   if (file_exists($file) === false) {
@@ -562,4 +566,65 @@ function tb_startElementHandler_GetId($parser, $name, $attribs) {
 // xml_set_element_handler関数でセットした EndElementHandler
 function tb_xg_dummy($parser, $name) { return; }
 
+// Referer データ保存(更新)
+function ref_save($page) {
+  global $referer;
+
+  if (!$referer) return;
+  $url = get_referer();
+  if (empty($url)) return;
+
+  // URI の妥当性評価
+  $url_arry = parse_url($url);
+  if (!isset($url_arry['host'])) return;
+
+  // TRACKBACK_DIR の存在と書き込み可能かの確認
+  if (file_exists(TRACKBACK_DIR) === false) {
+    die(TRACKBACK_DIR.": No such directory");
+  }
+  if (is_writable(TRACKBACK_DIR) === false) {
+    die(TRACKBACK_DIR.": Permission denied");
+  }
+
+  $filename = TRACKBACK_DIR.md5(rawurlencode($page)).".ref";
+  // Referer のデータを読み込む
+  $rc = ref_put($url,$filename,tb_get($filename));
+  return;
+}
+
+// Referer データ出力
+function ref_put($url,$file,$data) {
+
+  if (!($fp = fopen($file,"w"))) return 1;
+  @flock($fp, LOCK_EX);
+
+  // カンマが入っても良いように。(なんか違うと思うなぁ)
+  $url = rawurlencode($url);
+
+  $sw_put = 0; // 更新用
+  if ($data !== false) {
+    foreach ($data as $x) {
+      if (!$x[4]) continue; // 利用可否フラグが ゼロの場合は、データを捨てる
+      // Referer ヘッダが一致する場合は、データを更新する
+      if ($x[3] == $url) {
+        $sw_put = 1;
+	$x[0] = UTIME; // 最終更新日時
+	$x[2]++;       // 参照カウンタ
+      }
+      // 0:最終更新日時, 1:初回登録日時, 2:参照カウンタ, 3:Referer ヘッダ, 4:利用可否フラグ(1は有効)
+      fwrite($fp, $x[0].",".$x[1].",".$x[2].",".$x[3].",".$x[4]."\n");
+    }
+  }
+
+  // 更新していない場合は、１件追加する
+  if (!$sw_put) {
+    // 0:最終更新日時, 1:初回登録日時, 2:参照カウンタ, 3:Referer ヘッダ, 4:利用可否フラグ(1は有効)
+    fwrite($fp, UTIME.",".UTIME.",1,".$url.",1\n");
+  }
+
+  @flock($fp, LOCK_UN);
+  @fclose($fp);
+
+  return 0;
+}
 ?>

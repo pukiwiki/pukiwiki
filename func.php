@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.45 2003/06/23 13:24:32 arino Exp $
+// $Id: func.php,v 1.46 2003/07/03 04:47:49 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -772,5 +772,23 @@ function read_auth($page, $auth_flag=true, $exit_flag=true) {
 		return false;
 	}
 	return true;
+}
+
+// Referer 変数を戻す
+function get_referer($local=FALSE)
+{
+	$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
+	// 自サイトも有効の場合は、そのまま戻す
+	if ($local)
+	{
+		return $HTTP_REFERER;
+	}
+	$HTTP_HOST = 'http://'.$_SERVER['HTTP_HOST'];
+	// 自サイト内の場合は、消去
+	if (strpos($HTTP_REFERER,$HTTP_HOST) === 0)
+	{
+		$HTTP_REFERER = '';
+	}
+	return $HTTP_REFERER;
 }
 ?>
