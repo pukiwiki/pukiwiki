@@ -1,12 +1,12 @@
 <?php
-// $Id: source.inc.php,v 1.3 2002/11/29 00:09:01 panda Exp $
+// $Id: source.inc.php,v 1.4 2002/12/05 05:02:27 panda Exp $
 
 function plugin_source_action()
 {
-	global $post,$vars,$script,$InterWikiName,$WikiName,$BracketName,$defaultpage;
+	global $vars;
 
-	header("Content-type: text/plain");
-	readfile(get_filename(encode($vars["page"])));
+	header('Content-type: text/plain');
+	readfile(get_filename(encode($vars['page'])));
 
 	die();
 }

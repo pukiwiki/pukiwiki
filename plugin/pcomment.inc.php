@@ -1,4 +1,5 @@
 <?php
+// $Id: pcomment.inc.php,v 1.4 2002/12/05 05:02:27 panda Exp $
 /*
 Last-Update:2002-09-12 rev.15
 

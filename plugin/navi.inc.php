@@ -1,4 +1,5 @@
 <?php
+// $Id: navi.inc.php,v 1.3 2002/12/05 05:02:27 panda Exp $
 /*
 Last-Update:2002-10-15 rev.2
 

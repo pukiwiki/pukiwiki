@@ -1,4 +1,5 @@
 <?php
+// $Id: map.inc.php,v 1.3 2002/12/05 05:02:27 panda Exp $
 /*
 Last-Update:2002-11-29 rev.12
  http://home.arino.jp/?map.inc.php

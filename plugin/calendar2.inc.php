@@ -1,11 +1,13 @@
-<?php
-// $Id: calendar2.inc.php,v 1.12 2002/12/02 02:51:24 panda Exp $
 
+<?
+// $Id: calendar2.inc.php,v 1.13 2002/12/05 05:02:27 panda Exp $
+// *引数にoffと書くことで今日の日記を表示しないようにした。
 function plugin_calendar2_convert()
 {
 	global $script,$weeklabels,$vars,$command,$WikiName,$BracketName,$post,$get;
 	global $_calendar2_plugin_edit, $_calendar2_plugin_empty;
-	
+
+	$today_view = true;
 	$args = func_get_args();
 	
 	if(func_num_args() == 0)
@@ -14,16 +16,38 @@ function plugin_calendar2_convert()
 		$pre = strip_bracket($vars['page']);
 		$prefix = strip_bracket($vars['page'])."/";
 	}
+	else{
+		foreach ($args as $arg){
+			if(is_numeric($arg) && strlen($arg) == 6){
+				$date_str = $arg;
+			}
+			else if($arg == "off"){
+				$today_view = false;
+			}
+			else {
+				$pre = strip_bracket($arg);
+				$prefix = strip_bracket($arg)."/";
+			}
+		}
+		if(empty($date_str)) $date_str = date("Ym");
+		if(empty($pre)){
+			$pre = strip_bracket($vars['page']);
+			$prefix = strip_bracket($vars['page'])."/";
+		}
+	}
+	/*
 	else if(func_num_args() == 1)
 	{
 		if(is_numeric($args[0]) && strlen($args[0]) == 6)
 		{
+			//#calendar2(yyyymm)
 			$date_str = $args[0];
 			$pre = strip_bracket($vars['page']);
 			$prefix = strip_bracket($vars['page'])."/";
 		}
 		else
 		{
+			//calendar2(pagename)
 			$date_str = date("Ym");
 			$pre = strip_bracket($args[0]);
 			$prefix = strip_bracket($args[0])."/";
@@ -33,27 +57,57 @@ function plugin_calendar2_convert()
 	{
 		if(is_numeric($args[0]) && strlen($args[0]) == 6)
 		{
+                      //#calendar2(yyyymm,pagename)
 			$date_str = $args[0];
 			$pre = strip_bracket($args[1]);
 			$prefix = strip_bracket($args[1])."/";
 		}
 		else if(is_numeric($args[1]) && strlen($args[1]) == 6)
 		{
+                      //#calendar2(pagename,yyyymm)
 			$date_str = $args[1];
 			$pre = strip_bracket($args[0]);
 			$prefix = strip_bracket($args[0]).'/';
 		}
 		else
 		{
+                      //#calendar2(?,?)
 			$date_str = date("Ym");
 			$pre = strip_bracket($vars[page]);
 			$prefix = strip_bracket($vars[page])."/";
+		}
+	}
+	else if(func_num_args() == 3){
+		if(is_numeric($args[0]) && strlen($args[0]) == 6)
+		{
+                      //#calendar2(yyyymm,pagename)
+			$date_str = $args[0];
+			$pre = strip_bracket($args[1]);
+			$prefix = strip_bracket($args[1])."/";
+		}
+		else if(is_numeric($args[1]) && strlen($args[1]) == 6)
+		{
+                      //#calendar2(pagename,yyyymm)
+			$date_str = $args[1];
+			$pre = strip_bracket($args[0]);
+			$prefix = strip_bracket($args[0]).'/';
+		}
+		else
+		{
+                      //#calendar2(?,?)
+			$date_str = date("Ym");
+			$pre = strip_bracket($vars[page]);
+			$prefix = strip_bracket($vars[page])."/";
+		}
+		if($args[2] == "off"){
+			$today_view = false;
 		}
 	}
 	else
 	{
 		return FALSE;
 	}
+  */
 	if($pre == "*") {
 		$prefix = '';
 		$pre = '';
@@ -202,7 +256,7 @@ function plugin_calendar2_convert()
 	}
 
 	$ret .= "  </tr>\n</table>\n";
-	
+  if ($today_view == true){
 	$page = sprintf("[[%s%4d-%02d-%02d]]", $prefix, $today[year], $today[mon], $today[mday]);
 	$page_url = rawurlencode($page);
 	if(is_page($page)) {
@@ -213,9 +267,11 @@ function plugin_calendar2_convert()
 		$get['page'] = $post['page'] = $vars['page'] = $page_;
 	}
 	else {
-		$str = make_link(sprintf($_calendar2_plugin_empty,sprintf('[[%s%4d-%02d-%02d]]',$prefix, $today[year], $today[mon], $today[mday])));
+		$str = sprintf($_calendar2_plugin_empty,make_link(sprintf('[[%s%4d-%02d-%02d]]',$prefix, $today[year], $today[mon], $today[mday])));
 	}
-	
+  }else{
+    $str = "";
+  }
 	$ret .= "</td><td valign=\"top\">".$str."</td></tr></table>";
 	
 	return $ret;
