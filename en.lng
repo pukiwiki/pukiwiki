@@ -114,6 +114,10 @@ $_btn_delete = 'Del';
 $_msg_newpage = 'new page';
 
 ///////////////////////////////////////
+// insert
+$_btn_insert = 'add';
+
+///////////////////////////////////////
 // recent
 $_recent_plugin_frame = '<h5 class="side_label">recent(%d)</h5><span class="small">%s</span>';
 $_recent_plugin_li = '.';

@@ -1,5 +1,5 @@
 <?
-// $Id: insert.inc.php,v 1.3 2002/07/01 07:08:57 masui Exp $
+// $Id: insert.inc.php,v 1.4 2002/07/18 16:28:33 masui Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -53,11 +53,11 @@ function plugin_insert_action()
 		$body = "$_msg_collided\n";
 
 		$body .= "<form action=\"$script?cmd=preview\" method=\"post\">\n"
-			,"<div>\n"
+			."<div>\n"
 			."<input type=\"hidden\" name=\"refer\" value=\"".$post["refer"]."\" />\n"
 			."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\" />\n"
 			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">$postdata_input</textarea><br />\n"
-			,"</div>\n"
+			."</div>\n"
 			."</form>\n";
 	}
 	else

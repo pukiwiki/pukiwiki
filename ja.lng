@@ -122,6 +122,10 @@ $_btn_delete = '削除';
 $_msg_newpage = 'ページ新規作成';
 
 ///////////////////////////////////////
+// insert
+$_btn_insert = '追加';
+
+///////////////////////////////////////
 // recent
 $_recent_plugin_frame = '<h5 class="side_label">最新の%d件</h5><span class="small">%s</span>';
 $_recent_plugin_li = '・';
