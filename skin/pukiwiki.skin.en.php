@@ -5,7 +5,7 @@
 <META HTTP-EQUIV="content-type" CONTENT="text/html; charset=iso-8859-1">
 <meta http-equiv="content-style-type" content="text/css">
 <title><?=$page_title ?> - <?=$title?></title>
-<link rel="stylesheet" href="/skin/default.en.css" type="text/css" media="screen" charset="iso-8859-1">
+<link rel="stylesheet" href="skin/default.en.css" type="text/css" media="screen" charset="iso-8859-1">
 <script language="JavaScript">
 <!--
   function open_mini(URL,width,height){
