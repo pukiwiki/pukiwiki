@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.28 2004/12/11 08:47:20 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.29 2004/12/11 08:53:24 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -153,9 +153,7 @@ function _navigator($key, $value = '', $javascript = ''){
 <table border="0" style="width:100%">
  <tr>
   <td class="menubar">
-   <div id="menubar">
-    <?php echo do_plugin_convert('menu') ?>
-   </div>
+   <div id="menubar"><?php echo do_plugin_convert('menu') ?></div>
   </td>
   <td valign="top">
    <div id="body"><?php echo $body ?></div>
@@ -167,9 +165,7 @@ function _navigator($key, $value = '', $javascript = ''){
 <?php } ?>
 
 <?php if ($notes) { ?>
-<div id="note">
-<?php echo $notes ?>
-</div>
+<div id="note"><?php echo $notes ?></div>
 <?php } ?>
 
 <?php if ($attaches) { ?>
@@ -227,15 +223,11 @@ function _toolbar($key, $x = 20, $y = 20){
 </div>
 
 <?php if ($lastmodified) { ?>
-<div id="lastmodified">
- Last-modified: <?php echo $lastmodified ?>
-</div>
+<div id="lastmodified">Last-modified: <?php echo $lastmodified ?></div>
 <?php } ?>
 
 <?php if ($related) { ?>
-<div id="related">
- Link: <?php echo $related ?>
-</div>
+<div id="related">Link: <?php echo $related ?></div>
 <?php } ?>
 
 <div id="footer">
