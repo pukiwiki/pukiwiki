@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar2.inc.php,v 1.21 2004/07/31 03:09:20 henoheno Exp $
+// $Id: calendar2.inc.php,v 1.22 2005/01/26 13:20:26 henoheno Exp $
 // *引数にoffと書くことで今日の日記を表示しないようにした。
 function plugin_calendar2_convert()
 {
@@ -121,14 +121,21 @@ EOD;
 		}
 
 		if (is_page($page)) {
-			$link = "<a href=\"$script?$r_page\" title=\"$s_page\"><strong>$day</strong></a>";
-		}
-		else {
-			$link = "<a class=\"small\" href=\"$script?cmd=edit&amp;page=$r_page&amp;refer=$r_base\" title=\"$s_page\">$day</a>";
+			$link = '<a href="' . $script . '?' . $r_page . '" title="' . $s_page .
+				'"><strong>' . $day . '</strong></a>';
+		} else {
+			if (PKWK_READONLY) {
+				$link = '<span class="small">' . $day . '</small>';
+			} else {
+				$link = $script . '?cmd=edit&amp;page=' . $r_page . '&amp;refer=' . $r_base;
+				$link = '<a class="small" href="' . $link . '" title="' . $s_page . '">' . $day . '</a>';
+			}
 		}
 
-		$ret .= "     <td class=\"$style\">\n      $link\n     </td>\n";
-		$day++;
+		$ret .= '     <td class="' . $style . '">' . "\n" .
+			'      ' . $link . "\n" .
+			'     </td>' . "\n";
+		++$day;
 		$wday = ++$wday % 7;
 	}
 	if ($wday > 0) {
