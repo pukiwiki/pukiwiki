@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.19 2004/12/16 13:09:48 henoheno Exp $
+// $Id: func.php,v 1.20 2004/12/25 00:14:52 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -370,16 +370,15 @@ function catrule()
 function die_message($msg)
 {
 	$title = $page = 'Runtime error';
-
 	$body = <<<EOD
 <h3>Runtime error</h3>
 <strong>Error message : $msg</strong>
 EOD;
 
+	pkwk_common_headers();
 	if(defined('SKIN_FILE') && file_exists(SKIN_FILE) && is_readable(SKIN_FILE)) {
 		catbody($title, $page, $body);
 	} else {
-		pkwk_headers_sent();
 		header('Content-Type: text/html; charset=euc-jp');
 		print <<<EOD
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -394,7 +393,7 @@ EOD;
 </html>
 EOD;
 	}
-	die();
+	exit;
 }
 
 // 現在時刻をマイクロ秒で取得
