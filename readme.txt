@@ -1,18 +1,12 @@
 NAME
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
-       PukiWiki 1.3.1beta MASUI'z Edition
-        Copyright (C) 2001,2002 by sng, MASUI.
-        Yuichiro MASUI <masui@masui.net>
-        http://masui.net/pukiwiki/
-
-       PukiWiki 1.3 (based)
-        Copyright (C) 2001,2002 by sng.
-        sng <sng@factage.com>
-        http://factage.com/sng/
+       PukiWiki 1.3.2 by
+        Copyright (C) 2001,2002 by sng, PukiWiki Developers Team
+        http://pukiwiki.org/
 
 SYNOPSIS
-        http://masui.net/pukiwiki/
+        http://pukiwiki.org/
 
 DESCRIPTION
     PukiWikiは参加者が自由にページを追加・削除・編集できる
@@ -22,8 +16,8 @@ DESCRIPTION
     PukiWikiは、Webページ全体を自由に変更することができます。
 
     PukiWikiは、結城浩さんのYukiWikiの仕様を参考にして独自に作られました。
-    PukiWiki(MASUI'z Edition)は、sngさんのPukiWiki 1.3を元にプラグインなどを
-    まとめたものです。
+    1.3まではsngさんが作成し、1.3.1b以降はPukiWiki Developers Teamによって
+    開発が続けられています。
 
     PukiWikiはPHPで書かれたPHPスクリプトとして実現されていますので、
     PHPが動作するWebサーバならば比較的容易に設置できます。
@@ -33,15 +27,7 @@ DESCRIPTION
 設置方法
   入手
 
-    PukiWiki(MASUI'z Edition)の最新版は、 http://masui.net/pukiwiki/ から入手できます。
-
-  ファイル一覧
-
-        readme.txt        ドキュメント
-        pukiwiki.php      PukiWiki本体
-        pukiwiki.ini.php  PukiWikiの設定ファイル
-        pukiwiki.skin.php PukiWikiのディフォルトスキンファイル
-        pukiwiki.gif      ロゴ
+    PukiWikiの最新版は、 http://pukiwiki.org/ から入手できます。
 
   インストール
 
@@ -183,14 +169,14 @@ DESCRIPTION
             大かっこの中にはスペースを含めてはいけません。
             日本語も使えます。
 
-        *   また、[[pukiwiki:http://masui.net/pukiwiki/]] のようにすると factage の文字に
+        *   また、[[pukiwiki:http://pukiwiki.org/]] のようにすると factage の文字に
             http://masui.net/pukiwiki/ へのリンクが貼れます。
 
         *   [[サーバ名:WikiName]] のようにすると InterWikiName になります。
 
-        *   http://masui.net/pukiwiki/ のようなURLは自動的にリンクになります。
+        *   http://pukiwiki.org/ のようなURLは自動的にリンクになります。
 
-        *   team@pukiwiki.jp のようなメールアドレスも自動的にリンクになります。
+        *   team@pukiwiki.org のようなメールアドレスも自動的にリンクになります。
 
     *   行頭がスペースやタブで始まっていると、
         それは整形済みの段落`<pre>'として扱われます。
@@ -230,7 +216,7 @@ InterWiki
     InterWikiName のページに以下のようにサーバの定義をする。 
 
     *   [URL サーバ名] タイプ
-    *   [http://masui.net/pukiwiki/pukiwiki.php?read&page= pukiwiki] pw
+    *   [http://pukiwiki.org/index.php?read&page= pukiwiki] pw
 
 
   InterWikiNameの追加 
@@ -243,14 +229,14 @@ InterWiki
     要求しようとするURLへのWikiNameの挿入位置を $1 で指定することができます。
     省略するとお尻にくっつきます。 
 
-    *   [http://masui.net/pukiwiki/pukiwiki.php?backup&page=$1&age=1 pukiwiki] pw
+    *   [http://pukiwiki.org/index.php?backup&page=$1&age=1 pukiwiki] pw
 
 
   文字コード変換タイプ 
     PukiWikiページ以外にも飛ばせます。日本語をURLに含む可能性もあるのでその場合の
     エンコーディングの指定をタイプとして指定できます。 
 
-    *   [http://masui.net/pukiwiki/pukiwiki.php?read&page=$1 pukiwiki] pw
+    *   [http://pukiwiki.org/index.php?read&page=$1 pukiwiki] pw
 
 
     *   std 省略時
@@ -290,13 +276,20 @@ RDF/RSS
 
   RSS 0.91 の出力方法の例
 
-    *   http://masui.net/pukiwiki/pukiwiki.php?rss
+    *   http://pukiwiki/index.php?rss
 
   RSS 1.0 の出力方法の例
 
-    *   http://masui.net/pukiwiki/pukiwiki.php?rss10
+    *   http://pukiwiki.org/index.php?rss10
 
 更新履歴
+    *   2002-07-15 1.3.2 by PukiWiki Developers Team
+
+        開発をPukiWiki Developers Team (http://pukiwiki.org/)に移行して初めてのリリース。
+        以前のリリースに含まれていたXSS脆弱性を修正。
+        HTMLがHTML4.01に準拠するように修正
+        その他多数のバグを修正
+
     *   2002-06-10 1.3.1beta MASUI'z Edition
 
         PukiWiki 1.3をベースに、MASUIが勝手にプラグインとかまとめてみました。
@@ -367,20 +360,14 @@ RDF/RSS
     *   2001-11-25 0.90 by sng. 一応公開。YukiWiki の検索と差分はまだ。
 
 TODO
-        - 予定なし、これから実装される YukiWiki の機能を移植 by sng.
+        - http://pukiwiki.org/?BugTrack
 
 作者
-        PukiWiki 1.3.1 MASUI'z Edition by
-         Copyright (C) 2002 by sng & MASUI.
-         Yuichiro MASUI <masui@masui.net>
-         http://masui.net/pukiwiki/
+        PukiWiki 1.3.2 by PukiWiki Developers Team
+         Copyright (C) 2002 by sng & PukiWiki Developers Team
+         http://pukiwiki.org/
 
-        PukiWiki 1.3 by
-         Copyright (C) 2001,2002 by sng.
-         sng <sng@factage.com>
-         http://factage.com/sng/
-
-    質問、意見、バグ報告は masui@masui.net にメールしてください。
+    質問、意見、バグ報告は http://pukiwiki.org/ までお願いします。
 
 配布条件
     PukiWikiは、 GNU General Public Licenseにて公開します。
@@ -388,6 +375,8 @@ TODO
     PukiWikiはフリーソフトです。 ご自由にお使いください。
 
 謝辞
+    PukiWiki Develpers Teamの皆さん、PukiWikiユーザの皆さんに感謝します。
+
     PukiWiki を開発した、sngさんに感謝します。
 
     YukiWiki のクローン化を許可していただいた結城浩さんに感謝します。
@@ -395,9 +384,9 @@ TODO
     本家のWikiWikiを作ったCunningham & Cunningham, Inc.に 感謝します。
 
 参照リンク
-    *   sngのホームページ http://factage.com/sng/
+    *   PukiWikiホームページ http://pukiwiki.org/
 
-    *   PukiWikiホームページ http://factage.com/sng/pukiwiki/
+    *   sngのホームページ http://factage.com/sng/
 
     *   結城浩さんのホームページ http://www.hyuki.com/
 
