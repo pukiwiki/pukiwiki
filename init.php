@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.78 2004/06/28 12:07:21 henoheno Exp $
+// $Id: init.php,v 1.79 2004/06/30 13:36:45 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -145,6 +145,9 @@ $get    = sanitize($_GET);
 $post   = sanitize($_POST);
 $cookie = sanitize($_COOKIE);
 
+// Expire risk
+unset($_GET, $_POST, $_COOKIE);	//, 'SERVER', 'ENV', 'REQUEST', 'SESSION', ...
+
 /////////////////////////////////////////////////
 // 文字コードを変換
 
@@ -241,7 +244,7 @@ if (array_key_exists('page', $vars)) {
 }
 
 // 整形: msg, 改行を取り除く
-if (!empty($vars['msg']))  {
+if (isset($vars['msg'])) {
 	$get['msg'] = $post['msg'] = $vars['msg'] = str_replace("\r",'',$vars['msg']);
 }
 
