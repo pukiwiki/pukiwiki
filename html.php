@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.25 2002/07/18 16:35:08 masui Exp $
+// $Id: html.php,v 1.26 2002/07/19 01:09:48 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -252,7 +252,7 @@ function convert_html($string)
 			else if(strlen($comment_out) != 0)
 			{
 				$headform[$_cnt] = '//';
-				array_push($result," <!-- ".htmlspecialchars($comment_out)." -->");
+#				array_push($result," <!-- ".htmlspecialchars($comment_out)." -->");
 			}
 
 		} else {
