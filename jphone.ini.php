@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: jphone.ini.php,v 1.3 2003/03/07 04:09:43 panda Exp $
+// $Id: jphone.ini.php,v 1.4 2003/03/07 08:03:51 panda Exp $
 //
 // PukiWiki setting file (user agent:J-PHONE)
 
@@ -107,7 +107,7 @@ $line_rules = array(
 /////////////////////////////////////////////////
 // max_size (SKIN§«ª»Õ—)
 $max_size = 6; //KByte
-if (array_key_exists(1,$user_agent['matches'][1]))
+if (array_key_exists(1,$user_agent['matches']))
 {
 	$max_size = 12;
 }
