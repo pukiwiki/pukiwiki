@@ -435,6 +435,7 @@ div#footer
 
 div#preview
 {
+	color:inherit;
 	background-color:#F5F8FF;
 }
 
@@ -560,7 +561,7 @@ hr.short_line
 {
 	text-align:center;
 	width:80%;
-	border-style:soild;
+	border-style:solid;
 	border-color:#333333;
 	border-width:1px 0px;
 }
