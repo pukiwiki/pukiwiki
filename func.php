@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.36 2003/05/02 07:38:32 arino Exp $
+// $Id: func.php,v 1.37 2003/05/12 10:33:43 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -36,7 +36,7 @@ function is_pagename($str)
 // 文字列がURLかどうか
 function is_url($str)
 {
-	return preg_match('/^(https?|ftp|news)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/', $str);
+	return preg_match('/^(https?|ftp|news)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]*)$/', $str);
 }
 // ページが存在するか
 function is_page($page,$reload=FALSE)
