@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.3 2004/10/13 15:08:35 henoheno Exp $
+// $Id: make_link.php,v 1.4 2004/10/31 04:14:05 henoheno Exp $
 //
 
 // リンクを付加する
@@ -184,13 +184,17 @@ class Link
 		$this->name = $name;
 		$this->body = $body;
 		$this->type = $type;
-		if ($type != 'InterWikiName' && preg_match('/\.(gif|png|jpe?g)$/i', $alias)) {
+		if (is_url($alias) && preg_match('/\.(gif|png|jpe?g)$/i', $alias)) {
 			$alias = htmlspecialchars($alias);
 			$alias = "<img src=\"$alias\" alt=\"$name\" />";
 		} else if ($alias != '') {
 			if ($converter === NULL)
 				$converter = new InlineConverter(array('plugin'));
+
 			$alias = make_line_rules($converter->convert($alias, $page));
+
+			// BugTrack/669: A hack removing anchor tags added by AutoLink
+			$alias = preg_replace('#</?a[^>]*>#i', '', $alias);
 		}
 		$this->alias = $alias;
 
