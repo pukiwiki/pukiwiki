@@ -2,13 +2,12 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.20.2.18 2004/06/27 14:38:23 henoheno Exp $
+// $Id: init.php,v 1.20.2.19 2004/06/28 12:07:18 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
 // 初期設定 (エラー出力レベル)
-// (E_WARNING | E_NOTICE)を除外しています。
-error_reporting(E_ERROR | E_PARSE);
+error_reporting(E_ERROR | E_PARSE);	// (E_WARNING | E_NOTICE)を除外しています。
 //error_reporting(E_ALL);
 
 /////////////////////////////////////////////////
@@ -137,6 +136,11 @@ if (!empty($vars['msg']))  {
 	$get['msg'] = $post['msg'] = $vars['msg'] = preg_replace("/((\x0D\x0A)|(\x0D)|(\x0A))/", "\n", $vars["msg"]);
 }
 
+// 入力チェック: 'cmd=' prohibits nasty 'plugin='
+if (isset($vars['cmd']) && isset($vars['plugin']))
+	unset($get['plugin'], $post['plugin'], $vars['plugin']);
+
+/////////////////////////////////////////////////
 $arg = rawurldecode((getenv('QUERY_STRING') != '') ? getenv('QUERY_STRING') :
 		    isset($HTTP_SERVER_VARS['argv'][0]) ? $HTTP_SERVER_VARS['argv'][0] : '');
 
@@ -175,7 +179,7 @@ $foot_explain = array();
 if (!isset($script) or $script == '') {
 	$script = get_script_uri();
 	if ($script === FALSE or (php_sapi_name() == 'cgi' and !is_url($script,TRUE))) {
-		die_message("get_script_uri() failed: Please set \$script at INI_FILE manually.");
+		die_message('get_script_uri() failed: Please set $script at INI_FILE manually.');
 	}
 }
 
