@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.45.2.5 2003/04/08 10:16:17 arino Exp $
+// $Id: html.php,v 1.45.2.6 2003/06/03 11:57:34 arino Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -498,7 +498,7 @@ function get_list($withfilename)
 					else
 						$head_nm = "Low_$head";
 					
-					if($head_str) $retval2[$page] = "</ul></li>\n";
+					if($head_str != '') $retval2[$page] = "</ul></li>\n";
 					$retval2[$page] .= "<li><a href=\"#top_$head_nm\" name=\"$head_nm\"><strong>$head</strong></a>\n<ul>\n";
 					$head_str = $head;
 					if($link_counter) $top_link .= "|";
@@ -513,7 +513,7 @@ function get_list($withfilename)
 				{
 					if(!$symbol_sw)
 					{
-						if($head_str) $retval2[$page] = "</ul></li>\n";
+						if($head_str != '') $retval2[$page] = "</ul></li>\n";
 						$retval2[$page] .= "<li><a href=\"#top_symbol\" name=\"symbol\"><strong>$_msg_symbol</strong></a>\n<ul>\n";
 						$head_str = $head;
 						if($link_counter) $top_link .= "|";
@@ -524,7 +524,7 @@ function get_list($withfilename)
 				}
 				else
 				{
-					if($head_str) $retval2[$page] = "</ul></li>\n";
+					if($head_str != '') $retval2[$page] = "</ul></li>\n";
 					$retval2[$page] .= "<li><a href=\"#top_etc\" name=\"etc\"><strong>$_msg_other</strong></a>\n<ul>\n";
 					$etc_sw = 1;
 					if($link_counter) $top_link .= "|";
