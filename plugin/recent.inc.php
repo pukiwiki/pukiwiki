@@ -17,7 +17,7 @@
 
 function plugin_recent_convert()
 {
-	global $script,$BracketName,$whatsnew,$date_format;
+	global $script,$BracketName,$date_format;
 	global $_recent_plugin_frame;
 	
 	$recent_lines = 10;
@@ -25,16 +25,18 @@ function plugin_recent_convert()
 		list($recent_lines) = func_get_args();
 	
 	$date = $items = '';
-	$lines = array_splice(preg_grep('/^\/\//',get_source($whatsnew)),0,$recent_lines);
-	foreach($lines as $line) {
-		if (!preg_match("/^\/\/(\d+)\s($BracketName)$/",$line,$match))
-			continue; // fatal error, die?
-		
-		$page = $match[2];
-		$_date = get_date($date_format,$match[1]);
+	if (!file_exists(CACHE_DIR.'recent.dat')) {
+		return '';
+	}
+	$recent = file(CACHE_DIR.'recent.dat');
+	$lines = array_splice($recent,0,$recent_lines);
+	foreach ($lines as $line) {
+		list($time,$page) = explode("\t",$line);
+		$_date = get_date($date_format,$time);
 		if ($date != $_date) {
-			if ($date != '')
+			if ($date != '') {
 				$items .= '</ul>';
+			}
 			$date = $_date;
 			$items .= "<strong>$date</strong>\n<ul class=\"recent_list\">";
 		}
