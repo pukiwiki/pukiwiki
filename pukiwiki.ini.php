@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.12 2002/08/21 17:32:04 masui Exp $
+// $Id: pukiwiki.ini.php,v 1.13 2002/09/15 07:05:51 masui Exp $
 //
 // PukiWiki setting file
 
@@ -104,7 +104,7 @@ $rows = 20;
 
 /////////////////////////////////////////////////
 // 大・小見出しから目次へ戻るリンクの文字
-$top = '<span class="super_index">↑</span>';
+$top = $_msg_content_back_to_top;
 /////////////////////////////////////////////////
 // 関連ページ表示のページ名の区切り文字
 $related_str = " ";
@@ -136,7 +136,7 @@ $date_format = "Y-m-d";
 $time_format = "H:i:s";
 /////////////////////////////////////////////////
 // 曜日配列
-$weeklabels = array("日","月","火","水","木","金","土");
+$weeklabels = $_msg_week;
 
 /////////////////////////////////////////////////
 // RSS に出力するページ数

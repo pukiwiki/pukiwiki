@@ -64,6 +64,9 @@ $_msg_notfoundresult = 'Not found word of <strong>$1</strong> in pages.';
 $_msg_symbol = 'Symbols';
 $_msg_other = 'Others';
 $_msg_help = 'View rules of text formatting';
+$_msg_week = array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
+$_msg_content_back_to_top = '<span class="super_index">[back to top]</span>';
+
 
 ///////////////////////////////////////
 // form buttons
