@@ -1,3 +1,5 @@
+[[PukiWiki]]
+* InterWikiName [#bf2d416a]
 InterWiki用のサーバリストです。
   [URL サーバ名] タイプ
 の形式で記述してください。
