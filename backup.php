@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.php,v 1.4 2002/07/18 15:24:08 masui Exp $
+// $Id: backup.php,v 1.5 2002/08/07 08:51:45 masui Exp $
 /////////////////////////////////////////////////
 
 // バックアップデータを作成する
@@ -149,9 +149,9 @@ function get_backup_list($_page="")
 			$name = $page;
 			$name = strip_bracket($name);
 			if(is_page($page))
-				$vals[$name]["link"] = "<li><a href=\"$script?$page_url\">$name</a></li>";
+				$vals[$name]["link"] = "<li><a href=\"$script?$page_url\">$name</a>";
 			else
-				$vals[$name]["link"] = "<li>$name</li>";
+				$vals[$name]["link"] = "<li>$name";
 			$vals[$name]["name"] = $page;
 		}
 		closedir($dir);
@@ -165,7 +165,7 @@ function get_backup_list($_page="")
 		$vals[$name]["link"] = "";
 		$vals[$name]["name"] = $_page;
 		$retvars[] = "<ul>";
-		$retvars[] .= "<li><a href=\"$script?cmd=backup\">$_msg_backuplist</a></li>\n";
+		$retvars[] .= "<li><a href=\"$script?cmd=backup\">$_msg_backuplist</a>\n";
 	}
 	
 	
@@ -173,7 +173,10 @@ function get_backup_list($_page="")
 	{
 		$arybackups = get_backup_info(encode($line["name"]).".txt");
 		$page_url = rawurlencode($line["name"]);
-		if(count($arybackups)) $line["link"] .= "\n<ul>\n";
+		if(count($arybackups))
+			$line["link"] .= "<ul>\n";
+		else
+			$line["link"] .= "</li>\n";
 		foreach($arybackups as $key => $val)
 		{
 			$ins_date = date($date_format,$val);
@@ -189,7 +192,7 @@ function get_backup_list($_page="")
  				$line["link"] .= "<li><a href=\"$script?cmd=backup&amp;page=$page_url&amp;age=$key\">$key $backupdate</a> [ <a href=\"$script?cmd=backup_diff&amp;page=$page_url&amp;age=$key\">$_msg_diff</a> | <a href=\"$script?cmd=backup_nowdiff&amp;page=$page_url&amp;age=$key\">$_msg_nowdiff</a> | <a href=\"$script?cmd=backup_source&amp;page=$page_url&amp;age=$key\">$_msg_source</a> ]</li>\n";
 			}
 		}
-		if(count($arybackups)) $line["link"] .= "</ul>";
+		if(count($arybackups)) $line["link"] .= "</ul></li>";
 		$retvars[] = $line["link"];
 	}
 	$retvars[] = "</ul>";

@@ -26,7 +26,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.13 2002/07/26 09:44:25 masui Exp $
+// $Id: pukiwiki.php,v 1.14 2002/08/07 08:51:45 masui Exp $
 /////////////////////////////////////////////////
 
 
@@ -81,7 +81,7 @@ else if(arg_check("list"))
 	header_lastmod($whatsnew);
 	
 	$page = $title = $_title_list;
-	$body = "<ul>\n" . get_list(false) . "</ul>\n";
+	$body = get_list(false);
 }
 // ファイル名一覧の表示
 else if(arg_check("filelist"))
@@ -89,7 +89,7 @@ else if(arg_check("filelist"))
 	header_lastmod($whatsnew);
 
 	$page = $title = $_title_filelist;
-	$body = "<ul>\n" . get_list(true) . "</ul>\n";
+	$body = get_list(true);
 }
 // 編集不可能なページを編集しようとしたとき
 else if(((arg_check("add") || arg_check("edit") || arg_check("preview")) && (is_freeze($vars["page"]) || !is_editable($vars["page"]) || $vars["page"] == "")))
@@ -497,12 +497,12 @@ else if($do_backup && arg_check("backup"))
 		if(is_page($get["page"]))
 		{
 			$link = str_replace('$1',"<a href=\"$script?".rawurlencode($get["page"])."\">".htmlspecialchars($pagename)."</a>",$_msg_goto);
-			$body .=  "<li>$link</li>\n";
+			$body .=  "<li>$link\n";
 		}
 		else
 		{
 			$link = str_replace('$1',htmlspecialchars($pagename),$_msg_deleleted);
-			$body .=  "<li>$link</li>\n";
+			$body .=  "<li>$link\n";
 		}
 
 		$backups = array();
@@ -520,6 +520,7 @@ else if($do_backup && arg_check("backup"))
 				$body .= "<li><em>$key $backupdate</em></li>\n";
 		}
 		if(count($backups)) $body .= "</ul>\n";
+		$body .= "</li>\n";
 		
 		if(arg_check("backup_diff"))
 		{
@@ -567,7 +568,7 @@ else if($do_backup && arg_check("backup"))
 			$diffdata = preg_replace("/^(\-)(.*)/","<span class=\"diff_removed\"> $2</span>",$diffdata);
 			$diffdata = preg_replace("/^(\+)(.*)/","<span class=\"diff_added\"> $2</span>",$diffdata);
 
-			$body .= "<br />\n"
+			$body .= "</ul><br /><ul>\n"
 				."<li>$_msg_addline</li>\n"
 				."<li>$_msg_delline</li>\n"
 				."</ul>\n"

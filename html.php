@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.32 2002/08/05 10:08:19 masui Exp $
+// $Id: html.php,v 1.33 2002/08/07 08:51:45 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -172,15 +172,15 @@ function convert_html($string)
 				}
 				else
 				{
-					back_push($result,$saved,'ul', strlen($out[1]));
-					array_push($result, '<li>' . inline($out[2]) . '</li>');
+					list_push($result,$saved,'ul', strlen($out[1]));
+					array_push($result, inline($out[2]));
 				}
 			}
 			else if(preg_match("/^(\+{1,3})(.*)/",$line,$out))
 			{
 				$headform[$_cnt] = $out[1];
-				back_push($result,$saved,'ol', strlen($out[1]));
-				array_push($result, '<li>' . inline($out[2]) . '</li>');
+				list_push($result,$saved,'ol', strlen($out[1]));
+				array_push($result, inline($out[2]));
 			}
 			else if (preg_match("/^:([^:]+):(.*)/",$line,$out))
 			{
@@ -316,8 +316,8 @@ function convert_html($string)
 		{
 			if(preg_match("/^(-{1,3})(.*)/",$line,$out))
 			{
-				back_push($result,$saved,'ul', strlen($out[1]));
-				array_push($result, '<li>'.$out[2].'</li>');
+				list_push($result,$saved,'ul', strlen($out[1]));
+				array_push($result, $out[2]);
 			}
 		}
 		$result = array_merge($result,$saved); $saved = array();
@@ -364,6 +364,33 @@ function back_push(&$result,&$saved,$tag, $level)
 		array_unshift($saved, "</$tag>");
 		array_push($result, "<$tag>");
 	}
+}
+
+function list_push(&$result,&$saved,$tag,$level) {
+	$cont = true;
+	$open = "<$tag%s><li>";
+	$close = "</li></$tag>";
+	
+	while (count($saved) > $level or
+		(count($saved) > 0 and $saved[0] != $close)) {
+		array_push($result, array_shift($saved));
+	}
+	
+	$margin = $level - count($saved);
+	
+	while (count($saved) < ($level - 1)) {
+		array_unshift($saved, ''); //count($saved)を増やすためのdummy
+	}
+	
+	if (count($saved) < $level) {
+		$cont = false;
+		array_unshift($saved, $close);
+		array_push($result, sprintf($open, " style=\"margin-left:".($margin * 3)."em\""));
+//		array_push($result, sprintf($open, " class=\"listmargin$margin\""));
+	}
+	
+	if ($cont)
+		array_push($result, '</li><li>');
 }
 
 // インライン要素のパース (注釈)
@@ -442,11 +469,12 @@ function get_list($withfilename)
 		$page2 = strip_bracket($page);
 		$pg_passage = get_pg_passage($page);
 		$file = encode($page).".txt";
-		$retval[$page2] .= "<li><a href=\"$script?$page_url\">".htmlspecialchars($page2,ENT_QUOTES)."</a>$pg_passage</li>\n";
+		$retval[$page2] .= "<li><a href=\"$script?$page_url\">".htmlspecialchars($page2,ENT_QUOTES)."</a>$pg_passage";
 		if($withfilename)
 		{
 			$retval[$page2] .= "<ul><li>$file</li></ul>\n";
 		}
+		$retval[$page2] .= "</li>\n";
 	}
 	
 	$retval = list_sort($retval);
@@ -472,8 +500,8 @@ function get_list($withfilename)
 					else
 						$head_nm = "Low:$head";
 					
-					if($head_str) $retval2[$page] = "</ul>\n";
-					$retval2[$page] .= "<li><a href=\"#top:$head_nm\" name=\"$head_nm\"><strong>$head</strong></a></li>\n<ul>\n";
+					if($head_str) $retval2[$page] = "</ul></li>\n";
+					$retval2[$page] .= "<li><a href=\"#top:$head_nm\" name=\"$head_nm\"><strong>$head</strong></a>\n<ul>\n";
 					$head_str = $head;
 					if($link_counter) $top_link .= "|";
 					$link_counter = $link_counter + 1;
@@ -487,8 +515,8 @@ function get_list($withfilename)
 				{
 					if(!$symbol_sw)
 					{
-						if($head_str) $retval2[$page] = "</ul>\n";
-						$retval2[$page] .= "<li><a href=\"#top:symbol\" name=\"symbol\"><strong>$_msg_symbol</strong></a></li>\n<ul>\n";
+						if($head_str) $retval2[$page] = "</ul></li>\n";
+						$retval2[$page] .= "<li><a href=\"#top:symbol\" name=\"symbol\"><strong>$_msg_symbol</strong></a>\n<ul>\n";
 						$head_str = $head;
 						if($link_counter) $top_link .= "|";
 						$link_counter = $link_counter + 1;
@@ -498,8 +526,8 @@ function get_list($withfilename)
 				}
 				else
 				{
-					if($head_str) $retval2[$page] = "</ul>\n";
-					$retval2[$page] .= "<li><a href=\"#top:etc\" name=\"etc\"><strong>$_msg_other</strong></a></li>\n<ul>\n";
+					if($head_str) $retval2[$page] = "</ul></li>\n";
+					$retval2[$page] .= "<li><a href=\"#top:etc\" name=\"etc\"><strong>$_msg_other</strong></a>\n<ul>\n";
 					$etc_sw = 1;
 					if($link_counter) $top_link .= "|";
 					$link_counter = $link_counter + 1;
@@ -508,18 +536,22 @@ function get_list($withfilename)
 			}
 			$retval2[$page] .= $link;
 		}
-		$retval2[] = "</ul>\n";
+		$retval2[] = "</ul></li>\n";
 		
-		$top_link = "<div style=\"text-align:center\"><a name=\"top\">$top_link</a></div><br />\n";
+		$top_link = "<div style=\"text-align:center\"><a name=\"top\"></a>$top_link</div><br />\n<ul>";
 		
 		array_unshift($retval2,$top_link);
 	}
 	else
 	{
 		$retval2 = $retval;
+		
+		$top_link = "<ul>";
+		
+		array_unshift($retval2,$top_link);
 	}
 	
-	return join("",$retval2);
+	return join("",$retval2)."</ul>";
 }
 
 // 編集フォームの表示
