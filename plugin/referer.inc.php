@@ -1,5 +1,5 @@
 <?php
-// $Id: referer.inc.php,v 1.9 2005/01/23 04:49:14 henoheno Exp $
+// $Id: referer.inc.php,v 1.10 2005/01/23 05:20:02 henoheno Exp $
 /*
  * PukiWiki Referer プラグイン(リンク元表示プラグイン)
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -20,7 +20,7 @@ function plugin_referer_action()
 		$sort = (empty($vars['sort'])) ? '0d' : $vars['sort'];
 		return array(
 			'msg'  => $_referer_msg['msg_H0_Refer'],
-			'body' => referer_body($vars['page'], $sort));
+			'body' => plugin_referer_body($vars['page'], $sort));
 	}
 	$pages = get_existpages(TRACKBACK_DIR, '.ref');
 
@@ -34,14 +34,14 @@ function plugin_referer_action()
 }
 
 // Referer 明細行編集
-function referer_body($page, $sort)
+function plugin_referer_body($page, $sort)
 {
 	global $script, $_referer_msg;
 
 	$data = tb_get(tb_get_filename($page, '.ref'));
 	if (empty($data)) return '<p>no data.</p>';
 
-	$bg = referer_set_color();
+	$bg = plugin_referer_set_color();
 
 	$arrow_last = $arrow_1st = $arrow_ctr = '';
 	$color_last = $color_1st = $color_ctr = $color_ref = $bg['etc'];
@@ -120,7 +120,7 @@ function referer_body($page, $sort)
 		$body .= '  <td style="text-align:right;">' . $count . '</td>' . "\n";
 
 		// 適用不可データのときはアンカーをつけない
-		$body .= referer_ignore_check($url) ?
+		$body .= plugin_referer_ignore_check($url) ?
 			'  <td>' . $s_url . '</td>' . "\n" :
 			'  <td><a href="' . $e_url . '" rel="nofollow">' . $s_url . '</a></td>' . "\n";
 
@@ -148,7 +148,7 @@ function referer_body($page, $sort)
 EOD;
 }
 
-function referer_set_color()
+function plugin_referer_set_color()
 {
 	static $color;
 
@@ -171,7 +171,7 @@ function referer_set_color()
 	return $color;
 }
 
-function referer_ignore_check($url)
+function plugin_referer_ignore_check($url)
 {
 	static $ignore_url;
 
