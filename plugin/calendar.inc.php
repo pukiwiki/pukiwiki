@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar.inc.php,v 1.16 2003/06/04 13:08:35 arino Exp $
+// $Id: calendar.inc.php,v 1.17 2003/06/04 14:14:00 arino Exp $
 
 function plugin_calendar_convert()
 {
@@ -91,7 +91,7 @@ EOD;
 
 	foreach($weeklabels as $label)
 	{
-		$ret .= "  <td class=\"style_td_week\"><strong>$label</strong></span></td>\n";
+		$ret .= "  <td class=\"style_td_week\"><strong>$label</strong></td>\n";
 	}
 	$ret .= " </tr>\n <tr>\n";
 	
