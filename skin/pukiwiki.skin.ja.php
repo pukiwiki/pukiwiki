@@ -16,7 +16,7 @@
  <meta name="robots" content="NOINDEX,NOFOLLOW" />
 <?php } ?>
 
- <title><?php echo "$page_title - $title" ?></title>
+ <title><?php echo "$title - $page_title" ?></title>
  <link rel="stylesheet" href="skin/default.ja.css" type="text/css" media="screen" charset="Shift_JIS" />
 </head>
 <body>
