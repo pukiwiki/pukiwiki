@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.34 2004/08/26 15:32:51 henoheno Exp $
+// $Id: ref.inc.php,v 1.35 2004/08/28 01:04:33 henoheno Exp $
 //
 
 // UPLOAD_DIR のデータ(画像ファイルのみ)に直接アクセスさせる
@@ -177,8 +177,8 @@ function plugin_ref_body($args)
 			$page = get_fullname(strip_bracket($matches[1]), $page); // strip is a compat
 			$is_file = is_file(UPLOAD_DIR . encode($page) . '_' . encode($name));
 
-		// 第二引数以降が存在するか
-		} else if (isset($args[0])) {
+		// 第二引数以降が存在し、それはrefのオプション名称などと一致しない
+		} else if (isset($args[0]) &&  ! isset($params[$args[0]])) {
 			$e_name = encode($name);
 
 			// Try the second argument, as a page-name or a path-name
