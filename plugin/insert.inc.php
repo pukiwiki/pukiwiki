@@ -1,54 +1,43 @@
 <?php
-// $Id: insert.inc.php,v 1.11 2004/10/09 08:01:58 henoheno Exp $
+// $Id: insert.inc.php,v 1.12 2005/01/23 07:34:39 henoheno Exp $
+//
+// Text inserting box plugin
 
-/////////////////////////////////////////////////
-// テキストエリアのカラム数
-define('INSERT_COLS',70);
-/////////////////////////////////////////////////
-// テキストエリアの行数
-define('INSERT_ROWS',5);
-/////////////////////////////////////////////////
-// 挿入する位置 1:欄の前 0:欄の後
-define('INSERT_INS',1);
+define('INSERT_COLS', 70); // Columns of textarea
+define('INSERT_ROWS',  5); // Rows of textarea
+define('INSERT_INS',   1); // Order of insertion (1:before the textarea, 0:after)
 
 function plugin_insert_action()
 {
 	global $script, $vars, $cols, $rows;
 	global $_title_collided, $_msg_collided, $_title_updated;
 
-	if (! isset($vars['msg']) || $vars['msg'] == '') {
-		return;
-	}
+	if (! isset($vars['msg']) || $vars['msg'] == '') return;
 
-	$vars['msg'] = preg_replace("/\r/", '', $vars['msg']);
-	$insert = ($vars['msg'] != '') ? "\n{$vars['msg']}\n" : '';
+	$vars['msg'] = preg_replace('/' . "\r" . '/', '', $vars['msg']);
+	$insert = ($vars['msg'] != '') ? "\n" . $vars['msg'] . "\n" : '';
 
 	$postdata = '';
 	$postdata_old  = get_source($vars['refer']);
 	$insert_no = 0;
 
 
-	foreach($postdata_old as $line)
-	{
-		if (!INSERT_INS) {
-			$postdata .= $line;
-		}
-		if (preg_match('/^#insert$/i',$line)) {
-			if ($insert_no == $vars['insert_no']) {
+	foreach($postdata_old as $line) {
+		if (! INSERT_INS) $postdata .= $line;
+		if (preg_match('/^#insert$/i', $line)) {
+			if ($insert_no == $vars['insert_no'])
 				$postdata .= $insert;
-			}
 			$insert_no++;
 		}
-		if (INSERT_INS) {
-			$postdata .= $line;
-		}
+		if (INSERT_INS) $postdata .= $line;
 	}
 
-	$postdata_input = "$insert\n";
+	$postdata_input = $insert . "\n";
 
+	$body = '';
 	if (md5(@join('', get_source($vars['refer']))) != $vars['digest']) {
 		$title = $_title_collided;
-		$body = "$_msg_collided\n";
+		$body = $_msg_collided . "\n";
 
 		$s_refer  = htmlspecialchars($vars['refer']);
 		$s_digest = htmlspecialchars($vars['digest']);
@@ -57,35 +46,33 @@ function plugin_insert_action()
 		$body .= <<<EOD
 <form action="$script?cmd=preview" method="post">
  <div>
-  <input type="hidden" name="refer" value="$s_refer" />
+  <input type="hidden" name="refer"  value="$s_refer" />
   <input type="hidden" name="digest" value="$s_digest" />
   <textarea name="msg" rows="$rows" cols="$cols" id="textarea">$s_postdata_input</textarea><br />
  </div>
 </form>
 EOD;
-	}
-	else {
+	} else {
 		page_write($vars['refer'], $postdata);
 
 		$title = $_title_updated;
 	}
-	$retvars['msg'] = $title;
+	$retvars['msg']  = $title;
 	$retvars['body'] = $body;
 
 	$vars['page'] = $vars['refer'];
 
 	return $retvars;
 }
+
 function plugin_insert_convert()
 {
 	global $script, $vars, $digest;
 	global $_btn_insert;
 	static $numbers = array();
 
-	if (! isset($numbers[$vars['page']]))
-	{
-		$numbers[$vars['page']] = 0;
-	}
+	if (! isset($numbers[$vars['page']])) $numbers[$vars['page']] = 0;
+
 	$insert_no = $numbers[$vars['page']]++;
 
 	$s_page   = htmlspecialchars($vars['page']);
