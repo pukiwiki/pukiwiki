@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: clear.inc.php,v 1.1 2004/02/29 07:18:39 arino Exp $
+// $Id: clear.inc.php,v 1.2 2004/08/04 11:21:13 henoheno Exp $
 //
 // div class="clear"を表示する
 // plugin=clear

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: topicpath.inc.php,v 1.1 2004/04/03 15:26:07 arino Exp $
+// $Id: topicpath.inc.php,v 1.2 2004/08/04 11:21:13 henoheno Exp $
 //
 // topicpath plugin for PukiWiki
 //   available under the GPL
