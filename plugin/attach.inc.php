@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.51 2004/08/13 13:07:50 henoheno Exp $
+//  $Id: attach.inc.php,v 1.52 2004/08/13 13:24:20 henoheno Exp $
 //
 
 /*
@@ -77,7 +77,7 @@ function plugin_attach_convert()
 //-------- action
 function plugin_attach_action()
 {
-	global $vars;
+	global $vars, $_attach_messages;
 
 	// Backward compatible
 	if (isset($vars['openfile'])) {
