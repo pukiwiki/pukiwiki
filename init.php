@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.20.2.8 2003/09/12 01:18:42 arino Exp $
+// $Id: init.php,v 1.20.2.9 2003/11/05 10:31:37 arino Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -130,7 +130,7 @@ $note_id = 1;
 $foot_explain = array();
 
 // 変数のチェック
-if(php_sapi_name()=='cgi' && !preg_match("/^http:\/\/[-a-zA-Z0-9\@:;_.]+\//",$script))
+if(php_sapi_name()=='cgi' && !preg_match("/^https?:\/\/[-a-zA-Z0-9\@:;_.]+\//",$script))
 	die_message("please set '\$script' in ".INI_FILE);
 
 
