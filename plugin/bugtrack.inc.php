@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.20 2005/01/23 07:15:59 henoheno Exp $
+ * $Id: bugtrack.inc.php,v 1.21 2005/01/23 07:17:37 henoheno Exp $
  */
 
 function plugin_bugtrack_init()
@@ -41,6 +41,8 @@ function plugin_bugtrack_action()
 {
 	global $post, $vars, $_bugtrack_plugin_title;
 
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
+
 	if ($post['mode'] == 'submit') {
 		$page = plugin_bugtrack_write($post['base'], $post['pagename'], $post['summary'],
 			$post['name'], $post['priority'], $post['state'], $post['category'],
@@ -60,7 +62,7 @@ function plugin_bugtrack_action()
 */
 }
 
-function plugin_bugtrack_print_form($base,$category)
+function plugin_bugtrack_print_form($base, $category)
 {
 	global $_bugtrack_plugin_priority_list,$_bugtrack_plugin_state_list;
 	global $_bugtrack_plugin_priority, $_bugtrack_plugin_state, $_bugtrack_plugin_name;
@@ -214,6 +216,8 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 function plugin_bugtrack_convert()
 {
 	global $vars;
+
+	if (PKWK_READONLY) return ''; // Show nothing
 
 	$base = $vars['page'];
 	$category = array();
