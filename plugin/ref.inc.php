@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.33 2004/08/26 14:37:33 henoheno Exp $
+// $Id: ref.inc.php,v 1.34 2004/08/26 15:32:51 henoheno Exp $
 //
 
 // UPLOAD_DIR のデータ(画像ファイルのみ)に直接アクセスさせる
@@ -185,36 +185,34 @@ function plugin_ref_body($args)
 			$_arg = get_fullname(strip_bracket($args[0]), $page); // strip is a compat
 			$is_file_second = is_file(UPLOAD_DIR .  encode($_arg) . '_' . $e_name);
 
-			// Try default page, with default params
-			$is_file_default = is_file(UPLOAD_DIR . encode($page) . '_' . $e_name);
-
 			// If the second argument is WikiName, or double-bracket-inserted pagename (compat)
 			$is_bracket_bracket = preg_match("/^($WikiName|\[\[$BracketName\]\])$/", $args[0]);
 
-			// Race condition
-			if ($is_file_default && $is_file_second) {
-				if (! $is_bracket_bracket) {
-					$params['_error'] = htmlspecialchars('The same file name "' .
-						$name . '" at both page: ' .  $page . ' and ' .  $_arg .
-						'. Try ref(pagename/filname) to specify one of them');
-					return $params;
-				} else {
-					// Believe the second argument (compat)
-					array_shift($args);
-					$page = $_arg;
-					$is_file = TRUE;
-				}
+			if ($is_file_second && $is_bracket_bracket) {
+				// Believe the second argument (compat)
+				array_shift($args);
+				$page = $_arg;
+				$is_file = TRUE;
 			} else {
-				if ($is_file_default) {
-					$is_file = TRUE;
-				} else if ($is_file_second) {
-					array_shift($args);
-					$page = $_arg;
-					$is_file = TRUE;
+				// Try default page, with default params
+				$is_file_default = is_file(UPLOAD_DIR . encode($page) . '_' . $e_name);
+
+				// Promote new design
+				if ($is_file_default && $is_file_second) {
+					// Because of race condition NOW
+					$params['_error'] = htmlspecialchars('The same file name "' .
+						$name . '" at both page: "' .  $page . '" and "' .  $_arg .
+						'". Try ref(pagename/filname) to specify one of them');
 				} else {
-					$is_file = FALSE;
+					// Because of possibility of race condition, in the future
+					$params['_error'] = 'This style is ambiguous and become obsolete. ' .
+						'Please try ref(pagename/filname)';
 				}
+				return $params;
 			}
+		} else {
+			// Simple single argument
+			$is_file = is_file(UPLOAD_DIR . encode($page) . '_' . encode($name));
 		}
 		if (! $is_file) {
 			$params['_error'] = htmlspecialchars('File not found: "' .
