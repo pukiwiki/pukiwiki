@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.34 2002/08/07 08:55:40 masui Exp $
+// $Id: html.php,v 1.35 2002/08/07 12:10:59 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -106,10 +106,12 @@ function convert_html($string)
 	{
 		if(!preg_match("/^\/\/(.*)/",$line,$comment_out) && $table != 0)
 		{
-			if(!preg_match("/^\|(.+)\|$/",$line,$out))
-				array_push($result, "</table></div>");
-			if(!$out[1] || $table != count(explode("|",$out[1])))
+			if(!preg_match("/^\|(.+)\|$/",$line,$out) or
+				$table != count(explode("|",$out[1])))
+			{
 				$table = 0;
+				array_push($result, "</table></div>");
+			}
 		}
 
 		$comment_out = $comment_out[1];
