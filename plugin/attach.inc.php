@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.36 2003/11/05 10:40:48 arino Exp $
+//  $Id: attach.inc.php,v 1.37 2003/12/04 05:24:03 arino Exp $
 //
 
 /*
@@ -623,6 +623,7 @@ EOD;
 		$filename = htmlspecialchars(mb_convert_encoding($this->file,'SJIS','auto'));
 		header('Content-Disposition: inline; filename="'.$filename.'"');
 		header('Content-Length: '.$this->size);
+		ini_set('default_charset','');
 		header('Content-Type: '.$this->type);
 		@readfile($this->filename);
 		exit;
