@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.inc.php,v 1.7 2004/07/18 02:58:00 henoheno Exp $
+// $Id: diff.inc.php,v 1.8 2004/07/18 10:12:40 henoheno Exp $
 //
 
 //ページの差分を表示する
@@ -95,6 +95,7 @@ function plugin_diff_delete($page)
 			);
 		} else {
 			$body .= "<p><strong>$_msg_invalidpass</strong></p>\n";
+			sleep(2); // Blocking brute force attack
 		}
 	}
 
