@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.38 2003/06/10 14:22:51 arino Exp $
+// $Id: pukiwiki.ini.php,v 1.39 2003/06/13 01:04:54 arino Exp $
 //
 // PukiWiki setting file
 
@@ -218,13 +218,12 @@ $facemark_rules = array(
 '\s(;\))' => ' <img src="./face/wink.png" alt="$1" />',
 '\s(;\()' => ' <img src="./face/sad.png" alt="$1" />',
 '\s(\:\()' => ' <img src="./face/sad.png" alt="$1" />',
-'&(smile);' => ' <img src="./face/smile.png" alt="$1" />',
-'&(bigsmile);' => ' <img src="./face/bigsmile.png" alt="$1" />',
-'&(huh);' => ' <img src="./face/huh.png" alt="$1" />',
-'&(oh);' => ' <img src="./face/oh.png" alt="$1" />',
-'&(wink);' => ' <img src="./face/wink.png" alt="$1" />',
-'&(sad);' => ' <img src="./face/sad.png" alt="$1" />',
-'&(heart);' => '<img src="./face/heart.png" alt="$1" />',
+'&amp;(smile);' => ' <img src="./face/smile.png" alt="$1" />',
+'&amp;(bigsmile);' => ' <img src="./face/bigsmile.png" alt="$1" />',
+'&amp;(huh);' => ' <img src="./face/huh.png" alt="$1" />',
+'&amp;(oh);' => ' <img src="./face/oh.png" alt="$1" />',
+'&amp;(wink);' => ' <img src="./face/wink.png" alt="$1" />',
+'&amp;(sad);' => ' <img src="./face/sad.png" alt="$1" />',
+'&amp;(heart);' => '<img src="./face/heart.png" alt="$1" />',
 );
-
 ?>

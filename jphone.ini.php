@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: jphone.ini.php,v 1.4 2003/03/07 08:03:51 panda Exp $
+// $Id: jphone.ini.php,v 1.5 2003/06/13 01:04:54 arino Exp $
 //
 // PukiWiki setting file (user agent:J-PHONE)
 
@@ -99,9 +99,6 @@ $line_rules = array(
 "'''(?!')((?:(?!''').)*)'''" => '<em>$1</em>',
 "''(?!')((?:(?!'').)*)''" => '<strong>$1</strong>',
 '&amp;br;' => '<br>',
-'&amp;(#[0-9]+|#x[0-9a-f]+|[0-9a-zA-Z]+);' => '&$1;',
-"\r" => "<br>", /* 行末にチルダは改行 */
-'#related' => '<del>#related</del>'
 );
 
 /////////////////////////////////////////////////
