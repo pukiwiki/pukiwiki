@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.30 2003/02/21 07:04:44 panda Exp $
+// $Id: init.php,v 1.31 2003/02/22 04:57:38 panda Exp $
 //
 
 /////////////////////////////////////////////////
@@ -65,11 +65,11 @@ require(INI_FILE);
 /////////////////////////////////////////////////
 // 初期設定($script)
 if (!isset($script) or $script == '') {
-	$script =
-		 ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://')
-		. $_SERVER['SERVER_NAME']
-		.($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT'])
-		. $_SERVER['SCRIPT_NAME'];
+	$script  = ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://');
+	$script .=  $_SERVER['SERVER_NAME'];
+	$script .= ($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT']);
+	$parse_url = parse_url($_SERVER['REQUEST_URI']);
+	$script .= (isset($parse_url['path']) ? $parse_url['path'] : $_SERVER['SCRIPT_NAME']);
 }
 if (php_sapi_name() == 'cgi' && !preg_match("/^http:\/\/[-a-zA-Z0-9\@:;_.]+\//",$script)) {
 	die_message("please set '\$script' in ".INI_FILE);
