@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.33 2002/08/07 08:51:45 masui Exp $
+// $Id: html.php,v 1.34 2002/08/07 08:55:40 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -300,8 +300,6 @@ function convert_html($string)
 	if($_p) array_push($result, "</p>");
 	if($_bq) {
 		array_push($result, "</p>");
-		array_push($result, "</blockquote>");
-		$saved = array();
 	}
 	if($table) array_push($result, "</table></div>");
 	
