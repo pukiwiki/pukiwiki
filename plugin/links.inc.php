@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: links.inc.php,v 1.11 2003/03/10 11:30:25 panda Exp $
+// $Id: links.inc.php,v 1.12 2003/03/10 12:27:12 panda Exp $
 //
 
 function plugin_links_action()
@@ -54,7 +54,7 @@ function plugin_links_initdata()
 		$obj = new InlineConverter(array('page','auto')); 
 		foreach ($pages as $page=>$id)
 		{
-			$links = $obj->get_objects(join('',get_source($page)),$page);
+			$links = $obj->get_objects(join('',preg_grep('/^(?!\/\/|\s)./',get_source($page))),$page);
 			foreach ($links as $_obj)
 			{
 				if ($_obj->type != 'pagename')
@@ -101,7 +101,7 @@ function plugin_links_initdata()
 			}
 			$time = get_filetime($page);
 			$rel = array(); // 参照先
-			$links = $obj->get_objects(join('',get_source($page)),$page);
+			$links = $obj->get_objects(join('',preg_grep('/^(?!\/\/|\s)./',get_source($page))),$page);
 			foreach ($links as $_obj)
 			{
 				if (!isset($_obj->type) or $_obj->type != 'pagename')
@@ -184,8 +184,8 @@ function plugin_links_updatedata($page)
 		// cache
 		$pages = array();
 		
-		$obj = new InlineConverter(array('page','auto'));
-		$links = $obj->get_objects(join('',get_source($page)),$page);
+		$obj = new InlineConverter();
+		$links = $obj->get_objects(join('',preg_grep('/^(?!\/\/|\s)./',get_source($page))),$page);
 		foreach ($links as $_obj)
 		{
 			if (!isset($_obj->type) or $_obj->type != 'pagename' or $_obj->name == $page)
@@ -223,7 +223,7 @@ function plugin_links_updatedata($page)
 	}
 	else // if (!defined('LINK_DB'))
 	{
-		$obj = new InlineConverter(array('page','auto'));
+		$obj = new InlineConverter();
 		$time = is_page($page) ? get_filetime($page) : 0;
 		
 		$rel_old = array();
@@ -238,7 +238,7 @@ function plugin_links_updatedata($page)
 			unlink($rel_file);
 		}
 		$rel_new = array(); // 参照先
-		$links = $obj->get_objects(join('',get_source($page)),$page);
+		$links = $obj->get_objects(join('',preg_grep('/^(?!\/\/|\s)./',get_source($page))),$page);
 		foreach ($links as $_obj)
 		{
 			if (!isset($_obj->type) or $_obj->type != 'pagename')
