@@ -2,67 +2,131 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss.inc.php,v 1.7 2004/07/31 03:09:20 henoheno Exp $
+// $Id: rss.inc.php,v 1.8 2004/11/07 12:18:14 henoheno Exp $
 //
 // RecentChanges の RSS を出力
+// 使い方 :
+//  rss.inc.php?ver=[version]
+//  versionは0.91か1.0か2.0のうちどれか。
 function plugin_rss_action()
 {
-	global $script,$rss_max,$page_title,$whatsnew;
+	global $vars,$script,$rss_max,$page_title,$whatsnew,$trackback;
+
+	$version = isset($vars['ver']) ? $vars['ver'] : '0.91';
 
 	$self = (preg_match('#^https?://#',$script) ? $script : get_script_uri());
-	if ($self === FALSE)
-	{
+	if ($self === FALSE) {
 		die_message("please set '\$script' in ".INI_FILE);
 	}
 
 	$page_title_utf8 = mb_convert_encoding($page_title,'UTF-8',SOURCE_ENCODING);
 
-	$items = '';
+	$items = $rdf_li = '';
 
-	if (!file_exists(CACHE_DIR.'recent.dat'))
-	{
+	if (!file_exists(CACHE_DIR.'recent.dat')) {
 		return '';
 	}
 	$recent = file(CACHE_DIR.'recent.dat');
 	$lines = array_splice($recent,0,$rss_max);
-	foreach ($lines as $line)
-	{
+	foreach ($lines as $line) {
 		list($time,$page) = explode("\t",rtrim($line));
 		$r_page = rawurlencode($page);
 		$title = mb_convert_encoding($page,'UTF-8',SOURCE_ENCODING);
-		$desc = get_date('D, d M Y H:i:s T',$time);
-		$items .= <<<EOD
+		switch ($version) {
+		case '0.91':
+			/* FALLTHROUGH */
+		case '2.0':
+			$date = get_date('D, d M Y H:i:s T',$time);
+			$date = ($version == '0.91') ?
+						" <description>" . $date . "</description>" :
+						" <pubDate>" . $date . "</pubDate>";
+			$items .= <<<EOD
 <item>
  <title>$title</title>
  <link>$self?$r_page</link>
- <description>$desc</description>
+$date
 </item>
 
 EOD;
+			break;
+
+		case '1.0':
+			$dc_date = substr_replace(get_date('Y-m-d\TH:i:sO',$time),':',-2,0);
+			$dc_identifier = " <dc:identifier>$self?$r_page</dc:identifier>";
+			$trackback_ping = '';
+			$rdf_li .= "    <rdf:li rdf:resource=\"$self?$r_page\" />\n";
+			if ($trackback) {
+				$tb_id = md5($r_page);
+				$trackback_ping = " <trackback:ping>$self?tb_id=$tb_id</trackback:ping>";
+			}
+			$items .= <<<EOD
+<item rdf:about="$self?$r_page">
+ <title>$title</title>
+ <link>$self?$r_page</link>
+ <dc:date>$dc_date</dc:date>
+$dc_identifier
+$trackback_ping
+</item>
+
+EOD;
+			break;
+		default:
+			die("Invalid RSS version!!");
+			break;
+		}
 	}
 
 	header('Content-type: application/xml');
 
 	$r_whatsnew = rawurlencode($whatsnew);
 
-	print <<<EOD
-<?xml version="1.0" encoding="UTF-8"?>
+	print '<?xml version="1.0" encoding="UTF-8"?>' . "\n\n";
+	switch ($version) {
+	case '0.91':
+		print '<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"' .
+		' "http://my.netscape.com/publish/formats/rss-0.91.dtd">' . "\n";
+		 /* FALLTHROUGH */
 
-<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"
-            "http://my.netscape.com/publish/formats/rss-0.91.dtd">
-
-<rss version="0.91">
-
-<channel>
-<title>$page_title_utf8</title>
-<link>$self?$r_whatsnew</link>
-<description>PukiWiki RecentChanges</description>
-<language>ja</language>
+	case '2.0':
+		print <<<EOD
+<rss version="$version">
+ <channel>
+  <title>$page_title_utf8</title>
+  <link>$self?$r_whatsnew</link>
+  <description>PukiWiki RecentChanges</description>
+  <language>ja</language>
 
 $items
-</channel>
+ </channel>
 </rss>
 EOD;
+		break;
+	case '1.0':
+		$xmlns_trackback = $trackback ?
+			'  xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"' : '';
+		print <<<EOD
+<rdf:RDF
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+$xmlns_trackback
+  xmlns="http://purl.org/rss/1.0/"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xml:lang="ja">
+ <channel rdf:about="$self?$r_whatsnew">
+  <title>$page_title_utf8</title>
+  <link>$self?$r_whatsnew</link>
+  <description>PukiWiki RecentChanges</description>
+  <items>
+   <rdf:Seq>
+$rdf_li
+   </rdf:Seq>
+  </items>
+ </channel>
+
+$items
+</rdf:RDF>
+EOD;
+		break;
+	}
 	exit;
 }
 ?>

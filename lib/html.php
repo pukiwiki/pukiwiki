@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.11 2004/11/02 13:45:37 henoheno Exp $
+// $Id: html.php,v 1.12 2004/11/07 12:18:14 henoheno Exp $
 //
 
 // 本文を出力
@@ -43,7 +43,7 @@ function catbody($title,$page,$body)
 	$_LINK['help']     = "$script?" . rawurlencode($help_page);
 	$_LINK['list']     = "$script?cmd=list";
 	$_LINK['new']      = "$script?plugin=newpage&amp;refer=$r_page";
-	$_LINK['rdf']      = "$script?cmd=rss10";
+	$_LINK['rdf']      = "$script?cmd=rss&amp;ver=1.0";
 	$_LINK['recent']   = "$script?" . rawurlencode($whatsnew);
 	$_LINK['refer']    = "$script?plugin=referer&amp;page=$r_page";
 	$_LINK['reload']   = "$script?$r_page";
