@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.22 2005/01/08 02:34:11 henoheno Exp $
+// $Id: html.php,v 1.23 2005/01/08 11:20:08 henoheno Exp $
 //
 // HTML-publishing related functions
 
@@ -13,11 +13,11 @@ function catbody($title, $page, $body)
 	global $trackback, $trackback_javascript, $referer, $javascript;
 	global $_LANG, $_LINK, $_IMAGE;
 
-	global $html_transitional; // FALSE:XHTML1.1 TRUE:XHTML1.0 Transitional
-	global $page_title;        // Title of this site
-	global $do_backup;         // Do backup or not
-	global $modifier;          // Site administrator's  web page
-	global $modifierlink;      // Site administrator's name
+	global $pkwk_dtd;     // XHTML 1.1, XHTML1.0, HTML 4.01 Transitional...
+	global $page_title;   // Title of this site
+	global $do_backup;    // Do backup or not
+	global $modifier;     // Site administrator's  web page
+	global $modifierlink; // Site administrator's name
 
 	if (! file_exists(SKIN_FILE) || ! is_readable(SKIN_FILE))
 		die_message('SKIN_FILE is not found');
