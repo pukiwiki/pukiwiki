@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.9 2003/01/31 01:49:35 panda Exp $
+ $Id: article.inc.php,v 1.10 2003/02/15 13:21:05 panda Exp $
  
  */
 
@@ -164,7 +164,7 @@ EOD;
 	}
 	else {
 		page_write($post['refer'],trim($postdata));
-		print "<pre>$_mailto</pre>";
+		
 		// 投稿内容のメール自動送信
 		if (MAIL_AUTO_SEND) {
 			$mailaddress = implode(',' ,$_mailto);
