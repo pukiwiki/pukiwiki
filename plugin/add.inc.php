@@ -1,25 +1,20 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: add.inc.php,v 1.5 2005/01/16 13:03:06 henoheno Exp $
 //
-// $Id: add.inc.php,v 1.4 2004/07/31 03:09:19 henoheno Exp $
-//
-// ÄÉ²Ã
-// cmd=add
+// Add plugin - Append new text below/above existing page
+// Usage: cmd=add&page=pagename
+
 function plugin_add_action()
 {
-	global $get,$post,$vars,$_title_add,$_msg_add;
+	global $get, $post, $vars, $_title_add, $_msg_add;
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
-
 	check_editable($page);
 
 	$get['add'] = $post['add'] = $vars['add'] = TRUE;
-
-	return array(
-		'msg' => $_title_add,
-		'body' => "<ul>\n <li>$_msg_add</li>\n</ul>" .
-			edit_form($page, '')
-	);
+	return array('msg'=>$_title_add, 'body' => '<ul>' . "\n" .
+		' <li>' . $_msg_add . '</li>' . "\n" . '</ul>' . "\n" .
+		edit_form($page, ''));
 }
 ?>
