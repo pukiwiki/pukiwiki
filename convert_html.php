@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.9 2003/02/03 10:31:45 panda Exp $
+// $Id: convert_html.php,v 1.10 2003/02/03 11:56:28 panda Exp $
 //
 
 function &convert_html(&$lines)
@@ -625,7 +625,7 @@ class Div extends Block
 		return $text;
 	}
 }
-class Align extends Body
+class Align extends Block
 { // LEFT:/CENTER:/RIGHT:
 	var $align;
 	
@@ -633,11 +633,18 @@ class Align extends Body
 	{
 		$this->align = $align;
 	}
+	function &insert(&$obj)
+	{
+		if (is_a($obj,'Inline')) {
+			$obj =& $obj->toPara();
+		}
+		return parent::insert($obj);
+	}
 	function toString()
 	{
 		$string = parent::toString();
 		if ($string != '') {
-			if (preg_match('/^(\s*<[^>]+style=")([^"]+)"/',$string,$matches)) {
+			if (preg_match('/^(\s*<[^>]+style=")(.+)$"/',$string,$matches)) {
 				$string = $matches[1]."text-align:{$this->align};".$matches[2];
 			}
 			else {
@@ -658,7 +665,7 @@ class Body extends Block
 		$this->id = $id;
 		$this->count = 0;
 		$this->top = "<a href=\"#contents_$id\">$top</a>";
-		$this->contents =& new Block();
+		$this->contents = new Block();
 		$this->last =& $this->contents;
 		parent::Block();
 	}
