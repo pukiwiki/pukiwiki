@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.65 2004/07/08 12:20:13 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.66 2004/07/09 22:50:57 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -298,10 +298,15 @@ $line_break = 0;
 /////////////////////////////////////////////////
 // ユーザーエージェント対応設定
 
-$agents = array(
-//	pattern: デバイス[ブラウザ]名およびバージョンの検出パターン  profile: 所属するグループ
+$agents = array( // pattern: デバイス[ブラウザ]名およびバージョンの検出パターン  profile: 所属するグループ
 
-    // 組み込みブラウザ(リッチクライアントではないもの)
+    // 組み込みブラウザ (リッチクライアント:PukiWikiがそのまま使えるという意味の)
+
+	// "PlayStation BB Navigator" (ACCESS NetFront, for SONY PlayStation 2)
+	// Sample: "Mozilla/4.0 (PS2; PlayStation BB Navigator 1.0) NetFront/3.0"
+	array('pattern'=>'#\bPlayStation\b.*\b(NetFront)/([0-9\.]+)#',	'profile'=>'default'),
+
+    // 組み込みブラウザ (リッチクライアントではないもの)
 
 	// NTT-DoCoMo, i-mode (embeded Compact NetFront) and FOMA (embedded NetFront) phones
 	// Sample: "DoCoMo/1.0/F501i", "DoCoMo/1.0/N504i/c10/TB/serXXXX" // c以降は可変
@@ -317,12 +322,46 @@ $agents = array(
 	// Sample: "OPWV-SDK/62K UP.Browser/6.2.0.5.136 (GUI) MMP/2.0"
 	array('pattern'=>'#\b(UP\.Browser)/([0-9\.]+)#',	'profile'=>'keitai'),
 
-	// ACCESS NetFront / Compact NetFront
+	// ACCESS "NetFront" / "Compact NetFront" and thier OEM
+	// Sample: "Mozilla/4.0 (PDA; PalmOS/sony/model crdb/Revision:1.1.19) NetFront/3.0" (SONY Clie series)
+	// Sample: "Mozilla/4.0 (PDA; SL-A300/1.0,Embedix/Qtopia/1.1.0) NetFront/3.0" (Sharp Zaurus)
+	// Sample: "Mozilla/3.0 (AveFront/2.6)" ("SUNTAC OnlineStation", USB-Modem for PlayStation 2)
 	// Sample: "Mozilla/3.0(DDIPOCKET;JRC/AH-J3001V,AH-J3002V/1.0/0100/c50)CNF/2.0" (DDI Pocket: AirH" Phone by JRC)
-	array('pattern'=>'#\b(NetFront)/([0-9\.]+)#', 'profile'=>'keitai'),
-	array('pattern'=>'#\b(CNF)/([0-9\.]+)#',      'profile'=>'keitai'),
+	array('pattern'=>'#\b(NetFront)/([0-9\.]+)#',	'profile'=>'keitai'),
+	array('pattern'=>'#\b(CNF)/([0-9\.]+)#',	'profile'=>'keitai'),
+	array('pattern'=>'#\b(AveFront)/([0-9\.]+)#',	'profile'=>'keitai'),
+	array('pattern'=>'#\b(AVE-Front)/([0-9\.]+)#',	'profile'=>'keitai'), // The same?
+
+	// Planetweb http://www.planetweb.com/
+	// Sample: "Mozilla/3.0 (Planetweb/v1.07 Build 141; SPS JP)" ("EGBROWSER", Web browser for PlayStation 2)
+	array('pattern'=>'#\b(Planet[Ww]eb)/[a-z]?([0-9\.]+)#',	'profile'=>'keitai'),
+
+	// DreamPassport, Web browser for SEGA DreamCast
+	// Sample: "Mozilla/3.0 (DreamPassport/3.0)"
+	array('pattern'=>'#\b(DreamPassport)/([0-9\.]+)#',	'profile'=>'keitai'),
+
+	// Palm "Web Pro" http://www.palmone.com/us/support/accessories/webpro/
+	// Sample: "Mozilla/4.76 [en] (PalmOS; U; WebPro)"
+	array('pattern'=>'#\b(WebPro)\b#',	'profile'=>'keitai'),
+
+	// ilinx "Palmscape" / "Xiino" http://www.ilinx.co.jp/
+	// Sample: "Xiino/2.1SJ [ja] (v. 4.1; 153x130; c16/d)"
+	array('pattern'=>'#^(Palmscape)/([0-9\.]+)#',	'profile'=>'keitai'),
+	array('pattern'=>'#^(Xiino)/([0-9\.]+)#',	'profile'=>'keitai'),
+
+	// Sharp PDA Browser (Sharp Zaurus)
+	// Sample: "sharp pda browser/6.1[ja](MI-E1/1.0) "
+	array('pattern'=>'#^(sharp [a-z]+ browser)/([0-9\.]+)#',	'profile'=>'keitai'),
+
+	// Windows CE
+	// Sample: "Mozilla/4.0 (compatible; MSIE 5.5; Windows CE; sigmarion3)" (sigmarion, Hand-held PC)
+	array('pattern'=>'#\b(Windows CE)\b#',	'profile'=>'keitai'),
+
+	// WebTV
+	array('pattern'=>'#^(WebTV)/([0-9\.]+)#',	'profile'=>'keitai'),
 
     // デスクトップあるいはリッチクライアント (デバイスを識別する必要がないもの)
 	array('pattern'=>'#^#',	'profile'=>'default'),	// default
+
 );
 ?>
