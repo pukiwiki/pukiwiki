@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.25 2005/01/10 03:25:36 henoheno Exp $
+// $Id: func.php,v 1.26 2005/01/10 04:18:46 henoheno Exp $
 //
 // General functions
 
@@ -77,6 +77,7 @@ function is_freeze($page, $clearcache = FALSE)
 	} else {
 		$fp     = fopen(get_filename($page), 'rb');
 		flock($fp, LOCK_SH);
+		rewind($fp);
 		$buffer = fgets($fp, 8);
 		flock($fp, LOCK_UN);
 		fclose($fp);
