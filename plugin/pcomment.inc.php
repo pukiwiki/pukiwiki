@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.12 2003/04/22 14:07:05 arino Exp $
+// $Id: pcomment.inc.php,v 1.13 2003/05/08 02:51:00 arino Exp $
 //
 
 /*
@@ -32,7 +32,8 @@
 define('PCMT_PAGE','[[コメント/%s]]');
 //
 // ページのカテゴリ(新規作成時に挿入)
-define('PCMT_CATEGORY','[[:Comment]]');
+//define('PCMT_CATEGORY','[[:Comment]]');
+define('PCMT_CATEGORY','');
 //
 // 表示するコメント数のデフォルト
 define('PCMT_NUM_COMMENTS',10);
@@ -65,6 +66,7 @@ function plugin_pcomment_init() {
 			'title_collided' => '$1 で【更新の衝突】が起きました',
 			'msg_collided' => 'あなたがこのページを編集している間に、他の人が同じページを更新してしまったようです。<br />
 コメントを追加しましたが、違う位置に挿入されているかもしれません。<br />',
+			'err_pagename' => basename(__FILE__).' : ページ名 [[%s]] は使用できません。 正しいページ名を指定してください。',
 		)
 	);
 	set_plugin_messages($messages);
@@ -114,7 +116,7 @@ function plugin_pcomment_convert()
 	$_page = get_fullname(strip_bracket($page),$vars['page']);
 	if (!preg_match("/^$BracketName$/",$_page))
 	{
-		return 'invalid page name.';
+		return sprintf($_pcmt_messages['err_pagename'],htmlspecialchars($_page));
 	}
 	if ($count == 0 and $count !== '0')
 	{
@@ -304,10 +306,10 @@ function pcmt_check_arg($val, $key, &$params)
 {
 	if ($val != '')
 	{
-		$val = strtolower($val);
+		$l_val = strtolower($val);
 		foreach (array_keys($params) as $key)
 		{
-			if (strpos($key,$val) === 0)
+			if (strpos($key,$l_val) === 0)
 			{
 				$params[$key] = TRUE;
 				return;
