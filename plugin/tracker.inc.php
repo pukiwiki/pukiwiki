@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.26 2004/12/02 11:34:25 henoheno Exp $
+// $Id: tracker.inc.php,v 1.27 2005/01/15 09:35:58 henoheno Exp $
 //
 
 // tracker_listで表示しないページ名(正規表現で)
@@ -816,7 +816,7 @@ class Tracker_list
 		$arrow = '';
 		$order = $this->order;
 
-		if (array_key_exists($sort,$order))
+		if (is_array($order) && isset($order[$sort]))
 		{
 			$index = array_flip(array_keys($order));
 			$pos = 1 + $index[$sort];
@@ -831,10 +831,9 @@ class Tracker_list
 		$r_config = rawurlencode($this->config->config_name);
 		$r_list = rawurlencode($this->list);
 		$_order = array("$sort:$dir");
-		foreach ($order as $key=>$value)
-		{
-			$_order[] = "$key:$value";
-		}
+		if (is_array($order))
+			foreach ($order as $key=>$value)
+				$_order[] = "$key:$value";
 		$r_order = rawurlencode(join(';',$_order));
 
 		return "[[$title$arrow>$script?plugin=tracker_list&refer=$r_page&config=$r_config&list=$r_list&order=$r_order]]";
