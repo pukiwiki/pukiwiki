@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: amazon.inc.php,v 1.13 2005/02/08 14:27:16 henoheno Exp $
+// $Id: amazon.inc.php,v 1.14 2005/02/12 03:04:06 henoheno Exp $
 // Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 閑舎
 //
 // Amazon plugin: Book-review maker via amazon.com/amazon.jp
@@ -193,35 +193,38 @@ function plugin_amazon_action()
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
+	$s_page   = isset($vars['refer']) ? $vars['refer'] : '';
 	$asin_all = isset($vars['asin']) ?
 		htmlspecialchars(rawurlencode(strip_bracket($vars['asin']))) : '';
 
 	if (! is_asin()) {
 		$retvars['msg']   = 'ブックレビュー編集';
-		$retvars['refer'] = isset($vars['refer']) ? $vars['refer'] : '';
+		$retvars['refer'] = & $s_page;
 		$retvars['body']  = plugin_amazon_convert();
 		return $retvars;
 
 	} else {
-		$s_page     = $vars['refer'];
 		$r_page     = $s_page . '/' . $asin;
 		$r_page_url = rawurlencode($r_page);
 		$auth_user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
 
 		pkwk_headers_sent();
 		if ($edit_auth && ($auth_user == '' || ! isset($edit_auth_users[$auth_user]) ||
-			$edit_auth_users[$auth_user] != $_SERVER['PHP_AUTH_PW'])) {
-			header('Location: ' . get_script_uri() . '?cmd=read&page=' . $r_page_url);
+		    $edit_auth_users[$auth_user] != $_SERVER['PHP_AUTH_PW'])) {
+		    	// Edit-auth failed. Just look the page
+			header('Location: ' . get_script_uri() . '?' . $r_page_url);
 		} else {
 			$title = plugin_amazon_get_asin_title();
-			if ($title == '' || preg_match('/^\//', $s_page)) {
+			if ($title == '' || preg_match('#^/#', $s_page)) {
+				// Invalid page name
+				header('Location: ' . get_script_uri() . '?' . rawurlencode($s_page));
+			} else {
+				$body = '#amazon(' . $asin_all . ',,image)' . "\n" .
+					'*' . $title . "\n" . $amazon_body;
+				plugin_amazon_review_save($r_page, $body);
 				header('Location: ' . get_script_uri() .
-					'?cmd=read&page=' . encode($s_page));
+					'?cmd=edit&page=' . $r_page_url);
 			}
-			$body = '#amazon(' . $asin_all . ',,image)' . "\n" .
-				'*' . $title . "\n" . $amazon_body;
-			plugin_amazon_review_save($r_page, $body);
-			header('Location: ' . get_script_uri() . '?cmd=edit&page=' . $r_page_url);
 		}
 		exit;
 	}
