@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.3 2003/03/02 16:07:32 panda Exp $
+// $Id: edit.inc.php,v 1.4 2003/03/08 13:19:02 panda Exp $
 //
 // 編集
 // cmd=edit
@@ -37,8 +37,8 @@ function plugin_edit_preview()
 		$post['msg'] = join('',get_source($post['template_page']));
 	}
 	
-	$post['msg'] = preg_replace("/^#freeze\n/",'',$post['msg']);
-	$postdata_input = $post['msg'];
+	// 手書きの#freezeを削除
+	$post['msg'] = preg_replace('/^#freeze\s*\n/','',$post['msg']);
 
 	if (!empty($post['add']))
 	{
@@ -75,7 +75,7 @@ function plugin_edit_preview()
 </div>
 EOD;
 	}
-	$body .= edit_form($post['page'],$postdata_input,$post['digest'],FALSE);
+	$body .= edit_form($post['page'],$post['msg'],$post['digest'],FALSE);
 	
 	return array('msg'=>$_title_preview,'body'=>$body);
 }
@@ -89,7 +89,7 @@ function plugin_edit_write()
 	$retvars = array();
 	
 	// 手書きの#freezeを削除
-	$post['msg'] = preg_replace('/^#freeze\n/','',$post['msg']);
+	$post['msg'] = preg_replace('/^#freeze\s*\n/','',$post['msg']);
 	
 	$postdata_input = $post['msg'];
 	
