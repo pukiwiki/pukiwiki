@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.30 2004/12/11 13:56:40 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.31 2004/12/17 14:01:36 henoheno Exp $
 //
 // PukiWiki default skin
 
@@ -13,7 +13,7 @@ if (! defined('SKIN_DEFAULT_DISABLE_TOPICPATH'))
 // ----
 
 // Prohibit direct access
-if (! defined('UI_LANG')) exit;
+if (! defined('UI_LANG')) die('UI_LANG is not set');
 
 // Set skin-specific images
 $_IMAGE['skin']['logo']     = 'pukiwiki.png';
