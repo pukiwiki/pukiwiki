@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.21 2003/03/07 04:09:43 panda Exp $
+//  $Id: attach.inc.php,v 1.22 2003/03/07 04:13:27 panda Exp $
 //
 
 /*
@@ -37,11 +37,6 @@ if (!defined('FILE_ICON'))
 {
 	define('FILE_ICON','<img src="./image/file.png" width="20" height="20" alt="file" style="border-width:0px" />');
 }
-
-// mime-typeを記述したページ
-define('ATTACH_CONFIG_PAGE_MIME','plugin/attach/mime-type');
-
-require_once('config.php');
 
 //-------- init
 function plugin_attach_init()
@@ -79,7 +74,6 @@ function plugin_attach_init()
 			'err_exists'   => '$1 に同じファイル名が存在します',
 			'err_notfound' => '$1 にそのファイルは見つかりません',
 			'err_noexist'  => '添付ファイルがありません。',
-			'err_delete'   => '$1 からファイルを削除できませんでした',
 			'err_password' => 'パスワードが一致しません。',
 			'err_adminpass'=> '管理者パスワードが一致しません。',
 			'btn_upload'   => 'アップロード',
@@ -348,19 +342,16 @@ function attach_delete()
 	}
 	while (file_exists($obj->basename.'.'.$age));
 	
-	if (!rename($obj->basename,$obj->basename.'.'.$age))
-	{
-		// 削除失敗 why?
-		return array('msg' => $_attach_messages['err_delete']);
-	}
-	
+	rename($obj->basename,$obj->basename.'.'.$age);
 	$obj->status['count'][$age] = $obj->status['count'][0];
 	$obj->status['count'][0] = 0;
 	$obj->putstatus();
+	
 	if (is_page($vars['refer']))
 	{
 		touch(get_filename($vars['refer']));
 	}
+	
 	return array('msg' => $_attach_messages['msg_deleted']);
 }
 //凍結
@@ -456,12 +447,13 @@ function attach_showform()
 function attach_mime_content_type($filename)
 {
 	$type = 'application/octet-stream'; //default
+	$config = ':config/plugin/attach/mime-type';
 	
 	if (!file_exists($filename))
 	{
 		return $type;
 	}
-	$size = @getimagesize($filename);
+	$size = getimagesize($filename);
 	if (is_array($size))
 	{
 		switch ($size[2])
@@ -477,25 +469,26 @@ function attach_mime_content_type($filename)
 		}
 	}
 	
+	if (!is_page($config))
+	{
+		return $type;
+	}
+	
 	if (!preg_match('/_([0-9A-Z]+)$/',$filename,$matches))
 	{
 		return $type;
 	}
 	$filename = decode($matches[1]);
 	
-	// mime-type一覧表を取得
-	$obj = new Config(ATTACH_CONFIG_PAGE_MIME);
-	// 読み出し
-	$obj->read();
-	// 書き戻しを行わないため、コピー
-	$table = $obj->get('MimeType');
-	// メモリ節約
-	unset($obj);
-	
-	foreach ($table as $row)
+	foreach (get_source($config) as $line)
 	{
-		$_type = trim($row[0]);
-		$exts = preg_split('/\s+|,/',trim($row[1]),-1,PREG_SPLIT_NO_EMPTY);
+		if (!preg_match('/\|(.+)\|/',$line,$matches))
+		{
+			continue;
+		}
+		$cells = explode('|',$matches[1]);
+		$_type = trim($cells[0]);
+		$exts = preg_split('/\s+|,/',trim($cells[1]),-1,PREG_SPLIT_NO_EMPTY);
 		
 		foreach ($exts as $ext)
 		{
