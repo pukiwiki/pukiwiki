@@ -2,12 +2,12 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss.inc.php,v 1.3 2003/05/16 05:58:19 arino Exp $
+// $Id: rss.inc.php,v 1.4 2003/06/09 07:56:58 arino Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss_action()
 {
-	global $script,$rss_max,$page_title,$whatsnew;
+	global $rss_max,$page_title,$whatsnew;
 
 	$self = 'http://'.SERVER_NAME.PHP_SELF.'?';
 	
