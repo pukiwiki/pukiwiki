@@ -2,11 +2,12 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.css.php,v 1.6 2004/10/31 09:20:00 henoheno Exp $
+// $Id: pukiwiki.css.php,v 1.7 2004/11/01 12:56:50 henoheno Exp $
 //
 header('Content-Type: text/css');
-if(ini_get('zlib.output_compression')) {
-	header('Content-Encoding: gzip');
+$matches = array();
+if(ini_get('zlib.output_compression') && preg_match('/\b(gzip|deflate)\b/i', $_SERVER['HTTP_ACCEPT_ENCODING'], $matches)) {
+	header('Content-Encoding: ' . $matches[1]);
 	header('Vary: Accept-Encoding');
 }
 
@@ -22,6 +23,7 @@ if ($media != 'print') $media = 'screen';
 ?>
 @charset "<?php echo $charset ?>";
 
+<?php exit; ?>
 pre, dl, ol, p, blockquote
 {
 	line-height:130%;
