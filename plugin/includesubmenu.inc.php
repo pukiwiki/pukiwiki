@@ -1,5 +1,5 @@
 <?php
-// $Id: includesubmenu.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+// $Id: includesubmenu.inc.php,v 1.1.2.1 2003/02/14 08:17:22 panda Exp $
 
 function plugin_includesubmenu_convert()
 {
@@ -40,7 +40,7 @@ function plugin_includesubmenu_convert()
     return "";
   }
   
-  $link = "<a href=\"$script?cmd=edit&page=".rawurlencode($SubMenuPageName)."\">".strip_bracket($SubMenuPageName)."</a>";
+  $link = "<a href=\"$script?cmd=edit&amp;page=".rawurlencode($SubMenuPageName)."\">".strip_bracket($SubMenuPageName)."</a>";
 
   $body = @join("",@file(get_filename(encode($SubMenuPageName))));
   $body = convert_html($body);

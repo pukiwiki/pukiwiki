@@ -1,5 +1,5 @@
 <?php
-// $Id: include.inc.php,v 1.2 2002/12/05 05:45:18 panda Exp $
+// $Id: include.inc.php,v 1.2.2.1 2003/02/14 08:17:22 panda Exp $
 function plugin_include_convert()
 {
 	global $script,$get,$post,$vars,$WikiName,$BracketName,$hr;
@@ -32,7 +32,7 @@ function plugin_include_convert()
 	$body = convert_html($body);
 
 	// $link = "<a href=\"$script?".rawurlencode($page)."\">".strip_bracket($page)."</a>";
-	$link = "<a href=\"$script?cmd=edit&page=".rawurlencode($page)."\">".strip_bracket($page)."</a>";
+	$link = "<a href=\"$script?cmd=edit&amp;page=".rawurlencode($page)."\">".strip_bracket($page)."</a>";
 	if($page == 'MenuBar'){
 		$head = "<span align=\"center\"><h5 class=\"side_label\">$link</h5></span>";
 		$body = "$head\n<small>$body</small>\n";
