@@ -1,0 +1,107 @@
+<?
+///////////////////////////////////////
+// PukiWiki message file (japanese/EUC)
+
+///////////////////////////////////////
+// page titles
+$_title_list = 'ページの一覧';
+$_title_filelist = 'ページファイルの一覧';
+$_title_cannotedit = '$1 は編集できません';
+$_title_add = '$1 への追加';
+$_title_edit = '$1 の編集';
+$_title_preview = '$1 のプレビュー';
+$_title_collided = '$1 で【更新の衝突】が起きました';
+$_title_updated = '$1 を更新しました';
+$_title_deleted = '$1 を削除しました';
+$_title_freeze = '$1 の凍結';
+$_title_isfreezed = '$1 はすでに凍結されています';
+$_title_freezed = '$1 を凍結しました';
+$_title_unfreeze = '$1 の凍結解除';
+$_title_isunfreezed = '$1 は凍結されていません';
+$_title_unfreezed = '$1 の凍結を解除しました';
+$_title_diff = '$1 の変更点';
+$_title_result = '$1 の検索結果';
+$_title_search = '単語検索';
+$_title_backupdiff = '$1 のバックアップ差分';
+$_title_backupnowdiff = '$1 のバックアップの現在との差分';
+$_title_backupsource = '$1 のバックアップソース';
+$_title_backup = '$1 のバックアップ';
+$_title_pagebackuplist = '$1 のバックアップ一覧';
+$_title_backuplist = 'バックアップ一覧';
+$_title_help = 'ヘルプ';
+$_title_invalidiwn = '有効なInterWikiNameではありません';
+$_title_backuplist = 'バックアップ一覧';
+
+///////////////////////////////////////
+// messages
+$_msg_unfreeze = '凍結解除';
+$_msg_add = 'ページへの追加は、現在のページ内容に改行が二つと入力内容が追加されます。';
+$_msg_preview = '以下のプレビューを確認して、よければページ下部のボタンで更新してください。';
+$_msg_preview_delete = '（ページの内容は空です。更新するとこのページは削除されます。）';
+$_msg_collided = 'あなたがこのページを編集している間に、他の人が同じページを更新してしまったようです。<br>
+以下にあなたの編集したテキストがありますので、あなたの編集内容が失われないように<br>
+エディタにコピー＆ペーストしてください。その後で最新の内容から再度編集し直してください。';
+$_msg_freezing = '凍結用のパスワードを入力してください。';
+$_msg_unfreezing = '凍結解除用のパスワードを入力してください。';
+$_msg_invalidpass = 'パスワードが間違っています。';
+$_msg_notfound = '指定されたページは見つかりませんでした。';
+$_msg_addline = '追加された行は<font color="blue">青色</font>です。';
+$_msg_delline = '削除された行は<font color="red">赤色</font>です。';
+$_msg_goto = '$1 へ行く。';
+$_msg_searching = '全てのページから単語を検索します。大文字小文字の区別はありません。';
+$_msg_backuplist = 'バックアップ一覧';
+$_msg_diff = '差分';
+$_msg_nowdiff = '現在との差分';
+$_msg_source = 'ソース';
+$_msg_backup = 'バックアップ';
+$_msg_view = '$1 を表示';
+$_msg_deleleted = '$1 は削除されています。';
+$_msg_invalidiwn = '$1 は有効な $2 ではありません。';
+$_msg_andresult = '<b>$1</b> のすべてを含むページは <b>$3</b> ページ中、 <b>$2</b> ページ見つかりました。';
+$_msg_orresult = '<b>$1</b> のいずれかを含むページは <b>$3</b> ページ中、 <b>$2</b> ページ見つかりました。';
+$_msg_notfoundresult = '</b>$1</b> を含むページは見つかりませんでした。';
+$_msg_symbol = '記号';
+$_msg_other = '日本語';
+$_msg_help = 'テキスト整形のルールを表示する';
+
+///////////////////////////////////////
+// form buttons
+$_btn_preview = 'プレビュー';
+$_btn_repreview = '再度プレビュー';
+$_btn_update = 'ページの更新';
+$_btn_search = '検索';
+$_btn_and = 'AND検索';
+$_btn_or = 'OR検索';
+$_btn_freeze = '凍結';
+$_btn_unfreeze = '凍結解除';
+$_btn_notchangetimestamp = 'タイムスタンプを変更しない';
+$_btn_addtop = 'ページの上に追加';
+$_btn_template = '雛形とするページ';
+$_btn_load = '読込';
+
+///////////////////////////////////////
+// plug-in message
+
+///////////////////////////////////////
+// comment
+$_btn_name = 'お名前: ';
+$_btn_comment = 'コメントの挿入';
+
+///////////////////////////////////////
+// attach file
+$_title_uploaded = '$1 にアップロードしました';
+$_title_file_deleted = '$1 からファイルを削除しました';
+$_title_notfound = '$1 にそのファイルは見つかりません';
+$_title_upload = '$1 への添付';
+
+$_msg_noparm = '$1 へはアップロード・削除はできません';
+$_msg_already_exists = '$1 に同じファイル名が存在します';
+$_msg_attach_filelist = '全ページの添付ファイル一覧';
+$_msg_maxsize = 'アップロード可能最大ファイルサイズは $1 です。';
+$_msg_delete = '\'$1\' を削除します';
+$_msg_exceed = '$1 へのファイルサイズが大きすぎます';
+$_msg_attachfile = '添付ファイル';
+
+$_btn_upload = 'アップロード';
+$_btn_delete = '削除';
+?>

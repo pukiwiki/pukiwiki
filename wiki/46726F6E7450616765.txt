@@ -1,0 +1,18 @@
+*PukiWiki
+
+ここはFrontPageです。
+自由に編集してください。
+
+-PukiWiki
+--PukiWikiのご紹介
+-[[ヘルプ]]
+--PukiWikiで編集するとき？
+-SandBox
+--自由に編集して試してみてください
+-InterWikiName
+--InterWikiのサーバリスト
+-InterWikiSandBox
+--InterWikiを試してみてください
+
+-[[sng's PukiWiki:http://factage.com/sng/pukiwiki]]
+--スクリプト作者のPukiWikiです

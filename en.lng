@@ -1,0 +1,107 @@
+<?
+///////////////////////////////////////
+// PukiWiki message file (english)
+
+///////////////////////////////////////
+// page titles
+$_title_list = 'List of pages';
+$_title_filelist = 'List of page files';
+$_title_cannotedit = '$1 is not editable';
+$_title_add = 'Add to $1';
+$_title_edit = 'Edit of $1';
+$_title_preview = 'Preview of $1';
+$_title_collided = 'The collision of updating broke out in the $1.';
+$_title_updated = '$1 was updated';
+$_title_deleted = '$1 was deleted';
+$_title_freeze = 'Freezing $1';
+$_title_isfreezed = '$1 is already frozen';
+$_title_freezed = '$1 was frozen.';
+$_title_unfreeze = 'Unfreezing $1';
+$_title_isunfreezed = '$1 is not unfrozen';
+$_title_unfreezed = '$1 was unfrozen.';
+$_title_diff = 'Diff of $1';
+$_title_result = 'Search result of $1';
+$_title_search = 'Search';
+$_title_backupdiff = 'Backup diff of $1';
+$_title_backupnowdiff = 'Backup diff of $1 vs current';
+$_title_backupsource = 'Backup source of $1';
+$_title_backup = 'Backup of $1';
+$_title_pagebackuplist = 'Backup list of $1';
+$_title_backuplist = 'Backup list';
+$_title_help = 'Help';
+$_title_invalidiwn = 'It is not an effective InterWikiName';
+$_title_backuplist = 'Backup list';
+
+///////////////////////////////////////
+// messages
+$_msg_unfreeze = 'Unfreeze';
+$_msg_add = 'Two and the contents of an input are added for a new-line to the contents of a page of present addition.';
+$_msg_preview = 'If the following previews are checked and avoided, please update with the button of the page lower part.';
+$_msg_preview_delete = '(The contents of a page are empty.Updating deletes this page.)';
+$_msg_collided = 'It seems that other user have updated the same page while you are editing this page.<br>
+Since there is a text which you edited into below, please copy & paste to<br>
+an editor so that your contents of edit are not lost.<br>
+Please reedit again from the contents newest after that.';
+$_msg_freezing = 'Please input the password for freezing.';
+$_msg_unfreezing = 'Please input the password for unfreezing.';
+$_msg_invalidpass = 'Invalid password.';
+$_msg_notfound = 'The page is not found.';
+$_msg_addline = 'The added line is <font color="blue">BLUE</font>.';
+$_msg_delline = 'The deleted line is <font color="red">RED</font>.';
+$_msg_goto = 'Goto $1.';
+$_msg_searching = 'Some words are searched from all pages.There is no distinction of a capital letter small letter.';
+$_msg_backuplist = 'List of Backup';
+$_msg_diff = 'diff';
+$_msg_nowdiff = 'diff current';
+$_msg_source = 'source';
+$_msg_backup = 'backup';
+$_msg_view = 'View the $1.';
+$_msg_deleleted = '$1 is deleted.';
+$_msg_invalidiwn = '$1 is not an effective $2.';
+$_msg_andresult = 'In <b>$2</b> page, <b>$3</b> pages of pages containing all the <b>$1</b> were found.';
+$_msg_orresult = 'In <b>$2</b> page, <b>$3</b> pages of pages containing either of the <b>$1</b> were found.';
+$_msg_notfoundresult = 'Not found word of </b>$1</b> in pages.';
+$_msg_symbol = 'Symbols';
+$_msg_other = 'Others';
+$_msg_help = 'View rules of text formatting';
+
+///////////////////////////////////////
+// form buttons
+$_btn_preview = 'Preview';
+$_btn_repreview = 'Preview again';
+$_btn_update = 'Update';
+$_btn_search = 'Search';
+$_btn_and = 'AND';
+$_btn_or = 'OR';
+$_btn_freeze = 'Freeze';
+$_btn_unfreeze = 'Unfreeze';
+$_btn_notchangetimestamp = 'Not change timestamp';
+$_btn_addtop = 'Add to top of page';
+$_btn_template = 'Page for use template';
+$_btn_load = 'Load';
+
+///////////////////////////////////////
+// plug-in message
+
+///////////////////////////////////////
+// comment
+$_btn_name = 'Name: ';
+$_btn_comment = 'Submit';
+
+///////////////////////////////////////
+// attach file
+$_title_uploaded = 'Uploaded file to $1';
+$_title_file_deleted = 'Deleted file in $1';
+$_title_notfound = 'Not found the file in $1';
+$_title_upload = 'Upload at $1';
+
+$_msg_noparm = 'Cannot upload/delete in $1';
+$_msg_already_exists = 'Already exists file in $1';
+$_msg_attach_filelist = 'Attached file list of all pages';
+$_msg_maxsize = 'Maximum file size is $1.';
+$_msg_delete = 'Delete \'$1\'';
+$_msg_exceed = 'File size is too big to $1';
+$_msg_attachfile = 'Attach file';
+$_btn_upload = 'Upload';
+$_btn_delete = 'Del';
+?>

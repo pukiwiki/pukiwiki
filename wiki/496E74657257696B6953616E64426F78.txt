@@ -1,0 +1,12 @@
+-[[WikiWikiWeb:FrontPage]]
+-[[Tiki:WelcomeVisitors]] 
+-[[YukiWiki:FrontPage]] 
+-[[RWiki:top]] 
+-[[PukiWiki:FrontPage]] 
+-[[ウヰキエリア:FrontPage]]
+
+-[[Google:pukiwiki]]
+--Googleでpukiwikiを検索
+
+-[[Yahoo:PHP]] 
+--YahooでPHPを検索
