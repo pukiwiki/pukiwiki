@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: popular.inc.php,v 1.6 2003/08/20 02:38:30 arino Exp $
+// $Id: popular.inc.php,v 1.7 2003/08/20 11:11:04 arino Exp $
 //
 
 /*
@@ -60,7 +60,7 @@ function plugin_popular_convert()
 			continue;
 		}
 		
-		$array = file($file);
+		$array = file(COUNTER_DIR.$file);
 		$count = rtrim($array[0]);
 		$date = rtrim($array[1]);
 		$today_count = rtrim($array[2]);
