@@ -1,9 +1,13 @@
 <?php
-// $Id: newpage.inc.php,v 1.13 2005/01/02 06:56:46 henoheno Exp $
+// $Id: newpage.inc.php,v 1.14 2005/01/23 08:05:38 henoheno Exp $
+//
+// Newpage plugin
 
 function plugin_newpage_convert()
 {
 	global $script, $vars, $_btn_edit, $_msg_newpage, $BracketName;
+
+	if (PKWK_READONLY) return ''; // Show nothing
 
 	$newpage = '';
 	if (func_num_args()) list($newpage) = func_get_args();
@@ -29,6 +33,8 @@ EOD;
 function plugin_newpage_action()
 {
 	global $vars, $_btn_edit, $_msg_newpage;
+
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
 	if ($vars['page'] == '') {
 		$retvars['msg']  = $_msg_newpage;

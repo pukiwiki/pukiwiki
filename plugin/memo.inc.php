@@ -1,5 +1,5 @@
 <?php
-// $Id: memo.inc.php,v 1.13 2005/01/23 07:55:22 henoheno Exp $
+// $Id: memo.inc.php,v 1.14 2005/01/23 08:01:29 henoheno Exp $
 //
 // Memo box plugin
 
@@ -11,6 +11,7 @@ function plugin_memo_action()
 	global $script, $vars, $cols, $rows;
 	global $_title_collided, $_msg_collided, $_title_updated;
 
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 	if (! isset($vars['msg']) || $vars['msg'] == '') return;
 
 	$memo_body = preg_replace('/' . "\r" . '/', '', $vars['msg']);
@@ -80,19 +81,27 @@ function plugin_memo_convert()
 	$data = str_replace('&#x22;', '"', $data); // Unescape double quotes
 	$data = htmlspecialchars(str_replace('\n', "\n", $data));
 
+	if (PKWK_READONLY) {
+		$_script = '';
+		$_submit = '';	
+	} else {
+		$_script = & $script;
+		$_submit = '<input type="submit" name="memo"    value="' . $_btn_memo_update . '" />';
+	}
+
 	$s_page   = htmlspecialchars($vars['page']);
 	$s_digest = htmlspecialchars($digest);
 	$s_cols   = MEMO_COLS;
 	$s_rows   = MEMO_ROWS;
 	$string   = <<<EOD
-<form action="$script" method="post" class="memo">
+<form action="$_script" method="post" class="memo">
  <div>
   <input type="hidden" name="memo_no" value="$memo_no" />
   <input type="hidden" name="refer"   value="$s_page" />
   <input type="hidden" name="plugin"  value="memo" />
   <input type="hidden" name="digest"  value="$s_digest" />
   <textarea name="msg" rows="$s_rows" cols="$s_cols">$data</textarea><br />
-  <input type="submit" name="memo"    value="$_btn_memo_update" />
+  $_submit
  </div>
 </form>
 EOD;
