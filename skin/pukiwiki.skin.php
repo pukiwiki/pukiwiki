@@ -2,25 +2,36 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.4 2004/09/30 12:27:32 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.5 2004/09/30 12:48:38 henoheno Exp $
 //
-if (!defined('DATA_DIR')) { exit; }
 
-require_once(SKIN_DIR . 'skin.' . SKIN_LANG . '.lng');
-$lang = $_LANG['skin'];
+// Prohibit direct access
+if (! defined('DATA_DIR')) exit;
 
+// Load language resources
+$skin_lang = 'skin.' . SKIN_LANG . '.lng';
+$lang = array();
+if (! file_exists(SKIN_DIR . $skin_lang)) {
+	die($skin_lang . ' is not found');  // die_message() causes a loop!
+} else {
+	require_once(SKIN_DIR . $skin_lang);
+	$lang = $_LANG['skin'];
+}
+
+// Decide charset for CSS
 $css_charset = 'iso-8859-1';
 switch(SKIN_LANG){
 	case 'ja': $css_charset = 'Shift_JIS'; break;
 }
 
+// Output header
 header('Cache-control: no-cache');
 header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 echo '<?xml version="1.0" encoding="' . CONTENT_CHARSET . '"?>';
-?>
 
-<?php if ($html_transitional) { ?>
+// Output body
+if ($html_transitional) { ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo LANG ?>" lang="<?php echo LANG ?>">
 <?php } else { ?>
@@ -31,13 +42,14 @@ echo '<?xml version="1.0" encoding="' . CONTENT_CHARSET . '"?>';
  <meta http-equiv="content-type" content="application/xhtml+xml; charset=<?php echo CONTENT_CHARSET ?>" />
  <meta http-equiv="content-style-type" content="text/css" />
 
-<?php if (!$is_read) { ?>
+<?php if (! $is_read) { ?>
  <meta name="robots" content="NOINDEX,NOFOLLOW" />
 <?php } ?>
 
  <title><?php echo "$title - $page_title" ?></title>
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>" type="text/css" media="screen" charset="<?php echo $css_charset ?>" />
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>&media=print" type="text/css" media="print" charset="<?php echo $css_charset ?>" />
+
 <?php
   global $trackback, $referer;
   if ($trackback) {
@@ -45,6 +57,7 @@ echo '<?xml version="1.0" encoding="' . CONTENT_CHARSET . '"?>';
  <meta http-equiv="Content-Script-Type" content="text/javascript" />
  <script type="text/javascript" src="skin/trackback.js"></script>
 <?php } ?>
+
 <?php echo $head_tag ?>
 </head>
 <body>
