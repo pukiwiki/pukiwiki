@@ -21,7 +21,7 @@
  <link rel="stylesheet" href="skin/default.en.css" type="text/css" media="screen" charset="iso-8859-1" />
  <link rel="stylesheet" href="skin/print.en.css" type="text/css" media="print" charset="iso-8859-1" />
 <?php
-  global $trackback;
+  global $trackback, $referer;
   if ($trackback) {
 ?>
  <meta http-equiv="Content-Script-Type" content="text/javascript" />
@@ -90,6 +90,13 @@
  &nbsp;
  [ <a href="<?php echo "$script?plugin=tb&amp;__mode=view&amp;tb_id=$tb_id" ?>" onclick="OpenTrackback(this.href); return false">TrackBack(<?php echo tb_count($r_page) ?>)</a> ]
 <?php } ?>
+
+<?php
+  if ($referer) {
+?>
+ [ <a href="<?php echo "$script?plugin=referer&amp;page=$r_page" ?>">Referer</a> ]
+<?php } ?>
+
 </div>
 <?php echo $hr ?>
 
