@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.53 2003/07/02 14:55:08 arino Exp $
+// $Id: init.php,v 1.54 2003/07/03 05:30:46 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -145,7 +145,7 @@ $post   = sanitize($_POST);
 $cookie = sanitize($_COOKIE);
 
 // ポストされた文字のコードを変換
-mb_convert_variables(SOURCE_ENCODING,'',$get,$post);
+mb_convert_variables(SOURCE_ENCODING,'auto',$get,$post);
 
 if (!empty($get['page'])) {
 	$get['page']  = strip_bracket($get['page']);
