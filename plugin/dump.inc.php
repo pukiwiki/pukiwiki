@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.15 2004/09/26 12:01:53 henoheno Exp $
+// $Id: dump.inc.php,v 1.16 2004/09/26 12:24:20 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -539,11 +539,9 @@ class tarlib
 	{
 		$fixsize  = ceil($size / TARLIB_BLK_LEN) * TARLIB_BLK_LEN - $size;
 
-		flock($this->fp, LOCK_EX);
 		fwrite($this->fp, $header, TARLIB_HDR_LEN);    // Header
 		fwrite($this->fp, $body, $size);               // Body
 		fwrite($this->fp, $this->dummydata, $fixsize); // Padding
-		flock($this->fp, LOCK_UN);
 	}
 
 	////////////////////////////////////////////////////////////
@@ -685,10 +683,8 @@ class tarlib
 		if ($this->status == TARLIB_STATUS_CREATE)
 		{
 			// バイナリーゼロを1024バイト出力
-			flock($this->fp, LOCK_EX);
 			fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
 			fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
-			flock($this->fp, LOCK_UN);
 
 			// ファイルを閉じる
 			if ($this->arc_kind == ARCFILE_TAR_GZ) {
