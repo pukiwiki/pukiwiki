@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.5 2004/08/02 13:17:36 henoheno Exp $
+// $Id: func.php,v 1.6 2004/08/06 15:39:52 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -222,7 +222,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE)
 		$r_page = rawurlencode($page);
 		$s_page = htmlspecialchars($page);
 		$passage = get_passage($time);
-		$retval .= " <li><a href=\"$script?cmd=read&page=$r_page&word=$r_word\">$s_page</a>$passage</li>\n";
+		$retval .= " <li><a href=\"$script?cmd=read&amp;page=$r_page&amp;word=$r_word\">$s_page</a>$passage</li>\n";
 	}
 	$retval .= "</ul>\n";
 
@@ -288,7 +288,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 		$s_page = htmlspecialchars($page, ENT_QUOTES);
 		$passage = get_pg_passage($page);
 
-		$str = "   <li><a href=\"$script?cmd=$cmd&page=$r_page\">$s_page</a>$passage";
+		$str = "   <li><a href=\"$script?cmd=$cmd&amp;page=$r_page\">$s_page</a>$passage";
 
 		if ($withfilename) {
 			$s_file = htmlspecialchars($file);

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
+// $Id: html.php,v 1.2 2004/08/06 15:41:41 henoheno Exp $
 //
 
 // 本文を出力
@@ -202,7 +202,7 @@ EOD;
 		$body .= $hr . catrule();
 	} else {
 		$body .=
-		"<ul><li><a href=\"$script?cmd=edit&help=true&page=$r_page\">$_msg_help</a></li></ul>";
+		"<ul><li><a href=\"$script?cmd=edit&amp;help=true&amp;page=$r_page\">$_msg_help</a></li></ul>";
 	}
 	return $body;
 }
