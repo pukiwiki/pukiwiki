@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.24 2003/06/12 00:19:43 arino Exp $
+// $Id: file.php,v 1.25 2003/06/13 00:53:33 arino Exp $
 //
 
 // ソースを取得
@@ -67,6 +67,7 @@ function make_str_rules($str)
 	
 	$arr = explode("\n",$str);
 	
+	$retvars = array();
 	foreach ($arr as $str)
 	{
 		if ($str != '' and $str{0} != ' ' and $str{0} != "\t")
