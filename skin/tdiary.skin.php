@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.13 2005/01/16 06:49:34 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.14 2005/01/19 13:49:19 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -63,6 +63,7 @@ case 'hatena':	/*FALLTHROUGH*/
 $title_design_date = 1; // Default: Select the date desin, or 'the same design'
 switch(TDIARY_THEME){
 case '3minutes':
+case 'aoikuruma':
 case 'black-lingerie':
 case 'blog':
 case 'book':
