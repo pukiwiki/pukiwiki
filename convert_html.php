@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.50 2003/07/27 13:40:41 arino Exp $
+// $Id: convert_html.php,v 1.51 2003/07/29 09:57:13 arino Exp $
 //
 function convert_html($lines)
 {
@@ -807,12 +807,6 @@ class Body extends Block
 		$this->contents_last =& $this->contents_last->add(new Contents_UList($text,$level,$id));
 		return array($text.$anchor,$this->count > 1 ? $top : '',$id);
 	}
-	function getContents()
-	{
-		$contents  = "<a id=\"contents_{$this->id}\"></a>";
-		$contents .= $this->contents->toString();
-		return "<div class=\"contents\">\n$contents</div>\n";
-	}
 	function &insert(&$obj)
 	{
 		if (is_a($obj,'Inline')) {
@@ -827,13 +821,40 @@ class Body extends Block
 		$text = parent::toString();
 		
 		// #contents
-		$text = preg_replace('/<p[^>]*>#contents<\/p>/',$this->getContents(),$text);
+		$text = preg_replace_callback('/(<p[^>]*>)<del>#contents<\/del>(.*)(<\/p>)/',
+			array(&$this,'replace_contents'),$text);
 		
 		// 関連するページ
 		// <p>のときは行頭から、<del>のときは他の要素の子要素として存在
-		$text = preg_replace('/<p><del>#related<\/del><\/p>/',make_related($vars['page'],'p'),$text);
+		$text = preg_replace_callback('/(<p[^>]*>)<del>#related<\/del>(.*)(<\/p>)/',
+			array(&$this,'replace_related'),$text);
 		$text = preg_replace('/<del>#related<\/del>/',make_related($vars['page'],'del'),$text);
 		return $text;
+	}
+	function replace_contents($arr)
+	{
+		static $contents = NULL;
+		
+		if (is_null($contents))
+		{
+			$contents  = "<div class=\"contents\">\n";
+			$contents .= "<a id=\"contents_{$this->id}\"></a>";
+			$contents .= $this->contents->toString();
+			$contents .= "</div>\n";
+		}
+		array_shift($arr);
+		return ($arr[1] != '') ? $contents.join('',$arr) : $contents;
+	}
+	function replace_related($arr)
+	{
+		static $related = NULL;
+		
+		if (is_null($related))
+		{
+			$related = make_related($vars['page'],'p');
+		}
+		array_shift($arr);
+		return ($arr[1] != '') ? $related.join('',$arr) : $related;
 	}
 	function block(&$lines,$start,$end,$class)
 	{

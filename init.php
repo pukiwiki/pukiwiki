@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.58 2003/07/06 15:10:27 arino Exp $
+// $Id: init.php,v 1.59 2003/07/29 09:57:14 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -280,6 +280,7 @@ $entity_pattern = trim(join('',file(CACHE_DIR.'entities.dat')));
 $line_rules = array_merge(array(
 	'&amp;(#[0-9]+|#x[0-9a-f]+|'.$entity_pattern.');'=>'&$1;',
 	"\r"=>"<br />\n", /* 行末にチルダは改行 */
-	'#related'=>'<del>#related</del>'
+	'#related$'=>'<del>#related</del>',
+	'^#contents$'=>'<del>#contents</del>'
 ),$line_rules);
 ?>
