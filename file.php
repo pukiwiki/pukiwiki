@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.9 2003/02/22 05:11:45 panda Exp $
+// $Id: file.php,v 1.10 2003/03/02 02:48:45 panda Exp $
 //
 
 // ソースを取得
@@ -53,7 +53,16 @@ function page_write($page,$postdata)
 function file_write($dir,$page,$str)
 {
 	global $post,$update_exec;
+	global $_msg_invalidiwn;
 	
+	if (!is_pagename($page))
+	{
+		die_message(
+			str_replace('$1',htmlspecialchars($page),
+				str_replace('$2','WikiName',$_msg_invalidiwn)
+			)
+		);
+	}
 	$page = strip_bracket($page);
 	$timestamp = FALSE;
 	$file = $dir.encode($page).'.txt';
@@ -199,7 +208,7 @@ function get_existfiles($dir,$ext)
 {
 	$aryret = array();
 	
-	$pattern = '^[0-9A-F]+'.preg_quote($ext).'$';
+	$pattern = '^[0-9A-F]+'.preg_quote($ext,'/').'$';
 	$dp = @opendir($dir)
 		or die_message($dir. ' is not found or not readable.');
 	while ($file = readdir($dp)) {
