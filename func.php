@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.15 2003/02/18 04:31:09 panda Exp $
+// $Id: func.php,v 1.16 2003/02/22 05:11:45 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -395,30 +395,81 @@ function drop_submit($str)
 	);
 }
 
-//AutoLinkのパターンを生成する
-function get_autolink_pattern()
+// AutoLinkのパターンを生成する
+// thx for hirofummy
+function get_autolink_pattern(&$pages)
 {
 	global $WikiName,$autolink,$nowikiname;
 	
-	if (!$autolink) {
+	$auto_pages = array();
+	foreach ($pages as $page)
+	{
+		$match = preg_match("/^$WikiName$/",$page);
+		if($match ? $nowikiname : strlen($page) >= $autolink)
+		{
+			$auto_pages[] = $page;
+		}
+	}
+	if (count($auto_pages) == 0)
+	{
 		return $nowikiname ? '(?!)' : $WikiName;
 	}
 	
-	$pages = get_existpages();
-	$arr = array();
-	foreach ($pages as $page) {
-		if (preg_match("/^$WikiName$/",$page) ? $nowikiname : strlen($page) >= $autolink) {
-			// /xを使っているので、空白もエスケープしなければならない
-			$pattern = '(?:'.str_replace(' ','\ ',preg_quote($page,'/')).')';
-			$arr[$pattern] = strlen($pattern);
+	sort($auto_pages,SORT_STRING);
+	
+	$result = get_autolink_pattern_sub($auto_pages,0,count($auto_pages),0);
+
+	if(!$nowikiname)
+	{
+		$result .= '|(?:'.$WikiName.')';
+	}
+	
+	return $result;
+}
+function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
+{
+	$result = '';
+	$count = 0;
+	$x = (strlen($pages[$start]) <= $pos);
+	
+	if ($x) {
+		$start++;
+	}
+	for ($i = $start; $i < $end; $i = $j)
+	{
+		$char = $pages[$i]{$pos};
+		for ($j = $i; $j < $end; $j++)
+		{
+			if ($pages[$j]{$pos} != $char)
+			{
+				break;
+			}
 		}
+		if ($i != $start)
+		{
+			$result .= '|';
+		}
+		if ($i >= ($j - 1))
+		{
+			$result .= preg_quote(substr($pages[$i],$pos),'/'); 
+		}
+		else
+		{
+			$result .=
+				preg_quote($char,'/').
+				get_autolink_pattern_sub($pages,$i,$j,$pos + 1);
+		}
+		$count++;
 	}
-	arsort($arr,SORT_NUMERIC);
-	$arr = array_keys($arr);
-	if (!$nowikiname) {
-		array_push($arr,"(?:$WikiName)");
+	if ($count > 1)
+	{
+		$result = '(?:'.$result.')';
 	}
-	return join('|',$arr);
+	if ($x)
+	{
+		$result .= '?';
+	}
+	return $result;
 }
 
 //is_a

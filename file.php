@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.8 2003/02/20 12:24:18 panda Exp $
+// $Id: file.php,v 1.9 2003/02/22 05:11:45 panda Exp $
 //
 
 // ソースを取得
@@ -32,7 +32,7 @@ function page_write($page,$postdata)
 	$postdata = user_rules_str($postdata);
 	
 	// 差分ファイルの作成
-	$oldpostdata = is_page($page) ? join('',get_source($page)) : "\n";
+	$oldpostdata = is_page($page) ? join('',get_source($page)) : '';
 	$diffdata = do_diff($oldpostdata,$postdata);
 	file_write(DIFF_DIR,$page,$diffdata);
 	
@@ -61,7 +61,7 @@ function file_write($dir,$page,$str)
 	if ($dir == DATA_DIR and $str == '' and file_exists($file)) {
 		unlink($file);
 	}
-	else {
+	if ($str != '') {
 		$str = preg_replace("/\r/",'',$str);
 		$str = rtrim($str)."\n";
 		
@@ -92,34 +92,28 @@ function file_write($dir,$page,$str)
 // 最終更新ページの更新
 function put_lastmodified()
 {
-	global $script,$post,$maxshow,$whatsnew,$non_list;
-	global $WikiName,$autolink,$nowikiname;
+	global $script,$post,$maxshow,$whatsnew,$non_list,$autolink;
 
-	$pages = array(); // for RecentChanges, recent.dat(recent.inc.php)
-	$auto = array(); // for autolink
-	foreach(get_existpages() as $page) {
-		if ($page == $whatsnew or preg_match("/$non_list/",$page)) {
-			continue;
-		}
-		$pages[$page] = get_filetime($page);
-		
-		// for autolink
-		if (preg_match("/^$WikiName$/",$page) ? $nowikiname : strlen($page) >= $autolink) {
-			$pattern = '(?:'.preg_quote($page,'/').')';
-			$auto[$pattern] = strlen($pattern);
+	$pages = get_existpages();
+	$recent_pages = array();
+	foreach($pages as $page)
+	{
+		if ($page != $whatsnew and !preg_match("/$non_list/",$page))
+		{
+			$recent_pages[$page] = get_filetime($page);
 		}
 	}
 	
 	//時刻降順でソート
-	arsort($pages,SORT_NUMERIC);
-	arsort($auto,SORT_NUMERIC);
+	arsort($recent_pages,SORT_NUMERIC);
 	
-	// create recent.dat
+	// create recent.dat (for recent.inc.php)
 	$fp = fopen(CACHE_DIR.'recent.dat','w')
 		or die_message('cannot write cache file '.CACHE_DIR.'recent.dat<br>maybe permission is not writable or filename is too long');
 	flock($fp,LOCK_EX);
-	foreach ($pages as $_page=>$time) {
-		fputs($fp,"$time\t$_page\n");
+	foreach ($recent_pages as $page=>$time)
+	{
+		fputs($fp,"$time\t$page\n");
 	}
 	flock($fp,LOCK_UN);
 	fclose($fp);
@@ -128,9 +122,10 @@ function put_lastmodified()
 	$fp = fopen(get_filename($whatsnew),'w')
 		or die_message('cannot write page file '.htmlspecialchars($whatsnew).'<br>maybe permission is not writable or filename is too long');
 	flock($fp,LOCK_EX);
-	foreach (array_splice($pages,0,$maxshow) as $_page=>$time) {
+	foreach (array_splice($recent_pages,0,$maxshow) as $page=>$time)
+	{
 		$s_lastmod = htmlspecialchars(format_date($time));
-		$s_page = htmlspecialchars($_page);
+		$s_page = htmlspecialchars($page);
 		fputs($fp, "-$s_lastmod - [[$s_page]]\n");
 	}
 	fputs($fp,"#norelated\n"); // :)
@@ -138,16 +133,15 @@ function put_lastmodified()
 	fclose($fp);
 	
 	// for autolink
-	$auto = array_keys($auto);
-	if (!$nowikiname) {
-		array_push($auto,"(?:$WikiName)");
+	if ($autolink)
+	{
+		$fp = fopen(CACHE_DIR.'autolink.dat','w')
+			or die_message('cannot write autolink file '.CACHE_DIR.'/autolink.dat<br>maybe permission is not writable');
+		flock($fp,LOCK_EX);
+		fputs($fp,get_autolink_pattern($pages));
+		flock($fp,LOCK_UN);
+		fclose($fp);
 	}
-	$fp = fopen(CACHE_DIR.'autolink.dat','w')
-		or die_message('cannot write autolink file '.CACHE_DIR.'/autolink.dat<br>maybe permission is not writable');
-	flock($fp,LOCK_EX);
-	fputs($fp,join('|',$auto));
-	flock($fp,LOCK_UN);
-	fclose($fp);
 }
 
 // 指定されたページの経過時刻
