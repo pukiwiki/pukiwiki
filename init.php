@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.20.2.12 2004/06/24 13:59:21 henoheno Exp $
+// $Id: init.php,v 1.20.2.13 2004/06/27 12:57:15 henoheno Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -100,15 +100,35 @@ $get    = sanitize_null_character($get);
 $post   = sanitize_null_character($post);
 $cookie = sanitize_null_character($cookie);
 
-if($post["msg"])
-{
-	$post["msg"] = preg_replace("/((\x0D\x0A)|(\x0D)|(\x0A))/","\n",$post["msg"]);
-}
-if($get["page"]) $get["page"] = rawurldecode($get["page"]);
-if($post["word"]) $post["word"] = rawurldecode($post["word"]);
-if($get["word"]) $get["word"] = rawurldecode($get["word"]);
+/////////////////////////////////////////////////
+// GET + POST = $vars
 
 $vars = array_merge($post,$get);
+
+// 入力チェック: cmd, plugin の文字列は英数字以外ありえない
+foreach(array('cmd', 'plugin') as $var){
+	if (array_key_exists($var, $vars) &&
+	    ! preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $vars[$var])) {
+		unset($get[$var], $post[$var], $vars[$var]);
+	}
+}
+
+// 整形: page, strip_bracket()
+if (array_key_exists('page', $vars)) {
+	$get['page'] = $post['page'] = $vars['page']  = rawurldecode($vars['page']);
+} else {
+	$get['page'] = $post['page'] = $vars['page'] = '';
+}
+
+// 整形: word, rawurldecode()
+if (array_key_exists('page', $vars)) {
+	$get['word'] = $post['word'] = $vars['word']  = rawurldecode($vars["word"]);
+}
+
+// 整形: msg
+if (!empty($vars['msg']))  {
+	$get['msg'] = $post['msg'] = $vars['msg'] = preg_replace("/((\x0D\x0A)|(\x0D)|(\x0A))/", "\n", $vars["msg"]);
+}
 
 $arg = rawurldecode((getenv('QUERY_STRING') != '')?
 		    getenv('QUERY_STRING') :
@@ -120,6 +140,7 @@ $arg = sanitize_null_character($arg);
 $update_exec = "";
 $content_id = 0;
 
+/////////////////////////////////////////////////
 // ファイル読み込み
 $die = FALSE; $message = '';
 foreach(array('INI_FILE', 'LANG_FILE') as $file){
@@ -130,11 +151,13 @@ foreach(array('INI_FILE', 'LANG_FILE') as $file){
 		require(constant($file));
 	}
 }
-if ($die) { die_message(nl2br("\n\n" . $message . "\n")); }
+if ($die)
+	die_message(nl2br("\n\n" . $message . "\n"));
 
 
 // フェイスマークを$line_rulesに加える
-if ($usefacemark) { $line_rules += $facemark_rules; }
+if ($usefacemark)
+	$line_rules += $facemark_rules;
 
 $user_rules = array_merge($str_rules,$line_rules);
 
@@ -149,6 +172,7 @@ if (!isset($script) or $script == '') {
 	}
 }
 
+/////////////////////////////////////////////////
 // ディレクトリのチェック
 $die = FALSE; $message = $temp = '';
 
@@ -158,13 +182,15 @@ foreach(array('DATA_DIR', 'DIFF_DIR', 'BACKUP_DIR', 'CACHE_DIR') as $dir){
                 $temp = "${temp}Directory is not found or not writable ($dir)\n";
         }
 }
-if ($temp) { $message = "$temp\n"; }
+if ($temp)
+	$message = "$temp\n";
 
 // 設定ファイルの変数チェック
 $temp = '';
-foreach(array('rss_max', 'page_title', 'note_hr', 'related_link', 'show_passage',
-        'rule_related_str', 'load_template_func') as $var){
-        if (!isset(${$var})) { $temp .= "\$$var\n"; }
+foreach(array('rss_max', 'page_title', 'note_hr', 'related_link',
+	'show_passage', 'rule_related_str', 'load_template_func') as $var){
+        if (!isset(${$var}))
+		$temp .= "\$$var\n";
 }
 if ($temp) {
         $die = TRUE;
@@ -173,21 +199,28 @@ if ($temp) {
 
 $temp = '';
 foreach(array('LANG', 'PLUGIN_DIR') as $def){
-        if (!defined($def)) $temp .= "$def\n";
+        if (!defined($def))
+		$temp .= "$def\n";
 }
 if ($temp) {
         $die = TRUE;
         $message = "${message}Define(s) not found: (Maybe the old *.ini.php?)\n" . $temp . "\n";
 }
 
-if($die){ die_message(nl2br("\n\n" . $message)); }
+if($die)
+	die_message(nl2br("\n\n" . $message));
 
+
+/////////////////////////////////////////////////
 // 必須のページが存在しなければ、空のファイルを作成する
-$pages = array($defaultpage, $whatsnew, $interwiki);
-foreach($pages as $page){
-	if (!file_exists(get_filename(encode($page)))) { touch(get_filename(encode($page))); }
+foreach(array($defaultpage, $whatsnew, $interwiki) as $page){
+	$page = get_filename(encode($page));
+	if (!file_exists($page)) {
+		touch($page);
+	}
 }
 
+/////////////////////////////////////////////////
 $ins_date = date($date_format,UTIME);
 $ins_time = date($time_format,UTIME);
 $ins_week = "(".$weeklabels[date("w",UTIME)].")";
