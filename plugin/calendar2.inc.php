@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar2.inc.php,v 1.18 2003/05/14 10:13:30 arino Exp $
+// $Id: calendar2.inc.php,v 1.19 2003/06/03 05:17:15 arino Exp $
 // *引数にoffと書くことで今日の日記を表示しないようにした。
 function plugin_calendar2_convert()
 {
@@ -58,7 +58,6 @@ function plugin_calendar2_convert()
 	$f_today = getdate(mktime(0,0,0,$m_num,1,$year));
 	$wday = $f_today['wday'];
 	$day = 1;
-	$fweek = TRUE;
 	
 	$m_name = "$year.$m_num";
 	
@@ -95,6 +94,10 @@ EOD;
 	}
 	
 	$ret .= "    </tr>\n    <tr>\n";
+	// Blank 
+	for ($i = 0; $i < $wday; $i++) {
+		$ret .= "     <td class=\"style_td_blank\">&nbsp;</td>\n";
+	}
 	
 	while (checkdate($m_num,$day,$year)) {
 		$dt = sprintf('%4d-%02d-%02d', $year, $m_num, $day);
@@ -102,14 +105,7 @@ EOD;
 		$r_page = rawurlencode($page);
 		$s_page = htmlspecialchars($page);
 		
-		if ($fweek) {
-			for ($i = 0; $i < $wday; $i++) { // Blank 
-				$ret .= "     <td class=\"style_td_blank\">&nbsp;</td>\n";
-			}
-			$fweek = FALSE;
-		}
-		
-		if ($wday == 0) {
+		if ($wday == 0 and $day > 1) {
 			$ret .= "    </tr>\n    <tr>\n";
 		}
 		

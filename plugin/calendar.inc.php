@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar.inc.php,v 1.14 2003/02/28 14:25:10 panda Exp $
+// $Id: calendar.inc.php,v 1.15 2003/06/03 05:17:15 arino Exp $
 
 function plugin_calendar_convert()
 {
@@ -72,7 +72,6 @@ function plugin_calendar_convert()
 	$f_today = getdate(mktime(0,0,0,$m_num,1,$year) - LOCALZONE + ZONETIME);
 	$wday = $f_today['wday'];
 	$day = 1;
-	$fweek = true;
 
 	$m_name = "$year.$m_num ($cmd)";
 
@@ -98,6 +97,11 @@ EOD;
 EOD;
 
 	$ret .= " </tr>\n <tr>\n";
+	// Blank 
+	for ($i = 0; $i < $wday; $i++)
+	{
+		$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n"; 
+	} 
 
 	while(checkdate($m_num,$day,$year))
 	{
@@ -113,16 +117,10 @@ EOD;
 		else
 			$link = "<a href=\"$script?cmd=$cmd&amp;page=$r_page$refer\" title=\"$name\"><strong>$day</strong></a>";
 
-		if ($fweek)
+		if ($wday == 0 and $day > 1)
 		{
-			for($i=0;$i<$wday;$i++)
-			{ // Blank 
-				$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n"; 
-			} 
-		$fweek=false;
+			$ret .= "  </tr><tr>\n";
 		}
-
-		if ($wday == 0) $ret .= "  </tr><tr>\n";
 		if (!$other_month && ($day == $today['mday']) && ($m_num == $today['mon']) && ($year == $today['year']))
 		{
 			//  Today 
