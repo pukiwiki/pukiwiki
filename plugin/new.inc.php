@@ -1,21 +1,17 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: new.inc.php,v 1.5 2004/12/18 06:52:57 henoheno Exp $
+// $Id: new.inc.php,v 1.6 2004/12/25 05:56:50 henoheno Exp $
 //
 // New! plugin
 
-// 全体の表示フォーマット
 define('PLUGIN_NEW_FORMAT', '<span class="comment_date">%s</span>');
 
 function plugin_new_init()
 {
-	// 経過秒数 => 新着表示タグ
-	$messages = array(
-		'_plugin_new_elapses' => array(
-			1*60*60*24 => ' <span class="new1" title="%s">New!</span>',
-			5*60*60*24 => ' <span class="new5" title="%s">New</span>',
-		),
-	);
+	// Elapsed time => New! message with CSS
+	$messages['_plugin_new_elapses'] = array(
+		60 * 60 * 24 * 1 => ' <span class="new1" title="%s">New!</span>',  // 1day
+		60 * 60 * 24 * 5 => ' <span class="new5" title="%s">New</span>');  // 5days
 	set_plugin_messages($messages);
 }
 
@@ -23,16 +19,26 @@ function plugin_new_inline()
 {
 	global $vars, $_plugin_new_elapses;
 
-	if (func_num_args() < 1) return FALSE;
-
 	$retval = '';
 	$args = func_get_args();
-	$date = strip_htmltag(array_pop($args)); // {}部分の引数
-	if ($date != '' && ($timestamp = strtotime($date)) !== -1) {
+	$date = array_pop($args); // {date} always exists
+
+	if($date !== '') {
+		$usage = '&new([nodate]){date};';
+		if (func_num_args() > 2) return $usage;
+		$timestamp = strtotime($date);
+	} else {
+		$usage = '&new(pagename[,nolink]);';
+		if (func_num_args() > 3) return $usage;
+	}
+
+	if (isset($timestamp) && $timestamp !== -1) {
+		// &new([nodate]){date};
 		$timestamp -= ZONETIME;
 		$nodate = in_array('nodate', $args);
 		$retval = $nodate ? '' : htmlspecialchars($date);
 	} else {
+		// &new(pagename[,nolink]);
 		$timestamp = 0;
 		$name = strip_bracket(! empty($args) ? array_shift($args) : $vars['page']);
 		$page = get_fullname($name, $vars['page']);
@@ -42,7 +48,7 @@ function plugin_new_inline()
 			    get_existpages()) as $page) {
 				$_timestamp = get_filetime($page);
 				if ($timestamp < $_timestamp) {
-					// 最も新しいページを表示
+					// Show the latest page
 					$retval    = $nolink ? '' : make_pagelink($page);
 					$timestamp = $_timestamp;
 				}
