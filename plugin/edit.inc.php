@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.12 2004/07/02 12:47:48 henoheno Exp $
+// $Id: edit.inc.php,v 1.13 2004/07/02 13:07:31 henoheno Exp $
 //
 
 // 編集
@@ -32,57 +32,46 @@ function plugin_edit_action()
 // プレビュー
 function plugin_edit_preview()
 {
-	global $script,$post;
-	global $_title_preview,$_msg_preview,$_msg_preview_delete;
+	global $script, $vars;
+	global $_title_preview, $_msg_preview, $_msg_preview_delete;
 
-	if (array_key_exists('template_page',$post) and is_page($post['template_page']))
-	{
-		$post['msg'] = join('',get_source($post['template_page']));
+	$page = isset($vars['page']) ? $vars['page'] : '';
+
+	if (isset($vars['template_page']) && is_page($vars['template_page'])) {
+
+		$vars['msg'] = join('', get_source($vars['template_page']));
+
 		// 見出しの固有ID部を削除
-		$post['msg'] = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m','$1$2',$post['msg']);
+		$vars['msg'] = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $vars['msg']);
 	}
 	
 	// 手書きの#freezeを削除
-	$post['msg'] = preg_replace('/^#freeze\s*$/m','',$post['msg']);
+	$vars['msg'] = preg_replace('/^#freeze\s*$/m', '' ,$vars['msg']);
 
-	if (!empty($post['add']))
-	{
-		if ($post['add_top'])
-		{
-			$postdata  = $post['msg']."\n\n".@join('',get_source($post['page']));
+	if (isset($vars['add'])) {
+		if (isset($vars['add_top']) && $vars['add_top']) {
+			$postdata  = $vars['msg'] . "\n\n" . @join('', get_source($page));
+		} else {
+			$postdata  = @join('', get_source($page)) . "\n\n" . $vars['msg'];
 		}
-		else
-		{
-			$postdata  = @join('',get_source($post['page']))."\n\n".$post['msg'];
-		}
-	}
-	else
-	{
-		$postdata = $post['msg'];
+	} else {
+		$postdata = $vars['msg'];
 	}
 
 	$body = "$_msg_preview<br />\n";
 	if ($postdata == '')
-	{
 		$body .= "<strong>$_msg_preview_delete</strong>";
-	}
 	$body .= "<br />\n";
 
-	if ($postdata != '')
-	{
+	if ($postdata) {
 		$postdata = make_str_rules($postdata);
-		$postdata = explode("\n",$postdata);
+		$postdata = explode("\n", $postdata);
 		$postdata = drop_submit(convert_html($postdata));
-		
-		$body .= <<<EOD
-<div id="preview">
-  $postdata
-</div>
-EOD;
+		$body .= '<div id="preview">' . $postdata . '</div>' . "\n";
 	}
-	$body .= edit_form($post['page'],$post['msg'],$post['digest'],FALSE);
+	$body .= edit_form($page, $vars['msg'], $vars['digest'], FALSE);
 	
-	return array('msg'=>$_title_preview,'body'=>$body);
+	return array('msg'=>$_title_preview, 'body'=>$body);
 }
 
 // 書き込みもしくは追加もしくはコメントの挿入
