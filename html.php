@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.45.2.8 2004/06/27 14:29:19 henoheno Exp $
+// $Id: html.php,v 1.45.2.9 2004/06/27 14:33:52 henoheno Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -42,16 +42,19 @@ function catbody($title,$page,$body)
  	$link_backup = "$script?cmd=backup&amp;page=".rawurlencode($vars["page"]);
 	$link_help = "$script?cmd=help";
 
+	$fmt = FALSE;
 	if(is_page($vars["page"]) && $is_page)
 	{
 		$fmt = @filemtime(get_filename(encode($vars["page"])));
 	}
 
+	$related = FALSE;
 	if(is_page($vars["page"]) && $related_link && $is_page && !arg_check("edit") && !arg_check("freeze") && !arg_check("unfreeze"))
 	{
 		$related = make_related($vars["page"],FALSE);
 	}
 
+	$is_read = FALSE;
 	if(is_page($vars["page"]) && !in_array($vars["page"],$cantedit) && !arg_check("backup") && !arg_check("edit") && !$vars["preview"])
 	{
 		$is_read = TRUE;
