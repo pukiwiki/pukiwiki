@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.29 2004/12/14 14:14:02 henoheno Exp $
+// $Id: edit.inc.php,v 1.30 2005/01/23 05:22:25 henoheno Exp $
 //
 // Edit plugin
 // cmd=edit
@@ -8,6 +8,8 @@
 function plugin_edit_action()
 {
 	global $vars, $_title_edit, $load_template_func;
+
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
@@ -78,6 +80,8 @@ function plugin_edit_inline()
 	static $usage = '&edit(pagename#anchor[[,noicon],nolabel])[{label}];';
 
 	global $script, $vars, $fixed_heading_anchor_edit;
+
+	if (PKWK_READONLY) return ''; // Show nothing 
 
 	// Arguments
 	$args = func_get_args();
