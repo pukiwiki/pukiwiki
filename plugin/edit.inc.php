@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.20 2004/11/20 04:32:49 henoheno Exp $
+// $Id: edit.inc.php,v 1.21 2004/11/20 05:12:01 henoheno Exp $
 //
 
 // Edit plugin
@@ -44,12 +44,12 @@ function plugin_edit_preview()
 
 		$vars['msg'] = join('', get_source($vars['template_page']));
 
-		// 見出しの固有ID部を削除
+		// Cut fixed anchors
 		$vars['msg'] = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $vars['msg']);
 	}
 
 	// 手書きの#freezeを削除
-	$vars['msg'] = preg_replace('/^#freeze\s*$/im', '' ,$vars['msg']);
+	$vars['msg'] = preg_replace('/^#freeze\s*$/im', '', $vars['msg']);
 	$postdata = $vars['msg'];
 
 	if (isset($vars['add']) && $vars['add']) {
@@ -105,10 +105,11 @@ function plugin_edit_inline()
 	if ($s_page == '') $s_page = isset($vars['page']) ? $vars['page'] : '';
 	// $s_page fixed
 	$isfreeze = is_freeze($s_page);
+	$ispage   = is_page($s_page);
 
-	// Paragraph edit or not
+	// Paragraph edit enabled or not
 	$short = htmlspecialchars('Edit');
-	if ($fixed_heading_anchor_edit && $editable === TRUE) {
+	if ($fixed_heading_anchor_edit && $editable === TRUE && $ispage === TRUE) {
 		$title = htmlspecialchars(sprintf('Edit %s', $page));
 		$id    = rawurlencode($id);
 		$icon = '<img src="' . IMAGE_DIR . 'paraedit.png' .
@@ -149,7 +150,7 @@ function plugin_edit_inline()
 	$atag  = '<a class="' . $class . '" href="' . $url . '" title="' . $title . '">';
 	static $atags = '</a>';
 
-	if (is_page($s_page)) {
+	if ($ispage) {
 		// Normal edit link
 		return $atag . $icon . $s_label . $atags;
 	} else {
