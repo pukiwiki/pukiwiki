@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.26 2005/02/20 14:24:50 henoheno Exp $
+// $Id: init.php,v 1.27 2005/03/05 14:20:12 henoheno Exp $
 //
 // Init PukiWiki here
 
@@ -375,6 +375,10 @@ require(DATA_HOME . 'rules.ini.php');
 
 // 現在時刻
 $now = format_date(UTIME);
+
+// 日時置換ルールを$line_rulesに加える
+if ($usedatetime) $line_rules += $datetime_rules;
+unset($datetime_rules);
 
 // フェイスマークを$line_rulesに加える
 if ($usefacemark) $line_rules += $facemark_rules;
