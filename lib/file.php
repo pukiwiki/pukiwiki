@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.12 2005/01/18 12:54:53 henoheno Exp $
+// $Id: file.php,v 1.13 2005/01/29 13:29:34 henoheno Exp $
 //
 // File related functions
 
@@ -27,6 +27,8 @@ function get_filename($page)
 function page_write($page, $postdata, $notimestamp = FALSE)
 {
 	global $trackback;
+
+	if (PKWK_READONLY) return; // Do nothing
 
 	$postdata = make_str_rules($postdata);
 
@@ -61,10 +63,9 @@ function make_str_rules($str)
 
 	$retvars = $matches = array();
 	foreach ($arr as $str) {
-		if ($str != '' && $str{0} != ' ' && $str{0} != "\t") {
+		if ($str != '' && $str{0} != ' ' && $str{0} != "\t")
 			foreach ($str_rules as $rule => $replace)
-				$str = preg_replace("/$rule/", $replace, $str);
-		}
+				$str = preg_replace('/' . $rule . '/', $replace, $str);
 		
 		// Adding fixed anchor into headings
 		if ($fixed_heading_anchor &&
@@ -74,7 +75,7 @@ function make_str_rules($str)
 			// A random alphabetic letter + 7 letters of random strings from md()
 			$anchor = chr(mt_rand(ord('a'), ord('z'))) .
 				substr(md5(uniqid(substr($matches[1], 0, 100), 1)), mt_rand(0, 24), 7);
-			$str = rtrim($matches[1]) . " [#$anchor]";
+			$str = rtrim($matches[1]) . ' [#' . $anchor . ']';
 		}
 		$retvars[] = $str;
 	}
@@ -90,6 +91,8 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	global $smtp_server, $smtp_auth;
 	global $whatsdeleted, $maxshow_deleted;
 
+	if (PKWK_READONLY) return; // Do nothing
+
 	if (! is_pagename($page))
 		die_message(str_replace('$1', htmlspecialchars($page),
 		            str_replace('$2', 'WikiName', $_msg_invalidiwn)));
@@ -104,7 +107,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	}
 
 	if ($str != '') {
-		$str = preg_replace("/\r/", '', $str);
+		$str = preg_replace('/' . "\r" . '/', '', $str);
 		$str = rtrim($str) . "\n";
 
 		if ($notimestamp && file_exists($file))
@@ -154,7 +157,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 // Update RecentDeleted
 function add_recent($page, $recentpage, $subject = '', $limit = 0)
 {
-	if ($limit == 0 || $page == '' || $recentpage == '') return;
+	if (PKWK_READONLY || $limit == 0 || $page == '' || $recentpage == '') return;
 
 	// Load
 	$lines = $matches = array();
@@ -193,6 +196,8 @@ function add_recent($page, $recentpage, $subject = '', $limit = 0)
 function put_lastmodified()
 {
 	global $maxshow, $whatsnew, $non_list, $autolink;
+
+	if (PKWK_READONLY) return; // Do nothing
 
 	$pages = get_existpages();
 	$recent_pages = array();
@@ -266,7 +271,7 @@ function get_pg_passage($page, $sw = TRUE)
 	$time = get_filetime($page);
 	$pg_passage = ($time != 0) ? get_passage($time) : '';
 
-	return $sw ? "<small>$pg_passage</small>" : " $pg_passage";
+	return $sw ? '<small>' . $pg_passage . '</small>' : ' ' . $pg_passage;
 }
 
 // Last-Modified header
