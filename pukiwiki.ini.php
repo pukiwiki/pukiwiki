@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.16.2.8 2004/07/31 03:12:13 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.16.2.9 2004/08/08 02:16:10 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -265,16 +265,16 @@ $line_rules = array(
 // 必要のない方は $usefacemarkを0にしてください。
 $usefacemark = 1;
 $facemark_rules = array(
-	"\s(\:\))"	=> " <img alt=\"\\1\" src=\"./face/smile.gif\" />",
-	"\s(\:D)"	=> " <img alt=\"\\1\" src=\"./face/bigsmile.gif\" />",
-	"\s(\:p)"	=> " <img alt=\"\\1\" src=\"./face/huh.gif\" />",
-	"\s(\:d)"	=> " <img alt=\"\\1\" src=\"./face/huh.gif\" />",
-	"\s(XD)"	=> " <img alt=\"\\1\" src=\"./face/oh.gif\" />",
-	"\s(X\()"	=> " <img alt=\"\\1\" src=\"./face/oh.gif\" />",
-	"\s(;\))"	=> " <img alt=\"\\1\" src=\"./face/wink.gif\" />",
-	"\s(;\()"	=> " <img alt=\"\\1\" src=\"./face/sad.gif\" />",
-	"\s(\:\()"	=> " <img alt=\"\\1\" src=\"./face/sad.gif\" />",
-	"&amp;(heart);" => " <img alt=\"\\1\" src=\"./face/heart.gif\" />",
+	"\s(\:\))"	=> " <img alt=\"\\1\" src=\"image/face/smile.gif\" />",
+	"\s(\:D)"	=> " <img alt=\"\\1\" src=\"image/face/bigsmile.gif\" />",
+	"\s(\:p)"	=> " <img alt=\"\\1\" src=\"image/face/huh.gif\" />",
+	"\s(\:d)"	=> " <img alt=\"\\1\" src=\"image/face/huh.gif\" />",
+	"\s(XD)"	=> " <img alt=\"\\1\" src=\"image/face/oh.gif\" />",
+	"\s(X\()"	=> " <img alt=\"\\1\" src=\"image/face/oh.gif\" />",
+	"\s(;\))"	=> " <img alt=\"\\1\" src=\"image/face/wink.gif\" />",
+	"\s(;\()"	=> " <img alt=\"\\1\" src=\"image/face/sad.gif\" />",
+	"\s(\:\()"	=> " <img alt=\"\\1\" src=\"image/face/sad.gif\" />",
+	"&amp;(heart);" => " <img alt=\"\\1\" src=\"image/face/heart.gif\" />",
 );
 
 ?>
