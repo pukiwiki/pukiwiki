@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.9 2004/10/03 07:05:34 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.10 2004/10/12 11:11:56 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -33,7 +33,7 @@ $_IMAGE['skin']['list']     = 'list.png';
 $_IMAGE['skin']['search']   = 'search.png';
 $_IMAGE['skin']['recent']   = 'recentchanges.png';
 $_IMAGE['skin']['backup']   = 'backup.png';
-$_IMAGE['skin']['help']     = 'help';
+$_IMAGE['skin']['help']     = 'help.png';
 $_IMAGE['skin']['rss']      = 'rss.png';
 
 $lang  = $_LANG['skin'];
