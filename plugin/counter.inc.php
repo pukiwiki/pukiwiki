@@ -5,7 +5,7 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: counter.inc.php,v 1.5 2002/12/05 01:06:12 panda Exp $
+ * $Id: counter.inc.php,v 1.5.2.1 2003/01/27 04:13:29 panda Exp $
  */
 
 // counter file
@@ -14,6 +14,10 @@ define(COUNTER_DIR, "./counter/");
 function plugin_counter_convert()
 {
 	global $vars,$HTTP_SERVER_VARS;
+	
+	if (arg_check("add") || arg_check("edit") || arg_check("preview") || $vars['preview'] != '' || $vars['write'] != '') {
+		return "";
+	}
 	
 	$file = COUNTER_DIR.encode($vars["page"]).".count";
 	if(!file_exists($file))

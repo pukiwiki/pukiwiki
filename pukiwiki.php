@@ -25,7 +25,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.16 2002/11/29 00:09:00 panda Exp $
+// $Id: pukiwiki.php,v 1.16.2.1 2003/01/27 04:13:29 panda Exp $
 /////////////////////////////////////////////////
 
 
@@ -724,13 +724,13 @@ else if((arg_check("read") && $vars["page"] != "") || (!arg_check("read") && $ar
 			$page = str_replace('$1',make_search($get["page"]),$_title_edit);
 			$template = auto_template($get["page"]);
 			$body = edit_form($template,$get["page"]);
-	        }
+			$vars["cmd"] = "edit";
+		}
 		else {
 			$title = str_replace('$1',htmlspecialchars(strip_bracket($get["page"])),$_title_invalidwn);
 			$body = $page = str_replace('$1',make_search($get["page"]), str_replace('$2','WikiName',$_msg_invalidiwn));
 			$template = '';
 		}
-	  
 	}
 }
 // 何も指定されない場合、トップページを表示
