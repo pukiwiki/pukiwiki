@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.24 2004/08/18 13:14:53 henoheno Exp $
+// $Id: ref.inc.php,v 1.25 2004/08/18 13:28:25 henoheno Exp $
 //
 
 /*
@@ -75,12 +75,10 @@ define('REF_URL_GETIMAGESIZE', FALSE);
 
 function plugin_ref_inline()
 {
-	global $vars;
-
 	// Not reached, because of "$aryargs[] = & $body" at plugin.php
 	// if (! func_num_args()) return '&amp;ref(): No arguments;';
 
-	$params = plugin_ref_body(func_get_args(), $vars['page']);
+	$params = plugin_ref_body(func_get_args());
 
 	if (isset($params['_error']) && $params['_error'] != '') {
 		return '&amp;ref(): ' . $params['_error'] . ';';
@@ -91,11 +89,9 @@ function plugin_ref_inline()
 
 function plugin_ref_convert()
 {
-	global $vars;
-
 	if (! func_num_args()) return '<p>#ref(): No arguments</p>';
 
-	$params = plugin_ref_body(func_get_args(), $vars['page']);
+	$params = plugin_ref_body(func_get_args());
 
 	if (isset($params['_error']) && $params['_error'] != '') {
 		return "<p>#ref(): {$params['_error']}</p>";
@@ -134,12 +130,12 @@ EOD;
 	return "<div class=\"img_margin\" style=\"$style\">{$params['_body']}</div>\n";
 }
 
-function plugin_ref_body($args, $page)
+function plugin_ref_body($args)
 {
-	global $script, $WikiName, $BracketName;
+	global $script, $vars, $WikiName, $BracketName;
 
-	// 戻り値
-	$params = array();
+	$params = array(); // 戻り値
+	$page = isset($vars['page']) ? $vars['page'] : '';
 
 	// 添付ファイル名を取得
 	$name = array_shift($args);
@@ -177,8 +173,8 @@ function plugin_ref_body($args, $page)
 	);
 
 	if (! empty($args)) {
-		foreach ($args as $key=>$val) {
-			ref_check_arg($val, $key, $params);
+		foreach ($args as $arg) {
+			ref_check_arg($arg, $params);
 		}
 	}
 
@@ -328,7 +324,7 @@ function plugin_ref_body($args, $page)
 
 //-----------------------------------------------------------------------------
 // オプションを解析する
-function ref_check_arg($val, $_key, & $params)
+function ref_check_arg($val, & $params)
 {
 	if ($val == '') {
 		$params['_done'] = TRUE;
