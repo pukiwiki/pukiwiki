@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar.inc.php,v 1.13 2003/02/28 03:16:26 panda Exp $
+// $Id: calendar.inc.php,v 1.14 2003/02/28 14:25:10 panda Exp $
 
 function plugin_calendar_convert()
 {
@@ -37,7 +37,7 @@ function plugin_calendar_convert()
 	
 	if ($page == '')
 	{
-		$page = $vars['page']
+		$page = $vars['page'];
 	}
 	else if (!is_pagename($page))
 	{
