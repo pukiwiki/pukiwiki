@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: links.inc.php,v 1.6 2003/02/18 10:37:09 panda Exp $
+// $Id: links.inc.php,v 1.7 2003/02/20 12:27:45 panda Exp $
 //
 
 function plugin_links_action()
@@ -63,14 +63,14 @@ function links_init_file()
 			}
 		}
 		$fp = fopen(CACHE_DIR.encode($page).'.rel','w')
-			or die_message('cannot write cache.');
+			or die_message('cannot write '.htmlspecialchars(CACHE_DIR.encode($page).'.rel'));
 		fputs($fp,join("\t",array_keys($rel)));
 		fclose($fp);
 	}
 	
 	foreach ($ref as $page=>$arr) {
 		$fp = fopen(CACHE_DIR.encode($page).'.ref','w')
-			or die_message('cannot write refer cache.');
+			or die_message('cannot write '.htmlspecialchars(CACHE_DIR.encode($page).'.ref'));
 		foreach ($arr as $_page=>$time) {
 			fputs($fp,"$_page\t$time\n");
 		}
@@ -107,7 +107,7 @@ function links_update_file($page)
 	$rel_new = array_keys($rel_new);
 	
 	$fp = fopen($rel_file,'w')
-		or die_message('cannot write cache.');
+		or die_message('cannot write '.htmlspecialchars($rel_file));
 	fputs($fp,join("\t",$rel_new));
 	fclose($fp);
 	
@@ -123,7 +123,8 @@ function links_update_file($page)
 				}
 			}
 		}
-		$fp = fopen($ref_file,'w') or die;
+		$fp = fopen($ref_file,'w')
+			 or die_message('cannot write '.htmlspecialchars($ref_file));
 		fputs($fp,$ref);
 		fclose($fp);
 	}
@@ -138,7 +139,8 @@ function links_update_file($page)
 					$ref .= $line;
 				}
 			}
-			$fp = fopen($ref_file,'w') or die;
+			$fp = fopen($ref_file,'w')
+				or die_message('cannot write '.htmlspecialchars($ref_file));
 			fputs($fp,$ref);
 			fclose($fp);
 		}
