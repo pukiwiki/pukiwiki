@@ -26,7 +26,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.12 2002/07/12 11:53:15 masui Exp $
+// $Id: pukiwiki.php,v 1.13 2002/07/26 09:44:25 masui Exp $
 /////////////////////////////////////////////////
 
 
@@ -654,14 +654,14 @@ else if((arg_check("read") && $vars["page"] != "") || (!arg_check("read") && $ar
 			{
 				// YukiWiki系
 				if(!preg_match("/$WikiName/",$match[3]))
-					$match[3] = "[[".mb_convert_encoding($match[3],"SJIS","auto")."]]";
+					$match[3] = "[[".mb_convert_encoding($match[3],"SJIS","EUC-JP")."]]";
 			}
 			else if($interwikis[$match[2]]["opt"] == "moin")
 			{
 				// moin系
 				if(function_exists("mb_convert_encoding"))
 				{
-					$match[3] = rawurlencode(mb_convert_encoding($match[3],"EUC-JP","auto"));
+					$match[3] = rawurlencode($match[3]);
 					$match[3] = str_replace("%","_",$match[3]);
 				}
 				else
@@ -689,7 +689,7 @@ else if((arg_check("read") && $vars["page"] != "") || (!arg_check("read") && $ar
 
 				// その他、指定された文字コードへエンコードしてURLエンコード
 				if(function_exists("mb_convert_encoding"))
-					$match[3] = rawurlencode(mb_convert_encoding($match[3],$interwikis[$match[2]]["opt"],"auto"));
+					$match[3] = rawurlencode(mb_convert_encoding($match[3],$interwikis[$match[2]]["opt"],"EUC-JP"));
 				else
 					$not_mb = 1;
 			}
