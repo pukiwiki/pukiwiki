@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.php,v 1.4 2003/02/08 11:33:04 panda Exp $
+// $Id: diff.php,v 1.5 2003/02/15 13:09:55 panda Exp $
 //
 //衝突時に対応表を出す
 define('DIFF_SHOW_TABLE',TRUE);
@@ -131,7 +131,7 @@ class line_diff
 		$fp = array();
 		$this->path = array();
 		
-		for ($p = -($this->m); $p <= $this->n; $p++) {
+		for ($p = -($this->m + 1); $p <= ($this->n + 1); $p++) {
 			$fp[$p] = -1;
 			$this->path[$p] = array();
 		}
