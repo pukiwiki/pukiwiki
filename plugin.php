@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: plugin.php,v 1.7 2003/07/14 04:27:07 arino Exp $
+// $Id: plugin.php,v 1.8 2003/07/27 13:51:36 arino Exp $
 //
 
 // プラグイン用に未定義の変数を設定
@@ -12,7 +12,7 @@ function set_plugin_messages($messages)
 	{
 		global $$name;
 		
-		if(!isset($$name))
+		if (!isset($$name))
 		{
 			$$name = $val;
 		}
@@ -65,26 +65,26 @@ function exist_plugin_inline($name)
 //プラグインの初期化を実行
 function do_plugin_init($name)
 {
-	$funcname = 'plugin_'.$name.'_init';
-	if (!function_exists($funcname)) {
-		return FALSE;
+	static $check = array();
+	
+	if (array_key_exists($name,$check))
+	{
+		return $check[$name];
 	}
 	
-	$func_check = '_funccheck_'.$funcname;
-	global $$func_check;
-	
-	if ($$func_check)
+	$func = 'plugin_'.$name.'_init';
+	if ($check[$name] = function_exists($func))
 	{
+		@call_user_func($func);
 		return TRUE;
 	}
-	$$func_check = TRUE;
-	return @call_user_func($funcname);
+	return FALSE;
 }
 
 //プラグイン(action)を実行
 function do_plugin_action($name)
 {
-	if(!exist_plugin_action($name))
+	if (!exist_plugin_action($name))
 	{
 		return array();
 	}
@@ -104,7 +104,7 @@ function do_plugin_convert($name,$args='')
 	do_plugin_init($name);
 	$retvar = call_user_func_array('plugin_'.$name.'_convert',$aryargs);
 	
-	if($retvar === FALSE)
+	if ($retvar === FALSE)
 	{
 		return htmlspecialchars('#'.$name.($args ? "($args)" : ''));
 	}
