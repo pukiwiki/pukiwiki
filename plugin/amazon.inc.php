@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: amazon.inc.php,v 1.6 2004/12/25 02:12:05 henoheno Exp $
+// $Id: amazon.inc.php,v 1.7 2004/12/25 02:28:06 henoheno Exp $
 // Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 閑舎
 //
 // Amazon plugin: Book-review maker via amazon.com/amazon.jp
@@ -133,7 +133,7 @@ function plugin_amazon_convert()
 EOD;
     return $ret;
   } elseif (func_num_args() < 1 || func_num_args() > 3) {
-    return false;
+    return FALSE;
   }
   $aryargs = func_get_args();
 
@@ -142,13 +142,13 @@ EOD;
   if ($align != 'left') $align = 'right'; // 配置決定
 
   $asin_all = htmlspecialchars($aryargs[0]);  // for XSS
-  if (is_asin() == false && $align != 'clear') return false;
+  if (is_asin() == FALSE && $align != 'clear') return FALSE;
 
   if ($aryargs[2] != '') { // タイトル指定か自動取得か
     $title = $alt = htmlspecialchars($aryargs[2]); // for XSS
     if ($alt == 'image') {
       $alt = plugin_amazon_get_asin_title();
-      if ($alt == '') return false;
+      if ($alt == '') return FALSE;
       $title = '';
     } elseif ($alt == 'delimage') {
       if (unlink(CACHE_DIR . 'ASIN' . $asin . '.jpg')) {
@@ -171,7 +171,7 @@ EOD;
     }
   } else {
     $alt = $title = plugin_amazon_get_asin_title(); // タイトル自動取得
-    if ($alt == '') return false;
+    if ($alt == '') return FALSE;
   }
 
   return plugin_amazon_print_object($align, $alt, $title);
@@ -221,13 +221,13 @@ function plugin_amazon_inline()
   list($asin_all) = func_get_args();
 
   $asin_all = htmlspecialchars($asin_all); // for XSS
-  if (! is_asin()) return false;
+  if (! is_asin()) return FALSE;
 
   $title = plugin_amazon_get_asin_title();
   if ($title == '')
-    return false;
+    return FALSE;
   else
-    return '<a href="' . PLUGIN_AMAZON_SHOP_URI . "$asin/$amazon_aid" . 'ref=nosim">' . "$title</a>\n";
+    return '<a href="' . PLUGIN_AMAZON_SHOP_URI . $asin . '/' . $amazon_aid . 'ref=nosim">' . $title . '</a>' . "\n";
 }
 
 function plugin_amazon_print_object($align, $alt, $title)
@@ -264,9 +264,9 @@ function plugin_amazon_get_asin_title()
 
   $url = PLUGIN_AMAZON_XML . $asin;
 
-  if (file_exists(CACHE_DIR) === false || is_writable(CACHE_DIR) === false) $nocachable = 1; // キャッシュ不可の場合
+  if (file_exists(CACHE_DIR) === FALSE || is_writable(CACHE_DIR) === FALSE) $nocachable = 1; // キャッシュ不可の場合
 
-  if (($title = plugin_amazon_cache_title_fetch(CACHE_DIR)) == false) {
+  if (($title = plugin_amazon_cache_title_fetch(CACHE_DIR)) == FALSE) {
     $nocache = 1; // キャッシュ見つからず
     $body = plugin_amazon_get_page($url); // しかたないので取りにいく
     $tmpary = array();
@@ -274,7 +274,7 @@ function plugin_amazon_get_asin_title()
     preg_match('/<ProductName>([^<]*)</', $body, $tmpary);
     $title = trim($tmpary[1]);
 //    $tmpary[1] = '';
-//    preg_match("/<ImageUrlMedium>http:\/\/images-jp.amazon.com\/images\/P\/[^.]+\.(..)\./", $body, $tmpary);
+//    preg_match('#<ImageUrlMedium>http://images-jp.amazon.com/images/P/[^.]+\.(..)\.#', $body, $tmpary);
 //    if ($tmpary[1] != '') {
 //      $asin_ext = $tmpary[1];
 //      $asin_all = $asin . $asin_ext;
@@ -295,15 +295,15 @@ function plugin_amazon_cache_title_fetch($dir)
   $filename = $dir . 'ASIN' . $asin . '.tit';
 
   $get_tit = 0;
-  if (!is_readable($filename)) {
+  if (! is_readable($filename)) {
     $get_tit = 1;
   } elseif (PLUGIN_AMAZON_EXPIRE_TITLECACHE * 3600 * 24 < time() - filemtime($filename)) {
     $get_tit = 1;
   }
 
-  if ($get_tit) return false;
+  if ($get_tit) return FALSE;
 
-  if (!($fp = @fopen($filename, 'r'))) return false;
+  if (($fp = @fopen($filename, 'r')) === FALSE) return FALSE;
   $title = fgets($fp, 4096);
 //  $tmp_ext = fgets($fp, 4096);
 //  if ($tmp_ext != '') {
@@ -314,7 +314,7 @@ function plugin_amazon_cache_title_fetch($dir)
   if (strlen($title) > 0)
     return $title;
   else
-    return false;
+    return FALSE;
 }
 
 // 画像キャッシュがあるか調べる
@@ -325,7 +325,7 @@ function plugin_amazon_cache_image_fetch($dir)
   $filename = $dir . 'ASIN' . $asin . '.jpg';
 
   $get_img = 0;
-  if (!is_readable($filename)) {
+  if (! is_readable($filename)) {
     $get_img = 1;
   } elseif (PLUGIN_AMAZON_EXPIRE_IMAGECACHE * 3600 * 24 < time() - filemtime($filename)) {
     $get_img = 1;
@@ -334,7 +334,7 @@ function plugin_amazon_cache_image_fetch($dir)
   if ($get_img) {
     $url = 'http://images-jp.amazon.com/images/P/' . $asin . '.' . $asin_ext . '.MZZZZZZZ.jpg';
 
-    if (!is_url($url)) return false; // URL 形式チェック
+    if (! is_url($url)) return FALSE; // URL 形式チェック
     $body = plugin_amazon_get_page($url);
     if ($body != '') {
       $tmpfile = $dir . 'ASIN' . $asin . '.jpg.0';
@@ -360,9 +360,9 @@ function plugin_amazon_cache_image_fetch($dir)
       }
       if ($body == '' || $size[1] <= 1) {
         $fp = fopen(PLUGIN_AMAZON_NO_IMAGE, 'rb');
-        if (! $fp) return false;
+        if (! $fp) return FALSE;
         $body = '';
-        while (!feof($fp)) {
+        while (! feof($fp)) {
           $body .= fread($fp, 4096);
         }
         fclose ($fp);
@@ -373,7 +373,7 @@ function plugin_amazon_cache_image_fetch($dir)
   return $filename;
 }
 
-// タイトルキャッシュを保存
+// Save title cache
 function plugin_amazon_cache_title_save($data, $dir)
 {
   global $asin, $asin_ext, $asin_all;
@@ -381,13 +381,13 @@ function plugin_amazon_cache_title_save($data, $dir)
   $filename = $dir . 'ASIN' . $asin . '.tit';
 
   $fp = fopen($filename, 'w');
-  fwrite($fp, "$data");
+  fwrite($fp, $data);
   fclose($fp);
 
   return $filename;
 }
 
-// 画像キャッシュを保存
+// Save image cache
 function plugin_amazon_cache_image_save($data, $dir)
 {
   global $asin, $asin_ext, $asin_all;
@@ -401,7 +401,7 @@ function plugin_amazon_cache_image_save($data, $dir)
   return $filename;
 }
 
-// 書籍データを保存
+// Save book data
 function plugin_amazon_review_save($page, $data)
 {
   global $asin, $asin_ext, $asin_all;
@@ -412,27 +412,25 @@ function plugin_amazon_review_save($page, $data)
     $fp = fopen($filename, 'w');
     fwrite($fp, $data);
     fclose($fp);
-    return true;
+    return TRUE;
   }
-  return false;
+  return FALSE;
 }
 
-// ネット上の URL のデータを取ってきて返す(なければ空データ)
 function plugin_amazon_get_page($url)
 {
 	$data = http_request($url);
-
 	return ($data['rc'] == 200) ? $data['data'] : '';
 }
 
-// ASINか？
+// is ASIN?
 function is_asin()
 {
   global $asin, $asin_ext, $asin_all;
 
   $tmpary = array();
-  if (preg_match('/^([A-Z0-9]{10}).?([0-9][0-9])?$/', $asin_all, $tmpary) == false) {
-    return false;
+  if (preg_match('/^([A-Z0-9]{10}).?([0-9][0-9])?$/', $asin_all, $tmpary) == FALSE) {
+    return FALSE;
   } else {
     $asin = $tmpary[1];
     $asin_ext = $tmpary[2];
@@ -440,7 +438,7 @@ function is_asin()
       $asin_ext = '09';
     }
     $asin_all = $asin . $asin_ext;
-    return true;
+    return TRUE;
   }
 }
 
