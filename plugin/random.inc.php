@@ -1,5 +1,5 @@
 <?php
-// $Id: random.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+// $Id: random.inc.php,v 1.2 2002/12/05 05:50:41 panda Exp $
 /*
 Last-Update:2002-10-29 rev.2
 
@@ -46,4 +46,3 @@ function plugin_random_action()
 	return array('body'=>'','msg'=>'');
 }
 ?>
-
