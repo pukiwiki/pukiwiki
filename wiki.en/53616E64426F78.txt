@@ -1,3 +1,9 @@
+#freeze
+#norelated
+* SandBox: A page for your practice of editing [#o00a2b58]
+
+| NOTE: This page is now freezed due to anti SEO-SPAMming by default |
+
 #contents
 
 * Heading 1 [#vbd41e7f]
