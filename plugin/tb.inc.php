@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.16 2004/12/25 00:39:45 henoheno Exp $
+// $Id: tb.inc.php,v 1.17 2005/01/23 03:15:40 henoheno Exp $
 /*
  * PukiWiki/TrackBack: TrackBack Ping receiver and viewer
  * (C) 2003-2004 PukiWiki Developer Team
@@ -66,18 +66,18 @@ function plugin_tb_save($url, $tb_id)
 	$page = tb_id2page($tb_id);
 	if ($page === FALSE) plugin_tb_return(1, 'TrackBack ID is invalid.');
 
-	// URL 妥当性チェック (これを入れると処理時間に問題がでる)
+	// URL validation (maybe worse of processing time limit)
 	$result = http_request($url, 'HEAD');
 	if ($result['rc'] !== 200) plugin_tb_return(1, 'URL is fictitious.');
 
-	// TrackBack Ping のデータを更新
+	// Update TrackBack Ping data
 	$filename = tb_get_filename($page);
 	$data     = tb_get($filename);
 
 	$items = array(UTIME);
 	foreach ($fields as $key) {
 		$value = isset($vars[$key]) ? $vars[$key] : '';
-		if (preg_match("/[,\"\n\r]/", $value))
+		if (preg_match('/[,"' . "\n\r" . ']/', $value))
 			$value = '"' . str_replace('"', '""', $value) . '"';
 		$items[$key] = $value;
 	}
@@ -181,7 +181,7 @@ function plugin_tb_mode_view($tb_id)
 
 	$data = tb_get(tb_get_filename($page));
 
-	// 最新版から整列
+	// Sort: The first is the latest
 	usort($data, create_function('$a,$b', 'return $b[0] - $a[0];'));
 
 	$tb_body = '';
@@ -194,7 +194,7 @@ function plugin_tb_mode_view($tb_id)
 		$time = date($_tb_date, $time + LOCALZONE); // May 2, 2003 11:25 AM
 		$tb_body .= <<<EOD
 <div class="trackback-body">
- <span class="trackback-post"><a href="$url" target="new">$title</a><br />
+ <span class="trackback-post"><a href="$url" target="new" rel="nofollow">$title</a><br />
   <strong>$_tb_header_Excerpt</strong> $excerpt<br />
   <strong>$_tb_header_Weblog</strong> $blog_name<br />
   <strong>$_tb_header_Tracked</strong> $time
