@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: amazon.inc.php,v 1.7 2004/12/25 02:28:06 henoheno Exp $
+// $Id: amazon.inc.php,v 1.8 2004/12/25 02:38:08 henoheno Exp $
 // Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 閑舎
 //
 // Amazon plugin: Book-review maker via amazon.com/amazon.jp
@@ -9,7 +9,7 @@
 //	2004 PukiWiki Developer Team
 //	2003 閑舎 <raku@rakunet.org> (Original author)
 //
-// Thanks: To reimy and PukiWiki Developers Team.
+// License: GNU/GPL
 //
 // ChangeLog:
 // * 2004/04/03 PukiWiki Developer Team (arino <arino@users.sourceforge.jp>)
@@ -37,13 +37,13 @@
 //        画像の最後が 01 の場合、image を削除すると noimage.jpg となってしまうバグを修正。
 //        1.0 で導入した XML アクセスは高速だが、返す画像情報がウソなので、09 がだめなら 01 をトライする、で暫定的に解決。
 //
-// License: GNU/GPL
-//
 // Caution!:
 // * 著作権が関連する為、www.amazon.co.jp のアソシエイトプログラムを確認の上ご利用下さい。
 // * レビューは、amazon プラグインが呼び出す編集画面はもう出来て PukiWiki に登録されているので、
 //   中止するなら全文を削除してページの更新ボタンを押すこと。
 // * 下の PLUGIN_AMAZON_AID、PROXY サーバの部分、expire の部分を適当に編集して使用してください(他はそのままでも Ok)。
+//
+// Thanks to: Reimy and PukiWiki Developers Team
 //
 
 /////////////////////////////////////////////////
@@ -215,8 +215,7 @@ function plugin_amazon_action()
 
 function plugin_amazon_inline()
 {
-  global $amazon_aid;
-  global $asin, $asin_ext, $asin_all;
+  global $amazon_aid, $asin, $asin_all;
 
   list($asin_all) = func_get_args();
 
@@ -242,6 +241,7 @@ function plugin_amazon_print_object($align, $alt, $title)
     $div .= ' <a href="' . PLUGIN_AMAZON_SHOP_URI . $asin . '/' . $amazon_aid . 'ref=nosim">' .
     	'<img src="' . $url . '" alt="' . $alt . '" /></a>' . "\n";
     $div .= '</div>' . "\n";
+
   } else {	      // 通常表示
     $div = '<div style="float:' . $align . ';padding:.5em 1.5em .5em 1.5em;text-align:center">' . "\n";
     $div .= ' <table style="width:110px;border:0;text-align:center"><tr><td style="text-align:center">' . "\n";
