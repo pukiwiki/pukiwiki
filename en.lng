@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.17 2003/07/03 06:14:20 arino Exp $
+// $Id: en.lng,v 1.18 2003/07/03 06:35:52 arino Exp $
 //
 // PukiWiki message file (english)
 
@@ -95,8 +95,8 @@ $_msg_add = 'Two and the contents of an input are added for a new-line to the co
 ///////////////////////////////////////
 // article.inc.php
 $_btn_name = 'Name: ';
-$_btn_article' = 'Submit';
-$_btn_subject' = 'Subject: ';
+$_btn_article = 'Submit';
+$_btn_subject = 'Subject: ';
 $_msg_article_mail_sender = 'Sender: ';
 $_msg_article_mail_page = 'Page: ';
 
