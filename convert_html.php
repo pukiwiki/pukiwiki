@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.22 2003/02/26 01:28:39 panda Exp $
+// $Id: convert_html.php,v 1.23 2003/02/28 03:39:36 panda Exp $
 //
 function convert_html($lines)
 {
@@ -669,16 +669,7 @@ class Align extends Block
 	}
 	function toString()
 	{
-		$string = parent::toString();
-		if ($string != '') {
-			if (preg_match('/^(\s*<[^>]+style=")(.+)$"/',$string,$matches)) {
-				$string = $matches[1]."text-align:{$this->align};".$matches[2];
-			}
-			else {
-				$string = preg_replace('/^(\s*<[a-z]+)/', '$1 style="text-align:'.$this->align.';"',$string);
-			}
-		}
-		return $string;
+		return $this->wrap(parent::toString(),'div',' style="text-align:'.$this->align.'"');
 	}
 }
 class Body extends Block
