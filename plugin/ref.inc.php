@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.40 2004/09/21 11:53:18 henoheno Exp $
+// $Id: ref.inc.php,v 1.41 2004/09/21 11:57:23 henoheno Exp $
 //
 // Include an attached image-file as an inline-image
 
@@ -30,13 +30,13 @@ if (! defined('FILE_ICON')) {
 }
 
 // Default alignment
-define('REF_DEFAULT_ALIGN', 'left'); // 'left', 'center', 'right'
+define('PLUGIN_REF_DEFAULT_ALIGN', 'left'); // 'left', 'center', 'right'
 
 // Force wrap on default
-define('REF_WRAP_TABLE', FALSE); // TRUE, FALSE
+define('PLUGIN_REF_WRAP_TABLE', FALSE); // TRUE, FALSE
 
 // URL指定時に画像サイズを取得するか
-define('REF_URL_GETIMAGESIZE', FALSE);
+define('PLUGIN_REF_URL_GET_IMAGE_SIZE', FALSE); // FALSE, TRUE
 
 function plugin_ref_inline()
 {
@@ -65,7 +65,7 @@ function plugin_ref_convert()
 		return "<p>#ref(): {$params['_error']}</p>\n";
 	}
 
-	if ((REF_WRAP_TABLE && ! $params['nowrap']) || $params['wrap']) {
+	if ((PLUGIN_REF_WRAP_TABLE && ! $params['nowrap']) || $params['wrap']) {
 		// 枠で包む
 		// margin:auto
 		//	Mozilla 1.x  = x (wrap,aroundが効かない)
@@ -228,7 +228,7 @@ function plugin_ref_body($args)
 
 		$is_image = (! $params['noimg'] && preg_match(PLUGIN_REF_IMAGE, $name));
 
-		if ($is_image && REF_URL_GETIMAGESIZE && (bool)ini_get('allow_url_fopen')) {
+		if ($is_image && PLUGIN_REF_URL_GET_IMAGE_SIZE && (bool)ini_get('allow_url_fopen')) {
 			$size = @getimagesize($name);
 			if (is_array($size)) {
 				$width  = $size[0];
@@ -324,7 +324,7 @@ function plugin_ref_body($args)
 	}
 
 	// アラインメント判定
-	$params['_align'] = REF_DEFAULT_ALIGN;
+	$params['_align'] = PLUGIN_REF_DEFAULT_ALIGN;
 	foreach (array('right', 'left', 'center') as $align) {
 		if ($params[$align])  {
 			$params['_align'] = $align;
