@@ -1,5 +1,5 @@
 <?php
-// $Id: showrss.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+// $Id: showrss.inc.php,v 1.1.2.1 2003/03/12 03:32:30 panda Exp $
 /**
  *
  * showrss プラグイン
@@ -23,7 +23,7 @@
  * 
  * 避難所       ->   http://do3ob.s20.xrea.com/
  *
- * version: $Id: showrss.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+ * version: $Id: showrss.inc.php,v 1.1.2.1 2003/03/12 03:32:30 panda Exp $
  * 
  */
 
@@ -151,7 +151,7 @@ function plugin_showrss_convert() {
 
 // エラーメッセージ（簡易）
 function plugin_showrss_private_error_message($msg) {
-	return "<strong>showrss:</strong>" . $msg;
+	return '<strong>showrss:</strong>' . htmlspecialchars($msg);
 }
 
 // urlチェック
