@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.31 2003/03/21 22:45:48 panda Exp $
+// $Id: func.php,v 1.32 2003/04/01 08:05:26 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -280,18 +280,18 @@ function page_list($pages, $cmd = 'read', $withfilename=FALSE)
 	$retval = '';
 	
 	$list = array();
-	foreach($pages as $page)
+	foreach($pages as $file=>$page)
 	{
 		$r_page = rawurlencode($page);
 		$s_page = htmlspecialchars($page,ENT_QUOTES);
-		$e_page = encode($page);
 		$passage = get_pg_passage($page);
 		
 		$str = "   <li><a href=\"$script?cmd=$cmd&amp;page=$r_page\">$s_page</a>$passage";
 		
 		if ($withfilename)
 		{
-			$str .= "\n    <ul><li>$e_page</li></ul>\n   ";
+			$s_file = htmlspecialchars($file);
+			$str .= "\n    <ul><li>$s_file</li></ul>\n   ";
 		}
 		$str .= "</li>";
 		

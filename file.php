@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.15 2003/03/13 14:11:24 panda Exp $
+// $Id: file.php,v 1.16 2003/04/01 08:05:26 panda Exp $
 //
 
 // ソースを取得
@@ -216,14 +216,17 @@ function get_existpages($dir=DATA_DIR,$ext='.txt')
 	$aryret = array();
 	
 	$pattern = '^([0-9A-F]+)';
-	if ($ext != '') {
+	if ($ext != '')
+	{
 		$pattern .= preg_quote($ext,'/').'$';
 	}
 	$dp = @opendir($dir)
 		or die_message($dir. ' is not found or not readable.');
-	while ($file = readdir($dp)) {
-		if (preg_match("/$pattern/",$file,$matches)) {
-			$aryret[] = decode($matches[1]);
+	while ($file = readdir($dp))
+	{
+		if (preg_match("/$pattern/",$file,$matches))
+		{
+			$aryret[$file] = decode($matches[1]);
 		}
 	}
 	closedir($dp);

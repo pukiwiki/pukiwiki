@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: list.inc.php,v 1.1 2003/01/27 05:38:46 panda Exp $
+// $Id: list.inc.php,v 1.2 2003/04/01 08:05:26 panda Exp $
 //
 // 一覧の表示
 function plugin_list_action()
@@ -24,16 +24,14 @@ function get_list($withfilename)
 {
 	global $non_list,$whatsnew;
 	
-	$_pages = get_existpages();
-	if (count($_pages) == 0)
-		return '';
-	
-	$pages = array();
-	foreach($_pages as $page) {
-		if ($page == $whatsnew or
-			(!$withfilename and preg_match("/$non_list/",$page)))
-			continue;
-		$pages[] = $page;
+	$pages = array_diff(get_existpages(),array($whatsnew));
+	if (!$withfilename)
+	{
+		$pages = array_diff($pages,preg_grep("/$non_list/",$pages));
+	}
+	if (count($pages) == 0)
+	{
+	        return '';
 	}
 	
 	return page_list($pages,'read',$withfilename);
