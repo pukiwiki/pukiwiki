@@ -2,18 +2,25 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: unfreeze.inc.php,v 1.1 2003/01/27 05:38:47 panda Exp $
+// $Id: unfreeze.inc.php,v 1.2 2003/05/14 10:07:38 arino Exp $
 //
 // 凍結解除
+
+// 凍結解除時にページの編集フォームを表示するか
+define('UNFREEZE_EDIT',FALSE);
+
 function plugin_unfreeze_action()
 {
 	global $script,$post,$vars,$function_freeze,$adminpass;
-	global $_title_isunfreezed,$_title_unfreezed,$_title_unfreeze,$_msg_invalidpass,$_msg_unfreezing,$_btn_unfreeze;
+	global $_title_isunfreezed,$_title_unfreezed,$_title_unfreeze;
+	global $_msg_invalidpass,$_msg_unfreezing,$_btn_unfreeze;
 	
 	$msg = $body = '';
 	
 	if (!$function_freeze or !is_page($vars['page']))
+	{
 		return array('msg'=>$msg,'body'=>$body);
+	}
 	
 	$pass = array_key_exists('pass',$post) ? $post['pass'] : NULL;
 	
@@ -36,6 +43,12 @@ function plugin_unfreeze_action()
 		$vars['cmd'] = 'read';
 		$msg = $_title_unfreezed;
 		$body = '';
+		
+		if (UNFREEZE_EDIT)
+		{
+			$vars['cmd'] = 'edit';
+			$body = edit_form($vars['page'],$postdata);
+		}
 	}
 	else
 	{
