@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.35 2005/03/27 10:23:06 henoheno Exp $
+// $Id: func.php,v 1.36 2005/03/28 13:50:08 henoheno Exp $
 //
 // General functions
 
@@ -255,10 +255,17 @@ function encode($key)
 // Decode page name
 function decode($key)
 {
-	// preg_match()       = Warning: pack(): Type H: illegal hex digit ...
-	// substr('20202020') = Avoid pack() bug
-	return preg_match('/^[0-9a-f]+$/i', $key) ?
-		substr(pack('H*', '20202020' . $key), 4) : $key;
+	return hex2bin($key);
+}
+
+// Inversion of bin2hex()
+function hex2bin($hex_string)
+{
+	// preg_match : Avoid warning : pack(): Type H: illegal hex digit ...
+	// '20202020' : Avoid pack() bug. See BugTrack2/31
+	return preg_match('/^[0-9a-f]+$/i', $hex_string) ?
+		substr(pack('H*', '20202020' . $hex_string), 4) :
+		$hex_string;
 }
 
 // Remove [[ ]] (brackets)
