@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.9.2.2 2003/02/28 06:15:49 panda Exp $
+// $Id: func.php,v 1.9.2.3 2003/09/12 01:18:42 arino Exp $
 /////////////////////////////////////////////////
 
 // 検索
@@ -376,5 +376,37 @@ function sanitize_null_character($param)
 // URLかどうか
 function is_url($text) {
 	return preg_match('/^(https?|ftp|news)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/', $text);
+}
+// pukiwiki.phpスクリプトのabsolute-uriを生成
+function get_script_uri()
+{
+	global $HTTP_SERVER_VARS;
+
+	// scheme
+	$script  = ($HTTP_SERVER_VARS['SERVER_PORT'] == 443 ? 'https://' : 'http://');
+	// host
+	$script .= $HTTP_SERVER_VARS['SERVER_NAME'];
+	// port
+	$script .= ($HTTP_SERVER_VARS['SERVER_PORT'] == 80 ? '' : ':'.$HTTP_SERVER_VARS['SERVER_PORT']);
+	// path
+	$path = $HTTP_SERVER_VARS['SCRIPT_NAME'];
+	// pathが'/'で始まっていない場合(cgiなど) REQUEST_URIを使ってみる
+	if ($path{0} != '/')
+	{
+		if (!array_key_exists('REQUEST_URI',$HTTP_SERVER_VARS) or $HTTP_SERVER_VARS['REQUEST_URI']{0} != '/')
+		{
+			return FALSE;
+		}
+		// REQUEST_URIをパースし、path部分だけを取り出す
+		$parse_url = parse_url($script.$HTTP_SERVER_VARS['REQUEST_URI']);
+		if (!isset($parse_url['path']) or $parse_url['path']{0} != '/')
+		{
+			return FALSE;
+		}
+		$path = $parse_url['path'];
+	}
+	$script .= $path;
+	
+	return $script;
 }
 ?>

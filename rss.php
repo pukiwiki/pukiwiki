@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: rss.php,v 1.5.2.1 2003/02/24 11:02:57 panda Exp $
+// $Id: rss.php,v 1.5.2.2 2003/09/12 01:18:42 arino Exp $
 /////////////////////////////////////////////////
 
 // RecentChanges の RSS を出力
@@ -11,6 +11,11 @@ function catrss($rss)
 	$lines = get_source($whatsnew);
 	header("Content-type: application/xml");
 
+	$self = (preg_match('#^https?://#',$script) ? $script : get_script_uri());
+	if ($self === FALSE)
+	{
+		die_message("please set '\$script' in ".INI_FILE);
+	}
 
 	$page_title_utf8 = $page_title;
 	if(function_exists("mb_convert_encoding"))
@@ -45,18 +50,18 @@ function catrss($rss)
 			$desc = date("D, d M Y H:i:s T",filemtime(get_filename(encode($match[1]))));
 			
 			if($rss==2)
-				$items.= "<item rdf:about=\"http://".SERVER_NAME.PHP_SELF."?".rawurlencode($url)."\">\n";
+				$items.= "<item rdf:about=\"$self?".rawurlencode($url)."\">\n";
 			else
 				$items.= "<item>\n";
 			$items.= " <title>$title</title>\n";
-			$items.= " <link>http://".SERVER_NAME.PHP_SELF."?".rawurlencode($url)."</link>\n";
+			$items.= " <link>$self?".rawurlencode($url)."</link>\n";
 			if($rss==2)
 			{
 				$items.= " <dc:date>$dcdate</dc:date>\n";
 			}
 			$items.= " <description>$desc</description>\n";
 			$items.= "</item>\n\n";
-			$rdf_li.= "    <rdf:li rdf:resource=\"http://".SERVER_NAME.PHP_SELF."?".rawurlencode($url)."\" />\n";
+			$rdf_li.= "    <rdf:li rdf:resource=\"$self?".rawurlencode($url)."\" />\n";
 
 		}
 
@@ -76,7 +81,7 @@ function catrss($rss)
 
 <channel>
 <title><?php echo $page_title_utf8 ?></title>
-<link><?php echo "http://".SERVER_NAME.PHP_SELF."?$whatsnew" ?></link>
+<link><?php echo "$self?$whatsnew" ?></link>
 <description>PukiWiki RecentChanges</description>
 <language>ja</language>
 
@@ -97,9 +102,9 @@ function catrss($rss)
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
   xml:lang="ja">
 
- <channel rdf:about="<?php echo "http://".SERVER_NAME.PHP_SELF."?rss" ?>">
+ <channel rdf:about="<?php echo "$self?rss" ?>">
   <title><?php echo $page_title_utf8 ?></title>
-  <link><?php echo "http://".SERVER_NAME.PHP_SELF."?$whatsnew" ?></link>
+  <link><?php echo "$self?$whatsnew" ?></link>
   <description>PukiWiki RecentChanges</description>
   <items>
    <rdf:Seq>
