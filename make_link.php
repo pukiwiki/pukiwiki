@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.36 2003/05/13 00:32:13 arino Exp $
+// $Id: make_link.php,v 1.37 2003/05/13 07:56:12 arino Exp $
 //
 
 // リンクを付加する
@@ -235,7 +235,7 @@ EOD;
 	{
 		//&hoge(){...}; &fuga(){...}; のbodyが'...}; &fuga(){...'となるので、前後に分ける
 		$after = '';
-		if (preg_match("/^ ((?!};).*?) }; (.*?) & (\w+) (?: \( ([^()]*) \) )? { (.+)$/x",$body,$matches))
+		if (preg_match("/^ ((?!};).*?) }; (.*?) &amp; (\w+) (?: \( ([^()]*) \) )? { (.+)$/x",$body,$matches))
 		{
 			$body = $matches[1];
 			$after = $matches[2].$this->make_inline($matches[3],$matches[4],$matches[5]);
