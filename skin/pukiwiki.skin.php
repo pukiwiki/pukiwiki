@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.18 2004/11/02 14:02:10 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.19 2004/11/05 15:19:56 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -26,6 +26,7 @@ $_IMAGE['skin']['recent']   = 'recentchanges.png';
 $_IMAGE['skin']['backup']   = 'backup.png';
 $_IMAGE['skin']['help']     = 'help.png';
 $_IMAGE['skin']['rss']      = 'rss.png';
+$_IMAGE['skin']['rdf']      = 'rdf.png';
 
 $lang  = $_LANG['skin'];
 $link  = $_LINK;
@@ -212,7 +213,7 @@ function _toolbar($key, $x = 20, $y = 20){
   <?php _toolbar('backup') ?>
 <?php } ?>
  &nbsp; <?php _toolbar('help') ?>
- &nbsp; <?php _toolbar('rss', 36, 14) ?>
+ &nbsp; <?php _toolbar('rdf', 36, 14) ?>
 </div>
 
 <?php if ($lastmodified) { ?>
