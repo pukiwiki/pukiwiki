@@ -1,5 +1,5 @@
 <?php
-// $Id: img.inc.php,v 1.5.2.1 2003/02/28 06:15:14 panda Exp $
+// $Id: img.inc.php,v 1.5.2.2 2003/05/29 08:25:34 arino Exp $
 function plugin_img_convert()
 {
 	if(func_num_args()!=2) {
@@ -15,7 +15,7 @@ function plugin_img_convert()
 		$align = 'left';
 	}
 	else {
-		return "<br style=\"clear:both\">";
+		return "<div style=\"clear:both\"></div>";
 	}
 	if (!is_url($url) or preg_match('/(\.gif|\.png|\.jpeg|\.jpg)$/i', $url))
 	{
