@@ -1,8 +1,6 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: color.inc.php,v 1.17 2004/11/22 14:28:55 henoheno Exp $
+// $Id: color.inc.php,v 1.18 2004/12/14 14:12:05 henoheno Exp $
 //
 // Text color plugin
 
@@ -21,12 +19,12 @@ function plugin_color_inline()
 	$text = array_pop($args); // htmlspecialchars(text)
 
 	list($color, $bgcolor) = array_pad($args, 2, '');
-	if ($text == '' && $bgcolor != '') {
+	if ($color != '' && $bgcolor != '' && $text == '') {
 		// Maybe the old style: '&color(foreground,text);'
 		$text    = htmlspecialchars($bgcolor);
 		$bgcolor = '';
 	}
-	if ($color == '' || $text == '' || func_num_args() > 3)
+	if (($color == '' && $bgcolor == '') || $text == '' || func_num_args() > 3)
 		return PLUGIN_COLOR_USAGE;
 
 	// Invalid color
@@ -36,8 +34,12 @@ function plugin_color_inline()
 	}
 
 	if (PLUGIN_COLOR_ALLOW_CSS === TRUE && $html_transitional === FALSE) {
-		if ($bgcolor != '') $bgcolor = ';background-color:' . $bgcolor;
-		return '<span style="color:' . $color . $bgcolor . '">' . $text . '</span>';
+		$delimiter = '';
+		if ($color != '' && $bgcolor != '') $delimiter = '; ';
+		if ($color   != '') $color   = 'color:' . $color;
+		if ($bgcolor != '') $bgcolor = 'background-color:' . $bgcolor;
+		return '<span style="' . $color . $delimiter . $bgcolor . '">' .
+			$text . '</span>';
 	} else {
 		if ($bgcolor != '') return '&color(): bgcolor (with CSS) not allowed;';
 		return '<font color="' . $color . '">' . $text . '</font>';
