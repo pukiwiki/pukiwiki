@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.14 2004/12/02 11:42:37 henoheno Exp $
+// $Id: func.php,v 1.15 2004/12/04 05:55:42 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -73,11 +73,15 @@ function is_editable($page)
 function is_freeze($page)
 {
 	global $function_freeze;
+	static $is_freeze = array();
 
+	if (isset($is_freeze[$page])) return $is_freeze[$page];
 	if (! $function_freeze || ! is_page($page)) return FALSE;
 
 	list($lines) = get_source($page);
-	return (rtrim($lines) == '#freeze');
+	$is_freeze[$page] = (rtrim($lines) == '#freeze');
+
+	return $is_freeze[$page];
 }
 
 // 自動テンプレート
