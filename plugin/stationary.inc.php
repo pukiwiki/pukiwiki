@@ -1,5 +1,5 @@
 <?php
-// $Id: stationary.inc.php,v 1.4 2005/04/02 06:33:39 henoheno Exp $
+// $Id: stationary.inc.php,v 1.5 2005/04/02 07:43:19 henoheno Exp $
 //
 // Stationary plugin
 // License: The same as PukiWiki
@@ -22,7 +22,7 @@ function plugin_stationary_init()
 // Convert-type plugin: #stationary or #stationary(foo)
 function plugin_stationary_convert()
 {
-	// If you don't want this to work at secure/productive site,
+	// If you don't want this work at secure/productive site,
 	if (PKWK_SAFE_MODE) return ''; // Show nothing
 
 	// If this plugin will write someting,
