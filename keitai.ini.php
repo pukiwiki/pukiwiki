@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.ini.php,v 1.5 2004/07/15 12:33:15 henoheno Exp $
+// $Id: keitai.ini.php,v 1.6 2004/07/15 12:44:06 henoheno Exp $
 //
 // PukiWiki setting file (Cell phones, PDAs and other thin clients)
 
@@ -228,9 +228,9 @@ switch ($ua_name) {
 	// '&amp;(man);'	=>	'&#63829;',
 	// '&amp;(clock);'	=>	'&#63838;',
 	// '&amp;(mail);'	=>	'&#63863;',
+	// '&amp;(mailto);'	=>	'&#63859;',
 	// '&amp;(phone);'	=>	'&#63720;',
 	// '&amp;(phoneto);'	=>	'&#63858;',
-	// '&amp;(mailto);'	=>	'&#63859;',
 	// '&amp;(faxto);'	=>	'&#63860;',
 	);
 	break;
@@ -284,10 +284,10 @@ switch ($ua_name) {
 	// '&amp;(zzz);'	=>	chr(27).'$E\\'.chr(15),
 	// '&amp;(man);'	=>	chr(27).'$G!'.chr(15),
 	// '&amp;(clock);'	=>	chr(27).'$GF'.chr(15),	// '&#xE026;',
-	// '&amp;(phone);'	=>	chr(27).'$G)'.chr(15),
 	// '&amp;(mail);'	=>	chr(27).'$Fv'.chr(15),
-	// '&amp;(phoneto);'=>	chr(27).'$E$'.chr(15),
 	// '&amp;(mailto);'=>	chr(27).'$E#'.chr(15),
+	// '&amp;(phone);'	=>	chr(27).'$G)'.chr(15),
+	// '&amp;(phoneto);'=>	chr(27).'$E$'.chr(15),
 	// '&amp;(faxto);'	=>	chr(27).'$G+'.chr(15),
 
 	// 最近の顔文字 (?)
@@ -354,9 +354,9 @@ switch ($ua_name) {
 	'&amp;(man);'	=>	'<img localsrc="80">',	// Face of male
 	'&amp;(clock);'	=>	'<img localsrc="46">',
 	'&amp;(mail);'	=>	'<img localsrc="108">',
+	'&amp;(mailto);'=>	'<img localsrc="784">',
 	'&amp;(phone);'	=>	'<img localsrc="85">',
 	'&amp;(phoneto);'=>	'<img localsrc="155">',	// An ear receiver
-	'&amp;(mailto);'=>	'<img localsrc="784">',
 	'&amp;(faxto);'	=>	'<img localsrc="166">',	// A FAX
 	);
 	}
