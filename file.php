@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.22 2003/06/10 13:59:02 arino Exp $
+// $Id: file.php,v 1.23 2003/06/10 14:22:51 arino Exp $
 //
 
 // ソースを取得
@@ -89,6 +89,7 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 {
 	global $post,$update_exec;
 	global $_msg_invalidiwn;
+	global $notify,$notify_to,$notify_from,$notify_subject,$notify_header;
 	
 	if (!is_pagename($page))
 	{
@@ -102,14 +103,17 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 	$timestamp = FALSE;
 	$file = $dir.encode($page).'.txt';
 	
-	if ($dir == DATA_DIR and $str == '' and file_exists($file)) {
+	if ($dir == DATA_DIR and $str == '' and file_exists($file))
+	{
 		unlink($file);
 	}
-	if ($str != '') {
+	if ($str != '')
+	{
 		$str = preg_replace("/\r/",'',$str);
 		$str = rtrim($str)."\n";
 		
-		if ($notimestamp and file_exists($file)) {
+		if ($notimestamp and file_exists($file))
+		{
 			$timestamp = filemtime($file) - LOCALZONE;
 		}
 		
@@ -119,17 +123,27 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 		fputs($fp,$str);
 		flock($fp,LOCK_UN);
 		fclose($fp);
-		if ($timestamp) {
+		if ($timestamp)
+		{
 			touch($file,$timestamp + LOCALZONE);
 		}
 	}
 	
-	if (!$timestamp) {
+	if (!$timestamp)
+	{
 		put_lastmodified();
 	}
 	
-	if ($update_exec and $dir == DATA_DIR) {
+	if ($update_exec and $dir == DATA_DIR)
+	{
 		system($update_exec.' > /dev/null &');
+	}
+	
+	if ($notify and $dir == DIFF_DIR)
+	{
+ 		$subject = str_replace('$page',$page,$notify_subject);
+ 		mb_language(LANG);
+ 		mb_send_mail($notify_to,$subject,$str,$notify_header);
 	}
 }
 

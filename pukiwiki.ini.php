@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.37 2003/06/05 06:20:48 arino Exp $
+// $Id: pukiwiki.ini.php,v 1.38 2003/06/10 14:22:51 arino Exp $
 //
 // PukiWiki setting file
 
@@ -135,6 +135,18 @@ $splitter = ">>>>>>>>>>";
 // ページの更新時にバックグランドで実行されるコマンド(mknmzなど)
 $update_exec = '';
 //$update_exec = '/usr/bin/mknmz --media-type=text/pukiwiki -O /var/lib/namazu/index/ -L ja -c -K /var/www/wiki/';
+
+////////////////////////////////////////////////
+// ページの更新時にメールを送信する
+$notify = 0;
+// To:（宛先）
+$notify_to = 'xxx@yyy.zz';
+// From:（送り主）
+$notify_from = 'xxx@yyy.zz';
+// Subject:（件名） $pageにページ名が入る
+$notify_subject = '[pukiwiki] $page';
+// 追加ヘッダ
+$notify_header = "From: $notify_from\r\nX-Mailer: PukiWiki/".S_VERSION." PHP/".phpversion();
 
 /////////////////////////////////////////////////
 // 一覧・更新一覧に含めないページ名(正規表現で)
