@@ -2,9 +2,9 @@ NAME
 
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
-        PukiWiki 1.4.4
+        PukiWiki 1.4.5_alpha
         Copyright (C) 2001-2004 PukiWiki Developers Team
-        License is GNU GPL
+        License: GPL
         Based on "PukiWiki" 1.3 by yu-ji
 
 SYNOPSIS
@@ -121,7 +121,7 @@ DESCRIPTION
 
 テキスト整形のルール
 
-        [[整形ルール]] ページを参照してください。
+        [[整形ルール]] のページを参照してください。
 
 InterWiki
 
@@ -134,30 +134,25 @@ InterWiki
         表していないことになります。
         この機能は Tiki からほぼ完全に移植しています。
 
-        詳細は [[InterWikiテクニカル]] ページを参照してください。
+        詳細は [[InterWikiテクニカル]] のページを参照してください。
 
 RDF/RSSの出力
 
         1.2.1から、RecentChangesのRDF/RSSを出力できるようになりました。
+	1.4.5から、RSS 2.0 を出力できるようになりました。
 
-        * RSS 0.91 の出力方法の例
-            http://pukiwiki/index.php?cmd=rss
-
-        * RSS 1.0 の出力方法の例
-            http://pukiwiki.org/index.php?cmd=rss10
+	* 出力方法の例
+          RSS 0.91 http://path/to/pukiwiki/index.php?plugin=rss
+          RSS 1.0  http://path/to/pukiwiki/index.php?plugin=rss&ver=1.0
+          RSS 2.0  http://path/to/pukiwiki/index.php?plugin=rss&ver=2.0
 
 FAQ
 
         PukiWiki.orgのそれぞれのページをチェックして下さい。
 
-        FAQ
-        http://pukiwiki.org/?FAQ
-
-        質問箱
-        http://pukiwiki.org/?%E8%B3%AA%E5%95%8F%E7%AE%B1
-
-        続・質問箱
-        http://pukiwiki.org/?%E7%B6%9A%E3%83%BB%E8%B3%AA%E5%95%8F%E7%AE%B1
+        FAQ        http://pukiwiki.org/?FAQ
+        質問箱     http://pukiwiki.org/?%E8%B3%AA%E5%95%8F%E7%AE%B1
+        続・質問箱 http://pukiwiki.org/?%E7%B6%9A%E3%83%BB%E8%B3%AA%E5%95%8F%E7%AE%B1
 
 BUG
 
@@ -176,11 +171,11 @@ BUG
 
 参照リンク
 
-    * PukiWikiホームページ	http://pukiwiki.org/
-    * yu-jiさんのホームページ	http://factage.com/yu-ji/
-    * 結城浩さんのホームページ	http://www.hyuki.com/
-    * YukiWikiホームページ	http://www.hyuki.com/yukiwiki/
-    * Tiki	http://todo.org/cgi-bin/tiki/tiki.cgi
-    * 本家WikiWikiWeb	http://c2.com/cgi/wiki?WikiWikiWeb
-    * WikiWikiWebの作者(Cunningham & Cunningham, Inc.)	http://c2.com/
+    * PukiWikiホームページ      http://pukiwiki.org/
+    * yu-jiさんのホームページ   http://factage.com/yu-ji/
+    * 結城浩さんのホームページ  http://www.hyuki.com/
+    * YukiWikiホームページ      http://www.hyuki.com/yukiwiki/
+    * Tiki                      http://todo.org/cgi-bin/tiki/tiki.cgi
+    * 本家WikiWikiWeb           http://c2.com/cgi/wiki?WikiWikiWeb
+    * WikiWikiWebの作者(Cunningham & Cunningham, Inc.) http://c2.com/
     
