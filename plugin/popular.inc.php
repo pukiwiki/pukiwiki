@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: popular.inc.php,v 1.10 2004/09/04 14:53:13 henoheno Exp $
+// $Id: popular.inc.php,v 1.11 2004/09/04 15:00:56 henoheno Exp $
 //
 
 /*
@@ -27,7 +27,7 @@
 
 function plugin_popular_convert()
 {
-	global $whatsnew, $non_list;
+	global $vars, $whatsnew, $non_list;
 	global $_popular_plugin_frame, $_popular_plugin_today_frame;
 
 	$max = 10;
@@ -74,7 +74,13 @@ function plugin_popular_convert()
 			$page = substr($page, 1);
 
 			$s_page = htmlspecialchars($page);
-			$items .= ' <li>' . make_pagelink($page, "$s_page<span class=\"counter\">($count)</span>") . "</li>\n";
+			if ($page == $vars['page']) {
+				// No need to link itself, notifies where you just read
+				$pg_passage = get_pg_passage($page,FALSE);
+				$items .= " <li><span title=\"$s_page $pg_passage\">$s_page<span class=\"counter\">($count)</span></span></li>\n";
+			} else {
+				$items .= ' <li>' . make_pagelink($page, "$s_page<span class=\"counter\">($count)</span>") . "</li>\n";
+			}
 		}
 		$items .= "</ul>\n";
 	}
