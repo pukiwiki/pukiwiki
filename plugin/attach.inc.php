@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.55 2004/08/13 14:04:41 henoheno Exp $
+//  $Id: attach.inc.php,v 1.56 2004/08/13 14:10:41 henoheno Exp $
 //
 
 /*
@@ -94,10 +94,6 @@ function plugin_attach_action()
 	$pass  = isset($vars['pass'])  ? $vars['pass']  : NULL;
 	$page  = isset($vars['page'])  ? $vars['page']  : '';
 
-	if (! is_page($page)) {
-		die_message("No such page");
-	}
-
 	if ($refer != '' && is_pagename($refer)) {
 		if(in_array($pcmd, array('info', 'open', 'list'))) {
 			check_readable($refer);
@@ -152,7 +148,9 @@ function attach_upload($file, $page, $pass = NULL)
 {
 	global $_attach_messages;
 
-	if ($file['tmp_name'] == '' || ! is_uploaded_file($file['tmp_name'])) {
+	if (! is_page($page)) {
+		die_message("No such page");
+	} else if ($file['tmp_name'] == '' || ! is_uploaded_file($file['tmp_name'])) {
 		return array('result'=>FALSE);
 	} else if ($file['size'] > MAX_FILESIZE) {
 		return array(
