@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.14 2003/02/26 11:45:35 panda Exp $
+//  $Id: attach.inc.php,v 1.15 2003/02/26 11:56:36 panda Exp $
 //
 
 /*
@@ -412,7 +412,7 @@ function attach_list()
 	$obj = &new AttachPages($refer);
 	
 	$msg = $_attach_messages[$refer == '' ? 'msg_listall' : 'msg_listpage'];
-	$body = array_key_exists($refer,$obj->pages) ?
+	$body = ($refer == '' or array_key_exists($refer,$obj->pages)) ?
 		$obj->to_string($refer,FALSE) :
 		$_attach_messages['err_noexist'];
 	return array('msg'=>$msg,'body'=>$body);
