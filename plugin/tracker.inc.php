@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.11 2003/09/27 15:28:12 arino Exp $
+// $Id: tracker.inc.php,v 1.12 2003/10/05 14:47:16 arino Exp $
 //
 
 function plugin_tracker_convert()
@@ -557,7 +557,7 @@ function plugin_tracker_list_convert()
 				$config = ($args[0] != '') ? $args[0] : $config;
 		}
 	}
-	return plugin_tracker_getlist($page,$config,$field,$order,$limit);
+	return plugin_tracker_getlist($page,$config,$order,$limit);
 }
 function plugin_tracker_list_action()
 {
@@ -571,10 +571,10 @@ function plugin_tracker_list_action()
 	return array(
 		'msg' => $_tracker_messages['msg_list'],
 		'body'=> str_replace('$1',$s_page,$_tracker_messages['msg_back']).
-			plugin_tracker_getlist($page,$config,$field,$order)
+			plugin_tracker_getlist($page,$config,$order)
 	);
 }
-function plugin_tracker_getlist($page,$config_name,$field=NULL,$order='',$limit=NULL)
+function plugin_tracker_getlist($page,$config_name,$order='',$limit=NULL)
 {
 	$config = new Config('plugin/tracker/'.$config_name);
 	
