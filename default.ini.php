@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: default.ini.php,v 1.16 2004/12/24 15:30:29 henoheno Exp $
+// $Id: default.ini.php,v 1.17 2005/03/19 01:26:53 henoheno Exp $
 //
 // PukiWiki setting file (user agent:default)
 
@@ -100,7 +100,6 @@ $line_rules = array(
 	'%%(?!%)((?:(?!%%).)*)%%'	=> '<del>$1</del>',
 	"'''(?!')((?:(?!''').)*)'''"	=> '<em>$1</em>',
 	"''(?!')((?:(?!'').)*)''"	=> '<strong>$1</strong>',
-	'&amp;br;'	=> '<br />',
 );
 
 /////////////////////////////////////////////////

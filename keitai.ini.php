@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.ini.php,v 1.17 2004/10/31 02:01:38 henoheno Exp $
+// $Id: keitai.ini.php,v 1.18 2005/03/19 01:26:53 henoheno Exp $
 //
 // PukiWiki setting file (Cell phones, PDAs and other thin clients)
 
@@ -169,7 +169,6 @@ $line_rules = array(
 	'%%(?!%)((?:(?!%%).)*)%%'	=> '<del>$1</del>',
 	"'''(?!')((?:(?!''').)*)'''"	=> '<em>$1</em>',
 	"''(?!')((?:(?!'').)*)''"	=> '<strong>$1</strong>',
-	'&amp;br;'	=> '<br>',
 );
 
 
