@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.24 2003/05/02 07:44:59 arino Exp $
+//  $Id: attach.inc.php,v 1.25 2003/05/16 05:52:50 arino Exp $
 //
 
 /*
@@ -126,7 +126,7 @@ function plugin_attach_convert()
 //-------- action
 function plugin_attach_action()
 {
-	global $vars,$HTTP_POST_FILES;
+	global $vars;
 	
 	if (array_key_exists('openfile',$vars))
 	{
@@ -138,8 +138,8 @@ function plugin_attach_action()
 		$vars['pcmd'] = 'delete';
 		$vars['file'] = $vars['delfile'];
 	}
-	if (array_key_exists('attach_file',$HTTP_POST_FILES) and
-		is_uploaded_file($HTTP_POST_FILES['attach_file']['tmp_name']))
+	if (array_key_exists('attach_file',$_FILES) and
+		is_uploaded_file($_FILES['attach_file']['tmp_name']))
 	{
 		return attach_upload();
 	}
@@ -183,10 +183,10 @@ function attach_filelist()
 //ファイルアップロード
 function attach_upload($force = FALSE)
 {
-	global $vars,$adminpass,$HTTP_POST_FILES;
+	global $vars,$adminpass;
 	global $_attach_messages;
 	
-	if ($HTTP_POST_FILES['attach_file']['size'] > MAX_FILESIZE)
+	if ($_FILES['attach_file']['size'] > MAX_FILESIZE)
 	{
 		return array('msg'=>$_attach_messages['err_exceed']);
 	}
@@ -199,13 +199,13 @@ function attach_upload($force = FALSE)
 		return array('msg'=>$_attach_messages['err_adminpass']);
 	}
 	
-	$obj = &new AttachFile($vars['refer'],$HTTP_POST_FILES['attach_file']['name']);	
+	$obj = &new AttachFile($vars['refer'],$_FILES['attach_file']['name']);	
 	
 	if ($obj->exist)
 	{
 		return array('msg'=>$_attach_messages['err_exists']);
 	}
-	move_uploaded_file($HTTP_POST_FILES['attach_file']['tmp_name'],$obj->filename);
+	move_uploaded_file($_FILES['attach_file']['tmp_name'],$obj->filename);
 	
 	if (is_page($vars['refer']))
 	{
@@ -412,10 +412,7 @@ function attach_open($page,$file,$age=0)
 	$name = htmlspecialchars($obj->file);
 	
 	// for japanese (???)
-	if (function_exists('mb_convert_encoding'))
-	{
-		$name = mb_convert_encoding($name,'SJIS','auto');
-	}
+	$name = mb_convert_encoding($name,'SJIS','auto');
 	
 	header('Content-Disposition: inline; filename="'.$name.'"');
 	header('Content-Length: '.$obj->size);
@@ -486,10 +483,7 @@ function attach_mime_content_type($filename)
 	
 	// mime-type一覧表を取得
 	$config = new Config(ATTACH_CONFIG_PAGE_MIME);
-	// 読み出し
-	$config->read();
-	// 書き戻しを行わないため、コピー
-	$table = $config->get('MimeType');
+	$table = $config->read() ? $config->get('MimeType') : array();
 	// メモリ節約
 	unset($config);
 	
