@@ -1,5 +1,5 @@
 <?php
-// $Id: bugtrack.inc.php,v 1.23 2005/04/02 15:09:59 henoheno Exp $
+// $Id: bugtrack.inc.php,v 1.24 2005/04/03 03:09:30 henoheno Exp $
 //
 // PukiWiki BugTrack plugin
 //
@@ -7,8 +7,9 @@
 // 2002-2005 PukiWiki Developers Team
 // 2002 Y.MASUI GPL2  http://masui.net/pukiwiki/ masui@masui.net
 
-define('PLUGIN_BUGTRACK_NUMBER_FORMAT', '%d'); // From 'page/1'
-//define('PLUGIN_BUGTRACK_NUMBER_FORMAT', '%03d'); // From 'page/001'
+// Numbering format
+define('PLUGIN_BUGTRACK_NUMBER_FORMAT', '%d'); // Like 'page/1'
+//define('PLUGIN_BUGTRACK_NUMBER_FORMAT', '%03d'); // Like 'page/001'
 
 function plugin_bugtrack_init()
 {
@@ -43,21 +44,22 @@ function plugin_bugtrack_init()
 		);
 }
 
-// Add new issue
-function plugin_bugtrack_action()
+// #bugtrack: Show bugtrack form
+function plugin_bugtrack_convert()
 {
-	global $post;
+	global $vars;
 
-	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
-	if ($post['mode'] != 'submit') return FALSE;
+	if (PKWK_READONLY) return ''; // Show nothing
 
-	$page = plugin_bugtrack_write($post['base'], $post['pagename'], $post['summary'],
-		$post['name'], $post['priority'], $post['state'], $post['category'],
-		$post['version'], $post['body']);
+	$base = $vars['page'];
+	$category = array();
+	if (func_num_args()) {
+		$category = func_get_args();
+		$_base    = get_fullname(strip_bracket(array_shift($category)), $base);
+		if (is_pagename($_base)) $base = $_base;
+	}
 
-	pkwk_headers_sent();
-	header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
-	exit;
+	return plugin_bugtrack_print_form($base, $category);
 }
 
 function plugin_bugtrack_print_form($base, $category)
@@ -162,33 +164,21 @@ EOD;
 	return $body;
 }
 
-function plugin_bugtrack_template($base, $summary, $name, $priority, $state, $category, $version, $body)
+// Add new issue
+function plugin_bugtrack_action()
 {
-	global $_plugin_bugtrack, $WikiName;
+	global $post;
 
-	if (! preg_match("/^$WikiName$$/",$base)) $base = '[[' . $base . ']]';
-	if ($name != '' && ! preg_match("/^$WikiName$$/",$name)) $name = '[[' . $name . ']]';
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
+	if ($post['mode'] != 'submit') return FALSE;
 
-	if ($name    == '') $name    = $_plugin_bugtrack['noname'];
-	if ($summary == '') $summary = $_plugin_bugtrack['nosummary'];
+	$page = plugin_bugtrack_write($post['base'], $post['pagename'], $post['summary'],
+		$post['name'], $post['priority'], $post['state'], $post['category'],
+		$post['version'], $post['body']);
 
-	 return <<<EOD
-* $summary
-
-- ${_plugin_bugtrack['base'    ]}: $base
-- ${_plugin_bugtrack['name'    ]}: $name
-- ${_plugin_bugtrack['priority']}: $priority
-- ${_plugin_bugtrack['state'   ]}: $state
-- ${_plugin_bugtrack['category']}: $category
-- ${_plugin_bugtrack['date'    ]}: now?
-- ${_plugin_bugtrack['version' ]}: $version
-
-** ${_plugin_bugtrack['body']}
-$body
---------
-
-#comment
-EOD;
+	pkwk_headers_sent();
+	header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
+	exit;
 }
 
 function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $state, $category, $version, $body)
@@ -227,62 +217,40 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 	return $page;
 }
 
-// #bugtrack: Show bugtrack form
-function plugin_bugtrack_convert()
+// Generate new page contents
+function plugin_bugtrack_template($base, $summary, $name, $priority, $state, $category, $version, $body)
 {
-	global $vars;
+	global $_plugin_bugtrack, $WikiName;
 
-	if (PKWK_READONLY) return ''; // Show nothing
+	if (! preg_match("/^$WikiName$$/",$base)) $base = '[[' . $base . ']]';
+	if ($name != '' && ! preg_match("/^$WikiName$$/",$name)) $name = '[[' . $name . ']]';
 
-	$base = $vars['page'];
-	$category = array();
-	if (func_num_args()) {
-		$category = func_get_args();
-		$_base    = get_fullname(strip_bracket(array_shift($category)), $base);
-		if (is_pagename($_base)) $base = $_base;
-	}
+	if ($name    == '') $name    = $_plugin_bugtrack['noname'];
+	if ($summary == '') $summary = $_plugin_bugtrack['nosummary'];
 
-	return plugin_bugtrack_print_form($base, $category);
+	 return <<<EOD
+* $summary
+
+- ${_plugin_bugtrack['base'    ]}: $base
+- ${_plugin_bugtrack['name'    ]}: $name
+- ${_plugin_bugtrack['priority']}: $priority
+- ${_plugin_bugtrack['state'   ]}: $state
+- ${_plugin_bugtrack['category']}: $category
+- ${_plugin_bugtrack['date'    ]}: now?
+- ${_plugin_bugtrack['version' ]}: $version
+
+** ${_plugin_bugtrack['body']}
+$body
+--------
+
+#comment
+EOD;
 }
 
-// Get data from a page (or a page moved from $page)
-function plugin_bugtrack_pageinfo($page, $no = NULL, $recurse = TRUE)
-{
-	global $WikiName, $InterWikiName, $BracketName, $_plugin_bugtrack;
+// ----------------------------------------
+// BugTrack-List plugin
 
-	if ($no === NULL)
-		$no = preg_match('/\/([0-9]+)$/', $page, $matches) ? $matches[1] : 0;
-
-	$source = get_source($page);
-
-	// Check 'moved' page _just once_
-	$regex  = "/move\s*to\s*($WikiName|$InterWikiName|\[\[$BracketName\]\])/";
-	$match  = array();
-	if ($recurse && preg_match($regex, $source[0], $match))
-		return plugin_bugtrack_pageinfo(strip_bracket($match[1]), $no, FALSE);
-
-	$body = join("\n", $source);
-	foreach(array('summary', 'name', 'priority', 'state', 'category') as $item) {
-		$regex = '/-\s*' . preg_quote($_plugin_bugtrack[$item], '/') . '\s*:(.*)/';
-		if (preg_match($regex, $body, $matches)) {
-			if ($item == 'name') {
-				$$item = htmlspecialchars(strip_bracket(trim($matches[1])));
-			} else {
-				$$item = htmlspecialchars(trim($matches[1]));
-			}
-		} else {
-				$$item = ''; // Data not found
-		}
-	}
-
-	if (preg_match("/\*([^\n]*)/", $body, $matches)) {
-		$summary = $matches[1];
-		make_heading($summary);
-	}
-
-	return array($page, $no, $summary, $name, $priority, $state, $category);
-}
-
+// #bugtrack_list plugin itself
 function plugin_bugtrack_list_convert()
 {
 	global $script, $vars, $_plugin_bugtrack;
@@ -299,7 +267,7 @@ function plugin_bugtrack_list_convert()
 	$pattern_len = strlen($pattern);
 	foreach (get_existpages() as $page) {
 		if (strpos($page, $pattern) === 0 && is_numeric(substr($page, $pattern_len))) {
-			$line = plugin_bugtrack_pageinfo($page);
+			$line = plugin_bugtrack_list_pageinfo($page);
 			array_push($data, $line);
 		}
 	}
@@ -350,5 +318,43 @@ EOD;
 	return '<table border="1" width="100%">' . "\n" .
 		$table_html . "\n" .
 		'</table>';
+}
+
+// Get one set of data from a page (or a page moved to $page)
+function plugin_bugtrack_list_pageinfo($page, $no = NULL, $recurse = TRUE)
+{
+	global $WikiName, $InterWikiName, $BracketName, $_plugin_bugtrack;
+
+	if ($no === NULL)
+		$no = preg_match('/\/([0-9]+)$/', $page, $matches) ? $matches[1] : 0;
+
+	$source = get_source($page);
+
+	// Check 'moved' page _just once_
+	$regex  = "/move\s*to\s*($WikiName|$InterWikiName|\[\[$BracketName\]\])/";
+	$match  = array();
+	if ($recurse && preg_match($regex, $source[0], $match))
+		return plugin_bugtrack_list_pageinfo(strip_bracket($match[1]), $no, FALSE);
+
+	$body = join("\n", $source);
+	foreach(array('summary', 'name', 'priority', 'state', 'category') as $item) {
+		$regex = '/-\s*' . preg_quote($_plugin_bugtrack[$item], '/') . '\s*:(.*)/';
+		if (preg_match($regex, $body, $matches)) {
+			if ($item == 'name') {
+				$$item = htmlspecialchars(strip_bracket(trim($matches[1])));
+			} else {
+				$$item = htmlspecialchars(trim($matches[1]));
+			}
+		} else {
+				$$item = ''; // Data not found
+		}
+	}
+
+	if (preg_match("/\*([^\n]*)/", $body, $matches)) {
+		$summary = $matches[1];
+		make_heading($summary);
+	}
+
+	return array($page, $no, $summary, $name, $priority, $state, $category);
 }
 ?>
