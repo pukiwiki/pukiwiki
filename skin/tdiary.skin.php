@@ -1,34 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.7 2005/01/10 01:07:57 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.8 2005/01/13 13:42:21 henoheno Exp $
 //
 // tDiary-wrapper skin
 
 // Select theme
-//define('TDIARY_THEME', '3minutes');
-//define('TDIARY_THEME', 'aoikuruma');
-//define('TDIARY_THEME', 'bill');
-//define('TDIARY_THEME', 'black-lingerie');
-//define('TDIARY_THEME', 'black_mamba');
-//define('TDIARY_THEME', 'blog');
-//define('TDIARY_THEME', 'bubble');
-//define('TDIARY_THEME', 'cards');
-//define('TDIARY_THEME', 'cat');
-//define('TDIARY_THEME', 'christmas');
-//define('TDIARY_THEME', 'clover');
-//define('TDIARY_THEME', 'dot');
-//define('TDIARY_THEME', 'gear');
-//define('TDIARY_THEME', 'gingham-gray');
-//define('TDIARY_THEME', 'green-border');	// With frogs
-//define('TDIARY_THEME', 'himawari');
-//define('TDIARY_THEME', 'hatena');
-//define('TDIARY_THEME', 'kaeru');
-//define('TDIARY_THEME', 'loose-leaf');
-//define('TDIARY_THEME', 'petith');
-//define('TDIARY_THEME', 'piyo-family');
-//define('TDIARY_THEME', 'plum');
-//define('TDIARY_THEME', 'puppy');
-//define('TDIARY_THEME', 'snowy');
 if (! defined('TDIARY_THEME')) define('TDIARY_THEME', 'loose-leaf'); // Default
 
 // Show someting with <div class="calendar"> design
@@ -45,7 +21,7 @@ if (! isset($_LANG)) die('$_LANG is not set');
 
 // Check theme
 $theme = TDIARY_THEME;
-if ($theme == '') {
+if ($theme == '' || $theme == 'TDIARY_THEME') {
 	die('Theme is not specified. Set "TDIARY_THEME" correctly');
 } else {
 	$theme = rawurlencode($theme); // Supress all nasty letters
@@ -68,7 +44,7 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	//     75 list-sidebar.txt
 	//    193 list-all.txt
 	$sidebar = 'another'; // Default: Show as an another page below
-	switch($theme){
+	switch(TDIARY_THEME){
 	case '3minutes':	/*FALLTHROUGH*/
 	case '3pink':
 	case 'aoikuruma':
@@ -149,7 +125,7 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	}
 
 	// Adjust sidebar's default position
-	switch($theme){
+	switch(TDIARY_THEME){
 	case 'autumn':	/*FALLTHROUGH*/
 	case 'cosmos':
 	case 'happa':
@@ -225,7 +201,7 @@ if ($menu) {
 
 // Adjust reverse-link default design manually
 $disable_reverse_link = FALSE;
-switch($theme){
+switch(TDIARY_THEME){
 case 'hatena':	/*FALLTHROUGH*/
 case 'repro':
 case 'yukon':
@@ -237,7 +213,7 @@ case 'yukon':
 // NOTE:
 //    PukiWiki default: PKWK_DTD_XHTML_1_1
 //    tDiary's default: PKWK_DTD_HTML_4_01_STRICT
-switch($theme){
+switch(TDIARY_THEME){
 case 'christmas':
 	$pkwk_dtd = PKWK_DTD_HTML_4_01_STRICT; // or centering will be ignored via MSIE
 	break;
