@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.17 2003/06/10 14:05:42 arino Exp $
+// $Id: pcomment.inc.php,v 1.18 2003/06/22 06:37:18 arino Exp $
 //
 
 /*
@@ -207,6 +207,8 @@ function pcmt_insert()
 		return array('msg'=>'invalid page name.','body'=>'cannot add comment.','collided'=>TRUE);
 	}
 	
+	check_editable($page, true, true);
+	
 	$ret = array(
 		'msg' => $_title_updated,
 		'collided' => FALSE
@@ -368,6 +370,11 @@ function pcmt_check_arg($val, $key, &$params)
 
 function pcmt_get_comments($page,$count,$dir,$reply)
 {
+	if (!check_readable($page, false, false))
+	{
+		return array("閲覧制限がかかっているため、".$page."からはコメントを読みこむことができません。");
+	}
+	
 	$data = get_source($page);
 	
 	if (!is_array($data))

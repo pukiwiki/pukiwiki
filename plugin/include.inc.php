@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: include.inc.php,v 1.6 2003/03/03 07:07:28 panda Exp $
+// $Id: include.inc.php,v 1.7 2003/06/22 06:37:18 arino Exp $
 //
 
 /*
@@ -36,7 +36,14 @@ function plugin_include_convert()
 	
 	$_page = $vars['page'];
 	$get['page'] = $post['page'] = $vars['page'] = $page;
-	$body = convert_html(get_source($page));
+	
+	// includeのときは、認証画面をいちいち出さず、後始末もこちらでつける
+	if (check_readable($page, false, false)) {
+		$body = convert_html(get_source($page));
+	} else {
+		$body = $page." は閲覧制限がかかっているためincludeできません";
+	}
+	
 	$get['page'] = $post['page'] = $vars['page'] = $_page;
 	
 	$s_page = htmlspecialchars($page);

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.15 2003/06/05 10:37:35 arino Exp $
+// $Id: ja.lng,v 1.16 2003/06/22 06:37:19 arino Exp $
 //
 // PukiWiki message file (japanese)
 
@@ -160,6 +160,10 @@ $_calendar2_plugin_empty = '%sは空です。';
 ///////////////////////////////////////
 // attach
 $_attach_plugin_files = '%s件';
+
+///////////////////////////////////////
+$_title_cannotread = '$1 は閲覧できません';
+$_msg_auth = 'PukiWikiAuth';
 
 ///////////////////////////////////////
 // help 'wiki format rule'.

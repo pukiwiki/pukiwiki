@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.43 2003/06/10 13:53:56 arino Exp $
+// $Id: func.php,v 1.44 2003/06/22 06:37:19 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -85,50 +85,30 @@ function is_freeze($page)
 }
 
 // 編集不可能なページを編集しようとしたとき
-function check_editable($page)
+// デフォルト値で互換性を保つ
+function check_editable($page, $auth_flag=true, $exit_flag=true)
 {
 	global $script,$_title_cannotedit,$_msg_unfreeze;
 	
-	edit_auth($page);
-	
-	if (is_editable($page))
+	if (edit_auth($page, $auth_flag, $exit_flag) and is_editable($page))
 	{
-		return;
+		return true;
 	}
-	
-	$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($page)),$_title_cannotedit);
-	$_page = str_replace('$1',make_search($page),$_title_cannotedit);
-	
-	if (is_freeze($page))
-	{
-		$body .= "(<a href=\"$script?cmd=unfreeze&amp;page=".
-			rawurlencode($page)."\">$_msg_unfreeze</a>)";
-	}
-	
-	catbody($title,$_page,$body);
-	exit;
-}
 
-// 編集時の認証
-function edit_auth($page)
-{
-	global $edit_auth,$edit_auth_users,$_msg_auth,$_title_cannotedit;
+	if ($exit_flag) {
+		$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($page)),$_title_cannotedit);
+		if(is_freeze($page))
+		{
+			$body .= "(<a href=\"$script?cmd=unfreeze&amp;page=".
+				rawurlencode($page)."\">$_msg_unfreeze</a>)";
+		}
 
-	if ($edit_auth and
-		(!isset($_SERVER['PHP_AUTH_USER']) or
-		 !array_key_exists($_SERVER['PHP_AUTH_USER'],$edit_auth_users) or
-		 $edit_auth_users[$_SERVER['PHP_AUTH_USER']] != $_SERVER['PHP_AUTH_PW']))
-	{
-		header('WWW-Authenticate: Basic realm="'.$_msg_auth.'"');
-		header('HTTP/1.0 401 Unauthorized');
-		// press cancel.
- 		$body  = str_replace('$1',make_pagelink($page),   $_title_cannotedit);
-		$title = str_replace('$1',htmlspecialchars($page),$_title_cannotedit);
-		$page  = str_replace('$1',make_search($page),     $_title_cannotedit);
-		
+		$page = str_replace('$1',make_search($page),$_title_cannotedit);
+
 		catbody($title,$page,$body);
 		exit;
 	}
+	return false;
 }
 
 // 自動テンプレート
@@ -241,7 +221,12 @@ function do_search($word,$type='AND',$non_format=FALSE)
 			continue;
 		}
 		
-		$source = get_source($page);
+		// 検索対象ページの制限をかけるかどうか (ページ名は制限外)
+		if ($search_auth and !check_readable($page,false,false)) {
+			$source = get_source(); // 検索対象ページ内容を空に。
+		} else {
+			$source = get_source($page);
+		}
 		if (!$non_format)
 		{
 			array_unshift($source,$page); // ページ名も検索対象に
@@ -670,5 +655,121 @@ if (!function_exists('md5_file'))
 		fclose($fd);
 		return md5($data);
 	}
+}
+
+/////////////////////////////////////////////////////////////////
+// Basic認証による権限チェック
+// 編集認証
+// 閲覧との対称性を持たせた
+function edit_auth($page, $auth_flag=true, $exit_flag=true) {
+	global $_msg_auth,$edit_auth,$auth_users,$edit_auth_pages;
+	global $_title_cannotedit,$auth_method_type;
+
+	// 編集認証フラグをチェック (システム全体として編集認証するかどうか)
+	if (!$edit_auth) { return true; }
+
+	// 認証要否判断対象文字列を取得する
+	// ページ名でチェックする場合
+	if ($auth_method_type == "pagename") {
+		$target_str = $page;
+	}
+	// ページ内の文字列でチェックする場合
+	else if ($auth_method_type == "contents") {
+		$target_str = join('',get_source($page));
+	}
+	else {
+		$target_str = "";
+	}
+
+	// 合致したパターンで定義されたユーザリストをマージする
+	reset($edit_auth_pages);
+	$user_list = "";
+	while (list($key, $val) = each($edit_auth_pages)) {
+		if (preg_match($key, $target_str)) {
+			$user_list .= ",".$val;
+		}
+	}
+	if ($user_list == "") { return true; }
+
+	// ユーザリストに含まれるいずれかのユーザと認証されればOK
+	if (!isset($_SERVER['PHP_AUTH_USER'])
+		or !preg_match("/".$_SERVER['PHP_AUTH_USER']."/", $user_list)
+		or !array_key_exists($_SERVER['PHP_AUTH_USER'], $auth_users)
+		or $auth_users[$_SERVER['PHP_AUTH_USER']] != $_SERVER['PHP_AUTH_PW'])
+	{
+		if ($auth_flag) {
+			header('WWW-Authenticate: Basic realm="'.$_msg_auth.'"');
+			header('HTTP/1.0 401 Unauthorized');
+		}
+		if ($exit_flag) {
+			$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($page)), $_title_cannotedit);
+			$page = str_replace('$1',make_search($page),$_title_cannotedit);
+			catbody($title, $page, $body);
+			exit;
+		}
+		return false;
+	}
+	return true;
+}
+
+// 閲覧不可能なページを閲覧しようとしたとき (？)
+//  ※あまり必要性を感じないが、editの場合と対称性を持たせるために導入。
+function check_readable($page, $auth_flag=true, $exit_flag=true) {
+	if (read_auth($page, $auth_flag, $exit_flag)) {
+		return true;
+	}
+	return false;
+}
+
+// 閲覧認証
+function read_auth($page, $auth_flag=true, $exit_flag=true) {
+	global $_msg_auth,$read_auth,$auth_users,$read_auth_pages;
+	global $_title_cannotread, $auth_method_type;
+
+	// 閲覧認証フラグをチェック
+	if (!$read_auth) { return true; }
+
+	// 認証要否判断対象文字列を取得する
+	// ページ名でチェックする場合
+	if ($auth_method_type == "pagename") {
+		$target_str = $page;
+	}
+	// ページ内の文字列でチェックする場合
+	else if ($auth_method_type == "contents") {
+		$target_str = join('',get_source($page));
+	}
+	else {
+		$target_str = "";
+	}
+
+	// 合致したパターンで定義されたユーザリストをマージする
+	reset($read_auth_pages);
+	$user_list = "";
+	while (list($key, $val) = each($read_auth_pages)) {
+		if (preg_match($key, $target_str)) {
+			$user_list .= ",".$val;
+		}
+	}
+	if ($user_list == "") { return true; }
+
+	// ユーザリストに含まれるいずれかのユーザと認証されればOK
+	if (!isset($_SERVER['PHP_AUTH_USER'])
+		or !preg_match("/".$_SERVER['PHP_AUTH_USER']."/", $user_list)
+		or !array_key_exists($_SERVER['PHP_AUTH_USER'], $auth_users)
+		or $auth_users[$_SERVER['PHP_AUTH_USER']] != $_SERVER['PHP_AUTH_PW'])
+	{
+		if ($auth_flag) {
+			header('WWW-Authenticate: Basic realm="'.$_msg_auth.'"');
+			header('HTTP/1.0 401 Unauthorized');
+		}
+		if ($exit_flag) {
+			$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($page)), $_title_cannotread);
+			$page = str_replace('$1',make_search($page),$_title_cannotread);
+			catbody($title, $page, $body);
+			exit;
+		}
+		return false;
+	}
+	return true;
 }
 ?>

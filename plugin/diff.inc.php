@@ -2,13 +2,15 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.inc.php,v 1.2 2003/01/28 14:30:39 panda Exp $
+// $Id: diff.inc.php,v 1.3 2003/06/22 06:37:18 arino Exp $
 //
 //ページの差分を表示する
 function plugin_diff_action()
 {
 	global $script,$get,$hr;
 	global $_msg_notfound,$_msg_goto,$_msg_addline,$_msg_delline,$_title_diff;
+	
+	check_readable($get['page'],true,true);
 	
 	$r_page = rawurlencode($get['page']);
 	$s_page = htmlspecialchars($get['page']);
