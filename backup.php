@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.php,v 1.6 2002/11/29 00:09:00 panda Exp $
+// $Id: backup.php,v 1.6.2.1 2003/05/19 14:37:27 arino Exp $
 /////////////////////////////////////////////////
 
 // バックアップデータを作成する
@@ -44,7 +44,7 @@ function make_backup($filename,$body,$oldtime)
 		$body = "$splitter " . $oldtime . "\n" . $body;
 		if(!preg_match("/\n$/",$body)) $body .= "\n";
 
-		$fp = backup_fopen($realfilename,"w");
+		$fp = backup_fopen($realfilename,"wb");
 		if($fp===FALSE) die_message("cannot write file ".htmlspecialchars($realfilename)."<br>maybe permission is not writable or filename is too long");
 		backup_fputs($fp,$strout);
 		backup_fputs($fp,$body);
