@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: aname.inc.php,v 1.11 2003/04/24 14:42:29 arino Exp $
+// $Id: aname.inc.php,v 1.12 2003/04/26 05:10:13 arino Exp $
 //
 
 function plugin_aname_inline()
@@ -12,6 +12,8 @@ function plugin_aname_inline()
 }
 function plugin_aname_convert()
 {
+	global $script,$vars;
+	
 	if (func_num_args() < 1)
 	{
 		return FALSE;
@@ -26,7 +28,9 @@ function plugin_aname_convert()
 	}
 	
 	$body = count($args) ? preg_replace('/<\/?a[^>]*>/','',array_pop($args)) : '';
+	$class = (array_search('super',$args) !== FALSE) ? 'anchor_super' : 'anchor';
+	$url = (array_search('full',$args) !== FALSE) ? "$script?".rawurlencode($vars['page']) : '';
 	
-	return "<a id=\"$id\" href=\"#$id\" title=\"$id\">$body</a>";
+	return "<a class=\"$class\" id=\"$id\" href=\"$url#$id\" title=\"$id\">$body</a>";
 }
 ?>
