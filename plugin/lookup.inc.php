@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: lookup.inc.php,v 1.15 2005/01/08 11:26:22 henoheno Exp $
+// $Id: lookup.inc.php,v 1.16 2005/01/30 10:55:53 henoheno Exp $
 //
 // InterWiki lookup plugin
 
@@ -14,7 +14,7 @@ function plugin_lookup_convert()
 
 	$args = func_get_args();
 	$interwiki = htmlspecialchars(trim($args[0]));
-	$button    = trim($args[1]);
+	$button    = isset($args[1]) ? trim($args[1]) : '';
 	$button    = ($button != '') ? htmlspecialchars($button) : 'lookup';
 	$default   = ($num > 2) ? htmlspecialchars(trim($args[2])) : '';
 	$s_page    = htmlspecialchars($vars['page']);
