@@ -2,99 +2,117 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.23 2004/07/31 03:09:20 henoheno Exp $
+// $Id: ref.inc.php,v 1.24 2004/08/18 13:14:53 henoheno Exp $
 //
 
 /*
-*プラグイン ref
+
+* プラグイン ref
 ページに添付されたファイルを展開する
 URLを展開する
 
-*Usage
+* Usage
  #ref(filename[,page][,parameters][,title])
 
-*パラメータ
--filename~
-添付ファイル名、あるいはURL~
+* パラメータ
+- filename~
+添付ファイル名、あるいはURL
+
 'ページ名/添付ファイル名'を指定すると、そのページの添付ファイルを参照する
--page~
+
+- page~
 ファイルを添付したページ名(省略可)~
--パラメータ
---Left|Center|Right~
+
+- Left|Center|Right
 横の位置合わせ
---Wrap|Nowrap~
+
+- Wrap|Nowrap
 テーブルタグで囲む/囲まない
--Around~
+
+- Around
 テキストの回り込み
--noicon~
+
+- noicon
 アイコンを表示しない
--nolink~
+
+- nolink
 元ファイルへのリンクを張らない
--noimg~
+
+- noimg
 画像を展開しない
--zoom~
+
+- zoom
 縦横比を保持する
--999x999~
+
+- 999x999
 サイズを指定(幅x高さ)
--999%~
+
+- 999%
 サイズを指定(拡大率)
--その他~
+
+- その他の文字列
 imgのalt/hrefのtitleとして使用~
 ページ名やパラメータに見える文字列を使用するときは、#ref(hoge.png,,zoom)のように
 タイトルの前にカンマを余分に入れる
+
 */
 
-// file icon image
-if (!defined('FILE_ICON'))
-{
-	define('FILE_ICON','<img src="' . IMAGE_DIR . 'file.png" width="20" height="20" alt="file" style="border-width:0px" />');
+// File icon image
+if (! defined('FILE_ICON')) {
+	define('FILE_ICON',
+	'<img src="' . IMAGE_DIR . 'file.png" width="20" height="20"' .
+	' alt="file" style="border-width:0px" />');
 }
 
-// default alignment
-define('REF_DEFAULT_ALIGN','left'); // 'left','center','right'
+// Default alignment
+define('REF_DEFAULT_ALIGN', 'left'); // 'left','center','right'
 
-// force wrap on default
-define('REF_WRAP_TABLE',FALSE); // TRUE,FALSE
+// Force wrap on default
+define('REF_WRAP_TABLE', FALSE); // TRUE,FALSE
 
 // URL指定時に画像サイズを取得するか
-define('REF_URL_GETIMAGESIZE',FALSE);
+define('REF_URL_GETIMAGESIZE', FALSE);
 
 function plugin_ref_inline()
 {
 	global $vars;
 
-	//エラーチェック
-	if (!func_num_args())
-	{
-		return 'no argument(s).';
+	// Not reached, because of "$aryargs[] = & $body" at plugin.php
+	// if (! func_num_args()) return '&amp;ref(): No arguments;';
+
+	$params = plugin_ref_body(func_get_args(), $vars['page']);
+
+	if (isset($params['_error']) && $params['_error'] != '') {
+		return '&amp;ref(): ' . $params['_error'] . ';';
+	} else {
+		return $params['_body'];
 	}
-
-	$params = plugin_ref_body(func_get_args(),$vars['page']);
-
-	return ($params['_error'] != '') ? $params['_error'] : $params['_body'];
 }
+
 function plugin_ref_convert()
 {
 	global $vars;
 
-	//エラーチェック
-	if (!func_num_args())
-	{
-		return '<p>no argument(s).</p>';
+	if (! func_num_args()) return '<p>#ref(): No arguments</p>';
+
+	$params = plugin_ref_body(func_get_args(), $vars['page']);
+
+	if (isset($params['_error']) && $params['_error'] != '') {
+		return "<p>#ref(): {$params['_error']}</p>";
 	}
 
-	$params = plugin_ref_body(func_get_args(),$vars['page']);
-
-	if ($params['_error'] != '')
-	{
-		return "<p>{$params['_error']}</p>";
-	}
-
-	if ((REF_WRAP_TABLE and !$params['nowrap']) or $params['wrap'])
-	{
+	if ((REF_WRAP_TABLE && ! $params['nowrap']) || $params['wrap']) {
 		// 枠で包む
-		// margin:auto Moz1=x(wrap,aroundが効かない),op6=oNN6=x(wrap,aroundが効かない)IE6=x(wrap,aroundが効かない)
-		// margin:0px Moz1=x(wrapで寄せが効かない),op6=x(wrapで寄せが効かない),nn6=x(wrapで寄せが効かない),IE6=o
+		// margin:auto
+		//	Mozilla 1.x  = x (wrap,aroundが効かない)
+		//	Opera 6      = o
+		//	Netscape 6   = x (wrap,aroundが効かない)
+		//	IE 6         = x (wrap,aroundが効かない)
+		// margin:0px
+		//	Mozilla 1.x  = x (wrapで寄せが効かない)
+		//	Opera 6      = x (wrapで寄せが効かない)
+		//	Netscape 6   = x (wrapで寄せが効かない)
+		//	IE6          = o
 		$margin = ($params['around'] ? '0px' : 'auto');
 		$margin_align = ($params['_align'] == 'center') ? '' : ";margin-{$params['_align']}:0px";
 		$params['_body'] = <<<EOD
@@ -105,21 +123,20 @@ function plugin_ref_convert()
 </table>
 EOD;
 	}
-	// divで包む
-	if ($params['around'])
-	{
+
+	if ($params['around']) {
 		$style = ($params['_align'] == 'right') ? 'float:right' : 'float:left';
-	}
-	else
-	{
+	} else {
 		$style = "text-align:{$params['_align']}";
 	}
+
+	// divで包む
 	return "<div class=\"img_margin\" style=\"$style\">{$params['_body']}</div>\n";
 }
 
-function plugin_ref_body($args,$page)
+function plugin_ref_body($args, $page)
 {
-	global $script,$WikiName,$BracketName;
+	global $script, $WikiName, $BracketName;
 
 	// 戻り値
 	$params = array();
@@ -128,17 +145,17 @@ function plugin_ref_body($args,$page)
 	$name = array_shift($args);
 
 	// 次の引数がページ名かどうか
-	if (count($args) and preg_match("/^($WikiName|\[\[$BracketName\]\])$/",$args[0]))
+	if (! empty($args) &&
+		preg_match("/^($WikiName|\[\[$BracketName\]\])$/", $args[0]))
 	{
-		$_page = get_fullname(strip_bracket($args[0]),$page);
-		if (is_pagename($_page))
-		{
+		$_page = get_fullname(strip_bracket($args[0]), $page);
+		if (is_pagename($_page)) {
 			$page = $_page;
 			array_shift($args);
 		}
 	}
 
-	//パラメータ
+	// パラメータ
 	$params = array(
 		'left'   => FALSE, // 左寄せ
 		'center' => FALSE, // 中央寄せ
@@ -150,20 +167,18 @@ function plugin_ref_body($args,$page)
 		'nolink' => FALSE, // 元ファイルへのリンクを張らない
 		'noimg'  => FALSE, // 画像を展開しない
 		'zoom'   => FALSE, // 縦横比を保持する
-		'_size'  => FALSE, //(サイズ指定あり)
-		'_w'     => 0,      //(幅)
-		'_h'     => 0,      //(高さ)
-		'_%'     => 0,      //(拡大率)
+		'_size'  => FALSE, // サイズ指定あり
+		'_w'     => 0,       // 幅
+		'_h'     => 0,       // 高さ
+		'_%'     => 0,     // 拡大率
 		'_args'  => array(),
 		'_done'  => FALSE,
 		'_error' => ''
 	);
 
-	if (count($args) > 0)
-	{
-		foreach ($args as $key=>$val)
-		{
-			ref_check_arg($val,$key,$params);
+	if (! empty($args)) {
+		foreach ($args as $key=>$val) {
+			ref_check_arg($val, $key, $params);
 		}
 	}
 
@@ -179,194 +194,157 @@ function plugin_ref_body($args,$page)
 */
 	$file = $title = $url = $url2 = $info = '';
 	$width = $height = 0;
+	$matches = array();
 
-	if (is_url($name))	//URL
-	{
+	if (is_url($name)) {	// URL
 		$url = $url2 = htmlspecialchars($name);
-		$title = htmlspecialchars(preg_match('/([^\/]+)$/', $name, $match) ? $match[1] : $url);
+		$title = htmlspecialchars(preg_match('/([^\/]+)$/', $name, $matches) ? $matches[1] : $url);
 
-		$is_image = (!$params['noimg'] and preg_match("/\.(gif|png|jpe?g)$/i",$name));
-		if (REF_URL_GETIMAGESIZE and $is_image and (bool)ini_get('allow_url_fopen'))
-		{
+		$is_image = (! $params['noimg'] && preg_match("/\.(gif|png|jpe?g)$/i",$name));
+
+		if (REF_URL_GETIMAGESIZE && $is_image && (bool)ini_get('allow_url_fopen')) {
 			$size = @getimagesize($name);
-			if (is_array($size))
-			{
-				$width = $size[0];
+			if (is_array($size)) {
+				$width  = $size[0];
 				$height = $size[1];
-				$info = $size[3];
+				$info   = $size[3];
 			}
 		}
-	}
-	else //添付ファイル
-	{
-		if (!is_dir(UPLOAD_DIR))
-		{
-			$params['_error'] = 'no UPLOAD_DIR.';
+
+	} else { // 添付ファイル
+		if (! is_dir(UPLOAD_DIR)) {
+			$params['_error'] = 'No UPLOAD_DIR';
 			return $params;
 		}
 
-		//ページ指定のチェック
-//		$page = $vars['page'];
-		if (preg_match('/^(.+)\/([^\/]+)$/',$name,$matches))
-		{
-			if ($matches[1] == '.' or $matches[1] == '..')
-			{
+		// ページ指定のチェック
+		if (preg_match('/^(.+)\/([^\/]+)$/', $name, $matches)) {
+			if ($matches[1] == '.' || $matches[1] == '..') {
 				$matches[1] .= '/';
 			}
 			$page = get_fullname($matches[1],$page);
 			$name = $matches[2];
 		}
 		$title = htmlspecialchars($name);
-		$file = UPLOAD_DIR.encode($page).'_'.encode($name);
-		if (!is_file($file))
-		{
-			$params['_error'] = 'file not found.';
+		$file = UPLOAD_DIR . encode($page) . '_' . encode($name);
+
+		if (! is_file($file)) {
+			$params['_error'] = 'File not found';
 			return $params;
 		}
-		$size = @getimagesize($file);
-		$is_image = (!$params['noimg'] and preg_match("/\.(gif|png|jpe?g)$/i",$name));
-		$width = $height = 0;
-		$url = $script.'?plugin=attach&amp;openfile='.rawurlencode($name).'&amp;refer='.rawurlencode($page);
-		if ($is_image)
-		{
+
+		$is_image = (! $params['noimg'] && preg_match('/\.(gif|png|jpe?g)$/i', $name));
+
+		$url = $script . '?plugin=attach' . '&amp;refer=' . rawurlencode($page) .
+			'&amp;openfile=' . rawurlencode($name); // Show its filename at the last
+
+		if ($is_image) {
+			// Swap $url
 			$url2 = $url;
-			$url = $file;
-			if (is_array($size))
-			{
-				$width = $size[0];
+			$url  = $file;
+
+			$width = $height = 0;
+			$size = @getimagesize($file);
+			if (is_array($size)) {
+				$width  = $size[0];
 				$height = $size[1];
 			}
-		}
-		else
-		{
-			$info = get_date('Y/m/d H:i:s',filemtime($file) - LOCALZONE).' '.sprintf('%01.1f',round(filesize($file)/1000,1)).'KB';
+		} else {
+			$info = get_date('Y/m/d H:i:s', filemtime($file) - LOCALZONE) .
+				' ' . sprintf('%01.1f', round(filesize($file)/1024, 1)) . 'KB';
 		}
 	}
 
-	//拡張パラメータをチェック
-	if (count($params['_args']))
-	{
+	// 拡張パラメータをチェック
+	if (! empty($params['_args'])) {
 		$_title = array();
-		foreach ($params['_args'] as $arg)
-		{
-			if (preg_match('/^([0-9]+)x([0-9]+)$/',$arg,$m))
-			{
+		foreach ($params['_args'] as $arg) {
+			if (preg_match('/^([0-9]+)x([0-9]+)$/', $arg, $matches)) {
 				$params['_size'] = TRUE;
-				$params['_w'] = $m[1];
-				$params['_h'] = $m[2];
-			}
-			else if (preg_match('/^([0-9.]+)%$/',$arg,$m) and $m[1] > 0)
-			{
-				$params['_%'] = $m[1];
-			}
-			else
-			{
+				$params['_w'] = $matches[1];
+				$params['_h'] = $matches[2];
+
+			} else if (preg_match('/^([0-9.]+)%$/', $arg, $matches) && $matches[1] > 0) {
+				$params['_%'] = $matches[1];
+
+			} else {
 				$_title[] = $arg;
 			}
 		}
-		if (count($_title))
-		{
-			$title = join(',', $_title);
-			$title = $is_image ? htmlspecialchars($title) : make_line_rules(htmlspecialchars($title));
+
+		if (! empty($_title)) {
+			$title = htmlspecialchars(join(',', $_title));
+			if ($is_image) $title = make_line_rules($title);
 		}
 	}
 
-	//画像サイズ調整
-	if ($is_image)
-	{
+	// 画像サイズ調整
+	if ($is_image) {
 		// 指定されたサイズを使用する
-		if ($params['_size'])
-		{
-			if ($width == 0 and $height == 0)
-			{
-				$width = $params['_w'];
+		if ($params['_size']) {
+			if ($width == 0 && $height == 0) {
+				$width  = $params['_w'];
 				$height = $params['_h'];
-			}
-			else if ($params['zoom'])
-			{
-				$_w = $params['_w'] ? $width / $params['_w'] : 0;
+			} else if ($params['zoom']) {
+				$_w = $params['_w'] ? $width  / $params['_w'] : 0;
 				$_h = $params['_h'] ? $height / $params['_h'] : 0;
-				$zoom = max($_w,$_h);
-				if ($zoom)
-				{
-					$width = (int)($width / $zoom);
+				$zoom = max($_w, $_h);
+				if ($zoom) {
+					$width  = (int)($width  / $zoom);
 					$height = (int)($height / $zoom);
 				}
-			}
-			else
-			{
-				$width = $params['_w'] ? $params['_w'] : $width;
+			} else {
+				$width  = $params['_w'] ? $params['_w'] : $width;
 				$height = $params['_h'] ? $params['_h'] : $height;
 			}
 		}
-		if ($params['_%'])
-		{
-			$width = (int)($width * $params['_%'] / 100);
+		if ($params['_%']) {
+			$width  = (int)($width  * $params['_%'] / 100);
 			$height = (int)($height * $params['_%'] / 100);
 		}
-		if ($width and $height)
-		{
-			$info = "width=\"$width\" height=\"$height\" ";
+		if ($width && $height) $info = "width=\"$width\" height=\"$height\" ";
+	}
+
+	// アラインメント判定
+	$params['_align'] = REF_DEFAULT_ALIGN;
+	foreach (array('right', 'left', 'center') as $align) {
+		if ($params[$align])  {
+			$params['_align'] = $align;
+			break;
 		}
 	}
 
-	//アラインメント判定
-	if ($params['right'])
-	{
-		$params['_align'] = 'right';
-	}
-	else if ($params['left'])
-	{
-		$params['_align'] = 'left';
-	}
-	else if ($params['center'])
-	{
-		$params['_align'] = 'center';
-	}
-	else
-	{
-		$params['_align'] = REF_DEFAULT_ALIGN;
-	}
-
-	// ファイル種別判定
-	if ($is_image)	// 画像
-	{
-		$_url = "<img src=\"$url\" alt=\"$title\" title=\"$title\" $info/>";
-		if (!$params['nolink'] and $url2)
-		{
-			$_url = "<a href=\"$url2\" title=\"$title\">$_url</a>";
-		}
-		$params['_body'] = $_url;
-	}
-	else	// 通常ファイル
-	{
+	if ($is_image) { // 画像
+		$params['_body'] = "<img src=\"$url\" alt=\"$title\" title=\"$title\" $info/>";
+		if (! $params['nolink'] && $url2)
+			$params['_body'] = "<a href=\"$url2\" title=\"$title\">{$params['_body']}</a>";
+	} else {
 		$icon = $params['noicon'] ? '' : FILE_ICON;
 		$params['_body'] = "<a href=\"$url\" title=\"$info\">$icon$title</a>";
 	}
+
 	return $params;
 }
 
 //-----------------------------------------------------------------------------
-//オプションを解析する
-function ref_check_arg($val, $_key, &$params)
+// オプションを解析する
+function ref_check_arg($val, $_key, & $params)
 {
-	if ($val == '')
-	{
+	if ($val == '') {
 		$params['_done'] = TRUE;
 		return;
 	}
-	if (!$params['_done'])
-	{
-		foreach (array_keys($params) as $key)
-		{
-			if (strpos($key, strtolower($val)) === 0)
-			{
+
+	if (! $params['_done']) {
+		foreach (array_keys($params) as $key) {
+			if (strpos($key, strtolower($val)) === 0) {
 				$params[$key] = TRUE;
 				return;
 			}
 		}
 		$params['_done'] = TRUE;
 	}
+
 	$params['_args'][] = $val;
 }
 ?>
