@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rules.ini.php,v 1.1 2003/10/27 02:45:52 arino Exp $
+// $Id: rules.ini.php,v 1.2 2004/03/20 13:32:29 arino Exp $
 //
 // PukiWiki setting file
 
@@ -25,6 +25,7 @@ $str_rules = array(
 	'&time;' => get_date($time_format),
 	'&page;' => array_pop(explode('/',$vars['page'])),
 	'&fpage;' => $vars['page'],
+	'&t;' => "\t",
 );
 
 /////////////////////////////////////////////////
