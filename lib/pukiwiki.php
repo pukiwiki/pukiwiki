@@ -29,7 +29,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.3 2004/08/05 14:46:28 henoheno Exp $
+// $Id: pukiwiki.php,v 1.4 2004/10/10 12:58:30 henoheno Exp $
 /////////////////////////////////////////////////
 
 /////////////////////////////////////////////////
@@ -43,7 +43,7 @@ if (! defined('DATA_HOME')) define('DATA_HOME', '');
 if (! defined('LIB_DIR')) define('LIB_DIR', '');
 
 /////////////////////////////////////////////////
-// サブルーチンの読み込み
+// Include subroutines
 
 require(LIB_DIR . 'func.php');
 require(LIB_DIR . 'file.php');
@@ -60,7 +60,7 @@ require(LIB_DIR . 'trackback.php');
 require(LIB_DIR . 'auth.php');
 require(LIB_DIR . 'proxy.php');
 require(LIB_DIR . 'mail.php');
-if (!extension_loaded('mbstring')) {
+if (! extension_loaded('mbstring')) {
 	require(LIB_DIR . 'mbstring.php');
 }
 
@@ -68,66 +68,62 @@ if (!extension_loaded('mbstring')) {
 require(LIB_DIR . 'init.php');
 
 /////////////////////////////////////////////////
-// メイン処理
+// Main
 
-$base = $defaultpage;
+$base    = $defaultpage;
 $retvars = array();
 
-// Plug-in action
-if (!empty($vars['plugin'])) {
-	if (!exist_plugin_action($vars['plugin'])) {
+if (isset($vars['plugin'])) {
+	// Plug-in action
+	if (! exist_plugin_action($vars['plugin'])) {
 		$s_plugin = htmlspecialchars($vars['plugin']);
-		$msg = "plugin=$s_plugin is not implemented.";
+		$msg      = "plugin=$s_plugin is not implemented.";
+		$retvars  = array('msg'=>$msg,'body'=>$msg);
+	} else {
+		$retvars  = do_plugin_action($vars['plugin']);
+		if ($retvars !== FALSE)
+			$base = isset($vars['refer']) ? $vars['refer'] : '';
+	}
+
+} else if (isset($vars['cmd'])) {
+	// Command action
+	if (! exist_plugin_action($vars['cmd'])) {
+		$s_cmd   = htmlspecialchars($vars['cmd']);
+		$msg     = "cmd=$s_cmd is not implemented.";
 		$retvars = array('msg'=>$msg,'body'=>$msg);
-	}
-	else {
-		$retvars = do_plugin_action($vars['plugin']);
-		if ($retvars !== FALSE) {
-			$base = array_key_exists('refer',$vars) ? $vars['refer'] : '';
-		}
-	}
-}
-// Command action
-else if (!empty($vars['cmd'])) {
-	if (!exist_plugin_action($vars['cmd'])) {
-		$s_cmd = htmlspecialchars($vars['cmd']);
-		$msg = "cmd=$s_cmd is not implemented.";
-		$retvars = array('msg'=>$msg,'body'=>$msg);
-	}
-	else {
+	} else {
 		$retvars = do_plugin_action($vars['cmd']);
-		$base = $vars['page'];
+		$base    = $vars['page'];
 	}
 }
 
 if ($retvars !== FALSE) {
 	$title = htmlspecialchars(strip_bracket($base));
-	$page = make_search($base);
+	$page  = make_search($base);
 
-	if (array_key_exists('msg',$retvars) and $retvars['msg'] != '') {
-		$title = str_replace('$1',$title,$retvars['msg']);
-		$page = str_replace('$1',$page,$retvars['msg']);
+	if (isset($retvars['msg']) && $retvars['msg'] != '') {
+		$title = str_replace('$1', $title, $retvars['msg']);
+		$page  = str_replace('$1', $page,  $retvars['msg']);
 	}
 
-	if (array_key_exists('body',$retvars) and $retvars['body'] != '') {
+	if (isset($retvars['body']) && $retvars['body'] != '') {
 		$body = $retvars['body'];
-	}
-	else {
-		if ($base == '' or !is_page($base)) {
-			$base = $defaultpage;
+	} else {
+		if ($base == '' || ! is_page($base)) {
+			$base  = $defaultpage;
 			$title = htmlspecialchars(strip_bracket($base));
-			$page = make_search($base);
+			$page  = make_search($base);
 		}
 
-		$vars['cmd'] = 'read';
+		$vars['cmd']  = 'read';
 		$vars['page'] = $base;
-		$body = convert_html(get_source($base));
+		$body  = convert_html(get_source($base));
 		$body .= tb_get_rdf($vars['page']);
 		ref_save($vars['page']);
 	}
 
-	// ** 出力処理 **
-	catbody($title,$page,$body);
+	// Output
+	catbody($title, $page, $body);
 }
-// ** 終了 **
+// End
 ?>
