@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.ini.php,v 1.10 2004/08/08 03:40:27 henoheno Exp $
+// $Id: keitai.ini.php,v 1.11 2004/08/08 03:41:46 henoheno Exp $
 //
 // PukiWiki setting file (Cell phones, PDAs and other thin clients)
 
@@ -223,14 +223,14 @@ switch ($ua_name) {
 	'&amp;(pb#);'	=>	'&#63877;',
 
 	// Others
-	// '&amp;(zzz);'	=>	'&#63910;',
-	// '&amp;(man);'	=>	'&#63829;',
-	// '&amp;(clock);'	=>	'&#63838;',
-	// '&amp;(mail);'	=>	'&#63863;',
-	// '&amp;(mailto);'	=>	'&#63859;',
-	// '&amp;(phone);'	=>	'&#63720;',
-	// '&amp;(phoneto);'	=>	'&#63858;',
-	// '&amp;(faxto);'	=>	'&#63860;',
+	'&amp;(zzz);'	=>	'&#63910;',
+	'&amp;(man);'	=>	'&#63829;',
+	'&amp;(clock);'	=>	'&#63838;',
+	'&amp;(mail);'	=>	'&#63863;',
+	'&amp;(mailto);'=>	'&#63859;',
+	'&amp;(phone);'	=>	'&#63720;',
+	'&amp;(phoneto);'=>	'&#63858;',
+	'&amp;(faxto);'	=>	'&#63860;',
 	);
 	break;
 
@@ -280,14 +280,14 @@ switch ($ua_name) {
 	'&amp;(pb0);'	=>	chr(27).'$FE'.chr(15),	// '&#57893;',
 
 	// Others
-	// '&amp;(zzz);'	=>	chr(27).'$E\\'.chr(15),
-	// '&amp;(man);'	=>	chr(27).'$G!'.chr(15),
-	// '&amp;(clock);'	=>	chr(27).'$GF'.chr(15),	// '&#xE026;',
-	// '&amp;(mail);'	=>	chr(27).'$Fv'.chr(15),
-	// '&amp;(mailto);'=>	chr(27).'$E#'.chr(15),
-	// '&amp;(phone);'	=>	chr(27).'$G)'.chr(15),
-	// '&amp;(phoneto);'=>	chr(27).'$E$'.chr(15),
-	// '&amp;(faxto);'	=>	chr(27).'$G+'.chr(15),
+	'&amp;(zzz);'	=>	chr(27).'$E\\'.chr(15),
+	'&amp;(man);'	=>	chr(27).'$G!'.chr(15),
+	'&amp;(clock);'	=>	chr(27).'$GF'.chr(15),	// '&#xE026;',
+	'&amp;(mail);'	=>	chr(27).'$Fv'.chr(15),
+	'&amp;(mailto);'=>	chr(27).'$E#'.chr(15),
+	'&amp;(phone);'	=>	chr(27).'$G)'.chr(15),
+	'&amp;(phoneto);'=>	chr(27).'$E$'.chr(15),
+	'&amp;(faxto);'	=>	chr(27).'$G+'.chr(15),
 	);
 	break;
 
