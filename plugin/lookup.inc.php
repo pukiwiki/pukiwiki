@@ -1,10 +1,8 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: lookup.inc.php,v 1.15 2005/01/08 11:26:22 henoheno Exp $
 //
-// $Id: lookup.inc.php,v 1.14 2004/12/25 00:43:22 henoheno Exp $
-//
-// Lookup plugin
+// InterWiki lookup plugin
 
 define('PLUGIN_LOOKUP_USAGE', '#lookup(interwikiname[,button_name[,default]])');
 function plugin_lookup_convert()
