@@ -1,5 +1,4 @@
 <?php if (!defined('DATA_DIR')) { exit; } ?>
-<?php $is_print = array_key_exists('prn',$vars); ?>
 <?php header('Content-Type: text/html; charset=iso-8859-1') ?>
 <?php echo '<?xml version="1.0" encoding="iso-8859-1"?>' ?>
 
@@ -14,21 +13,19 @@
  <meta http-equiv="content-type" content="application/xhtml+xml; charset=iso-8859-1" />
  <meta http-equiv="content-style-type" content="text/css" />
 
-<?php if (!$is_read or $is_print) { ?>
+<?php if (!$is_read) { ?>
  <meta name="robots" content="NOINDEX,NOFOLLOW" />
 <?php } ?>
 
  <title><?php echo "$title - $page_title" ?></title>
-<?php if ($is_print) { ?>
- <link rel="stylesheet" href="skin/print.en.css" type="text/css" media="screen,print" charset="iso-8859-1" />
-<?php } else { ?>
  <link rel="stylesheet" href="skin/default.en.css" type="text/css" media="screen" charset="iso-8859-1" />
-<?php } ?>
+ <link rel="stylesheet" href="skin/print.en.css" type="text/css" media="print" charset="iso-8859-1" />
 <?php
   global $trackback;
   if ($trackback) {
 ?>
-<script language="JavaScript" src="skin/trackback.js"></script>
+ <meta http-equiv="Content-Script-Type" content="text/javascript" />
+ <script type="text/javascript" src="skin/trackback.js"></script>
 <?php } ?>
 <?php echo $head_tag ?>
 </head>
@@ -52,9 +49,6 @@
  &nbsp;
  [ <a href="<?php echo "$script?plugin=newpage&amp;refer=$r_page" ?>">New</a>
  | <a href="<?php echo $link_edit ?>">Edit</a>
-<?php   if (!$is_print) { ?>
- | <a href="<?php echo "$script?cmd=read&amp;page=$r_page&amp;prn=on" ?>">Printer friendly</a>
-<?php   } ?>
 <?php   if ($is_read and $function_freeze) { ?>
 <?php     if ($is_freeze) { ?>
  | <a href="<?php echo $link_unfreeze ?>">Unfreeze</a>
@@ -100,13 +94,18 @@
 <?php echo $hr ?>
 
 
-<?php if (!$is_print and arg_check('read') and is_page('MenuBar')) { ?>
-<table border="0" width="100%">
-<tr><td valign="top" style="width:120px;word-break:break-all;padding:4px;">
-<div id="menubar"><?php echo preg_replace('/<ul[^>]*>/','<ul>',convert_html(get_source('MenuBar'))) ?></div>
-</td><td valign="top" style="padding-left:10px;">
-<div><?php echo $body ?></div>
-</td></tr>
+<?php if (arg_check('read') and is_page('MenuBar')) { ?>
+<table border="0" style="width:100%">
+ <tr>
+  <td class="menubar">
+   <div id="menubar">
+    <?php echo preg_replace('/<ul[^>]*>/','<ul>',convert_html(get_source('MenuBar'))) ?>
+   </div>
+  </td>
+  <td valign="top">
+   <div id="body"><?php echo $body ?></div>
+  </td>
+ </tr>
 </table>
 <?php } else { ?>
 <div id="body"><?php echo $body ?></div>
@@ -136,9 +135,6 @@
  &nbsp;
  <a href="<?php echo $script ?>?plugin=newpage"><img src="./image/new.png" width="20" height="20" alt="New" title="New" /></a>
  <a href="<?php echo $link_edit ?>"><img src="./image/edit.png" width="20" height="20" alt="Edit" title="Edit" /></a>
-<?php   if (!$is_print) { ?>
- <a href="<?php echo "$script?cmd=read&amp;page=$r_page&amp;prn=on" ?>"><img src="./image/print.png" width="20" height="20" alt="Printer friendly" title="Printer friendly" /></a>
-<?php   } ?>
  <a href="<?php echo $link_diff ?>"><img src="./image/diff.png" width="20" height="20" alt="Diff" title="Diff" /></a>
 <?php   if ((bool)ini_get('file_uploads')) { ?>
  <a href="<?php echo $link_upload ?>"><img src="./image/file.png" width="20" height="20" alt="Upload" title="Upload" /></a>
