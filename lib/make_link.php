@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.4 2004/10/31 04:14:05 henoheno Exp $
+// $Id: make_link.php,v 1.5 2004/10/31 05:12:24 henoheno Exp $
 //
 
 // リンクを付加する
@@ -337,7 +337,7 @@ class Link_url extends Link
  (?:>|:)
 )?
 (                 # (3) url
- (?:https?|ftp|news):\/\/[!~*'();\/?:\@&=+\$,%#\w.-]+
+ (?:(?:https?|ftp|news):\/\/|mailto:)[\w\/\@\$()!?&%#:;.,~'=*+-]+
 )
 (?($s1)\]\])      # close bracket
 EOD;
