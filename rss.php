@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: rss.php,v 1.1 2002/06/21 05:21:46 masui Exp $
+// $Id: rss.php,v 1.2 2002/07/01 06:29:59 masui Exp $
 /////////////////////////////////////////////////
 
 // RecentChanges の RSS を出力
@@ -44,7 +44,7 @@ function catrss($rss)
 			$items.= " <link>http://".SERVER_NAME.PHP_SELF."?".rawurlencode($url)."</link>\n";
 			$items.= " <description>$desc</description>\n";
 			$items.= "</item>\n\n";
-			$rdf_li.= "    <rdf:li rdf:resource=\"http://".SERVER_NAME.PHP_SELF."?".rawurlencode($url)."\"/>\n";
+			$rdf_li.= "    <rdf:li rdf:resource=\"http://".SERVER_NAME.PHP_SELF."?".rawurlencode($url)."\" />\n";
 
 		}
 

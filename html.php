@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.10 2002/06/27 08:51:19 masui Exp $
+// $Id: html.php,v 1.11 2002/07/01 06:25:32 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -386,37 +386,37 @@ function get_list($withfilename)
 						$head_nm = "Low:$head";
 					
 					if($head_str) $retval2[$page] = "</ul>\n";
-					$retval2[$page] .= "<li><a href=\"#top:$head_nm\" name=\"$head_nm\"><b>$head</b></a></li>\n<ul>\n";
+					$retval2[$page] .= "<li><a href=\"#top:$head_nm\" name=\"$head_nm\"><strong>$head</strong></a></li>\n<ul>\n";
 					$head_str = $head;
 					if($top_link) $top_link .= "|";
-					$top_link .= "<a href=\"#$head_nm\" name=\"top:$head_nm\"><b>&nbsp;".$head."&nbsp;</b></a>";
+					$top_link .= "<a href=\"#$head_nm\" name=\"top:$head_nm\"><strong>&nbsp;".$head."&nbsp;</strong></a>";
 				}
 				else if(preg_match("/[ -~]/",$head))
 				{
 					if(!$symbol_sw)
 					{
 						if($head_str) $retval2[$page] = "</ul>\n";
-						$retval2[$page] .= "<li><a href=\"#top:symbol\" name=\"symbol\"><b>$_msg_symbol</b></a></li>\n<ul>\n";
+						$retval2[$page] .= "<li><a href=\"#top:symbol\" name=\"symbol\"><strong>$_msg_symbol</strong></a></li>\n<ul>\n";
 						$head_str = $head;
 						if($top_link) $top_link .= "|";
-						$top_link .= "<a href=\"#symbol\" name=\"top:symbol\"><b>$_msg_symbol</b></a>";
+						$top_link .= "<a href=\"#symbol\" name=\"top:symbol\"><strong>$_msg_symbol</strong></a>";
 						$symbol_sw = 1;
 					}
 				}
 				else
 				{
 					if($head_str) $retval2[$page] = "</ul>\n";
-					$retval2[$page] .= "<li><a href=\"#top:etc\" name=\"etc\"><b>$_msg_other</b></a></li>\n<ul>\n";
+					$retval2[$page] .= "<li><a href=\"#top:etc\" name=\"etc\"><strong>$_msg_other</strong></a></li>\n<ul>\n";
 					$etc_sw = 1;
 					if($top_link) $top_link .= "|";
-					$top_link .= "<a href=\"#etc\" name=\"top:etc\"><b>$_msg_other</b></a>";
+					$top_link .= "<a href=\"#etc\" name=\"top:etc\"><strong>$_msg_other</strong></a>";
 				}
 			}
 			$retval2[$page] .= $link;
 		}
 		$retval2[] = "</ul>\n";
 		
-		$top_link = "<div align=\"center\"><a name=\"top\">$top_link</a></div><br>\n";
+		$top_link = "<div style=\"text-align:center\"><a name=\"top\">$top_link</a></div><br />\n";
 		
 		array_unshift($retval2,$top_link);
 	}
@@ -439,17 +439,17 @@ function edit_form($postdata,$page,$add=0)
 
 	if($add)
 	{
-		$addtag = '<input type="hidden" name="add" value="true">';
-		$add_top = '<input type="checkbox" name="add_top" value="true"><small>'.$_btn_addtop.'</small>';
+		$addtag = '<input type="hidden" name="add" value="true" />';
+		$add_top = '<input type="checkbox" name="add_top" value="true" /><span class="small">'.$_btn_addtop.'</span>';
 	}
 
 	if($vars["help"] == "true")
 		$help = $hr.catrule();
 	else
- 		$help = "<br>\n<ul><li><a href=\"$script?cmd=edit&amp;help=true&amp;page=".rawurlencode($page)."\">$_msg_help</a></ul></li>\n";
+ 		$help = "<br />\n<ul><li><a href=\"$script?cmd=edit&amp;help=true&amp;page=".rawurlencode($page)."\">$_msg_help</a></ul></li>\n";
 
 	if($function_freeze)
-		$str_freeze = '<input type="submit" name="freeze" value="'.$_btn_freeze.'" accesskey="f">';
+		$str_freeze = '<input type="submit" name="freeze" value="'.$_btn_freeze.'" accesskey="f" />';
 
 	if($load_template_func)
 	{
@@ -468,7 +468,7 @@ function edit_form($postdata,$page,$add=0)
 			   ."    <option value=\"\">-- $_btn_template --</option>\n"
 			   .join("\n",$vals)
 			   ."   </select>\n"
-			   ."   <input type=\"submit\" name=\"template\" value=\"$_btn_load\" accesskey=\"r\"><br>\n";
+			   ."   <input type=\"submit\" name=\"template\" value=\"$_btn_load\" accesskey=\"r\" /><br />\n";
 
 		if($vars["refer"]) $refer = $vars["refer"]."\n\n";
 	}
@@ -484,26 +484,28 @@ return '
  </tr>
  <tr>
   <td align="right">
-   <input type="hidden" name="page" value="'.$page.'">
-   <input type="hidden" name="digest" value="'.$digest.'">
+   <input type="hidden" name="page" value="'.$page.'" />
+   <input type="hidden" name="digest" value="'.$digest.'" />
    <textarea name="msg" rows="'.$rows.'" cols="'.$cols.'" wrap="virtual">
 '.htmlspecialchars($refer.$postdata).'</textarea>
   </td>
  </tr>
  <tr>
   <td>
-   <input type="submit" name="preview" value="'.$_btn_preview.'" accesskey="p">
-   <input type="submit" name="write" value="'.$_btn_update.'" accesskey="s">
+   <input type="submit" name="preview" value="'.$_btn_preview.'" accesskey="p" />
+   <input type="submit" name="write" value="'.$_btn_update.'" accesskey="s" />
    '.$add_top.'
-   <input type="checkbox" name="notimestamp" value="true"><small>'.$_btn_notchangetimestamp.'</small>
+   <input type="checkbox" name="notimestamp" value="true" /><span style="small">'.$_btn_notchangetimestamp.'</span>
   </td>
  </tr>
 </table>
 </form>
 
 <form action="'.$script.'?cmd=freeze" method="post">
-<input type="hidden" name="page" value="'.$vars["page"].'">
+<div>
+<input type="hidden" name="page" value="'.$vars["page"].'" />
 '.$str_freeze.'
+</div>
 </form>
 
 ' . $help;
@@ -578,8 +580,8 @@ function make_note($str)
 
 	$str = make_user_rules($str);
 
-	$foot_explain[] = "<a name=\"notefoot:$note_id\" href=\"#notetext:$note_id\"><sup><small>*$note_id</small></sup></a> <small>$str</small><br />\n";
-	$note =  "<a name=\"notetext:$note_id\" href=\"#notefoot:$note_id\"><sup><small>*$note_id</small></sup></a>";
+	$foot_explain[] = "<a name=\"notefoot:$note_id\" href=\"#notetext:$note_id\" class=\"note_super\">*$note_id</a> <span class=\"small\">$str</span><br />\n";
+	$note =  "<a name=\"notetext:$note_id\" href=\"#notefoot:$note_id\" class=\"note_super\">*$note_id</a>";
 	$note_id++;
 
 	return $note;

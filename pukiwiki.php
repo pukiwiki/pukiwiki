@@ -26,7 +26,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.5 2002/06/28 12:47:46 masui Exp $
+// $Id: pukiwiki.php,v 1.6 2002/07/01 06:29:22 masui Exp $
 /////////////////////////////////////////////////
 
 
@@ -155,15 +155,15 @@ else if(arg_check("preview") || $post["preview"] || $post["template"])
 	$title = str_replace('$1',strip_bracket($post["page"]),$_title_preview);
 	$page = str_replace('$1',make_search($post["page"]),$_title_preview);
 
-	$body = "$_msg_preview<br>\n";
-	if($postdata == "") $body .= "<b>$_msg_preview_delete</b><br>\n";
-	else                $body .= "<br>\n";
+	$body = "$_msg_preview<br />\n";
+	if($postdata == "") $body .= "<strong>$_msg_preview_delete</strong><br />\n";
+	else                $body .= "<br />\n";
 
 	if($postdata != "")
 	{
 		$postdata = convert_html($postdata);
 		
-		$body .= "<table width=\"100%\" bgcolor=\"$preview_color\">\n"
+		$body .= "<table width=\"100%\" style=\"background-color:$preview_color\">\n"
 			."<tr><td>\n"
 			.$postdata
 			."\n</td></tr>\n"
@@ -172,22 +172,24 @@ else if(arg_check("preview") || $post["preview"] || $post["template"])
 
 	if($post["add"])
 	{
-		if($post["add_top"]) $checked_top = " checked";
-		$addtag = '<input type="hidden" name="add" value="true">';
-		$add_top = '<input type="checkbox" name="add_top" value="true"'.$checked_top.'><small>ページの上に追加</small>';
+		if($post["add_top"]) $checked_top = " checked=\"checked\"";
+		$addtag = '<input type="hidden" name="add" value="true" />';
+		$add_top = '<input type="checkbox" name="add_top" value="true"'.$checked_top.' /><span class="small">ページの上に追加</span>';
 	}
-	if($post["notimestamp"]) $checked_time = "checked";
+	if($post["notimestamp"]) $checked_time = "checked=\"checked\"";
 
 	$body .= "<form action=\"$script\" method=\"post\">\n"
-		."<input type=\"hidden\" name=\"help\" value=\"$post[add]\">\n"
-		."<input type=\"hidden\" name=\"page\" value=\"".$post["page"]."\">\n"
-		."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\">\n"
+		."<div>\n"
+		."<input type=\"hidden\" name=\"help\" value=\"$post[add]\" />\n"
+		."<input type=\"hidden\" name=\"page\" value=\"".$post["page"]."\" />\n"
+		."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\" />\n"
 		."$addtag\n"
-		."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\">\n".htmlspecialchars($postdata_input)."</textarea><br>\n"
-		."<input type=\"submit\" name=\"preview\" value=\"$_btn_repreview\" accesskey=\"p\">\n"
-		."<input type=\"submit\" name=\"write\" value=\"$_btn_update\" accesskey=\"s\">\n"
+		."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\">\n".htmlspecialchars($postdata_input)."</textarea><br />\n"
+		."<input type=\"submit\" name=\"preview\" value=\"$_btn_repreview\" accesskey=\"p\" />\n"
+		."<input type=\"submit\" name=\"write\" value=\"$_btn_update\" accesskey=\"s\" />\n"
 		."$add_top\n"
-		."<input type=\"checkbox\" name=\"notimestamp\" value=\"true\" $checked_time><small>$_btn_notchangetimestamp</small>\n"
+		."<input type=\"checkbox\" name=\"notimestamp\" value=\"true\" $checked_time /><span class=\"small\">$_btn_notchangetimestamp</span>\n"
+		."</div>\n"
 		."</form>\n";
 }
 // 書き込みもしくは追加もしくはコメントの挿入
@@ -231,13 +233,15 @@ else if($post["write"])
 		  $body = $_msg_collided."\n";
 		}
 		$body .= "<form action=\"$script\" method=\"post\">\n"
-			."<input type=\"hidden\" name=\"page\" value=\"".$post["page"]."\">\n"
-			."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\">\n"
-			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">$postdata_input</textarea><br>\n"
-			."<input type=\"submit\" name=\"preview\" value=\"$_btn_repreview\" accesskey=\"p\">\n"
-			."<input type=\"submit\" name=\"write\" value=\"$_btn_update\" accesskey=\"s\">\n"
+			."<div>\n"
+			."<input type=\"hidden\" name=\"page\" value=\"".$post["page"]."\" />\n"
+			."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\" />\n"
+			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">$postdata_input</textarea><br />\n"
+			."<input type=\"submit\" name=\"preview\" value=\"$_btn_repreview\" accesskey=\"p\" />\n"
+			."<input type=\"submit\" name=\"write\" value=\"$_btn_update\" accesskey=\"s\" />\n"
 			."$add_top\n"
-			."<input type=\"checkbox\" name=\"notimestamp\" value=\"true\" $checked_time><small>$_btn_notchangetimestamp</small>\n"
+			."<input type=\"checkbox\" name=\"notimestamp\" value=\"true\" $checked_time /><span class=\"small\">$_btn_notchangetimestamp</span>\n"
+			."</div>\n"
 			."</form>\n";
 	}
 	else
@@ -315,17 +319,19 @@ else if(arg_check("freeze") && $vars["page"] && $function_freeze)
 		$title = str_replace('$1',strip_bracket($vars["page"]),$_title_freeze);
 		$page = str_replace('$1',make_search($vars["page"]),$_title_freeze);
 
-		$body.= "<br>\n";
+		$body.= "<br />\n";
 		
 		if($post["pass"])
-			$body .= "<b>$_msg_invalidpass</b><br>\n";
+			$body .= "<strong>$_msg_invalidpass</strong><br />\n";
 		else
-			$body.= "$_msg_freezing<br>\n";
+			$body.= "$_msg_freezing<br />\n";
 		
 		$body.= "<form action=\"$script?cmd=freeze\" method=\"post\">\n";
-		$body.= "<input type=\"hidden\" name=\"page\" value=\"$vars[page]\">\n";
-		$body.= "<input type=\"password\" name=\"pass\" size=\"12\">\n";
-		$body.= "<input type=\"submit\" name=\"ok\" value=\"$_btn_freeze\">\n";
+		$body.= "<div>\n";
+		$body.= "<input type=\"hidden\" name=\"page\" value=\"$vars[page]\" />\n";
+		$body.= "<input type=\"password\" name=\"pass\" size=\"12\" />\n";
+		$body.= "<input type=\"submit\" name=\"ok\" value=\"$_btn_freeze\" />\n";
+		$body.= "</div>\n";
 		$body.= "</form>\n";
 	}
 }
@@ -359,17 +365,19 @@ else if(arg_check("unfreeze") && $vars["page"] && $function_freeze)
 		$title = str_replace('$1',strip_bracket($vars["page"]),$_title_unfreeze);
 		$page = str_replace('$1',make_search($vars["page"]),$_title_unfreeze);
 
-		$body.= "<br>\n";
+		$body.= "<br />\n";
 
 		if($post["pass"])
-			$body .= "<b>$_msg_invalidpass</b><br>\n";
+			$body .= "<strong>$_msg_invalidpass</strong><br />\n";
 		else
-			$body.= "$_msg_unfreezing<br>\n";
+			$body.= "$_msg_unfreezing<br />\n";
 
 		$body.= "<form action=\"$script?cmd=unfreeze\" method=\"post\">\n";
-		$body.= "<input type=\"hidden\" name=\"page\" value=\"$vars[page]\">\n";
-		$body.= "<input type=\"password\" name=\"pass\" size=\"12\">\n";
-		$body.= "<input type=\"submit\" name=\"ok\" value=\"$_btn_unfreeze\">\n";
+		$body.= "<div>\n";
+		$body.= "<input type=\"hidden\" name=\"page\" value=\"$vars[page]\" />\n";
+		$body.= "<input type=\"password\" name=\"pass\" size=\"12\" />\n";
+		$body.= "<input type=\"submit\" name=\"ok\" value=\"$_btn_unfreeze\" />\n";
+		$body.= "</div>\n";
 		$body.= "</form>\n";
 	}
 }
@@ -401,12 +409,10 @@ else if(arg_check("diff"))
 		$page = str_replace('$1',make_search($get["page"]),$_title_diff);
 
 		$diffdata = htmlspecialchars(join("",get_source($get["page"])));
-		$body .= "<font color=\"blue\">\n"
-			."<pre>\n"
+		$body .= "<pre style=\"color=:blue\">\n"
 			.$diffdata
 			."\n"
-			."</pre>\n"
-			."</font>\n";
+			."</pre>\n";
 	}
 	else if(file_exists(DIFF_DIR.encode($get["page"]).".txt"))
 	{
@@ -417,8 +423,8 @@ else if(arg_check("diff"))
 		$diffdata = preg_replace("/&/","&amp;",$diffdata);
 		$diffdata = preg_replace("/</","&lt;",$diffdata);
 		$diffdata = preg_replace("/>/","&gt;",$diffdata);
-		$diffdata = preg_replace("/^(\-)(.*)/","<font color=\"red\"> $2</font>",$diffdata);
-		$diffdata = preg_replace("/^(\+)(.*)/","<font color=\"blue\"> $2</font>",$diffdata);
+		$diffdata = preg_replace("/^(\-)(.*)/","<span style=\"color:red\"> $2</span>",$diffdata);
+		$diffdata = preg_replace("/^(\+)(.*)/","<span style=\"color:blue\"> $2</span>",$diffdata);
 		
 		$body .= "<pre>\n"
 			.join("",$diffdata)
@@ -441,16 +447,18 @@ else if(arg_check("search"))
 	if($vars["word"])
 		$body = do_search($vars["word"],$vars["type"]);
 	else
-		$body = "<br>\n$_msg_searching";
+		$body = "<br />\n$_msg_searching";
 
-	if($vars["type"]=="AND" || !$vars["type"]) $and_check = "checked";
-	else if($vars["type"]=="OR")               $or_check = "checked";
+	if($vars["type"]=="AND" || !$vars["type"]) $and_check = "checked=\"checked\"";
+	else if($vars["type"]=="OR")               $or_check = "checked=\"checked\"";
 
 	$body .= "<form action=\"$script?cmd=search\" method=\"post\">\n"
-		."<input type=\"text\" name=\"word\" size=\"20\" value=\"".htmlspecialchars($vars["word"])."\">\n"
-		."<input type=\"radio\" name=\"type\" value=\"AND\" $and_check>$_btn_and\n"
-		."<input type=\"radio\" name=\"type\" value=\"OR\" $or_check>$_btn_or\n"
-		."&nbsp;<input type=\"submit\" value=\"$_btn_search\">\n"
+		."<div>\n"
+		."<input type=\"text\" name=\"word\" size=\"20\" value=\"".htmlspecialchars($vars["word"])."\" />\n"
+		."<input type=\"radio\" name=\"type\" value=\"AND\" $and_check />$_btn_and\n"
+		."<input type=\"radio\" name=\"type\" value=\"OR\" $or_check />$_btn_or\n"
+		."&nbsp;<input type=\"submit\" value=\"$_btn_search\" />\n"
+		."</div>\n"
 		."</form>\n";
 }
 // バックアップ
@@ -486,7 +494,7 @@ else if($do_backup && arg_check("backup"))
 		
 		if(is_page($get["page"]))
 		{
-			$link = str_replace('$1',"<a href=\"$script?".rawurlencode($get["page"])."\">$pagename</a>",$_msg_goto);
+			$link = str_replace('$1',"<a href=\"$script?".rawurlencode($get["page"])."\">".htmlspecialchars($pagename)."</a>",$_msg_goto);
 			$body .=  "<li>$link</li>\n";
 		}
 		else
@@ -507,7 +515,7 @@ else if($do_backup && arg_check("backup"))
 			if($key != $get["age"])
  				$body .= "<li><a href=\"$script?cmd=$get[cmd]&amp;page=".rawurlencode($get["page"])."&amp;age=$key\">$key $backupdate</a></li>\n";
 			else
-				$body .= "<li><i>$key $backupdate</i></li>\n";
+				$body .= "<li><em>$key $backupdate</em></li>\n";
 		}
 		if(count($backups)) $body .= "</ul>\n";
 		
@@ -553,10 +561,10 @@ else if($do_backup && arg_check("backup"))
 		{
 			$diffdata = preg_replace("/</","&lt;",$diffdata);
 			$diffdata = preg_replace("/>/","&gt;",$diffdata);
-			$diffdata = preg_replace("/^(\-)(.*)/","<font color=\"red\"> $2</font>",$diffdata);
-			$diffdata = preg_replace("/^(\+)(.*)/","<font color=\"blue\"> $2</font>",$diffdata);
+			$diffdata = preg_replace("/^(\-)(.*)/","<span style=\"color:red\"> $2</span>",$diffdata);
+			$diffdata = preg_replace("/^(\+)(.*)/","<span style=\"color:blue\"> $2</span>",$diffdata);
 
-			$body .= "<br>\n"
+			$body .= "<br />\n"
 				."<li>$_msg_addline</li>\n"
 				."<li>$_msg_delline</li>\n"
 				."</ul>\n"

@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.3 2002/06/28 10:39:57 masui Exp $
+// $Id: func.php,v 1.4 2002/07/01 06:25:01 masui Exp $
 /////////////////////////////////////////////////
 
 // ¸¡º÷
@@ -89,7 +89,7 @@ function do_search($word,$type="AND",$non_format=0)
 
 	if(count($retval) && !$non_format)
 	{
-		$retvals = "<ul>\n" . join("\n",$retval) . "</ul>\n<br>\n";
+		$retvals = "<ul>\n" . join("\n",$retval) . "</ul>\n<br />\n";
 		
 		if($type=="AND")
 			$retvals.= str_replace('$1',htmlspecialchars($result_word),str_replace('$2',count($retval),str_replace('$3',$cnt,$_msg_andresult)));
@@ -210,7 +210,7 @@ function die_message($msg)
 	$title = $page = "Runtime error";
 
 	$body = "<h3>Runtime error</h3>\n";
-	$body .= "<b>Error message : $msg</b>\n";
+	$body .= "<strong>Error message : $msg</strong>\n";
 
 	catbody($title,$page,$body);
 
