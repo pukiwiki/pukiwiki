@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: unfreeze.inc.php,v 1.9 2004/12/16 13:32:19 henoheno Exp $
+// $Id: unfreeze.inc.php,v 1.10 2004/12/18 01:24:21 henoheno Exp $
 //
 // Unfreeze(Unlock) plugin
 
@@ -29,7 +29,8 @@ function plugin_unfreeze_action()
 		// Unfreeze
 		$postdata = get_source($page);
 		array_shift($postdata);
-		file_write(DATA_DIR, $page, join('', $postdata), TRUE);
+		$postdata = join('', $postdata);
+		file_write(DATA_DIR, $page, $postdata, TRUE);
 
 		// Update 
 		is_freeze($page, TRUE);
