@@ -142,6 +142,18 @@ INCOMPATIBILIY BETWEEN 1.3 AND 1.4
 
 CHANGELOG
 
+    *   2003-11-10 1.4.1 by PukiWiki Developers Team
+
+         Fixed BugTrack/478
+         Fixed BugTrack/479
+         Fixed BugTrack/480
+         Fixed BugTrack/482
+         Fixed BugTrack/483
+         Fixed BugTrack/485
+         Fixed BugTrack/486
+         Update plugin/tracker.inc.php
+         Fixed backup.php (array initialize) 
+        
     *   2003-11-03 1.4 by PukiWiki Developers Team
          First official release of 1.4 series
 

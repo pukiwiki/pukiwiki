@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.66 2003/11/05 10:30:02 arino Exp $
+// $Id: init.php,v 1.67 2003/11/10 02:44:59 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -23,7 +23,7 @@ define('INI_FILE','./pukiwiki.ini.php');
 
 /////////////////////////////////////////////////
 // 初期設定 (バージョン/著作権)
-define('S_VERSION','1.4');
+define('S_VERSION','1.4.1');
 define('S_COPYRIGHT','
 <strong>"PukiWiki" '.S_VERSION.'</strong> Copyright &copy; 2001,2002,2003
 <a href="http://pukiwiki.org">PukiWiki Developers Team</a>.

@@ -166,6 +166,20 @@ PukiWiki/1.3.xとの非互換点
 
 更新履歴
 
+    *   2003-11-10 1.4.1 by PukiWiki Developers Team
+
+        BugTrack/478    リストの子要素の段落が正しく出力されない
+        BugTrack/479    CGI版PHPの場合、HTTPSで利用できない
+        BugTrack/480    online.inc.php 内のディレクトリ指定を定数に
+        BugTrack/482    AutoLinkの動作を調整
+        BugTrack/483    注釈内にHTMLエンティティを書くと注釈が作られない
+        BugTrack/485    lookupでInterWikiNameの「検索」等を実行すると
+                        &でなく&amp;が入る
+        BugTrack/486    headerでキャッシュ無効を
+        tracker.inc.php radio/select/checkboxで、選択肢がひとつも選択
+                        されなかったときは、値を空白とする
+        backup.php      dataが空の場合のwarning抑止
+
     *   2003-11-03 1.4 by PukiWiki Developers Team
 
         1.4系最初のリリース
