@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.37 2004/08/29 10:24:45 henoheno Exp $
+// $Id: ref.inc.php,v 1.38 2004/09/01 13:15:16 henoheno Exp $
 //
 
 // UPLOAD_DIR のデータ(画像ファイルのみ)に直接アクセスさせる
@@ -152,8 +152,11 @@ function plugin_ref_body($args)
 	// 添付ファイルのあるページ: defaultは現在のページ名
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
-	// 添付ファイル名
+	// 添付ファイルのファイル名
 	$name = '';
+
+	// 添付ファイルまでのパスおよび(実際の)ファイル名
+	$file = '';
 
 	// 第一引数: "[ページ名および/]添付ファイル名"、あるいは"URL"を取得
 	$name = array_shift($args);
@@ -175,7 +178,8 @@ function plugin_ref_body($args)
 			}
 			$name = $matches[2];
 			$page = get_fullname(strip_bracket($matches[1]), $page); // strip is a compat
-			$is_file = is_file(UPLOAD_DIR . encode($page) . '_' . encode($name));
+			$file = UPLOAD_DIR . encode($page) . '_' . encode($name);
+			$is_file = is_file($file);
 
 		// 第二引数以降が存在し、それはrefのオプション名称などと一致しない
 		} else if (isset($args[0]) && $args[0] != '' && ! isset($params[$args[0]])) {
@@ -183,7 +187,8 @@ function plugin_ref_body($args)
 
 			// Try the second argument, as a page-name or a path-name
 			$_arg = get_fullname(strip_bracket($args[0]), $page); // strip is a compat
-			$is_file_second = is_file(UPLOAD_DIR .  encode($_arg) . '_' . $e_name);
+			$file = UPLOAD_DIR .  encode($_arg) . '_' . $e_name;
+			$is_file_second = is_file($file);
 
 			// If the second argument is WikiName, or double-bracket-inserted pagename (compat)
 			$is_bracket_bracket = preg_match("/^($WikiName|\[\[$BracketName\]\])$/", $args[0]);
@@ -213,7 +218,8 @@ function plugin_ref_body($args)
 			}
 		} else {
 			// Simple single argument
-			$is_file = is_file(UPLOAD_DIR . encode($page) . '_' . encode($name));
+			$file = UPLOAD_DIR . encode($page) . '_' . encode($name);
+			$is_file = is_file($file);
 		}
 		if (! $is_file) {
 			$params['_error'] = htmlspecialchars('File not found: "' .
@@ -237,7 +243,7 @@ function plugin_ref_body($args)
          添付ファイルのとき : ファイルの最終更新日とサイズ
          URLのとき : URLそのもの
 */
-	$file = $title = $url = $url2 = $info = '';
+	$title = $url = $url2 = $info = '';
 	$width = $height = 0;
 	$matches = array();
 
