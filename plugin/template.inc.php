@@ -1,5 +1,5 @@
 <?php
-// $Id: template.inc.php,v 1.13 2003/07/03 05:27:08 arino Exp $
+// $Id: template.inc.php,v 1.14 2003/07/05 15:40:32 arino Exp $
 
 define('MAX_LEN',60);
 
@@ -94,7 +94,8 @@ EOD;
 		$select.= "</table><br />\n";
 */
 	}
-	$s_refer = str_replace('$1',htmlspecialchars($vars['refer']),$_msg_template_page);
+	$s_refer = htmlspecialchars($vars['refer']);
+	$s_page = str_replace('$1',htmlspecialchars($vars['refer']),$_msg_template_page);
 	$ret = <<<EOD
 <form action="$script" method="post">
  <div>
@@ -102,7 +103,7 @@ EOD;
   <input type="hidden" name="refer" value="$s_refer" />
   $begin_select
   $end_select
-  $_msg_template_refer <input type="text" name="page" value="$s_refer" />
+  $_msg_template_refer <input type="text" name="page" value="$s_page" />
   <input type="submit" name="submit" value="$_btn_template_create" />
  </div>
 </form>
