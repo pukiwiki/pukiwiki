@@ -1,6 +1,6 @@
 <?php
 /*
-$Id: ls2.inc.php,v 1.7 2003/03/02 08:53:15 panda Exp $
+$Id: ls2.inc.php,v 1.8 2003/03/02 08:56:51 panda Exp $
 
 *プラグイン ls2
 配下のページの見出し(*,**,***)の一覧を表示する
@@ -121,7 +121,7 @@ function ls2_show_lists($prefix,&$params)
 
 function ls2_get_headings($page,&$params,$level,$include = FALSE)
 {
-	global $script, $user_rules;
+	global $script;
 	global $_ls2_messages;
 	static $_ls2_anchor = 0;
 	
