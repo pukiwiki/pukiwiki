@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.46 2004/08/05 13:46:59 henoheno Exp $
+//  $Id: attach.inc.php,v 1.47 2004/08/05 14:16:42 henoheno Exp $
 //
 
 /*
@@ -405,7 +405,7 @@ class AttachFile
 		}
 		$this->time_str = get_date('Y/m/d H:i:s', $this->time);
 		$this->size     = filesize($this->filename);
-		$this->size_str = sprintf('%01.1f', round($this->size)/1024) . 'KB';
+		$this->size_str = sprintf('%01.1f', round($this->size/1024, 1)) . 'KB';
 		$this->type     = attach_mime_content_type($this->filename);
 
 		return TRUE;
