@@ -139,9 +139,9 @@ InterWiki
 RDF/RSSの出力
 
         1.2.1から、RecentChangesのRDF/RSSを出力できるようになりました。
-	1.4.5から、RSS 2.0 を出力できるようになりました。
+        1.4.5から、RSS 2.0 を出力できるようになりました。
 
-	* 出力方法の例
+        * 出力方法の例
           RSS 0.91 http://path/to/pukiwiki/index.php?plugin=rss
           RSS 1.0  http://path/to/pukiwiki/index.php?plugin=rss&ver=1.0
           RSS 2.0  http://path/to/pukiwiki/index.php?plugin=rss&ver=2.0
