@@ -1,8 +1,6 @@
-<!-- default skin by sng -->
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html; charset=euc-jp">
-<title>sng's PukiWiki - <?=$title?></title>
+<title><?=$page_title ?> - <?=$title?></title>
 <style>
 <!--
 pre, dl, ol, p, blockquote { line-height:130%; }
@@ -167,7 +165,7 @@ ul {
 <table>
  <tr>
   <td rowspan="2">
-   <a href="http://factage.com/sng/pukiwiki/"><img src="logo3.png" width="120" height="64" border="0" alt="[PukiWiki]"></a><br>
+   <a href="http://pukiwiki.org/"><img src="pukiwiki.png" width="120" height="64" border="0" alt="[PukiWiki]"></a><br>
   </td>
   <td width="10" rowspan="2">
   </td>
@@ -176,7 +174,7 @@ ul {
   </td></tr>
   <tr><td valign="top">
    <? if($is_page) { ?>
-   <font size="1"><a href="<?=$script?>?<?=rawurlencode($vars[page])?>">http://factage.com/sng/pukiwiki/pukiwiki.php?<?=rawurlencode($vars[page])?></a></font><br>
+   <font size="1"><a href="<?=$script?>?<?=rawurlencode($vars["page"])?>"><?=$script?>?<?=rawurlencode($vars["page"])?></a></font><br>
    <? } ?>
   </td>
  </tr>
@@ -187,7 +185,7 @@ ul {
 <? if($is_page) { ?>
 [ <a href="<?=$script?>?<?=rawurlencode($vars[page])?>">Reload</a> ]
 &nbsp;
-[ <a href="<?=$link_add?>">Add</a>
+[ <a href="<?=$script?>?plugin=newpage">New</a>
 | <a href="<?=$link_edit?>">Edit</a>
 | <a href="<?=$link_diff?>">Diff</a>
 | <a href="<?=$script?>?plugin=attach&pcmd=upload&page=<?=rawurlencode($vars[page])?>">Upload</a>
@@ -234,7 +232,7 @@ if(file_exists(PLUGIN_DIR."attach.inc.php") && $is_read)
 
 &nbsp;
 
-<a href="<?=$link_add?>"><img src="./image/add.gif" width="20" height="20" border="0" alt="Add"></a>
+<a href="<?=$script?>?plugin=newpage"><img src="./image/new.gif" width="20" height="20" border="0" alt="New"></a>
 <a href="<?=$link_edit?>"><img src="./image/edit.gif" width="20" height="20" border="0" alt="Edit"></a>
 <a href="<?=$link_diff?>"><img src="./image/diff.gif" width="20" height="20" border="0" alt="Diff"></a>
 &nbsp;
@@ -268,8 +266,7 @@ if(file_exists(PLUGIN_DIR."attach.inc.php") && $is_read)
 <font face="Verdana" size="1">
 Modified by <a href="<?=$modifierlink?>"><?=$modifier?></a><br>
 <br>
-<b>"PukiWiki" <?=S_VERSION?></b> Copyright &copy; 2001,2002 <a href="mailto:sng@factage.com">sng</a>.<br>
-This is Free Software released under the <a href="http://www.gnu.org/">GNU/GPL license</a>.<br>
+<?=S_COPYRIGHT?><br>
 Powered by PHP <?=PHP_VERSION?><br>
 <br>
 HTML convert time to <?=$taketime?> sec.

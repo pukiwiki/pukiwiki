@@ -1,9 +1,8 @@
-<!-- default skin by sng -->
-<!-- little changed by masui -->
+<? header("Content-Type: text/html; charset=EUC_JP") ?>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=euc-jp">
-<title>sng's PukiWiki - <?=$title?></title>
+<title><?=$page_title ?> - <?=$title?></title>
 <style>
 <!--
 pre, dl, ol, p, blockquote { line-height:130%; }
@@ -162,14 +161,14 @@ ul {
 <table>
  <tr>
   <td>
-   <a href="http://factage.com/sng/pukiwiki/"><img src="pukiwiki.png" width="80" height="80" border="0" alt="[PukiWiki]"></a><br>
+   <a href="http://pukiwiki.org/"><img src="pukiwiki.png" width="80" height="80" border="0" alt="[PukiWiki]"></a><br>
   </td>
   <td width="20">
   </td>
   <td>
    <b style="font-size:30px"><?=$page?></b><br>
    <? if($is_page) { ?>
-   <font size="1"><a href="<?=$script?>?<?=rawurlencode($vars[page])?>">http://factage.com/sng/pukiwiki/pukiwiki.php?<?=rawurlencode($vars[page])?></a></font><br>
+   <font size="1"><a href="<?=$script?>?<?=rawurlencode($vars["page"])?>"><?=$script?>?<?=rawurlencode($vars["page"])?></a></font><br>
    <? } ?>
   </td>
  </tr>
@@ -180,7 +179,7 @@ ul {
 <? if($is_page) { ?>
 [ <a href="<?=$script?>?<?=rawurlencode($vars[page])?>">リロード</a> ]
 &nbsp;
-[ <a href="<?=$link_add?>">追加</a>
+[ <a href="<?=$script?>?plugin=newpage">新規</a>
 | <a href="<?=$link_edit?>">編集</a>
 | <a href="<?=$link_diff?>">差分</a>
 ]
@@ -210,7 +209,7 @@ ul {
 
 &nbsp;
 
-<a href="<?=$link_add?>"><img src="./image/add.gif" width="20" height="20" border="0" alt="追加"></a>
+<a href="<?=$script?>?plugin=newpage"><img src="./image/new.gif" width="20" height="20" border="0" alt="新規"></a>
 <a href="<?=$link_edit?>"><img src="./image/edit.gif" width="20" height="20" border="0" alt="編集"></a>
 <a href="<?=$link_diff?>"><img src="./image/diff.gif" width="20" height="20" border="0" alt="差分"></a>
 &nbsp;
