@@ -200,7 +200,7 @@ $line_breakの設定に因らず改行をどのように扱うかを指定できるようになります。
 --PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY　現在表示中のページに対するリンクを表示するかどうか
 --PLUGIN_TOPICPATH_THIS_PAGE_LINK　現在表示中のページに対してリンクするかどうか
 :備考|
-~スキンに組み込む場合は、pukiwiki.skin.php の SKIN_DEFAULT_DISABLE_TOPICPATH に 1を指定して下さい。
+~スキンに組み込む場合は、pukiwiki.skin.php の SKIN_DEFAULT_DISABLE_TOPICPATH に 0を指定して下さい。
 
 
 **touchgraph [#p93402bd]
