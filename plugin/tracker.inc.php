@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.8 2003/08/08 02:59:24 arino Exp $
+// $Id: tracker.inc.php,v 1.9 2003/08/20 10:56:35 arino Exp $
 //
 
 function plugin_tracker_convert()
@@ -108,7 +108,7 @@ function plugin_tracker_action()
 		$page = "$base/$real";
 	}
 	// ページデータを生成
-	$postdata = join('',plugin_tracker_get_source($source));
+	$postdata = plugin_tracker_get_source($source);
 	
 	// 規定のデータ
 	$_post = array_merge($post,$_FILES);
@@ -122,15 +122,28 @@ function plugin_tracker_action()
 	
 	foreach (array_keys($fields) as $key)
 	{
-		if (array_key_exists($key,$_post))
+		if (!array_key_exists($key,$_post))
 		{
-			$postdata = str_replace("[$key]",
-				$fields[$key]->format_value($_post[$key]),$postdata);
+			continue;
+		}
+		$value = $fields[$key]->format_value($_post[$key]);
+		foreach (array_keys($postdata) as $num)
+		{
+			if (trim($postdata[$num]) == '')
+			{
+				continue;
+			}
+			$postdata[$num] = str_replace(
+				"[$key]",
+				($postdata[$num]{0} == '|' or $postdata[$num]{0} == ':') ?
+					str_replace('|','&#x7c;',$value) : $value,
+				$postdata[$num]
+			);
 		}
 	}
 	
 	// 書き込み
-	page_write($page,$postdata);
+	page_write($page,join('',$postdata));
 	
 	$r_page = rawurlencode($page);
 	
@@ -205,7 +218,7 @@ class Tracker_field
 	}
 	function format_value($value)
 	{
-		return str_replace('|','&#x7c;',$value);
+		return $value;
 	}
 	function format_cell($str)
 	{
@@ -652,7 +665,7 @@ class Tracker_list
 		}
 		else
 		{
-			return $arr[0];
+			return $this->pipe ? str_replace('|','&#x7c;',$arr[0]) : $arr[0];
 		}
 		$style = count($params) ? $params[0] : $name;
 		if (array_key_exists($style,$this->items)
@@ -660,7 +673,7 @@ class Tracker_list
 		{
 			$str = sprintf($this->fields[$style]->get_style($this->items[$style]),$str);
 		}
-		return $str;
+		return $this->pipe ? str_replace('|','&#x7c;',$str) : $str;
 	}
 	function replace_title($arr)
 	{
@@ -690,10 +703,12 @@ class Tracker_list
 	{
 		global $_tracker_messages;
 		
-		$list = $body = '';
+		$source = '';
+		$body = array();
+		
 		if ($limit !== NULL and count($this->rows) > $limit)
 		{
-			$list .= str_replace(
+			$source = str_replace(
 				array('$1','$2'),
 				array(count($this->rows),$limit),
 				$_tracker_messages['msg_limit'])."\n";
@@ -707,20 +722,28 @@ class Tracker_list
 		{
 			if (preg_match('/^\|(.+)\|[hHfFcC]$/',$line))
 			{
-				$list .= $line;
+				$source .= preg_replace_callback('/\[([^\[\]]+)\]/',array(&$this,'replace_title'),$line);
 			}
 			else
 			{
-				$body .= $line;
+				$body[] = $line;
 			}
 		}
-		$list = preg_replace_callback('/\[([^\[\]]+)\]/',array(&$this,'replace_title'),$list);
 		foreach ($this->rows as $key=>$row)
 		{
 			$this->items = $row;
-			$list .= preg_replace_callback('/\[([^\[\]]+)\]/',array(&$this,'replace_item'),$body);
+			foreach ($body as $line)
+			{
+				if (trim($line) == '')
+				{
+					$source .= $line;
+					continue;
+				}
+				$this->pipe = ($line{0} == '|' or $line{0} == ':');
+				$source .= preg_replace_callback('/\[([^\[\]]+)\]/',array(&$this,'replace_item'),$line);
+			}
 		}
-		return convert_html($list);
+		return convert_html($source);
 	}
 }
 function plugin_tracker_get_source($page)
