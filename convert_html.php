@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.47 2003/06/30 00:38:21 arino Exp $
+// $Id: convert_html.php,v 1.48 2003/07/05 01:40:49 arino Exp $
 //
 function convert_html($lines)
 {
@@ -832,7 +832,7 @@ class Body extends Block
 		// 関連するページ
 		// <p>のときは行頭から、<del>のときは他の要素の子要素として存在
 		$text = preg_replace('/<p><del>#related<\/del><\/p>/',make_related($vars['page'],'p'),$text);
-		$text = preg_replace('/<del>#related<\/del>/',make_related($vars['page']),$text);
+		$text = preg_replace('/<del>#related<\/del>/',make_related($vars['page'],'del'),$text);
 		return $text;
 	}
 	function block(&$lines,$start,$end,$class)
