@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.36 2003/03/02 16:08:04 panda Exp $
+// $Id: init.php,v 1.37 2003/03/05 06:48:19 panda Exp $
 //
 
 /////////////////////////////////////////////////
@@ -233,6 +233,6 @@ $html_transitional = FALSE;
 // フェイスマークを$line_rulesに加える
 if ($usefacemark)
 {
-	$line_rules = array_merge($line_rules,$facemark_rules);
+	$line_rules += $facemark_rules;
 }
 ?>
