@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.27 2003/07/14 03:54:24 arino Exp $
+// $Id: file.php,v 1.28 2003/07/22 05:28:16 arino Exp $
 //
 
 // ソースを取得
@@ -18,6 +18,10 @@ function get_source($page=NULL)
 // ページの更新時刻を得る
 function get_filetime($page)
 {
+	if (!is_page($page))
+	{
+		return 0;
+	}
 	return filemtime(get_filename($page)) - LOCALZONE;
 }
 
