@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.75 2004/08/08 04:56:34 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.76 2004/08/22 08:10:22 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -30,17 +30,32 @@ define('COUNTER_DIR', DATA_HOME . 'counter/');
 // TrackBackファイル格納ディレクトリ
 define('TRACKBACK_DIR', DATA_HOME . 'trackback/');
 
-/////////////////////////////////////////////////
-// ディレクトリ指定 最後に / が必要
-
 // プラグインファイル格納先ディレクトリ
 define('PLUGIN_DIR', DATA_HOME . 'plugin/');
 
+/////////////////////////////////////////////////
+// ディレクトリ指定 最後に / が必要
+//
+//  PukiWiki本体をWebブラウザからアクセスできない
+//  場所に設置するときは、以下のディレクトリにある
+//  ファイルの一部を Webブラウザからアクセスできる
+//  場所に設置する必要があります。
+//  (無くとも動作はしますが、少々味気なくなるでしょう)
+
 // スキン/スタイルシートファイル格納ディレクトリ
 define('SKIN_DIR', 'skin/');
+//  このディレクトリ以下のスキンファイル (*.php) は
+//  PukiWiki本体側(DATA_HOME/SKIN_DIR) に必要ですが、
+//  CSSファイル(*.css) およびJavaScriptファイル( *.js)
+//  はWebサーバーから見える場所(./SKIN_DIR)に配置
+//  して下さい
 
 // 画像ファイル格納ディレクトリ
 define('IMAGE_DIR', 'image/');
+//  このディレクトリ以下の全てのファイルは
+//  Webサーバーから見える場所(./IMAGE_DIR)に配置
+//  して下さい
+
 
 /////////////////////////////////////////////////
 // ローカル時間
@@ -54,7 +69,7 @@ $page_title = 'PukiWiki';
 
 // index.php などに変更した場合のスクリプト名の設定
 // とくに設定しなくても問題なし
-//$script = 'http://hogehoge/pukiwiki/';
+//$script = 'http://example.com/pukiwiki/';
 
 // 編集者の名前(修正してください)
 $modifier = 'anonymous';
@@ -119,20 +134,24 @@ $adminpass = '1a1dc91c907325c69271ddf0c944bc72';
 //
 // ただし、この方法では、このファイルを覗き見ることができる
 // (できた) 誰かに、パスワードそのものを知られる高い危険性が
-// あります。この危険性を下げるために、MD5関数の結果だけを
+// あります。この危険性を下げるために、md5()関数の結果だけを
 // 記述することができます。
 //
-// MD5関数の結果(ハッシュ)は0から9の数字と、AからFまでの英字
-// からなる32文字の文字列で、この情報だけでは元の文字列を
+// md5()関数の結果(MD5ハッシュ)は0から9の数字と、AからFまで
+// の英字からなる32文字の文字列で、この情報だけでは元の文字列を
 // 推測することは困難です。
 //
-// 'pass' のMD5ハッシュを算出するには、Linuxやcygwinであれば
+// MD5ハッシュは、Linuxやcygwinであれば
+//
 //    $ echo -n 'pass' | md5sum
-// の様にして算出する事ができます。('-n' オプションを忘れずに!)
-// FreeBSDなどではmd5sumの代わりにmd5コマンドを使ってください。
+//
+// の様にして計算させる事ができます。('-n' オプションを忘れずに!)
+// FreeBSDなどでは md5sum の代わりに md5 コマンドを使ってください。
 //
 // お勧めできませんが、PukiWikiのmd5コマンドでも算出が可能です。
+//
 // http://<設置した場所>/pukiwiki.php?md5=pass
+//
 // このURLにアクセスすることで、算出結果が表示されます。その
 // かわり、あなたがタイプしたパスワードはネットワークを流れ、
 // 誰にでも覗き見ができ、Webサーバーのログにも残ってしまう、
@@ -144,9 +163,7 @@ $adminpass = '1a1dc91c907325c69271ddf0c944bc72';
 // ChaSen, KAKASI による、ページ名の読みの取得 (0:無効,1:有効)
 $pagereading_enable = 0;
 
-// ChaSen or KAKASI or none
-//$pagereading_kanji2kana_converter = 'chasen';
-//$pagereading_kanji2kana_converter = 'kakasi';
+// ChaSen('chasen') or KAKASI('kakasi') or None('none')
 $pagereading_kanji2kana_converter = 'none';
 
 // ChaSen/KAKASI との受け渡しに使う漢字コード (UNIX系は EUC、Win系は SJIS が基本)
@@ -156,12 +173,14 @@ $pagereading_kanji2kana_encoding = 'EUC';
 // ChaSen/KAKASI の実行ファイル (各自の環境に合わせて設定)
 $pagereading_chasen_path = '/usr/local/bin/chasen';
 //$pagereading_chasen_path = 'c:\progra~1\chasen21\chasen.exe';
+
 $pagereading_kakasi_path = '/usr/local/bin/kakasi';
 //$pagereading_kakasi_path = 'c:\kakasi\bin\kakasi.exe';
 
 // ページ名読みを格納したページの名前
 $pagereading_config_page = ':config/PageReading';
-// converter = none の場合の読み仮名辞書
+
+// converter ='none' の場合の読み仮名辞書
 $pagereading_config_dict = ':config/PageReading/dict';
 
 /////////////////////////////////////////////////
@@ -174,14 +193,12 @@ $auth_users = array(
 
 /////////////////////////////////////////////////
 // 認証方式種別
-// pagename : ページ名
-// contents : ページ内容
+// 'pagename' : ページ名
+// 'contents' : ページ内容
 $auth_method_type = 'contents';
 
 /////////////////////////////////////////////////
-// 閲覧認証フラグ
-// 0:不要
-// 1:必要
+// 閲覧認証フラグ (0:不要 1:必要)
 $read_auth = 0;
 
 // 閲覧認証対象パターン定義
@@ -191,9 +208,7 @@ $read_auth_pages = array(
 );
 
 /////////////////////////////////////////////////
-// 編集認証フラグ
-// 0:不要
-// 1:必要
+// 編集認証フラグ (0:不要 1:必要)
 $edit_auth = 0;
 
 // 編集認証対象パターン定義
@@ -248,17 +263,15 @@ $del_backup = 0;
 // バックアップ間隔と世代数
 $cycle  = 3;	// 直前の修正から何時間経過していたらバックアップするか (0で更新毎)
 $maxage = 120;	// 世代数
-// NOTE:
-//   $cycle x $maxage / 24 = データを失うために最低限必要な日数
-//       3  x   120   / 24 = 15
+
+// NOTE: $cycle x $maxage / 24 = データを失うために最低限必要な日数
+//          3   x   120   / 24 = 15
 
 // バックアップの世代を区切る文字列
-// (通常はこのままで良いが、文章中で使われる可能性
-// があれば、使われそうにない文字を設定する)
 $splitter = ">>>>>>>>>>";
 
 /////////////////////////////////////////////////
-// ページの更新時にバックグランドで実行されるコマンド(mknmzなど)
+// ページの更新時にバックグランドで実行するコマンド(mknmzなど)
 $update_exec = '';
 //$update_exec = '/usr/bin/mknmz --media-type=text/pukiwiki -O /var/lib/namazu/index/ -L ja -c -K /var/www/wiki/';
 
@@ -351,8 +364,19 @@ $line_break = 0;
 
 /////////////////////////////////////////////////
 // ユーザーエージェント対応設定
+//
+// リッチクライアントを前提としたサイトを構築する
+// ために、携帯電話などに意図的に非対応としたい場合、
+// 最後のデフォルト設定以外の行を全て削除あるいは
+// コメントアウトして下さい。
+//
+// デザインやスタイルを簡素なkeitaiプロファイルに
+// 統一したい時は、デフォルト設定以外の行を全て削除
+// あるいはコメントアウトした後に、デフォルト設定を
+// 'profile'=>'keitai' と修正して下さい。
 
-$agents = array( // pattern: デバイス[ブラウザ]名およびバージョンの検出パターン  profile: 所属するグループ
+$agents = array(
+// pattern: デバイス[ブラウザ]名およびバージョンの検出パターン  profile: 所属するグループ
 
     // 組み込みブラウザ (リッチクライアント:PukiWikiがそのまま使えるという意味の)
 
@@ -419,6 +443,8 @@ $agents = array( // pattern: デバイス[ブラウザ]名およびバージョンの検出パターン 
 	array('pattern'=>'#^(WebTV)/([0-9\.]+)#',	'profile'=>'keitai'),
 
     // デスクトップあるいはリッチクライアント (デバイスを識別する必要がないもの)
+
+    	// デフォルト設定
 	array('pattern'=>'#^#',	'profile'=>'default'),	// default
 
 );
