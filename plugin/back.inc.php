@@ -1,5 +1,5 @@
 <?php
-// $Id: back.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+// $Id: back.inc.php,v 1.2 2003/02/28 02:40:52 panda Exp $
 /*
  * PukiWiki back プラグイン
  * (C) 2002, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -30,27 +30,27 @@ function plugin_back_convert()
 
 	// パラメータの判断
 	if (func_num_args() > 0) {
-		$word = trim(strip_tags($argv[0]));
+		$word = htmlspecialchars(trim(strip_tags($argv[0])));
 		if ($word == '') $word = '戻る';
 	}
 	if (func_num_args() > 1) {
-		$align = trim(strip_tags($argv[1]));
+		$align = htmlspecialchars(trim(strip_tags($argv[1])));
 		if ($align == '') $align = 'center';
 	}
 	if (func_num_args() > 2) {
 		$hr = trim(strip_tags($argv[2]));
 	}
 	if (func_num_args() > 3) {
-		$href = trim(strip_tags($argv[3]));
+		$href = rawurlencode(trim(strip_tags($argv[3])));
 		if ($href == '') $href = 'javascript:history.go(-1)';
 	}
 
 	// <hr> タグを出力するかどうか
 	if ($hr) {
-		$ret = "<hr class=\"full_hr\">\n";
+		$ret = "<hr class=\"full_hr\" />\n";
 	}
 
-	$ret.= "<div align=\"$align\">[ <a href=\"$href\">$word</a> ]</div>\n";
+	$ret.= "<div style=\"text-align:$align\">[ <a href=\"$href\">$word</a> ]</div>\n";
 
 	return $ret;
 }
