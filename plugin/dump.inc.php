@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.5 2004/09/25 12:34:39 henoheno Exp $
+// $Id: dump.inc.php,v 1.6 2004/09/25 12:36:28 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -47,7 +47,6 @@ define('ARCFILE_TAR',  1);
 // プラグイン本体
 function plugin_dump_action()
 {
-	global $adminpass;
 	global $vars, $post;
 
 	$pass = isset($post['pass']) ? $post['pass'] : NULL;
@@ -55,9 +54,8 @@ function plugin_dump_action()
 
 	$body = '';
 
-//	if (pkwk_login($pass))	// for pukiwiki-1.4.4
 	if ($pass !== NULL) {
-		if ((md5($pass) == $adminpass) && ($act !== NULL) ) {
+		if (pkwk_login($pass) && ($act !== NULL) ) {
 			switch($act){
 			case PLUGIN_DUMP_DUMP:
 				$body = plugin_dump_download();
