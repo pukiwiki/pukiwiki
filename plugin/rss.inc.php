@@ -1,9 +1,15 @@
 <?php
-// PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: rss.inc.php,v 1.13 2004/12/25 00:39:45 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: rss.inc.php,v 1.14 2005/01/16 13:10:52 henoheno Exp $
 //
-// Publishing RSS feed of RecentChanges
-// Usage: rss.inc.php?ver=[0.91(default)|1.0|2.0]
+// RSS plugin: Publishing RSS of RecentChanges
+//
+// Usage: plugin=rss[&ver=[0.91|1.0|2.0]] (Default: 0.91)
+//
+// NOTE for acronyms
+//   RSS 0.9,  1.0  : RSS means 'RDF Site Summary'
+//   RSS 0.91, 0.92 : RSS means 'Rich Site Summary'
+//   RSS 2.0        : RSS means 'Really Simple Syndication' (born from RSS 0.92)
 
 function plugin_rss_action()
 {
@@ -12,8 +18,8 @@ function plugin_rss_action()
 	$version = isset($vars['ver']) ? $vars['ver'] : '';
 	switch($version){
 	case '':  $version = '0.91'; break; // Default
-	case '1': $version = '1.0';  break;
-	case '2': $version = '2.0';  break;
+	case '1': $version = '1.0';  break; // Sugar
+	case '2': $version = '2.0';  break; // Sugar
 	case '0,91': /* FALLTHROUGH */
 	case '1.0' : /* FALLTHROUGH */
 	case '2.0' : break;
@@ -23,8 +29,9 @@ function plugin_rss_action()
 	$recent = CACHE_DIR . 'recent.dat';
 	if (! file_exists($recent)) die('recent.dat is not found');
 
+	$lang = LANG;
 	$page_title_utf8 = mb_convert_encoding($page_title, 'UTF-8', SOURCE_ENCODING);
-	$self  = get_script_uri();
+	$self = get_script_uri();
 
 	// Creating <item>
 	$items = $rdf_li = '';
@@ -39,7 +46,7 @@ function plugin_rss_action()
 			$date = get_date('D, d M Y H:i:s T', $time);
 			$date = ($version == '0.91') ?
 				' <description>' . $date . '</description>' :
-				' <pubDate>' . $date . '</pubDate>';
+				' <pubDate>'     . $date . '</pubDate>';
 			$items .= <<<EOD
 <item>
  <title>$title</title>
@@ -59,8 +66,8 @@ EOD;
 			$trackback_ping = '';
 			if ($trackback) {
 				$tb_id = md5($r_page);
-				$trackback_ping = ' <trackback:ping>' .
-					"$self?tb_id=$tb_id" . '</trackback:ping>';
+				$trackback_ping = ' <trackback:ping>' . $self .
+					'?tb_id=' . $tb_id . '</trackback:ping>';
 			}
 			$items .= <<<EOD
 <item rdf:about="$self?$r_page">
@@ -95,7 +102,7 @@ EOD;
   <title>$page_title_utf8</title>
   <link>$self?$r_whatsnew</link>
   <description>PukiWiki RecentChanges</description>
-  <language>ja</language>
+  <language>$lang</language>
 
 $items
  </channel>
@@ -112,7 +119,7 @@ EOD;
 $xmlns_trackback
   xmlns="http://purl.org/rss/1.0/"
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-  xml:lang="ja">
+  xml:lang="$lang">
  <channel rdf:about="$self?$r_whatsnew">
   <title>$page_title_utf8</title>
   <link>$self?$r_whatsnew</link>
