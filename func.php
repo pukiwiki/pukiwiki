@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.29 2003/03/13 14:11:59 panda Exp $
+// $Id: func.php,v 1.30 2003/03/15 04:24:59 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -19,11 +19,14 @@ function is_pagename($str)
 	
 	$is_pagename = (!is_interwiki($str) and preg_match("/^(?!\.{0,}\/)$BracketName$(?<!\/$)/",$str));
 	
-	if (defined('SOURCE_ENCODING')) {
-		if (SOURCE_ENCODING == 'UTF-8') {
+	if (defined('SOURCE_ENCODING'))
+	{
+		if (SOURCE_ENCODING == 'UTF-8')
+		{
 			$is_pagename = ($is_pagename and preg_match('/^(?:[\x00-\x7F]|(?:[\xC0-\xDF][\x80-\xBF])|(?:[\xE0-\xEF][\x80-\xBF][\x80-\xBF]))+$/',$str)); // UTF-8
 		}
-		else if (SOURCE_ENCODING == 'EUC-JP') {
+		else if (SOURCE_ENCODING == 'EUC-JP')
+		{
 			$is_pagename = ($is_pagename and preg_match('/^(?:[\x00-\x7F]|(?:[\x8E\xA1-\xFE][\xA1-\xFE])|(?:\x8F[\xA1-\xFE][\xA1-\xFE]))+$/',$str)); // EUC-JP
 		}
 	}
@@ -42,10 +45,14 @@ function is_page($page,$reload=FALSE)
 	static $is_page;
 	
 	if (!isset($is_page))
+	{
 		$is_page = array();
+	}
 	
 	if ($reload or !array_key_exists($page,$is_page))
+	{
 		$is_page[$page] = file_exists(get_filename($page));
+	}
 	
 	return $is_page[$page];
 }
@@ -56,10 +63,18 @@ function is_editable($page)
 	static $is_editable;
 	
 	if (!isset($is_editable))
+	{
 		$is_editable = array();
+	}
 	
 	if (!array_key_exists($page,$is_editable))
-		$is_editable[$page] = (is_pagename($page) and !is_freeze($page) and !in_array($page,$cantedit));
+	{
+		$is_editable[$page] = (
+			is_pagename($page) and
+			!is_freeze($page) and
+			!in_array($page,$cantedit)
+		);
+	}
 	
 	return $is_editable[$page];
 }
@@ -69,7 +84,8 @@ function is_freeze($page)
 {
 	global $function_freeze;
 
-	if (!$function_freeze or !is_page($page)) {
+	if (!$function_freeze or !is_page($page))
+	{
 		return FALSE;
 	}
 
@@ -84,15 +100,18 @@ function check_editable()
 	
 	edit_auth();
 	
-	if (is_editable($get['page'])) {
+	if (is_editable($get['page']))
+	{
 		return;
 	}
 	
 	$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($get['page'])),$_title_cannotedit);
 	$page = str_replace('$1',make_search($get['page']),$_title_cannotedit);
 
-	if(is_freeze($get['page'])) {
-		$body .= "(<a href=\"$script?cmd=unfreeze&amp;page=".rawurlencode($get['page'])."\">$_msg_unfreeze</a>)";
+	if(is_freeze($get['page']))
+	{
+		$body .= "(<a href=\"$script?cmd=unfreeze&amp;page=".
+			rawurlencode($get['page'])."\">$_msg_unfreeze</a>)";
 	}
 	
 	catbody($title,$page,$body);
@@ -125,16 +144,20 @@ function auto_template($page)
 {
 	global $auto_template_func,$auto_template_rules;
 	
-	if (!$auto_template_func) {
+	if (!$auto_template_func)
+	{
 		return '';
 	}
 
 	$body = '';
-	foreach ($auto_template_rules as $rule => $template) {
-		if (preg_match("/$rule/",$page,$matches)) {
+	foreach ($auto_template_rules as $rule => $template)
+	{
+		if (preg_match("/$rule/",$page,$matches))
+		{
 			$template_page = preg_replace("/$rule/",$template,$page);
 			$body = join('',get_source($template_page));
-			for ($i = 0; $i < count($matches); $i++) {
+			for ($i = 0; $i < count($matches); $i++)
+			{
 				$body = str_replace("\$$i",$matches[$i],$body);
 			}
 			break;
@@ -225,26 +248,27 @@ function arg_check($str)
 // ページ名のエンコード
 function encode($key)
 {
-	return strtoupper(join('',unpack('H*0',$key)));
+	return ($key == '') ? '' : strtoupper(join('',unpack('H*0',$key)));
 }
 
 // ページ名のデコード
 function decode($key)
 {
-	return ($key == '') ? '' : pack('H*',$key);
+	return ($key == '') ? '' : substr(pack('H*','20202020'.$key),4);
 }
 
 // [[ ]] を取り除く
 function strip_bracket($str)
 {
-	if (preg_match('/^\[\[(.*)\]\]$/',$str,$match)) {
+	if (preg_match('/^\[\[(.*)\]\]$/',$str,$match))
+	{
 		$str = $match[1];
 	}
 	return $str;
 }
 
 // ページ一覧の作成
-function page_list($pages, $cmd = 'read', $withfilename = FALSE)
+function page_list($pages, $cmd = 'read', $withfilename=FALSE)
 {
 	global $script,$list_index,$top;
 	global $_msg_symbol,$_msg_other;
@@ -256,7 +280,8 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 	$retval = '';
 	
 	$list = array();
-	foreach($pages as $page) {
+	foreach($pages as $page)
+	{
 		$r_page = rawurlencode($page);
 		$s_page = htmlspecialchars($page,ENT_QUOTES);
 		$e_page = encode($page);
@@ -264,7 +289,8 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 		
 		$str = "   <li><a href=\"$script?cmd=$cmd&amp;page=$r_page\">$s_page</a>$passage";
 		
-		if ($withfilename) {
+		if ($withfilename)
+		{
 			$str .= "\n    <ul><li>$e_page</li></ul>\n   ";
 		}
 		$str .= "</li>";
@@ -279,29 +305,36 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 	$cnt = 0;
 	$arr_index = array();
 	$retval .= "<ul>\n";
-	foreach ($list as $head=>$pages) {
-		if ($head === $symbol) {
+	foreach ($list as $head=>$pages)
+	{
+		if ($head === $symbol)
+		{
 			$head = $_msg_symbol;
 		}
-		else if ($head === $other) {
+		else if ($head === $other)
+		{
 			$head = $_msg_other;
 		}
 		
-		if ($list_index) {
+		if ($list_index)
+		{
 			$cnt++;
 			$arr_index[] = "<a id=\"top_$cnt\" href=\"#head_$cnt\"><strong>$head</strong></a>";
 			$retval .= " <li><a id=\"head_$cnt\" href=\"#top_$cnt\"><strong>$head</strong></a>\n  <ul>\n";
 		}
 		ksort($pages);
 		$retval .= join("\n",$pages);
-		if ($list_index) {
+		if ($list_index)
+		{
 			$retval .= "\n  </ul>\n </li>\n";
 		}
 	}
 	$retval .= "</ul>\n";
-	if ($list_index and $cnt > 0) {
+	if ($list_index and $cnt > 0)
+	{
 		$top = array();
-		while (count($arr_index) > 0) {
+		while (count($arr_index) > 0)
+		{
 			$top[] = join(" | \n",array_splice($arr_index,0,16))."\n";
 		}
 		$retval = "<div id=\"top\" style=\"text-align:center\">\n".
@@ -315,7 +348,8 @@ function catrule()
 {
 	global $rule_page;
 	
-	if (!is_page($rule_page)) {
+	if (!is_page($rule_page))
+	{
 		return "<p>sorry, $rule_page unavailable.</p>";
 	}
 	return convert_html(get_source($rule_page));
@@ -331,12 +365,14 @@ function die_message($msg)
 <strong>Error message : $msg</strong>
 EOD;
 	
-	if(defined('SKIN_FILE') && file_exists(SKIN_FILE) && is_readable(SKIN_FILE)) {
+	if(defined('SKIN_FILE') && file_exists(SKIN_FILE) && is_readable(SKIN_FILE))
+	{
 	  catbody($title,$page,$body);
 	}
-	else {
+	else
+	{
 		header('Content-Type: text/html; charset=euc-jp');
-		print <<<__TEXT__
+		print <<<EOD
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
  <head>
@@ -347,7 +383,7 @@ EOD;
  $body
  </body>
 </html>
-__TEXT__;
+EOD;
 	}
 	die();
 }
@@ -371,7 +407,8 @@ function get_date($format,$timestamp = NULL)
 }
 
 // 日時文字列を作る
-function format_date($val, $paren = FALSE) {
+function format_date($val, $paren = FALSE)
+{
 	global $date_format,$time_format,$weeklabels;
 	
 	$val += ZONETIME;
@@ -389,13 +426,16 @@ function get_passage($time)
 {
 	$time = UTIME - $time;
 	
-	if (ceil($time / 60) < 60) {
+	if (ceil($time / 60) < 60)
+	{
 		$str = '('.ceil($time / 60).'m)';
 	}
-	else if (ceil($time / 60 / 60) < 24) {
+	else if (ceil($time / 60 / 60) < 24)
+	{
 		$str = '('.ceil($time / 60 / 60).'h)';
 	}
-	else {
+	else
+	{
 		$str = '('.ceil($time / 60 / 60 / 24).'d)';
 	}
 	
