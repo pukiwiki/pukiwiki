@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.85 2004/07/03 14:50:43 henoheno Exp $
+// $Id: init.php,v 1.86 2004/07/04 11:37:33 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -84,29 +84,42 @@ if (!isset($script) or $script == '') {
 }
 
 /////////////////////////////////////////////////
-// INI_FILE: $agents, $user_agent:  UserAgentの識別
+// INI_FILE: $agents:  UserAgentの識別
 
-$ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+$ua = 'HTTP_USER_AGENT';
+$user_agent = $matches = array();
+
+$user_agent['agent'] = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+unset(${$ua}, $_SERVER[$ua], $HTTP_SERVER_VARS[$ua], $ua);	// safety
+
 foreach ($agents as $agent) {
-	if (preg_match($agent['pattern'], $ua, $matches)) {
-		$user_agent = $agent;	// array to array
-		$user_agent['matches'] = $matches;
+	if (preg_match($agent['pattern'], $user_agent['agent'], $matches)) {
+		$user_agent['profile'] = isset($agent['profile']) ? $agent['profile'] : '';
+		$user_agent['name']    = isset($matches[1]) ? $matches[1] : '';	// device or browser name
+		$user_agent['vers']    = isset($matches[2]) ? $matches[2] : ''; // 's version
 		break;
 	}
 }
-define('UA_NAME',    isset($user_agent['name'])       ? $user_agent['name']       : '');
-define('UA_MATCHES', isset($user_agent['matches'][0]) ? $user_agent['matches'][0] : '');
-unset($agents);
+unset($agents, $matches);
 
-// UserAgent別の設定ファイル読み込み
-define('UA_INI_FILE' , UA_NAME . '.ini.php');
-if (!file_exists(UA_INI_FILE) || !is_readable(UA_INI_FILE)) {
-	die_message('UA_INI_FILE for "' . UA_NAME . '" not found.');
-} else {
-	require(UA_INI_FILE);
+// Profile-related init and setting
+define('UA_PROFILE', isset($user_agent['profile']) ? $user_agent['profile'] : '');
+
+define('INI_PRO_FILE', SUB_DIR . 'init.' . UA_PROFILE . '.php');
+if (file_exists(INI_PRO_FILE) && is_readable(INI_PRO_FILE)) {
+	require(INI_PRO_FILE);	// A chance to rewrite $user_agent['name'] and ['vers']
 }
-$ua = 'HTTP_USER_AGENT';
-unset($user_agent, ${$ua}, $_SERVER[$ua], $HTTP_SERVER_VARS[$ua], $ua);	// Unset after reading UA_INI_FILE
+
+define('UA_INI_FILE', UA_PROFILE . '.ini.php');
+if (!file_exists(UA_INI_FILE) || !is_readable(UA_INI_FILE)) {
+	die_message('UA_INI_FILE for "' . UA_PROFILE . '" not found.');
+} else {
+	require(UA_INI_FILE); // Also manually
+}
+
+define('UA_NAME', isset($user_agent['name']) ? $user_agent['name'] : '');
+define('UA_VERS', isset($user_agent['vers']) ? $user_agent['vers'] : '');
+unset($user_agent);	// Unset after reading UA_INI_FILE
 
 /////////////////////////////////////////////////
 // ディレクトリのチェック

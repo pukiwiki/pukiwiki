@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.60 2004/07/03 14:26:29 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.61 2004/07/04 11:37:33 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -297,16 +297,32 @@ $line_break = 0;
 
 /////////////////////////////////////////////////
 // ユーザーエージェント対応設定
-// デフォルト
-$user_agent = array('name'=>'default');
-// 携帯端末
+
 $agents = array(
-	array('name'=>'jphone','pattern'=>'#^J-PHONE/([0-9\.]+)#'),	// Vodafone
-	array('name'=>'jphone','pattern'=>'#^J-PHONE#'),
-	array('name'=>'i_mode','pattern'=>'#DoCoMo/(1\.0)/(?:[^/]+/c([0-9]+))?#'),
-	array('name'=>'i_mode','pattern'=>'#DoCoMo/(2\.0) [^(]+\(c([0-9]+)#'),
-	array('name'=>'i_mode','pattern'=>'#DDIPOCKET;JRC/[^/]+/(1\.0)/0100/c([0-9]+)#'),
-//	array('name'=>'opwvmb','pattern'=>'#UP\.Browser/([0-9\.]+)#'),	// Openwave(R) Mobile Browser (EZweb, WAP phone, etc)
-	array('name'=>'i_mode','pattern'=>'#UP\.Browser#'),	// Treat as i_mode now
+//	pattern: デバイス[ブラウザ]名およびバージョンの検出パターン  name: 検出した場合の設定
+
+    // 組み込みブラウザ(リッチクライアントではないもの)
+
+	// NTT-DoCoMo, i-mode (using Compact NetFront) and FOMA (using NetFront) phones
+	// Sample: "DoCoMo/1.0/F501i", "DoCoMo/1.0/N504i/c10/TB/serXXXX" // c以降は可変
+	// Sample: "DoCoMo/2.0 MST_v_SH2101V(c100;TB;W22H12;serXXXX;iccxxxx)" // ()の中は可変
+	array('pattern'=>'#^(DoCoMo)/([0-9\.]+)#',	'profile'=>'i_mode'),
+
+	// Compact NetFront 2.0 (DDI Pocket: AirH" Phone by JRC)
+	// Sample: "Mozilla/3.0(DDIPOCKET;JRC/AH-J3001V,AH-J3002V/1.0/0100/c50)CNF/2.0"
+	array('pattern'=>'#DDIPOCKET;JRC/[^/]+/1.0/0100/c[0-9]+\)([A-Za-z]+)/([0-9\.]+)#',
+		'profile'=>'i_mode'),
+
+	// Vodafone's embedded browser
+	// Sample: "J-PHONE/2.0/J-T03"	// 2.0は"ブラウザの"バージョン
+	// Sample: "J-PHONE/4.0/J-SH51/SNxxxx SH/0001a Profile/MIDP-1.0 Configuration/CLDC-1.0 Ext-Profile/JSCL-1.1.0"
+	array('pattern'=>'#^(J-PHONE)/([0-9\.]+)#',	'profile'=>'jphone'),
+
+	// Openwave(R) Mobile Browser (EZweb, WAP phone, etc)
+	// Sample: "OPWV-SDK/62K UP.Browser/6.2.0.5.136 (GUI) MMP/2.0"
+	array('pattern'=>'#(UP\.Browser)/([0-9\.]+)#',	'profile'=>'i_mode'),
+
+    // デスクトップあるいはリッチクライアント (デバイスを識別する必要がないもの)
+	array('pattern'=>'#.#',	'profile'=>'default'),	// default
 );
 ?>
