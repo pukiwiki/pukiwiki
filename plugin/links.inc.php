@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: links.inc.php,v 1.18 2004/02/29 07:45:20 arino Exp $
+// $Id: links.inc.php,v 1.19 2004/07/18 13:56:10 henoheno Exp $
 //
 
 // メッセージ設定
@@ -33,10 +33,10 @@ function plugin_links_init()
 
 function plugin_links_action()
 {
-	global $script,$post,$vars,$adminpass,$foot_explain;
+	global $script, $post, $vars, $foot_explain;
 	global $_links_messages;
 	
-	if (empty($vars['action']) or empty($post['adminpass']) or md5($post['adminpass']) != $adminpass)
+	if (empty($vars['action']) or empty($post['adminpass']) or ! pkwk_login($post['adminpass']))
 	{
 		$body = convert_html($_links_messages['msg_usage']);
 		$body .= <<<EOD

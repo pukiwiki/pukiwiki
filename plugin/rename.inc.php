@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rename.inc.php,v 1.13 2004/07/18 13:46:22 henoheno Exp $
+// $Id: rename.inc.php,v 1.14 2004/07/18 13:51:12 henoheno Exp $
 //
 
 /*
@@ -256,7 +256,7 @@ function rename_regex($arr_from, $arr_to)
 
 function rename_phase3($pages)
 {
-	global $script, $adminpass, $_rename_messages;
+	global $script, $_rename_messages;
 	
 	$msg = $input = '';
 	$files = rename_get_files($pages);
@@ -273,7 +273,7 @@ function rename_phase3($pages)
 		}
 	}
 	$pass = rename_getvar('pass');
-	if (md5($pass) == $adminpass)
+	if ($pass != '' && pkwk_login($pass))
 	{
 		return rename_proceed($pages, $files, $exists);
 	}
