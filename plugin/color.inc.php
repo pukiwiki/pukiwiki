@@ -2,17 +2,17 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: color.inc.php,v 1.10 2004/11/21 09:55:02 henoheno Exp $
+// $Id: color.inc.php,v 1.11 2004/11/21 10:09:39 henoheno Exp $
 //
 // Text color plugin
 
 define('PLUGIN_COLOR_ALLOW_CSS', FALSE); // TRUE, FALSE
 
 // ----
+define('PLUGIN_COLOR_USAGE', '&color(foreground[,background]){text};');
 define('PLUGIN_COLOR_REGEX', '/^(#[0-9a-f]{6}|[a-z-]+)$/i');
 function plugin_color_inline()
 {
-	static $usage = '&color(foreground[,background]){text};';
 	global $html_transitional;
 
 	$args = func_get_args();
@@ -24,7 +24,8 @@ function plugin_color_inline()
 		$text    = htmlspecialchars($bgcolor);
 		$bgcolor = '';
 	}
-	if ($color == '' || $text == '' || func_num_args() > 3) return $usage;
+	if ($color == '' || $text == '' || func_num_args() > 3)
+		return PLUGIN_COLOR_USAGE;
 
 	// Invalid color
 	foreach(array($color, $bgcolor) as $col){
