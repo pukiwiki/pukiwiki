@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.3 2003/06/17 00:30:59 arino Exp $
+// $Id: trackback.php,v 1.4 2003/06/22 05:39:07 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -55,6 +55,7 @@ function tb_send($page,$data) {
   global $script, $trackback;
 
   if (!$trackback) return;
+  set_time_limit( 0 ); // 処理実行時間制限(php.ini オプション max_execution_time )
 
   $link = tb_ScanLink($data);
   if (!is_array($link)) return; // リンク無しは終了
