@@ -2,7 +2,7 @@ InterWiki用のサーバリストです。
   [URL サーバ名] タイプ
 の形式で記述してください。
 
-** WikiEngines
+** WikiEngines [#c3e04f1c]
 -[http://www.c2.com/cgi/wiki? WikiWikiWeb] raw WikiNameのみなのでraw。
 -[http://www.todo.org/cgi-bin/jp/tiki.cgi?c=v&p= Tiki] euc
 -[http://www.hyuki.com/yukiwiki/wiki.cgi? YukiWiki] euc
@@ -12,20 +12,20 @@ InterWiki用のサーバリストです。
 -[http://www.namaraii.com/hiki/? Hiki] euc
 -[http://xiki.mitsuki.no-ip.com/? Xiki] utf8
 
-** PukiWiki
+** PukiWiki [#j0d346fa]
 // PukiWiki Official Main Site
 -[http://pukiwiki.org/? pukiwiki] utf8
 -[http://pukiwiki.org/? pukiwiki.org] utf8
 // PukiWiki Developer Site
--[http://pukiwiki.sourceforge.jp/dev/? pukiwiki.dev] utf8
+-[http://pukiwiki.sourceforge.jp/dev/? pukiwiki.dev] euc
 
-** Search Engine
+** Search Engine [#jaaa4e4c]
 -[http://www.google.co.jp/search?ie=utf8&oe=utf8&q=$1&lr=lang_ja&hl=ja Google.jp] utf8 
 //IEのGoogleツールバー対策でUTF-8になってます。
 -[http://search.yahoo.co.jp/bin/search?p= Yahoo.jp] euc
 -[http://www.wikipedia.org/wiki/? WikiPedia] euc
 
-** 拡張InterWikiName
+** 拡張InterWikiName [#q192ea38]
 -[./?cmd=add&page= 新規]
 -[./?cmd=add&page= New]
 -[./?cmd=read&page= 参照]
@@ -35,6 +35,6 @@ InterWiki用のサーバリストです。
 -[./?cmd=search&word=$1&type=OR 検索]
 -[./?cmd=search&word=$1&type=OR Search]
 
-*** その他
+*** その他 [#b69e2eec]
 -[http://www.gembook.jp/tsum/page.pys?wiki= ウヰキエリア] moin
 -[http://tdiary-users.sourceforge.jp/cgi-bin/wiki.cgi? tDiaryUsers] euc
