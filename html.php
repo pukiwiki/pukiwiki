@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.19 2002/07/11 09:54:32 kawara Exp $
+// $Id: html.php,v 1.20 2002/07/15 06:57:20 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -844,7 +844,6 @@ function make_search($page)
 {
 	global $script,$WikiName;
 
-	$page = htmlspecialchars($page);
 	$name = strip_bracket($page);
 	$url = rawurlencode($page);
 
@@ -852,7 +851,7 @@ function make_search($page)
 	//if(preg_match("/^$WikiName$/",$page))
 	//	$name = preg_replace("/([A-Z][a-z]+)/","$1 ",$name);
 
- 	return "<a href=\"$script?cmd=search&amp;word=$url\">$name</a> ";
+ 	return "<a href=\"$script?cmd=search&amp;word=$url\">".htmlspecialchars($name)."</a> ";
 }
 
 ?>
