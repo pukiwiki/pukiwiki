@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.11 2003/08/06 08:23:13 arino Exp $
+// $Id: trackback.php,v 1.12 2003/09/03 04:05:38 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -62,7 +62,7 @@ function tb_id2page($tb_id)
 // TrackBack Ping データファイル名を取得
 function tb_get_filename($page,$ext='.txt')
 {
-	return TRACKBACK_DIR.tb_get_id($page).$ext;
+	return TRACKBACK_DIR.encode($page).$ext;
 }
 
 // TrackBack Ping データ個数取得
@@ -99,12 +99,13 @@ function tb_send($page,$data)
 	}
 	
 	$r_page = rawurlencode($page);
+	$excerpt = strip_htmltag(convert_html(get_source($page)));
 	
 	// 自文書の情報
 	$putdata = array(
 		'title'     => $page, // タイトルはページ名
 		'url'       => "$script?$r_page", // 送信時に再度、rawurlencode される
-		'excerpt'   => mb_strimwidth(preg_replace("/[\r\n]/",' ',strip_htmltag($data)),0,255,'...'),
+		'excerpt'   => mb_strimwidth(preg_replace("/[\r\n]/",' ',$excerpt),0,255,'...'),
 		'blog_name' => 'PukiWiki/TrackBack 0.1',
 		'charset'   => SOURCE_ENCODING // 送信側文字コード(未既定)
 	);
