@@ -1,10 +1,20 @@
 <?
-// $Id: vote.inc.php,v 1.6 2002/07/02 04:20:20 masui Exp $
+// $Id: vote.inc.php,v 1.7 2002/07/02 05:02:51 masui Exp $
+
+function plugin_vote_init()
+{
+  $_plugin_vote_messages = array(
+    '_vote_plugin_choice' => 'ÁªÂò»è',
+    '_vote_plugin_votes' => 'ÅêÉ¼',
+    );
+  set_plugin_messages($_plugin_vote_messages);
+}
 
 function plugin_vote_action()
 {
 	global $post,$vars,$script,$cols,$rows,$del_backup,$do_backup;
 	global $_title_collided,$_msg_collided,$_title_updated;
+	global $_vote_plugin_choice, $_vote_plugin_votes;
 
 	$postdata_old  = file(get_filename(encode($post["refer"])));
 	$vote_no = 0;
@@ -29,7 +39,7 @@ function plugin_vote_action()
 						$cnt = 0;
 					}
 
-					if($post["vote"][preg_replace("/\]\]$/","",$arg)]) $cnt++;
+					if($post["vote_$arg"]==$_vote_plugin_votes) $cnt++;
 
 					$votes[] = $arg.'['.$cnt.']';
 				}
@@ -61,7 +71,6 @@ function plugin_vote_action()
 	}
 	else
 	{
-		// ?¡¦?a?t?@?C???I?i?¢Ì
 		if(is_page($post["refer"]))
 			$oldpostdata = join("",file(get_filename(encode($post["refer"]))));
 		else
@@ -70,22 +79,18 @@ function plugin_vote_action()
 			$diffdata = do_diff($oldpostdata,$postdata);
 		file_write(DIFF_DIR,$post["refer"],$diffdata);
 
-		// ?o?b?N?A?b?v?I?i?¢Ì
 		if(is_page($post["refer"]))
 			$oldposttime = filemtime(get_filename(encode($post["refer"])));
 		else
 			$oldposttime = time();
 
-		// ?O?W¡Èa?e?a¢ó??a?¡Æ?c?e?A?¡ñ?E?¡ñ?A?o?b?N?A?b?v?a?i???¡¦?e??¦Ì?E?¡ñ?A?¡¦?a?E?B
 		if(!$postdata && $del_backup)
 			backup_delete(BACKUP_DIR.encode($post["refer"]).".txt");
 		else if($do_backup && is_page($post["refer"]))
 			make_backup(encode($post["refer"]).".txt",$oldpostdata,$oldposttime);
 
-		// ?t?@?C???I?¡Æ?¢ã???Y
 		file_write(DATA_DIR,$post["refer"],$postdata);
 
-		// is_page?I?L???b?V?¡Ä?d?N???A?¡¦?e?B
 		is_page($post["refer"],true);
 
 		$title = $_title_updated;
@@ -102,6 +107,7 @@ function plugin_vote_action()
 function plugin_vote_convert()
 {
 	global $script,$vars,$vote_no,$digest;
+	global $_vote_plugin_choice, $_vote_plugin_votes;
 
 	$args = func_get_args();
 
@@ -109,15 +115,15 @@ function plugin_vote_convert()
 
 	$string = ""
 		. "<form action=\"$script\" method=\"post\">\n"
-		. "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\">\n"
-		. "<tr>\n"
-		. "<td align=\"left\" class=\"vote_label\"><strong>The choices</strong>"
+ 		. "<table cellspacing=\"0\" cellpadding=\"2\" class=\"style_table\">\n"
+ 		. "<tr>\n"
+ 		. "<td align=\"left\" class=\"vote_label\" style=\"padding-left:1em;padding-right:1em\"><strong>$_vote_plugin_choice</strong>"
 		. "<input type=\"hidden\" name=\"plugin\" value=\"vote\" />\n"
 		. "<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($vars["page"])."\" />\n"
 		. "<input type=\"hidden\" name=\"vote_no\" value=\"".htmlspecialchars($vote_no)."\" />\n"
 		. "<input type=\"hidden\" name=\"digest\" value=\"".htmlspecialchars($digest)."\" />\n"
 		. "</td>\n"
-		. "<td align=\"center\" class=\"vote_label\"><strong>Votes</strong></td>\n"
+		. "<td align=\"center\" class=\"vote_label\"><strong>$_votes_plugin_votes</strong></td>\n"
 		. "</tr>\n";
 
 	$tdcnt = 0;
@@ -137,8 +143,8 @@ function plugin_vote_convert()
 		else           $cls = "vote_td2";
 
 		$string .= "<tr>"
-			.  "<td width=\"80%\" class=\"$cls\" nowrap>$link</td>"
-			.  "<td class=\"$cls\" nowrap=\"nowrap\">$cnt&nbsp;&nbsp;<input type=\"submit\" name=\"vote[".htmlspecialchars($arg)."]\" value=\"Vote\" /></td>"
+			.  "<td align=\"left\" class=\"$cls\" style=\"padding-left:1em;padding-right:1em;nowrap=\"nowrap\">$link</td>"
+			.  "<td align=\"right\" class=\"$cls\" nowrap=\"nowrap\">$cnt&nbsp;&nbsp;<input type=\"submit\" name=\"vote_".htmlspecialchars($arg)."\" value=\"$_vote_plugin_votes\" class=\"submit\" /></td>"
 			.  "</tr>\n";
 	}
 
