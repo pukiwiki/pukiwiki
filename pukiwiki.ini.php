@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.73 2004/08/08 03:09:17 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.74 2004/08/08 04:08:37 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -48,11 +48,19 @@ define('ZONE','JST');
 define('ZONETIME',9 * 3600); // JST = GMT+9
 
 /////////////////////////////////////////////////
+// ホームページのタイトル(修正してください)
+// * RSS に出力するチャンネル名を兼ねる
+$page_title = 'PukiWiki';
+
 // index.php などに変更した場合のスクリプト名の設定
 // とくに設定しなくても問題なし
 //$script = 'http://hogehoge/pukiwiki/';
 
-/////////////////////////////////////////////////
+// 編集者の名前(修正してください)
+$modifier = 'anonymous';
+
+// 編集者のホームページ(修正してください)
+$modifierlink = 'http://pukiwiki.example.com/';
 
 // トップページの名前
 $defaultpage = 'FrontPage';
@@ -68,18 +76,6 @@ $interwiki = 'InterWikiName';
 
 // MenuBarページの名前
 $menubar = 'MenuBar';
-
-/////////////////////////////////////////////////
-// 編集者の名前(自由に変えてください)
-$modifier = 'me';
-
-// 編集者のホームページ(自由に変えてください)
-$modifierlink = 'http://change me!/';
-
-/////////////////////////////////////////////////
-// ホームページのタイトル(自由に変えてください)
-// RSS に出力するチャンネル名
-$page_title = 'PukiWiki';
 
 /////////////////////////////////////////////////
 // TrackBack機能を使用する
