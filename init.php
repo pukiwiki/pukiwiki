@@ -2,14 +2,14 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.20.2.17 2004/06/27 14:34:35 henoheno Exp $
+// $Id: init.php,v 1.20.2.18 2004/06/27 14:38:23 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
 // 初期設定 (エラー出力レベル)
 // (E_WARNING | E_NOTICE)を除外しています。
-//error_reporting(E_ERROR | E_PARSE);
-error_reporting(E_ALL);
+error_reporting(E_ERROR | E_PARSE);
+//error_reporting(E_ALL);
 
 /////////////////////////////////////////////////
 // 初期設定 (文字エンコード、言語)
