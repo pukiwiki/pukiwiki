@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: links.inc.php,v 1.8 2003/02/23 02:12:39 panda Exp $
+// $Id: links.inc.php,v 1.9 2003/02/26 08:53:51 panda Exp $
 //
 
 function plugin_links_action()
@@ -28,7 +28,7 @@ function plugin_links_action()
 }
 function links_init_file()
 {
-	global $get,$adminpass,$whatsnew,$non_list;
+	global $get,$adminpass,$whatsnew;
 	
 	if (md5($get['adminpass']) != $adminpass) {
 		return array('msg'=>'update database',
@@ -57,7 +57,7 @@ function links_init_file()
 				continue;
 			}			
 			$_page = $_obj->name;
-			if ($_page != $page and !preg_match("/$non_list/",$_page)) {
+			if ($_page != $page) {
 				$rel[$_page] = 1;
 				$ref[$_page][$page] = $time;
 			}
@@ -80,7 +80,7 @@ function links_init_file()
 }
 function links_update_file($page)
 {
-	global $whatsnew,$non_list;
+	global $whatsnew;
 	
 	$obj = new InlineConverter();
 	$time = is_page($page) ? get_filetime($page) : 0;
@@ -100,7 +100,7 @@ function links_update_file($page)
 			continue;
 		}			
 		$_page = $_obj->name;
-		if ($_page != $page and !preg_match("/$non_list/",$_page)) {
+		if ($_page != $page) {
 			$rel_new[$_page] = 1;
 		}
 	}
