@@ -2,39 +2,39 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss.inc.php,v 1.1 2003/01/27 05:38:46 panda Exp $
+// $Id: rss.inc.php,v 1.2 2003/02/20 12:21:07 panda Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss_action()
 {
-	global $script,$rss_max,$page_title,$whatsnew,$BracketName;
+	global $script,$rss_max,$page_title,$whatsnew;
 
 	$self = 'http://'.SERVER_NAME.PHP_SELF.'?';
 
 	$page_title_utf8 = $page_title;
-	if (function_exists('mb_convert_encoding'))
-		$page_title_utf8 = mb_convert_encoding($page_title_utf8,'UTF-8','auto');
+	if (function_exists('mb_convert_encoding')) {
+		$page_title_utf8 = mb_convert_encoding($page_title_utf8,'UTF-8',SOURCE_ENCODING);
+	}
 
 	$items = '';
-	$lines = array_splice(preg_grep('/^\/\//',get_source($whatsnew)),0,$rss_max);
-	
-	foreach($lines as $line) {
-		if (!preg_match("/^\/\/(\d+)\s($BracketName)$/",$line,$match))
-			continue; // fatal error, die?
-		
-		$page = $match[2];
-		
-		$r_url = rawurlencode($page);
-		
-		$title = strip_bracket($page);
-		if (function_exists('mb_convert_encoding'))
-			$title = mb_convert_encoding($title,'UTF-8','auto');
-		
-		$desc = get_date('D, d M Y H:i:s T',get_filetime($page));
+
+	if (!file_exists(CACHE_DIR.'recent.dat')) {
+		return '';
+	}
+	$recent = file(CACHE_DIR.'recent.dat');
+	$lines = array_splice($recent,0,$rss_max);
+	foreach ($lines as $line) {
+		list($time,$page) = explode("\t",rtrim($line));
+		$r_page = rawurlencode($page);
+		$title = $page;
+		if (function_exists('mb_convert_encoding')) {
+			$title = mb_convert_encoding($title,'UTF-8',SOURCE_ENCODING);
+		}
+		$desc = get_date('D, d M Y H:i:s T',$time);
 		$items .= <<<EOD
 <item>
  <title>$title</title>
- <link>$self$r_url</link>
+ <link>$self$r_page</link>
  <description>$desc</description>
 </item>
 
