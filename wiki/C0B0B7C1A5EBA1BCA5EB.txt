@@ -517,19 +517,13 @@ PukiWiki 1.3系との後方互換性のために、下記のものも使用できるようにしてあります。
 - &amp;date;、 &amp;time;、 &amp;now;は、記事が書き込まれるときに置換されて記録されます。
 - &amp;date;、 &amp;time;、 &amp;now;は、他のインライン要素の子要素になることができます。
 - &amp;date;、 &amp;time;、 &amp;now;は、他のインライン要素を子要素にはできません。
- &_date;
- &_time;
- &_now;
  &lastmod;
 
-- 行中で &amp;_date; と書くと、表示時の日付に置換されます
-- 行中で &amp;_time; と書くと、表示時の時刻に置換されます
-- 行中で &amp;_now; と書くと、表示時の日時に置換されます
 - 行中で &amp;lastmod; と書くと、そのページの最終更新日時に置換されます
 
-- &amp;_date;、 &amp;_time;、 &amp;_now;、 &amp;lastmod;は、記事が表示されるときに置換されて表示されます。
-- &amp;_date;、 &amp;_time;、 &amp;_now;、 &amp;lastmod;は、他のインライン要素の子要素になることができます。
-- &amp;_date;、 &amp;_time;、 &amp;_now;、 &amp;lastmod;は、他のインライン要素を子要素にはできません。
+- &amp;lastmod;は、記事が表示されるときに置換されて表示されます。
+- &amp;lastmod;は、他のインライン要素の子要素になることができます。
+- &amp;lastmod;は、他のインライン要素を子要素にはできません。
 
 *** 文字参照文字 [#oc8e0c4c]
 文字参照は、SGMLで定義されている文字参照文字(&amp;copy;や&amp;reg;など)のほか、下記の独自の文字参照文字が使用できます。
