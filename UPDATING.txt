@@ -1,5 +1,5 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.10 2004/08/30 13:45:11 henoheno Exp $
+$Id: UPDATING.txt,v 1.11 2004/08/30 13:47:34 henoheno Exp $
 
 
 互換性に関する記述
@@ -7,27 +7,19 @@ $Id: UPDATING.txt,v 1.10 2004/08/30 13:45:11 henoheno Exp $
 
 PukiWiki 1.4.4: PukiWiki 1.4.3との非互換点
 
-    1. POSTメソッドを使うべき処理にGETメソッドを使うことが明確に禁止されました
-       具体的には 'msg'(編集するテキストデータ) や 'pass'(パスワード) のキーを
-       GETメソッドで送信すると、必ず "Runtime Error" を表示します
+    1. includeプラグインにリミッターが設けられました(デフォルトで４ページまで)
 
-    2. pop_before_smtp のコードが見直され、APOPが動作する様になった事により、
-       デフォルトでは可能であればAPOPを使用する様になりました(自動認識)
-       pukiwiki.ini.php の設定により、APOPあるいはPOPを強制することも可能です
-
-    3. includeプラグインにリミッターが設けられました(デフォルトで４ページまで)
-
-    4. calendar_viewerプラグインにリミッターが設けられました(一テーマ一回まで)
+    2. calendar_viewerプラグインにリミッターが設けられました(一テーマ一回まで)
        ※今後のリリースで、数回までに拡張される可能性があります
 
-    5. Apache Webサーバー向けに .htaccess ファイルが同梱される様になりました。
+    3. Apache Webサーバー向けに .htaccess ファイルが同梱される様になりました。
        サーバー上で .htaccess が有効であるとき、例えばattach ディレクトリに保
        存した添付ファイルに直接アクセスすることができなくなります。この結果、
        古いバージョンのrefプラグインや、そこから派生したプラグインはうまく動
        作しないでしょう
        (これらの制限は、.htaccess を削除することで解除できます)
 
-    6. 初期化処理(init.php)が大幅に見直され、PukiWikiにとって不要なグローバル
+    4. 初期化処理(init.php)が大幅に見直され、PukiWikiにとって不要なグローバル
        変数(特に、危険なデータを含んでいるもの)が積極的に削除(unset)される様に
        なりました。具体的には $_REQUEST, $HTTP_GET_VARS, $HTTP_POST_VARS,
        HTTP_USER_AGENT 関係, REQUEST_URI 関係, QUERY_STRING 関係のデータにアク
