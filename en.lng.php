@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng.php,v 1.2 2004/10/31 03:45:52 henoheno Exp $
+// $Id: en.lng.php,v 1.3 2004/11/02 14:02:10 henoheno Exp $
 //
 // PukiWiki message file (english)
 
@@ -113,6 +113,7 @@ $_LANG['skin']['freeze']    = 'Freeze';
 $_LANG['skin']['help']      = 'Help';
 $_LANG['skin']['list']      = 'List of pages';
 $_LANG['skin']['new']       = 'New';
+$_LANG['skin']['rdf']       = 'RDF of recent changes';
 $_LANG['skin']['recent']    = 'Recent changes';	// RecentChanges
 $_LANG['skin']['refer']     = 'Referer';	// Show list of referer
 $_LANG['skin']['reload']    = 'Reload';
