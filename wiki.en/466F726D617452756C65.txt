@@ -1,0 +1,214 @@
+*Inline Elements [#v2f727fb]
+In the following table you can see how to use the inline text elements of PukiWiki
+
+|''Format example''|''Formatting code''|''Comment''|h
+|''Emphasised text''|&#39;&#39;Emphasised text&#39;&#39;|Put the text between two single quotes.|
+|'''Italic text'''|&#39;&#39;&#39;Italic text&#39;&#39;&#39;|Put the text between three single quotes.|
+|Text with&br;a break|Text with &amp;br; a break||
+|&size(24){Text in font size 24};| &amp;size(24){Text in font size 24};||
+|&color(purple){Purple text};| &amp;color(purple){Purple text};||
+|&color(#123456){Colored text};| &amp;color(#123456){Colored text};||
+|&color(red,yellow){Red text with yellow backbround};| &amp;color(red,yellow){Red text with yellow background};||
+|%%Strikethrough text%%| &#37;&#37;Strikethrough text&#37;&#37;||
+|((This is the footnote's text))|&#40;&#40;This is the footnote's text&#41;&#41;|This inserts a footnote with the given text at the bottom of the page.|
+|&ref(http://www.example.com);|&amp;ref(http:&#47;&#47;www.example.com);|This inserts a reference.|
+|&aname(Anchor);|&amp;aname(Anchor);|This inserts an invisible anchor for hyperlinking.|
+|&counter;|&amp;counter;|This inserts a counter. What does it count, in fact?|
+|&online;|&amp;online;|What does this do, in fact?|
+|&version;|&amp;version;|I guess this inserts the current version number of PukiWiki itself?|
+|WikiName|&#87;ikiName|This create a link to another pages on the same Pukiwiki site.|
+|[[BracketName]]|&#x5b;&#x5b;&#x42;racketName&#x5d;&#x5d;|This creates a link to another page on a same Pukiwiki site.|
+|[[External link:http://www.example.com]]|&#91;&#91;External link:http:&#47;&#47;www.example.com]]|This creates links to pages on other web sites.|
+|[[InterWikiLink:page name]]|&#91;&#91;Inter&#87;iki&#76;ink:page name]]|This creates a link to another Wiki, right?|
+|Paragraph| ~Paragraph||
+|Inline text&br;Inline text| Inline text&amp;br;Inline text|&amp;br; is replaced with a line break.|
+|Inline text~&br;#plug-in| Inline text~&br;#plug-in|The ~, followed by a line break works as an escape character that disables the # character, which normally activates a plugin.|
+
+
+
+
+&br;
+
+*Block Elements [#veaf1193]
+~In what follows, examples for the block elements will be given.
+First, you will see the example as it should be entered into PukiWiki,and
+next is the result you'll get. 
+
+**Preformatted text [#v6d2a929]
+  Preformatted text. There is a space in front of this text.
+
+ Preformatted text. There is a space in front of this text. 
+&br;
+
+**Headings [#n6275890]
+ *Heading level 1
+ **Heading level 2
+ ***Heading level 3
+There are no examples of how the heading looks like here, 
+because they would disturb the structure of this document.
+But take a look at the headings above and below to see how 
+it might look. 
+&br; 
+**Paragraphs and the tilde as and escape character [#a6ab3c0e]
+ ~Paragraph
+ ~*This will not be displayed as a heading
+~Paragraph
+~*This will not be displayed as a heading
+ Line break escape example~
+ #comment (disables first letter formatting rule, which is used to activate plug-ins.)
+Line break escape example~
+#comment (disables first letter formatting rule, which is used to activate plug-ins.)
+&br;
+**Quotes [#q0849799]
+ >Quote Level 1
+ >>Quote Level 2
+ >>>Quote Level 3
+>Quote Level 1
+>>Quote Level 2
+>>>Quote Level 3
+&br;
+**Unordered lists [#kbd4d759]
+ -Unordered list level 1
+ --Unordered list level 2
+ ---Unordered list level 3
+-Unordered list level 1
+--Unordered list level 2
+---Unordered list level 3
+&br;
+**Ordered lists [#z291b8c3]
+ +Ordered list level 1
+ ++Ordered list level 2
+ +++Ordered list level 3
++Ordered list level 1
+++Ordered list level 2
++++Ordered list level 3
+&br;
+**Definition lists [#z93a6096]
+ :Definition|Description
+:Definition|Description
+&br;
+**Comments [#l279ee0b]
+ A comment is hidden here: 
+ //Comment
+A comment is hidden here: 
+//Comment
+&br;
+**Horizontal Rule [#s0439a0c]
+ ----
+----
+**Table [#jecf0233]
+*** Simple [#v90083b4]
+ |aaa|bbb|ccc|
+ |111|222|333|
+|aaa|bbb|ccc|
+|111|222|333|
+*** Advanced [#n6c24e02]
+ |RIGHT:100|CENTER:|SIZE(20)|c -------------- format definition line
+ |~Header|Header2|Header3|h ----------------- header line
+ |CENTER:lowspan|COLOR(red):bbb|ccc|
+ |~|222|COLOR(#ff0000):BGCOLOR(yellow):333|
+ |footer|>|CENTER:colspan|f ----------------- footer line
+
+|RIGHT:100|CENTER:|SIZE(20)|c
+|~Header|Header2|Header3|h
+|CENTER:lowspan|COLOR(red):bbb|ccc|
+|~|222|COLOR(#ff0000):BGCOLOR(yellow):333|
+|footer|>|CENTER:colspan|f
+
+
+**CSV Table [#pece650e]
+ ,aaa,bbb,ccc
+ ,111,222,333
+,aaa,bbb,ccc
+,111,222,333
+
+//**Plug-ins
+// #contents 
+// (This is the table of contents plugin) 
+//
+//#contents 
+//(This is the table of contents plugin)
+// The above does not work?
+
+*Special entities : [#nb14c38a]
+// These expressions do not work with the default settings. 
+// See pukiwiki.ini.php and default.ini.php.
+//|FormattingSandbox|&amp;page;|This one doesn't seem to work?|
+//|2003-10-28|&amp;date;|This one doesn't seem to work?|
+//|03:33:43|&amp;time;|This one doesn't seem to work?|
+//|2003-10-28 (&#28779;) 03:33:43|&amp;now;|This one doesn't seem to work?|
+//|2003-10-15|date ?| This one is replaced when  editing is finished.|
+//|12:35:09|time ?| This one is replaced when  editing is finished.|
+//|2003-10-15 (&#27700;) 12:35:09|now ?| This one is replaced when  editing is finished.|
+
+|''Special entity''|''Code''|''Comments''|h
+|&heart;|&amp;heart;||
+|&copy;|&amp;copy;||
+|&reg;|&amp;reg;||
+|&trade;|&amp;trade;||
+|&sup2;|&amp;sup2;||
+|&sup3;|&amp;sup3;||
+|&nbsp;|&amp;nbsp;|You may not be able to see it,&br;but there is a non-breaking space in the first column. &br; It prevents a line from being broken at that point.|
+|&#10;|&amp;#10;|You can define any unicode character up to #32000 using this code. Please note that you need a font that supports the character, or you will not be able to see it.|
+|&#19990;|&amp;#19990;|You can use characters from all over the world!|
+|&#9794;|&amp;#9794;|It is a man's world.|
+|&#9791;|&amp;#9792;|But it would be nothing without a woman.|
+|&#8734;|&amp;#8734;|We could go on like this forever...|
+|&#937;|&amp;#937;|But here it must end.|
+
+&br;
+
+*Nesting Elements [#vd8a37d7]
+**Paragraph Element-Emphasize Element [#n053ef8b]
+ ~This is the paragraph, which is the parent element that contains emphasized text. 
+ ''This is the emphasized text, that is the child element of the paragraph element.''
+ 
+~This is the paragraph, which is the parent element that contains emphasized text. 
+''This is the emphasized text, that is the child element of the paragraph element.''
+
+**Quotation Element-List Element [#a8c9880d]
+ Level[0]
+ >Quotation Level[1]AAA
+ ~Quotation Level[1]BBB
+ >>Quotation Level[2]AAA
+ ~Quotation Level[2]BBB
+ >>>Quotation Level[3]
+ -Child Element-List Level[1]
+ |TABLE|ELEMENT|NEXT|to|the Inline|element|in a list|
+ --Child Element-List Level[2]
+ &br;Line Break in a Element
+ ---Child Element-List Level[3]
+ --Child Element-List Level[2]
+ ---Child Element-List Level[3]
+ <<Quotation Level[1]
+ >>Quotation Level[2]
+ <<Get out of the Quotation Level2 Element
+ >>>Quotation Level[3]AAA
+ >>>Quotation Level[3]BBB
+ -Child Element-List Level[1]
+ --Child Element-List Level[2]
+ ---Child Element-List Level[3]
+
+Level[0]
+>Quotation Level[1]AAA
+~Quotation Level[1]BBB
+>>Quotation Level[2]AAA
+~Quotation Level[2]BBB
+>>>Quotation Level[3]
+-Child Element-List Level[1]
+|TABLE|ELEMENT|NEXT|to|the Inline|element|in a list|
+--Child Element-List Level[2]
+&br;Line Break in a Element
+---Child Element-List Level[3]
+--Child Element-List Level[2]
+---Child Element-List Level[3]
+<<Quotation Level[1]
+>>Quotation Level[2]
+<<Get out of the Quotation Level2 Element
+>>>Quotation Level[3]AAA
+>>>Quotation Level[3]BBB
+-Child Element-List Level[1]
+--Child Element-List Level[2]
+---Child Element-List Level[3]
+
+This section needs to be brushed up.

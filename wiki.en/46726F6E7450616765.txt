@@ -1,0 +1,17 @@
+*PukiWiki [#vfad867b]
+
+This is FrontPage.
+Please edit as you like.
+
+-PukiWiki
+--Introduction to PukiWiki
+-[[Help]]
+--How to edit page in PukiWiki.
+-SandBox
+--Edit this page freely. Try it.
+-InterWikiName
+--The lists of servers of InterWiki.
+-InterWikiSandBox
+--Try InterWiki here.
+-[[PukiWiki.org:http://pukiwiki.org]]
+--The official page of PukiWiki Developper Team.

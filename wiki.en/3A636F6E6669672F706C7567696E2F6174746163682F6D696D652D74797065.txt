@@ -1,0 +1,36 @@
+#freeze
+*mime-type
+
+この表は、attach.inc.phpがファイルのContent-typeを決定するときに使用します。
+
+|~Content-type|~拡張子|~説明|h
+|image/jpeg|jpeg jpg|jpeg 画像|
+|image/gif|gif|gif 画像|
+|image/png|png|png 画像|
+|application/pdf|pdf|pdf ファイル|
+|application/x-shockwave-flash|swf|フラッシュファイル|
+|video/mpg|mpg|mpg ビデオファイル|
+|application/vnd.rn-realmedia|rm|RealPlay ビデオファイル|
+|video/quicktime|mov|mov ビデオファイル|
+|video/avi|avi|avi ビデオファイル|
+|video/x-ms-wmv|wmv|Windows ビデオファイル|
+|audio/mp3|mp3|MP3 音声ファイル|
+|audio/wav|wav wave|wave 音声ファイル|
+|audio/vnd.rn-realaudio|ra ram|RealPlay 音声ファイル|
+|audio/midi|mid midi|midi オーディオファイル|
+|application/x-zip-compressed|zip|zip 圧縮ファイル|
+|application/x-lzh-compressed|lzh|lzh 圧縮ファイル|
+|application/x-gzip|gz|g-zip 圧縮ファイル|
+|application/x-bz2-compressed|bz2|bz2 圧縮ファイル|
+|application/x-compress|z tgz|compress 圧縮ファイル|
+|application/x-cab-compressed|cab|cab 圧縮ファイル|
+|application/x-stuffit|sit|stuff it 圧縮ファイル|
+|application/x-tar|tar|tar 書庫ファイル|
+|text/plain|txt text dat jis euc sjis sjs asc utf utf8 csv|プレーンテキスト|
+|text/html|html htm|html文書|
+|image/svg-xml|svg|svg(Scalable Vector Graphics)|
+|application/ms-download|exe|Windows 実行ファイル|
+|application/ms-word|doc|MS-Word 文書ファイル|
+|application/ms-excel|xls|MS-Excel 文書ファイル|
+|application/ms-access|mdb mde|MS-Access データベース|
+|application/ms-powerpoint|ppt pps|MS-パワーポイントプレゼンテーション|

@@ -1,0 +1,5 @@
+#recent(20)
+
+//常に表示されるメニューバーです。
+// [[edit:http://設置場所/pukiwiki.php?cmd=edit&page=MenuBar]]
+//を記述しておくとMenuBarを気軽に修正できるようになって便利かも。

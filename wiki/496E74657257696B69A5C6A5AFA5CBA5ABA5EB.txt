@@ -1,31 +1,31 @@
-*[[InterWiki¥Æ¥¯¥Ë¥«¥ë]]
+*[[InterWiki¥Æ¥¯¥Ë¥«¥ë]] [#v2a7f90e]
 
 #contents
-
 ----
-
-**¥µ¡¼¥Ð¡¼¥ê¥¹¥È¤Ø¤ÎÄÉ²Ã
-[[ÊÔ½¸:InterWikiName]] ¤Î¥Ú¡¼¥¸¤Ë°Ê²¼¤Î¤è¤¦¤Ë¥µ¡¼¥Ð¤ÎÄêµÁ¤ò¤¹¤ë¡£
-
- [URL ¥µ¡¼¥ÐÌ¾] ¥¿¥¤¥×
- [http://pukiwiki.org/index.php pukiwiki] pw
-
-**InterWikiName¤ÎÄÉ²Ã
-¥µ¡¼¥ÐÌ¾:WikiName¤ò[[BracketName]]¤Çºî¤ì¤ÐInterWikiName¤Î´°À®
+**InterWiki¤Ø¤Î¥¢¥¯¥»¥¹(InterWikiName¤ÎÀ¸À®) [#nb5bafb9]
+¥µ¡¼¥Ð¥ê¥¹¥È¤Ë¤¢¤ë¥µ¡¼¥ÐÌ¾:WikiName¤ò[[BracketName]]¤Çºî¤ì¤ÐInterWikiName¤Î´°À®¡£~
+¤³¤ì¤ò¥Ú¡¼¥¸¤Ëµ­½Ò¤¹¤ì¤Ð¡¢¤½¤Î¥µ¡¼¥Ð¤ÎWikiName¤Ø¤Î¥Ï¥¤¥Ñ¡¼¥ê¥ó¥¯¤¬À¸À®¤µ¤ì¤Þ¤¹¡£
 
  [[¥µ¡¼¥ÐÌ¾:WikiName]]
  [[pukiwiki:FrontPage]]
 
-**WikiName¤ÎÁÞÆþ°ÌÃÖ
+**¥µ¡¼¥Ð¡¼¥ê¥¹¥È¤Ø¤ÎÄÉ²Ã [#a71a4d66]
+[[InterWikiName]] ¤Î¥Ú¡¼¥¸¤Ë°Ê²¼¤Î¤è¤¦¤Ë¥µ¡¼¥Ð¤ÎÄêµÁ¤ò¤¹¤ë¤³¤È¤Ç
+¥µ¡¼¥Ð¡¼¥ê¥¹¥È¤ËÄÉ²Ã¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£
+
+ [URL ¥µ¡¼¥ÐÌ¾] ¥¿¥¤¥×
+ [http://pukiwiki.org/index.php pukiwiki] utf8
+
+**WikiName¤ÎÁÞÆþ°ÌÃÖ [#q7ad1d6d]
 Í×µá¤·¤è¤¦¤È¤¹¤ëURL¤Ø¤ÎWikiName¤ÎÁÞÆþ°ÌÃÖ¤ò $1 ¤Ç»ØÄê¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£¾ÊÎ¬¤¹¤ë¤È¤ª¿¬¤Ë¤¯¤Ã¤Ä¤­¤Þ¤¹¡£
 
- -[http://pukiwiki.org/index.php?cmd=backup&page=$1&age=1 pukiwiki] pw
+ -[http://pukiwiki.org/index.php?cmd=backup&page=$1&age=1 pukiwiki] utf8
 
-**Ê¸»ú¥³¡¼¥ÉÊÑ´¹¥¿¥¤¥×
+**Ê¸»ú¥³¡¼¥ÉÊÑ´¹¥¿¥¤¥× [#k34801d3]
 
 PukiWiki¥Ú¡¼¥¸°Ê³°¤Ë¤âÈô¤Ð¤»¤Þ¤¹¡£ÆüËÜ¸ì¤òURL¤Ë´Þ¤à²ÄÇ½À­¤â¤¢¤ë¤Î¤Ç¤½¤Î¾ì¹ç¤Î¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤Î»ØÄê¤ò¥¿¥¤¥×¤È¤·¤Æ»ØÄê¤Ç¤­¤Þ¤¹¡£
 
- -[http://pukiwiki.org/index.php?cmd=read&page=$1 sng] pw
+ -[http://pukiwiki.org/index.php?cmd=read&page=$1 sng] utf8
 
 :std ¾ÊÎ¬»þ|ÆâÉôÊ¸»ú¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°(É¸½à¤ÏSJIS)¤Î¤Þ¤ÞURL¥¨¥ó¥³¡¼¥É¤·¤Þ¤¹¡£
 :raw asis|URL¥¨¥ó¥³¡¼¥É¤·¤Ê¤¤¤Ç¤½¤Î¤Þ¤Þ»ÈÍÑ¡£
@@ -39,7 +39,7 @@ PukiWiki¥Ú¡¼¥¸°Ê³°¤Ë¤âÈô¤Ð¤»¤Þ¤¹¡£ÆüËÜ¸ì¤òURL¤Ë´Þ¤à²ÄÇ½À­¤â¤¢¤ë¤Î¤Ç¤½¤Î¾ì¹ç¤Î¥¨¥
 
 ''UCS-4, UCS-4BE, UCS-4LE, UCS-2, UCS-2BE, UCS-2LE, UTF-32, UTF-32BE, UTF-32LE, UCS-2LE, UTF-16, UTF-16BE, UTF-16LE, UTF-8, UTF-7, ASCII, EUC-JP, SJIS, eucJP-win, SJIS-win, ISO-2022-JP, JIS, ISO-8859-1, ISO-8859-2, ISO-8859-3, ISO-8859-4, ISO-8859-5, ISO-8859-6, ISO-8859-7, ISO-8859-8, ISO-8859-9, ISO-8859-10, ISO-8859-13, ISO-8859-14, ISO-8859-15, byte2be, byte2le, byte4be, byte4le, BASE64, 7bit, 8bit, UTF7-IMAP''
 
-**YukiWiki·Ï¤Ø¤Î¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°
+**YukiWiki·Ï¤Ø¤Î¥¨¥ó¥³¡¼¥Ç¥£¥ó¥° [#zeb5d7f0]
 
 -WikiName¤Î¤â¤Î¤Ø¤Ï¤½¤Î¤Þ¤ÞURL¥¨¥ó¥³¡¼¥É¡£
 -[[BracketName]]¤Î¤â¤Î¤Ï[[ ]]¤òÉÕ²Ã¤·¤ÆURL¥¨¥ó¥³¡¼¥É¡£
