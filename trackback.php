@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.14 2003/11/05 10:42:00 arino Exp $
+// $Id: trackback.php,v 1.15 2004/02/29 08:20:38 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -141,7 +141,7 @@ function tb_get($file,$key=1)
 	while ($data = @fgetcsv($fp,8192,','))
 	{
 		// $data[$key] = URL
-		$result[$data[$key]] = $data;
+		$result[rawurldecode($data[$key])] = $data;
 	}
 	flock($fp,LOCK_UN);
 	fclose ($fp);
@@ -316,14 +316,15 @@ function ref_save($page)
 		$url = '"'.str_replace('"', '""', $url).'"';
 	}
 	$filename = tb_get_filename($page,'.ref');
-	$data = tb_get($filename,3);
-	if (!array_key_exists($url,$data))
+	$data = tb_get($filename, 3);
+	$d_url = rawurldecode($url);
+	if (!array_key_exists($d_url,$data))
 	{
 		// 0:最終更新日時, 1:初回登録日時, 2:参照カウンタ, 3:Referer ヘッダ, 4:利用可否フラグ(1は有効)
-		$data[$url] = array(UTIME,UTIME,0,$url,1);
+		$data[$d_url] = array(UTIME,UTIME,0,$url,1);
 	}
-	$data[$url][0] = UTIME;
-	$data[$url][2]++;
+	$data[$d_url][0] = UTIME;
+	$data[$d_url][2]++;
 	
 	if (!($fp = fopen($filename,'w')))
 	{

@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.7 2003/12/04 08:29:49 arino Exp $
+// $Id: tb.inc.php,v 1.8 2004/02/29 08:20:38 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -110,7 +110,7 @@ function tb_save()
 		}
 		$items[$field] = $value;
 	}
-	$data[$items['url']] = $items;
+	$data[rawurldecode($items['url'])] = $items;
 	
 	$fp = fopen($filename,'w');
 	flock($fp,LOCK_EX);
