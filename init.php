@@ -2,13 +2,13 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.77 2004/06/27 11:15:51 henoheno Exp $
+// $Id: init.php,v 1.78 2004/06/28 12:07:21 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
 // 初期設定 (エラー出力レベル)
-// (E_WARNING | E_NOTICE)を除外しています。
-error_reporting(E_ERROR | E_PARSE);
+error_reporting(E_ERROR | E_PARSE);	// (E_WARNING | E_NOTICE)を除外しています
+//error_reporting(E_ALL);
 
 /////////////////////////////////////////////////
 // 初期設定 (文字エンコード、言語)
@@ -21,7 +21,6 @@ mb_internal_encoding(SOURCE_ENCODING);
 ini_set('mbstring.http_input', 'pass');
 mb_http_output('pass');
 mb_detect_order('auto');
-
 
 /////////////////////////////////////////////////
 // 初期設定(設定ファイルの場所)
@@ -79,7 +78,7 @@ if ($die) { die_message(nl2br("\n\n" . $message . "\n")); }
 if (!isset($script) or $script == '') {
 	$script = get_script_uri();
 	if ($script === FALSE or (php_sapi_name() == 'cgi' and !is_url($script,TRUE))) {
-		die_message("get_script_uri() failed: Please set \$script at INI_FILE manually.");
+		die_message('get_script_uri() failed: Please set $script at INI_FILE manually.');
 	}
 }
 
@@ -271,6 +270,11 @@ if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars))
 	$get['cmd']  = $post['cmd']  = $vars['cmd']  = 'read';
 	$get['page'] = $post['page'] = $vars['page'] = $arg;
 }
+
+// 入力チェック: 'cmd=' prohibits nasty 'plugin='
+if (isset($vars['cmd']) && isset($vars['plugin']))
+	unset($get['plugin'], $post['plugin'], $vars['plugin']);
+
 
 /////////////////////////////////////////////////
 // 初期設定($WikiName,$BracketNameなど)
