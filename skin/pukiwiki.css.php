@@ -2,23 +2,18 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.css.php,v 1.1 2004/09/18 09:45:14 henoheno Exp $
+// $Id: pukiwiki.css.php,v 1.2 2004/09/18 11:58:09 henoheno Exp $
 //
 header('Content-Type: text/css');
 
-$charset = isset($_REQUEST['charset']) ? $_REQUEST['charset']  : '';
-$media   = isset($_REQUEST['media'])   ? $_REQUEST['media']    : 'en';
+$charset = isset($_GET['charset']) ? $_GET['charset']  : '';
+$media   = isset($_GET['media'])   ? $_GET['media']    : 'en';
 
 switch ($charset) {
 	case 'Shift_JIS': break; /* this @charset is for Mozilla's bug */
 	default: $charset ='iso-8859-1';
 }
-
-if ($media == 'print') {
-	;
-} else {
-	$media = 'screen';
-}
+if ($media != 'print') $media = 'screen';
 
 ?>
 @charset "<?php echo $charset ?>";
