@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.17 2003/11/03 15:08:25 arino Exp $
+// $Id: tracker.inc.php,v 1.18 2003/11/12 07:49:44 arino Exp $
 //
 
 // tracker_listで表示しないページ名(正規表現で)
@@ -31,13 +31,10 @@ function plugin_tracker_convert()
 			case 3:
 				$options = array_splice($args,2);
 			case 2:
-				$_base = get_fullname($args[1],$base);
-				if (is_pagename($_base))
-				{
-					$base = $_base;
-				}
+				$args[1] = get_fullname($args[1],$base);
+				$base = is_pagename($args[1]) ? $args[1] : $base; 
 			case 1:
-				$config_name = $args[0];
+				$config_name = ($args[0] != '') ? $args[0] : $config_name;
 				list($config_name,$_form) = array_pad(explode('/',$config_name,2),2,$form);
 		}
 	}
@@ -572,6 +569,7 @@ function plugin_tracker_list_convert()
 			case 3:
 				$order = $args[2];
 			case 2:
+				$args[1] = get_fullname($args[1],$page);
 				$page = is_pagename($args[1]) ? $args[1] : $page;
 			case 1:
 				$config = ($args[0] != '') ? $args[0] : $config;
