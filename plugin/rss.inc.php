@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss.inc.php,v 1.5 2003/09/12 00:38:06 arino Exp $
+// $Id: rss.inc.php,v 1.6 2004/03/18 09:17:54 arino Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss_action()
@@ -43,6 +43,8 @@ EOD;
 	
 	header('Content-type: application/xml');
 	
+	$r_whatsnew = rawurlencode($whatsnew);
+	
 	print <<<EOD
 <?xml version="1.0" encoding="UTF-8"?>
 
@@ -53,7 +55,7 @@ EOD;
 
 <channel>
 <title>$page_title_utf8</title>
-<link>$self?$whatsnew</link>
+<link>$self?$r_whatsnew</link>
 <description>PukiWiki RecentChanges</description>
 <language>ja</language>
 
