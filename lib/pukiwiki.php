@@ -29,7 +29,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
+// $Id: pukiwiki.php,v 1.2 2004/08/01 02:22:36 henoheno Exp $
 /////////////////////////////////////////////////
 
 /////////////////////////////////////////////////
@@ -40,32 +40,32 @@ if (! defined('DATA_HOME')) define('DATA_HOME', '');
 /////////////////////////////////////////////////
 // サブルーチンの格納先ディレクトリ (他の *.phpファイル)
 
-if (! defined('LIB_DIR')) define('SUB_DIR', '');
+if (! defined('LIB_DIR')) define('LIB_DIR', '');
 
 /////////////////////////////////////////////////
 // サブルーチンの読み込み
 
-require(LIB_DIR . 'func.php');
-require(LIB_DIR . 'file.php');
-require(LIB_DIR . 'plugin.php');
-require(LIB_DIR . 'html.php');
-require(LIB_DIR . 'backup.php');
+require('func.php');
+require('file.php');
+require('plugin.php');
+require('html.php');
+require('backup.php');
 
-require(LIB_DIR . 'convert_html.php');
-require(LIB_DIR . 'make_link.php');
-require(LIB_DIR . 'diff.php');
-require(LIB_DIR . 'config.php');
-require(LIB_DIR . 'link.php');
-require(LIB_DIR . 'trackback.php');
-require(LIB_DIR . 'auth.php');
-require(LIB_DIR . 'proxy.php');
-require(LIB_DIR . 'mail.php');
+require('convert_html.php');
+require('make_link.php');
+require('diff.php');
+require('config.php');
+require('link.php');
+require('trackback.php');
+require('auth.php');
+require('proxy.php');
+require('mail.php');
 if (!extension_loaded('mbstring')) {
-	require(LIB_DIR . 'mbstring.php');
+	require('mbstring.php');
 }
 
 // 初期化: 設定ファイルの読み込み
-require(LIB_DIR . 'init.php');
+require('init.php');
 
 /////////////////////////////////////////////////
 // メイン処理
