@@ -2,9 +2,13 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.css.php,v 1.5 2004/10/23 13:57:28 henoheno Exp $
+// $Id: pukiwiki.css.php,v 1.6 2004/10/31 09:20:00 henoheno Exp $
 //
 header('Content-Type: text/css');
+if(ini_get('zlib.output_compression')) {
+	header('Content-Encoding: gzip');
+	header('Vary: Accept-Encoding');
+}
 
 $charset = isset($_GET['charset']) ? $_GET['charset']  : '';
 $media   = isset($_GET['media'])   ? $_GET['media']    : '';
