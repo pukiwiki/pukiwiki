@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: map.inc.php,v 1.12 2005/01/06 13:35:11 henoheno Exp $
+// $Id: map.inc.php,v 1.13 2005/01/08 11:35:37 henoheno Exp $
 //
 // Site-map plugin
 
@@ -35,8 +35,9 @@ function plugin_map_action()
 	}
 
 	// ページ数
-	$retval['body'] .= '<p>' . "\n" . 'total: ' . $count .
-		' page(s) on this site.' . "\n" . '</p>' . "\n";
+	$retval['body'] .= '<p>' . "\n" .
+		'Total: ' . $count . ' page(s) on this site.' . "\n" .
+		'</p>' . "\n";
 
 	// ツリー作成
 	$nodes = array();
@@ -57,7 +58,8 @@ function plugin_map_action()
 		}
 		$retval['body'] .= '</ul>' . "\n";
 		if (! empty($alone)) {
-			$retval['body'] .= '<hr />' . "\n" . '<p>no link from anywhere in this site.</p>' . "\n";
+			$retval['body'] .= '<hr />' . "\n" .
+				'<p>No link from anywhere in this site.</p>' . "\n";
 			$retval['body'] .= '<ul>' . "\n";
 			foreach ($alone as $page)
 				$retval['body'] .= $nodes[$page]->toString($nodes, 1, $nodes[$page]->parent_id);
@@ -66,7 +68,8 @@ function plugin_map_action()
 	} else {
 		$nodes[$refer]->chain($nodes);
 		$retval['body'] .= '<ul>' . "\n" . $nodes[$refer]->toString($nodes) . '</ul>' . "\n";
-		$retval['body'] .= '<hr /><p>not related from ' . htmlspecialchars($refer) . '</p>' . "\n";
+		$retval['body'] .= '<hr />' . "\n" .
+			'<p>Not related from ' . htmlspecialchars($refer) . '</p>' . "\n";
 		$keys = array_keys($nodes);
 		sort($keys);
 		$retval['body'] .= '<ul>' . "\n";
@@ -169,7 +172,7 @@ class MapNode
 			$childs = array();
 			$level += 2;
 			foreach ($this->rels as $page)
-				if ($this->parent_id != $nodes[$page]->id)
+				if (isset($nodes[$page]) && $this->parent_id != $nodes[$page]->id)
 					$childs[] = $nodes[$page]->toString($nodes, $level, $this->id);
 
 			if (! empty($childs))
