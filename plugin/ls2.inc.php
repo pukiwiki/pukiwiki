@@ -1,5 +1,5 @@
 <?php
-// $Id: ls2.inc.php,v 1.1.2.2 2004/07/24 00:55:46 henoheno Exp $
+// $Id: ls2.inc.php,v 1.1.2.3 2004/07/24 00:57:23 henoheno Exp $
 /*
 Last-Update:2002-10-29 rev.8
 
@@ -80,7 +80,7 @@ function plugin_ls2_convert() {
 
 	if ($params['link']) {
 		$tmp = array();
-		$tmp[] = 'plugin=ls2&prefix=' . $prefix;
+		$tmp[] = 'plugin=ls2&prefix=' . rawurlencode($prefix);
 		if (isset($params['title']))   { $tmp[] = 'title=1'; }
 		if (isset($params['include'])) { $tmp[] = 'include=1'; }
 		return '<p><a href="' . $script . '?' . join('&', $tmp) . '">' . $title . '</a></p>' . "\n";
