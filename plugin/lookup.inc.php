@@ -1,5 +1,5 @@
 <?php
-// $Id: lookup.inc.php,v 1.7 2003/01/27 05:38:46 panda Exp $
+// $Id: lookup.inc.php,v 1.8 2003/02/28 03:19:55 panda Exp $
 
 function plugin_lookup_convert()
 {
@@ -9,12 +9,12 @@ function plugin_lookup_convert()
 	
 	if (func_num_args() < 2) return FALSE;
 	
-	$iwn = trim(strip_tags($args[0]));
-	$btn = trim(strip_tags($args[1]));
+	$iwn = htmlspecialchars(trim(strip_tags($args[0])));
+	$btn = htmlspecialchars(trim(strip_tags($args[1])));
 	
 	$default = '';
 	if (func_num_args() > 2)
-		$default = trim(strip_tags($args[2]));
+		$default = htmlspecialchars(trim(strip_tags($args[2])));
 	
 	$s_page = htmlspecialchars($vars['page']);
 	
