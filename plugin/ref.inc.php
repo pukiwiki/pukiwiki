@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.35 2004/08/28 01:04:33 henoheno Exp $
+// $Id: ref.inc.php,v 1.36 2004/08/28 01:32:19 henoheno Exp $
 //
 
 // UPLOAD_DIR のデータ(画像ファイルのみ)に直接アクセスさせる
@@ -205,7 +205,8 @@ function plugin_ref_body($args)
 						'". Try ref(pagename/filname) to specify one of them');
 				} else {
 					// Because of possibility of race condition, in the future
-					$params['_error'] = 'This style is ambiguous and become obsolete. ' .
+					$params['_error'] = 'The style ref(filename,pagename) is ambiguous ' .
+						'and become obsolete. ' .
 						'Please try ref(pagename/filname)';
 				}
 				return $params;
