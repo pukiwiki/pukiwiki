@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.17 2003/02/26 07:12:30 panda Exp $
+// $Id: make_link.php,v 1.18 2003/02/26 11:29:47 panda Exp $
 //
 
 // リンクを付加する
@@ -15,8 +15,8 @@ function make_link($string,$page = '')
 	{
 		$converter = new InlineConverter();
 	}
-	
-	return $converter->convert($string, ($page != '') ? $page : $vars['page']);
+	$_converter = $converter; // copy
+	return $_converter->convert($string, ($page != '') ? $page : $vars['page']);
 }
 //インライン要素を置換する
 class InlineConverter
@@ -29,7 +29,7 @@ class InlineConverter
 	{
 		if ($converters == NULL)
 		{
-			$converters = array('plugin','url','mailto','interwiki','page','auto');
+			$converters = array('plugin','note','url','mailto','interwiki','page','auto');
 		}
 		$this->converters = array();
 		$pattern = array();
@@ -536,6 +536,62 @@ EOD;
 		return "<a href=\"{$this->name}\">"
 			.($this->is_image ? $this->image : $this->alias)
 			.'</a>';
+	}
+}
+
+// 注釈
+class Link_note extends Link
+{
+	function Link_note($start)
+	{
+		parent::Link($start);
+	}
+	function get_pattern()
+	{
+
+		return <<<EOD
+\(\(    # open paren
+ (      # <1> note body
+  (?:
+   (?>  # once-only 
+    (?:
+     (?!\(\()(?!\)\)(?:[^\)]|$)).
+    )+
+   )
+   |
+   (?R) # or recursive of me
+  )*
+ )
+\)\)
+EOD;
+	}
+	function get_count()
+	{
+		return 1;
+	}
+	function set($arr,$page)
+	{
+		global $foot_explain;
+		static $note_id = 0;
+		
+		$arr = $this->splice($arr);
+		
+		$id = ++$note_id;
+		$note = make_link($arr[1]);
+		
+		$foot_explain[] = <<<EOD
+<a id="notefoot_$id" href="#notetext_$id" class="note_super">*$id</a>
+<span class="small">$note</span>
+<br />
+EOD;
+		$name = "<a id=\"notetext_$id\" href=\"#notefoot_$id\" class=\"note_super\">*$id</a>";
+		
+		return parent::setParam($page,$name);
+		
+	}
+	function toString()
+	{
+		return $this->name;
 	}
 }
 

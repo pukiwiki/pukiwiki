@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.58 2003/02/26 08:52:26 panda Exp $
+// $Id: html.php,v 1.59 2003/02/26 11:29:47 panda Exp $
 //
 
 // 本文を出力
@@ -90,15 +90,17 @@ function catbody($title,$page,$body)
 	require(SKIN_FILE);
 }
 
-// インライン要素のパース (注釈)
+// インライン要素のパース
 function inline($line,$remove=FALSE)
 {
 	global $NotePattern;
 	
-	return preg_replace(
-		$NotePattern,
-		$remove ? '' : 'make_note(\'$1\')',
-		htmlspecialchars($line));
+	$line = htmlspecialchars($line);
+	if ($remove)
+	{
+		$line = preg_replace($NotePattern,'',$line);
+	}
+	return $line;
 }
 
 // インライン要素のパース (リンク、見出し一覧)
@@ -239,24 +241,6 @@ function make_related($page,$tag='')
 	return $retval;
 }
 
-// 注釈処理
-function make_note($str)
-{
-	global $NotePattern,$foot_explain;
-	static $note_id = 0;
-	
-	$note = ++$note_id;
-	if (preg_match($NotePattern,$str)) {
-		$str = preg_replace($NotePattern,'make_note(\'$1\')',$str);
-	}
-	
-	$str= str_replace("\\'","'",$str);
-	$str = inline2($str);
-	
-	$foot_explain[] = "<a id=\"notefoot_$note\" href=\"#notetext_$note\" class=\"note_super\">*$note</a> <span class=\"small\">$str</span><br />\n";
-	
-	return "<a id=\"notetext_$note\" href=\"#notefoot_$note\" class=\"note_super\">*$note</a>";
-}
 // ユーザ定義ルール(ソースを置換する)
 function user_rules_str($str)
 {
