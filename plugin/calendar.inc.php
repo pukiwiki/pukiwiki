@@ -129,7 +129,7 @@ function plugin_calendar_convert()
 		{
 			for($i=0;$i<$wday;$i++)
 			{ // Blank 
-				$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_blank\" height=\"19\">Å@</td>\n"; 
+				$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_blank\" height=\"19\">°°</td>\n"; 
 			} 
 		$fweek=false;
 		}
@@ -163,7 +163,7 @@ function plugin_calendar_convert()
 	{
 		while($wday < 7)
 		{ // Blank 
-			$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_blank\" height=\"19\">Å@</td>\n";
+			$ret .= "    <td width=\"14%\" align=\"center\" class=\"style_td_blank\" height=\"19\">°°</td>\n";
 		$wday++;
 		} 
 	}

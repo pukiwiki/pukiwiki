@@ -79,6 +79,7 @@ $_btn_notchangetimestamp = 'Not change timestamp';
 $_btn_addtop = 'Add to top of page';
 $_btn_template = 'Page for use template';
 $_btn_load = 'Load';
+$_btn_edit = 'Edit';
 
 ///////////////////////////////////////
 // plug-in message
@@ -87,6 +88,7 @@ $_btn_load = 'Load';
 // comment
 $_btn_name = 'Name: ';
 $_btn_comment = 'Submit';
+$_msg_comment = 'Comment: ';
 
 ///////////////////////////////////////
 // attach file
@@ -94,6 +96,7 @@ $_title_uploaded = 'Uploaded file to $1';
 $_title_file_deleted = 'Deleted file in $1';
 $_title_notfound = 'Not found the file in $1';
 $_title_upload = 'Upload at $1';
+$_title_confirm_delete = 'Delete %s';
 
 $_msg_noparm = 'Cannot upload/delete in $1';
 $_msg_already_exists = 'Already exists file in $1';
@@ -102,6 +105,16 @@ $_msg_maxsize = 'Maximum file size is $1.';
 $_msg_delete = 'Delete \'$1\'';
 $_msg_exceed = 'File size is too big to $1';
 $_msg_attachfile = 'Attach file';
+$_msg_confirm_delete = '<center>comfirm Delete '%s'<br>%s</center>';
 $_btn_upload = 'Upload';
 $_btn_delete = 'Del';
+
+///////////////////////////////////////
+// newpage
+$_msg_newpage = 'new page';
+
+///////////////////////////////////////
+// recent
+$_recent_plugin_frame = '<span align="center"><h5 class="side_label">recent(%d)</h5></span><small>%s</small>';
+$_recent_plugin_li = '.';
 ?>

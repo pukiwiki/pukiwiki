@@ -1,12 +1,18 @@
 NAME
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
+       PukiWiki 1.3.1beta MASUI'z Edition
+        Copyright (C) 2001,2002 by sng, MASUI.
+        Yuichiro MASUI <masui@masui.net>
+        http://masui.net/pukiwiki/
+
+       PukiWiki 1.3 (based)
         Copyright (C) 2001,2002 by sng.
         sng <sng@factage.com>
         http://factage.com/sng/
 
 SYNOPSIS
-        http://factage.com/sng/pukiwiki/pukiwiki.php
+        http://masui.net/pukiwiki/
 
 DESCRIPTION
     PukiWikiは参加者が自由にページを追加・削除・編集できる
@@ -16,6 +22,8 @@ DESCRIPTION
     PukiWikiは、Webページ全体を自由に変更することができます。
 
     PukiWikiは、結城浩さんのYukiWikiの仕様を参考にして独自に作られました。
+    PukiWiki(MASUI'z Edition)は、sngさんのPukiWiki 1.3を元にプラグインなどを
+    まとめたものです。
 
     PukiWikiはPHPで書かれたPHPスクリプトとして実現されていますので、
     PHPが動作するWebサーバならば比較的容易に設置できます。
@@ -25,7 +33,7 @@ DESCRIPTION
 設置方法
   入手
 
-    PukiWikiの最新版は、 http://factage.com/sng/php/ から入手できます。
+    PukiWiki(MASUI'z Edition)の最新版は、 http://masui.net/pukiwiki/ から入手できます。
 
   ファイル一覧
 
@@ -42,21 +50,28 @@ DESCRIPTION
     2.  必要に応じてpukiwiki.ini.phpの設定を確認します。
         1.11 から設定ファイルが別ファイルのpukiwiki.ini.phpになりました。
 
-    3.  pukiwiki.phpとpukiwiki.gifを同じところに設置します。
+    3.  *.phpとpukiwiki.gifを同じところに設置します。
 
-    4.  さらにpukiwiki.phpと同じところにpukiwiki.ini.phpとpukiwiki.skin.ja.php、        もしくはpukiwiki.skin.en.phpを同じところに設置します。
+    4.  さらに*.phpと同じところにpukiwiki.ini.phpとpukiwiki.skin.ja.php、
+        もしくはpukiwiki.skin.en.phpを同じところに設置します。
 
-    5.  pukiwiki.php内で指定したデータファイルディレクトリを
+    5.  pukiwiki.ini.php内で指定したデータファイルディレクトリを
         属性 777 で作成する。(ディフォルトは wiki )
 
-    6.  pukiwiki.php内で指定した差分ファイルディレクトリを
+    6.  pukiwiki.ini.php内で指定した差分ファイルディレクトリを
         属性 777 で作成する。(ディフォルトは diff )
 
     7.  自動バックアップ機能(ディフォルトでは off)を使う場合、
-        pukiwiki.php内で指定した差分ファイルディレクトリを
-        属性 777 で作成する。(ディフォルトは diff )
+        pukiwiki.ini.php内で指定した差分ファイルディレクトリを
+        属性 777 で作成する。(ディフォルトは backup )
 
-    8.  pukiwiki.phpにブラウザからアクセスします。
+    8.  attach.inc.php内で指定した添付ファイルディレクトリを
+        属性 777 で作成する。(ディフォルトは attach )
+
+    9.  counter.inc.php内で指定したカウンターファイルディレクトリを
+        属性 777 で作成する。(ディフォルトは counter )
+
+    10. pukiwiki.phpにブラウザからアクセスします。
 
   パーミッション
 
@@ -67,13 +82,24 @@ DESCRIPTION
             pukiwiki.skin.ja.php 644                 ASCII
             en.lng               644                 ASCII
             ja.lng               644                 ASCII
+	    func.php             644                 ASCII
+	    file.php             644                 ASCII
+	    html.php             644                 ASCII
+	    init.php             644                 ASCII
+	    plugin.php           644                 ASCII
+	    template.php         644                 ASCII
+	    rss.php              644                 ASCII
+	    backup.php           644                 ASCII
             pukiwiki.gif         644                 BINARY
 
             ディレクトリ         パーミッション
             wiki                 777
             diff                 777
             backup               777
-            plug-in              777
+            attach               777
+            counter              777
+            skin                 755
+            plug-in              755
 
    データのバックアップ方法
 
@@ -157,14 +183,14 @@ DESCRIPTION
             大かっこの中にはスペースを含めてはいけません。
             日本語も使えます。
 
-        *   また、[[factage:http://factage.com/]] のようにすると factage の文字に
-            http://factage.com/ へのリンクが貼れます。
+        *   また、[[pukiwiki:http://masui.net/pukiwiki/]] のようにすると factage の文字に
+            http://masui.net/pukiwiki/ へのリンクが貼れます。
 
         *   [[サーバ名:WikiName]] のようにすると InterWikiName になります。
 
-        *   http://factage.com/sng/ のようなURLは自動的にリンクになります。
+        *   http://masui.net/pukiwiki/ のようなURLは自動的にリンクになります。
 
-        *   sng@factage.com のようなメールアドレスも自動的にリンクになります。
+        *   team@pukiwiki.jp のようなメールアドレスも自動的にリンクになります。
 
     *   行頭がスペースやタブで始まっていると、
         それは整形済みの段落`<pre>'として扱われます。
@@ -204,27 +230,27 @@ InterWiki
     InterWikiName のページに以下のようにサーバの定義をする。 
 
     *   [URL サーバ名] タイプ
-    *   [http://factage.com/sng/pukiwiki/pukiwiki.php?read&page= sng] pw
+    *   [http://masui.net/pukiwiki/pukiwiki.php?read&page= pukiwiki] pw
 
 
   InterWikiNameの追加 
     サーバ名:WikiNameをBracketNameで作ればInterWikiNameの完成 
 
     *   [[サーバ名:WikiName]]
-    *   [[sng:FrontPage]]
+    *   [[pukiwiki:FrontPage]]
 
   WikiNameの挿入位置 
     要求しようとするURLへのWikiNameの挿入位置を $1 で指定することができます。
     省略するとお尻にくっつきます。 
 
-    *   [http://factage.com/sng/pukiwiki/pukiwiki.php?backup&page=$1&age=1 sng] pw
+    *   [http://masui.net/pukiwiki/pukiwiki.php?backup&page=$1&age=1 pukiwiki] pw
 
 
   文字コード変換タイプ 
     PukiWikiページ以外にも飛ばせます。日本語をURLに含む可能性もあるのでその場合の
     エンコーディングの指定をタイプとして指定できます。 
 
-    *   [http://factage.com/sng/pukiwiki/pukiwiki.php?read&page=$1 sng] pw
+    *   [http://masui.net/pukiwiki/pukiwiki.php?read&page=$1 pukiwiki] pw
 
 
     *   std 省略時
@@ -264,14 +290,26 @@ RDF/RSS
 
   RSS 0.91 の出力方法の例
 
-    *   http://factage.com/sng/pukiwiki/pukiwiki.php?rss
+    *   http://masui.net/pukiwiki/pukiwiki.php?rss
 
   RSS 1.0 の出力方法の例
 
-    *   http://factage.com/sng/pukiwiki/pukiwiki.php?rss10
+    *   http://masui.net/pukiwiki/pukiwiki.php?rss10
 
 更新履歴
-    *   2002-03-18 1.3
+    *   2002-06-10 1.3.1beta MASUI'z Edition
+
+        PukiWiki 1.3をベースに、MASUIが勝手にプラグインとかまとめてみました。
+        ソースファイルを分割。
+        calendar2, include, article, memo, aname, anchor, counter, vote, ls, yetlist, recent, source, imgプラグインを添付。
+        attach, commentプラグインバージョンアップ。
+        本文に、タグが入っていた場合、編集がうまくできなかった不具合を修正。
+        更新衝突時にdiffアルゴリズムで差分をとり、マージを行う様に変更。
+	&amp; &lt;などを含んだ文章を編集すると、それが消えてしまう場合がある不具合を修正。
+	自動テンプレート機能を追加。[[SandBox/template]]
+        ソースファイルを分割。
+
+    *   2002-03-18 1.3 by sng.
 
         ある文字列へWikiName/BracketNameへのリンクを貼る。(エイリアス機能)
         疑似ディレクトリ構想。./ や ../ などをBracketNameとして使用することで実現。 
@@ -282,7 +320,7 @@ RDF/RSS
         一部の整形ルールをプラグイン化する。
         Win32でも正常に動作するように修正
 
-    *   2002-02-15 1.2.12
+    *   2002-02-15 1.2.12 by sng.
 
         バックアップの挙動の変更 
         現在表示しているページのみのバックアップ一覧を表示する 
@@ -298,46 +336,51 @@ RDF/RSS
         #norelated を行頭に書くと関連ページを表示しないルールを追加 
         関連ページの区切り文字を整形ルール用と分けた 
 
-    *   2002-02-09 1.2.11 関連リンク常時表示機能、経過時間表示機能、セキュリティ対策、コマンドを cmd= に修正。その他バグ修正。 
+    *   2002-02-09 1.2.11 by sng. 関連リンク常時表示機能、経過時間表示機能、セキュリティ対策、コマンドを cmd= に修正。その他バグ修正。 
 
-    *   2002-02-09 1.2.1 バグ修正、高速化、RDF/RSS(1.0,0.91)の実装。
+    *   2002-02-09 1.2.1 by sng. バグ修正、高速化、RDF/RSS(1.0,0.91)の実装。
 
-    *   2002-02-07 1.2.0 設定ファイルを外部へ、InterWiki搭載、関連ページルール、注釈ルール、httpリンクルール、バグ修正。
+    *   2002-02-07 1.2.0 by sng. 設定ファイルを外部へ、InterWiki搭載、関連ページルール、注釈ルール、httpリンクルール、バグ修正。
 
-    *   2002-02-05 1.10 スキン機能、コメント挿入、見出し目次作成、その他バグ修正。
+    *   2002-02-05 1.10 by sng. スキン機能、コメント挿入、見出し目次作成、その他バグ修正。
 
-    *   2002-02-01 1.07 追加機能、ユーザ定義ルール、単語AND/OR検索の実装。
+    *   2002-02-01 1.07 by sng. 追加機能、ユーザ定義ルール、単語AND/OR検索の実装。
 
-    *   2001-01-22 1.06 ページ編集時エラーの修正。ページタイトルの[[]]も取り除くように。
+    *   2001-01-22 1.06 by sng. ページ編集時エラーの修正。ページタイトルの[[]]も取り除くように。
 
-    *   2001-12-12 1.05 差分アルゴリズムの修正、自動バックアップ機能追加。
+    *   2001-12-12 1.05 by sng. 差分アルゴリズムの修正、自動バックアップ機能追加。
 
-    *   2001-12-10 1.01 メールアドレスリンクの不備の修正(thanks to s.sawada)
+    *   2001-12-10 1.01 by sng. メールアドレスリンクの不備の修正(thanks to s.sawada)
 
-    *   2001-12-05 1.00 正式公開。検索結果からのハイライト表示機能の削除。
+    *   2001-12-05 1.00 by sng. 正式公開。検索結果からのハイライト表示機能の削除。
 
-    *   2001-11-29 0.96 またまたいくつかのバグの修正。差分の追加。まだまだ未完、とりあえず。 
+    *   2001-11-29 0.96 by sng. またまたいくつかのバグの修正。差分の追加。まだまだ未完、とりあえず。 
 
-    *   2001-11-28 0.94 いくつかのバグの修正。日付・時刻挿入ルールの追加。 
+    *   2001-11-28 0.94 by sng. いくつかのバグの修正。日付・時刻挿入ルールの追加。 
 
-    *   2001-11-27 0.93 コードの清書。検索結果からのページ表示時ハイライト表示。 
+    *   2001-11-27 0.93 by sng. コードの清書。検索結果からのページ表示時ハイライト表示。 
 
-    *   2001-11-26 0.92 データファイル名を YukiWiki と共通の変換方法にした。 
+    *   2001-11-26 0.92 by sng. データファイル名を YukiWiki と共通の変換方法にした。 
 
-    *   2001-11-25 0.91 即日にして単語検索機能が追加。差分は結構かかりそう。 
+    *   2001-11-25 0.91 by sng. 即日にして単語検索機能が追加。差分は結構かかりそう。 
 
-    *   2001-11-25 0.90 一応公開。YukiWiki の検索と差分はまだ。
+    *   2001-11-25 0.90 by sng. 一応公開。YukiWiki の検索と差分はまだ。
 
 TODO
-        - 予定なし、これから実装される YukiWiki の機能を移植
+        - 予定なし、これから実装される YukiWiki の機能を移植 by sng.
 
 作者
-        Copyright (C) 2001,2002 by sng.
-        sng <sng@factage.com>
-        http://factage.com/sng/
-        http://factage.com/sng/pukiwiki/
+        PukiWiki 1.3.1 MASUI'z Edition by
+         Copyright (C) 2002 by sng & MASUI.
+         Yuichiro MASUI <masui@masui.net>
+         http://masui.net/pukiwiki/
 
-    質問、意見、バグ報告は sng@factage.com にメールしてください。
+        PukiWiki 1.3 by
+         Copyright (C) 2001,2002 by sng.
+         sng <sng@factage.com>
+         http://factage.com/sng/
+
+    質問、意見、バグ報告は masui@masui.net にメールしてください。
 
 配布条件
     PukiWikiは、 GNU General Public Licenseにて公開します。
@@ -345,6 +388,8 @@ TODO
     PukiWikiはフリーソフトです。 ご自由にお使いください。
 
 謝辞
+    PukiWiki を開発した、sngさんに感謝します。
+
     YukiWiki のクローン化を許可していただいた結城浩さんに感謝します。
 
     本家のWikiWikiを作ったCunningham & Cunningham, Inc.に 感謝します。

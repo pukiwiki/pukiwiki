@@ -1,7 +1,9 @@
+<? header("Content-Type: text/html; charset=EUC_JP") ?>
 <!-- default skin by sng -->
+<!-- little changed by masui -->
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html; charset=euc-jp">
+<meta http-equiv="content-type" content="text/html; charset=EUC_JP">
 <title>sng's PukiWiki - <?=$title?></title>
 <style>
 <!--
@@ -109,6 +111,12 @@ ul {
 	margin: 1px;
 }
 
+.style_calendar {
+	border: 0px;
+	background-color: #CCD5DD;
+	padding: 0px;
+}
+
 .style_td_caltop {
 	background-color: #EEF5FF;
 	padding: 5px;
@@ -160,13 +168,15 @@ ul {
 
 <table>
  <tr>
-  <td>
+  <td rowspan="2">
    <a href="http://factage.com/sng/pukiwiki/"><img src="pukiwiki.png" width="80" height="80" border="0" alt="[PukiWiki]"></a><br>
   </td>
-  <td width="20">
+  <td width="20" rowspan="2">
   </td>
-  <td>
+  <td valign="bottom">
    <b style="font-size:30px"><?=$page?></b><br>
+  </td></tr>
+  <tr><td valign="top">
    <? if($is_page) { ?>
    <font size="1"><a href="<?=$script?>?<?=rawurlencode($vars[page])?>">http://factage.com/sng/pukiwiki/pukiwiki.php?<?=rawurlencode($vars[page])?></a></font><br>
    <? } ?>
@@ -179,15 +189,20 @@ ul {
 <? if($is_page) { ?>
 [ <a href="<?=$script?>?<?=rawurlencode($vars[page])?>">リロード</a> ]
 &nbsp;
-[ <a href="<?=$link_add?>">追加</a>
+[ <a href="<?=$script?>?plugin=newpage">新規</a>
+<!--| <a href="<?=$link_add?>">追加</a-->
 | <a href="<?=$link_edit?>">編集</a>
 | <a href="<?=$link_diff?>">差分</a>
+| <a href="<?=$script?>?plugin=attach&pcmd=upload&page=<?=rawurlencode($vars[page])?>">添付</a>
 ]
 &nbsp;
 <? } ?>
 
  [ <a href="<?=$link_top?>">トップ</a>
  | <a href="<?=$link_list?>">一覧</a>
+<? if(arg_check("list")) { ?>
+ | <a href="<?=$link_filelist?>">ファイル名一覧</a>
+<? } ?>
  | <a href="<?=$link_search?>">単語検索</a>
  | <a href="<?=$link_whatsnew?>">最終更新</a>
 <? if($do_backup) { ?>
@@ -197,10 +212,36 @@ ul {
  ]<br>
 
 <?=$hr?>
-
-<?=$body?>
-
+<?if($is_page){ ?>
+<table cellspacing="1" cellpadding="0" border="0" width="100%">
+ <tr>
+  <td width="120" valign="top" style="word-break:break-all;">
+   <? echo convert_html(@join("",@file(get_filename(encode("MenuBar"))))); ?> 
+  </td>
+ <td width="10">
+ </td>
+  <td valign="top">
+<? } ?>
+   <?=$body?>
+<?if($is_page){ ?>
+  </td>
+ </tr>
+</table>
+<? } ?>
 <?=$hr?>
+
+<?
+if(file_exists(PLUGIN_DIR."attach.inc.php") && $is_read)
+{
+	require_once(PLUGIN_DIR."attach.inc.php");
+	$attaches = attach_filelist();
+	if($attaches)
+	{
+		print $attaches;
+		print $hr;
+	}
+}
+?>
 
 <div align="right">
 
@@ -209,7 +250,8 @@ ul {
 
 &nbsp;
 
-<a href="<?=$link_add?>"><img src="./image/add.gif" width="20" height="20" border="0" alt="追加"></a>
+<a href="<?=$script?>?plugin=newpage"><img src="./image/new.gif" width="20" height="20" border="0" alt="新規"></a>
+<!--a href="<?=$link_add?>"><img src="./image/add.gif" width="20" height="20" border="0" alt="追加"></a-->
 <a href="<?=$link_edit?>"><img src="./image/edit.gif" width="20" height="20" border="0" alt="編集"></a>
 <a href="<?=$link_diff?>"><img src="./image/diff.gif" width="20" height="20" border="0" alt="差分"></a>
 &nbsp;
@@ -243,8 +285,7 @@ ul {
 <font face="Verdana" size="1">
 Modified by <a href="<?=$modifierlink?>"><?=$modifier?></a><br>
 <br>
-<b>"PukiWiki" <?=S_VERSION?></b> Copyright &copy; 2001,2002 <a href="mailto:sng@factage.com">sng</a>.<br>
-This is Free Software released under the <a href="http://www.gnu.org/">GNU/GPL license</a>.<br>
+<?=S_COPYRIGHT?><br>
 Powered by PHP <?=PHP_VERSION?><br>
 <br>
 HTML convert time to <?=$taketime?> sec.

@@ -1,4 +1,5 @@
 <!-- default skin by sng -->
+<!-- little changed by masui -->
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=euc-jp">
@@ -109,12 +110,6 @@ ul {
 	margin: 1px;
 }
 
-.style_calendar {
-	border: 0px;
-	background-color: #CCD5DD;
-	padding: 0px;
-}
-
 .style_td_caltop {
 	background-color: #EEF5FF;
 	padding: 5px;
@@ -166,15 +161,13 @@ ul {
 
 <table>
  <tr>
-  <td rowspan="2">
+  <td>
    <a href="http://factage.com/sng/pukiwiki/"><img src="pukiwiki.png" width="80" height="80" border="0" alt="[PukiWiki]"></a><br>
   </td>
-  <td width="20" rowspan="2">
+  <td width="20">
   </td>
-  <td valign="bottom">
+  <td>
    <b style="font-size:30px"><?=$page?></b><br>
-  </td></tr>
-  <tr><td valign="top">
    <? if($is_page) { ?>
    <font size="1"><a href="<?=$script?>?<?=rawurlencode($vars[page])?>">http://factage.com/sng/pukiwiki/pukiwiki.php?<?=rawurlencode($vars[page])?></a></font><br>
    <? } ?>
@@ -190,16 +183,12 @@ ul {
 [ <a href="<?=$link_add?>">追加</a>
 | <a href="<?=$link_edit?>">編集</a>
 | <a href="<?=$link_diff?>">差分</a>
-| <a href="<?=$script?>?plugin=attach&pcmd=upload&page=<?=rawurlencode($vars[page])?>">添付</a>
 ]
 &nbsp;
 <? } ?>
 
  [ <a href="<?=$link_top?>">トップ</a>
  | <a href="<?=$link_list?>">一覧</a>
-<? if(arg_check("list")) { ?>
- | <a href="<?=$link_filelist?>">ファイル名一覧</a>
-<? } ?>
  | <a href="<?=$link_search?>">単語検索</a>
  | <a href="<?=$link_whatsnew?>">最終更新</a>
 <? if($do_backup) { ?>
@@ -213,19 +202,6 @@ ul {
 <?=$body?>
 
 <?=$hr?>
-
-<?
-if(file_exists(PLUGIN_DIR."attach.inc.php") && $is_read)
-{
-	require_once(PLUGIN_DIR."attach.inc.php");
-	$attaches = attach_filelist();
-	if($attaches)
-	{
-		print $attaches;
-		print $hr;
-	}
-}
-?>
 
 <div align="right">
 
@@ -268,8 +244,7 @@ if(file_exists(PLUGIN_DIR."attach.inc.php") && $is_read)
 <font face="Verdana" size="1">
 Modified by <a href="<?=$modifierlink?>"><?=$modifier?></a><br>
 <br>
-<b>"PukiWiki" <?=S_VERSION?></b> Copyright &copy; 2001,2002 <a href="mailto:sng@factage.com">sng</a>.<br>
-This is Free Software released under the <a href="http://www.gnu.org/">GNU/GPL license</a>.<br>
+<?=S_COPYRIGHT?><br>
 Powered by PHP <?=PHP_VERSION?><br>
 <br>
 HTML convert time to <?=$taketime?> sec.

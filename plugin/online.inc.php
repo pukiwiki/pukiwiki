@@ -1,7 +1,7 @@
 <?
 
 // user list file
-define(USR_LST, "user.dat");
+define(USR_LST, "counter/user.dat");
 // time out sec
 define(TIMEOUT, 300);
 

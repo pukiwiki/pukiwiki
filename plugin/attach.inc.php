@@ -1,6 +1,8 @@
 <?
 // プラグイン attach
 
+// changed by Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
+
 // set PHP value to enable file upload
 ini_set("file_uploads","1");
 
@@ -31,7 +33,7 @@ function plugin_attach_convert()
 		while($file = readdir($dir))
 		{
 			if($file == ".." || $file == ".") continue;
-			if(!preg_match("/^${decoded_pgname}_(.*)$/",$file,$match)) continue;
+			if(!preg_match("/^${decoded_pgname}_([^.]+)$/",$file,$match)) continue;
 			
 			$lastmod = date("Y/m/d H:i:s",filemtime(UPLOAD_DIR.$file));
 			
@@ -44,8 +46,15 @@ function plugin_attach_convert()
 			$filename_url = rawurlencode($filename);
 			$refername_url = rawurlencode($vars[page]);
 			
-			$del = "[<a href=\"$script?plugin=attach&delfile=${filename_url}&refer=${refername_url}\" title=\"".str_replace('$1',$filename,$_msg_delete)."\">$_btn_delete</a>]";
-			$open = "<a href=\"$script?plugin=attach&openfile=${filename_url}&refer=${refername_url}\" title=\"$lastmod $file_size\">$icon$filename</a>\n";
+			$counter = '';
+			if(file_exists(UPLOAD_DIR.$file.'.log')) {
+				$list = file(UPLOAD_DIR.$file.'.log');
+				
+				$counter = ' <small>' . chop($list[0]) . '件</small>';
+			}
+			
+			$del = "[<a href=\"$script?plugin=attach&mode=confirm&delfile=${filename_url}&refer=${refername_url}\" title=\"".str_replace('$1',$filename,$_msg_delete)."\">$_btn_delete</a>]";
+			$open = "<a href=\"$script?plugin=attach&openfile=${filename_url}&refer=${refername_url}\" title=\"$lastmod $file_size\">$icon$filename</a>$counter\n";
 			
 			$into = "$open <small>$del</small>";
 			
@@ -87,11 +96,12 @@ function plugin_attach_action()
 {
 	global $vars,$script,$max_size,$HTTP_POST_FILES;
 	global $_title_uploaded,$_title_file_deleted,$_title_notfound,$_msg_noparm,$_msg_already_exists,$_msg_attach_filelist,$_msg_delete,$_msg_exceed,$_btn_delete;
-	global $_msg_maxsize,$_btn_upload,$_msg_attachfile,$_title_upload;
+	global $_msg_maxsize,$_btn_upload,$_msg_attachfile,$_title_upload,$_title_confirm_delete,$_msg_confirm_delete;
 	
 	$postfiles = $HTTP_POST_FILES;
 	$icon = FILE_ICON;
 
+	$vars["mode"] = rawurldecode($vars["mode"]);
 	$vars["openfile"] = rawurldecode($vars["openfile"]);
 	$vars["delfile"] = rawurldecode($vars["delfile"]);
 	$vars["refer"] = rawurldecode($vars["refer"]);
@@ -114,18 +124,32 @@ function plugin_attach_action()
 	}
 	else if($vars["delfile"])
 	{
-		$filename = encode($vars["refer"])."_".encode($vars["delfile"]);
-		if(is_freeze($vars["refer"]) || !is_editable($vars["refer"])) return array("msg" => $_msg_noparm);
+                if($vars["mode"] == "confirm") {
+		  $form = "<form action=\"$script\" method=\"post\">\n";
+		  $form .= "<input type=\"hidden\" name=\"plugin\" value=\"attach\">\n";
+		  $form .= "<input type=\"hidden\" name=\"refer\" value=\"$vars[refer]\">\n";
+		  $form .= "<input type=\"hidden\" name=\"delfile\" value=\"$vars[delfile]\">\n";
+		  $form .= "<input type=\"submit\" value=\"$_btn_delete\">\n";
+		  $form .= "</form>";
+
+		  $retvars["body"] = sprintf($_msg_confirm_delete,$vars["delfile"],$form);
+		  $retvars["msg"] = sprintf($_title_confirm_delete,$vars["delfile"]);
+		  return $retvars;
+		}
+		else {
+		  $filename = encode($vars["refer"])."_".encode($vars["delfile"]);
+		  if(is_freeze($vars["refer"]) || !is_editable($vars["refer"])) return array("msg" => $_msg_noparm);
 		
-		if(!file_exists(UPLOAD_DIR.$filename))
+		  if(!file_exists(UPLOAD_DIR.$filename))
 			return array("msg" => $_title_notfound);
 		
-		@unlink(UPLOAD_DIR.$filename);
+		  @unlink(UPLOAD_DIR.$filename);
 
-		if(file_exists(DATA_DIR.encode($vars["refer"]).".txt"))
-			@touch(DATA_DIR.encode($vars["refer"]).".txt");
+		  if(file_exists(DATA_DIR.encode($vars["refer"]).".txt"))
+		    @touch(DATA_DIR.encode($vars["refer"]).".txt");
 		
-		return array("msg" => $_title_file_deleted);
+		  return array("msg" => $_title_file_deleted);
+		}
 	}
 	else if($vars["openfile"])
 	{
@@ -145,9 +169,10 @@ function plugin_attach_action()
 			$pgname_keep = "";
 			$retbody = "";
 			$aryret = array();
+			$pagenames = array();
 			while($file = readdir($dir))
 			{
-				if($file == ".." || $file == ".") continue;
+				if($file == ".." || $file == "." || strstr($file,".log")!=FALSE) continue;
 				
 				settype($dfile_size,"double");
 				$dfile_size = round(filesize(UPLOAD_DIR.$file)/1000,1);
@@ -163,34 +188,22 @@ function plugin_attach_action()
 				$passage = get_pg_passage($pagename);
 				
 				$pagename = strip_bracket($pagename);
-				$page = "<a href=\"$script?${pagename_url}\">$pagename</a>$passage\n";
-				
-				$strtmp = "";
-				if($pgname_keep != $pagename)
-				{
-					if($pgname_keep!="")
-						$strtmp .= "</ul>\n";
-					
-					$strtmp .= "<li>$page</li>\n";
-					$strtmp .= "<ul>\n";
-					$aryret[$pagename] = $strtmp;
-					$pgname_keep = $pagename;
-				}
+				$pagenames[$pagename] = "<li><a href=\"$script?${pagename_url}\">$pagename</a>$passage</li>\n";
 				
 				$lastmod = date("Y/m/d H:i:s",filemtime(UPLOAD_DIR.$file));
 				
-				$del = "[<a href=\"$script?plugin=attach&delfile=${filename_url}&refer=${pagename_url}\" title=\"".str_replace('$1',$filename,$_msg_delete)."\">$_btn_delete</a>]";
+				$del = "[<a href=\"$script?plugin=attach&mode=confirm&delfile=${filename_url}&refer=${pagename_url}\" title=\"".str_replace('$1',$filename,$_msg_delete)."\">$_btn_delete</a>]";
 				
 				$open = "<a href=\"$script?plugin=attach&openfile=${filename_url}&refer=${pagename_url}\" title=\"$lastmod $file_size\">$filename</a>";
 
-				
-				$into = "<li>$open <small>$del</small></li>\n";
-				
-				$aryret[$pagename.$filename] = $into;
+				$aryret[$pagename] .= "<li>$open <small>$del</small></li>\n";
 			}
 			closedir($dir);
 			ksort($aryret);
-			$retbody = join("",$aryret);
+			$retbody = '';
+			foreach($aryret as $pagename => $list) {
+				$retbody .= $pagenames[$pagename] . "<ul>\n" . $list . "</ul>\n";
+			}
 		}
 		
 		$retvars["msg"] = $_msg_attach_filelist;
@@ -233,7 +246,18 @@ function attach_filelist()
 function download_file($path_file,$filename)
 {
 	$content_length = filesize($path_file);
-
+	
+	$list = array(1);
+	if(file_exists($path_file.'.log')) {
+		$list = file($path_file.'.log');
+		$list[0] = chop($list[0]) + 1;
+	}
+	$fp = fopen($path_file.'.log','w');
+	foreach ($list as $l) {
+		fputs($fp,$l);
+	}
+	fclose($fp);
+	
 	// for japanese
 	if(function_exists("mb_convert_encoding"))
 		$filename = mb_convert_encoding($filename,"SJIS","auto");

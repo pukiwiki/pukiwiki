@@ -1,64 +1,81 @@
-
 /////////////////////////////////////////////////
-// ƒvƒ‰ƒOƒCƒ“ƒfƒBƒŒƒNƒgƒŠ‚É‚Â‚¢‚Ä
+// ¥×¥é¥°¥¤¥ó¥Ç¥£¥ì¥¯¥È¥ê¤Ë¤Ä¤¤¤Æ
 
-  PukiWiki‚Ìƒy[ƒW‚ÌHTML‚Ö‚ÌƒRƒ“ƒo[ƒgŽž‚ÆAƒvƒ‰ƒOƒCƒ“‹@”\‚©‚ç‚Ì’l‚ðŽó‚¯Žæ‚Á‚Ä
-  ˆ—‚ðs‚¤ƒvƒ‰ƒOƒCƒ“‚ðÝ’u‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+  PukiWiki¤Î¥Ú¡¼¥¸¤ÎHTML¤Ø¤Î¥³¥ó¥Ð¡¼¥È»þ¤È¡¢¥×¥é¥°¥¤¥óµ¡Ç½¤«¤é¤ÎÃÍ¤ò¼õ¤±¼è¤Ã¤Æ
+  ½èÍý¤ò¹Ô¤¦¥×¥é¥°¥¤¥ó¤òÀßÃÖ¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£
 
-  ‚±‚ÌƒeƒLƒXƒg‚ÍA‚»‚Ìƒvƒ‰ƒOƒCƒ“‚Ì‹Lq•û–@‚É‚Â‚¢‚Ä‚Ìà–¾‚ð‚µ‚Ü‚·B
-
-
-/////////////////////////////////////////////////
-// ƒy[ƒW“à‚Å‚Ìƒvƒ‰ƒOƒCƒ“‚ÌŒÄ‚Ño‚µ
-
-  #ƒvƒ‰ƒOƒCƒ“–¼
-  #ƒvƒ‰ƒOƒCƒ“–¼(arg1,arg2...)
-
-    s“ª‚ÉƒXƒy[ƒX‚ÍŠÜ‚ß‚é‚±‚Æ‚Í‚Å‚«‚È‚¢B
-    ˆø”“à‚ÉŠ‡ŒÊ()‚ðŽg—p‚·‚é‚±‚Æ‚ª‚Å‚«‚éB‚½‚¾‚µ ) ’P‘Ì‚Í•s‰ÂB
-    ˆø”‚ðŽw’è‚µ‚È‚­‚Ä‚àŒÄ‚Ño‚¹‚é
+  ¤³¤Î¥Æ¥­¥¹¥È¤Ï¡¢¤½¤Î¥×¥é¥°¥¤¥ó¤Îµ­½ÒÊýË¡¤Ë¤Ä¤¤¤Æ¤ÎÀâÌÀ¤ò¤·¤Þ¤¹¡£
 
 
 /////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹–¼
+// ¥Ú¡¼¥¸Æâ¤Ç¤Î¥×¥é¥°¥¤¥ó¤Î¸Æ¤Ó½Ð¤·
 
-  ƒvƒ‰ƒOƒCƒ“–¼.inc.php
+  #¥×¥é¥°¥¤¥óÌ¾
+  #¥×¥é¥°¥¤¥óÌ¾(arg1,arg2...)
+
+    ¹ÔÆ¬¤Ë¥¹¥Ú¡¼¥¹¤Ï´Þ¤á¤ë¤³¤È¤Ï¤Ç¤­¤Ê¤¤¡£
+    °ú¿ôÆâ¤Ë³ç¸Ì()¤ò»ÈÍÑ¤¹¤ë¤³¤È¤¬¤Ç¤­¤ë¡£¤¿¤À¤· ) Ã±ÂÎ¤ÏÉÔ²Ä¡£
+    °ú¿ô¤ò»ØÄê¤·¤Ê¤¯¤Æ¤â¸Æ¤Ó½Ð¤»¤ë
+
+
+/////////////////////////////////////////////////
+// ¥Õ¥¡¥¤¥ëÌ¾
+
+  ¥×¥é¥°¥¤¥óÌ¾.inc.php
 
 
 /////////////////////////////////////////////////
-// ŠÖ”
+// ´Ø¿ô
 
-  ¡function plugin_ƒvƒ‰ƒOƒCƒ“–¼_convert()
+  ¢£function plugin_¥×¥é¥°¥¤¥óÌ¾_convert()
 
-    HTML‚Ö‚ÌƒRƒ“ƒo[ƒgŽž‚ÉŒÄ‚Ño‚³‚ê‚é
+    HTML¤Ø¤Î¥³¥ó¥Ð¡¼¥È»þ¤Ë¸Æ¤Ó½Ð¤µ¤ì¤ë
 
-    ˆø”‚Í func_get_args() ‚Å”z—ñ‚ÖŠi”[‚Å‚«‚éB([0]`[n])
-    func_num_args() ‚É‚æ‚Á‚ÄA“n‚³‚ê‚½ˆø”‚Ì”‚ð‹‚ß‚é‚±‚Æ‚ª‚Å‚«‚éB
+    °ú¿ô¤Ï func_get_args() ¤ÇÇÛÎó¤Ø³ÊÇ¼¤Ç¤­¤ë¡£([0]¡Á[n])
+    func_num_args() ¤Ë¤è¤Ã¤Æ¡¢ÅÏ¤µ¤ì¤¿°ú¿ô¤Î¿ô¤òµá¤á¤ë¤³¤È¤¬¤Ç¤­¤ë¡£
 
-  ¡function plugin_ƒvƒ‰ƒOƒCƒ“–¼_action()
+  ¢£function plugin_¥×¥é¥°¥¤¥óÌ¾_action()
 
-    GETEPOSTƒƒ\ƒbƒh‚Åplugin‚ðŽw’è‚³‚ê‚½‚Æ‚«‚ÉŒÄ‚Ño‚³‚ê‚é
+    GET¡¦POST¥á¥½¥Ã¥É¤Çplugin¤ò»ØÄê¤µ¤ì¤¿¤È¤­¤Ë¸Æ¤Ó½Ð¤µ¤ì¤ë
 
-    •Ô’l‚É array("msg" => "$1 is page") ‚È‚Ç‚ð•Ô‚·‚Æ $1 ‚ðƒy[ƒW–¼‚Æ‚µ‚Ä
-    ƒy[ƒWƒ^ƒCƒgƒ‹‚É’uŠ·‚³‚ê‚é
+    ÊÖÃÍ¤Ë array("msg" => "$1 is page") ¤Ê¤É¤òÊÖ¤¹¤È $1 ¤ò¥Ú¡¼¥¸Ì¾¤È¤·¤Æ
+    ¥Ú¡¼¥¸¥¿¥¤¥È¥ë¤ËÃÖ´¹¤µ¤ì¤ë
 
-    die() ‚ðŽÀs‚·‚é‚±‚Æ‚É‚æ‚èAƒy[ƒW‚É–ß‚ç‚È‚¢‚æ‚¤‚É‚Å‚«‚é
+    die() ¤ò¼Â¹Ô¤¹¤ë¤³¤È¤Ë¤è¤ê¡¢¥Ú¡¼¥¸¤ËÌá¤é¤Ê¤¤¤è¤¦¤Ë¤Ç¤­¤ë
+
+  ¢£function plugin_¥×¥é¥°¥¤¥óÌ¾_init()
+
+    ¥×¥é¥°¥¤¥ó¤¬ÆÉ¤ß¹þ¤Þ¤ì¤ë»þ¤Ë¸Æ¤Ó½Ð¤µ¤ì¤Þ¤¹¡£
+
+    $_plugin_recent_messages = array(
+    '_recent_plugin_li'=>'¡¦',
+    '_recent_plugin_frame '=>'<span align="center"><h5 class="side_label">ºÇ¿·¤Î%d·ï</h5></span><small>%s</small>'
+    );
+    set_plugin_messages($_plugin_recent_messages);
+
+    ¤È¤·¤ÆÃÖ¤¯¤È¡¢*.lng¥Õ¥¡¥¤¥ë¤Ç¥Ü¥¿¥ó¤ä¥á¥Ã¥»¡¼¥¸¤ò»ØÄê¤·¤Æ¤¤¤Ê¤¤¾ì¹ç¤Ë¤Î¤ß
+    ¥á¥Ã¥»¡¼¥¸¤Ê¤É¤¬¥»¥Ã¥È¤µ¤ì¤Þ¤¹¡£
+    ÊÑ¿ô¤Ê¤É¤Î½é´ü²½¤â¹Ô¤¨¤Þ¤¹¤¬¡¢PukiWiki 1.3.1(MASUI'z Edition)°Ê¹ß¤Î¤ß
+    Í­¸ú¤Ç¤¹¤Î¤Ç¡¢¸Å¤¤PukiWiki¤«¤é¤Ï¸Æ¤Ð¤ì¤Ê¤¤²ÄÇ½À­¤¬¤¢¤ë¤³¤È¤òµ¤¤ò¤Ä¤±¤Æ
+    ¤¯¤À¤µ¤¤¡£
+    set_plugin_messages´Ø¿ô¤âPukiWiki 1.3.1(MASUI'z Edition)°Ê¹ß¤Î¤ß¤Ç¤¹¡£
+
 
 /////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹“à—e
+// ¥Õ¥¡¥¤¥ëÆâÍÆ
 
-  ƒ†[ƒU‚ÉÝ’è‚³‚¹‚é‰Šú’l‚È‚Ç‚É‚Â‚¢‚Ä‚ÍAdefine ‚Å’è‹`‚·‚éB
+  ¥æ¡¼¥¶¤ËÀßÄê¤µ¤»¤ë½é´üÃÍ¤Ê¤É¤Ë¤Ä¤¤¤Æ¤Ï¡¢define ¤ÇÄêµÁ¤¹¤ë¡£
 
-  ƒRƒ“ƒo[ƒgŽž‚ÌGETEPOST‚Ìo—Í“à—e‚É•K—v‚È‚à‚Ì‚Í refer ‚Æ plugin ‚Æ‚¢‚¤’l‚ÅA
-  refer : ‚»‚Ìƒy[ƒW‚Ì–¼‘O($vars["page"])
-  plugin : ƒvƒ‰ƒOƒCƒ“–¼
-  ‚Æ‚µ‚Ü‚·B
+  ¥³¥ó¥Ð¡¼¥È»þ¤ÎGET¡¦POST¤Î½ÐÎÏÆâÍÆ¤ËÉ¬Í×¤Ê¤â¤Î¤Ï refer ¤È plugin ¤È¤¤¤¦ÃÍ¤Ç¡¢
+  refer : ¤½¤Î¥Ú¡¼¥¸¤ÎÌ¾Á°($vars["page"])
+  plugin : ¥×¥é¥°¥¤¥óÌ¾
+  ¤È¤·¤Þ¤¹¡£
 
-  ˆÈ‰º‚Ì’l‚ð global ‚ÅƒOƒ[ƒoƒ‹•Ï”‚É‚·‚é‚±‚Æ‚É‚æ‚Á‚Ä’l‚ðŽæ“¾‚Å‚«‚Ü‚·B
+  °Ê²¼¤ÎÃÍ¤ò global ¤Ç¥°¥í¡¼¥Ð¥ëÊÑ¿ô¤Ë¤¹¤ë¤³¤È¤Ë¤è¤Ã¤ÆÃÍ¤ò¼èÆÀ¤Ç¤­¤Þ¤¹¡£
 
-  $script : ƒXƒNƒŠƒvƒg–¼
-  $get : GETƒƒ\ƒbƒh‚É‚æ‚éHTTP‚©‚ç‚Ìˆø”
-  $post : POSTƒƒ\ƒbƒh‚É‚æ‚éHTTP‚©‚ç‚Ìˆø”
-  $vars : GETEPOST—¼•û‚Ìƒƒ\ƒbƒh‚É‚æ‚éHTTP‚©‚ç‚Ìˆø”
+  $script : ¥¹¥¯¥ê¥×¥ÈÌ¾
+  $get : GET¥á¥½¥Ã¥É¤Ë¤è¤ëHTTP¤«¤é¤Î°ú¿ô
+  $post : POST¥á¥½¥Ã¥É¤Ë¤è¤ëHTTP¤«¤é¤Î°ú¿ô
+  $vars : GET¡¦POSTÎ¾Êý¤Î¥á¥½¥Ã¥É¤Ë¤è¤ëHTTP¤«¤é¤Î°ú¿ô
 
-  $vars["page"] : ŠJ‚¢‚Ä‚¢‚éƒy[ƒW–¼(strip_bracketŠÖ”‚É‚æ‚è[[]]‚ðŽæ‚èœ‚¯‚é)
+  $vars["page"] : ³«¤¤¤Æ¤¤¤ë¥Ú¡¼¥¸Ì¾(strip_bracket´Ø¿ô¤Ë¤è¤ê[[]]¤ò¼è¤ê½ü¤±¤ë)
