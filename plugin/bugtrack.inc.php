@@ -1,5 +1,5 @@
 <?php
-// $Id: bugtrack.inc.php,v 1.24 2005/04/03 03:09:30 henoheno Exp $
+// $Id: bugtrack.inc.php,v 1.25 2005/04/03 03:33:47 henoheno Exp $
 //
 // PukiWiki BugTrack plugin
 //
@@ -265,21 +265,19 @@ function plugin_bugtrack_list_convert()
 	$data = array();
 	$pattern = $page . '/';
 	$pattern_len = strlen($pattern);
-	foreach (get_existpages() as $page) {
-		if (strpos($page, $pattern) === 0 && is_numeric(substr($page, $pattern_len))) {
-			$line = plugin_bugtrack_list_pageinfo($page);
-			array_push($data, $line);
-		}
-	}
+	foreach (get_existpages() as $page)
+		if (strpos($page, $pattern) === 0 && is_numeric(substr($page, $pattern_len)))
+			array_push($data, plugin_bugtrack_list_pageinfo($page));
 
 	$count_list = count($_plugin_bugtrack['state_list']);
 
 	$table = array();
-	for ($i = 0; $i <= $count_list + 1; ++$i)
-		$table[$i] = array();
+	for ($i = 0; $i <= $count_list + 1; ++$i) $table[$i] = array();
 
 	foreach ($data as $line) {
 		list($page, $no, $summary, $name, $priority, $state, $category) = $line;
+		foreach (array('summary', 'name', 'priority', 'state', 'category') as $item)
+			$$item = htmlspecialchars($$item);
 		$page_link = make_pagelink($page);
 
 		$state_no = array_search($state, $_plugin_bugtrack['state_sort']);
@@ -299,17 +297,13 @@ EOD;
 		$table[$state_no][$no] = $row;
 	}
 
+	$table_html = ' <tr>' . "\n";
 	$bgcolor = htmlspecialchars($_plugin_bugtrack['header_bgcolor']);
-	$table_html = <<<EOD
- <tr>
-  <th style="background-color:$bgcolor">${_plugin_bugtrack['pagename']}</th>
-  <th style="background-color:$bgcolor">${_plugin_bugtrack['state'   ]}</th>
-  <th style="background-color:$bgcolor">${_plugin_bugtrack['priority']}</th>
-  <th style="background-color:$bgcolor">${_plugin_bugtrack['category']}</th>
-  <th style="background-color:$bgcolor">${_plugin_bugtrack['name'    ]}</th>
-  <th style="background-color:$bgcolor">${_plugin_bugtrack['summary' ]}</th>
- </tr>
-EOD;
+	foreach (array('pagename', 'state', 'priority', 'category', 'name', 'summary') as $item)
+		$table_html .= '  <th style="background-color:' . $bgcolor . '">' .
+			htmlspecialchars($_plugin_bugtrack[$item]) . '</th>' . "\n";
+	$table_html .= ' </tr>' . "\n";
+
 	for ($i = 0; $i <= $count_list; ++$i) {
 		ksort($table[$i], SORT_NUMERIC);
 		$table_html .= join("\n", $table[$i]);
@@ -341,9 +335,9 @@ function plugin_bugtrack_list_pageinfo($page, $no = NULL, $recurse = TRUE)
 		$regex = '/-\s*' . preg_quote($_plugin_bugtrack[$item], '/') . '\s*:(.*)/';
 		if (preg_match($regex, $body, $matches)) {
 			if ($item == 'name') {
-				$$item = htmlspecialchars(strip_bracket(trim($matches[1])));
+				$$item = strip_bracket(trim($matches[1]));
 			} else {
-				$$item = htmlspecialchars(trim($matches[1]));
+				$$item = trim($matches[1]);
 			}
 		} else {
 				$$item = ''; // Data not found
