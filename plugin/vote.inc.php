@@ -2,69 +2,70 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: vote.inc.php,v 1.14 2003/07/03 05:28:04 arino Exp $
+// $Id: vote.inc.php,v 1.15 2004/07/19 03:50:32 henoheno Exp $
 //
 
 function plugin_vote_action()
 {
-	global $post,$vars,$script,$cols,$rows;
-	global $_title_collided,$_msg_collided,$_title_updated;
+	global $vars, $script, $cols,$rows;
+	global $_title_collided, $_msg_collided, $_title_updated;
 	global $_vote_plugin_choice, $_vote_plugin_votes;
 
-	$postdata_old  = get_source($post['refer']);
+	$postdata_old  = get_source($vars['refer']);
 	$vote_no = 0;
 	$title = $body = $postdata = '';
 
 	foreach($postdata_old as $line)
 	{
-		if (!preg_match("/^#vote\((.*)\)\s*$/",$line,$arg))
+		if (! preg_match("/^#vote\((.*)\)\s*$/", $line, $arg))
 		{
 			$postdata .= $line;
 			continue;
 		}
 		
-		if ($vote_no++ != $post['vote_no'])
+		if ($vote_no++ != $vars['vote_no'])
 		{
 			$postdata .= $line;
 			continue;
 		}
-		$args = explode(',',$arg[1]);
-		
+		$args = explode(',', $arg[1]);
+
+		$match = array();
 		foreach($args as $arg)
 		{
 			$cnt = 0;
-			if (preg_match("/^(.+)\[(\d+)\]$/",$arg,$match))
+			if (preg_match("/^(.+)\[(\d+)\]$/", $arg, $match))
 			{
 				$arg = $match[1];
 				$cnt = $match[2];
 			}
 			$e_arg = encode($arg);
-			if (!empty($post["vote_$e_arg"]) and $post["vote_$e_arg"] == $_vote_plugin_votes)
+			if (! empty($vars["vote_$e_arg"]) and $vars["vote_$e_arg"] == $_vote_plugin_votes)
 			{
-				$cnt++;
+				++$cnt;
 			}
 			
-			$votes[] = $arg.'['.$cnt.']';
+			$votes[] = $arg . '[' . $cnt . ']';
 		}
 		
-		$vote_str = '#vote('.@join(',',$votes).")\n";
+		$vote_str = '#vote(' . @join(',', $votes) . ")\n";
 		
 		$postdata_input = $vote_str;
-		$postdata .= $vote_str;
+		$postdata      .= $vote_str;
 	}
 
-	if (md5(@join('',get_source($post['refer']))) != $post['digest'])
+	if (md5(@join('', get_source($vars['refer']))) != $vars['digest'])
 	{
 		$title = $_title_collided;
 		
-		$s_refer = htmlspecialchars($post['refer']);
-		$s_digest = htmlspecialchars($post['digest']);
+		$s_refer  = htmlspecialchars($vars['refer']);
+		$s_digest = htmlspecialchars($vars['digest']);
 		$s_postdata_input = htmlspecialchars($postdata_input);
 		$body = <<<EOD
 $_msg_collided
 <form action="$script?cmd=preview" method="post">
  <div>
-  <input type="hidden" name="refer" value="$s_refer" />
+  <input type="hidden" name="refer"  value="$s_refer" />
   <input type="hidden" name="digest" value="$s_digest" />
   <textarea name="msg" rows="$rows" cols="$cols" id="textarea">$s_postdata_input</textarea><br />
  </div>
@@ -74,7 +75,7 @@ EOD;
 	}
 	else
 	{
-		page_write($post['refer'],$postdata);
+		page_write($vars['refer'], $postdata);
 		
 		$title = $_title_updated;
 	}
@@ -82,18 +83,18 @@ EOD;
 	$retvars['msg'] = $title;
 	$retvars['body'] = $body;
 
-	$post['page'] = $post['refer'];
-	$vars['page'] = $post['refer'];
+	$vars['page'] = $vars['refer'];
 
 	return $retvars;
 }
+
 function plugin_vote_convert()
 {
-	global $script,$vars,$digest;
+	global $script, $vars,  $digest;
 	global $_vote_plugin_choice, $_vote_plugin_votes;
 	static $numbers = array();
 	
-	if (!array_key_exists($vars['page'],$numbers))
+	if (! isset($numbers[$vars['page']]))
 	{
 		$numbers[$vars['page']] = 0;
 	}
@@ -105,7 +106,7 @@ function plugin_vote_convert()
 	}
 
 	$args = func_get_args();
-	$s_page = htmlspecialchars($vars['page']);
+	$s_page   = htmlspecialchars($vars['page']);
 	$s_digest = htmlspecialchars($digest);
 
 	$body = <<<EOD
@@ -113,10 +114,10 @@ function plugin_vote_convert()
  <table cellspacing="0" cellpadding="2" class="style_table" summary="vote">
   <tr>
    <td align="left" class="vote_label" style="padding-left:1em;padding-right:1em"><strong>$_vote_plugin_choice</strong>
-    <input type="hidden" name="plugin" value="vote" />
-    <input type="hidden" name="refer" value="$s_page" />
+    <input type="hidden" name="plugin"  value="vote" />
+    <input type="hidden" name="refer"   value="$s_page" />
     <input type="hidden" name="vote_no" value="$vote_no" />
-    <input type="hidden" name="digest" value="$s_digest" />
+    <input type="hidden" name="digest"  value="$s_digest" />
    </td>
    <td align="center" class="vote_label"><strong>$_vote_plugin_votes</strong></td>
   </tr>
@@ -124,11 +125,12 @@ function plugin_vote_convert()
 EOD;
 	
 	$tdcnt = 0;
+	$match = array();
 	foreach($args as $arg)
 	{
 		$cnt = 0;
 		
-		if (preg_match("/^(.+)\[(\d+)\]$/",$arg,$match))
+		if (preg_match("/^(.+)\[(\d+)\]$/", $arg, $match))
 		{
 			$arg = $match[1];
 			$cnt = $match[2];
