@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: config.php,v 1.5 2003/05/16 05:43:55 arino Exp $
+// $Id: config.php,v 1.6 2003/07/06 03:13:48 arino Exp $
 //
 /*
  * プラグインの設定をPukiWikiのページに記述する
@@ -136,7 +136,7 @@ class Config
 	{
 		if (!array_key_exists($title,$this->objs))
 		{
-			$this->objs[$title] = &new ConfigTable(array('*'.trim($title)."\n"));
+			$this->objs[$title] = &new ConfigTable('*'.trim($title)."\n");
 		}
 		return $this->objs[$title];
 	}
