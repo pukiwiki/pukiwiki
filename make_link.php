@@ -79,6 +79,8 @@ function &expand_bracket($name,$refer)
 
 	if (is_array($name))
 		$arr = $name;
+	else if (preg_match("/^$WikiName$/",$name))
+		return new link_wikiname($name);
 	else if (!preg_match($LinkPattern,$name,$arr) or $arr[12] == '')
 		return new link($name);
 
