@@ -1,5 +1,5 @@
 <?php
-// $Id: paint.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+// $Id: paint.inc.php,v 1.1.2.1 2004/06/20 04:57:36 henoheno Exp $
 /*
 Last-Update:2002-10-30 rev.20
 
@@ -15,9 +15,6 @@ Last-Update:2002-10-30 rev.20
 
 */
 
-// upload dir(must set end of /) attach.inc.phpと合わせる
-define('PAINT_UPLOAD_DIR','./attach/');
-//
 // character encoding
 define('PAINT_ENCODING','EUC-JP');
 //
@@ -79,7 +76,7 @@ function plugin_paint_action() {
 		$attachname = preg_replace('/^[^\.]+/', $filename, $HTTP_POST_FILES['attach_file']['name']);
 		//すでに存在した場合、 ファイル名に'_0','_1',...を付けて回避(姑息)
 		$count = '_0';
-		while (file_exists(PAINT_UPLOAD_DIR.encode($vars['refer']).'_'.encode($attachname))) {
+		while (file_exists(UPLOAD_DIR.encode($vars['refer']).'_'.encode($attachname))) {
 			$attachname = preg_replace('/^[^\.]+/', $filename.$count++, $HTTP_POST_FILES['attach_file']['name']);
 		}
 

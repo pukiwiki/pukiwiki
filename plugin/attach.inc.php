@@ -2,13 +2,10 @@
 // プラグイン attach
 
 // changed by Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
-// $Id: attach.inc.php,v 1.10 2002/11/29 00:09:01 panda Exp $
+// $Id: attach.inc.php,v 1.10.2.1 2004/06/20 04:53:39 henoheno Exp $
 
 // set PHP value to enable file upload
 ini_set("file_uploads","1");
-
-// upload dir(must set end of /)
-define("UPLOAD_DIR","./attach/");
 
 // max file size for upload on PHP(PHP default 2MB)
 ini_set("upload_max_filesize","2M");

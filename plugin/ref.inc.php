@@ -1,5 +1,5 @@
 <?php
-// $Id: ref.inc.php,v 1.2.2.1 2003/02/28 06:15:42 panda Exp $
+// $Id: ref.inc.php,v 1.2.2.2 2004/06/20 04:55:13 henoheno Exp $
 /*
 Last-Update:2002-10-29 rev.33
 
@@ -22,9 +22,6 @@ Last-Update:2002-10-29 rev.33
  テキストの回り込み
 
 */
-
-// upload dir(must set end of /)
-define('REF_UPLOAD_DIR','./attach/');
 
 // file icon image
 define('REF_FILE_ICON','<img src="./image/file.gif" alt="file" width="20" height="20" />');
@@ -66,7 +63,7 @@ function plugin_ref_convert() {
 		if (preg_match('/([^\/]+)$/', $name, $match)) { $ext = $match[1]; }
 	} else { //添付ファイル
 		$icon = REF_FILE_ICON;
-		if (!is_dir(REF_UPLOAD_DIR)) return 'no REF_UPLOAD_DIR.';
+		if (!is_dir(UPLOAD_DIR)) return 'no UPLOAD_DIR.';
 		//ページ指定のチェック
 		$page = $vars['page'];
 		if (count($args) > 0) {
@@ -79,7 +76,7 @@ function plugin_ref_convert() {
 		if (!is_page($page)) { return 'page not found.'; }
 
 		$ext = $name;
-		$file = REF_UPLOAD_DIR.encode($page).'_'.encode($name);
+		$file = UPLOAD_DIR.encode($page).'_'.encode($name);
 		if (!is_file($file)) { return 'not found.'; }
 
 		if (is_picture($ext)) {
