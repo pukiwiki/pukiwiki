@@ -537,6 +537,12 @@ br.spacer
 	text-align:center;
 }
 
+/* clear.inc.php */
+.clear{
+	margin:0px;
+	clear:both;
+}
+
 /* counter.inc.php */
 div.counter
 {
