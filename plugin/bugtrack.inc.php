@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.2.2.5 2003/03/05 09:17:53 panda Exp $
+ * $Id: bugtrack.inc.php,v 1.2.2.6 2003/03/12 04:17:26 panda Exp $
  */
 
 function plugin_bugtrack_init()
@@ -151,23 +151,23 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 {
   global $WikiName,$BracketName;
   
-//  $base = strip_bracket($base);
+  $strip_base = strip_bracket($base);
   $pagename = strip_bracket($pagename);
   
-  $postdata = plugin_bugtrack_template($base, $summary, $name, $priority, $state, $category, $version, $body);
+  $postdata = plugin_bugtrack_template($strip_base, $summary, $name, $priority, $state, $category, $version, $body);
   $postdata = user_rules_str($postdata);
 
   $i = 0;
   do {
     $i++;
-    $page = "[[".strip_bracket($base)."/$i]]";
+    $page = "[[".$strip_base."/$i]]";
   } while(is_page($page));
   
   if($pagename == '') {
     file_write(DATA_DIR,$page,$postdata);
   }
   else {
-    if(!preg_match("/^$WikiName$$/",$pagename)) {
+    if(!preg_match("/^$WikiName$/",$pagename)) {
       $pagename = "[[$pagename]]";
     }
     $pagename = get_fullname($pagename,$base);
