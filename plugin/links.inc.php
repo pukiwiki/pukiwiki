@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: links.inc.php,v 1.7 2003/02/20 12:27:45 panda Exp $
+// $Id: links.inc.php,v 1.8 2003/02/23 02:12:39 panda Exp $
 //
 
 function plugin_links_action()
@@ -82,7 +82,7 @@ function links_update_file($page)
 {
 	global $whatsnew,$non_list;
 	
-	$obj = new InlineConverter(array('page','auto'));
+	$obj = new InlineConverter();
 	$time = is_page($page) ? get_filetime($page) : 0;
 	
 	$rel_old = array();
@@ -112,9 +112,9 @@ function links_update_file($page)
 	fclose($fp);
 	
 	$add = array_diff($rel_new,$rel_old);
-	$ref = "$page\t$time\n";
 	foreach ($add as $_page) {
 		$ref_file = CACHE_DIR.encode($_page).'.ref';
+		$ref = "$page\t$time\n";
 		if (file_exists($ref_file)) {
 			foreach (file($ref_file) as $line) {
 				list($ref_page,$time) = explode("\t",rtrim($line));
