@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.8 2003/02/03 10:22:11 panda Exp $
+// $Id: convert_html.php,v 1.9 2003/02/03 10:31:45 panda Exp $
 //
 
 function &convert_html(&$lines)
@@ -394,7 +394,7 @@ class TableCell extends Block
 }
 class Table extends Block
 { // |
-	var $type,$types;;
+	var $type,$types;
 	var $level;
 	
 	function Table($text)
