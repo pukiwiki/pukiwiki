@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: navi.inc.php,v 1.13 2003/05/01 08:49:55 arino Exp $
+// $Id: navi.inc.php,v 1.14 2003/05/20 10:31:21 arino Exp $
 //
 
 /*
@@ -84,7 +84,7 @@ function plugin_navi_convert()
 		// preg_grep(,,PREG_GREP_INVERT)が使えれば…
 		if (NAVI_EXCLUDE_PATTERN != '')
 		{
-			$pages = array_diff($pages,preg_grep(NAVI_EXCLUDE_PATTERN,$page));
+			$pages = array_diff($pages,preg_grep(NAVI_EXCLUDE_PATTERN,$pages));
 		}
 		$pages[] = $current; // 番兵 :)
 		$pages = array_unique($pages);
