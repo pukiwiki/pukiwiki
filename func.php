@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.44 2003/06/22 06:37:19 arino Exp $
+// $Id: func.php,v 1.45 2003/06/23 13:24:32 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -203,6 +203,7 @@ function do_search($word,$type='AND',$non_format=FALSE)
 {
 	global $script,$vars,$whatsnew,$non_list,$search_non_list;
 	global $_msg_andresult,$_msg_orresult,$_msg_notfoundresult;
+	global $search_auth;
 	
 	$database = array();
 	$retval = array();
