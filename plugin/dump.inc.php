@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.7 2004/09/25 12:40:54 henoheno Exp $
+// $Id: dump.inc.php,v 1.8 2004/09/25 12:44:47 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -19,9 +19,7 @@
 // ・リストア時ファイルの更新時刻を元に戻すように修正
 
 /////////////////////////////////////////////////
-// action定義
-define('PLUGIN_DUMP_DUMP',  'dump');    // Dump & download
-define('PLUGIN_DUMP_RESTORE', 'restore'); // Upload & restore
+// User define
 
 // ページ名をディレクトリ構造に変換する際の日本語の文字コード
 define('PLUGIN_DUMP_FILENAME_ENCORDING', 'SJIS');
@@ -30,15 +28,15 @@ define('PLUGIN_DUMP_FILENAME_ENCORDING', 'SJIS');
 define('PLUGIN_DUMP_MAX_FILESIZE', 1024); // Kbyte
 
 /////////////////////////////////////////////////
-// ページ名をディレクトリ構造に変換する際の日本語の文字コード
-define('PLUGIN_DUMP_FILENAME_ENCORDING', 'SJIS');
 
-/////////////////////////////////////////////////
-// 拡張子
+// Action
+define('PLUGIN_DUMP_DUMP',    'dump');    // Dump & download
+define('PLUGIN_DUMP_RESTORE', 'restore'); // Upload & restore
+
+// Suffixes
 define('PLUGIN_DUMP_SFX_TAR' , '.tar');
 define('PLUGIN_DUMP_SFX_GZIP', '.tar.gz');
 
-// アーカイブの種類
 define('ARCFILE_GZIP', 0);
 define('ARCFILE_TAR',  1);
 
