@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.10 2004/10/30 07:02:46 henoheno Exp $
+// $Id: html.php,v 1.11 2004/11/02 13:45:37 henoheno Exp $
 //
 
 // 本文を出力
@@ -43,11 +43,12 @@ function catbody($title,$page,$body)
 	$_LINK['help']     = "$script?" . rawurlencode($help_page);
 	$_LINK['list']     = "$script?cmd=list";
 	$_LINK['new']      = "$script?plugin=newpage&amp;refer=$r_page";
+	$_LINK['rdf']      = "$script?cmd=rss10";
 	$_LINK['recent']   = "$script?" . rawurlencode($whatsnew);
 	$_LINK['refer']    = "$script?plugin=referer&amp;page=$r_page";
 	$_LINK['reload']   = "$script?$r_page";
 	$_LINK['rename']   = "$script?plugin=rename&amp;refer=$r_page";
-	$_LINK['rss']      = "$script?cmd=rss10";
+	$_LINK['rss']      = "$script?cmd=rss";
 	$_LINK['search']   = "$script?cmd=search";
 	$_LINK['top']      = "$script?" . rawurlencode($defaultpage);
 	if ($trackback) {
@@ -70,6 +71,7 @@ function catbody($title,$page,$body)
 	$link_backup    = & $_LINK['backup'];
 	$link_help      = & $_LINK['help'];
 	$link_trackback = & $_LINK['trackback'];	// New!
+	$link_rdf       = & $_LINK['rdf'];		// New!
 	$link_rss       = & $_LINK['rss'];
 	$link_freeze    = & $_LINK['freeze'];
 	$link_unfreeze  = & $_LINK['unfreeze'];

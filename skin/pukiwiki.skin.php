@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.16 2004/11/01 12:56:50 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.17 2004/11/02 13:45:37 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -64,6 +64,7 @@ if ($html_transitional) { ?>
  <title><?php echo "$title - $page_title" ?></title>
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>" type="text/css" media="screen" charset="<?php echo $css_charset ?>" />
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>&amp;media=print" type="text/css" media="print" charset="<?php echo $css_charset ?>" />
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss']$ ?>" /><?php // RSS auto-discovery ?>
 
 <?php if (PKWK_JAVASCRIPT && $trackback_javascript) { ?> <script type="text/javascript" src="skin/trackback.js"></script><?php } ?>
 
