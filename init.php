@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.20.2.6 2003/05/28 06:05:20 arino Exp $
+// $Id: init.php,v 1.20.2.7 2003/05/28 06:24:23 arino Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -18,12 +18,8 @@ define("SERVER_NAME",$HTTP_SERVER_VARS["SERVER_NAME"]);
 
 define("MUTIME",getmicrotime());
 
-if (!isset($script) or $script == '') {
-	$script  = ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://');
-	$script .=  $_SERVER['SERVER_NAME'];
-	$script .= ($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT']);
-	$parse_url = parse_url($_SERVER['REQUEST_URI']);
-	$script .= (isset($parse_url['path']) ? $parse_url['path'] : $_SERVER['SCRIPT_NAME']);
+if($script == "") {
+	$script = (getenv('SERVER_PORT')==443?'https://':('http://')).getenv('SERVER_NAME').(getenv('SERVER_PORT')==80?'':(':'.getenv('SERVER_PORT'))).getenv('SCRIPT_NAME');
 }
 
 $WikiName = '[A-Z][a-z]+(?:[A-Z][a-z]+)+';
