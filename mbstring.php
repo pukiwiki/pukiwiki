@@ -2,38 +2,43 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mbstring.php,v 1.9 2003/11/17 00:15:13 arino Exp $
+// $Id: mbstring.php,v 1.10 2004/06/19 03:39:22 henoheno Exp $
 //
 
 /*
- * PHPのmbstring extensionが使用できないときの代替関数
+ * mbstring extension がサーバー側に存在しない時の代替関数
  *
  * 注意事項
  *
- * EUC-JP専用です。
+ * 1. 実際に漢字コード変換を行わせるためには、別途jcodeをインストールして下さい。
  *
- * 使用方法
- *
- * jcode_1.34.zip (http://www.spencernetwork.org/)を入手して、
- * mbstring.phpと同じところにディレクトリ付きで展開してください。
+ *   jcode (http://www.spencernetwork.org/jcode/)を入手して、
+ *   mbstring.phpと同じところにディレクトリ付きで展開してください。
  * 
- * -+--- mbstring.php          -r--
- *  +-+- jcode_1.34/           dr-x
- *    +--- readme.txt          -r--
- *    +--- jcode.phps          -r--
- *    +--- jcode_wrapper.php   -r--
- *    +--- code_table.ucs2jis  -r--
- *    +--- code_table.jis2ucs  -r--
+ *   -+--- mbstring.php          -r--
+ *    +-+- jcode_1.34/           dr-x
+ *      +--- readme.txt          -r--
+ *      +--- jcode.phps          -r--
+ *      +--- jcode_wrapper.php   -r--
+ *      +--- code_table.ucs2jis  -r--
+ *      +--- code_table.jis2ucs  -r--
+ *
+ * 2. EUC-JP専用です。(出力されるデータがEUC-JPである必要があります)
  *
  */
 
-if (is_readable('jcode_1.34/jcode_wrapper.php'))
+// jcodeの所在
+define('JCODE_DIR','./jcode_1.34');
+
+if (is_readable(JCODE_DIR . '/jcode_wrapper.php'))
 {
-	require_once('jcode_1.34/jcode_wrapper.php');
+	require_once(JCODE_DIR . '/jcode_wrapper.php');
 }
+
+// jcodeが存在しない場合、マルチバイト文字や漢字コードを扱えない
 if (!function_exists('jcode_convert_encoding'))
 {
-//	die_message('Multibyte functions cannot be used. Please read "mbstring.php" for an additional installation procedure.');
+//	die_message('Multibyte functions cannot be used. Please read "mbstring.php" for an additional installation procedure of "jcode".');
 	function jstrlen($str)
 	{
 		return strlen($str);
