@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: color.inc.php,v 1.4 2003/05/12 10:32:13 arino Exp $
+// $Id: color.inc.php,v 1.5 2003/05/16 06:13:06 arino Exp $
 //
 
 function plugin_color_inline()
@@ -14,7 +14,7 @@ function plugin_color_inline()
 		list($color,$bgcolor,$body) = func_get_args();
 		if ($body == '')
 		{
-			$body = $bg;
+			$body = $bgcolor;
 			$bgcolor = '';
 		}
 		else if ($bgcolor != '')
