@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.inc.php,v 1.4 2004/04/03 15:27:07 arino Exp $
+// $Id: diff.inc.php,v 1.5 2004/06/30 13:03:39 henoheno Exp $
 //
 //ページの差分を表示する
 function plugin_diff_action()
@@ -13,7 +13,7 @@ function plugin_diff_action()
 	
 	$action = array_key_exists('action',$vars) ? $vars['action'] : '';
 	
-	switch ($vars['action']) {
+	switch ($action) {
 	case 'delete':
 		$retval = plugin_diff_delete($vars['page']);
 		break;
