@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.32 2003/04/26 05:13:25 arino Exp $
+// $Id: convert_html.php,v 1.33 2003/04/30 12:53:54 arino Exp $
 //
 function convert_html($lines)
 {
@@ -240,6 +240,9 @@ class ListContainer extends Block
 	function &insert(&$obj)
 	{
 		if (is_a($obj, get_class($this))) {
+			if (count($obj->elements) == 0) {
+				return $this;
+			}
 			for ($n = 0; $n < count($obj->elements); $n++) {
 				$this->last =& parent::insert($obj->elements[$n]);
 			}
