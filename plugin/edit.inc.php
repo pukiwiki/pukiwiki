@@ -1,9 +1,12 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.30 2005/01/23 05:22:25 henoheno Exp $
+// $Id: edit.inc.php,v 1.31 2005/02/20 12:59:37 henoheno Exp $
 //
 // Edit plugin
 // cmd=edit
+
+// Remove #freeze written by hand
+define('PLUGIN_EDIT_FREEZE_REGEX', '/^#freeze(?:\(.*\))?[\s;]*/im');
 
 function plugin_edit_action()
 {
@@ -46,8 +49,7 @@ function plugin_edit_preview()
 		$vars['msg'] = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $vars['msg']);
 	}
 
-	// 手書きの#freezeを削除
-	$vars['msg'] = preg_replace('/^#freeze\s*$/im', '', $vars['msg']);
+	$vars['msg'] = preg_replace(PLUGIN_EDIT_FREEZE_REGEX, '', $vars['msg']);
 	$postdata = $vars['msg'];
 
 	if (isset($vars['add']) && $vars['add']) {
@@ -176,8 +178,7 @@ function plugin_edit_write()
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	$retvars = array();
 
-	// 手書きの#freezeを削除
-	$vars['msg'] = preg_replace('/^#freeze\s*$/im','',$vars['msg']);
+	$vars['msg'] = preg_replace(PLUGIN_EDIT_FREEZE_REGEX,'',$vars['msg']);
 	$postdata = $postdata_input = $vars['msg'];
 
 	if (isset($vars['add']) && $vars['add']) {
