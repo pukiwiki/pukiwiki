@@ -71,7 +71,7 @@ function plugin_ref_convert()
 		// margin:0px Moz1=x(wrapで寄せが効かない),op6=x(wrapで寄せが効かない),nn6=x(wrapで寄せが効かない),IE6=o
 		$margin = ($params['around'] ? '0px' : 'auto');
 		$margin_align = ($params['_align'] == 'center') ? '' : ";margin-{$params['_align']}:0px";
-		$ret = <<<EOD
+		$params['_body'] = <<<EOD
 <table class="style_table" style="margin:$margin$margin_align">
  <tr>
   <td class="style_td">{$params['_body']}</td>
