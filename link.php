@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: link.php,v 1.3 2003/03/30 03:50:03 panda Exp $
+// $Id: link.php,v 1.4 2003/04/03 01:41:08 panda Exp $
 //
 
 /*
@@ -55,7 +55,7 @@ function links_update($page)
 	$links = links_get_objects($page,TRUE);
 	foreach ($links as $_obj)
 	{
-		if (!isset($_obj->type) or $_obj->type != 'pagename' or $_obj->name == $page)
+		if (!isset($_obj->type) or $_obj->type != 'pagename' or $_obj->name == $page or $_obj->name == '')
 		{
 			continue;
 		}
@@ -149,7 +149,7 @@ function links_init()
 		$links = links_get_objects($page);
 		foreach ($links as $_obj)
 		{
-			if (!isset($_obj->type) or $_obj->type != 'pagename' or $_obj->name == $page)
+			if (!isset($_obj->type) or $_obj->type != 'pagename' or $_obj->name == $page or $_obj->name == '')
 			{
 				continue;
 			}
