@@ -1,25 +1,31 @@
 <?php
-// $Id: template.inc.php,v 1.7 2003/02/26 08:55:05 panda Exp $
+// $Id: template.inc.php,v 1.8 2003/03/03 07:35:56 panda Exp $
 
 define('MAX_LEN',60);
 
 function plugin_template_action()
 {
-	global $vars,$script,$whatsnew,$_btn_template;
-	
-	global $script,$vars;
+	global $script,$vars,$whatsnew;
 	global $_title_edit;
 	
-	if (!is_page($vars['refer'])) { return; }
+	if (!is_page($vars['refer']))
+	{
+		return; 
+	}
 	
 	// edit
-	if (array_key_exists('begin',$vars) and is_numeric($vars['begin']) and array_key_exists('end',$vars) and is_numeric($vars['end']))
+	if (array_key_exists('begin',$vars) and is_numeric($vars['begin'])
+		and array_key_exists('end',$vars) and is_numeric($vars['end']))
 	{
 		$lines = get_source($vars['refer']);
 		
 		if ($vars['begin'] <= $vars['end'])
+		{
 			for($i = $vars['begin']; $i <= $vars['end']; $i++)
+			{
 				$postdata.= $lines[$i];
+			}
+		}
 		
 		$retvar['msg'] = $_title_edit;
 		$vars['refer'] = ''; // edit_formにはreferを見せたくない
@@ -79,15 +85,15 @@ EOD;
 		$select.= "</table><br />\n";
 */
 	}
-	
+	$s_refer = htmlspecialchars($vars['refer']);
 	$ret = <<<EOD
 <form action="$script" method="post">
  <div>
   <input type="hidden" name="plugin" value="template" />
-  <input type="hidden" name="refer" value="{$vars['refer']}" />
+  <input type="hidden" name="refer" value="$s_refer" />
   $begin_select
   $end_select
-  ページ名: <input type="text" name="page" value="{$vars['refer']}/複製" />
+  ページ名: <input type="text" name="page" value="$s_refer/複製" />
   <input type="submit" name="submit" value="作成" />
  </div>
 </form>
