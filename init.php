@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.76 2004/06/24 13:45:52 henoheno Exp $
+// $Id: init.php,v 1.77 2004/06/27 11:15:51 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -221,35 +221,39 @@ foreach (explode('&',$arg) as $tmp_string)
 	}
 }
 
-if (!empty($get['page']))
-{
-	$get['page']  = strip_bracket($get['page']);
-}
-if (!empty($post['page']))
-{
-	$post['page'] = strip_bracket($post['page']);
-}
-if (!empty($post['msg']))
-{
-	$post['msg']  = str_replace("\r",'',$post['msg']);
-}
+/////////////////////////////////////////////////
+// GET + POST = $vars
 
 $vars = array_merge($post,$get);
-if (!array_key_exists('page',$vars))
-{
+
+// 入力チェック: cmd, plugin の文字列は英数字以外ありえない
+foreach(array('cmd', 'plugin') as $var){
+	if (array_key_exists($var, $vars) &&
+	    ! preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $vars[$var])) {
+		unset($get[$var], $post[$var], $vars[$var]);
+	}
+}
+
+// 整形: page, strip_bracket()
+if (array_key_exists('page', $vars)) {
+	$get['page'] = $post['page'] = $vars['page']  = strip_bracket($vars['page']);
+} else {
 	$get['page'] = $post['page'] = $vars['page'] = '';
 }
 
+// 整形: msg, 改行を取り除く
+if (!empty($vars['msg']))  {
+	$get['msg'] = $post['msg'] = $vars['msg'] = str_replace("\r",'',$vars['msg']);
+}
+
 // 後方互換性 (?md5=...)
-if (array_key_exists('md5',$vars) and $vars['md5'] != '')
-{
-	$vars['cmd'] = 'md5';
+if (array_key_exists('md5', $vars) and $vars['md5'] != '') {
+	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'md5';
 }
 
 // TrackBack Ping
-if (array_key_exists('tb_id',$vars) and $vars['tb_id'] != '')
-{
-	$vars['cmd'] = 'tb';
+if (array_key_exists('tb_id', $vars) and $vars['tb_id'] != '') {
+	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'tb';
 }
 
 // cmdもpluginも指定されていない場合は、QUERY_STRINGをページ名かInterWikiNameであるとみなす
@@ -264,7 +268,7 @@ if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars))
 	$arg = strip_bracket($arg);
 	$arg = sanitize($arg);
 
-	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'read';
+	$get['cmd']  = $post['cmd']  = $vars['cmd']  = 'read';
 	$get['page'] = $post['page'] = $vars['page'] = $arg;
 }
 
