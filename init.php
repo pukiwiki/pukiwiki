@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.94 2004/07/25 14:29:28 henoheno Exp $
+// $Id: init.php,v 1.95 2004/07/31 03:09:19 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -216,7 +216,7 @@ if (isset($get['encode_hint']) && $get['encode_hint'] != '')
 	// 理由は、post と同様
 	$encode = mb_detect_encoding($get['encode_hint']);
 	mb_convert_variables(SOURCE_ENCODING, $encode, $get);
-}	
+}
 // <a href...> の場合は、サーバーが rawurlencode しているので、コード変換は不要
 
 // QUERY_STRINGを取得
@@ -297,7 +297,7 @@ if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars))
 	{
 		//なにも指定されていなかった場合は$defaultpageを表示
 		$arg = $defaultpage;
-	}		
+	}
 	$arg = rawurldecode($arg);
 	$arg = strip_bracket($arg);
 	$arg = input_filter($arg);

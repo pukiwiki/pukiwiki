@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: proxy.php,v 1.5 2004/07/16 23:56:43 henoheno Exp $
+// $Id: proxy.php,v 1.6 2004/07/31 03:09:19 henoheno Exp $
 //
 
 /*
@@ -23,21 +23,21 @@ function http_request($url,$method='GET',$headers='',$post=array(),
 {
 	global $proxy_host, $proxy_port;
 	global $need_proxy_auth, $proxy_auth_user, $proxy_auth_pass;
-	
+
 	$rc = array();
 	$arr = parse_url($url);
-	
+
 	$via_proxy = via_proxy($arr['host']);
-	
+
 	// query
 	$arr['query'] = isset($arr['query']) ? '?'.$arr['query'] : '';
 	// port
 	$arr['port'] = isset($arr['port']) ? $arr['port'] : 80;
-	
+
 	$url_base = $arr['scheme'].'://'.$arr['host'].':'.$arr['port'];
 	$url_path = isset($arr['path']) ? $arr['path'] : '/';
 	$url = ($via_proxy ? $url_base : '').$url_path.$arr['query'];
-	
+
 	$query = $method.' '.$url." HTTP/1.0\r\n";
 	$query .= "Host: ".$arr['host']."\r\n";
 	$query .= "User-Agent: PukiWiki/".S_VERSION."\r\n";
@@ -54,9 +54,9 @@ function http_request($url,$method='GET',$headers='',$post=array(),
 		$query .= 'Authorization: Basic '.
 			base64_encode($arr['user'].':'.$arr['pass'])."\r\n";
 	}
-	
+
 	$query .= $headers;
-	
+
 	// POST 時は、urlencode したデータとする
 	if (strtoupper($method) == 'POST')
 	{
@@ -90,20 +90,20 @@ function http_request($url,$method='GET',$headers='',$post=array(),
 			'data'   => $errstr // エラーメッセージ
 		);
 	}
-	
+
 	fputs($fp, $query);
-	
+
 	$response = '';
 	while (!feof($fp))
 	{
 		$response .= fread($fp,4096);
 	}
 	fclose($fp);
-	
+
 	$resp = explode("\r\n\r\n",$response,2);
 	$rccd = explode(' ',$resp[0],3); // array('HTTP/1.1','200','OK\r\n...')
 	$rc = (integer)$rccd[1];
-	
+
 	// Redirect
 	$matches = array();
 	switch ($rc)
@@ -123,11 +123,11 @@ function http_request($url,$method='GET',$headers='',$post=array(),
 					}
 					// add sheme,host
 					$url = $url_base.$url;
-				} 
+				}
 				return http_request($url,$method,$headers,$post,$redirect_max);
 			}
 	}
-	
+
 	return array(
 		'query'  => $query,   // Query String
 		'rc'     => $rc,      // Response Code
@@ -141,7 +141,7 @@ function via_proxy($host)
 {
 	global $use_proxy, $no_proxy;
 	static $ip_pattern = '/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:\/(.+))?$/';
-	
+
 	if (!$use_proxy)
 	{
 		return FALSE;

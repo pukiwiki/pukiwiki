@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: showrss.inc.php,v 1.12 2004/06/20 04:20:18 henoheno Exp $
+// $Id: showrss.inc.php,v 1.13 2004/07/31 03:09:20 henoheno Exp $
 //
 // Modified version by PANDA <panda@arino.jp>
 //
@@ -10,18 +10,18 @@
 /**
  *
  * showrss プラグイン (Created by hiro_do3ob@yahoo.co.jp)
- * 
+ *
  * ライセンスは PukiWiki 本体と同じく GNU General Public License (GPL) です。
  * http://www.gnu.org/licenses/gpl.txt
  *
  * pukiwiki用のプラグインです。
  * pukiwiki1.3.2以上で動くと思います。
- * 
+ *
  * 今のところ動作させるためにはPHP の xml extension が必須です。PHPに組み込まれてない場合はそっけないエラーが出ると思います。
  * 正規表現 or 文字列関数でなんとかならなくもなさげなんですが需要ってどれくらいあるのかわからいので保留です。
- * 
+ *
  * version: Id:showrss.inc.php,v 1.40 2003/03/18 11:52:58 hiro Exp
- * 
+ *
  */
 
 // showrssプラグインが使用可能かどうかを表示

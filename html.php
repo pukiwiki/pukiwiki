@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.100 2004/06/27 11:37:00 henoheno Exp $
+// $Id: html.php,v 1.101 2004/07/31 03:09:19 henoheno Exp $
 //
 
 // 本文を出力
@@ -11,7 +11,7 @@ function catbody($title,$page,$body)
 	global $script,$vars,$arg,$defaultpage,$whatsnew,$help_page,$hr;
 	global $related_link,$cantedit,$function_freeze,$search_word_color,$_msg_word;
 	global $foot_explain,$note_hr,$head_tags;
-	
+
 	global $html_transitional; // FALSE:XHTML1.1 TRUE:XHTML1.0 Transitional
 	global $page_title;        // ホームページのタイトル
 	global $do_backup;         // バックアップを行うかどうか
@@ -20,7 +20,7 @@ function catbody($title,$page,$body)
 
 	$_page = $vars['page'];
 	$r_page = rawurlencode($_page);
-	
+
 	$link_add      = "$script?cmd=add&amp;page=$r_page";
 	$link_edit     = "$script?cmd=edit&amp;page=$r_page";
 	$link_diff     = "$script?cmd=diff&amp;page=$r_page";
@@ -37,33 +37,33 @@ function catbody($title,$page,$body)
 	$link_upload   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
 	$link_template = "$script?plugin=template&amp;refer=$r_page";
 	$link_rename   = "$script?plugin=rename&amp;refer=$r_page";
-	
+
 	// ページの表示時TRUE(バックアップの表示、RecentChangesの表示を除く)
 	$is_page = (is_pagename($_page) and !arg_check('backup') and $_page != $whatsnew);
-	
+
 	// ページの読み出し時TRUE
 	$is_read = (arg_check('read') and is_page($_page));
-	
+
 	// ページが凍結されているときTRUE
 	$is_freeze = is_freeze($_page);
-	
+
 	// ページの最終更新時刻(文字列)
 	$lastmodified = $is_read ?
 		get_date('D, d M Y H:i:s T',get_filetime($_page)).' '.get_pg_passage($_page,FALSE) : '';
-	
+
 	// 関連するページのリスト
 	$related = ($is_read and $related_link) ? make_related($_page) : '';
-	
+
 	// 添付ファイルのリスト
 	$attaches = ($is_read and exist_plugin_action('attach')) ? attach_filelist() : '';
-	
+
 	// 注釈のリスト
 	ksort($foot_explain,SORT_NUMERIC);
 	$notes = count($foot_explain) ? $note_hr.join("\n",$foot_explain) : '';
-	
+
 	// <head>内に追加するタグ
 	$head_tag = count($head_tags) ? join("\n",$head_tags)."\n" : '';
-	
+
 	// 1.3.x compat
 	// ページの最終更新時刻(UNIX timestamp)
 	$fmt = $is_read ? get_filetime($_page) + LOCALZONE : 0;
@@ -93,10 +93,10 @@ function catbody($title,$page,$body)
 			$notes = preg_replace_callback($pattern,$callback,$notes);
 		}
 	}
-	
+
 	$longtaketime = getmicrotime() - MUTIME;
 	$taketime = sprintf('%01.03f',$longtaketime);
-	
+
 	if (!file_exists(SKIN_FILE)||!is_readable(SKIN_FILE))
 	{
 		die_message(SKIN_FILE.'(skin file) is not found.');
@@ -108,7 +108,7 @@ function catbody($title,$page,$body)
 function inline($line,$remove=FALSE)
 {
 	global $NotePattern;
-	
+
 	$line = htmlspecialchars($line);
 	if ($remove)
 	{
@@ -129,16 +129,16 @@ function edit_form($page,$postdata,$digest = 0,$b_template = TRUE)
 	global $script,$vars,$rows,$cols,$hr,$function_freeze;
 	global $_btn_addtop,$_btn_preview,$_btn_repreview,$_btn_update,$_btn_freeze,$_msg_help,$_btn_notchangetimestamp;
 	global $whatsnew,$_btn_template,$_btn_load,$non_list,$load_template_func;
-	
+
 	$refer = $template = $addtag = $add_top = '';
-	
+
 	if ($digest == 0) {
 		$digest = md5(join('',get_source($page)));
 	}
-	
+
 	$checked_top = array_key_exists('add_top',$vars) ? ' checked="checked"' : '';
 	$checked_time = array_key_exists('notimestamp',$vars) ? ' checked="checked"' : '';
-	
+
 	if(array_key_exists('add',$vars)) {
 		$addtag = '<input type="hidden" name="add" value="true" />';
 		$add_top = "<input type=\"checkbox\" name=\"add_top\" value=\"true\"$checked_top /><span class=\"small\">$_btn_addtop</span>";
@@ -164,12 +164,12 @@ $s_pages
   <input type="submit" name="template" value="$_btn_load" accesskey="r" />
   <br />
 EOD;
-		
+
 		if (array_key_exists('refer',$vars) and $vars['refer'] != '') {
 			$refer = '[['.strip_bracket($vars['refer'])."]]\n\n";
 		}
 	}
-	
+
 	$r_page = rawurlencode($page);
 	$s_page = htmlspecialchars($page);
 	$s_digest = htmlspecialchars($digest);
@@ -177,7 +177,7 @@ EOD;
 	$s_original = array_key_exists('original',$vars) ? htmlspecialchars($vars['original']) : $s_postdata;
 	$b_preview = array_key_exists('preview',$vars); // プレビュー中TRUE
 	$btn_preview = $b_preview ? $_btn_repreview : $_btn_preview;
-	
+
 	$body = <<<EOD
 <form action="$script" method="post">
  <div class="edit_form">
@@ -197,11 +197,11 @@ $template
  </div>
 </form>
 EOD;
-	
+
 	if (array_key_exists('help', $vars)) {
 		$body .= $hr . catrule();
 	} else {
-		$body .= 
+		$body .=
 		"<ul><li><a href=\"$script?cmd=edit&help=true&page=$r_page\">$_msg_help</a></li></ul>";
 	}
 	return $body;
@@ -212,9 +212,9 @@ function make_related($page,$tag='')
 {
 	global $script,$vars,$related,$rule_related_str,$related_str,$non_list;
 	global $_ul_left_margin, $_ul_margin, $_list_pad_str;
-	
+
 	$links = links_get_related($page);
-	
+
 	if ($tag) {
 		ksort($links);
 	}
@@ -235,12 +235,12 @@ function make_related($page,$tag='')
 			"<a href=\"$script?$r_page\" title=\"$s_page $passage\">$s_page</a>" :
 			"<a href=\"$script?$r_page\">$s_page</a>$passage";
 	}
-	
+
 	if (count($_links) == 0)
 	{
 		return '';
 	}
-	
+
 	if ($tag == 'p') // 行頭から
 	{
 		$margin = $_ul_left_margin + $_ul_margin;
@@ -263,7 +263,7 @@ function make_line_rules($str)
 {
 	global $line_rules;
 	static $pattern,$replace;
-	
+
 	if (!isset($pattern))
 	{
 		$pattern = array_map(create_function('$a','return "/$a/";'),array_keys($line_rules));
@@ -277,11 +277,11 @@ function make_line_rules($str)
 function strip_htmltag($str)
 {
 	global $_symbol_noexists;
-	
+
 	$noexists_pattern = '#<span class="noexists">([^<]*)<a[^>]+>'.
 		preg_quote($_symbol_noexists,'#').
 		'</a></span>#';
-	
+
 	$str = preg_replace($noexists_pattern,'$1',$str);
 	//$str = preg_replace('/<a[^>]+>\?<\/a>/','',$str);
 	return preg_replace('/<[^>]+>/','',$str);
@@ -291,14 +291,14 @@ function strip_htmltag($str)
 function make_search($page)
 {
 	global $script,$WikiName;
-	
+
 	$s_page = htmlspecialchars($page);
 	$r_page = rawurlencode($page);
-	
+
 	//WikiWikiWeb like...
 	//if(preg_match("/^$WikiName$/",$page))
 	//	$name = preg_replace("/([A-Z][a-z]+)/","$1 ",$name);
-	
+
 	return "<a href=\"$script?cmd=search&amp;word=$r_page\">$s_page</a> ";
 }
 
@@ -306,7 +306,7 @@ function make_search($page)
 function make_heading(&$str,$strip=TRUE)
 {
 	global $NotePattern;
-	
+
 	// 見出しの固有ID部を削除
 	$id = '';
 	if (preg_match('/^(\*{0,3})(.*?)\[#([A-Za-z][\w-]+)\](.*?)$/m',$str,$matches))
@@ -321,8 +321,8 @@ function make_heading(&$str,$strip=TRUE)
 	if ($strip)
 	{
 		$str = strip_htmltag(make_link(preg_replace($NotePattern,'',$str)));
-	} 
-	
-	return $id; 
+	}
+
+	return $id;
 }
 ?>

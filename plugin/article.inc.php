@@ -1,26 +1,26 @@
 <?php
  /*
- 
+
  PukiWiki BBS風プラグイン
 
  CopyRight 2002 OKAWARA,Satoshi
  http://www.dml.co.jp/~kawara/pukiwiki/pukiwiki.php
  kawara@dml.co.jp
- 
+
  メッセージを変更したい場合はLANGUAGEファイルに下記の値を追加してからご使用ください
 	$_btn_name = 'お名前';
 	$_btn_article = '記事の投稿';
 	$_btn_subject = '題名: ';
 
  ※$_btn_nameはcommentプラグインで既に設定されている場合があります
- 
+
  投稿内容の自動メール転送機能をご使用になりたい場合は
  -投稿内容のメール自動配信
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.18 2004/07/24 05:10:06 henoheno Exp $
- 
+ $Id: article.inc.php,v 1.19 2004/07/31 03:09:20 henoheno Exp $
+
  */
 
 global $_mailto;

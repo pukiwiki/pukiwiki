@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: popular.inc.php,v 1.8 2003/11/05 10:40:48 arino Exp $
+// $Id: popular.inc.php,v 1.9 2004/07/31 03:09:20 henoheno Exp $
 //
 
 /*
@@ -29,7 +29,7 @@ function plugin_popular_convert()
 {
 	global $_popular_plugin_frame, $_popular_plugin_today_frame;
 	global $script,$whatsnew,$non_list;
-	
+
 	$max = 10;
 	$except = '';
 
@@ -55,13 +55,13 @@ function plugin_popular_convert()
 		if ($page == $whatsnew or preg_match("/$non_list/",$page) or !is_page($page)) {
 			continue;
 		}
-		
+
 		$array = file(COUNTER_DIR.$file);
 		$count = rtrim($array[0]);
 		$date = rtrim($array[1]);
 		$today_count = rtrim($array[2]);
 		$yesterday_count = rtrim($array[3]);
-		
+
 		if ($today) {
 			if ($today == $date) {
 				// $pageが数値に見える(たとえばencode('BBS')=424253)とき、
@@ -73,17 +73,17 @@ function plugin_popular_convert()
 			$counters["_$page"] = $count;
 		}
 	}
-	
+
 	asort($counters, SORT_NUMERIC);
 	$counters = array_splice(array_reverse($counters,TRUE),0,$max);
-	
+
 	$items = '';
 	if (count($counters)) {
 		$items = '<ul class="popular_list">';
-		
+
 		foreach ($counters as $page=>$count) {
 			$page = substr($page,1);
-			
+
 			$s_page = htmlspecialchars($page);
 			$items .= " <li>".make_pagelink($page,"$s_page<span class=\"counter\">($count)</span>")."</li>\n";
 		}

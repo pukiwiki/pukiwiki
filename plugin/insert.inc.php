@@ -1,5 +1,5 @@
 <?php
-// $Id: insert.inc.php,v 1.9 2004/07/19 01:42:35 henoheno Exp $
+// $Id: insert.inc.php,v 1.10 2004/07/31 03:09:20 henoheno Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -15,14 +15,14 @@ function plugin_insert_action()
 {
 	global $script, $vars, $cols, $rows;
 	global $_title_collided, $_msg_collided, $_title_updated;
-	
+
 	if (! isset($vars['msg']) || $vars['msg'] == '') {
 		return;
 	}
-	
+
 	$vars['msg'] = preg_replace("/\r/", '', $vars['msg']);
 	$insert = ($vars['msg'] != '') ? "\n{$vars['msg']}\n" : '';
-	
+
 	$postdata = '';
 	$postdata_old  = get_source($vars['refer']);
 	$insert_no = 0;
@@ -43,9 +43,9 @@ function plugin_insert_action()
 			$postdata .= $line;
 		}
 	}
-	
+
 	$postdata_input = "$insert\n";
-	
+
 	if (md5(@join('', get_source($vars['refer']))) != $vars['digest']) {
 		$title = $_title_collided;
 		$body = "$_msg_collided\n";
@@ -53,7 +53,7 @@ function plugin_insert_action()
 		$s_refer  = htmlspecialchars($vars['refer']);
 		$s_digest = htmlspecialchars($vars['digest']);
 		$s_postdata_input = htmlspecialchars($postdata_input);
-		
+
 		$body .= <<<EOD
 <form action="$script?cmd=preview" method="post">
  <div>
@@ -66,7 +66,7 @@ EOD;
 	}
 	else {
 		page_write($vars['refer'], $postdata);
-		
+
 		$title = $_title_updated;
 	}
 	$retvars['msg'] = $title;
@@ -81,13 +81,13 @@ function plugin_insert_convert()
 	global $script, $vars, $digest;
 	global $_btn_insert;
 	static $numbers = array();
-	
+
 	if (! isset($numbers[$vars['page']]))
 	{
 		$numbers[$vars['page']] = 0;
 	}
 	$insert_no = $numbers[$vars['page']]++;
-	
+
 	$s_page   = htmlspecialchars($vars['page']);
 	$s_digest = htmlspecialchars($digest);
 	$s_cols = INSERT_COLS;
@@ -104,7 +104,7 @@ function plugin_insert_convert()
  </div>
 </form>
 EOD;
-	
+
 	return $string;
 }
 ?>

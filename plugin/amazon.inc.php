@@ -44,7 +44,7 @@
 //
 
 /////////////////////////////////////////////////
-// $Id: amazon.inc.php,v 1.1 2004/04/03 15:25:43 arino Exp $
+// $Id: amazon.inc.php,v 1.2 2004/07/31 03:09:19 henoheno Exp $
 // - modified by arino <arino@users.sourceforge.jp>
 // -- replace plugin_amazon_get_page().
 // -- AMAZON_XML 'xml.amazon.com' -> 'xml.amazon.co.jp'
@@ -393,7 +393,7 @@ function plugin_amazon_review_save($page, $data) {
 function plugin_amazon_get_page($url)
 {
 	$data = http_request($url);
-	
+
 	return ($data['rc'] == 200) ? $data['data'] : '';
 }
 

@@ -1,11 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// PukiWiki 1.4.* 
+// PukiWiki 1.4.*
 //  Copyright (C) 2002 by PukiWiki Developers Team
 //  http://pukiwiki.org/
 //
-// PukiWiki 1.3.* 
+// PukiWiki 1.3.*
 //  Copyright (C) 2002 by PukiWiki Developers Team
 //  http://pukiwiki.org/
 //
@@ -29,7 +29,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.34 2004/07/24 12:28:57 henoheno Exp $
+// $Id: pukiwiki.php,v 1.35 2004/07/31 03:09:19 henoheno Exp $
 /////////////////////////////////////////////////
 
 /////////////////////////////////////////////////
@@ -103,12 +103,12 @@ else if (!empty($vars['cmd'])) {
 if ($retvars !== FALSE) {
 	$title = htmlspecialchars(strip_bracket($base));
 	$page = make_search($base);
-	
+
 	if (array_key_exists('msg',$retvars) and $retvars['msg'] != '') {
 		$title = str_replace('$1',$title,$retvars['msg']);
 		$page = str_replace('$1',$page,$retvars['msg']);
 	}
-	
+
 	if (array_key_exists('body',$retvars) and $retvars['body'] != '') {
 		$body = $retvars['body'];
 	}
@@ -118,14 +118,14 @@ if ($retvars !== FALSE) {
 			$title = htmlspecialchars(strip_bracket($base));
 			$page = make_search($base);
 		}
-		
+
 		$vars['cmd'] = 'read';
 		$vars['page'] = $base;
 		$body = convert_html(get_source($base));
 		$body .= tb_get_rdf($vars['page']);
 		ref_save($vars['page']);
 	}
-	
+
 	// ** 出力処理 **
 	catbody($title,$page,$body);
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.17 2004/07/09 23:47:48 henoheno Exp $
+// $Id: trackback.php,v 1.18 2004/07/31 03:09:19 henoheno Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -32,7 +32,7 @@ function tb_get_id($page)
 function tb_id2page($tb_id)
 {
 	static $pages,$cache = array();
-	
+
 	if (array_key_exists($tb_id,$cache))
 	{
 		return $cache[$tb_id];
@@ -71,7 +71,7 @@ function tb_count($page,$ext='.txt')
 function tb_send($page,$data)
 {
 	global $script,$trackback;
-	
+
 	if (!$trackback)
 	{
 		return;
@@ -79,24 +79,24 @@ function tb_send($page,$data)
 
 	// 処理実行時間制限(php.ini オプション max_execution_time )
 	if (ini_get('safe_mode') == '0') set_time_limit(0);
-	
+
 	$data = convert_html($data);
-	
+
 	// convert_html() 変換結果の <a> タグから URL 抽出
 	preg_match_all('#href="(https?://[^"]+)"#',$data,$links,PREG_PATTERN_ORDER);
-	
+
 	// 自ホスト($scriptで始まるurl)を除く
 	$links = preg_grep("/^(?!".preg_quote($script,'/')."\?)./",$links[1]);
-		
+
 	// リンク無しは終了
 	if (!is_array($links) or count($links) == 0)
 	{
 		return;
 	}
-	
+
 	$r_page = rawurlencode($page);
 	$excerpt = strip_htmltag(convert_html(get_source($page)));
-	
+
 	// 自文書の情報
 	$putdata = array(
 		'title'     => $page, // タイトルはページ名
@@ -135,7 +135,7 @@ function tb_get($file,$key=1)
 	{
 		return array();
 	}
-	
+
 	$result = array();
 	$fp = @fopen($file,'r');
 	set_file_buffer($fp, 0);
@@ -148,7 +148,7 @@ function tb_get($file,$key=1)
 	}
 	flock($fp,LOCK_UN);
 	fclose ($fp);
-	
+
 	return $result;
 }
 
@@ -156,17 +156,17 @@ function tb_get($file,$key=1)
 function tb_get_rdf($page)
 {
 	global $script,$trackback;
-	
+
 	if (!$trackback)
 	{
 		return '';
 	}
-	
+
 	$r_page = rawurlencode($page);
 	$tb_id = tb_get_id($page);
 	// $dcdate = substr_replace(get_date('Y-m-d\TH:i:sO',$time),':',-2,0);
 	// dc:date="$dcdate"
-	
+
 	return <<<EOD
 <!--
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -191,19 +191,19 @@ function tb_get_url($url)
 	{
 		return '';
 	}
-	
+
 	$data = http_request($url);
-	
+
 	if ($data['rc'] !== 200)
 	{
 		return '';
 	}
-	
+
 	if (!preg_match_all('#<rdf:RDF[^>]*>(.*?)</rdf:RDF>#si',$data['data'],$matches,PREG_PATTERN_ORDER))
 	{
 		return '';
 	}
-	
+
 	$obj = new TrackBack_XML();
 	foreach ($matches[1] as $body)
 	{
@@ -221,20 +221,20 @@ class TrackBack_XML
 {
 	var $url;
 	var $tb_url;
-	
+
 	function parse($buf,$url)
 	{
 		// 初期化
 		$this->url = $url;
 		$this->tb_url = FALSE;
-		
+
 		$xml_parser = xml_parser_create();
 		if ($xml_parser === FALSE)
 		{
 			return FALSE;
 		}
 		xml_set_element_handler($xml_parser,array(&$this,'start_element'),array(&$this,'end_element'));
-		
+
 		if (!xml_parse($xml_parser,$buf,TRUE))
 		{
 /*			die(sprintf('XML error: %s at line %d in %s',
@@ -245,7 +245,7 @@ class TrackBack_XML
 */
 			return FALSE;
 		}
-		
+
 		return $this->tb_url;
 	}
 	function start_element($parser,$name,$attrs)
@@ -254,7 +254,7 @@ class TrackBack_XML
 		{
 			return;
 		}
-		
+
 		$about = $url = $tb_url = '';
 		foreach ($attrs as $key=>$value)
 		{
@@ -287,14 +287,14 @@ class TrackBack_XML
 function ref_save($page)
 {
 	global $referer;
-	
+
 	if (!$referer or empty($_SERVER['HTTP_REFERER']))
 	{
 		return;
 	}
-	
+
 	$url = $_SERVER['HTTP_REFERER'];
-	
+
 	// URI の妥当性評価
 	// 自サイト内の場合は処理しない
 	$parse_url = parse_url($url);
@@ -302,7 +302,7 @@ function ref_save($page)
 	{
 		return;
 	}
-	
+
 	// TRACKBACK_DIR の存在と書き込み可能かの確認
 	if (!is_dir(TRACKBACK_DIR))
 	{
@@ -312,7 +312,7 @@ function ref_save($page)
 	{
 		die(TRACKBACK_DIR.': Permission denied');
 	}
-	
+
 	// Referer のデータを更新
 	if (ereg("[,\"\n\r]",$url))
 	{
@@ -328,7 +328,7 @@ function ref_save($page)
 	}
 	$data[$d_url][0] = UTIME;
 	$data[$d_url][2]++;
-	
+
 	if (!($fp = fopen($filename,'w')))
 	{
 		return 1;
@@ -342,7 +342,7 @@ function ref_save($page)
 	}
 	flock($fp, LOCK_UN);
 	fclose($fp);
-	
+
 	return 0;
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: referer.inc.php,v 1.6 2004/03/22 14:57:32 arino Exp $
+// $Id: referer.inc.php,v 1.7 2004/07/31 03:09:20 henoheno Exp $
 /*
  * PukiWiki Referer プラグイン(リンク元表示プラグイン)
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -13,30 +13,30 @@ function plugin_referer_action()
 {
 	global $vars,$referer;
 	global $_referer_msg;
-	
+
 	// Referer機能を使用していない
 	if (!$referer)
 	{
 		return array('msg'=>'','body'=>'');
 	}
-	
+
 	if (array_key_exists('page',$vars) and is_page($vars['page']))
 	{
 		// 整列順
 		$sort = (empty($vars['sort'])) ? '0d' : $vars['sort'];
-		
+
 		return array(
 			'msg'  => $_referer_msg['msg_H0_Refer'],
 			'body' => referer_body($vars['page'],$sort)
 		);
 	}
 	$pages = get_existpages(TRACKBACK_DIR,'.ref');
-	
+
 	if (count($pages) == 0)
 	{
 		return array('msg'=>'','body'=>'');
 	}
-	
+
 	return array(
 		'msg' => 'referer list',
 		'body' => page_list($pages,'referer',FALSE)
@@ -47,20 +47,20 @@ function plugin_referer_action()
 function referer_body($page,$sort)
 {
 	global $script,$_referer_msg;
-	
+
 	$data = tb_get(tb_get_filename($page,'.ref'));
 	if (count($data) == 0)
 	{
 		return '<p>no data.</p>';
 	}
 	$bg = referer_set_color();
-	
+
 	$arrow_last = $arrow_1st = $arrow_ctr = '';
 	$color_last = $color_1st = $color_ctr = $color_ref = $bg['etc'];
 	$sort_last = '0d';
 	$sort_1st = '1d';
 	$sort_ctr = '2d';
-	
+
 	switch ($sort)
 	{
 		case '0d': // 0d 最終更新日時(新着順)
@@ -104,26 +104,26 @@ function referer_body($page,$sort)
 			$color_ref = $bg['cur'];
 			break;
 	}
-	
+
 	$body = '';
 	foreach ($data as $arr)
 	{
 		// 0:最終更新日時, 1:初回登録日時, 2:参照カウンタ, 3:Referer ヘッダ, 4:利用可否フラグ(1は有効)
 		list($ltime,$stime,$count,$url,$enable) = $arr;
-		
+
 		// 非ASCIIキャラクタ(だけ)をURLエンコードしておく BugTrack/440
 		$e_url = htmlspecialchars(preg_replace('/([" \x80-\xff]+)/e','rawurlencode("$1")',$url));
 		$s_url = htmlspecialchars(mb_convert_encoding(rawurldecode($url),SOURCE_ENCODING,'auto'));
-		
+
 		$lpass = get_passage($ltime,FALSE); // 最終更新日時からの経過時間
 		$spass = get_passage($stime,FALSE); // 初回登録日時からの経過時間
 		$ldate = get_date($_referer_msg['msg_Fmt_Date'],$ltime); // 最終更新日時文字列
 		$sdate = get_date($_referer_msg['msg_Fmt_Date'],$stime); // 初回登録日時文字列
-		
+
 		$body .= " <tr>\n  <td>$ldate</td>\n  <td>$lpass</td>\n";
 		$body .= ($count == 1) ? "  <td colspan=\"2\">N/A</td>\n" : "  <td>$sdate</td>\n  <td>$spass</td>\n";
 		$body .= "  <td style=\"text-align:right;\">$count</td>\n";
-		
+
 		// 適用不可データのときはアンカーをつけない
 		$body .= referer_ignore_check($url) ?
 			"  <td>$s_url</td>\n" : "  <td><a href=\"$e_url\">$s_url</a></td>\n";
@@ -146,7 +146,7 @@ function referer_body($page,$sort)
    <a href="$href&amp;sort=3">{$_referer_msg['msg_Hed_Referer']}</a>
    </td>
  </tr>
- $body	
+ $body
 </table>
 EOD;
 }
@@ -154,7 +154,7 @@ EOD;
 function referer_set_color()
 {
 	static $color;
-	
+
 	if (!isset($color))
 	{
 		// デフォルトカラー
@@ -162,7 +162,7 @@ function referer_set_color()
 			'cur' => '#88ff88',
 			'etc' => '#cccccc'
 		);
-		
+
 		$config = new Config(CONFIG_REFERER);
 		$config->read();
 		$pconfig_color = $config->get('COLOR');
@@ -173,7 +173,7 @@ function referer_set_color()
 			$color[$x[0]] = htmlspecialchars(
 				preg_match('/BGCOLOR\(([^)]+)\)/si',$x[1],$matches) ? $matches[1] : $x[1]
 			);
-		}			
+		}
 	}
 	return $color;
 }
@@ -181,7 +181,7 @@ function referer_set_color()
 function referer_ignore_check($url)
 {
 	static $ignore_url;
-	
+
 	// config.php
 	if (!isset($ignore_url))
 	{
@@ -190,7 +190,7 @@ function referer_ignore_check($url)
 		$ignore_url = $config->get('IGNORE');
 		unset($config);
 	}
-	
+
 	foreach ($ignore_url as $x)
 	{
 		if (strpos($url,$x) !== FALSE)

@@ -1,5 +1,5 @@
 <?php
-// $Id: template.inc.php,v 1.16 2003/11/12 00:47:39 arino Exp $
+// $Id: template.inc.php,v 1.17 2004/07/31 03:09:20 henoheno Exp $
 
 define('MAX_LEN',60);
 
@@ -10,20 +10,20 @@ function plugin_template_action()
 	global $_msg_template_start,$_msg_template_end,$_msg_template_page,$_msg_template_refer;
 	global $_btn_template_create,$_title_template;
 	global $_err_template_already,$_err_template_invalid,$_msg_template_force;
-	
+
 	if (!array_key_exists('refer',$vars) or !is_page($vars['refer']))
 	{
-		return FALSE; 
+		return FALSE;
 	}
-	
+
 	$lines = get_source($vars['refer']);
-	
+
 	// #freeze¤òºï½ü
 	if (count($lines) and rtrim($lines[0]) == '#freeze')
 	{
 		array_shift($lines);
 	}
-	
+
 	$begin = (array_key_exists('begin',$vars) and is_numeric($vars['begin'])) ? $vars['begin'] : 0;
 	$end = (array_key_exists('end',$vars) and is_numeric($vars['end'])) ? $vars['end'] : count($lines) - 1;
 	if ($begin > $end)
@@ -34,7 +34,7 @@ function plugin_template_action()
 	}
 	$page = array_key_exists('page',$vars) ? $vars['page'] : '';
 	$is_page = is_page($page);
-	
+
 	// edit
 	if ($is_pagename = is_pagename($page) and (!$is_page or !empty($vars['force'])))
 	{
@@ -48,14 +48,14 @@ function plugin_template_action()
 	for ($i = 0; $i < count($lines); $i++)
 	{
 		$line = htmlspecialchars(mb_strimwidth($lines[$i],0,MAX_LEN,'...'));
-		
+
 		$tag = ($i == $begin) ? ' selected="selected"' : '';
 		$begin_select .= "<option value=\"$i\"$tag>$line</option>\n";
-		
+
 		$tag = ($i == $end) ? ' selected="selected"' : '';
 		$end_select .= "<option value=\"$i\"$tag>$line</option>\n";
 	}
-	
+
 	$_page = htmlspecialchars($page);
 	$msg = $tag = '';
 	if ($is_page)
@@ -67,7 +67,7 @@ function plugin_template_action()
 	{
 		$msg = str_replace('$1',$_page,$_err_template_invalid);
 	}
-	
+
 	$s_refer = htmlspecialchars($vars['refer']);
 	$s_page = ($page == '') ? str_replace('$1',$s_refer,$_msg_template_page) : $_page;
 	$ret = <<<EOD
@@ -82,10 +82,10 @@ function plugin_template_action()
  </div>
 </form>
 EOD;
-	
+
 	$retvar['msg'] = ($msg == '') ? $_title_template : $msg;
 	$retvar['body'] = $ret;
-	
+
 	return $retvar;
 }
 ?>

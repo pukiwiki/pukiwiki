@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: default.ja.css,v 1.31 2004/04/03 18:38:52 arino Exp $
+// $Id: default.ja.css,v 1.32 2004/07/31 03:09:20 henoheno Exp $
 //
 */
 
@@ -218,7 +218,7 @@ a.note_super
 
 div.jumpmenu
 {
-	font-size:60%; 
+	font-size:60%;
 	text-align:right;
 }
 

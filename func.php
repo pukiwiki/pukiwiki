@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.68 2004/07/18 10:38:54 henoheno Exp $
+// $Id: func.php,v 1.69 2004/07/31 03:09:19 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -17,10 +17,10 @@ function is_interwiki($str)
 function is_pagename($str)
 {
 	global $BracketName,$WikiName;
-	
+
 	$is_pagename = (!is_interwiki($str) and preg_match("/^(?!\/)$BracketName$(?<!\/$)/",$str)
 		and !preg_match('/(^|\/)\.{1,2}(\/|$)/',$str));
-	
+
 	if (defined('SOURCE_ENCODING'))
 	{
 		if (SOURCE_ENCODING == 'UTF-8')
@@ -32,7 +32,7 @@ function is_pagename($str)
 			$is_pagename = ($is_pagename and preg_match('/^(?:[\x00-\x7F]|(?:[\x8E\xA1-\xFE][\xA1-\xFE])|(?:\x8F[\xA1-\xFE][\xA1-\xFE]))+$/',$str)); // EUC-JP
 		}
 	}
-	
+
 	return $is_pagename;
 }
 
@@ -54,7 +54,7 @@ function is_editable($page)
 {
 	global $cantedit;
 	static $is_editable = array();
-	
+
 	if (!array_key_exists($page,$is_editable))
 	{
 		$is_editable[$page] = (
@@ -63,7 +63,7 @@ function is_editable($page)
 			!in_array($page,$cantedit)
 		);
 	}
-	
+
 	return $is_editable[$page];
 }
 
@@ -85,7 +85,7 @@ function is_freeze($page)
 function auto_template($page)
 {
 	global $auto_template_func,$auto_template_rules;
-	
+
 	if (!$auto_template_func)
 	{
 		return '';
@@ -104,7 +104,7 @@ function auto_template($page)
 				$body = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m','$1$2',$body);
 				// #freezeを削除
 				$body = preg_replace('/^#freeze\s*$/m','',$body);
-				
+
 				for ($i = 0; $i < count($matches); $i++)
 				{
 					$body = str_replace("\$$i",$matches[$i],$body);
@@ -135,7 +135,7 @@ function get_search_words($words,$special=FALSE)
 		(LANG == 'ja' and function_exists('mb_convert_kana')) ?
 			'return mb_convert_kana($str,$option);' : 'return $str;'
 	);
-	
+
 	foreach ($words as $word)
 	{
 		// 英数字は半角,カタカナは全角,ひらがなはカタカナに
@@ -177,16 +177,16 @@ function do_search($word,$type='AND',$non_format=FALSE)
 	global $script,$vars,$whatsnew,$non_list,$search_non_list;
 	global $_msg_andresult,$_msg_orresult,$_msg_notfoundresult;
 	global $search_auth;
-	
+
 	$database = array();
 	$retval = array();
 
 	$b_type = ($type == 'AND'); // AND:TRUE OR:FALSE
 	$keys = get_search_words(preg_split('/\s+/',$word,-1,PREG_SPLIT_NO_EMPTY));
-	
+
 	$_pages = get_existpages();
 	$pages = array();
-	
+
 	foreach ($_pages as $page)
 	{
 		if ($page == $whatsnew
@@ -194,7 +194,7 @@ function do_search($word,$type='AND',$non_format=FALSE)
 		{
 			continue;
 		}
-		
+
 		// 検索対象ページの制限をかけるかどうか (ページ名は制限外)
 		if ($search_auth and !check_readable($page,false,false)) {
 			$source = get_source(); // 検索対象ページ内容を空に。
@@ -205,7 +205,7 @@ function do_search($word,$type='AND',$non_format=FALSE)
 		{
 			array_unshift($source,$page); // ページ名も検索対象に
 		}
-		
+
 		$b_match = FALSE;
 		foreach ($keys as $key)
 		{
@@ -241,10 +241,10 @@ function do_search($word,$type='AND',$non_format=FALSE)
 		$retval .= " <li><a href=\"$script?cmd=read&amp;page=$r_page&amp;word=$r_word\">$s_page</a>$passage</li>\n";
 	}
 	$retval .= "</ul>\n";
-	
+
 	$retval .= str_replace('$1',$s_word,str_replace('$2',count($pages),
 		str_replace('$3',count($_pages),$b_type ? $_msg_andresult : $_msg_orresult)));
-	
+
 	return $retval;
 }
 
@@ -252,7 +252,7 @@ function do_search($word,$type='AND',$non_format=FALSE)
 function arg_check($str)
 {
 	global $vars;
-	
+
 	return array_key_exists('cmd',$vars) and (strpos($vars['cmd'],$str) === 0);
 }
 
@@ -284,34 +284,34 @@ function page_list($pages, $cmd = 'read', $withfilename=FALSE)
 	global $script,$list_index,$top;
 	global $_msg_symbol,$_msg_other;
 	global $pagereading_enable;
-	
+
 	// ソートキーを決定する。 ' ' < '[a-zA-Z]' < 'zz'という前提。
 	$symbol = ' ';
 	$other = 'zz';
-	
+
 	$retval = '';
-	
+
 	if($pagereading_enable) {
 		mb_regex_encoding(SOURCE_ENCODING);
 		$readings = get_readings($pages);
 	}
-	
+
 	$list = array();
 	foreach($pages as $file=>$page)
 	{
 		$r_page = rawurlencode($page);
 		$s_page = htmlspecialchars($page,ENT_QUOTES);
 		$passage = get_pg_passage($page);
-		
+
 		$str = "   <li><a href=\"$script?cmd=$cmd&amp;page=$r_page\">$s_page</a>$passage";
-		
+
 		if ($withfilename)
 		{
 			$s_file = htmlspecialchars($file);
 			$str .= "\n    <ul><li>$s_file</li></ul>\n   ";
 		}
 		$str .= "</li>";
-		
+
 		if($pagereading_enable) {
 			if(mb_ereg('^([A-Za-z])',mb_convert_kana($page,'a'),$matches)) {
 				$head = $matches[1];
@@ -330,11 +330,11 @@ function page_list($pages, $cmd = 'read', $withfilename=FALSE)
 			$head = (preg_match('/^([A-Za-z])/',$page,$matches)) ? $matches[1] :
 				(preg_match('/^([ -~])/',$page,$matches) ? $symbol : $other);
 		}
-		
+
 		$list[$head][$page] = $str;
 	}
 	ksort($list);
-	
+
 	$cnt = 0;
 	$arr_index = array();
 	$retval .= "<ul>\n";
@@ -348,7 +348,7 @@ function page_list($pages, $cmd = 'read', $withfilename=FALSE)
 		{
 			$head = $_msg_other;
 		}
-		
+
 		if ($list_index)
 		{
 			$cnt++;
@@ -380,7 +380,7 @@ function page_list($pages, $cmd = 'read', $withfilename=FALSE)
 function catrule()
 {
 	global $rule_page;
-	
+
 	if (!is_page($rule_page))
 	{
 		return "<p>sorry, $rule_page unavailable.</p>";
@@ -392,12 +392,12 @@ function catrule()
 function die_message($msg)
 {
 	$title = $page = 'Runtime error';
-	
+
 	$body = <<<EOD
 <h3>Runtime error</h3>
 <strong>Error message : $msg</strong>
 EOD;
-	
+
 	if(defined('SKIN_FILE') && file_exists(SKIN_FILE) && is_readable(SKIN_FILE))
 	{
 	  catbody($title,$page,$body);
@@ -433,9 +433,9 @@ function get_date($format,$timestamp = NULL)
 {
 	$time = ($timestamp === NULL) ? UTIME : $timestamp;
 	$time += ZONETIME;
-	
+
 	$format = preg_replace('/(?<!\\\)T/',preg_replace('/(.)/','\\\$1',ZONE),$format);
-	
+
 	return date($format,$time);
 }
 
@@ -443,13 +443,13 @@ function get_date($format,$timestamp = NULL)
 function format_date($val, $paren = FALSE)
 {
 	global $date_format,$time_format,$weeklabels;
-	
+
 	$val += ZONETIME;
-	
+
 	$ins_date = date($date_format,$val);
 	$ins_time = date($time_format,$val);
 	$ins_week = '('.$weeklabels[date('w',$val)].')';
-	
+
 	$ins = "$ins_date $ins_week $ins_time";
 	return $paren ? "($ins)" : $ins;
 }
@@ -458,9 +458,9 @@ function format_date($val, $paren = FALSE)
 function get_passage($time, $paren = TRUE)
 {
 	static $units = array('m'=>60,'h'=>24,'d'=>1);
-	
+
 	$time = max(0,(UTIME - $time) / 60); //minutes
-	
+
 	foreach ($units as $unit=>$card)
 	{
 		if ($time < $card)
@@ -470,7 +470,7 @@ function get_passage($time, $paren = TRUE)
 		$time /= $card;
 	}
 	$time = floor($time).$unit;
-	
+
 	return $paren ? "($time)" : $time;
 }
 
@@ -489,14 +489,14 @@ function drop_submit($str)
 function get_autolink_pattern(&$pages)
 {
 	global $WikiName,$autolink,$nowikiname;
-	
+
 	$config = &new Config('AutoLink');
 	$config->read();
 	$ignorepages = $config->get('IgnoreList');
 	$forceignorepages = $config->get('ForceIgnoreList');
 	unset($config);
 	$auto_pages = array_merge($ignorepages,$forceignorepages);
-	
+
 	foreach ($pages as $page)
 	{
 		if (preg_match("/^$WikiName$/",$page) ?
@@ -510,15 +510,15 @@ function get_autolink_pattern(&$pages)
 	{
 		return $nowikiname ? '(?!)' : $WikiName;
 	}
-	
+
 	$auto_pages = array_unique($auto_pages);
 	sort($auto_pages,SORT_STRING);
 	$auto_pages_a = array_values(preg_grep('/^[A-Z]+$/i',$auto_pages));
 	$auto_pages = array_values(array_diff($auto_pages,$auto_pages_a));
-	
+
 	$result = get_autolink_pattern_sub($auto_pages,0,count($auto_pages),0);
 	$result_a = get_autolink_pattern_sub($auto_pages_a,0,count($auto_pages_a),0);
-	
+
 	return array($result,$result_a,$forceignorepages);
 }
 
@@ -528,11 +528,11 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 	{
 		return '(?!)';
 	}
-	
+
 	$result = '';
 	$count = 0;
 	$x = (mb_strlen($pages[$start]) <= $pos);
-	
+
 	if ($x)
 	{
 		$start++;
@@ -553,7 +553,7 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 		}
 		if ($i >= ($j - 1))
 		{
-			$result .= str_replace(' ','\\ ',preg_quote(mb_substr($pages[$i],$pos),'/')); 
+			$result .= str_replace(' ','\\ ',preg_quote(mb_substr($pages[$i],$pos),'/'));
 		}
 		else
 		{
@@ -596,7 +596,7 @@ function get_script_uri()
 		$path = $parse_url['path'];
 	}
 	$script .= $path;	// path
-	
+
 	return $script;
 }
 
@@ -609,7 +609,7 @@ http://ns1.php.gr.jp/pipermail/php-users/2003-January/012742.html
 
 2003-05-16: magic quotes gpcの復元処理を統合
 2003-05-21: 連想配列のキーはbinary safe
-*/ 
+*/
 function input_filter($param)
 {
 	static $magic_quotes_gpc = NULL;
@@ -683,7 +683,7 @@ function pkwk_login($pass = '')
 //is_a
 //(PHP 4 >= 4.2.0)
 //
-//is_a --  Returns TRUE if the object is of this class or has this class as one of its parents 
+//is_a --  Returns TRUE if the object is of this class or has this class as one of its parents
 
 if (!function_exists('is_a'))
 {
@@ -712,7 +712,7 @@ if (!function_exists('array_fill'))
 	function array_fill($start_index,$num,$value)
 	{
 		$ret = array();
-		
+
 		while ($num-- > 0)
 		{
 			$ret[$start_index++] = $value;

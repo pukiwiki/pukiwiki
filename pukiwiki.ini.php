@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.69 2004/07/24 10:01:41 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.70 2004/07/31 03:09:19 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -266,10 +266,10 @@ $proxy_auth_user = 'foo';
 $proxy_auth_pass = 'foo_password';
 // プロキシサーバを使用しないホストのリスト
 $no_proxy = array(
-'localhost',        // localhost 
+'localhost',        // localhost
 '127.0.0.0/8',      // loopback
-// '10.0.0.0/8'     // private class A 
-// '172.16.0.0/12'  // private class B 
+// '10.0.0.0/8'     // private class A
+// '172.16.0.0/12'  // private class B
 // '192.168.0.0/16' // private class C
 //'no-proxy.com',
 );

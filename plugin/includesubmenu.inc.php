@@ -1,12 +1,12 @@
 <?php
-// $Id: includesubmenu.inc.php,v 1.4 2003/02/11 01:31:57 panda Exp $
+// $Id: includesubmenu.inc.php,v 1.5 2004/07/31 03:09:20 henoheno Exp $
 
 function plugin_includesubmenu_convert()
 {
   global $script,$vars;
-  
+
   $ShowPageName = FALSE;
-  
+
   if (func_num_args()) {
     $aryargs = func_get_args();
     if ($aryargs[0] == 'showpagename') {
@@ -43,9 +43,9 @@ function plugin_includesubmenu_convert()
     //SubMenuÌµ¤·
     return "";
   }
-  
+
   $body = convert_html(get_source($SubMenuPageName));
-  
+
   if ($ShowPageName) {
     $r_page = rawurlencode($SubMenuPageName);
     $s_page = htmlspecialchars($SubMenuPageName);

@@ -2,14 +2,14 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: auth.php,v 1.3 2003/12/02 09:31:18 arino Exp $
+// $Id: auth.php,v 1.4 2004/07/31 03:09:19 henoheno Exp $
 //
 
 // 編集不可能なページを編集しようとしたとき
 function check_editable($page,$auth_flag=TRUE,$exit_flag=TRUE)
 {
 	global $script,$_title_cannotedit,$_msg_unfreeze;
-	
+
 	if (edit_auth($page,$auth_flag,$exit_flag) and is_editable($page))
 	{
 		return TRUE;
@@ -24,9 +24,9 @@ function check_editable($page,$auth_flag=TRUE,$exit_flag=TRUE)
 		$body .= "(<a href=\"$script?cmd=unfreeze&amp;page=".
 			rawurlencode($page)."\">$_msg_unfreeze</a>)";
 	}
-	
+
 	$page = str_replace('$1',make_search($page),$_title_cannotedit);
-	
+
 	catbody($title,$page,$body);
 	exit;
 }
@@ -41,7 +41,7 @@ function check_readable($page,$auth_flag=TRUE,$exit_flag=TRUE)
 function edit_auth($page,$auth_flag=TRUE,$exit_flag=TRUE)
 {
 	global $edit_auth,$edit_auth_pages,$_title_cannotedit;
-	
+
 	// 編集認証フラグをチェック
 	return $edit_auth ?
 		basic_auth($page,$auth_flag,$exit_flag,$edit_auth_pages,$_title_cannotedit) : TRUE;
@@ -51,7 +51,7 @@ function edit_auth($page,$auth_flag=TRUE,$exit_flag=TRUE)
 function read_auth($page,$auth_flag=TRUE,$exit_flag=TRUE)
 {
 	global $read_auth,$read_auth_pages,$_title_cannotread;
-	
+
 	// 閲覧認証フラグをチェック
 	return $read_auth ?
 		basic_auth($page,$auth_flag,$exit_flag,$read_auth_pages,$_title_cannotread) : TRUE;
@@ -62,7 +62,7 @@ function basic_auth($page,$auth_flag,$exit_flag,$auth_pages,$title_cannot)
 {
 	global $auth_users,$auth_method_type;
 	global $_msg_auth;
-	
+
 	// 認証要否判断対象文字列を取得する
 	$target_str = '';
 	// ページ名でチェックする場合

@@ -9,9 +9,9 @@
  *
  * @package org.pukiwiki
  * @access  public
- * @author  
- * @create  
- * @version $Id: backup.php,v 1.15 2004/02/29 13:27:28 arino Exp $
+ * @author
+ * @create
+ * @version $Id: backup.php,v 1.16 2004/07/31 03:09:19 henoheno Exp $
  **/
 
 /**
@@ -28,25 +28,25 @@ function make_backup($page,$delete = FALSE)
 {
 	global $splitter,$cycle,$maxage;
 	global $do_backup,$del_backup;
-	
+
 	if (!$do_backup)
 	{
 		return;
 	}
-	
+
 	if ($del_backup and $delete)
 	{
 		backup_delete($page);
 		return;
 	}
-	
+
 	if (!is_page($page))
 	{
 		return;
 	}
-	
+
 	$arystrout = array();
-	
+
 	$lastmod = backup_get_filetime($page);
 	if (($lastmod == 0) or (UTIME - $lastmod) > (60 * 60 * $cycle))
 	{
@@ -57,7 +57,7 @@ function make_backup($page,$delete = FALSE)
 			//直後に1件追加するので、(最大件数-1)を超える要素を捨てる
 			array_splice($backups,0,$count - $maxage);
 		}
-		
+
 		$strout = '';
 		foreach($backups as $age=>$data)
 		{
@@ -65,7 +65,7 @@ function make_backup($page,$delete = FALSE)
 			$strout .= join('',$data['data']);
 		}
 		$strout = preg_replace("/([^\n])\n*$/","$1\n",$strout);
-		
+
 		// 本文に含まれる$splitterをエスケープする(半角スペースを一個付加)
 		$body = preg_replace('/^('.preg_quote($splitter)."\s\d+)$/",'$1 ',get_source($page));
 		$body = "$splitter ".get_filetime($page)."\n".join('',$body);
@@ -95,17 +95,17 @@ function make_backup($page,$delete = FALSE)
 function get_backup($page,$age = 0)
 {
 	global $splitter;
-	
+
 	$lines = backup_file($page);
-	
+
 	if (!is_array($lines))
 	{
 		return array();
 	}
-	
+
 	$_age = 0;
 	$retvars = array();
-	
+
 	foreach($lines as $line)
 	{
 		if (preg_match("/^$splitter\s(\d+)$/",$line,$match))
@@ -122,7 +122,7 @@ function get_backup($page,$age = 0)
 			$retvars[$_age]['data'][] = $line;
 		}
 	}
-	
+
 	return $retvars;
 }
 
@@ -192,7 +192,7 @@ if (function_exists('gzfile'))
 	// ファイルシステム関数
 	// zlib関数を使用
 	define('BACKUP_EXT','.gz');
-	
+
 /**
  * backup_fopen
  * バックアップファイルを開く
@@ -258,7 +258,7 @@ else
 {
 	// ファイルシステム関数
 	define('BACKUP_EXT','.txt');
-	
+
 /**
  * backup_fopen
  * バックアップファイルを開く

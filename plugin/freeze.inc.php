@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: freeze.inc.php,v 1.6 2004/07/18 13:06:24 henoheno Exp $
+// $Id: freeze.inc.php,v 1.7 2004/07/31 03:09:20 henoheno Exp $
 //
 // 凍結
 function plugin_freeze_convert()
@@ -20,7 +20,7 @@ function plugin_freeze_action()
 
 	if (!$function_freeze or !is_page($page))
 		return array('msg' => '', 'body' => '');
-	
+
 	$pass = isset($vars['pass']) ? $vars['pass'] : NULL;
 	if (is_freeze($page)) {
 		return array(
@@ -31,15 +31,15 @@ function plugin_freeze_action()
 		$postdata = get_source($page);
 		array_unshift($postdata, "#freeze\n");
 		$postdata = join('', $postdata);
-		
+
 		file_write(DATA_DIR,$page, $postdata, TRUE);
-		
+
 		$vars['cmd'] = 'read';
 		return array('msg' => $_title_freezed, 'body' => '');
 	}
 	// 凍結フォームを表示
 	$s_page = htmlspecialchars($page);
-	
+
 	$body = ($pass === NULL) ? '' : "<p><strong>$_msg_invalidpass</strong></p>\n";
 	$body .= <<<EOD
 <p>$_msg_freezing</p>
@@ -52,7 +52,7 @@ function plugin_freeze_action()
  </div>
 </form>
 EOD;
-	
+
 	return array('msg'=>$_title_freeze, 'body'=>$body);
 }
 ?>

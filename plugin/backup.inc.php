@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: backup.inc.php,v 1.13 2004/07/18 13:02:15 henoheno Exp $
+// $Id: backup.inc.php,v 1.14 2004/07/31 03:09:20 henoheno Exp $
 //
 // バックアップ
 function plugin_backup_action()
@@ -12,7 +12,7 @@ function plugin_backup_action()
 	global $_msg_view, $_msg_goto, $_msg_deleted, $_msg_addline, $_msg_delline;
 	global $_title_backupdiff, $_title_backupnowdiff, $_title_backupsource;
 	global $_title_backup, $_title_pagebackuplist, $_title_backuplist;
-	
+
 	if (!$do_backup)
 		return;
 
@@ -59,7 +59,7 @@ function plugin_backup_action()
 
 	if ($action)
 		$body .= ' <li>' . str_replace('$1', "<a href=\"$href\">$_msg_backup</a>", $_msg_view) . "</li>\n";
-	
+
 	if ($is_page) {
 		$body .= ' <li>' . str_replace('$1', "<a href=\"$script?$r_page\">$s_page</a>", $_msg_goto) . "\n";
 	} else {
@@ -81,13 +81,13 @@ function plugin_backup_action()
 	}
 	$body .= " </li>\n";
 	$body .= "</ul>\n";
-	
+
 	if ($action == 'diff')
 	{
 		$old = ($s_age > 1) ? join('',$backups[$s_age - 1]['data']) : '';
 		$cur = join('',$backups[$s_age]['data']);
 		$body .= plugin_backup_diff(do_diff($old,$cur));
-		
+
 		return array('msg'=>str_replace('$2',$s_age,$_title_backupdiff),'body'=>$body);
 	}
 	else if ($s_action == 'nowdiff')
@@ -95,18 +95,18 @@ function plugin_backup_action()
 		$old = join('',$backups[$s_age]['data']);
 		$cur = join('',get_source($page));
 		$body .= plugin_backup_diff(do_diff($old,$cur));
-		
+
 		return array('msg'=>str_replace('$2',$s_age,$_title_backupnowdiff),'body'=>$body);
 	}
 	else if ($s_action == 'source')
 	{
 		$body .= "<pre>".htmlspecialchars(join('',$backups[$s_age]['data']))."</pre>\n";
-		
+
 		return array('msg'=>str_replace('$2',$s_age,$_title_backupsource),'body'=>$body);
 	}
 	// else
 	$body .= "$hr\n".drop_submit(convert_html($backups[$s_age]['data']));
-	
+
 	return array('msg'=>str_replace('$2',$s_age,$_title_backup),'body'=>$body);
 }
 
@@ -147,12 +147,12 @@ function plugin_backup_delete($page)
 </form>
 EOD;
 	return	array('msg'=>$_title_backup_delete,'body'=>$body);
-}	
+}
 
-function plugin_backup_diff($str) 
+function plugin_backup_diff($str)
 {
 	global $_msg_addline, $_msg_delline,$hr;
-	
+
 	$str = htmlspecialchars($str);
 	$str = preg_replace('/^(\-)(.*)$/m', '<span class="diff_removed"> $2</span>', $str);
 	$str = preg_replace('/^(\+)(.*)$/m', '<span class="diff_added"> $2</span>', $str);
@@ -165,7 +165,7 @@ $hr
 </ul>
 <pre>$str</pre>
 EOD;
-	
+
 	return $str;
 }
 
@@ -175,7 +175,7 @@ function get_backup_list($page)
 	global $script;
 	global $_msg_backuplist, $_msg_diff, $_msg_nowdiff, $_msg_source, $_msg_nobackup;
 	global $_title_backup_delete;
-	
+
 	$r_page = rawurlencode($page);
 	$s_page = htmlspecialchars($page);
 	$retval = array();
@@ -190,7 +190,7 @@ EOD;
  </li>
 </ul>
 EOD;
-	
+
 	$backups = backup_file_exists($page) ? get_backup($page) : array();
 	if (count($backups) == 0)
 	{

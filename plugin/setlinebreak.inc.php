@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: setlinebreak.inc.php,v 1.1 2004/03/18 10:45:47 arino Exp $
+// $Id: setlinebreak.inc.php,v 1.2 2004/07/31 03:09:20 henoheno Exp $
 //
 // 改行を<br />に置換するフラグ($line_break)を設定する
 //
@@ -15,7 +15,7 @@ function plugin_setlinebreak_convert()
 {
 	global $line_break;
 	static $default;
-	
+
 	if (!isset($default))
 	{
 		$default = $line_break;
@@ -25,9 +25,9 @@ function plugin_setlinebreak_convert()
 		$line_break = !$line_break;
 		return '';
 	}
-	
+
 	$args = func_get_args();
-	
+
 	switch (strtolower($args[0]))
 	{
 		case 'on':
@@ -35,7 +35,7 @@ function plugin_setlinebreak_convert()
 		case '1':
 			$line_break = 1;
 			break;
-		
+
 		case 'off':
 		case 'false':
 		case '0':
@@ -44,7 +44,7 @@ function plugin_setlinebreak_convert()
 		case 'default':
 			$line_break = $default;
 			break;
-		
+
 		default:
 			return FALSE;
 	}

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: new.inc.php,v 1.3 2003/07/28 07:10:29 arino Exp $
+// $Id: new.inc.php,v 1.4 2004/07/31 03:09:20 henoheno Exp $
 //
 
 // 全体の表示フォーマット
@@ -11,7 +11,7 @@ define('NEW_MESSAGE','<span class="comment_date">%s</span>');
 function plugin_new_init()
 {
 	global $_plugin_new_elapses;
-	
+
 	// 経過秒数 => 新着表示タグ
 	$messages = array(
 		'_plugin_new_elapses' => array(
@@ -24,7 +24,7 @@ function plugin_new_init()
 function plugin_new_inline()
 {
 	global $vars,$_plugin_new_elapses;
-	
+
 	if (func_num_args() < 1)
 	{
 		return FALSE;
@@ -41,7 +41,7 @@ function plugin_new_inline()
 	else
 	{
 		$name = strip_bracket(count($args) ? array_shift($args) : $vars['page']);
-		$page = get_fullname($name,$vars['page']);   
+		$page = get_fullname($name,$vars['page']);
 		$nolink = in_array('nolink',$args);
 		$timestamp = 0;
 		if (substr($page,-1) == '/')
@@ -66,7 +66,7 @@ function plugin_new_inline()
 			return '';
 		}
 	}
-	
+
 	$erapse = UTIME - $timestamp;
 	foreach ($_plugin_new_elapses as $limit=>$tag)
 	{

@@ -3,7 +3,7 @@
  * PukiWiki calendar_viewerプラグイン
  *
  *
- *$Id: calendar_viewer.inc.php,v 1.9 2003/07/03 05:18:50 arino Exp $
+ *$Id: calendar_viewer.inc.php,v 1.10 2004/07/31 03:09:20 henoheno Exp $
   calendarrecentプラグインを元に作成
  */
 /**
@@ -169,14 +169,14 @@ function plugin_calendar_viewer_convert()
     $get["page"] = $page;
     $post["page"] = $page;
     $vars["page"] = $page;
-	
+
 	// 現状で閲覧許可がある場合だけ表示する
 	if (check_readable($page,false,false)) {
 		$body = convert_html(get_source($page));
 	} else {
 		$body = str_replace('$1',$page,$_msg_calendar_viewer_restrict);
 	}
-	
+
     $r_page = rawurlencode($page);
     $s_page = htmlspecialchars($page);
     $link = "<a href=\"$script?cmd=edit&amp;page=$r_page\">$s_page</a>";
@@ -236,7 +236,7 @@ function plugin_calendar_viewer_convert()
     if ($left_base >= 0) {
       $left_YM = $left_base . "*" . $limit_pitch;
       $left_text = sprintf($_msg_calendar_viewer_left,$limit_pitch);
-      
+
     }else{
       $left_YM = "";
     }

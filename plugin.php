@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: plugin.php,v 1.12 2004/07/10 12:00:25 henoheno Exp $
+// $Id: plugin.php,v 1.13 2004/07/31 03:09:19 henoheno Exp $
 //
 
 // プラグイン用に未定義の変数を設定
@@ -11,7 +11,7 @@ function set_plugin_messages($messages)
 	foreach ($messages as $name=>$val)
 	{
 		global $$name;
-		
+
 		if (!isset($$name))
 		{
 			$$name = $val;
@@ -54,12 +54,12 @@ function exist_plugin_inline($name) {
 function do_plugin_init($name)
 {
 	static $check = array();
-	
+
 	if (array_key_exists($name,$check))
 	{
 		return $check[$name];
 	}
-	
+
 	$func = 'plugin_'.$name.'_init';
 	if ($check[$name] = function_exists($func))
 	{
@@ -76,10 +76,10 @@ function do_plugin_action($name)
 	{
 		return array();
 	}
-	
+
 	do_plugin_init($name);
 	$retvar = call_user_func('plugin_'.$name.'_action');
-	
+
 	// 文字エンコーディング検出用 hidden フィールドを挿入する
 	return preg_replace('/(<form[^>]*>)/',"$1\n<div><input type=\"hidden\" name=\"encode_hint\" value=\"ぷ\" /></div>",$retvar);
 }
@@ -88,23 +88,23 @@ function do_plugin_action($name)
 function do_plugin_convert($name,$args='')
 {
 	global $digest;
-	
+
 	// digestを退避
 	$_digest = $digest;
-	
+
 	$aryargs = ($args !== '') ? csv_explode(',', $args) : array();
 
 	do_plugin_init($name);
 	$retvar = call_user_func_array('plugin_'.$name.'_convert',$aryargs);
-	
+
 	// digestを復元
 	$digest = $_digest;
-	
+
 	if ($retvar === FALSE)
 	{
 		return htmlspecialchars('#'.$name.($args ? "($args)" : ''));
 	}
-	
+
 	// 文字エンコーディング検出用 hidden フィールドを挿入する
 	return preg_replace('/(<form[^>]*>)/',"$1\n<div><input type=\"hidden\" name=\"encode_hint\" value=\"ぷ\" /></div>",$retvar);
 }
@@ -113,24 +113,24 @@ function do_plugin_convert($name,$args='')
 function do_plugin_inline($name,$args,$body)
 {
 	global $digest;
-	
+
 	// digestを退避
 	$_digest = $digest;
-	
+
 	$aryargs = ($args !== '') ? csv_explode(',',$args) : array();
 	$aryargs[] =& $body;
 
 	do_plugin_init($name);
 	$retvar = call_user_func_array('plugin_'.$name.'_inline',$aryargs);
-	
+
 	// digestを復元
 	$digest = $_digest;
-	
+
 	if($retvar === FALSE)
 	{
 		return htmlspecialchars("&${name}" . ($args ? "($args)" : '') . ';');
 	}
-	
+
 	return $retvar;
 }
 ?>

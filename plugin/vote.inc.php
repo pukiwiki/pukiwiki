@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: vote.inc.php,v 1.15 2004/07/19 03:50:32 henoheno Exp $
+// $Id: vote.inc.php,v 1.16 2004/07/31 03:09:20 henoheno Exp $
 //
 
 function plugin_vote_action()
@@ -22,7 +22,7 @@ function plugin_vote_action()
 			$postdata .= $line;
 			continue;
 		}
-		
+
 		if ($vote_no++ != $vars['vote_no'])
 		{
 			$postdata .= $line;
@@ -44,12 +44,12 @@ function plugin_vote_action()
 			{
 				++$cnt;
 			}
-			
+
 			$votes[] = $arg . '[' . $cnt . ']';
 		}
-		
+
 		$vote_str = '#vote(' . @join(',', $votes) . ")\n";
-		
+
 		$postdata_input = $vote_str;
 		$postdata      .= $vote_str;
 	}
@@ -57,7 +57,7 @@ function plugin_vote_action()
 	if (md5(@join('', get_source($vars['refer']))) != $vars['digest'])
 	{
 		$title = $_title_collided;
-		
+
 		$s_refer  = htmlspecialchars($vars['refer']);
 		$s_digest = htmlspecialchars($vars['digest']);
 		$s_postdata_input = htmlspecialchars($postdata_input);
@@ -76,7 +76,7 @@ EOD;
 	else
 	{
 		page_write($vars['refer'], $postdata);
-		
+
 		$title = $_title_updated;
 	}
 
@@ -93,13 +93,13 @@ function plugin_vote_convert()
 	global $script, $vars,  $digest;
 	global $_vote_plugin_choice, $_vote_plugin_votes;
 	static $numbers = array();
-	
+
 	if (! isset($numbers[$vars['page']]))
 	{
 		$numbers[$vars['page']] = 0;
 	}
 	$vote_no = $numbers[$vars['page']]++;
-	
+
 	if (!func_num_args())
 	{
 		return '';
@@ -123,24 +123,24 @@ function plugin_vote_convert()
   </tr>
 
 EOD;
-	
+
 	$tdcnt = 0;
 	$match = array();
 	foreach($args as $arg)
 	{
 		$cnt = 0;
-		
+
 		if (preg_match("/^(.+)\[(\d+)\]$/", $arg, $match))
 		{
 			$arg = $match[1];
 			$cnt = $match[2];
 		}
 		$e_arg = encode($arg);
-		
+
 		$link = make_link($arg);
-		
+
 		$cls = ($tdcnt++ % 2)  ? 'vote_td1' : 'vote_td2';
-		
+
 		$body .= <<<EOD
   <tr>
    <td align="left" class="$cls" style="padding-left:1em;padding-right:1em;">$link</td>
@@ -151,13 +151,13 @@ EOD;
 
 EOD;
 	}
-	
+
 	$body .= <<<EOD
  </table>
 </form>
 
 EOD;
-	
+
 	return $body;
 }
 ?>

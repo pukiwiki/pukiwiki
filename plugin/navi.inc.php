@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: navi.inc.php,v 1.15 2003/07/03 05:22:36 arino Exp $
+// $Id: navi.inc.php,v 1.16 2004/07/31 03:09:20 henoheno Exp $
 //
 
 /*
@@ -45,7 +45,7 @@ function plugin_navi_convert()
 	global $vars, $script, $head_tags;
 	global $_navi_prev,$_navi_next,$_navi_up,$_navi_home;
 	static $navi = array();
-	
+
 	$home = $current = $vars['page'];
 	if (func_num_args())
 	{
@@ -53,7 +53,7 @@ function plugin_navi_convert()
 		$home = strip_bracket($home);
 	}
 	$is_home = ($home == $current);
-	
+
 	// 初回FALSE,2回目以降TRUE
 	$footer = array_key_exists($home,$navi);
 	if (!$footer)
@@ -67,7 +67,7 @@ function plugin_navi_convert()
 			'home'=>'',
 			'home1'=>'',
 		);
-		
+
 		$pages = preg_grep('/^'.preg_quote($home,'/').'($|\/)/',get_existpages());
 		// preg_grep(,,PREG_GREP_INVERT)が使えれば…
 		if (NAVI_EXCLUDE_PATTERN != '')
@@ -87,7 +87,7 @@ function plugin_navi_convert()
 			$prev = $page;
 		}
 		$next = current($pages);
-		
+
 		$pos = strrpos($current, '/');
 		$up = '';
 		if ($pos > 0)
@@ -107,7 +107,7 @@ function plugin_navi_convert()
 		}
 		$navi[$home]['home'] = make_pagelink($home);
 		$navi[$home]['home1'] = make_pagelink($home,$_navi_home);
-		
+
 		// <link>タグを生成する : start next prev(previous) parent(up)
 		// 未対応 : contents(toc) search first(begin) last(end)
 		if (NAVI_LINK_TAGS)

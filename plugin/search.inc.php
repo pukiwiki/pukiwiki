@@ -2,14 +2,14 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: search.inc.php,v 1.1 2003/01/27 05:38:47 panda Exp $
+// $Id: search.inc.php,v 1.2 2004/07/31 03:09:20 henoheno Exp $
 //
 // ¸¡º÷
 function plugin_search_action()
 {
 	global $script,$vars;
 	global $_title_result,$_title_search,$_msg_searching,$_btn_and,$_btn_or,$_btn_search;
-	
+
 	$s_word = array_key_exists('word',$vars) ? htmlspecialchars($vars['word']) : '';
 	$type = array_key_exists('type',$vars) ? $vars['type'] : '';
 
@@ -29,7 +29,7 @@ function plugin_search_action()
 		$or_check = ' checked="checked"';
 	else
 		$and_check = ' checked="checked"';
-	
+
 	$body .= <<<EOD
 <form action="$script?cmd=search" method="post">
  <div>
@@ -40,6 +40,6 @@ function plugin_search_action()
  </div>
 </form>
 EOD;
-	
+
 	return array('msg'=>$msg,'body'=>$body);
 }

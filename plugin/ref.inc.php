@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.22 2004/06/22 11:56:25 henoheno Exp $
+// $Id: ref.inc.php,v 1.23 2004/07/31 03:09:20 henoheno Exp $
 //
 
 /*
@@ -62,15 +62,15 @@ define('REF_URL_GETIMAGESIZE',FALSE);
 function plugin_ref_inline()
 {
 	global $vars;
-	
+
 	//エラーチェック
 	if (!func_num_args())
 	{
 		return 'no argument(s).';
 	}
-	
+
 	$params = plugin_ref_body(func_get_args(),$vars['page']);
-	
+
 	return ($params['_error'] != '') ? $params['_error'] : $params['_body'];
 }
 function plugin_ref_convert()
@@ -82,14 +82,14 @@ function plugin_ref_convert()
 	{
 		return '<p>no argument(s).</p>';
 	}
-	
+
 	$params = plugin_ref_body(func_get_args(),$vars['page']);
-	
+
 	if ($params['_error'] != '')
 	{
 		return "<p>{$params['_error']}</p>";
 	}
-	
+
 	if ((REF_WRAP_TABLE and !$params['nowrap']) or $params['wrap'])
 	{
 		// 枠で包む
@@ -120,13 +120,13 @@ EOD;
 function plugin_ref_body($args,$page)
 {
 	global $script,$WikiName,$BracketName;
-	
+
 	// 戻り値
 	$params = array();
-	
+
 	// 添付ファイル名を取得
 	$name = array_shift($args);
-	
+
 	// 次の引数がページ名かどうか
 	if (count($args) and preg_match("/^($WikiName|\[\[$BracketName\]\])$/",$args[0]))
 	{
@@ -137,7 +137,7 @@ function plugin_ref_body($args,$page)
 			array_shift($args);
 		}
 	}
-	
+
 	//パラメータ
 	$params = array(
 		'left'   => FALSE, // 左寄せ
@@ -158,7 +158,7 @@ function plugin_ref_body($args,$page)
 		'_done'  => FALSE,
 		'_error' => ''
 	);
-	
+
 	if (count($args) > 0)
 	{
 		foreach ($args as $key=>$val)
@@ -166,7 +166,7 @@ function plugin_ref_body($args,$page)
 			ref_check_arg($val,$key,$params);
 		}
 	}
-	
+
 /*
  $nameをもとに以下の変数を設定
  $url,$url2 : URL
@@ -179,12 +179,12 @@ function plugin_ref_body($args,$page)
 */
 	$file = $title = $url = $url2 = $info = '';
 	$width = $height = 0;
-	
+
 	if (is_url($name))	//URL
 	{
 		$url = $url2 = htmlspecialchars($name);
 		$title = htmlspecialchars(preg_match('/([^\/]+)$/', $name, $match) ? $match[1] : $url);
-		
+
 		$is_image = (!$params['noimg'] and preg_match("/\.(gif|png|jpe?g)$/i",$name));
 		if (REF_URL_GETIMAGESIZE and $is_image and (bool)ini_get('allow_url_fopen'))
 		{
@@ -204,7 +204,7 @@ function plugin_ref_body($args,$page)
 			$params['_error'] = 'no UPLOAD_DIR.';
 			return $params;
 		}
-		
+
 		//ページ指定のチェック
 //		$page = $vars['page'];
 		if (preg_match('/^(.+)\/([^\/]+)$/',$name,$matches))
@@ -242,7 +242,7 @@ function plugin_ref_body($args,$page)
 			$info = get_date('Y/m/d H:i:s',filemtime($file) - LOCALZONE).' '.sprintf('%01.1f',round(filesize($file)/1000,1)).'KB';
 		}
 	}
-	
+
 	//拡張パラメータをチェック
 	if (count($params['_args']))
 	{
@@ -270,7 +270,7 @@ function plugin_ref_body($args,$page)
 			$title = $is_image ? htmlspecialchars($title) : make_line_rules(htmlspecialchars($title));
 		}
 	}
-	
+
 	//画像サイズ調整
 	if ($is_image)
 	{
@@ -309,7 +309,7 @@ function plugin_ref_body($args,$page)
 			$info = "width=\"$width\" height=\"$height\" ";
 		}
 	}
-	
+
 	//アラインメント判定
 	if ($params['right'])
 	{

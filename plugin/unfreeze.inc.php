@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: unfreeze.inc.php,v 1.6 2004/07/18 13:09:00 henoheno Exp $
+// $Id: unfreeze.inc.php,v 1.7 2004/07/31 03:09:20 henoheno Exp $
 //
 // 凍結解除
 
@@ -19,9 +19,9 @@ function plugin_unfreeze_action()
 
 	if (!$function_freeze or !is_page($page))
 		return array('msg' => '', 'body' => '');
-	
+
 	$pass = isset($vars['pass']) ? $vars['pass'] : NULL;
-	
+
 	if (!is_freeze($page)) {
 		return array(
 			'msg'  => $_title_isunfreezed,
@@ -31,9 +31,9 @@ function plugin_unfreeze_action()
 		$postdata = get_source($page);
 		array_shift($postdata);
 		$postdata = join('', $postdata);
-		
+
 		file_write(DATA_DIR, $page, $postdata, TRUE);
-		
+
 		if (UNFREEZE_EDIT) {
 			$vars['cmd'] = 'edit';
 			return array('msg' => $_title_unfreezed, 'body' => '');
@@ -48,7 +48,7 @@ function plugin_unfreeze_action()
 
 	// 凍結解除フォームを表示
 	$s_page = htmlspecialchars($page);
-	
+
 	$body = ($pass === NULL) ? '' : "<p><strong>$_msg_invalidpass</strong></p>\n";
 	$body .= <<<EOD
 <p>$_msg_unfreezing</p>
@@ -61,7 +61,7 @@ function plugin_unfreeze_action()
  </div>
 </form>
 EOD;
-	
+
 	return array('msg' => $_title_unfreeze, 'body' => $body);
 }
 ?>

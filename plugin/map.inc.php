@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: map.inc.php,v 1.10 2003/04/17 02:09:01 arino Exp $
+// $Id: map.inc.php,v 1.11 2004/07/31 03:09:20 henoheno Exp $
 //
 /*
 プラグイン map
@@ -24,39 +24,39 @@ Usage : http://.../pukiwiki.php?plugin=map
 function plugin_map_action()
 {
 	global $vars,$whatsnew,$defaultpage;
-	
+
 	$reverse = array_key_exists('reverse',$vars);
-	
+
 	$refer = array_key_exists('refer',$vars) ? $vars['refer'] : '';
-	
+
 	if ($refer == '' or !is_page($refer))
 	{
 		$vars['refer'] = $refer = $defaultpage;
 	}
-	
+
 	$retval['msg'] = $reverse ? 'Relation map (link from)' : 'Relation map, from $1';
 	$retval['body'] = '';
-	
+
 	$pages = array_values(array_diff(get_existpages(),array($whatsnew)));
-	
+
 	$count = count($pages);
-	
+
 	if ($count == 0)
 	{
 		$retval['body'] = 'no pages.';
 		return $retval;
 	}
-	
+
 	// ページ数
 	$retval['body'] .= "<p>\ntotal: $count page(s) on this site.\n</p>\n";
-	
+
 	// ツリー作成
 	$nodes = array();
 	foreach ($pages as $page)
 	{
 		$nodes[$page] = & new MapNode($page,$reverse);
 	}
-	
+
 	if ($reverse)
 	{
 		$keys = array_keys($nodes);
@@ -117,13 +117,13 @@ class MapNode
 	var $rels;
 	var $parent_id = 0;
 	var $done;
-	
+
 	function MapNode($page,$reverse=FALSE)
 	{
 		global $script;
-		
+
 		static $id = 0;
-		
+
 		$this->page = $page;
 		$this->is_page = is_page($page);
 		$this->cache = CACHE_DIR.encode($page);
@@ -167,12 +167,12 @@ class MapNode
 			return;
 		}
 		$this->done = TRUE;
-		
+
 		if ($this->parent_id == 0)
 		{
 			$this->parent_id = -1;
 		}
-		
+
 		foreach ($this->rels as $page)
 		{
 			if (!array_key_exists($page,$nodes))
@@ -192,7 +192,7 @@ class MapNode
 	function toString(&$nodes,$level=1,$parent_id=-1)
 	{
 		$indent = str_repeat(' ',$level);
-		
+
 		if (!$this->is_page)
 		{
 			return $indent."<li>{$this->link}</li>\n";
@@ -219,7 +219,7 @@ class MapNode
 			}
 		}
 		$retval .= $indent."</li>\n";
-		
+
 		return $retval;
 	}
 }

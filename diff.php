@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.php,v 1.7 2003/06/11 00:00:51 arino Exp $
+// $Id: diff.php,v 1.8 2004/07/31 03:09:19 henoheno Exp $
 //
 //衝突時に対応表を出す
 define('DIFF_SHOW_TABLE',TRUE);
@@ -19,21 +19,21 @@ function do_diff($strlines1,$strlines2)
 function do_update_diff($pagestr,$poststr,$original)
 {
 	$obj = new line_diff();
-	
+
 	$obj->set_str('left',$original,$pagestr);
 	$obj->compare();
 	$diff1 = $obj->toArray();
-	
+
 	$obj->set_str('right',$original,$poststr);
 	$obj->compare();
 	$diff2 = $obj->toArray();
-	
+
 	$arr = $obj->arr_compare('all',$diff1,$diff2);
-	
+
 	if (DIFF_SHOW_TABLE)
 	{
 		global $do_update_diff_table;
-		
+
 		$do_update_diff_table = <<<EOD
 <p>l : between backup data and stored page data.<br />
  r : between backup data and your post data.</p>
@@ -62,7 +62,7 @@ EOD;
 		}
 		$do_update_diff_table .= '</table>'."\n";
 	}
-	
+
 	$body = '';
 	foreach ($arr as $_obj)
 	{
@@ -71,9 +71,9 @@ EOD;
 			$body .= $_obj->text();
 		}
 	}
-	
+
 	$auto = 1;
-	
+
 	return array(rtrim($body)."\n",$auto);
 }
 
@@ -93,7 +93,7 @@ Information Processing Letters 35, 6 (1990), 317-323.
 class line_diff
 {
 	var $arr1,$arr2,$m,$n,$pos,$key,$plus,$minus,$equal,$reverse;
-	
+
 	function line_diff($plus='+',$minus='-',$equal=' ')
 	{
 		$this->plus = $plus;
@@ -129,7 +129,7 @@ class line_diff
 	{
 		$this->set_str('diff',$str1,$str2);
 		$this->compare();
-		
+
 		$str = '';
 		foreach ($this->toArray() as $obj)
 		{
@@ -141,19 +141,19 @@ class line_diff
 	{
 		$this->m = count($this->arr1);
 		$this->n = count($this->arr2);
-		
+
 		if ($this->m == 0 or $this->n == 0) // no need compare.
 		{
 			$this->result = array(array('x'=>0,'y'=>0));
 			return;
 		}
-		
+
 		// sentinel
 		array_unshift($this->arr1,new DiffLine(''));
 		$this->m++;
 		array_unshift($this->arr2,new DiffLine(''));
 		$this->n++;
-		
+
 		$this->reverse = ($this->n < $this->m);
 		if ($this->reverse) // swap
 		{
@@ -161,18 +161,18 @@ class line_diff
 			$tmp = $this->arr1; $this->arr1 = $this->arr2; $this->arr2 = $tmp;
 			unset($tmp);
 		}
-		
+
 		$delta = $this->n - $this->m; // must be >=0;
-		
+
 		$fp = array();
 		$this->path = array();
-		
+
 		for ($p = -($this->m + 1); $p <= ($this->n + 1); $p++)
 		{
 			$fp[$p] = -1;
 			$this->path[$p] = array();
 		}
-		
+
 		for ($p = 0;; $p++)
 		{
 			for ($k = -$p; $k <= $delta - 1; $k++)
@@ -224,7 +224,7 @@ class line_diff
 		{
 			$_x = 'x'; $_y = 'y'; $_m = $this->m; $arr1 =& $this->arr1; $arr2 =& $this->arr2;
 		}
-		
+
 		$x = $y = 1;
 		$this->add_count = $this->delete_count = 0;
 		$this->pos[] = array('x'=>$this->m,'y'=>$this->n); // sentinel
@@ -232,19 +232,19 @@ class line_diff
 		{
 			$this->delete_count += ($pos[$_x] - $x);
 			$this->add_count += ($pos[$_y] - $y);
-			
+
 			while ($pos[$_x] > $x)
 			{
 				$arr1[$x]->set($this->key,$this->minus);
 				$arr[] = $arr1[$x++];
 			}
-			
+
 			while ($pos[$_y] > $y)
 			{
 				$arr2[$y]->set($this->key,$this->plus);
 				$arr[] =  $arr2[$y++];
 			}
-			
+
 			if ($x < $_m)
 			{
 				$arr1[$x]->merge($arr2[$y]);
@@ -261,7 +261,7 @@ class DiffLine
 {
 	var $text;
 	var $status;
-	
+
 	function DiffLine($text)
 	{
 		$this->text = "$text\n";

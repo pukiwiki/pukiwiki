@@ -1,10 +1,10 @@
 <?php
-// $Id: newpage.inc.php,v 1.8 2003/07/03 05:23:08 arino Exp $
+// $Id: newpage.inc.php,v 1.9 2004/07/31 03:09:20 henoheno Exp $
 
 function plugin_newpage_convert()
 {
 	global $script,$vars,$_btn_edit,$_msg_newpage,$BracketName;
-	
+
 	$newpage = '';
 	if (func_num_args()) {
 		list($newpage) = func_get_args();
@@ -25,14 +25,14 @@ function plugin_newpage_convert()
  </div>
 </form>
 EOD;
-	
+
 	return $ret;
 }
 
 function plugin_newpage_action()
 {
 	global $vars,$script,$_btn_edit,$_msg_newpage;
-	
+
 	if ($vars['page'] == '') {
 		$retvars['msg'] = $_msg_newpage;
 		$retvars['body'] = plugin_newpage_convert();
@@ -42,7 +42,7 @@ function plugin_newpage_action()
 	$r_page = rawurlencode(array_key_exists('refer',$vars) ?
 		get_fullname($page,$vars['refer']) : $page);
 	$r_refer = rawurlencode($vars['refer']);
-	
+
 	header("Location: $script?cmd=read&page=$r_page&refer=$r_refer");
 	die();
 }

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.inc.php,v 1.10 2004/07/18 10:41:02 henoheno Exp $
+// $Id: diff.inc.php,v 1.11 2004/07/31 03:09:20 henoheno Exp $
 //
 
 //ページの差分を表示する
@@ -16,7 +16,7 @@ function plugin_diff_action()
 	$action = isset($vars['action']) ? $vars['action'] : '';
 	switch ($action) {
 		case 'delete': $retval = plugin_diff_delete($page);	break;
-		default:       $retval = plugin_diff_view($page);	break;			
+		default:       $retval = plugin_diff_view($page);	break;
 	}
 	return $retval;
 }
@@ -27,10 +27,10 @@ function plugin_diff_view($page)
 	global $script, $hr;
 	global $_msg_notfound, $_msg_goto, $_msg_deleted, $_msg_addline, $_msg_delline, $_title_diff;
 	global $_title_diff_delete;
-	
+
 	$r_page = rawurlencode($page);
 	$s_page = htmlspecialchars($page);
-	
+
 	$menu = array(
 		"<li>$_msg_addline</li>",
 		"<li>$_msg_delline</li>"
@@ -79,8 +79,8 @@ function plugin_diff_delete($page)
 	global $script, $vars;
 	global $_title_diff_delete, $_msg_diff_deleted;
 	global $_msg_diff_adminpass, $_btn_delete, $_msg_invalidpass;
-	
-	$filename = DIFF_DIR . encode($page) . '.txt'; 
+
+	$filename = DIFF_DIR . encode($page) . '.txt';
 	$body = '';
 	if (! is_pagename($page))     $body = "Invalid page name";
 	if (! file_exists($filename)) $body = make_pagelink($page) . "'s diff seems not found";
@@ -113,5 +113,5 @@ function plugin_diff_delete($page)
 EOD;
 
 	return array('msg'=>$_title_diff_delete, 'body'=>$body);
-}	
+}
 ?>

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: update_entities.inc.php,v 1.4 2004/07/24 04:43:10 henoheno Exp $
+// $Id: update_entities.inc.php,v 1.5 2004/07/31 03:09:20 henoheno Exp $
 //
 
 // DTD¤Î¾ì½ê
@@ -39,7 +39,7 @@ function plugin_update_entities_action()
 {
 	global $script, $vars;
 	global $_entities_messages;
-	
+
 	if (empty($vars['action']) or empty($vars['adminpass']) or ! pkwk_login($vars['adminpass']))
 	{
 		$items = plugin_update_entities_create();
@@ -68,7 +68,7 @@ EOD;
 			'body'=>$_entities_messages['msg_done']
 		);
 	}
-	
+
 	return array(
 		'msg'=>$_entities_messages['title_update'],
 		'body'=>$_entities_messages['err_invalid']
@@ -113,13 +113,13 @@ function plugin_update_entities_create($do=FALSE)
 		$max = max($max,$len);
 		$min = min($min,$len);
 	}
-	
+
 	$pattern = "(?=[a-zA-Z0-9]\{$min,$max})".get_autolink_pattern_sub($entities,0,count($entities),0);
 	$fp = fopen(CACHE_DIR.'entities.dat','w')
 		or die_message('cannot write file '.CAHCE_DIR.'entities.dat<br />maybe permission is not writable or filename is too long');
 	fwrite($fp,$pattern);
 	fclose($fp);
-	
+
 	return $items;
 }
 ?>

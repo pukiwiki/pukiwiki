@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.43 2004/07/10 10:59:38 henoheno Exp $
+// $Id: file.php,v 1.44 2004/07/31 03:09:19 henoheno Exp $
 //
 
 // ソースを取得
@@ -35,23 +35,23 @@ function get_filename($page)
 function page_write($page,$postdata,$notimestamp=FALSE)
 {
 	$postdata = make_str_rules($postdata);
-	
+
 	// 差分ファイルの作成
 	$oldpostdata = is_page($page) ? join('',get_source($page)) : '';
 	$diffdata = do_diff($oldpostdata,$postdata);
 	file_write(DIFF_DIR,$page,$diffdata);
-	
+
 	// バックアップの作成
 	make_backup($page,$postdata == '');
-	
+
 	// ファイルの書き込み
 	file_write(DATA_DIR,$page,$postdata,$notimestamp);
-	
+
 	// TrackBack Ping の送信
 	// 「追加」行を抽出
 	$lines = join("\n",preg_replace('/^\+/','',preg_grep('/^\+/',explode("\n",$diffdata))));
 	tb_send($page,$lines);
-	
+
 	// linkデータベースを更新
 	links_update($page);
 }
@@ -60,9 +60,9 @@ function page_write($page,$postdata,$notimestamp=FALSE)
 function make_str_rules($str)
 {
 	global $str_rules,$fixed_heading_anchor;
-	
+
 	$arr = explode("\n",$str);
-	
+
 	$retvars = array();
 	foreach ($arr as $str)
 	{
@@ -85,7 +85,7 @@ function make_str_rules($str)
 		}
 		$retvars[] = $str;
 	}
-	
+
 	return join("\n",$retvars);
 }
 
@@ -96,7 +96,7 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 	global $_msg_invalidiwn;
 	global $notify, $notify_diff_only, $notify_to, $notify_subject, $notify_header;
 	global $smtp_server, $smtp_auth;
-	
+
 	if (!is_pagename($page))
 	{
 		die_message(
@@ -108,7 +108,7 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 	$page = strip_bracket($page);
 	$timestamp = FALSE;
 	$file = $dir.encode($page).'.txt';
-	
+
 	if ($dir == DATA_DIR and $str == '' and file_exists($file))
 	{
 		unlink($file);
@@ -118,12 +118,12 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 	{
 		$str = preg_replace("/\r/",'',$str);
 		$str = rtrim($str)."\n";
-		
+
 		if ($notimestamp and file_exists($file))
 		{
 			$timestamp = filemtime($file) - LOCALZONE;
 		}
-		
+
 		$fp = fopen($file,'w')
 			or die_message('cannot write page file or diff file or other'.htmlspecialchars($page).'<br />maybe permission is not writable or filename is too long');
 		set_file_buffer($fp, 0);
@@ -137,20 +137,20 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 			touch($file,$timestamp + LOCALZONE);
 		}
 	}
-	
+
 	// is_pageのキャッシュをクリアする。
 	is_page($page,TRUE);
-	
+
 	if (!$timestamp and $dir == DATA_DIR)
 	{
 		put_lastmodified();
 	}
-	
+
 	if ($update_exec and $dir == DATA_DIR)
 	{
 		system($update_exec.' > /dev/null &');
 	}
-	
+
 	if ($notify and $dir == DIFF_DIR)
 	{
 		if ($notify_diff_only)
@@ -173,7 +173,7 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 function put_recentdeleted($page)
 {
 	global $whatsdeleted,$maxshow_deleted;
-	
+
 	if ($maxshow_deleted == 0)
 	{
 		return;
@@ -219,10 +219,10 @@ function put_lastmodified()
 			$recent_pages[$page] = get_filetime($page);
 		}
 	}
-	
+
 	//時刻降順でソート
 	arsort($recent_pages,SORT_NUMERIC);
-	
+
 	// create recent.dat (for recent.inc.php)
 	$fp = fopen(CACHE_DIR.'recent.dat','w')
 		or die_message('cannot write cache file '.CACHE_DIR.'recent.dat<br />maybe permission is not writable or filename is too long');
@@ -252,12 +252,12 @@ function put_lastmodified()
 	fputs($fp,"#norelated\n"); // :)
 	flock($fp,LOCK_UN);
 	fclose($fp);
-	
+
 	// for autolink
 	if ($autolink)
 	{
 		list($pattern,$pattern_a,$forceignorelist) = get_autolink_pattern($pages);
-		
+
 		$fp = fopen(CACHE_DIR.'autolink.dat','w')
 			or die_message('cannot write autolink file '.CACHE_DIR.'/autolink.dat<br />maybe permission is not writable');
 		set_file_buffer($fp, 0);
@@ -276,18 +276,18 @@ function get_pg_passage($page,$sw=TRUE)
 {
 	global $show_passage;
 	static $pg_passage = array();
-	
+
 	if (!$show_passage)
 	{
 		return '';
 	}
-	
+
 	if (!array_key_exists($page,$pg_passage))
 	{
 		$pg_passage[$page] = (is_page($page) and $time = get_filetime($page)) ?
 			get_passage($time) : '';
 	}
-	
+
 	return $sw ? "<small>{$pg_passage[$page]}</small>" : " {$pg_passage[$page]}";
 }
 
@@ -295,7 +295,7 @@ function get_pg_passage($page,$sw=TRUE)
 function header_lastmod($page=NULL)
 {
 	global $lastmod;
-	
+
 	if ($lastmod and is_page($page))
 	{
 		header('Last-Modified: '.date('D, d M Y H:i:s',get_filetime($page)).' GMT');
@@ -306,7 +306,7 @@ function header_lastmod($page=NULL)
 function get_existpages($dir=DATA_DIR,$ext='.txt')
 {
 	$aryret = array();
-	
+
 	$pattern = '^((?:[0-9A-F]{2})+)';
 	if ($ext != '')
 	{
@@ -331,9 +331,9 @@ function get_readings()
 	global $pagereading_kanji2kana_encoding, $pagereading_chasen_path;
 	global $pagereading_kakasi_path, $pagereading_config_page;
 	global $pagereading_config_dict;
-	
+
 	$pages = get_existpages();
-	
+
 	$readings = array();
 	foreach ($pages as $page) {
 		$readings[$page] = '';
@@ -408,7 +408,7 @@ function get_readings()
 				if(!file_exists($pagereading_kakasi_path)) {
 					unlink($tmpfname);
 					die_message("KAKASI not found: $pagereading_kakasi_path");
-				}					
+				}
 				$fp = popen("$pagereading_kakasi_path -kK -HK -JK <$tmpfname", "r");
 				if(!$fp) {
 					unlink($tmpfname);
@@ -452,7 +452,7 @@ function get_readings()
 		if($unknownPage or $deletedPage) {
 			// 読みでソート
 			asort($readings);
-			
+
 			// ページを書き込み
 			$body = '';
 			foreach ($readings as $page => $reading) {
@@ -461,7 +461,7 @@ function get_readings()
 			page_write($pagereading_config_page, $body);
 		}
 	}
-	
+
 	// 読み不明のページは、そのままページ名を返す (ChaSen/KAKASI 呼
 	// び出しが無効に設定されている場合や、ChaSen/KAKASI 呼び出しに
 	// 失敗した時の為)
@@ -470,14 +470,14 @@ function get_readings()
 			$readings[$page] = $page;
 		}
 	}
-	
+
 	return $readings;
 }
 //ファイル名の一覧を配列に(エンコード済み、拡張子を指定)
 function get_existfiles($dir,$ext)
 {
 	$aryret = array();
-	
+
 	$pattern = '^(?:[0-9A-F]{2})+'.preg_quote($ext,'/').'$';
 	$dp = @opendir($dir)
 		or die_message($dir. ' is not found or not readable.');
@@ -494,18 +494,18 @@ function links_get_related($page)
 {
 	global $vars,$related;
 	static $links = array();
-	
+
 	if (array_key_exists($page,$links))
 	{
 		return $links[$page];
 	}
-	
+
 	// 可能ならmake_link()で生成した関連ページを取り込む
 	$links[$page] = ($page == $vars['page']) ? $related : array();
-	
+
 	// データベースから関連ページを得る
 	$links[$page] += links_get_related_db($vars['page']);
-	
+
 	return $links[$page];
 }
 ?>

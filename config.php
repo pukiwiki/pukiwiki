@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: config.php,v 1.7 2003/08/02 02:02:44 arino Exp $
+// $Id: config.php,v 1.8 2004/07/31 03:09:19 henoheno Exp $
 //
 /*
  * プラグインの設定をPukiWikiのページに記述する
@@ -21,11 +21,11 @@
  * $array = array(1=>array(1,2,3));
  * // 置換 - Configオブジェクトのメソッド
  * $obj->put($title,array(1=>array(1,2,3));
- * // 消去 
+ * // 消去
  * $obj->put_values($title,NULL);
  * // 書き込み
  * $obj->write();
- * 
+ *
  */
 
 // ページ名のプレフィクス
@@ -38,7 +38,7 @@ class Config
 	var $name,$page;
 	// 要素
 	var $objs = array();
-	
+
 	function Config($name)
 	{
 		$this->name = $name;
@@ -59,21 +59,21 @@ class Config
 			{
 				continue;
 			}
-			
+
 			$head = $line{0};
 			$level = strspn($line,$head);
-			
+
 			if ($level > 3)
 			{
 				$obj->add_line($line);
 				continue;
 			}
-			
+
 			if ($head == '*')
 			{
 				// 見出しの固有ID部を削除
 				$line = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/','$1$2',$line);
-				
+
 				if ($level == 1)
 				{
 					$this->objs[$obj->title] = $obj;
@@ -110,7 +110,7 @@ class Config
 			}
 		}
 		$this->objs[$obj->title] = $obj;
-		
+
 		return TRUE;
 	}
 	// 配列を取得する
@@ -167,7 +167,7 @@ class ConfigTable
 	var $values = array();
 	// ページの内容(テーブル以外の部分)
 	var $after = array();
-	
+
 	function ConfigTable($title,$obj=NULL)
 	{
 		if ($obj !== NULL)
@@ -218,7 +218,7 @@ class ConfigTable_Direct extends ConfigTable
 {
 	// 取得したキーの配列。初期化時に使用する。
 	var $_keys = array();
-	
+
 	// キーの設定
 	function set_key($line)
 	{

@@ -1,15 +1,15 @@
 <?php
-// $Id: calendar.inc.php,v 1.18 2003/06/04 14:20:36 arino Exp $
+// $Id: calendar.inc.php,v 1.19 2004/07/31 03:09:20 henoheno Exp $
 
 function plugin_calendar_convert()
 {
 	global $script,$weeklabels,$vars,$command;
-	
+
 	$args = func_get_args();
-	
+
 	$date_str = get_date("Ym");
 	$page = '';
-	
+
 	if (func_num_args() == 1)
 	{
 		if (is_numeric($args[0]) && strlen($args[0]) == 6)
@@ -34,7 +34,7 @@ function plugin_calendar_convert()
 			$page = $args[0];
 		}
 	}
-	
+
 	if ($page == '')
 	{
 		$page = $vars['page'];
@@ -49,9 +49,9 @@ function plugin_calendar_convert()
 
 	if (!$command) $cmd = "read";
 	else          $cmd = $command;
-	
+
 	$prefix = strip_tags($prefix);
-	
+
 	$yr = substr($date_str,0,4);
 	$mon = substr($date_str,4,2);
 	if ($yr != get_date("Y") || $mon != get_date("m"))
@@ -65,7 +65,7 @@ function plugin_calendar_convert()
 		$other_month = 0;
 	}
 	$today = getdate(mktime(0,0,0,$mon,$now_day,$yr) - LOCALZONE + ZONETIME);
-	
+
 	$m_num = $today['mon'];
 	$d_num = $today['mday'];
 	$year = $today['year'];
@@ -94,12 +94,12 @@ EOD;
 		$ret .= "  <td class=\"style_td_week\"><strong>$label</strong></td>\n";
 	}
 	$ret .= " </tr>\n <tr>\n";
-	
-	// Blank 
+
+	// Blank
 	for ($i = 0; $i < $wday; $i++)
 	{
-		$ret .= "    <td class=\"style_td_blank\">&nbsp;</td>\n"; 
-	} 
+		$ret .= "    <td class=\"style_td_blank\">&nbsp;</td>\n";
+	}
 
 	while(checkdate($m_num,$day,$year))
 	{
@@ -107,9 +107,9 @@ EOD;
 		$name = "$prefix$dt";
 		$r_page = rawurlencode($name);
 		$s_page = htmlspecialchars($name);
-		
+
 		$refer = ($cmd == "edit") ? '&amp;refer='.rawurlencode($page) : '';
-		
+
 		if ($cmd == 'read' and !is_page($name))
 			$link = "<strong>$day</strong>";
 		else
@@ -121,22 +121,22 @@ EOD;
 		}
 		if (!$other_month && ($day == $today['mday']) && ($m_num == $today['mon']) && ($year == $today['year']))
 		{
-			//  Today 
-			$ret .= "    <td class=\"style_td_today\"><span class=\"small\">$link</span></td>\n"; 
+			//  Today
+			$ret .= "    <td class=\"style_td_today\"><span class=\"small\">$link</span></td>\n";
 		}
 		else if ($wday == 0)
 		{
-			//  Sunday 
+			//  Sunday
 			$ret .= "    <td class=\"style_td_sun\"><span class=\"small\">$link</span></td>\n";
 		}
 		else if ($wday == 6)
 		{
-			//  Saturday 
+			//  Saturday
 			$ret .= "    <td class=\"style_td_sat\"><span class=\"small\">$link</span></td>\n";
 		}
 		else
 		{
-			// Weekday 
+			// Weekday
 			$ret .= "    <td class=\"style_td_day\"><span class=\"small\">$link</span></td>\n";
 		}
 		$day++;
@@ -146,10 +146,10 @@ EOD;
 	if ($wday > 0)
 	{
 		while($wday < 7)
-		{ // Blank 
+		{ // Blank
 			$ret .= "    <td class=\"style_td_blank\">&nbsp;</td>\n";
 		$wday++;
-		} 
+		}
 	}
 
 	$ret .= "  </tr>\n</table>\n";

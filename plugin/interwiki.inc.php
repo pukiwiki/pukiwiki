@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: interwiki.inc.php,v 1.6 2003/07/14 04:41:10 arino Exp $
+// $Id: interwiki.inc.php,v 1.7 2004/07/31 03:09:20 henoheno Exp $
 //
 // InterWikiNameの判別とページの表示
 
@@ -10,9 +10,9 @@ function plugin_interwiki_action()
 {
 	global $vars,$InterWikiName;
 	global $_title_invalidiwn,$_msg_invalidiwn;
-	
+
 	$retvars = array();
-	
+
 	if (!preg_match("/^$InterWikiName$/",$vars['page'],$match))
 	{
 		$retvars['msg'] = $_title_invalidiwn;
@@ -25,7 +25,7 @@ function plugin_interwiki_action()
 	}
 	$name = $match[2];
 	$param = $match[3];
-	
+
 	$url = get_interwiki_url($name,$param);
 	if ($url === FALSE)
 	{
@@ -37,7 +37,7 @@ function plugin_interwiki_action()
 		);
 		return $retvars;
 	}
-	
+
 	header("Location: $url");
 	die();
 }

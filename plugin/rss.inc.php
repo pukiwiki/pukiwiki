@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss.inc.php,v 1.6 2004/03/18 09:17:54 arino Exp $
+// $Id: rss.inc.php,v 1.7 2004/07/31 03:09:20 henoheno Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss_action()
@@ -14,11 +14,11 @@ function plugin_rss_action()
 	{
 		die_message("please set '\$script' in ".INI_FILE);
 	}
-	
+
 	$page_title_utf8 = mb_convert_encoding($page_title,'UTF-8',SOURCE_ENCODING);
-	
+
 	$items = '';
-	
+
 	if (!file_exists(CACHE_DIR.'recent.dat'))
 	{
 		return '';
@@ -40,11 +40,11 @@ function plugin_rss_action()
 
 EOD;
 	}
-	
+
 	header('Content-type: application/xml');
-	
+
 	$r_whatsnew = rawurlencode($whatsnew);
-	
+
 	print <<<EOD
 <?xml version="1.0" encoding="UTF-8"?>
 

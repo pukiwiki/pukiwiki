@@ -5,13 +5,13 @@
  * CopyRight 2002 S.YOSHIMURA GPL2
  * http://masui.net/pukiwiki/ yosimura@excellence.ac.jp
  *
- * $Id: versionlist.inc.php,v 1.11 2004/07/24 09:45:38 henoheno Exp $
+ * $Id: versionlist.inc.php,v 1.12 2004/07/31 03:09:20 henoheno Exp $
  */
 
 function plugin_versionlist_action()
 {
 	global $_title_versionlist;
-	
+
 	return array(
 		'msg' => $_title_versionlist,
 		'body' => plugin_versionlist_convert()

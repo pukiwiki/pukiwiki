@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: link.php,v 1.7 2004/07/09 23:47:48 henoheno Exp $
+// $Id: link.php,v 1.8 2004/07/31 03:09:19 henoheno Exp $
 //
 
 /*
@@ -11,7 +11,7 @@
  * 参照元ページ名<tab>AutoLinkによるリンクのみのとき1\n
  * 参照元ページ名<tab>AutoLinkによるリンクのみのとき1\n
  * ...
- * 
+ *
  * CACHE_DIR/encode(ページ名).rel
  * 参照先ページ名<tab>参照先ページ名<tab>...
  *
@@ -38,7 +38,7 @@ function links_update($page)
 	if (ini_get('safe_mode') == '0') set_time_limit(0);
 
 	$time = is_page($page,TRUE) ? get_filetime($page) : 0;
-	
+
 	$rel_old = array();
 	$rel_file = CACHE_DIR.encode($page).'.rel';
 	if ($rel_file_exist = file_exists($rel_file))
@@ -73,7 +73,7 @@ function links_update($page)
 	$rel_auto = array_diff(array_unique($rel_auto),$rel_new);
 	// 全ての参照先ページ
 	$rel_new = array_merge($rel_new,$rel_auto);
-	
+
 	// .rel:$pageが参照しているページの一覧
 	if ($time) // ページが存在している
 	{
@@ -88,7 +88,7 @@ function links_update($page)
 	// .ref:$_pageを参照しているページの一覧
 	links_add($page,array_diff($rel_new,$rel_old),$rel_auto);
 	links_delete($page,array_diff($rel_old,$rel_new));
-	
+
 	global $WikiName,$autolink,$nowikiname,$search_non_list;
 	// $pageが新規作成されたページで、AutoLinkの対象となり得る場合
 	if ($time and !$rel_file_exist and $autolink
@@ -169,7 +169,7 @@ function links_init()
 			fclose($fp);
 		}
 	}
-	
+
 	foreach ($ref as $page=>$arr)
 	{
 		if (count($arr) == 0)
@@ -196,7 +196,7 @@ function links_add($page,$add,$rel_auto)
 		$all_auto = array_key_exists($_page,$rel_auto);
 		$is_page = is_page($_page);
 		$ref = "$page\t".($all_auto ? 1 : 0)."\n";
-		
+
 		$ref_file = CACHE_DIR.encode($_page).'.ref';
 		if (file_exists($ref_file))
 		{
@@ -229,7 +229,7 @@ function links_delete($page,$del)
 	{
 		$all_auto = TRUE;
 		$is_page = is_page($_page);
-		
+
 		$ref_file = CACHE_DIR.encode($_page).'.ref';
 		if (!file_exists($ref_file))
 		{
@@ -261,12 +261,12 @@ function links_delete($page,$del)
 function &links_get_objects($page,$refresh=FALSE)
 {
 	static $obj;
-	
+
 	if (!isset($obj) or $refresh)
 	{
 		$obj = &new InlineConverter(NULL,array('note'));
 	}
-	
+
 	return $obj->get_objects(join('',preg_grep('/^(?!\/\/|\s)./',get_source($page))),$page);
 }
 ?>

@@ -4,11 +4,11 @@
  *
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
- * 
+ *
  * ÊÑ¹¹ÍúÎò:
  *  2002.06.17: ºî¤ê»Ï¤á
  *
- * $Id: bugtrack.inc.php,v 1.15 2003/12/03 12:28:12 arino Exp $
+ * $Id: bugtrack.inc.php,v 1.16 2004/07/31 03:09:20 henoheno Exp $
  */
 
 function plugin_bugtrack_init()
@@ -18,7 +18,7 @@ function plugin_bugtrack_init()
 		'_bugtrack_plugin_state_list' => array('Äó°Æ','Ãå¼ê','CVSÂÔ¤Á','´°Î»','ÊÝÎ±','µÑ²¼'),
 		'_bugtrack_plugin_state_sort' => array('Ãå¼ê','CVSÂÔ¤Á','ÊÝÎ±','´°Î»','Äó°Æ','µÑ²¼'),
 		'_bugtrack_plugin_state_bgcolor' => array('#ccccff','#ffcc99','#ccddcc','#ccffcc','#ffccff','#cccccc','#ff3333'),
-		
+
 		'_bugtrack_plugin_title' => '$1 Bugtrack Plugin',
 		'_bugtrack_plugin_base' => '¥Ú¡¼¥¸',
 		'_bugtrack_plugin_summary' => '¥µ¥Þ¥ê',
@@ -40,7 +40,7 @@ function plugin_bugtrack_init()
 function plugin_bugtrack_action()
 {
 	global $script,$post,$vars,$_bugtrack_plugin_title;
-	
+
 	if ($post['mode'] == 'submit') {
 		$page = plugin_bugtrack_write($post['base'], $post['pagename'], $post['summary'], $post['name'], $post['priority'], $post['state'], $post['category'], $post['version'], $post['body']);
 		header("Location: $script?".rawurlencode($page));
@@ -52,7 +52,7 @@ function plugin_bugtrack_action()
 		$ret['msg'] = $_bugtrack_plugin_title;
 		$ret["body"] = plugin_bugtrack_print_form($vars['category']);
 	}
-	
+
 	return $ret;
 */
 }
@@ -77,12 +77,12 @@ function plugin_bugtrack_print_form($base,$category)
 		}
 		$select_priority .= "<option value=\"{$_bugtrack_plugin_priority_list[$i]}\"$selected>{$_bugtrack_plugin_priority_list[$i]}</option>\n";
 	}
-	
+
 	$select_state = '';
 	for ($i = 0; $i < count($_bugtrack_plugin_state_list); ++$i) {
 		$select_state .= "<option value=\"{$_bugtrack_plugin_state_list[$i]}\">{$_bugtrack_plugin_state_list[$i]}</option>\n";
 	}
-	
+
 	if (count($category) == 0) {
 		$encoded_category = '<input name="category" type="text" />';
 	}
@@ -94,9 +94,9 @@ function plugin_bugtrack_print_form($base,$category)
 		}
 		$encoded_category .= '</select>';
 	}
-	
+
 	$s_base = htmlspecialchars($base);
-	
+
 	$body = <<<EOD
 <form action="$script" method="post">
  <table border="0">
@@ -143,7 +143,7 @@ function plugin_bugtrack_print_form($base,$category)
  </table>
 </form>
 EOD;
-	
+
 	return $body;
 }
 
@@ -153,11 +153,11 @@ function plugin_bugtrack_template($base, $summary, $name, $priority, $state, $ca
 	global $_bugtrack_plugin_date, $_bugtrack_plugin_category, $_bugtrack_plugin_base;
 	global $_bugtrack_plugin_body, $_bugtrack_plugin_version;
 	global $script, $WikiName;
-	
+
 	if (!preg_match("/^$WikiName$$/",$name)) {
 		$name = "[[$name]]";
 	}
-	
+
 	if (!preg_match("/^$WikiName$$/",$base)) {
 		$base = "[[$base]]";
 	}
@@ -183,10 +183,10 @@ EOD;
 function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $state, $category, $version, $body)
 {
 	global $post;
-	
+
 	$base = strip_bracket($base);
 	$pagename = strip_bracket($pagename);
-	
+
 	$postdata = plugin_bugtrack_template($base, $summary, $name, $priority, $state, $category, $version, $body);
 
 	$i = 0;
@@ -194,7 +194,7 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 		$i++;
 		$page = "$base/$i";
 	} while (is_page($page));
-	
+
 	if ($pagename == '') {
 		page_write($page,$postdata);
 	}
@@ -217,7 +217,7 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 function plugin_bugtrack_convert()
 {
 	global $vars;
-	
+
 	$base = $vars['page'];
 	$category = array();
 	if (func_num_args() > 0) {
@@ -230,7 +230,7 @@ function plugin_bugtrack_convert()
 			$base = $_base;
 		}
 	}
-	
+
 	return plugin_bugtrack_print_form($base,$category);
 }
 
@@ -238,16 +238,16 @@ function plugin_bugtrack_convert()
 function plugin_bugtrack_pageinfo($page,$no = NULL)
 {
 	global $WikiName, $InterWikiName, $BracketName;
-	
+
 	if ($no === NULL) {
 		$no = preg_match('/\/([0-9]+)$/',$page,$matches) ? $matches[1] : 0;
 	}
-	
+
 	$source = get_source($page);
 	if (preg_match("/move\s*to\s*($WikiName|$InterWikiName|\[\[$BracketName\]\])/",$source[0],$match)) {
 		return plugin_bugtrack_pageinfo(strip_bracket($match[1]),$no);
 	}
-	
+
 	$body = join("\n",$source);
 	$summary = $name = $priority = $state = $category = 'test';
 	$itemlist = array();
@@ -264,12 +264,12 @@ function plugin_bugtrack_pageinfo($page,$no = NULL)
 			}
 		}
 	}
-	
+
 	if (preg_match("/\*([^\n]+)/",$body,$matches)) {
 		$summary = $matches[1];
 		make_heading($summary);
 	}
-	
+
 	return array($page, $no, $summary, $name, $priority, $state, $category);
 }
 
@@ -279,7 +279,7 @@ function plugin_bugtrack_list_convert()
 	global $_bugtrack_plugin_priority, $_bugtrack_plugin_state, $_bugtrack_plugin_name;
 	global $_bugtrack_plugin_date, $_bugtrack_plugin_category, $_bugtrack_plugin_summary;
 	global $_bugtrack_plugin_state_sort,$_bugtrack_plugin_state_list,$_bugtrack_plugin_state_bgcolor;
-	
+
 	$page = $vars['page'];
 	if (func_num_args()) {
 		list($_page) = func_get_args();
@@ -289,7 +289,7 @@ function plugin_bugtrack_list_convert()
 			$page = $_page;
 		}
 	}
-	
+
 	$data = array();
 	$pattern = "$page/";
 	$pattern_len = strlen($pattern);
@@ -299,12 +299,12 @@ function plugin_bugtrack_list_convert()
 			array_push($data,$line);
 		}
 	}
-	
+
 	$table = array();
 	for ($i = 0; $i <= count($_bugtrack_plugin_state_list) + 1; ++$i) {
 		$table[$i] = array();
 	}
-	
+
 	foreach ($data as $line) {
 		list($page, $no, $summary, $name, $priority, $state, $category) = $line;
 		$page_link = make_pagelink($page);
@@ -312,7 +312,7 @@ function plugin_bugtrack_list_convert()
 		if ($state_no === NULL or $state_no === FALSE) {
 			$state_no = count($_bugtrack_plugin_state_list);
 		}
-		
+
 		$bgcolor = $_bugtrack_plugin_state_bgcolor[$state_no];
 		$row = <<<EOD
  <tr>
@@ -340,7 +340,7 @@ EOD;
 		ksort($table[$i],SORT_NUMERIC);
 		$table_html .= join("\n",$table[$i]);
 	}
-	
+
 	return "<table border=\"1\">\n$table_html</table>";
 }
 ?>

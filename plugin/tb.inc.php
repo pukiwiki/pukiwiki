@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.9 2004/03/18 09:21:54 arino Exp $
+// $Id: tb.inc.php,v 1.10 2004/07/31 03:09:20 henoheno Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -15,13 +15,13 @@
 function plugin_tb_action()
 {
 	global $script,$vars,$trackback;
-	
+
 	// POST: TrackBack Ping を保存する
 	if (!empty($vars['url']))
 	{
 		tb_save();
 	}
-	
+
 	if ($trackback and !empty($vars['__mode']) and !empty($vars['tb_id']))
 	{
 		switch ($vars['__mode'])
@@ -35,12 +35,12 @@ function plugin_tb_action()
 		}
 	}
 	$pages = get_existpages(TRACKBACK_DIR,'.txt');
-	
+
 	if (count($pages) == 0)
 	{
 		return array('msg'=>'','body'=>'');
 	}
-	
+
 	return array(
 		'msg' => 'trackback list',
 		'body' => page_list($pages,'read',FALSE)
@@ -52,7 +52,7 @@ function tb_save()
 {
 	global $script,$vars,$trackback;
 	static $fields = array(/* UTIME, */'url','title','excerpt','blog_name');
-	
+
 	// 許可していないのに呼ばれた場合の対応
 	if (!$trackback)
 	{
@@ -68,24 +68,24 @@ function tb_save()
 	{
 		tb_xml_msg(1,'TrackBack Ping URL is inaccurate.');
 	}
-	
+
 	$url = $vars['url'];
 	$tb_id = $vars['tb_id'];
-	
+
 	// ページ存在チェック
 	$page = tb_id2page($tb_id);
 	if ($page === FALSE)
 	{
 		tb_xml_msg(1,'TrackBack ID is invalid.');
 	}
-	
+
 	// URL 妥当性チェック (これを入れると処理時間に問題がでる)
 	$result = http_request($url,'HEAD');
 	if ($result['rc'] !== 200)
 	{
 		tb_xml_msg(1,'URL is fictitious.');
 	}
-	
+
 	// TRACKBACK_DIR の存在と書き込み可能かの確認
 	if (!file_exists(TRACKBACK_DIR))
 	{
@@ -95,11 +95,11 @@ function tb_save()
 	{
 		tb_xml_msg(1,'Permission denied');
 	}
-	
+
 	// TrackBack Ping のデータを更新
 	$filename = tb_get_filename($page);
 	$data = tb_get($filename);
-	
+
 	$items = array(UTIME);
 	foreach ($fields as $field)
 	{
@@ -111,7 +111,7 @@ function tb_save()
 		$items[$field] = $value;
 	}
 	$data[rawurldecode($items['url'])] = $items;
-	
+
 	$fp = fopen($filename,'w');
 	set_file_buffer($fp, 0);
 	flock($fp,LOCK_EX);
@@ -122,7 +122,7 @@ function tb_save()
 	}
 	flock($fp,LOCK_UN);
 	fclose($fp);
-	
+
 	tb_xml_msg(0,'');
 }
 
@@ -145,13 +145,13 @@ EOD;
 function tb_mode_rss($tb_id)
 {
 	global $script,$vars,$entity_pattern;
-	
+
 	$page = tb_id2page($tb_id);
 	if ($page === FALSE)
 	{
 		return FALSE;
 	}
-	
+
 	$items = '';
 	foreach (tb_get(tb_get_filename($page)) as $arr)
 	{
@@ -167,7 +167,7 @@ function tb_mode_rss($tb_id)
    </item>
 EOD;
 	}
-	
+
 	$title = htmlspecialchars($page);
 	$link = "$script?".rawurlencode($page);
 	$vars['page'] = $page;
@@ -201,7 +201,7 @@ function tb_mode_view($tb_id)
 	global $script,$page_title;
 	global $_tb_title,$_tb_header,$_tb_entry,$_tb_refer,$_tb_date;
 	global $_tb_header_Excerpt,$_tb_header_Weblog,$_tb_header_Tracked;
-	
+
 	// TrackBack ID からページ名を取得
 	$page = tb_id2page($tb_id);
 	if ($page === FALSE)
@@ -209,16 +209,16 @@ function tb_mode_view($tb_id)
 		return FALSE;
 	}
 	$r_page = rawurlencode($page);
-	
+
 	$tb_title = sprintf($_tb_title,$page);
 	$tb_refer = sprintf($_tb_refer,"<a href=\"$script?$r_page\">'$page'</a>","<a href=\"$script\">$page_title</a>");
 
-	
+
 	$data = tb_get(tb_get_filename($page));
-	
+
 	// 最新版から整列
 	usort($data,create_function('$a,$b','return $b[0] - $a[0];'));
-	
+
 	$tb_body = '';
 	foreach ($data as $x)
 	{

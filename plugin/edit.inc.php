@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.14 2004/07/02 13:34:36 henoheno Exp $
+// $Id: edit.inc.php,v 1.15 2004/07/31 03:09:20 henoheno Exp $
 //
 
 // 編集
@@ -44,7 +44,7 @@ function plugin_edit_preview()
 		// 見出しの固有ID部を削除
 		$vars['msg'] = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $vars['msg']);
 	}
-	
+
 	// 手書きの#freezeを削除
 	$vars['msg'] = preg_replace('/^#freeze\s*$/m', '' ,$vars['msg']);
 	$postdata = $vars['msg'];
@@ -69,7 +69,7 @@ function plugin_edit_preview()
 		$body .= '<div id="preview">' . $postdata . '</div>' . "\n";
 	}
 	$body .= edit_form($page, $vars['msg'], $vars['digest'], FALSE);
-	
+
 	return array('msg'=>$_title_preview, 'body'=>$body);
 }
 
@@ -93,39 +93,39 @@ function plugin_edit_write()
 			$postdata  = @join('', get_source($page)) . "\n\n" . $postdata;
 		}
 	}
-	
+
 	$oldpagesrc = join('', get_source($page));
 	$oldpagemd5 = md5($oldpagesrc);
-	
+
 	if (! isset($vars['digest']) || $vars['digest'] != $oldpagemd5) {
 		$vars['digest'] = $oldpagemd5;
 
 		$retvars['msg'] = $_title_collided;
 		list($postdata_input, $auto) = do_update_diff($oldpagesrc, $postdata_input, $vars['original']);
-		
+
 		$retvars['body'] = ($auto ? $_msg_collided_auto : $_msg_collided)."\n";
-		
+
 		if (TRUE) {
 			global $do_update_diff_table;
 			$retvars['body'] .= $do_update_diff_table;
 		}
-		
+
 		$retvars['body'] .= edit_form($page, $postdata_input, $oldpagemd5, FALSE);
 	}
 	else {
 		$notimestamp = (isset($vars['notimestamp']) && $vars['notimestamp'] != '');
 		page_write($page, $postdata, $notimestamp);
-		
+
 		if ($postdata) {
 			header("Location: $script?" . rawurlencode($page));
 			exit;
 		}
-		
+
 		$retvars['msg'] = $_title_deleted;
 		$retvars['body'] = str_replace('$1', htmlspecialchars($page), $_title_deleted);
 		tb_delete($page);
 	}
-	
+
 	return $retvars;
 }
 

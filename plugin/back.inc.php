@@ -1,5 +1,5 @@
 <?php
-// $Id: back.inc.php,v 1.4 2003/07/03 05:11:38 arino Exp $
+// $Id: back.inc.php,v 1.5 2004/07/31 03:09:20 henoheno Exp $
 /*
  * PukiWiki back プラグイン
  * (C) 2002, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -20,7 +20,7 @@
 function plugin_back_convert()
 {
 	global $_msg_back_word;
-	
+
 	$argv = func_get_args();
 
 	// 初期値設定
