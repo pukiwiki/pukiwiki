@@ -1,5 +1,5 @@
 <?
-// $Id: calendar2.inc.php,v 1.7 2002/07/05 08:57:37 masui Exp $
+// $Id: calendar2.inc.php,v 1.8 2002/08/05 09:28:27 masui Exp $
 
 function plugin_calendar2_convert()
 {
@@ -111,7 +111,6 @@ function plugin_calendar2_convert()
 	if($prefix == "") {
 		$ret .= '
 <table class="style_calendar" cellspacing="1" width="150" border="0">
-  <tbody>
   <tr>
     <td align="middle" class="style_td_caltop" colspan="7">
       <div class="small" style="text-align:center"><a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$prev_date_str.'">&lt;&lt;</a> <strong>'.$m_name.'</strong> <a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$next_date_str.'">&gt;&gt;</a></div>

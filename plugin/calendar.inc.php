@@ -1,5 +1,5 @@
 <?
-// $Id: calendar.inc.php,v 1.5 2002/07/01 07:08:57 masui Exp $
+// $Id: calendar.inc.php,v 1.6 2002/08/05 09:28:28 masui Exp $
 
 function plugin_calendar_convert()
 {
@@ -93,7 +93,6 @@ function plugin_calendar_convert()
 
 	$ret .= '
 <table class="style_calendar" cellspacing="1" width="150" border="0">
-  <tbody>
   <tr>
     <td align="middle" class="style_td_caltop" colspan="7">
       <div class="small" style="text-align:center"><strong>'.$m_name.'</strong><br />[<a href="'.$script.'?'.$prefix_url.'">'.$pre.'</a>]</div>
