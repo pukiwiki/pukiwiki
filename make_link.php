@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.28 2003/03/18 07:19:39 panda Exp $
+// $Id: make_link.php,v 1.29 2003/03/21 22:48:44 panda Exp $
 //
 
 // リンクを付加する
@@ -222,7 +222,7 @@ EOD;
 		
 		return parent::setParam($page,$name,'plugin');
 	}
-	function toString($refer = '')
+	function toString()
 	{
 		return $this->make_inline($this->name,$this->param,$this->body);
 	}
@@ -261,13 +261,7 @@ class Link_note extends Link
 \(\(    # open paren
  (      # (1) note body
   (?:
-   (?>  # once-only 
-    (?:
-     (?!\(\()(?!\)\)(?:[^\)]|$)).
-    )+
-   )
-   |
-   (?R) # or recursive of me
+   (?R)|(?!\)\)).
   )*
  )
 \)\)
@@ -285,9 +279,9 @@ EOD;
 		$arr = $this->splice($arr);
 		
 		$id = ++$note_id;
-		$note = inline2($arr[1]);
+		$note = make_link($arr[1]);
 		
-		$foot_explain[] = <<<EOD
+		$foot_explain[$id] = <<<EOD
 <a id="notefoot_$id" href="#notetext_$id" class="note_super">*$id</a>
 <span class="small">$note</span>
 <br />
