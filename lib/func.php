@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.6 2004/08/06 15:39:52 henoheno Exp $
+// $Id: func.php,v 1.7 2004/10/10 02:22:19 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -18,19 +18,22 @@ function is_pagename($str)
 {
 	global $BracketName;
 
-	$is_pagename = (! is_interwiki($str) and
-		preg_match("/^(?!\/)$BracketName$(?<!\/$)/", $str) and
+	$is_pagename = (! is_interwiki($str) &&
+		  preg_match("/^(?!\/)$BracketName$(?<!\/$)/", $str) &&
 		! preg_match('/(^|\/)\.{1,2}(\/|$)/', $str));
 
+	$pattern = '';
 	if (defined('SOURCE_ENCODING')) {
-		if (SOURCE_ENCODING == 'UTF-8') {
+		switch(SOURCE_ENCODING){
+		case 'UTF-8':
 			$pattern = '/^(?:[\x00-\x7F]|(?:[\xC0-\xDF][\x80-\xBF])|(?:[\xE0-\xEF][\x80-\xBF][\x80-\xBF]))+$/';
-			$is_pagename = ($is_pagename and preg_match($pattern, $str));
-		} else if (SOURCE_ENCODING == 'EUC-JP') {
+			break;
+		case 'EUC-JP':
 			$pattern = '/^(?:[\x00-\x7F]|(?:[\x8E\xA1-\xFE][\xA1-\xFE])|(?:\x8F[\xA1-\xFE][\xA1-\xFE]))+$/';
-			$is_pagename = ($is_pagename and preg_match($pattern, $str));
+			break;
 		}
 	}
+	if($pattern !== '') $is_pagename = ($is_pagename && preg_match($pattern, $str));
 
 	return $is_pagename;
 }
@@ -55,11 +58,10 @@ function is_editable($page)
 	global $cantedit;
 	static $is_editable = array();
 
-	if (!array_key_exists($page, $is_editable))
-	{
+	if (! isset($is_editable[$page])) {
 		$is_editable[$page] = (
-			is_pagename($page) and
-			! is_freeze($page) and
+			is_pagename($page) &&
+			! is_freeze($page) &&
 			! in_array($page, $cantedit)
 		);
 	}
@@ -72,7 +74,7 @@ function is_freeze($page)
 {
 	global $function_freeze;
 
-	if (! $function_freeze or ! is_page($page)) return FALSE;
+	if (! $function_freeze || ! is_page($page)) return FALSE;
 
 	list($lines) = get_source($page);
 	return (rtrim($lines) == '#freeze');
@@ -87,25 +89,25 @@ function auto_template($page)
 
 	$body = '';
 	$matches = array();
-	foreach ($auto_template_rules as $rule => $template)
-	{
-		if (preg_match("/$rule/", $page, $matches))
-		{
-			$template_page = preg_replace("/$rule/", $template, $page);
-			if (is_page($template_page))
-			{
-				$body = join('', get_source($template_page));
-				// 見出しの固有ID部を削除
-				$body = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $body);
-				// #freezeを削除
-				$body = preg_replace('/^#freeze\s*$/m', '', $body);
+	foreach ($auto_template_rules as $rule => $template) {
 
-				for ($i = 0; $i < count($matches); $i++) {
-					$body = str_replace("\$$i", $matches[$i], $body);
-				}
-				break;
-			}
+		if (! preg_match("/$rule/", $page, $matches)) continue;
+
+		$template_page = preg_replace("/$rule/", $template, $page);
+		if (! is_page($template_page)) continue;
+
+		$body = join('', get_source($template_page));
+
+		// 見出しの固有ID部を削除
+		$body = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $body);
+
+		// #freezeを削除
+		$body = preg_replace('/^#freeze\s*$/m', '', $body);
+
+		for ($i = 0; $i < count($matches); $i++) {
+			$body = str_replace("\$$i", $matches[$i], $body);
 		}
+		break;
 	}
 	return $body;
 }
@@ -127,7 +129,7 @@ function get_search_words($words, $special = FALSE)
 
 	// LANG=='ja'で、mb_convert_kanaが使える場合はmb_convert_kanaを使用
 	$convert_kana = create_function('$str, $option',
-		(LANG == 'ja' and function_exists('mb_convert_kana')) ?
+		(LANG == 'ja' && function_exists('mb_convert_kana')) ?
 			'return mb_convert_kana($str, $option);' : 'return $str;'
 	);
 
@@ -182,11 +184,11 @@ function do_search($word, $type = 'AND', $non_format = FALSE)
 
 	foreach ($_pages as $page)
 	{
-		if ($page == $whatsnew or (! $search_non_list and preg_match("/$non_list/", $page)))
+		if ($page == $whatsnew || (! $search_non_list && preg_match("/$non_list/", $page)))
 			continue;
 
 		// 検索対象ページの制限をかけるかどうか (ページ名は制限外)
-		if ($search_auth and ! check_readable($page, false, false)) {
+		if ($search_auth && ! check_readable($page, false, false)) {
 			$source = get_source(); // 検索対象ページ内容を空に。
 		} else {
 			$source = get_source($page);
@@ -196,31 +198,27 @@ function do_search($word, $type = 'AND', $non_format = FALSE)
 
 		$b_match = FALSE;
 		foreach ($keys as $key) {
-			$tmp = preg_grep("/$key/", $source);
+			$tmp     = preg_grep("/$key/", $source);
 			$b_match = (count($tmp) > 0);
 			if ($b_match xor $b_type)
 				break;
 		}
-		if ($b_match) {
+		if ($b_match)
 			$pages[$page] = get_filetime($page);
-		}
 	}
-	if ($non_format) {
+	if ($non_format)
 		return array_keys($pages);
-	}
 
 	$r_word = rawurlencode($word);
 	$s_word = htmlspecialchars($word);
-	if (count($pages) == 0) {
+	if (empty($pages))
 		return str_replace('$1', $s_word, $_msg_notfoundresult);
-	}
 
 	ksort($pages);
 	$retval = "<ul>\n";
-	foreach ($pages as $page=>$time)
-	{
-		$r_page = rawurlencode($page);
-		$s_page = htmlspecialchars($page);
+	foreach ($pages as $page=>$time) {
+		$r_page  = rawurlencode($page);
+		$s_page  = htmlspecialchars($page);
 		$passage = get_passage($time);
 		$retval .= " <li><a href=\"$script?cmd=read&amp;page=$r_page&amp;word=$r_word\">$s_page</a>$passage</li>\n";
 	}
@@ -237,7 +235,7 @@ function arg_check($str)
 {
 	global $vars;
 
-	return array_key_exists('cmd', $vars) and (strpos($vars['cmd'], $str) === 0);
+	return isset($vars['cmd']) && (strpos($vars['cmd'], $str) === 0);
 }
 
 // ページ名のエンコード
@@ -284,8 +282,8 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 	$list = $matches = array();
 	foreach($pages as $file=>$page)
 	{
-		$r_page = rawurlencode($page);
-		$s_page = htmlspecialchars($page, ENT_QUOTES);
+		$r_page  = rawurlencode($page);
+		$s_page  = htmlspecialchars($page, ENT_QUOTES);
 		$passage = get_pg_passage($page);
 
 		$str = "   <li><a href=\"$script?cmd=$cmd&amp;page=$r_page\">$s_page</a>$passage";
@@ -330,8 +328,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 			$head = $_msg_other;
 		}
 
-		if ($list_index)
-		{
+		if ($list_index) {
 			++$cnt;
 			$arr_index[] = "<a id=\"top_$cnt\" href=\"#head_$cnt\"><strong>$head</strong></a>";
 			$retval .= " <li><a id=\"head_$cnt\" href=\"#top_$cnt\"><strong>$head</strong></a>\n  <ul>\n";
@@ -339,13 +336,10 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 		ksort($pages);
 		$retval .= join("\n", $pages);
 		if ($list_index)
-		{
 			$retval .= "\n  </ul>\n </li>\n";
-		}
 	}
 	$retval .= "</ul>\n";
-	if ($list_index and $cnt > 0)
-	{
+	if ($list_index && $cnt > 0) {
 		$top = array();
 		while (count($arr_index) > 0) {
 			$top[] = join(" | \n", array_splice($arr_index, 0, 16)) . "\n";
@@ -361,11 +355,11 @@ function catrule()
 {
 	global $rule_page;
 
-	if (! is_page($rule_page))
-	{
-		return "<p>sorry, $rule_page unavailable.</p>";
+	if (! is_page($rule_page)) {
+		return "<p>Sorry, $rule_page unavailable.</p>";
+	} else {
+		return convert_html(get_source($rule_page));
 	}
-	return convert_html(get_source($rule_page));
 }
 
 // エラーメッセージを表示する
@@ -465,7 +459,7 @@ function get_autolink_pattern(& $pages)
 
 	$config = &new Config('AutoLink');
 	$config->read();
-	$ignorepages = $config->get('IgnoreList');
+	$ignorepages      = $config->get('IgnoreList');
 	$forceignorepages = $config->get('ForceIgnoreList');
 	unset($config);
 	$auto_pages = array_merge($ignorepages, $forceignorepages);
@@ -476,15 +470,14 @@ function get_autolink_pattern(& $pages)
 			$auto_pages[] = $page;
 	}
 
-	if (count($auto_pages) == 0) {
+	if (empty($auto_pages))
 		return $nowikiname ? '(?!)' : $WikiName;
-	}
 
 	$auto_pages = array_unique($auto_pages);
 	sort($auto_pages, SORT_STRING);
 
 	$auto_pages_a = array_values(preg_grep('/^[A-Z]+$/i', $auto_pages));
-	$auto_pages   = array_values(array_diff($auto_pages, $auto_pages_a));
+	$auto_pages   = array_values(array_diff($auto_pages,  $auto_pages_a));
 
 	$result   = get_autolink_pattern_sub($auto_pages,   0, count($auto_pages),   0);
 	$result_a = get_autolink_pattern_sub($auto_pages_a, 0, count($auto_pages_a), 0);
@@ -497,23 +490,17 @@ function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 	if ($end == 0) return '(?!)';
 
 	$result = '';
-	$count = 0;
+	$count = $i = $j = 0;
 	$x = (mb_strlen($pages[$start]) <= $pos);
+	if ($x) ++$start;
 
-	if ($x) {
-		++$start;
-	}
-
-	for ($i = $start; $i < $end; $i = $j) // What is the initial state of $j?
+	for ($i = $start; $i < $end; $i = $j)
 	{
 		$char = mb_substr($pages[$i], $pos, 1);
 		for ($j = $i; $j < $end; $j++) {
-			if (mb_substr($pages[$j], $pos, 1) != $char)
-				break;
+			if (mb_substr($pages[$j], $pos, 1) != $char) break;
 		}
-		if ($i != $start) {
-			$result .= '|';
-		}
+		if ($i != $start) $result .= '|';
 		if ($i >= ($j - 1)) {
 			$result .= str_replace(' ', '\\ ', preg_quote(mb_substr($pages[$i], $pos), '/'));
 		} else {
@@ -522,12 +509,9 @@ function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 		}
 		++$count;
 	}
-	if ($x or $count > 1) {
-		$result = '(?:' . $result . ')';
-	}
-	if ($x) {
-		$result .= '?';
-	}
+	if ($x || $count > 1) $result = '(?:' . $result . ')';
+	if ($x)               $result .= '?';
+
 	return $result;
 }
 
@@ -540,14 +524,13 @@ function get_script_uri()
 
 	// SCRIPT_NAME が'/'で始まっていない場合(cgiなど) REQUEST_URIを使ってみる
 	$path    = SCRIPT_NAME;
-	if ($path{0} != '/')
-	{
-		if (!isset($_SERVER['REQUEST_URI']) or $_SERVER['REQUEST_URI']{0} != '/')
+	if ($path{0} != '/') {
+		if (! isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI']{0} != '/')
 			return FALSE;
 
 		// REQUEST_URIをパースし、path部分だけを取り出す
 		$parse_url = parse_url($script.$_SERVER['REQUEST_URI']);
-		if (! isset($parse_url['path']) or $parse_url['path']{0} != '/')
+		if (! isset($parse_url['path']) || $parse_url['path']{0} != '/')
 			return FALSE;
 
 		$path = $parse_url['path'];
@@ -599,9 +582,8 @@ function csv_explode($separator, $string)
 
 	foreach ($matches[1] as $str) {
 		$len = strlen($str);
-		if ($len > 1 and $str{0} == '"' and $str{$len - 1} == '"') {
+		if ($len > 1 && $str{0} == '"' && $str{$len - 1} == '"')
 			$str = str_replace('""', '"', substr($str, 1, -1));
-		}
 		$retval[] = $str;
 	}
 	return $retval;
@@ -610,14 +592,11 @@ function csv_explode($separator, $string)
 // 配列をCSV形式の文字列に
 function csv_implode($glue, $pieces)
 {
-	$_glue = ($glue != '') ? '\\'.$glue{0} : '';
+	$_glue = ($glue != '') ? '\\' . $glue{0} : '';
 	$arr = array();
-	foreach ($pieces as $str)
-	{
-		if (ereg("[$_glue\"\n\r]",$str))
-		{
-			$str = '"'.str_replace('"', '""', $str).'"';
-		}
+	foreach ($pieces as $str) {
+		if (ereg("[$_glue\"\n\r]", $str))
+			$str = '"' . str_replace('"', '""', $str) . '"';
 		$arr[] = $str;
 	}
 	return join($glue, $arr);
@@ -676,6 +655,7 @@ if (! function_exists('md5_file'))
 		if (! file_exists($filename)) return FALSE;
 
 		$fd = fopen($filename, 'rb');
+		if ($fd === FALSE ) return FALSE;
 		$data = fread($fd, filesize($filename));
 		fclose($fd);
 		return md5($data);
