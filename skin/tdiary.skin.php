@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.9 2005/01/15 03:58:07 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.10 2005/01/15 04:06:11 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -225,8 +225,8 @@ case 'christmas':
 	break;
 }
 
-$lang  = $_LANG['skin'];
-$link  = $_LINK;
+$lang  = & $_LANG['skin'];
+$link  = & $_LINK;
 
 // Decide charset for CSS
 $css_charset = 'iso-8859-1';
@@ -493,8 +493,7 @@ if ($disable_reverse_link === TRUE) {
 <!-- Toolbar -->
 <?php
 
-// Set skin-specific images
-$_IMAGE['skin']['logo']     = 'pukiwiki.png';
+// Set toolbar-specific images
 $_IMAGE['skin']['reload']   = 'reload.png';
 $_IMAGE['skin']['new']      = 'new.png';
 $_IMAGE['skin']['edit']     = 'edit.png';
@@ -516,9 +515,9 @@ $_IMAGE['skin']['rss20']    = 'rss20.png';
 $_IMAGE['skin']['rdf']      = 'rdf.png';
 
 function _toolbar($key, $x = 20, $y = 20){
-	$lang  = $GLOBALS['_LANG']['skin'];
-	$link  = $GLOBALS['_LINK'];
-	$image = $GLOBALS['_IMAGE']['skin'];
+	$lang  = & $GLOBALS['_LANG']['skin'];
+	$link  = & $GLOBALS['_LINK'];
+	$image = & $GLOBALS['_IMAGE']['skin'];
 	if (! isset($lang[$key]) ) { echo 'LANG NOT FOUND';  return FALSE; }
 	if (! isset($link[$key]) ) { echo 'LINK NOT FOUND';  return FALSE; }
 	if (! isset($image[$key])) { echo 'IMAGE NOT FOUND'; return FALSE; }
