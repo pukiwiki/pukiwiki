@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.en.php,v 1.14.2.4 2004/04/03 16:35:51 arino Exp $
+// $Id: pukiwiki.skin.en.php,v 1.14.2.5 2004/08/08 02:23:30 henoheno Exp $
 //
 
 if (!defined('DATA_DIR')) { exit; }
@@ -32,7 +32,7 @@ global $page_title;
 	<table border="0">
 		<tr>
 		<td rowspan="2">
-			<a href="http://pukiwiki.org/"><img src="pukiwiki.png" width="80" height="80" border="0" alt="[PukiWiki]" /></a><br />
+			<a href="http://pukiwiki.org/"><img src="image/pukiwiki.png" width="80" height="80" border="0" alt="[PukiWiki]" /></a><br />
 		</td>
 		<td rowspan="2" style="width:20px">
 		</td>
