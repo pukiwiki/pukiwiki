@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.1 2002/06/21 05:21:46 masui Exp $
+// $Id: init.php,v 1.2 2002/06/22 17:04:02 masui Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -17,7 +17,9 @@ define("SERVER_NAME",$HTTP_SERVER_VARS["SERVER_NAME"]);
 
 define("MUTIME",getmicrotime());
 
-$script = getenv('SCRIPT_NAME');
+if($script == "") {
+	$script = 'http://'.getenv('SERVER_NAME').(getenv('SERVER_PORT')==80?'':(':'.getenv('SERVER_PORT'))).getenv('SCRIPT_NAME');
+}
 
 $WikiName = '([A-Z][a-z]+([A-Z][a-z]+)+)';
 $BracketName = '\[\[(\[*[^\s\]]+?\]*)\]\]';
