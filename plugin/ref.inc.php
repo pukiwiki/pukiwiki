@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.32 2004/08/25 13:39:48 henoheno Exp $
+// $Id: ref.inc.php,v 1.33 2004/08/26 14:37:33 henoheno Exp $
 //
 
 // UPLOAD_DIR のデータ(画像ファイルのみ)に直接アクセスさせる
@@ -125,7 +125,8 @@ EOD;
 
 function plugin_ref_body($args)
 {
-	global $script, $vars, $WikiName, $BracketName;
+	global $script, $vars;
+	global $WikiName, $BracketName; // compat
 
 	// 戻り値
 	$params = array(
@@ -148,18 +149,77 @@ function plugin_ref_body($args)
 		'_error' => ''
 	);
 
-	// 第一引数: 添付ファイル名を取得
-	$name = array_shift($args);
-
-	// 第二引数がページ名かどうか
+	// 添付ファイルのあるページ: defaultは現在のページ名
 	$page = isset($vars['page']) ? $vars['page'] : '';
-	if (! empty($args) &&
-		preg_match("/^($WikiName|\[\[$BracketName\]\])$/", $args[0]))
-	{
-		$_page = get_fullname(strip_bracket($args[0]), $page);
-		if (is_pagename($_page)) {
-			$page = $_page;
-			array_shift($args);
+
+	// 添付ファイル名
+	$name = '';
+
+	// 第一引数: "[ページ名および/]添付ファイル名"、あるいは"URL"を取得
+	$name = array_shift($args);
+	$is_url = is_url($name);
+
+	if(! $is_url) {
+		// 添付ファイル
+		if (! is_dir(UPLOAD_DIR)) {
+			$params['_error'] = 'No UPLOAD_DIR';
+			return $params;
+		}
+
+		$matches = array();
+		// ファイル名にページ名(ページ参照パス)が合成されているか
+		//   (Page_name/maybe-separated-with/slashes/ATTACHED_FILENAME)
+		if (preg_match('#^(.+)/([^/]+)$#', $name, $matches)) {
+			if ($matches[1] == '.' || $matches[1] == '..') {
+				$matches[1] .= '/'; // Restore relative paths
+			}
+			$name = $matches[2];
+			$page = get_fullname(strip_bracket($matches[1]), $page); // strip is a compat
+			$is_file = is_file(UPLOAD_DIR . encode($page) . '_' . encode($name));
+
+		// 第二引数以降が存在するか
+		} else if (isset($args[0])) {
+			$e_name = encode($name);
+
+			// Try the second argument, as a page-name or a path-name
+			$_arg = get_fullname(strip_bracket($args[0]), $page); // strip is a compat
+			$is_file_second = is_file(UPLOAD_DIR .  encode($_arg) . '_' . $e_name);
+
+			// Try default page, with default params
+			$is_file_default = is_file(UPLOAD_DIR . encode($page) . '_' . $e_name);
+
+			// If the second argument is WikiName, or double-bracket-inserted pagename (compat)
+			$is_bracket_bracket = preg_match("/^($WikiName|\[\[$BracketName\]\])$/", $args[0]);
+
+			// Race condition
+			if ($is_file_default && $is_file_second) {
+				if (! $is_bracket_bracket) {
+					$params['_error'] = htmlspecialchars('The same file name "' .
+						$name . '" at both page: ' .  $page . ' and ' .  $_arg .
+						'. Try ref(pagename/filname) to specify one of them');
+					return $params;
+				} else {
+					// Believe the second argument (compat)
+					array_shift($args);
+					$page = $_arg;
+					$is_file = TRUE;
+				}
+			} else {
+				if ($is_file_default) {
+					$is_file = TRUE;
+				} else if ($is_file_second) {
+					array_shift($args);
+					$page = $_arg;
+					$is_file = TRUE;
+				} else {
+					$is_file = FALSE;
+				}
+			}
+		}
+		if (! $is_file) {
+			$params['_error'] = htmlspecialchars('File not found: "' .
+				$name . '" at page "' . $page . '"');
+			return $params;
 		}
 	}
 
@@ -182,13 +242,13 @@ function plugin_ref_body($args)
 	$width = $height = 0;
 	$matches = array();
 
-	if (is_url($name)) {	// URL
+	if ($is_url) {	// URL
 		$url = $url2 = htmlspecialchars($name);
 		$title = htmlspecialchars(preg_match('/([^\/]+)$/', $name, $matches) ? $matches[1] : $url);
 
 		$is_image = (! $params['noimg'] && preg_match(PLUGIN_REF_IMAGE, $name));
 
-		if (REF_URL_GETIMAGESIZE && $is_image && (bool)ini_get('allow_url_fopen')) {
+		if ($is_image && REF_URL_GETIMAGESIZE && (bool)ini_get('allow_url_fopen')) {
 			$size = @getimagesize($name);
 			if (is_array($size)) {
 				$width  = $size[0];
@@ -198,26 +258,8 @@ function plugin_ref_body($args)
 		}
 
 	} else { // 添付ファイル
-		if (! is_dir(UPLOAD_DIR)) {
-			$params['_error'] = 'No UPLOAD_DIR';
-			return $params;
-		}
 
-		// ページ名とファイル名の分解 (pagename/separated/with/slash/FILENAME)
-		if (preg_match('#^(.+)/([^/]+)$#', $name, $matches)) {
-			if ($matches[1] == '.' || $matches[1] == '..') {
-				$matches[1] .= '/';
-			}
-			$page = get_fullname($matches[1], $page);
-			$name = $matches[2];
-		}
 		$title = htmlspecialchars($name);
-
-		$file = UPLOAD_DIR . encode($page) . '_' . encode($name);
-		if (! is_file($file)) {
-			$params['_error'] = 'File not found';
-			return $params;
-		}
 
 		$is_image = (! $params['noimg'] && preg_match(PLUGIN_REF_IMAGE, $name));
 
