@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.30 2004/07/28 13:05:33 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.31 2004/07/31 08:55:05 henoheno Exp $
 //
 
 /*
@@ -96,8 +96,9 @@ function plugin_pcomment_convert()
 
 	//文字列を取得
 	$vars_page = isset($vars['page']) ? $vars['page'] : '';
-	$page  = isset($params['_args'][0]) ? $params['_args'][0] : sprintf(PCMT_PAGE, strip_bracket($vars_page));
-	$count = isset($params['_args'][1]) ? $params['_args'][1] : 0;
+	$page  = (isset($params['_args'][0]) && $params['_args'][0] != '') ? $params['_args'][0] :
+		sprintf(PCMT_PAGE, strip_bracket($vars_page));
+	$count = (isset($params['_args'][1]) && $params['_args'][1] != '') ? $params['_args'][1] : 0;
 	if ($count == 0 and $count !== '0') {
 		$count = PCMT_NUM_COMMENTS;
 	}
