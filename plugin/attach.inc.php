@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.31 2003/07/27 14:15:29 arino Exp $
+//  $Id: attach.inc.php,v 1.32 2003/09/03 01:50:21 arino Exp $
 //
 
 /*
@@ -28,6 +28,9 @@ define('MAX_FILESIZE',1000000);
 define('ATTACH_UPLOAD_ADMIN_ONLY',FALSE); // FALSE or TRUE
 // 管理者だけが添付ファイルを削除できるようにする
 define('ATTACH_DELETE_ADMIN_ONLY',FALSE); // FALSE or TRUE
+// 管理者が添付ファイルを削除するときは、バックアップを作らない
+// ATTACH_DELETE_ADMIN_ONLY=TRUEのとき有効
+define('ATTACH_DELETE_ADMIN_NOBACKUP',FALSE); // FALSE or TRUE
 
 // アップロード/削除時にパスワードを要求する(ADMIN_ONLYが優先)
 define('ATTACH_PASSWORD_REQUIRE',FALSE); // FALSE or TRUE
@@ -553,7 +556,8 @@ EOD;
 			}
 		}
 		//バックアップ
-		if ($this->age)
+		if ($this->age or
+			(ATTACH_DELETE_ADMIN_ONLY and ATTACH_DELETE_ADMIN_NOBACKUP))
 		{
 			@unlink($this->filename);
 		}
