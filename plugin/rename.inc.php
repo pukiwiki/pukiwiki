@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rename.inc.php,v 1.6 2003/06/05 05:03:11 arino Exp $
+// $Id: rename.inc.php,v 1.7 2003/06/18 00:11:09 arino Exp $
 //
 
 /*
@@ -137,7 +137,7 @@ function rename_err($err,$page='')
 	}
 	if ($page != '')
 	{
-		$body = sprintf($body,$page);
+		$body = sprintf($body,htmlspecialchars($page));
 	}
 	$msg = sprintf($_rename_messages['err'],$body);
 	return $msg;
