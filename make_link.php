@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.35 2003/05/12 10:31:03 arino Exp $
+// $Id: make_link.php,v 1.36 2003/05/13 00:32:13 arino Exp $
 //
 
 // リンクを付加する
@@ -158,7 +158,7 @@ class Link
 		return $arr;
 	}
 	// 基本パラメータを設定する
-	function setParam($page,$name,$type = '',$alias = '')
+	function setParam($page,$name,$type='',$alias='')
 	{
 		static $converter = NULL;
 		
@@ -338,7 +338,7 @@ EOD;
 		$arr = $this->splice($arr);
 		
 		$name = $arr[3];
-		$alias = htmlspecialchars(($arr[2] == '') ? $arr[3] : $arr[2]);
+		$alias = ($arr[2] == '') ? $arr[3] : $arr[2];
 		return parent::setParam($page,$name,'url',$alias);
 		
 	}
@@ -375,8 +375,8 @@ EOD;
 		$arr = $this->splice($arr);
 		
 		$name = $arr[1];
-		$alias = htmlspecialchars($arr[2]);
-
+		$alias = $arr[2];
+		
 		return parent::setParam($page,$name,'url',$alias);
 	}
 	function toString()
@@ -411,7 +411,7 @@ EOD;
 		$arr = $this->splice($arr);
 		
 		$name = $arr[2];
-		$alias = htmlspecialchars(($arr[1] == '') ? $arr[2] : $arr[1]);
+		$alias = ($arr[1] == '') ? $arr[2] : $arr[1];
 		
 		return parent::setParam($page,$name,'mailto',$alias);
 	}
@@ -475,7 +475,7 @@ EOD;
 			$param = $matches[1];
 		}
 		$name = rawurlencode('[['.$arr[4].$param.']]');
-		$alias = htmlspecialchars(($arr[2] != '') ? $arr[2] : $arr[4].$arr[6]);
+		$alias = ($arr[2] != '') ? $arr[2] : $arr[4].$arr[6];
 		
 		return parent::setParam($page,$name,'InterWikiName',$alias);
 	}
