@@ -1,9 +1,16 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: pukiwiki.skin.php,v 1.30 2004/12/11 13:56:40 henoheno Exp $
 //
-// $Id: pukiwiki.skin.php,v 1.29 2004/12/11 08:53:24 henoheno Exp $
-//
+// PukiWiki default skin
+
+// SKIN_DEFAULT_DISABLE_TOPICPATH
+//   1 = Show reload URL
+//   0 = Show topicpath
+if (! defined('SKIN_DEFAULT_DISABLE_TOPICPATH'))
+	define('SKIN_DEFAULT_DISABLE_TOPICPATH', 1);
+
+// ----
 
 // Prohibit direct access
 if (! defined('UI_LANG')) exit;
@@ -82,7 +89,7 @@ if ($html_transitional) { ?>
  <h1 class="title"><?php echo $page ?></h1>
 
 <?php if ($is_page) { ?>
- <?php if(TRUE) { ?>
+ <?php if(SKIN_DEFAULT_DISABLE_TOPICPATH) { ?>
    <a href="<?php echo $link['reload'] ?>"><span class="small"><?php echo $link['reload'] ?></span></a>
  <?php } else { ?>
    <span class="small">
