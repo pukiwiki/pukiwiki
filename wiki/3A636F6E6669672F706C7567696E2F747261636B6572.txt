@@ -1,4 +1,0 @@
-#freeze
-[[:config/plugin]]
-
-#ls2
