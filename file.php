@@ -1,22 +1,16 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.3.2.5 2003/03/02 04:33:25 panda Exp $
+// $Id: file.php,v 1.3.2.6 2004/06/28 13:38:26 henoheno Exp $
 /////////////////////////////////////////////////
 
 // ソースを取得
 function get_source($page)
 {	
-  if(page_exists($page)) {
+  if(is_page($page)) {
      return file(get_filename(encode($page)));
   }
 
   return array();
-}
-
-// ページが存在するか？
-function page_exists($page)
-{
-	return file_exists(get_filename(encode($page)));
 }
 
 // ファイルへの出力
@@ -119,18 +113,7 @@ function get_filename($pagename)
 // ページが存在するかしないか
 function is_page($page,$reload=false)
 {
-	global $InterWikiName,$_ispage;
-
-	if(($_ispage[$page] === true || $_ispage[$page] === false) && !$reload) return $_ispage[$page];
-
-	if(preg_match("/($InterWikiName)/",$page))
-		$_ispage[$page] = false;
-	else if(!page_exists($page))
-		$_ispage[$page] = false;
-	else
-		$_ispage[$page] = true;
-	
-	return $_ispage[$page];
+	return file_exists(get_filename(encode($page)));
 }
 
 // ページが編集可能か

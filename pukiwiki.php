@@ -25,7 +25,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.16.2.9 2004/06/27 14:18:43 henoheno Exp $
+// $Id: pukiwiki.php,v 1.16.2.10 2004/06/28 13:38:26 henoheno Exp $
 /////////////////////////////////////////////////
 
 /////////////////////////////////////////////////
@@ -130,7 +130,7 @@ else if(arg_check("edit"))
 // プレビュー
 else if(arg_check("preview") || isset($post["preview"]) || isset($post["template"]))
 {
-        if($post["template"] && page_exists($post["template_page"]))
+        if($post["template"] && is_page($post["template_page"]))
 	{
 		$post["msg"] = @join("",get_source($post["template_page"]));
 	}
