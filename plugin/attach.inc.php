@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.52 2004/08/13 13:24:20 henoheno Exp $
+//  $Id: attach.inc.php,v 1.53 2004/08/13 13:29:10 henoheno Exp $
 //
 
 /*
@@ -423,7 +423,7 @@ class AttachFile
 	function putstatus()
 	{
 		$this->status['count'] = join(',', $this->status['count']);
-		$fp = fopen($this->logname, 'wb') ||
+		$fp = fopen($this->logname, 'wb') or
 			die_message('cannot write ' . $this->logname);
 		set_file_buffer($fp, 0);
 		flock($fp, LOCK_EX);
@@ -687,7 +687,7 @@ class AttachPages
 	function AttachPages($page = '', $age = NULL)
 	{
 
-		$dir = opendir(UPLOAD_DIR) ||
+		$dir = opendir(UPLOAD_DIR) or
 			die('directory ' . UPLOAD_DIR . ' is not exist or not readable.');
 
 		$page_pattern = ($page == '') ? '(?:[0-9A-F]{2})+' : preg_quote(encode($page), '/');
