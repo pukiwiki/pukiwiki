@@ -2,8 +2,8 @@ NAME
 
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
-        PukiWiki 1.4.5_rc1
-        Copyright (C) 2001-2004 PukiWiki Developers Team
+        PukiWiki 1.4.5
+        Copyright (C) 2001-2005 PukiWiki Developers Team
         License: GPL
         Based on "PukiWiki" 1.3 by yu-ji
 
@@ -74,7 +74,6 @@ DESCRIPTION
 
         ファイル       パーミッション 転送モード
         *.php          644            ASCII
-        *.lng          644            ASCII
         cache/*        666            ASCII
         image/*        644            BINARY
         image/face/*   644            BINARY
