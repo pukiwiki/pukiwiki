@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.91 2004/07/23 14:27:17 henoheno Exp $
+// $Id: init.php,v 1.92 2004/07/23 14:38:33 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -199,7 +199,7 @@ else if (isset($post['charset']) && $post['charset'] != '')
 	if (mb_convert_variables(SOURCE_ENCODING, $post['charset'], $post) !== $post['charset'])
 		mb_convert_variables(SOURCE_ENCODING, 'auto', $post);
 
-	if (mb_convert_variables(SOURCE_ENCODING, $vars['charset'], $post) !== $vars['charset'])
+	if (mb_convert_variables(SOURCE_ENCODING, $vars['charset'], $vars) !== $vars['charset'])
 		mb_convert_variables(SOURCE_ENCODING, 'auto', $vars);
 }
 else if (count($post) > 0)
