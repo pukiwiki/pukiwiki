@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.20 2003/11/05 10:40:48 arino Exp $
+// $Id: ref.inc.php,v 1.21 2004/02/29 14:29:28 arino Exp $
 //
 
 /*
@@ -341,7 +341,7 @@ function plugin_ref_body($args,$page)
 	else	// 通常ファイル
 	{
 		$icon = $params['noicon'] ? '' : FILE_ICON;
-		$params['_body'] = "<a href=\"$url\" title=\"$info\">$icon$title</a>\n";
+		$params['_body'] = "<a href=\"$url\" title=\"$info\">$icon$title</a>";
 	}
 	return $params;
 }
