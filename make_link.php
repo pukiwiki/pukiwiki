@@ -1,5 +1,9 @@
 <?php
-// Last-Update:2002-09-24 rev.1
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: make_link.php,v 1.6.2.1 2004/03/21 13:05:26 arino Exp $
+//
 
 // リンクを付加する
 function p_make_link($name,$page = '')

@@ -1,5 +1,4 @@
 <?php
-// $Id: showrss.inc.php,v 1.1.2.1 2003/03/12 03:32:30 panda Exp $
 /**
  *
  * showrss プラグイン
@@ -23,7 +22,7 @@
  * 
  * 避難所       ->   http://do3ob.s20.xrea.com/
  *
- * version: $Id: showrss.inc.php,v 1.1.2.1 2003/03/12 03:32:30 panda Exp $
+ * version: $Id: showrss.inc.php,v 1.1.2.2 2004/03/21 13:05:26 arino Exp $
  * 
  */
 

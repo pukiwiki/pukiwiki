@@ -12,7 +12,7 @@
  *  2002.06.17: plugin_recent_init()を設定
  *  2002.07.02: <ul>による出力に変更し構造化
  *
- * $id$
+ * $Id: recent.inc.php,v 1.5.2.1 2004/03/21 13:05:26 arino Exp $
  */
 
 function plugin_recent_init()
