@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: backup.inc.php,v 1.14 2004/07/31 03:09:20 henoheno Exp $
+// $Id: backup.inc.php,v 1.15 2004/08/06 16:01:48 henoheno Exp $
 //
 // バックアップ
 function plugin_backup_action()
@@ -44,18 +44,18 @@ function plugin_backup_action()
 	$body  = "<ul>\n";
 	$body .= " <li><a href=\"$script?cmd=backup\">$_msg_backuplist</a></li>\n";
 
-	$href = "$script?cmd=backup&page=$r_page&age=$s_age";
+	$href = "$script?cmd=backup&amp;page=$r_page&amp;age=$s_age";
 	$is_page = is_page($page);
 
 	if ($is_page) {
 		if ($action != 'diff')
-			$body .= ' <li>' . str_replace('$1', "<a href=\"$href&action=diff\">$_msg_diff</a>", $_msg_view) . "</li>\n";
+			$body .= ' <li>' . str_replace('$1', "<a href=\"$href&amp;action=diff\">$_msg_diff</a>", $_msg_view) . "</li>\n";
 		if ($action != 'nowdiff')
-			$body .= ' <li>' . str_replace('$1', "<a href=\"$href&action=nowdiff\">$_msg_nowdiff</a>", $_msg_view) . "</li>\n";
+			$body .= ' <li>' . str_replace('$1', "<a href=\"$href&amp;action=nowdiff\">$_msg_nowdiff</a>", $_msg_view) . "</li>\n";
 	}
 
 	if ($action != 'source')
-		$body .= ' <li>' . str_replace('$1', "<a href=\"$href&action=source\">$_msg_source</a>", $_msg_view) . "</li>\n";
+		$body .= ' <li>' . str_replace('$1', "<a href=\"$href&amp;action=source\">$_msg_source</a>", $_msg_view) . "</li>\n";
 
 	if ($action)
 		$body .= ' <li>' . str_replace('$1', "<a href=\"$href\">$_msg_backup</a>", $_msg_view) . "</li>\n";
@@ -75,7 +75,7 @@ function plugin_backup_action()
 			$date = format_date($val['time'],TRUE);
 			$body .= ($age == $s_age) ?
 				"   <li><em>$age $date</em></li>\n" :
-				"   <li><a href=\"$script?cmd=backup&action=$r_action&page=$r_page&age=$age\">$age $date</a></li>\n";
+				"   <li><a href=\"$script?cmd=backup&amp;action=$r_action&amp;page=$r_page&amp;age=$age\">$age $date</a></li>\n";
 		}
 		$body .= "  </ul>\n";
 	}
@@ -198,17 +198,17 @@ EOD;
 		$retval[1] .= "   <li>$msg</li>\n";
 		return join('',$retval);
 	}
-	$retval[1] .= "   <li><a href=\"$script?cmd=backup&action=delete&page=$r_page\">";
+	$retval[1] .= "   <li><a href=\"$script?cmd=backup&amp;action=delete&amp;page=$r_page\">";
 	$retval[1] .= str_replace('$1',$s_page,$_title_backup_delete);
 	$retval[1] .= "</a></li>\n";
 	foreach ($backups as $age=>$data) {
 		$date = format_date($data['time'],TRUE);
-		$href = "$script?cmd=backup&page=$r_page&age=$age";
+		$href = "$script?cmd=backup&amp;page=$r_page&amp;age=$age";
 		$retval[1] .= <<<EOD
    <li><a href="$href">$age $date</a>
-     [ <a href="$href&action=diff">$_msg_diff</a>
-     | <a href="$href&action=nowdiff">$_msg_nowdiff</a>
-     | <a href="$href&action=source">$_msg_source</a>
+     [ <a href="$href&amp;action=diff">$_msg_diff</a>
+     | <a href="$href&amp;action=nowdiff">$_msg_nowdiff</a>
+     | <a href="$href&amp;action=source">$_msg_source</a>
      ]
    </li>
 EOD;

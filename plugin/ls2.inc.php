@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ls2.inc.php,v 1.17 2004/07/24 00:43:28 henoheno Exp $
+// $Id: ls2.inc.php,v 1.18 2004/08/06 16:10:50 henoheno Exp $
 //
 
 /*
@@ -93,7 +93,7 @@ function plugin_ls2_convert()
 	if ($params['link'])
 	{
 		$tmp = array();
-		$tmp[] = 'plugin=ls2&prefix=' . rawurlencode($prefix);
+		$tmp[] = 'plugin=ls2&amp;prefix=' . rawurlencode($prefix);
 		if (isset($params['title']))
 		{
 			$tmp[] = 'title=1';
@@ -102,7 +102,7 @@ function plugin_ls2_convert()
 		{
 			$tmp[] = 'include=1';
 		}
-		return '<p><a href="' . $script . '?' . join('&', $tmp) . '">' . $title . '</a></p>' . "\n";
+		return '<p><a href="' . $script . '?' . join('&amp;', $tmp) . '">' . $title . '</a></p>' . "\n";
 	}
 	return ls2_show_lists($prefix, $params);
 }
@@ -165,7 +165,7 @@ function ls2_get_headings($page, &$params, $level, $include = FALSE)
 	$r_page = rawurlencode($page);
 	$s_page = htmlspecialchars($page);
 	$title = $s_page . ' ' . get_pg_passage($page, FALSE);
-	$href = $script . '?cmd=read&page=' . $r_page;
+	$href = $script . '?cmd=read&amp;page=' . $r_page;
 
 	ls2_list_push($params, $level);
 	$ret = $include ? '<li>include ' : '<li>';

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.48 2004/08/06 12:35:51 henoheno Exp $
+//  $Id: attach.inc.php,v 1.49 2004/08/06 15:58:05 henoheno Exp $
 //
 
 /*
@@ -331,8 +331,8 @@ function attach_form($page)
 	$s_page = htmlspecialchars($page);
 	$navi = <<<EOD
   <span class="small">
-   [<a href="$script?plugin=attach&pcmd=list&refer=$r_page">{$_attach_messages['msg_list']}</a>]
-   [<a href="$script?plugin=attach&pcmd=list">{$_attach_messages['msg_listall']}</a>]
+   [<a href="$script?plugin=attach&amp;pcmd=list&amp;refer=$r_page">{$_attach_messages['msg_list']}</a>]
+   [<a href="$script?plugin=attach&amp;pcmd=list">{$_attach_messages['msg_listall']}</a>]
   </span><br />
 EOD;
 
@@ -437,8 +437,8 @@ class AttachFile
 		global $script, $_attach_messages;
 
 		$this->getstatus();
-		$param  = '&file=' . rawurlencode($this->file) . '&refer=' . rawurlencode($this->page) .
-			($this->age ? '&age=' . $this->age : '');
+		$param  = '&amp;file=' . rawurlencode($this->file) . '&amp;refer=' . rawurlencode($this->page) .
+			($this->age ? '&amp;age=' . $this->age : '');
 		$title = $this->time_str . ' ' . $this->size_str;
 		$label = ($showicon ? FILE_ICON : '') . htmlspecialchars($this->file);
 		if ($this->age) {
@@ -447,11 +447,11 @@ class AttachFile
 		$info = $count = '';
 		if ($showinfo) {
 			$_title = str_replace('$1', rawurlencode($this->file), $_attach_messages['msg_info']);
-			$info = "\n<span class=\"small\">[<a href=\"$script?plugin=attach&pcmd=info$param\" title=\"$_title\">{$_attach_messages['btn_info']}</a>]</span>";
+			$info = "\n<span class=\"small\">[<a href=\"$script?plugin=attach&amp;pcmd=info$param\" title=\"$_title\">{$_attach_messages['btn_info']}</a>]</span>";
 			$count = ($showicon and ! empty($this->status['count'][$this->age])) ?
 				sprintf($_attach_messages['msg_count'], $this->status['count'][$this->age]) : '';
 		}
-		return "<a href=\"$script?plugin=attach&pcmd=open$param\" title=\"$title\">$label</a>$count$info";
+		return "<a href=\"$script?plugin=attach&amp;pcmd=open$param\" title=\"$title\">$label</a>$count$info";
 	}
 
 	// 情報表示
@@ -495,8 +495,8 @@ class AttachFile
 		$retval = array('msg'=>sprintf($_attach_messages['msg_info'], htmlspecialchars($this->file)));
 		$retval['body'] = <<< EOD
 <p class="small">
- [<a href="$script?plugin=attach&pcmd=list&refer=$r_page">{$_attach_messages['msg_list']}</a>]
- [<a href="$script?plugin=attach&pcmd=list">{$_attach_messages['msg_listall']}</a>]
+ [<a href="$script?plugin=attach&amp;pcmd=list&amp;refer=$r_page">{$_attach_messages['msg_list']}</a>]
+ [<a href="$script?plugin=attach&amp;pcmd=list">{$_attach_messages['msg_listall']}</a>]
 </p>
 <dl>
  <dt>$info</dt>
