@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.11 2005/01/16 04:18:16 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.12 2005/01/16 04:27:00 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -41,6 +41,27 @@ if ($theme == '' || $theme == 'TDIARY_THEME') {
 	 }
 }
 
+// Adjust DTD (between theme(=CSS) and MSIE bug)
+// NOTE:
+//    PukiWiki default: PKWK_DTD_XHTML_1_1
+//    tDiary's default: PKWK_DTD_HTML_4_01_STRICT
+switch(TDIARY_THEME){
+case 'christmas':
+	$pkwk_dtd = PKWK_DTD_HTML_4_01_STRICT; // or centering will be ignored via MSIE
+	break;
+}
+
+// Adjust reverse-link default design manually
+$disable_reverse_link = FALSE;
+switch(TDIARY_THEME){
+case 'hatena':	/*FALLTHROUGH*/
+case 'repro':
+case 'yukon':
+	$disable_reverse_link = TRUE;
+	break;
+}
+
+// Sidebar: default position
 if (defined('TDIARY_SIDEBAR_POSITION')) {
 	$sidebar = TDIARY_SIDEBAR_POSITION;
 } else {
@@ -204,26 +225,6 @@ if ($menu) {
 	$menu_body = preg_replace('#<h2 ([^>]*)>(.*?)</h2>#',
 		'<h3 $1><span class="sanchor"></span> $2</h3>',
 		do_plugin_convert('menu'));
-}
-
-// Adjust reverse-link default design manually
-$disable_reverse_link = FALSE;
-switch(TDIARY_THEME){
-case 'hatena':	/*FALLTHROUGH*/
-case 'repro':
-case 'yukon':
-	$disable_reverse_link = TRUE;
-	break;
-}
-
-// Adjust DTD (between theme(=CSS) and MSIE bug)
-// NOTE:
-//    PukiWiki default: PKWK_DTD_XHTML_1_1
-//    tDiary's default: PKWK_DTD_HTML_4_01_STRICT
-switch(TDIARY_THEME){
-case 'christmas':
-	$pkwk_dtd = PKWK_DTD_HTML_4_01_STRICT; // or centering will be ignored via MSIE
-	break;
 }
 
 $lang  = & $_LANG['skin'];
