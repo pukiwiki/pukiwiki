@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.10 2004/09/20 02:04:24 henoheno Exp $
+// $Id: init.php,v 1.11 2004/10/10 03:36:27 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -48,7 +48,7 @@ if (! file_exists(INI_FILE) || ! is_readable(INI_FILE)) {
 } else {
 	require(INI_FILE);
 }
-if ($die) { die_message(nl2br("\n\n" . $die)); }
+if ($die) die_message(nl2br("\n\n" . $die));
 
 /////////////////////////////////////////////////
 // INI_FILE: mbstring extension 関連
@@ -70,7 +70,7 @@ if (! file_exists(LANG_FILE) || ! is_readable(LANG_FILE)) {
 } else {
 	require(LANG_FILE);
 }
-if ($die) { die_message(nl2br("\n\n" . $die)); }
+if ($die) die_message(nl2br("\n\n" . $die));
 
 /////////////////////////////////////////////////
 // LANG_FILE: 曜日配列
@@ -79,11 +79,10 @@ $weeklabels = $_msg_week;
 
 /////////////////////////////////////////////////
 // INI_FILE: $script: 初期設定
-if (! isset($script) or $script == '') {
+if (! isset($script) || $script == '') {
 	$script = get_script_uri();
-	if ($script === FALSE or (php_sapi_name() == 'cgi' and ! is_url($script, TRUE))) {
+	if ($script === FALSE || (php_sapi_name() == 'cgi' && ! is_url($script, TRUE)))
 		die_message('get_script_uri() failed: Please set $script at INI_FILE manually.');
-	}
 }
 
 /////////////////////////////////////////////////
@@ -124,20 +123,19 @@ unset($user_agent);	// Unset after reading UA_INI_FILE
 
 $die = '';
 foreach(array('DATA_DIR', 'DIFF_DIR', 'BACKUP_DIR', 'CACHE_DIR') as $dir){
-	if (! is_writable(constant($dir))) {
+	if (! is_writable(constant($dir)))
 		$die = "${die}Directory is not found or not writable ($dir)\n";
-	}
 }
 
 // 設定ファイルの変数チェック
 $temp = '';
 foreach(array('rss_max', 'page_title', 'note_hr', 'related_link', 'show_passage',
 	'rule_related_str', 'load_template_func') as $var){
-	if (! isset(${$var})) { $temp .= "\$$var\n"; }
+	if (! isset(${$var})) $temp .= "\$$var\n";
 }
 if ($temp) {
-	if ($die) { $die .= "\n"; }	// A breath
-	$die = "${die}Variable(s) not found: (Maybe the old *.ini.php?)\n" . $temp;
+	if ($die) $die .= "\n";	// A breath
+	$die .= "Variable(s) not found: (Maybe the old *.ini.php?)\n" . $temp;
 }
 
 $temp = '';
@@ -145,18 +143,18 @@ foreach(array('LANG', 'PLUGIN_DIR') as $def){
 	if (! defined($def)) $temp .= "$def\n";
 }
 if ($temp) {
-	if ($die) { $die .= "\n"; }	// A breath
-	$die = "${die}Define(s) not found: (Maybe the old *.ini.php?)\n" . $temp;
+	if ($die) $die .= "\n";	// A breath
+	$die .= "Define(s) not found: (Maybe the old *.ini.php?)\n" . $temp;
 }
 
-if($die){ die_message(nl2br("\n\n" . $die)); }
+if($die) die_message(nl2br("\n\n" . $die));
 unset($die, $temp);
 
 /////////////////////////////////////////////////
 // 必須のページが存在しなければ、空のファイルを作成する
 
 foreach(array($defaultpage, $whatsnew, $interwiki) as $page){
-	if (! is_page($page)) { touch(get_filename($page)); }
+	if (! is_page($page)) touch(get_filename($page));
 }
 
 /////////////////////////////////////////////////
@@ -270,10 +268,8 @@ if (empty($_POST)) {
 
 // 入力チェック: cmd, plugin の文字列は英数字以外ありえない
 foreach(array('cmd', 'plugin') as $var) {
-	if (array_key_exists($var, $vars) &&
-	    ! preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $vars[$var])) {
+	if (isset($vars[$var]) && ! preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $vars[$var]))
 		unset($get[$var], $post[$var], $vars[$var]);
-	}
 }
 
 // 整形: page, strip_bracket()
@@ -350,7 +346,7 @@ $html_transitional = FALSE;
 // TRUE :XHTML 1.0 Transitional
 
 // フェイスマークを$line_rulesに加える
-if ($usefacemark) { $line_rules += $facemark_rules; }
+if ($usefacemark) $line_rules += $facemark_rules;
 unset($facemark_rules);
 
 // 実体参照パターンおよびシステムで使用するパターンを$line_rulesに加える
