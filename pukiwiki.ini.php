@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.110 2005/01/30 09:59:23 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.111 2005/02/07 13:22:40 henoheno Exp $
 //
 // PukiWiki main setting file
 
@@ -162,7 +162,8 @@ $adminpass = '1a1dc91c907325c69271ddf0c944bc72'; // md5('pass')
 // (Automatically creating pronounce datas, for Kanji-included page names,
 //  to show sorted page-list correctly)
 
-// Enable page-reading feature by calling ChaSen or KAKASHI command (0:Enable, 1:Disable)
+// Enable page-reading feature by calling ChaSen or KAKASHI command
+// (1:Enable, 0:Disable)
 $pagereading_enable = 0;
 
 // Specify converter as ChaSen('chasen') or KAKASI('kakasi') or None('none')
