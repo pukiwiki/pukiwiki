@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.9 2004/09/25 13:27:15 henoheno Exp $
+// $Id: dump.inc.php,v 1.10 2004/09/25 13:34:44 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -76,7 +76,7 @@ function plugin_dump_action()
 	// 入力フォームを表示
 	$body .= plugin_dump_disp_form();
 	
-	return array('msg' => 'dump', 'body' => $body);
+	return array('msg' => 'dump & restore', 'body' => $body);
 }
 
 /////////////////////////////////////////////////
@@ -230,10 +230,8 @@ function plugin_dump_disp_form()
 
 	$data = <<<EOD
 <span class="small">
-TARファイルバックアップ / リストアプラグイン
 </span>
-<br /><br />
-<h3>Tarファイルのダウンロード</h3>
+<h3>データのダウンロード</h3>
 <form action="$script" method="post">
  <div>
   <input type="hidden" name="cmd"  value="dump" />
@@ -253,7 +251,7 @@ TARファイルバックアップ / リストアプラグイン
 </p>
 <p><strong>オプション</strong>
 <br />
-  <input type="checkbox" name="namedecode" /> ページ名をディレクトリ階層つきのファイルにデコード (※リストアに使うことはできなくなります。また、一部の文字は '_' に置換されます)<br />
+  <input type="checkbox" name="namedecode" /> エンコードされているページ名をディレクトリ階層つきのファイルにデコード (※リストアに使うことはできなくなります。また、一部の文字は '_' に置換されます)<br />
 </p>
 <p><strong>管理者パスワード</strong>
   <input type="password" name="pass" size="12" />
@@ -262,13 +260,12 @@ TARファイルバックアップ / リストアプラグイン
  </div>
 </form>
 
-<h3>データのリストア</h3>
+<h3>データのリストア (*.tar, *.tar.gz)</h3>
 <form enctype="multipart/form-data" action="$script" method="post">
  <div>
   <input type="hidden" name="cmd"  value="dump" />
   <input type="hidden" name="page" value="$defaultpage" />
   <input type="hidden" name="act"  value="$act_up" />
-  <input type="hidden" name="max_file_size" value="$maxsize" />
 <p><strong>[重要] 同じ名前のデータファイルは上書きされますので、十分ご注意ください。</strong></p>
 <p><span class="small">
 アップロード可能な最大ファイルサイズは、$maxsizekb KByte までです。<br />
