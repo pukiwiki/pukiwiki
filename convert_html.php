@@ -2,9 +2,8 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.12 2003/02/04 01:15:40 panda Exp $
+// $Id: convert_html.php,v 1.13 2003/02/07 15:09:10 panda Exp $
 //
-
 function &convert_html(&$lines)
 {
 	global $script,$vars,$digest;
@@ -27,6 +26,10 @@ class Element
 	{
 		$this->parent =& $parent;
 	}
+	function debug($indent = 0)
+	{
+		return str_repeat(' ',$indent).get_class($this)."({$this->text})\n";
+	}
 }
 
 class Inline extends Element
@@ -37,7 +40,7 @@ class Inline extends Element
 	{
 		if (substr($text,0,1) == '~') { // 行頭~。パラグラフ開始
 			$parent =& $this->parent;
-			$this = new Paragraph(substr($text,1));
+			$this = new Paragraph(' '.substr($text,1));
 			$this->setParent($parent);
 		}
 		else {
@@ -106,12 +109,23 @@ class Block extends Element
 	{
 		return  ($string == '') ? '' : "\n<$tag$param>$string</$tag>\n";
 	}
+	function debug($indent = 0)
+	{
+		$ret = parent::debug($indent);
+		foreach (array_keys($this->elements) as $key) {
+			if (is_object($this->elements[$key]))
+				$ret .= $this->elements[$key]->debug($indent + 2);
+			else
+				$ret .= str_repeat(' ',$indent + 2).$this->elements[$key];
+		}
+		return $ret;
+	}
 }
 class Paragraph extends Block
 { // 段落
 	var $class;
 	
-	function Paragraph($text, $class = '')
+	function Paragraph($text,$class='')
 	{
 		parent::Block();
 		$this->class = $class;
@@ -119,7 +133,7 @@ class Paragraph extends Block
 			return;
 		}
 		if (substr($text,0,1) == '~') {
-			$text = substr($text,1);
+			$text = ' '.substr($text,1);
 		}
 		$this->elements[] =& new Inline($text);
 	}
@@ -137,13 +151,16 @@ class Heading extends Block
 { // *
 	var $level,$top,$id;
 	
-	function Heading($text, &$contents)
+	function Heading(&$root,$text)
 	{
 		parent::Block();
-		preg_match("/^(\*{1,3})\s*(.*)$/",$text,$out) or die("Heading");
-		$this->level = strlen($out[1]) + 1;
-		list($this->top,$this->id) = $contents->getAnchor($out[2], $this->level);
-		$this->last =& $this->insert(new Inline($out[2]));
+		if (($level = strspn($text,'*')) > 3) {
+			$level = 3;
+		}
+		$text = ltrim(substr($text,$level));
+		$this->level = ++$level;
+		list($this->top,$this->id) = $root->getAnchor($text,$level);
+		$this->last =& $this->insert(new Inline($text));
 	}
 	function canContain(&$obj)
 	{
@@ -156,6 +173,9 @@ class Heading extends Block
 }
 class HRule extends Block
 { // ----
+	function HRule(&$root,$text) {
+		parent::Block();
+	}
 	function canContain(&$obj)
 	{
 		return FALSE;
@@ -167,12 +187,11 @@ class HRule extends Block
 		return $hr;
 	}
 }
-class _List extends Block
+class ListContainer extends Block
 {
-	var $level;
-	var $step, $margin, $left_margin;
+	var $tag,$tag2,$level,$style;
 	
-	function _List($tag, $tag2, $level, $text)
+	function ListContainer($tag,$tag2,$level,$text)
 	{
 		parent::Block();
 		//マージンを取得
@@ -194,15 +213,22 @@ class _List extends Block
 
 	function canContain(&$obj)
 	{
-		return is_a($obj, '_List') ? ($this->tag == $obj->tag and $this->level == $obj->level) : TRUE;
+		return is_a($obj, 'ListContainer') ? ($this->tag == $obj->tag and $this->level == $obj->level) : TRUE;
 	}
 	function setParent(&$parent)
 	{
+		global $_list_left_margin, $_list_margin, $_list_pad_str;
+
 		parent::setParent($parent);
-		$this->step = $this->level;
-		if (isset($parent->parent) and is_a($parent->parent,'_List')) {
-			$this->step -= $parent->parent->level; 
+		$step = $this->level;
+		if (isset($parent->parent) and is_a($parent->parent,'ListContainer')) {
+			$step -= $parent->parent->level; 
 		}
+		$margin = $_list_margin * $step;
+		if ($step == $this->level) {
+			$margin += $_list_left_margin;
+		}
+		$this->style = sprintf($_list_pad_str,$this->level,$margin,$margin);
 	}
 	function &insert(&$obj)
 	{
@@ -218,14 +244,7 @@ class _List extends Block
 	}
 	function toString($param='')
 	{
-		global $_list_left_margin, $_list_margin, $_list_pad_str;
-		
-		$margin = $_list_margin * $this->step;
-		if ($this->level == $this->step) {
-			$margin += $_list_left_margin;
-		}
-		$style = sprintf($_list_pad_str,$this->level,$margin,$margin);
-		return $this->wrap(Block::toString(),$this->tag,$style.$param);
+		return $this->wrap(parent::toString(),$this->tag,$this->style.$param);
 	}
 }
 class ListElement extends Block
@@ -243,40 +262,50 @@ class ListElement extends Block
 	}
 	function canContain(&$obj)
 	{
-		return !(is_a($obj, '_List') and ($obj->level <= $this->level));
+		return !(is_a($obj, 'ListContainer') and ($obj->level <= $this->level));
 	}
 	function toString()
 	{
 		return $this->wrap(parent::toString(), $this->head);
 	}
 }
-class UList extends _List
+class UList extends ListContainer
 { // -
-	function UList($text)
+	function UList(&$root,$text)
 	{
-		preg_match("/^(\-{1,3})([\n]?.*)$/",$text,$out) or die("UList $text");
-		parent::_List('ul', 'li', strlen($out[1]), $out[2]);
+		if (($level = strspn($text,'-')) > 3) {
+			$level = 3; // limitation ;(
+		}
+		$text = ltrim(substr($text,$level));
+		parent::ListContainer('ul','li',$level,$text);
 	}
 }
-class OList extends _List
+class OList extends ListContainer
 { // +
-	function OList($text)
+	function OList(&$root,$text)
 	{
-		preg_match("/^(\+{1,3})(.*)$/",$text,$out) or die("OList");
-		parent::_List('ol', 'li', strlen($out[1]), $out[2]);
+		if (($level = strspn($text,'+')) > 3) {
+			$level = 3; // limitation ;(
+		}
+		$text = ltrim(substr($text,$level));
+		parent::ListContainer('ol','li',$level,$text);
 	}
 }
-class DList extends _List
+class DList extends ListContainer
 { // :
-	function DList($text)
+	function DList(&$root,$text)
 	{
-		if (!preg_match("/^(:{1,3})(.*)\|(.*)$/",$text,$out)) {
+		if (($level = strspn($text,':')) > 3) {
+			$level = 3; // limitation ;(
+		}
+		$out = explode('|',ltrim(substr($text,$level)),2);
+		if (count($out) < 2) {
 			$this = new Inline($text);
 			return;
 		}
-		parent::_List('dl', 'dd', strlen($out[1]), $out[3]);
-		if ($out[2] != '') {
-			array_unshift($this->elements,new Inline("\n<dt>".inline2(inline($out[2]))."</dt>\n"));
+		parent::ListContainer('dl','dd',$level,$out[1]);
+		if ($out[0] != '') {
+			array_unshift($this->elements,new Inline("\n<dt>".inline2(inline($out[0]))."</dt>\n"));
 		}
 	}
 }
@@ -284,20 +313,29 @@ class BQuote extends Block
 { // >
 	var $level;
 	
-	function BQuote($text)
+	function BQuote(&$root,$text)
 	{
 		parent::Block();
-		preg_match("/^(\>{1,3})(.*)$/",$text,$out) or die("BQuote");
-		$this->level = strlen($out[1]);
-		$this->text = $out[2];
-		$this->last =& $this->insert(new Paragraph($this->text, ' class="quotation"'));
+		$head = substr($text,0,1);
+		if (($level = strspn($text,$head)) > 3) {
+			$level = 3; // limitation ;(
+		}
+		$this->level = $level;
+		$text = ltrim(substr($text,$level));
+		if ($head == '<') { //blockquote close
+			$this->level = 0;
+			$this->last =& $this->end($root,$level,$text);
+		}
+		else {
+			$this->last =& $this->insert(new Paragraph($text, ' class="quotation"'));
+		}
 	}
 	function canContain(&$obj)
 	{
 		if (!is_a($obj, get_class($this))) {
 			return TRUE;
 		}
-		return ($this->level <= $obj->level);
+		return ($obj->level >= $this->level);
 	}
 	function &insert(&$obj)
 	{
@@ -316,33 +354,27 @@ class BQuote extends Block
 	{
 		return $this->wrap(parent::toString(),'blockquote');
 	}
-}
-function &bq_end(&$last, $text)
-{
-	preg_match("/^(\<{1,3})(.*)$/",$text,$out) or die("bq_end");
-	$level = strlen($out[1]);
-	$parent =& $last;
-	while (is_object($parent)) {
-		if (is_a($parent,'BQuote') and $parent->level == $level) {
-			return $parent->parent->insert(new Inline($out[2]));
+	function &end(&$root,$level,$text)
+	{
+		$parent =& $root->last;
+		while (is_object($parent)) {
+			if (is_a($parent,'BQuote') and $parent->level == $level) {
+				return $parent->parent->insert(new Inline($text));
+			}
+			$parent =& $parent->parent;
 		}
-		$parent =& $parent->parent;
+		return $this->insert(new Inline($text));
 	}
-	return $last->insert(new Inline($text));
 }
-
 class TableCell extends Block
 {
-	var $tag; // {td|th}
-	var $colspan;
-	var $rowspan;
+	var $tag = 'td'; // {td|th}
+	var $colspan = 1;
+	var $rowspan = 1;
 	var $style; // is array('width'=>, 'align'=>...);
 	
 	function TableCell($text,$is_template=FALSE) {
 		parent::Block();
-		$this->tag = 'td';
-		$this->colspan = 1;
-		$this->rowspan = 1;
 		$this->style = array();
 		
 		if (preg_match("/^(LEFT|CENTER|RIGHT):(.*)$/",$text,$out)) {
@@ -395,17 +427,17 @@ class TableCell extends Block
 class Table extends Block
 { // |
 	var $type,$types;
-	var $level;
+	var $col; // number of column
 	
-	function Table($text)
+	function Table(&$root,$text)
 	{
-		parent::Block();
 		if (!preg_match("/^\|(.+)\|([hHfFcC]?)$/",$text,$out)) {
 			$this = new Inline($text);
 			return;
 		}
+		parent::Block();
 		$cells = explode('|',$out[1]);
-		$this->level = count($cells);
+		$this->col = count($cells);
 		$this->type = strtolower($out[2]);
 		$this->types = array($this->type);
 		$is_template = ($this->type == 'c');
@@ -418,7 +450,7 @@ class Table extends Block
 	}
 	function canContain(&$obj)
 	{
-		return is_a($obj, 'Table') and ($obj->level == $this->level);
+		return is_a($obj, 'Table') and ($obj->col == $this->col);
 	}
 	function &insert(&$obj)
 	{
@@ -429,7 +461,7 @@ class Table extends Block
 	function toString()
 	{
 		// rowspanを設定(下から上へ)
-		for ($ncol = 0; $ncol < $this->level; $ncol++) {
+		for ($ncol = 0; $ncol < $this->col; $ncol++) {
 			$rowspan = 1;
 			foreach (array_reverse(array_keys($this->elements)) as $nrow) {
 				$row =& $this->elements[$nrow];
@@ -500,7 +532,7 @@ class YTable extends Block
 { // ,
 	var $col;
 	
-	function YTable($text)
+	function YTable(&$root,$text)
 	{
 		parent::Block();
 		if (!preg_match_all('/("[^"]*(?:""[^"]*)*"|[^,]*),/',"$text,",$out)) {
@@ -544,7 +576,7 @@ class YTable extends Block
 	}
 	function canContain(&$obj)
 	{
-		return is_a($obj, 'YTable') and $obj->col == $this->col;
+		return is_a($obj, 'YTable') and ($obj->col == $this->col);
 	}
 	function &insert(&$obj)
 	{
@@ -557,7 +589,7 @@ class YTable extends Block
 		foreach ($this->elements as $str) {
 			$rows .= "\n<tr class=\"style_tr\">$str</tr>\n";
 		}
-		$string = <<<EOD
+		return <<<EOD
 
 <div class="ie5">
  <table class="style_table" cellspacing="1" border="0">
@@ -566,13 +598,12 @@ class YTable extends Block
 </div>
 
 EOD;
-		return $string;
 	}
 }
 class Pre extends Block
 { // ' '
 	
-	function Pre($text)
+	function Pre(&$root,$text)
 	{
 		parent::Block();
 		$this->elements[] = htmlspecialchars($text,ENT_NOQUOTES);
@@ -593,12 +624,17 @@ class Pre extends Block
 }
 class Div extends Block
 { // #
-	var $text;
+	var $name,$param;
 	
-	function Div($text)
+	function Div(&$root,$text)
 	{
+		if (!preg_match("/^\#([^\(]+)(?:\((.*)\))?/",$text,$out) or !exist_plugin_convert($out[1])) {
+			$this = new Inline($text);
+			return;
+		}
 		parent::Block();
-		$this->text = $text;
+		$this->name = $out[1];
+		$this->param = $out[2];
 	}
 	function canContain(&$obj)
 	{
@@ -606,19 +642,7 @@ class Div extends Block
 	}
 	function toString()
 	{
-		if (preg_match("/^\#([^\(]+)(.*)/",$this->text,$out) and exist_plugin_convert($out[1])) {
-			if ($out[2]) {
-				$_plugin = preg_replace("/^\#([^\(]+)\((.*)\)/ex","do_plugin_convert('$1','$2')",$this->text);
-			}
-			else {
-				$_plugin = preg_replace("/^\#([^\(]+)/ex","do_plugin_convert('$1','$2')",$this->text);
-			}
-			$text = "\t$_plugin";
-		}
-		else {
-			$text = "\n<p>".htmlspecialchars($this->text)."</p>\n";
-		}
-		return $text;
+		return do_plugin_convert($this->name,$this->param);
 	}
 }
 class Align extends Block
@@ -652,8 +676,9 @@ class Align extends Block
 }
 class Body extends Block
 { // Body
-	var $id,$count,$top,$contents,$last;
-	
+	var $id,$count,$top,$contents,$contents_last;
+	var $classes = array('HRule','Heading','Pre','UList','OList','DList','Table','YTable','BQuote','BQuoteEnd','Div');
+
 	function Body($id)
 	{
 		global $top;
@@ -662,22 +687,21 @@ class Body extends Block
 		$this->count = 0;
 		$this->top = "<a href=\"#contents_$id\">$top</a>";
 		$this->contents = new Block();
-		$this->last =& $this->contents;
+		$this->contents_last =& $this->contents;
 		parent::Block();
 	}
 	function parse(&$lines)
 	{
-		$last =& $this;
+		$this->last =& $this;
 		
 		foreach ($lines as $line) {
-			
 			if (substr($line,0,2) == '//') { //コメントは処理しない
 				continue;
 			}
 			
 			$align = '';
 			if (preg_match('/^(LEFT|CENTER|RIGHT):(.*)$/',$line,$matches)) {
-				$last =& $last->add(new Align(strtolower($matches[1]))); // <div style="text-align:...">
+				$this->last =& $this->last->add(new Align(strtolower($matches[1]))); // <div style="text-align:...">
 				if ($matches[2] == '') {
 					continue;
 				}
@@ -690,47 +714,44 @@ class Body extends Block
 			$head = substr($line,0,1);
 			
 			if ($line == '') { // 空行
-				$last =& $this;
+				$this->last =& $this;
 			}
 			else if (substr($line,0,4) == '----') { // HRule
-				$last =& $this->insert(new HRule());
+				$this->last =& $this->insert(new HRule($this,$line));
 			}
 			else if ($head == '*') { // Heading
-				$last =& $this->insert(new Heading($line, $this));
+				$this->last =& $this->insert(new Heading($this,$line));
 			}
 			else if ($head == ' ' or $head == "\t") { // Pre
-				$last =& $last->add(new Pre($line));
+				$this->last =& $this->last->add(new Pre($this,$line));
 			}
 			else {
 				if (substr($line,-1) == '~') {
 					$line = substr($line,0,-1)."\r";
 				}
 				if      ($head == '-') { // UList
-					$last =& $last->add(new UList($line)); // inline
+					$this->last =& $this->last->add(new UList($this,$line)); // inline
 				}
 				else if ($head == '+') { // OList
-					$last =& $last->add(new OList($line)); // inline
+					$this->last =& $this->last->add(new OList($this,$line)); // inline
 				}
 				else if ($head == ':') { // DList
-					$last =& $last->add(new DList($line)); // inline
+					$this->last =& $this->last->add(new DList($this,$line)); // inline
 				}
 				else if ($head == '|') { // Table
-					$last =& $last->add(new Table($line));
+					$this->last =& $this->last->add(new Table($this,$line));
 				}
 				else if ($head == ',') { // Table(YukiWiki互換)
-					$last =& $last->add(new YTable($line));
+					$this->last =& $this->last->add(new YTable($this,$line));
 				}
-				else if ($head == '>') { // BrockQuote
-					$last =& $last->add(new BQuote($line));
-				}
-				else if ($head == '<') { // BlockQuote end
-					$last =& bq_end($last, $line);
+				else if ($head == '>' or $head == '<') { // BrockQuote
+					$this->last =& $this->last->add(new BQuote($this,$line));
 				}
 				else if ($head == '#') { // Div
-					$last =& $last->add(new Div($line));
+					$this->last =& $this->last->add(new Div($this,$line));
 				}
 				else { // 通常文字列
-					$last =& $last->add(new Inline($line));
+					$this->last =& $this->last->add(new Inline($line));
 				}
 			}
 		}
@@ -739,7 +760,7 @@ class Body extends Block
 	{
 		$id = "content_{$this->id}_{$this->count}";
 		$this->count++;
-		$this->last =& $this->last->add(new Contents_UList($text,$this->id,$level,$id));
+		$this->contents_last =& $this->contents_last->add(new Contents_UList($text,$this->id,$level,$id));
 		return array(&$this->top,$id);
 	}
 	function getContents()
@@ -762,7 +783,7 @@ class Body extends Block
 		$text = parent::toString();
 		
 		// #contents
-		$text = preg_replace("/<p>#contents<\/p>/",$this->getContents(),$text);
+		$text = preg_replace('/<p[^>]+>#contents</p>',$this->getContents(),$text);
 		
 		// 関連するページ
 		// <p>のときは行頭から、<del>のときは他の要素の子要素として存在
@@ -770,14 +791,14 @@ class Body extends Block
 		return $text;
 	}
 }
-class Contents_UList extends _List
+class Contents_UList extends ListContainer
 {
 	function Contents_UList($text,$id,$level,$id)
 	{
 		// テキストのリフォーム
 		// 行頭\nで整形済みを表す ... X(
 		$text = "\n<a href=\"#$id\">".strip_htmltag(inline2(inline($text,TRUE)))."</a>\n";
-		parent::_List('ul', 'li', --$level, $text);
+		parent::ListContainer('ul', 'li', --$level, $text);
 	}
 }
 ?>
