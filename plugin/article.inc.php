@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.10 2003/02/15 13:21:05 panda Exp $
+ $Id: article.inc.php,v 1.11 2003/04/08 09:51:11 arino Exp $
  
  */
 
@@ -110,22 +110,22 @@ function plugin_article_action()
 	}
 	
 	$subject = str_replace('$subject',$post['subject'] == '' ? NO_SUBJECT : $post['subject'],SUBJECT_FORMAT);
-
+	
 	$article  = "$subject\n>$name ($now)~\n~\n";
-
+	
+	$msg = rtrim($post['msg']);
 	if (ARTICLE_AUTO_BR){
 		//改行の取り扱いはけっこう厄介。特にURLが絡んだときは…
-		$article .= preg_replace("/\n/","~\n",trim($post['msg']));
+		//コメント行、整形済み行には~をつけないように arino
+		$msg = join("\n",preg_replace('/^(?!\/\/)(?!\s)(.*)$/','$1~',explode("\n",$msg)));
 	}
-	else {
-		$article .= trim($post['msg']);
-	}
-
+	$article .= $msg;
+	
 	if (ARTICLE_COMMENT) {
 		$article .= "\n\n#comment\n";
 	}
 	
-
+	
 	foreach($postdata_old as $line) {
 		if (!ARTICLE_INS) {
 			$postdata .= $line;
@@ -140,15 +140,15 @@ function plugin_article_action()
 			$postdata .= $line;
 		}
 	}
-
+	
 	$postdata_input = "$article\n";
 	$body = '';
 	
 	if (md5(@join('',get_source($post['refer']))) != $post['digest']) {
 		$title = $_title_collided;
-
+		
 		$body = "$_msg_collided\n";
-
+		
 		$s_refer = htmlspecialchars($post['refer']);
 		$s_digest = htmlspecialchars($post['digest']);
 		$s_postdata = htmlspecialchars($postdata_input);
@@ -173,27 +173,27 @@ EOD;
 				$mailsubject .= '/'.$post['name'];
 			}
 			$mailsubject = mb_encode_mimeheader($mailsubject);
-
+			
 			$mailbody = $post['msg'];
 			$mailbody .= "\n\n---\n";
 			$mailbody .= "投稿者: ".$post['name']." ($now)\n";
 			$mailbody .= "投稿先: ".$post['refer']."\n";
 			$mailbody .= "　 URL: ".$script.'?'.rawurlencode($post['refer'])."\n";
 			$mailbody = mb_convert_encoding( $mailbody, "JIS" );
-
+			
 			$mailaddheader = "From: ".MAIL_FROM;
-
+			
 			mail($mailaddress, $mailsubject, $mailbody, $mailaddheader);
 		}
-
+		
 		$title = $_title_updated;
 	}
 	$retvars['msg'] = $title;
 	$retvars['body'] = $body;
-
+	
 	$post['page'] = $post['refer'];
 	$vars['page'] = $post['refer'];
-
+	
 	return $retvars;
 }
 function plugin_article_convert()
@@ -224,7 +224,7 @@ function plugin_article_convert()
 EOD;
 
 	$article_no++;
-
+	
 	return $string;
 }
 ?>
