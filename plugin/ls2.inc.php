@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ls2.inc.php,v 1.10 2003/03/30 07:27:45 panda Exp $
+// $Id: ls2.inc.php,v 1.11 2003/04/26 05:11:15 arino Exp $
 //
 
 /*
@@ -189,12 +189,18 @@ function ls2_get_headings($page,&$params,$level,$include = FALSE)
 	{
 		if ($params['title'] and preg_match('/^(\*+)\s*(.*)$/',$line,$matches))
 		{
-			$s_title = strip_htmltag(inline2(inline($matches[2],TRUE)));
-			ls2_list_push($params,$level + strlen($matches[1]));
-			array_push($params['result'], '<li>'.$s_title
-				.'<a href="'.$href.LS2_CONTENT_HEAD.$anchor.'">'.$_ls2_messages['msg_go'].'</a>'
+			$level = strlen($matches[1]);
+			$title = $matches[2];
+			if (preg_match('/^(.*)\[(#[A-Za-z][\w-]+)\](.*)$/',$title,$matches))
+			{
+				$title = $matches[1].$matches[3];
+			}
+			$id = LS2_CONTENT_HEAD.$anchor++;
+			$s_title = strip_htmltag(inline2(inline($title,TRUE)));
+			ls2_list_push($params,$level + strlen($level));
+			array_push($params['result'], '<li>'.$s_title.
+				'<a href="'.$href.$id.'">'.$_ls2_messages['msg_go'].'</a>'
 			);
-			$anchor++;
 		}
 		else if ($params['include']
 			and preg_match('/^#include\((.+)\)/',$line,$matches) and is_page($matches[1]))
