@@ -1,4 +1,5 @@
 #freeze
+#norelated
 #navi(PukiWiki/1.4/Manual/Plugin)
 #contents
 ------------------------------
