@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.32 2003/04/01 08:05:26 panda Exp $
+// $Id: func.php,v 1.33 2003/04/13 06:10:37 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -42,12 +42,7 @@ function is_url($str)
 function is_page($page,$reload=FALSE)
 {
 	global $InterWikiName;
-	static $is_page;
-	
-	if (!isset($is_page))
-	{
-		$is_page = array();
-	}
+	static $is_page = array();
 	
 	if ($reload or !array_key_exists($page,$is_page))
 	{
@@ -60,12 +55,7 @@ function is_page($page,$reload=FALSE)
 function is_editable($page)
 {
 	global $cantedit;
-	static $is_editable;
-	
-	if (!isset($is_editable))
-	{
-		$is_editable = array();
-	}
+	static $is_editable = array();
 	
 	if (!array_key_exists($page,$is_editable))
 	{

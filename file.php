@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.16 2003/04/01 08:05:26 panda Exp $
+// $Id: file.php,v 1.17 2003/04/13 06:10:37 arino Exp $
 //
 
 // ソースを取得
@@ -183,18 +183,17 @@ function put_lastmodified()
 function get_pg_passage($page,$sw=TRUE)
 {
 	global $show_passage;
-	static $pg_passage;
+	static $pg_passage = array();
 	
-	if (!$show_passage) {
+	if (!$show_passage)
+	{
 		return '';
 	}
 	
-	if (!isset($pg_passage)) {
-		$pg_passage = array();
-	}
-	
-	if (!array_key_exists($page,$pg_passage)) {
-		$pg_passage[$page] = (is_page($page) and $time = get_filetime($page)) ? get_passage($time) : '';
+	if (!array_key_exists($page,$pg_passage))
+	{
+		$pg_passage[$page] = (is_page($page) and $time = get_filetime($page)) ?
+			get_passage($time) : '';
 	}
 	
 	return $sw ? "<small>{$pg_passage[$page]}</small>" : " {$pg_passage[$page]}";
@@ -252,12 +251,7 @@ function get_existfiles($dir,$ext)
 function links_get_related($page)
 {
 	global $vars,$related;
-	static $links;
-	
-	if (!isset($links))
-	{
-		$links = array();
-	}
+	static $links = array();
 	
 	if (array_key_exists($page,$links))
 	{
