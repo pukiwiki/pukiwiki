@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.61 2004/09/19 14:05:30 henoheno Exp $
+//  $Id: attach.inc.php,v 1.62 2004/09/20 02:36:34 henoheno Exp $
 //
 
 /*
@@ -452,7 +452,7 @@ class AttachFile
 		$info = $count = '';
 		if ($showinfo) {
 			$_title = str_replace('$1', rawurlencode($this->file), $_attach_messages['msg_info']);
-			$info = "\n<span class=\"small\">[<a href=\"$script?plugin=attach&amp;pcmd=info$param\" title=\"$_title\">{$_attach_messages['btn_info']}</a>]</span><br />\n";
+			$info = "\n<span class=\"small\">[<a href=\"$script?plugin=attach&amp;pcmd=info$param\" title=\"$_title\">{$_attach_messages['btn_info']}</a>]</span>\n";
 			$count = ($showicon && ! empty($this->status['count'][$this->age])) ?
 				sprintf($_attach_messages['msg_count'], $this->status['count'][$this->age]) : '';
 		}
