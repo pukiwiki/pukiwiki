@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.14 2003/04/17 14:50:31 arino Exp $
+ $Id: article.inc.php,v 1.15 2003/07/03 05:35:14 arino Exp $
  
  */
 
@@ -70,25 +70,6 @@ define('MAIL_SUBJECT_PREFIX','[someone\'sPukiWiki]');
 $_mailto = array (
 	''
 );
-
-function plugin_article_init()
-{
-	if (LANG == 'ja') {
-		$messages = array(
-			'_btn_name'    => 'お名前',
-			'_btn_article' => '記事の投稿',
-			'_btn_subject' => '題名: '
-		);
-	}
-	else {
-		$messages = array(
-			'_btn_name'    => 'Name: ',
-			'_btn_article' => 'Submit',
-			'_btn_subject' => 'Subject: '
-		);
-	}
-  set_plugin_messages($messages);
-}
 
 function plugin_article_action()
 {
@@ -174,8 +155,8 @@ EOD;
 			
 			$mailbody = $post['msg'];
 			$mailbody .= "\n\n---\n";
-			$mailbody .= "投稿者: ".$post['name']." ($now)\n";
-			$mailbody .= "投稿先: ".$post['refer']."\n";
+			$mailbody .= $_msg_article_mail_sender.$post['name']." ($now)\n";
+			$mailbody .= $_msg_article_mail_page.$post['refer']."\n";
 			$mailbody .= "　 URL: ".$script.'?'.rawurlencode($post['refer'])."\n";
 			$mailbody = mb_convert_encoding( $mailbody, "JIS" );
 			
