@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.23 2005/01/02 06:38:18 henoheno Exp $
+// $Id: func.php,v 1.24 2005/01/10 03:18:58 henoheno Exp $
 //
 // General functions
 
@@ -63,7 +63,6 @@ function is_editable($page)
 	return $is_editable[$page];
 }
 
-// FIXME: Dont use get_source() to check the 1st line of the page!
 function is_freeze($page, $clearcache = FALSE)
 {
 	global $function_freeze;
@@ -76,8 +75,11 @@ function is_freeze($page, $clearcache = FALSE)
 		$is_freeze[$page] = FALSE;
 		return FALSE;
 	} else {
-		list($lines) = array_pad(get_source($page), 1, '');
-		$is_freeze[$page] = (rtrim($lines) == '#freeze');
+		$fp     = fopen(get_filename($page), 'rb');
+		$buffer = fgets($fp, 8);
+		fclose($fp);
+
+		$is_freeze[$page] = ($buffer != FALSE && rtrim($buffer) == '#freeze');
 		return $is_freeze[$page];
 	}
 }
@@ -181,8 +183,9 @@ function do_search($word, $type = 'AND', $non_format = FALSE)
 	$_pages = get_existpages();
 	$pages = array();
 
+	$non_list_pattern = '/' . $non_list . '/';
 	foreach ($_pages as $page) {
-		if ($page == $whatsnew || (! $search_non_list && preg_match("/$non_list/", $page)))
+		if ($page == $whatsnew || (! $search_non_list && preg_match($non_list_pattern, $page)))
 			continue;
 
 		// 検索対象ページの制限をかけるかどうか (ページ名は制限外)
