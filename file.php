@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.37 2003/11/05 10:58:39 arino Exp $
+// $Id: file.php,v 1.38 2003/12/03 12:40:35 arino Exp $
 //
 
 // ソースを取得
@@ -112,6 +112,7 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 	if ($dir == DATA_DIR and $str == '' and file_exists($file))
 	{
 		unlink($file);
+		put_recentdeleted($page);
 	}
 	if ($str != '')
 	{
@@ -164,6 +165,39 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
  		mb_language(LANG);
  		mb_send_mail($notify_to,$subject,$str,$notify_header);
 	}
+}
+// 削除履歴ページの更新
+function put_recentdeleted($page)
+{
+	global $whatsdeleted,$maxshow_deleted;
+	
+	if ($maxshow_deleted == 0)
+	{
+		return;
+	}
+	// update RecentDeleted
+	$lines = array();
+	foreach (get_source($whatsdeleted) as $line)
+	{
+		if (preg_match('/^-(.+) - (\[\[.+\]\])$/',$line,$matches))
+		{
+			$lines[$matches[2]] = $line;
+		}
+	}
+	$_page = "[[$page]]";
+	if (array_key_exists($_page,$lines))
+	{
+		unset($lines[$_page]);
+	}
+	array_unshift($lines,'-'.format_date(UTIME)." - $_page\n");
+	$lines = array_splice($lines,0,$maxshow_deleted);
+	$fp = fopen(get_filename($whatsdeleted),'w')
+		or die_message('cannot write page file '.htmlspecialchars($whatsdeleted).'<br />maybe permission is not writable or filename is too long');
+	flock($fp,LOCK_EX);
+	fputs($fp,join('',$lines));
+	fputs($fp,"#norelated\n"); // :)
+	flock($fp,LOCK_UN);
+	fclose($fp);
 }
 
 // 最終更新ページの更新

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.52 2003/12/03 12:17:26 arino Exp $
+// $Id: pukiwiki.ini.php,v 1.53 2003/12/03 12:40:35 arino Exp $
 //
 // PukiWiki setting file
 
@@ -48,6 +48,9 @@ $defaultpage = 'FrontPage';
 /////////////////////////////////////////////////
 // 更新履歴ページの名前
 $whatsnew = 'RecentChanges';
+/////////////////////////////////////////////////
+// 削除履歴ページの名前
+$whatsdeleted = 'RecentDeleted';
 /////////////////////////////////////////////////
 // InterWikiNameページの名前
 $interwiki = 'InterWikiName';
@@ -157,8 +160,11 @@ $search_auth = 0;
 // 更新履歴を表示するときの最大件数
 $maxshow = 80;
 /////////////////////////////////////////////////
+// 削除履歴の最大件数(0で記録しない)
+$maxshow_deleted = 0;
+/////////////////////////////////////////////////
 // 編集することのできないページの名前 , で区切る
-$cantedit = array( $whatsnew, );
+$cantedit = array( $whatsnew,$whatsdeleted );
 
 /////////////////////////////////////////////////
 // Last-Modified ヘッダを出力する
