@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.16.2.11 2004/08/08 03:04:51 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.16.2.12 2004/08/08 03:28:35 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -236,7 +236,7 @@ $load_template_func = 1;
 // ページ名に従って自動で、雛形とするページの読み込み
 $auto_template_func = 1;
 $auto_template_rules = array(
-'\[\[((.+)\/([^\/]+))\]\]' => '[[\2/template]]'
+	'\[\[((.+)\/([^\/]+))\]\]' => '[[\2/template]]'
 );
 
 /////////////////////////////////////////////////
@@ -250,25 +250,27 @@ $auto_template_rules = array(
 
 // ユーザ定義ルール(直接ソースを置換)
 $str_rules = array(
-"now\?" => date($date_format,UTIME)." (".$weeklabels[date("w",UTIME)].") ".date($time_format,UTIME),
-"date\?" => date($date_format,UTIME),
-"time\?" => date($time_format,UTIME),
+	'now\?'	=> date($date_format, UTIME) .
+		' (' .  $weeklabels[date('w', UTIME)] . ') ' .
+		date($time_format, UTIME),
+	'date\?'	=> date($date_format, UTIME),
+	'time\?'	=> date($time_format, UTIME),
 );
 
 // ユーザ定義ルール(コンバート時に置換、直接しない)
 $line_rules = array(
-"COLOR\(([^\(\)]*)\){([^}]*)}" => "<span style=\"color:\\1\">\\2</span>",
-"SIZE\(([^\(\)]*)\){([^}]*)}" => "<span style=\"font-size:\\1px;display:inline-block;line-height:130%;text-indent:0px\">\\2</span>",
-"COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)" => "<span style=\"color:\\1\">\\2</span>",
-"SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)" => "<span class=\"size\\1\">\\2</span>",
-"LEFT:((?:(?!LEFT\:).)*)" => "<div style=\"text-align:left\">\\1</div>",
-"CENTER:((?:(?!CENTER\:).)*)" => "<div style=\"text-align:center\">\\1</div>",
-"RIGHT:((?:(?!RIGHT\:).)*)" => "<div style=\"text-align:right\">\\1</div>",
-"%%((?:(?!%%).)*)%%" => "<del>\\1</del>",
-"'''((?:(?!''').)*)'''" => "<em>\\1</em>",
-"''((?:(?!'').)*)''" => "<strong>\\1</strong>",
-"~((?:<\\/[a-zA-Z]+>)*)$" => "\\1<br />", /* 行末にチルダは改行 */
-"&amp;aname\(([A-Za-z][\w\-]*)\);" => "<a id=\"\\1\" name=\"\\1\"></a>",
+	'COLOR\(([^\(\)]*)\){([^}]*)}'	=> '<span style="color:\1">\2</span>',
+	'SIZE\(([^\(\)]*)\){([^}]*)}'	=> '<span style="font-size:\1px;display:inline-block;line-height:130%;text-indent:0px">\2</span>',
+	'COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)'	=> '<span style="color:\1\">\2</span>',
+	'SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)'	=> '<span class="size\1\">\2</span>',
+	'LEFT:((?:(?!LEFT\:).)*)'	=> '<div style="text-align:left"  >\1</div>',
+	'CENTER:((?:(?!CENTER\:).)*)'	=> '<div style="text-align:center">\1</div>',
+	'RIGHT:((?:(?!RIGHT\:).)*)'	=> '<div style="text-align:right" >\1</div>',
+	'%%((?:(?!%%).)*)%%'	=> '<del>\1</del>',
+	"'''((?:(?!''').)*)'''"	=> '<em>\1</em>',
+	"''((?:(?!'').)*)''"	=> '<strong>\1</strong>',
+	'~((?:<\\/[a-zA-Z]+>)*)$'	=> '\1<br />', /* 行末にチルダは改行 */
+	"&amp;aname\(([A-Za-z][\w\-]*)\);"	=> '<a id="\1" name="\1"></a>',
 );
 
 /////////////////////////////////////////////////
