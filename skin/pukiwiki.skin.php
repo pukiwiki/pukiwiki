@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.27 2004/12/07 13:43:38 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.28 2004/12/11 08:47:20 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -113,7 +113,7 @@ function _navigator($key, $value = '', $javascript = ''){
 
 <?php if ($is_page) { ?>
  [ <?php _navigator('edit')   ?>
- <?php if ($is_read and $function_freeze) { ?>
+ <?php if ($is_read && $function_freeze) { ?>
  |  <?php (! $is_freeze) ? _navigator('freeze') : _navigator('unfreeze') ?>
  <?php } ?>
  | <?php _navigator('diff') ?>
@@ -149,7 +149,7 @@ function _navigator($key, $value = '', $javascript = ''){
 
 <?php echo $hr ?>
 
-<?php if (arg_check('read') and exist_plugin_convert('menu')) { ?>
+<?php if (arg_check('read') && exist_plugin_convert('menu')) { ?>
 <table border="0" style="width:100%">
  <tr>
   <td class="menubar">
@@ -203,7 +203,7 @@ function _toolbar($key, $x = 20, $y = 20){
 <?php if ($is_page) { ?>
  &nbsp;
  <?php _toolbar('edit') ?>
- <?php if ($is_read and $function_freeze) { ?>
+ <?php if ($is_read && $function_freeze) { ?>
   <?php if (! $is_freeze) { _toolbar('freeze'); } else { _toolbar('unfreeze'); } ?>
  <?php } ?>
  <?php _toolbar('diff') ?>
