@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.12 2003/06/05 06:20:48 arino Exp $
+// $Id: en.lng,v 1.13 2003/06/05 10:37:35 arino Exp $
 //
 // PukiWiki message file (english)
 
@@ -35,6 +35,7 @@ $_title_backuplist = 'Backup list';
 $_title_help = 'Help';
 $_title_invalidiwn = 'It is not an effective InterWikiName';
 $_title_backuplist = 'Backup list';
+$_title_backup_delete = 'Deleting backup of $1';
 
 ///////////////////////////////////////
 // messages
@@ -61,7 +62,7 @@ $_msg_nowdiff = 'diff current';
 $_msg_source = 'source';
 $_msg_backup = 'backup';
 $_msg_view = 'View the $1.';
-$_msg_deleleted = '$1 is deleted.';
+$_msg_deleted = '$1 is deleted.';
 $_msg_invalidiwn = '$1 is not an effective $2.';
 $_msg_andresult = 'In <strong>$2</strong> page, <strong>$3</strong> pages of pages containing all the $1 were found.';
 $_msg_orresult = 'In <strong>$2</strong> page, <strong>$3</strong> pages of pages containing either of the $1 were found.';
@@ -73,6 +74,8 @@ $_msg_week = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 $_msg_content_back_to_top = '<div class="jumpmenu"><a href="#navigator">&uarr;</a></div>';
 $_msg_auth = 'Page Edit.';
 $_msg_word = 'These search terms have been highlighted:';
+$_msg_backup_deleted = 'Backup of $1 is deleted.';
+$_msg_backup_adminpass = 'Please input the password for deleting.';
 
 ///////////////////////////////////////
 // symbols
@@ -95,6 +98,7 @@ $_btn_template = 'Page for use template';
 $_btn_load = 'Load';
 $_btn_edit = 'Edit';
 $_btn_viewtag = 'View HTML Tags';
+$_btn_delete = 'Delete';
 
 ///////////////////////////////////////
 // plug-in message

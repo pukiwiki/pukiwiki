@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.14 2003/06/05 06:20:48 arino Exp $
+// $Id: ja.lng,v 1.15 2003/06/05 10:37:35 arino Exp $
 //
 // PukiWiki message file (japanese)
 
@@ -36,6 +36,7 @@ $_title_help = 'ヘルプ';
 $_title_invalidiwn = '有効なInterWikiNameではありません';
 $_title_invalidwn = '有効なWikiNameではありません';
 $_title_backuplist = 'バックアップ一覧';
+$_title_backup_delete = '$1 のバックアップを削除';
 
 ///////////////////////////////////////
 // messages
@@ -65,7 +66,7 @@ $_msg_nowdiff = '現在との差分';
 $_msg_source = 'ソース';
 $_msg_backup = 'バックアップ';
 $_msg_view = '$1 を表示';
-$_msg_deleleted = '$1 は削除されています。';
+$_msg_deleted = '$1 は削除されています。';
 $_msg_invalidiwn = '$1 は有効な $2 ではありません。';
 $_msg_andresult = '$1 のすべてを含むページは <strong>$3</strong> ページ中、 <strong>$2</strong> ページ見つかりました。';
 $_msg_orresult = '$1 のいずれかを含むページは <strong>$3</strong> ページ中、 <strong>$2</strong> ページ見つかりました。';
@@ -77,6 +78,8 @@ $_msg_week = array('日','月','火','水','木','金','土');
 $_msg_content_back_to_top = '<div class="jumpmenu"><a href="#navigator">&uarr;</a></div>';
 $_msg_auth = 'Page Edit.';
 $_msg_word = 'これらのキーワードがハイライトされています：';
+$_msg_backup_deleted = '$1 のバックアップを削除しました。';
+$_msg_backup_adminpass = '削除用のパスワードを入力してください。';
 
 ///////////////////////////////////////
 // symbols
@@ -98,6 +101,7 @@ $_btn_addtop = 'ページの上に追加';
 $_btn_template = '雛形とするページ';
 $_btn_load = '読込';
 $_btn_edit = '編集';
+$_btn_delete = '削除';
 
 ///////////////////////////////////////
 // plug-in message
