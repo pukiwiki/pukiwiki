@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.66 2004/07/18 09:46:25 henoheno Exp $
+// $Id: func.php,v 1.67 2004/07/18 09:53:05 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -623,6 +623,11 @@ function input_filter($param)
 		if ($magic_quotes_gpc) $result = stripslashes($result);
 		return $result;
 	}
+}
+
+// Compat for 3rd party plugins. Remove this later
+function sanitize($param) {
+	return input_filter($param);
 }
 
 // CSV形式の文字列を配列に
