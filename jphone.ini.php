@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: jphone.ini.php,v 1.1 2003/02/21 07:07:00 panda Exp $
+// $Id: jphone.ini.php,v 1.2 2003/02/26 01:28:53 panda Exp $
 //
 // PukiWiki setting file (user agent:J-PHONE)
 
@@ -24,8 +24,12 @@ $list_index = 0;
 
 /////////////////////////////////////////////////
 // リスト構造の左マージン
-$_list_left_margin = 0; // リストと画面左端との間隔(px)
-$_list_margin = 16;      // リストの階層間の間隔(px)
+$_ul_left_margin = 0;   // リストと画面左端との間隔(px)
+$_ul_margin = 16;       // リストの階層間の間隔(px)
+$_ol_left_margin = 0;   // リストと画面左端との間隔(px)
+$_ol_margin = 16;       // リストの階層間の間隔(px)
+$_dl_left_margin = 0;   // リストと画面左端との間隔(px)
+$_dl_margin = 16;        // リストの階層間の間隔(px)
 $_list_pad_str = '';
 
 /////////////////////////////////////////////////

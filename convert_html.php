@@ -2,12 +2,17 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.21 2003/02/20 12:22:51 panda Exp $
+// $Id: convert_html.php,v 1.22 2003/02/26 01:28:39 panda Exp $
 //
-function &convert_html(&$lines)
+function convert_html($lines)
 {
 	global $script,$vars,$digest;
 	static $contents_id = 0;
+	
+	if (!is_array($lines))
+	{
+		$lines = explode("\n",$lines);
+	}
 	
 	$digest = md5(join('',get_source($vars['page'])));
 	
@@ -190,6 +195,7 @@ class HRule extends Block
 class ListContainer extends Block
 {
 	var $tag,$tag2,$level,$style;
+	var $margin,$left_margin;
 	
 	function ListContainer($tag,$tag2,$level,$text)
 	{
@@ -217,16 +223,16 @@ class ListContainer extends Block
 	}
 	function setParent(&$parent)
 	{
-		global $_list_left_margin, $_list_margin, $_list_pad_str;
+		global $_list_pad_str;
 
 		parent::setParent($parent);
 		$step = $this->level;
 		if (isset($parent->parent) and is_a($parent->parent,'ListContainer')) {
 			$step -= $parent->parent->level; 
 		}
-		$margin = $_list_margin * $step;
+		$margin = $this->margin * $step;
 		if ($step == $this->level) {
-			$margin += $_list_left_margin;
+			$margin += $this->left_margin;
 		}
 		$this->style = sprintf($_list_pad_str,$this->level,$margin,$margin);
 	}
