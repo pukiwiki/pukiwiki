@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.18 2003/11/12 07:49:44 arino Exp $
+// $Id: tracker.inc.php,v 1.19 2003/11/27 06:09:23 arino Exp $
 //
 
 // tracker_listで表示しないページ名(正規表現で)
@@ -736,23 +736,25 @@ class Tracker_list
 			$this->order[$key] = $dir;
 		}
 		$keys = array();
-		$eval_arg = 'return array_multisort(';
+		$params = array();
 		foreach ($this->order as $field=>$order)
 		{
 			if (!array_key_exists($field,$names))
 			{
 				continue;
 			}
-			$eval_arg .= '$keys['."'$field'],".
-				$this->fields[$field]->sort_type.','.
-				$order.',';
 			foreach ($this->rows as $row)
 			{
 				$keys[$field][] = $this->fields[$field]->get_value($row[$field]);
 			}
+			$params[] = $keys[$field];
+			$params[] = $this->fields[$field]->sort_type;
+			$params[] = $order;
+			
 		}
-		$eval_arg .= '$this->rows);';
-		eval($eval_arg);
+		$params[] = &$this->rows;
+
+		call_user_func_array('array_multisort',$params);
 	}
 	function replace_item($arr)
 	{
@@ -801,10 +803,12 @@ class Tracker_list
 		
 		if (array_key_exists($sort,$order))
 		{
+			$index = array_flip(array_keys($order));
+			$pos = 1 + $index[$sort];
 			$b_end = ($sort == array_shift(array_keys($order)));
 			$b_order = ($order[$sort] == SORT_ASC);
 			$dir = ($b_end xor $b_order) ? SORT_ASC : SORT_DESC;
-			$arrow = $b_end ? ($b_order ? '&uarr;' : '&darr;') : '';
+			$arrow = '&br;'.($b_order ? '&uarr;' : '&darr;')."($pos)";
 			unset($order[$sort]);
 		}
 		$title = $this->fields[$field]->title;
