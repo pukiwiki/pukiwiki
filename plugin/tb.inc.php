@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.6 2003/12/03 12:31:08 arino Exp $
+// $Id: tb.inc.php,v 1.7 2003/12/04 08:29:49 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -169,7 +169,7 @@ EOD;
 	$title = htmlspecialchars($page);
 	$link = "$script?".rawurlencode($page);
 	$vars['page'] = $page;
-	$excerpt = strip_htmltag(convert_html(join('',get_source($page))));
+	$excerpt = strip_htmltag(convert_html(get_source($page)));
 	$excerpt = preg_replace("/&$entity_pattern;/",'',$excerpt);
 	$excerpt = mb_strimwidth(preg_replace("/[\r\n]/",' ',$excerpt),0,255,'...');
 
