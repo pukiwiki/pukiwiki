@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.45 2003/06/12 00:44:30 arino Exp $
+// $Id: convert_html.php,v 1.46 2003/06/30 00:30:04 arino Exp $
 //
 function convert_html($lines)
 {
@@ -162,7 +162,6 @@ class Heading extends Block
 		if (($level = strspn($text,'*')) > 3) {
 			$level = 3;
 		}
-		$text = ltrim(substr($text,$level));
 		$this->level = ++$level;
 		list($text,$this->msg_top,$this->id) = $root->getAnchor($text,$level);
 		$this->last =& $this->insert(new Inline($text));
@@ -802,6 +801,7 @@ class Body extends Block
 		
 		$anchor = (($id = make_heading($text,FALSE)) == '') ?
 			'' : " &aname($id,super,full)\{$_symbol_anchor};";
+		$text = ' '.$text;
 		$id = "content_{$this->id}_{$this->count}";
 		$this->count++;
 		$this->contents_last =& $this->contents_last->add(new Contents_UList($text,$level,$id));

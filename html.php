@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.82 2003/06/22 05:47:17 arino Exp $
+// $Id: html.php,v 1.83 2003/06/30 00:30:04 arino Exp $
 //
 
 // 本文を出力
@@ -314,7 +314,7 @@ function make_heading(&$str,$strip=TRUE)
 	}
 	else
 	{
-		$str = ltrim($str,'*');
+		$str = preg_replace('/^\*{0,3}/','',$str);
 	}
 	if ($strip)
 	{
