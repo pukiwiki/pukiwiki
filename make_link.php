@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.58 2003/10/20 03:15:39 arino Exp $
+// $Id: make_link.php,v 1.59 2003/11/02 14:13:27 arino Exp $
 //
 
 // リンクを付加する
@@ -594,7 +594,7 @@ class Link_autolink extends Link
 		if (!isset($auto)) // and/or !isset($forceignorepages)
 		{
 			@list($auto,$forceignorepages) = file(CACHE_DIR.'autolink.dat');
-			$forceignorepages = explode("\t",$forceignorepages);
+			$forceignorepages = explode("\t",trim($forceignorepages));
 		}
 		$this->forceignorepages = $forceignorepages;
 		return "($auto)";
