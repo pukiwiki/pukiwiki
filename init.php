@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.5 2002/07/02 01:30:12 masui Exp $
+// $Id: init.php,v 1.6 2002/07/04 05:33:23 masui Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -56,7 +56,7 @@ if($post["word"]) $post["word"] = rawurldecode($post["word"]);
 if($get["word"]) $get["word"] = rawurldecode($get["word"]);
 
 $vars = array_merge($post,$get);
-$arg = rawurldecode($HTTP_SERVER_VARS["argv"][0]);
+$arg = rawurldecode(getenv("QUERY_STRING"));
 
 //** 初期処理 **
 
