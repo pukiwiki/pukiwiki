@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.16 2004/09/26 12:24:20 henoheno Exp $
+// $Id: dump.inc.php,v 1.17 2004/09/26 12:29:36 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -659,8 +659,8 @@ class tarlib
 				if ($fpw !== FALSE) {
 					fwrite($fpw, $buff, $size);
 					fclose($fpw);
-					chmod($name, 0666); // 念のためパーミッションを設定しておく
-					touch($name, $mtime); // 最終更新時刻の修正
+					@chmod($name, 0666); // 念のためパーミッションを設定しておく
+					@touch($name, $mtime); // 最終更新時刻の修正
 					$files[] = $name;
 				}
 			}
