@@ -605,14 +605,17 @@ div.jumpmenu{
 {
 	font-size:x-small;
 }
-.new
+.new1
 {
-	color:white;
-	background-color:darkcyan;
+	color:red;
+	background-color:transparent;
+	font-size:x-small;
+}
+.new5
+{
+	color:green;
+	background-color:transparent;
 	font-size:xx-small;
-	font-weight:bold;
-	padding:1px;
-	margin:0px .5em 0px .5em;
 }
 
 /* aname.inc.php */

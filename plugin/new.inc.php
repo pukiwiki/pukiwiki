@@ -2,23 +2,29 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: new.inc.php,v 1.1 2003/04/13 04:47:58 arino Exp $
+// $Id: new.inc.php,v 1.2 2003/04/30 08:17:15 arino Exp $
 //
 
-// 新着表示の期限(日数)
-define('NEW_LIMIT',3);
-
-// 期限内のとき表示するタグ
-define('NEW_FORMAT','<span class="new">%s</span>');
-
-// 表示フォーマット
+// 全体の表示フォーマット
 define('NEW_MESSAGE','<span class="comment_date">%s</span>');
 
-// デフォルトの表示文字列
-define('NEW_STR','New');
-
+function plugin_new_init()
+{
+	global $_plugin_new_elapses;
+	
+	// 経過秒数 => 新着表示タグ
+	$messages = array(
+		'_plugin_new_elapses' => array(
+			1*60*60*24 => ' <span class="new1">New!</span>',
+			5*60*60*24 => ' <span class="new5">New</span>',
+		),
+	);
+	set_plugin_messages($messages);
+}
 function plugin_new_inline()
 {
+	global $_plugin_new_elapses;
+	
 	if (func_num_args() < 1)
 	{
 		return FALSE;
@@ -31,28 +37,16 @@ function plugin_new_inline()
 	{
 		return FALSE;
 	}
-	$timestamp -= LOCALZONE;
-
-	$str = NEW_STR;
-	$limit = NEW_LIMIT;
-	
-	switch (count($args))
-	{
-		case 2:
-			$str = $args[1];
-		case 1:
-			if (is_numeric($args[0]))
-			{
-				$limit = $args[0];
-			}
-	}
-	$limit *= 60 * 60 * 24;
-	
 	$retval = htmlspecialchars($date);
-	
-	if ((UTIME - $timestamp) <= $limit)
+
+	$erapse = UTIME - $timestamp + LOCALZONE;
+	foreach ($_plugin_new_elapses as $limit=>$tag)
 	{
-		$retval .= sprintf(NEW_FORMAT,htmlspecialchars($str));
+		if ($erapse <= $limit)
+		{
+			$retval .= $tag;
+			break;
+		}
 	}
 	return sprintf(NEW_MESSAGE,$retval);
 }
