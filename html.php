@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.56 2003/02/23 02:14:22 panda Exp $
+// $Id: html.php,v 1.57 2003/02/26 01:31:36 panda Exp $
 //
 
 // 本文を出力
@@ -12,6 +12,12 @@ function catbody($title,$page,$body)
 	global $related_link,$cantedit,$function_freeze,$search_word_color,$_msg_word;
 	global $foot_explain,$note_hr;
 	
+	global $html_transitional; // FALSE:XHTML1.1 TRUE:XHTML1.0 Transitional
+	global $page_title;        // ホームページのタイトル
+	global $do_backup;         // バックアップを行うかどうか
+	global $modifier;          // 編集者のホームページ
+	global $modifierlink;      // 編集者の名前
+
 	$_page = $vars['page'];
 	$r_page = rawurlencode($_page);
 	
@@ -30,22 +36,33 @@ function catbody($title,$page,$body)
 	$link_unfreeze = "$script?cmd=unfreeze&amp;page=$r_page";
 	$link_upload   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
 	
+	// ページの表示時TRUE(バックアップの表示、RecentChangesの表示を除く)
 	$is_page = (is_pagename($_page) and !arg_check('backup') and $_page != $whatsnew);
 	
+	// ページの読み出し時TRUE
 	$is_read = (arg_check('read') and is_page($_page));
 	
+	// ページが凍結されているときTRUE
 	$is_freeze = is_freeze($_page);
 	
+	// ページの最終更新時刻(文字列)
 	$lastmodified = $is_read ?
 		get_date('D, d M Y H:i:s T',get_filetime($_page)).' '.get_pg_passage($_page,FALSE) : '';
 	
+	// 関連するページのリスト
 	$related = ($is_read and $related_link) ? make_related($_page) : '';
 	
+	// 添付ファイルのリスト
 	$attaches = ($is_read and exist_plugin_action('attach')) ? attach_filelist() : '';
 	
+	// 注釈のリスト
 	sort($foot_explain);
 	$notes = count($foot_explain) ? $note_hr.join("\n",$foot_explain) : '';
 	
+	// 1.3.x compat
+	// ページの最終更新時刻(UNIX timestamp)
+	$fmt = $is_read ? get_filetime($_page) + LOCALTIME : 0;
+
 	//単語検索
 	if ($search_word_color and array_key_exists('word',$vars)) {
 		$search_word = $_msg_word;
