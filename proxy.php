@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: proxy.php,v 1.1 2003/07/27 13:54:58 arino Exp $
+// $Id: proxy.php,v 1.2 2003/08/04 01:54:19 arino Exp $
 //
 
 /*
@@ -29,7 +29,8 @@ function http_request($url,$method='GET',$headers='',$post=array())
 	$arr['port'] = isset($arr['port']) ? $arr['port'] : 80;
 	
 	$url = $via_proxy ? $arr['scheme'].'://'.$arr['host'].':'.$arr['port'] : '';
-	$url .= $arr['path'].$arr['query'];
+	$url .= isset($arr['path']) ? $arr['path'] : '/';
+	$url .= $arr['query'];
 	
 	$query = $method.' '.$url." HTTP/1.0\r\n";
 	$query .= "Host: ".$arr['host']."\r\n";
