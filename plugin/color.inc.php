@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: color.inc.php,v 1.12 2004/11/21 11:38:57 henoheno Exp $
+// $Id: color.inc.php,v 1.13 2004/11/21 11:42:59 henoheno Exp $
 //
 // Text color plugin
 
@@ -33,12 +33,13 @@ function plugin_color_inline()
 			return '&color():Invalid color: ' . htmlspecialchars($col) . ';';
 	}
 
-	if ($html_transitional === TRUE && PLUGIN_COLOR_ALLOW_CSS === TRUE) {
+	if ($html_transitional === FALSE && PLUGIN_COLOR_ALLOW_CSS === TRUE) {
+		// Using <font> tag with:
+		//   NG: XHTML 1.1
 		if ($bgcolor != '') $bgcolor = ';background-color:' . $bgcolor;
 		return '<span style="color:' . $color . $bgcolor . '">' . $text . '</span>';
 	} else {
 		// Using <font> tag with:
-		//   NG: XHTML 1.1
 		//   OK: XHTML 1.0 Transitional
 		if ($bgcolor != '') return '&color(): bgcolor (with CSS) not allowd;';
 		return '<font color="' . $color . '">' . $text . '</font>';
