@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss10.inc.php,v 1.9 2003/09/12 00:38:06 arino Exp $
+// $Id: rss10.inc.php,v 1.10 2004/02/29 07:43:21 arino Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss10_action()
@@ -41,7 +41,7 @@ function plugin_rss10_action()
 		if ($trackback)
 		{
 			$tb_id = md5($r_page);
-			$dc_identifier = " <dc:identifer>$self?$r_page</dc:identifer>";
+			$dc_identifier = " <dc:identifier>$self?$r_page</dc:identifier>";
 			$trackback_ping = " <trackback:ping>$self?plugin=tb&amp;tb_id=$tb_id</trackback:ping>";
 		}
 		$items .= <<<EOD
