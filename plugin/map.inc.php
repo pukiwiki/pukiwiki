@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: map.inc.php,v 1.7 2003/02/28 14:41:16 panda Exp $
+// $Id: map.inc.php,v 1.8 2003/03/28 15:16:30 panda Exp $
 //
 /*
 プラグイン map
@@ -73,7 +73,7 @@ function plugin_map_action()
 	$retval['body'] .= "<p>\ntotal: $count page(s) on this site.\n</p>\n";
 	
 	//オブジェクトの配列を作る
-	$obj = new InlineConverter(array('page','auto')); 
+	$obj = new InlineConverter(array('wikiname','bracketname','autolink'));
 	$pages = $obj->get_objects('[['.join(']] [[',$pages).']]',$refer);
 	
 	//ページの属性を取得
