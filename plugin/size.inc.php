@@ -1,14 +1,14 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: size.inc.php,v 1.7 2005/01/01 10:43:46 henoheno Exp $
+// $Id: size.inc.php,v 1.8 2005/01/02 06:54:12 henoheno Exp $
 //
 // Text-size changing via CSS plugin
 
-define('PLUGIN_SIZE_MAX', 36); // px
-define('PLUGIN_SIZE_MIN', 8);  // px
+define('PLUGIN_SIZE_MAX', 60); // px
+define('PLUGIN_SIZE_MIN',  8); // px
 
 // ----
-define('PLUGIN_SIZE_USAGE', '&size(px){Text string};');
+define('PLUGIN_SIZE_USAGE', '&size(px){Text you want to change};');
 
 function plugin_size_inline()
 {
