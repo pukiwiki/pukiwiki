@@ -3,7 +3,7 @@
  * PukiWiki calendar_viewerプラグイン
  *
  *
- *$Id: calendar_viewer.inc.php,v 1.13 2004/08/10 12:21:17 henoheno Exp $
+ *$Id: calendar_viewer.inc.php,v 1.14 2004/08/10 12:23:27 henoheno Exp $
 	calendarrecentプラグインを元に作成
  */
 /**
@@ -74,23 +74,23 @@ function plugin_calendar_viewer_convert()
 			$page_YM = $func_vars_array[1];
 			$limit_base = 0;
 			$limit_page = 31;	//手抜き。31日分をリミットとする。
-		}else if (preg_match("/this/si",$func_vars_array[1])){
+		} else if (preg_match("/this/si",$func_vars_array[1])){
 			//今月の一覧表示
 			$page_YM = get_date('Y'.$date_sep.'m');
 			$limit_base = 0;
 			$limit_page = 31;
-		}else if (preg_match("/^[0-9]+$/",$func_vars_array[1])){
+		} else if (preg_match("/^[0-9]+$/",$func_vars_array[1])){
 			//n日分表示
 			$limit_pitch = $func_vars_array[1];
 			$limit_page = $limit_pitch;
 			$limit_base = 0;
 			$page_YM = '';
-		}else if (preg_match("/([0-9]+)\*([0-9]+)/",$func_vars_array[1],$reg_array)){
+		} else if (preg_match("/([0-9]+)\*([0-9]+)/",$func_vars_array[1],$reg_array)){
 			$limit_pitch = $reg_array[2];
 			$limit_page = $reg_array[1] + $limit_pitch;
 			$limit_base = $reg_array[1];
 			$page_YM = '';
-		}else{
+		} else {
 			return $_err_calendar_viewer_param2;
 		}
 		if (isset($func_vars_array[2])&&preg_match("/^(past|view|future)$/si",$func_vars_array[2])){
@@ -99,7 +99,7 @@ function plugin_calendar_viewer_convert()
 		}
 
 
-	}else{
+	} else {
 		return $_err_calendar_viewer_param;
 	}
 
@@ -110,7 +110,7 @@ function plugin_calendar_viewer_convert()
 		$pagepattern_len = 0;
 		$filepattern = encode($page_YM);
 		$filepattern_len = strlen($filepattern);
-	}else{
+	} else {
 		$pagepattern = strip_bracket($pagename) .'/';
 		$pagepattern_len = strlen($pagepattern);
 		$filepattern = encode($pagepattern.$page_YM);
@@ -155,7 +155,7 @@ function plugin_calendar_viewer_convert()
 	if ($mode == 'past'){
 		//past modeでは新→旧
 		rsort ($pagelist);
-	}else {
+	} else {
 		//view mode と future mode では、旧→新
 		sort ($pagelist);
 	}
@@ -217,17 +217,17 @@ function plugin_calendar_viewer_convert()
 			$right_text = $prev_YM."&gt;&gt;";
 			$left_YM = $next_YM;
 			$left_text = "&lt;&lt;".$next_YM;
-		}else{
+		} else {
 			$left_YM = $prev_YM;
 			$left_text = "&lt;&lt;".$prev_YM;
 			$right_YM = $next_YM;
 			$right_text = $next_YM."&gt;&gt;";
 		}
-	}else{
+	} else {
 		//n件表示時
 		if ($limit_base >= count($pagelist)){
 			$right_YM = '';
-		}else{
+		} else {
 			$right_base = $limit_base + $limit_pitch;
 			$right_YM = $right_base ."*".$limit_pitch;
 			$right_text = sprintf($_msg_calendar_viewer_right,$limit_pitch);
@@ -237,7 +237,7 @@ function plugin_calendar_viewer_convert()
 			$left_YM = $left_base . "*" . $limit_pitch;
 			$left_text = sprintf($_msg_calendar_viewer_left,$limit_pitch);
 
-		}else{
+		} else {
 			$left_YM = '';
 		}
 
@@ -246,12 +246,12 @@ function plugin_calendar_viewer_convert()
 	$s_date_sep = htmlspecialchars($date_sep);
 	if ($left_YM != ''){
 		$left_link = "<a href=\"$script?plugin=calendar_viewer&amp;file=$enc_pagename&amp;date=$left_YM&amp;date_sep=$s_date_sep&amp;mode=$mode\">$left_text</a>";
-	}else{
+	} else {
 		$left_link = '';
 	}
 	if ($right_YM != ''){
 		$right_link = "<a href=\"$script?plugin=calendar_viewer&amp;file=$enc_pagename&amp;date=$right_YM&amp;date_sep=$s_date_sep&amp;mode=$mode\">$right_text</a>";
-	}else {
+	} else {
 		$right_link = '';
 	}
 
@@ -301,7 +301,7 @@ function plugin_calendar_viewer_action()
 	}
 	if (preg_match("/\*/",$page_YM)){
 		//うーん、n件表示の時はなんてページ名にしたらいい？
-	}else{
+	} else {
 		$return_vars_array['msg'] .= htmlspecialchars($page_YM);
 	}
 
