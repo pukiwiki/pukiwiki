@@ -2,36 +2,22 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.77 2004/08/22 09:08:24 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.78 2004/08/30 14:29:47 henoheno Exp $
 //
 // PukiWiki setting file
 
 /////////////////////////////////////////////////
 // ディレクトリ指定 最後に / が必要 属性は 777
 
-// データの格納ディレクトリ
-define('DATA_DIR', DATA_HOME . 'wiki/');
-
-// 差分ファイルの格納ディレクトリ
-define('DIFF_DIR', DATA_HOME . 'diff/');
-
-// バックアップファイル格納先ディレクトリ
-define('BACKUP_DIR', DATA_HOME . 'backup/');
-
-// キャッシュファイル格納ディレクトリ
-define('CACHE_DIR', DATA_HOME . 'cache/');
-
-// 添付ファイル格納ディレクトリ
-define('UPLOAD_DIR', DATA_HOME . 'attach/');
-
-// カウンタファイル格納ディレクトリ
-define('COUNTER_DIR', DATA_HOME . 'counter/');
-
-// TrackBackファイル格納ディレクトリ
-define('TRACKBACK_DIR', DATA_HOME . 'trackback/');
-
-// プラグインファイル格納先ディレクトリ
-define('PLUGIN_DIR', DATA_HOME . 'plugin/');
+// データ格納ディレクトリ
+define('DATA_DIR',      DATA_HOME . 'wiki/');	// 最新のデータ
+define('DIFF_DIR',      DATA_HOME . 'diff/');	// 差分ファイル
+define('BACKUP_DIR',    DATA_HOME . 'backup/');	// バックアップ
+define('CACHE_DIR',     DATA_HOME . 'cache/');	// キャッシュ
+define('UPLOAD_DIR',    DATA_HOME . 'attach/');	// 添付ファイル
+define('COUNTER_DIR',   DATA_HOME . 'counter/');	// カウンタ
+define('TRACKBACK_DIR', DATA_HOME . 'trackback/');	// TrackBack
+define('PLUGIN_DIR',    DATA_HOME . 'plugin/'); // プラグインファイル
 
 /////////////////////////////////////////////////
 // ディレクトリ指定 最後に / が必要
@@ -77,20 +63,12 @@ $modifier = 'anonymous';
 // 編集者のホームページ(修正してください)
 $modifierlink = 'http://pukiwiki.example.com/';
 
-// トップページの名前
-$defaultpage = 'FrontPage';
-
-// 更新履歴ページの名前
-$whatsnew = 'RecentChanges';
-
-// 削除履歴ページの名前
-$whatsdeleted = 'RecentDeleted';
-
-// InterWikiNameページの名前
-$interwiki = 'InterWikiName';
-
-// MenuBarページの名前
-$menubar = 'MenuBar';
+// デフォルトのページ名
+$defaultpage  = 'FrontPage';	// トップページ (ページを指定しないとき)
+$whatsnew     = 'RecentChanges';	// 更新履歴
+$whatsdeleted = 'RecentDeleted';	// 削除履歴
+$interwiki    = 'InterWikiName';	// InterWikiName の一覧を書くページ
+$menubar      = 'MenuBar';	// メニューとして表示させる内容を書くページ
 
 /////////////////////////////////////////////////
 // TrackBack機能を使用する
