@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: navi.inc.php,v 1.9 2003/04/03 01:38:30 panda Exp $
+// $Id: navi.inc.php,v 1.10 2003/04/13 07:04:08 arino Exp $
 //
 
 /*
@@ -53,12 +53,8 @@ function plugin_navi_convert()
 {
 	global $vars, $script;
 	global $_navi_messages;
-	static $navi;
+	static $navi = array();
 	
-	if (!isset($navi))
-	{
-		$navi = array();
-	}
 	$home = $current = $vars['page'];
 	if (func_num_args())
 	{
