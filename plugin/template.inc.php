@@ -1,11 +1,11 @@
 <?php
-// $Id: template.inc.php,v 1.6 2003/01/27 05:38:47 panda Exp $
+// $Id: template.inc.php,v 1.7 2003/02/26 08:55:05 panda Exp $
 
 define('MAX_LEN',60);
 
 function plugin_template_action()
 {
-	global $vars,$script,$non_list,$whatsnew,$_btn_template;
+	global $vars,$script,$whatsnew,$_btn_template;
 	
 	global $script,$vars;
 	global $_title_edit;
