@@ -91,7 +91,6 @@ DESCRIPTION
         ファイル       パーミッション 転送モード
         *.php          644            ASCII
         *.lng          644            ASCII
-        pukiwiki.png   644            BINARY
 
         cache/*        666            ASCII
         face/*         644            BINARY
