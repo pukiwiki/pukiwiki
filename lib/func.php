@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.31 2005/02/20 12:50:06 henoheno Exp $
+// $Id: func.php,v 1.32 2005/03/05 14:31:12 henoheno Exp $
 //
 // General functions
 
@@ -425,8 +425,9 @@ function format_date($val, $paren = FALSE)
 
 	$val += ZONETIME;
 
-	$date = date($date_format . ' ' . $time_format, $val) .
-		' ' . '(' . $weeklabels[date('w', $val)] . ')';
+	$date = date($date_format, $val) .
+		' (' . $weeklabels[date('w', $val)] . ') ' .
+		date($time_format, $val);
 
 	return $paren ? '(' . $date . ')' : $date;
 }
