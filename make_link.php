@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.51 2003/07/14 05:11:17 arino Exp $
+// $Id: make_link.php,v 1.52 2003/07/22 06:05:04 arino Exp $
 //
 
 // リンクを付加する
@@ -443,28 +443,29 @@ class Link_interwikiname extends Link
 		$s3 = $this->start + 3;
 		$s5 = $this->start + 5;
 		return <<<EOD
-\[\[                    # open bracket
+\[\[                  # open bracket
 (?:
- (\[\[)?                # (1) open bracket
- ((?:(?<!\]\]).)+)>     # (2) alias
+ (\[\[)?              # (1) open bracket
+ ((?:(?<!\]\]).)+)>   # (2) alias
 )?
+(\[\[)?               # (3) open bracket
+((?:(?!\s|:|\]\]).)+) # (4) InterWiki
+(?<! > | >\[\[ )      # not '>' or '>[['
+(                     # (5)
+ (?($s1)\]\]          #  close bracket if (1)
+ |(?($s3)\]\])        #   or (3)
+ )
+)?
+:                     # separator
 (?:
- (\[\[)?                # (3) open bracket
- ((?:(?!\s|:|\]\]).)+)  # (4) InterWiki
- (                      # (5)
-  (?($s1)\]\]           #  close bracket if (1)
-  |(?($s3)\]\])         #   or (3)
-  )
- )?
- (?<! > | >\[\[ )       # not '>' or '>[['
- \:((?:(?<!>|\]\]).)+)  # (6) param
- (?($s5) |              # if !(5)
-  (?($s1)\]\]           #  close bracket if (1)
-  |(?($s3)\]\])         #   or (3)
+ ((?:(?<!>|\]\]).)+)  # (6) param
+ (?($s5) |            # if !(5)
+  (?($s1)\]\]         #  close bracket if (1)
+  |(?($s3)\]\])       #   or (3)
   )
  )
 )?
-\]\]                    # close bracket
+\]\]                  # close bracket
 EOD;
 	}
 	function get_count()
@@ -834,7 +835,7 @@ function get_fullname($name,$refer)
 // InterWikiNameを展開
 function get_interwiki_url($name,$param)
 {
-	global $interwiki;
+	global $WikiName,$interwiki;
 	static $interwikinames;
 	static $encode_aliases = array('sjis'=>'SJIS','euc'=>'EUC-JP','utf8'=>'UTF-8');
 	
