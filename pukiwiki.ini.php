@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.61 2004/07/04 11:37:33 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.62 2004/07/04 12:18:57 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -299,7 +299,7 @@ $line_break = 0;
 // ユーザーエージェント対応設定
 
 $agents = array(
-//	pattern: デバイス[ブラウザ]名およびバージョンの検出パターン  name: 検出した場合の設定
+//	pattern: デバイス[ブラウザ]名およびバージョンの検出パターン  profile: 所属するグループ
 
     // 組み込みブラウザ(リッチクライアントではないもの)
 
