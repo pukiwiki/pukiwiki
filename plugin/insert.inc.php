@@ -1,5 +1,5 @@
 <?php
-// $Id: insert.inc.php,v 1.5 2002/11/29 00:09:01 panda Exp $
+// $Id: insert.inc.php,v 1.5.2.1 2003/01/22 05:41:14 panda Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -103,8 +103,9 @@ function plugin_insert_action()
 }
 function plugin_insert_convert()
 {
-	global $script,$insert_no,$vars,$digest;
+	global $script,$vars,$digest;
 	global $_btn_insert,$vars;
+	static $insert_no = 0;
 
 	if((arg_check("read")||$vars["cmd"] == ""||arg_check("unfreeze")||arg_check("freeze")||$vars["write"]||$vars["insert"]))
 		$button = "<input type=\"submit\" name=\"insert\" value=\"$_btn_insert\" />\n";

@@ -1,5 +1,5 @@
 <?php
-// $Id: vote.inc.php,v 1.8 2002/11/29 00:09:01 panda Exp $
+// $Id: vote.inc.php,v 1.8.2.1 2003/01/22 05:41:14 panda Exp $
 
 function plugin_vote_init()
 {
@@ -39,7 +39,8 @@ function plugin_vote_action()
 						$cnt = 0;
 					}
 
-					if($post["vote_$arg"]==$_vote_plugin_votes) $cnt++;
+					$e_arg = encode($arg);
+					if($post["vote_$e_arg"]==$_vote_plugin_votes) $cnt++;
 
 					$votes[] = $arg.'['.$cnt.']';
 				}
@@ -106,8 +107,9 @@ function plugin_vote_action()
 }
 function plugin_vote_convert()
 {
-	global $script,$vars,$vote_no,$digest;
+	global $script,$vars,$digest;
 	global $_vote_plugin_choice, $_vote_plugin_votes;
+	static $vote_no = 0;
 
 	$args = func_get_args();
 
@@ -138,13 +140,14 @@ function plugin_vote_convert()
 		}
 
 		$link = make_link($arg);
+		$e_arg = encode($arg);
 
 		if($tdcnt++ % 2) $cls = "vote_td1";
 		else           $cls = "vote_td2";
 
 		$string .= "<tr>"
 			.  "<td align=\"left\" class=\"$cls\" style=\"padding-left:1em;padding-right:1em;\" nowrap=\"nowrap\">$link</td>"
-			.  "<td align=\"right\" class=\"$cls\" nowrap=\"nowrap\">$cnt&nbsp;&nbsp;<input type=\"submit\" name=\"vote_".htmlspecialchars($arg)."\" value=\"$_vote_plugin_votes\" class=\"submit\" /></td>"
+			.  "<td align=\"right\" class=\"$cls\" nowrap=\"nowrap\">$cnt&nbsp;&nbsp;<input type=\"submit\" name=\"vote_".htmlspecialchars($e_arg)."\" value=\"$_vote_plugin_votes\" class=\"submit\" /></td>"
 			.  "</tr>\n";
 	}
 
