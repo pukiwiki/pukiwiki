@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.25 2004/11/23 14:44:18 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.26 2004/12/06 13:10:59 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -41,6 +41,7 @@ switch(UI_LANG){
 }
 
 // Output header
+pkwk_headers_sent();
 header('Cache-control: no-cache');
 header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);

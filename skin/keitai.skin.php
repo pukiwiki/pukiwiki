@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.skin.php,v 1.3 2004/10/17 13:29:52 henoheno Exp $
+// $Id: keitai.skin.php,v 1.4 2004/12/06 13:10:59 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -12,6 +12,7 @@ global $max_size, $accesskey, $menubar;
 $link = $_LINK;
 
 // Force Shift JIS encode for Japanese embedded browsers and devices
+pkwk_headers_sent();
 header('Content-Type: text/html; charset=Shift_JIS');
 $title = mb_convert_encoding($title, 'SJIS', SOURCE_ENCODING);
 $body  = mb_convert_encoding($body,  'SJIS', SOURCE_ENCODING);
