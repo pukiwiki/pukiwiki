@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.90 2004/07/18 09:25:13 henoheno Exp $
+// $Id: init.php,v 1.91 2004/07/23 14:27:17 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -189,16 +189,18 @@ if (isset($post['encode_hint']) && $post['encode_hint'] != '')
 	// コードが混入した場合に、コード検出に失敗する恐れがある。
 	$encode = mb_detect_encoding($post['encode_hint']);
 	mb_convert_variables(SOURCE_ENCODING, $encode, $post);
+	mb_convert_variables(SOURCE_ENCODING, $encode, $vars);
 }
 else if (isset($post['charset']) && $post['charset'] != '')
 {
 	// TrackBack Pingに含まれていることがある
 	// 指定された場合は、その内容で変換を試みる
+	// うまくいかなかった場合はコード検出の設定で変換しなおし
 	if (mb_convert_variables(SOURCE_ENCODING, $post['charset'], $post) !== $post['charset'])
-	{
-		// うまくいかなかった場合はコード検出の設定で変換しなおし
 		mb_convert_variables(SOURCE_ENCODING, 'auto', $post);
-	}
+
+	if (mb_convert_variables(SOURCE_ENCODING, $vars['charset'], $post) !== $vars['charset'])
+		mb_convert_variables(SOURCE_ENCODING, 'auto', $vars);
 }
 else if (count($post) > 0)
 {
@@ -207,6 +209,7 @@ else if (count($post) > 0)
 
 	// 全部まとめて、コード検出、変換
 	mb_convert_variables(SOURCE_ENCODING, 'auto', $post);
+	mb_convert_variables(SOURCE_ENCODING, 'auto', $vars);
 }
 
 // get は <form> からの場合と、<a href="http;//script/?query> の場合がある
