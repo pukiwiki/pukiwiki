@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.12 2004/07/31 13:38:42 henoheno Exp $
+// $Id: tb.inc.php,v 1.13 2004/07/31 13:41:20 henoheno Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -97,6 +97,7 @@ function tb_save()
 	flock($fp, LOCK_EX);
 	rewind($fp);
 	foreach ($data as $line) {
+		$line = preg_replace('/[\r\n]/s', '', $line); // One line, one ping
 		fwrite($fp, join(',', $line) . "\n");
 	}
 	flock($fp, LOCK_UN);
