@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.44 2004/08/05 13:28:00 henoheno Exp $
+//  $Id: attach.inc.php,v 1.45 2004/08/05 13:39:27 henoheno Exp $
 //
 
 /*
@@ -15,8 +15,8 @@
 // Max file size for upload on PHP (PHP default: 2MB)
 ini_set('upload_max_filesize', '2M');
 
-// Max file size for upload on script of PukiWiki
-define('MAX_FILESIZE', 1000000); // default: 1MB
+// Max file size for upload on script of PukiWikiX_FILESIZE
+define('MAX_FILESIZE', (1024 * 1024)); // default: 1MB
 
 // 管理者だけが添付ファイルをアップロードできるようにする
 define('ATTACH_UPLOAD_ADMIN_ONLY', FALSE); // FALSE or TRUE
@@ -339,7 +339,7 @@ EOD;
 	if (! (bool)ini_get('file_uploads')) return $navi;
 
 	$maxsize = MAX_FILESIZE;
-	$msg_maxsize = sprintf($_attach_messages['msg_maxsize'], number_format($maxsize/1000). 'KB');
+	$msg_maxsize = sprintf($_attach_messages['msg_maxsize'], number_format($maxsize/1024) . 'KB');
 
 	$pass = '';
 	if (ATTACH_PASSWORD_REQUIRE or ATTACH_UPLOAD_ADMIN_ONLY) {
@@ -405,7 +405,7 @@ class AttachFile
 		}
 		$this->time_str = get_date('Y/m/d H:i:s', $this->time);
 		$this->size     = filesize($this->filename);
-		$this->size_str = sprintf('%01.1f', round($this->size)/1000, 1) . 'KB';
+		$this->size_str = sprintf('%01.1f', round($this->size)/1024) . 'KB';
 		$this->type     = attach_mime_content_type($this->filename);
 
 		return TRUE;
