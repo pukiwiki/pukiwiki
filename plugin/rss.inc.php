@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rss.inc.php,v 1.14 2005/01/16 13:10:52 henoheno Exp $
+// $Id: rss.inc.php,v 1.15 2005/02/05 03:11:13 henoheno Exp $
 //
 // RSS plugin: Publishing RSS of RecentChanges
 //
@@ -20,7 +20,7 @@ function plugin_rss_action()
 	case '':  $version = '0.91'; break; // Default
 	case '1': $version = '1.0';  break; // Sugar
 	case '2': $version = '2.0';  break; // Sugar
-	case '0,91': /* FALLTHROUGH */
+	case '0.91': /* FALLTHROUGH */
 	case '1.0' : /* FALLTHROUGH */
 	case '2.0' : break;
 	default: die('Invalid RSS version!!');
