@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.4 2003/08/20 10:55:36 arino Exp $
+// $Id: tb.inc.php,v 1.5 2003/09/28 14:29:07 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -257,6 +257,8 @@ EOD;
 </body>
 </html>
 EOD;
+	// BugTrack/466 エンコード誤認対策
+	header('Content-type: text/html; charset=UTF-8');
 	echo '<?xml version="1.0" encoding="UTF-8"?>';
 	echo mb_convert_encoding($msg,'UTF-8',SOURCE_ENCODING);
 	die;
