@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.1 2004/12/24 14:41:12 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.2 2004/12/30 08:51:46 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -31,17 +31,12 @@
 //define('TDIARY_THEME', 'snowy');
 if (! defined('TDIARY_THEME')) define('TDIARY_THEME', 'loose-leaf'); // Default
 
-// SKIN_DEFAULT_DISABLE_REVERSE_LINK
-if(! defined('SKIN_DEFAULT_DISABLE_REVERSE_LINK'))
-	define('SKIN_DEFAULT_DISABLE_REVERSE_LINK', 1);
-
-
-// SKIN_DEFAULT_DISABLE_TOPICPATH
+// Show someting with <div class="calendar"> design
 //   1    = Show reload URL
 //   0    = Show topicpath
 //   NULL = Show nothing
-if (! defined('SKIN_DEFAULT_DISABLE_TOPICPATH'))
-	define('SKIN_DEFAULT_DISABLE_TOPICPATH', NULL);
+if (! defined('TDIARY_CALENDAR_DESIGN'))
+	define('TDIARY_CALENDAR_DESIGN', NULL);
 
 // --------
 // Prohibit direct access
@@ -49,11 +44,11 @@ if (! defined('UI_LANG')) die('UI_LANG is not set');
 if (! isset($_LANG)) die('$_LANG is not set');
 
 // Check theme
-$theme = rawurlencode(TDIARY_THEME);
+$theme = TDIARY_THEME;
 if ($theme == '') {
-	echo '/* Theme is not specified. Set "TDIARY_THEME" */';
-	exit;
+	die('Theme is not specified. Set "TDIARY_THEME" correctly');
 } else {
+	$theme = rawurlencode($theme); // Supress all nasty letters
 	$theme_css = SKIN_DIR . 'theme/' . $theme . '/' . $theme . '.css';
 	if (! file_exists($theme_css)) {
 		echo 'tDiary theme wrapper: ';
@@ -72,7 +67,7 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	// $ wc -l *.txt
 	//     75 list-sidebar.txt
 	//    193 list-all.txt
-	$sidebar = FALSE; // Disabled
+	$sidebar = 'another'; // Default: Show as an another page below
 	switch($theme){
 	case '3minutes':	/*FALLTHROUGH*/
 	case '3pink':
@@ -149,12 +144,23 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'tinybox_green':
 	case 'wine':
 	case 'yukon':
-		$sidebar = TRUE; // Compatible
+		$sidebar = 'bottom';	// This is the default position of tDiary's.
 		break;
 	}
 
-	// Adjust sidebar's default design manually
+	// Adjust sidebar's default position
 	switch($theme){
+	case 'autumn':	/*FALLTHROUGH*/
+	case 'cosmos':
+	case 'happa':
+	case 'kaeru':
+	case 'note':
+	case 'sunset':
+	case 'tinybox':	// For MSIE with narrow window width, seems meanless
+	case 'tinybox_green':	// The same
+		$sidebar = 'top';	// Assuming sidebar is above of the body
+		break;
+
 	case '3minutes':	/*FALLTHROUGH*/
 	case '3pink':
 	case 'aoikuruma':
@@ -173,9 +179,10 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'matcha':
 	case 'mizu':
 	case 'mono':
+	case 'moo':	// For MSIE, strict seems meanless
 	case 'puppy':
 	case 'rainy-season':
-	case 's-blue':
+	case 's-blue':	// For MSIE, strict seems meanless
 	case 'sagegreen':
 	case 'savanna':
 	case 'scarlet':
@@ -183,23 +190,28 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'simple':
 	case 'spring':
 	case 'teacup':
-		$sidebar = 'top'; // Strict separation between sidebar and main
+	case 'wine':
+		$sidebar = 'strict'; // Strict separation between sidebar and main needed
 		break;
 
 	case 'babypink':	/*FALLTHROUGH*/
-	case 'bubble':
 	case 'blog':
+	case 'bubble':
+	case 'cherry':
+	case 'darkness-pop':
+	case 'diamond_dust':
+	case 'dice':
 	case 'gear':
+	case 'pale':
+	case 'paper':
+	case 'pink-border':
 	case 'purple_sun':
 	case 'rectangle':
 	case 'russet':
 	case 'smoking_black':
-		$sidebar = FALSE; // Show as an another page below
+		$sidebar = 'another'; // Show as an another page below
 		break;
 
-	case 'be_r5':
-		$sidebar = TRUE; // Not included officially but works
-		break;
 	}
 }
 // Check menu (sidebar) is ready and $menubar is there
@@ -259,9 +271,9 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
 <?php echo $head_tag ?>
 </head>
-<body><!-- Theme: <?php echo htmlspecialchars($theme) . ' Sidebar:' . $sidebar ?> -->
+<body><!-- Theme:<?php echo htmlspecialchars($theme) . ' Sidebar:' . $sidebar ?> -->
 
-<?php if ($menu && $sidebar === 'top') { ?>
+<?php if ($menu && $sidebar == 'strict') { ?>
 <!-- Sidebar top -->
 <div class="sidebar">
 	<div id="menubar">
@@ -271,7 +283,7 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
 <div class="pkwk_body">
 <div class="main">
-<?php } // if ($menu && $sidebar === 'top') ?>
+<?php } // if ($menu && $sidebar == 'strict') ?>
 
 <!-- Navigation buttuns -->
 <div class="adminmenu">
@@ -329,8 +341,8 @@ function _navigator($key, $value = '', $javascript = ''){
 <h1><?php echo $page_title ?></h1>
 
 <div class="calendar">
-<?php if ($is_page && SKIN_DEFAULT_DISABLE_TOPICPATH !== NULL) { ?>
-	<?php if(SKIN_DEFAULT_DISABLE_TOPICPATH) { ?>
+<?php if ($is_page && TDIARY_CALENDAR_DESIGN !== NULL) { ?>
+	<?php if(TDIARY_CALENDAR_DESIGN) { ?>
 		<a href="<?php echo $link['reload'] ?>"><span class="small"><?php echo $link['reload'] ?></span></a>
 	<?php } else { ?>
 		<?php require_once(PLUGIN_DIR . 'topicpath.inc.php'); echo plugin_topicpath_inline(); ?>
@@ -338,17 +350,22 @@ function _navigator($key, $value = '', $javascript = ''){
 <?php } ?>
 </div>
 
-<?php if ($menu && $sidebar === TRUE) { ?>
-<!-- Sidebar compat -->
+
+<?php if ($menu && $sidebar == 'top') { ?>
+<!-- Sidebar compat top -->
 <div class="sidebar">
 	<div id="menubar">
 		<?php echo $menu_body ?>
 	</div>
 </div><!-- class="sidebar" -->
+<?php } // if ($menu && $sidebar == 'top') ?>
 
+
+<?php if ($menu && ($sidebar == 'top' || $sidebar == 'bottom')) { ?>
 <div class="pkwk_body">
 <div class="main">
-<?php } // if ($menu && $sidebar === TRUE) ?>
+<?php } // if ($menu && $sidebar == 'top') ?>
+
 
 <hr class="sep" />
 
@@ -430,11 +447,12 @@ if ($disable_reverse_link === TRUE) {
 
 <hr class="sep" />
 
-<?php if ($menu && $sidebar === FALSE) { ?>
+
+<?php if ($menu && $sidebar == 'another') { ?>
 </div><!-- class="main" -->
 </div><!-- class="pkwk_body" -->
 
-<!-- Sidebar bottom -->
+<!-- Sidebar another -->
 <div class="pkwk_body">
 	<h1>&nbsp;</h1>
 	<div class="calendar"></div>
@@ -449,16 +467,28 @@ if ($disable_reverse_link === TRUE) {
 		<div class="referer"></div>
 	</div>
 	<hr class="sep" />
-</div><!-- class="sidebar" -->
+</div><!-- class="pkwk_body" -->
 
 <div class="pkwk_body">
 <div class="main">
-<?php } // if ($menu && $sidebar === FALSE) ?>
+<?php } // if ($menu && $sidebar == 'another') ?>
 
-<?php if ($menu && $sidebar === TRUE) { ?>
+
+<?php if ($menu && ($sidebar == 'top' || $sidebar == 'bottom')) { ?>
 </div><!-- class="main" -->
 </div><!-- class="pkwk_body" -->
 <?php } ?>
+
+
+<?php if ($menu && $sidebar == 'bottom') { ?>
+<!-- Sidebar compat bottom -->
+<div class="sidebar">
+	<div id="menubar">
+		<?php echo $menu_body ?>
+	</div>
+</div><!-- class="sidebar" -->
+<?php } // if ($menu && $sidebar == 'bottom') ?>
+
 
 <!-- Copyright etc -->
 <div class="footer">
@@ -468,10 +498,12 @@ if ($disable_reverse_link === TRUE) {
  HTML convert time to <?php echo $taketime ?> sec.
 </div>
 
-<?php if ($menu && $sidebar !== TRUE) { ?>
+
+<?php if ($menu && ($sidebar != 'top' && $sidebar != 'bottom')) { ?>
 </div><!-- class="main" -->
 </div><!-- class="pkwk_body" -->
 <?php } ?>
+
 
 </body>
 </html>
