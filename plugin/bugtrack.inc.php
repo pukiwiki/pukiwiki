@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.8 2003/02/25 04:01:33 panda Exp $
+ * $Id: bugtrack.inc.php,v 1.9 2003/02/25 06:17:35 panda Exp $
  */
 
 function plugin_bugtrack_init()
@@ -218,7 +218,12 @@ function plugin_bugtrack_convert()
 	if (func_num_args() > 0) {
 		$args = func_get_args();
 		$category = $args;
-		$base = array_shift($category);
+		$_base = strip_bracket(array_shift($category));
+		$_base = get_fullname($_base,$base);
+		if (is_pagename($_base))
+		{
+			$base = $_base;
+		}
 	}
 	
 	return plugin_bugtrack_print_form($base,$category);
@@ -272,7 +277,12 @@ function plugin_bugtrack_list_convert()
 	
 	$page = $vars['page'];
 	if (func_num_args()) {
-		list($page) = func_get_args();
+		list($_page) = func_get_args();
+		$_page = get_fullname(strip_bracket($_page),$page);
+		if (is_pagename($_page))
+		{
+			$page = $_page;
+		}
 	}
 	
 	$data = array();
