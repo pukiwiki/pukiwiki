@@ -1,7 +1,7 @@
 <?php
 /*
  * PukiWiki calendar_viewerプラグイン
- * $Id: calendar_viewer.inc.php,v 1.17 2004/08/10 12:56:30 henoheno Exp $
+ * $Id: calendar_viewer.inc.php,v 1.18 2004/08/10 13:10:35 henoheno Exp $
  * calendarrecentプラグインを元に作成
  */
 
@@ -52,47 +52,45 @@ function plugin_calendar_viewer_convert()
 
 
 	// 引数の確認
-	if (func_num_args() >= 2){
-		$func_vars_array = func_get_args();
+	if (func_num_args() < 2) return $_err_calendar_viewer_param;
 
-		$pagename = $func_vars_array[0];
+	$func_vars_array = func_get_args();
 
-		if (isset($func_vars_array[3])){
-			$date_sep = $func_vars_array[3];
-		}
-		if (preg_match('/[0-9]{4}' . $date_sep . '[0-9]{2}/', $func_vars_array[1])){
-			// 指定年月の一覧表示
-			$page_YM = $func_vars_array[1];
-			$limit_base = 0;
-			$limit_page = 31;	// 手抜き。31日分をリミットとする。
-		} else if (preg_match('/this/si', $func_vars_array[1])){
-			// 今月の一覧表示
-			$page_YM = get_date('Y' . $date_sep . 'm');
-			$limit_base = 0;
-			$limit_page = 31;
-		} else if (preg_match('/^[0-9]+$/', $func_vars_array[1])){
-			// n日分表示
-			$page_YM = '';
-			$limit_page = $limit_pitch;
-			$limit_base = 0;
-			$limit_pitch = $func_vars_array[1];
-		} else if (preg_match('/([0-9]+)\*([0-9]+)/', $func_vars_array[1], $reg_array)){
-			$page_YM = '';
-			$limit_base = $reg_array[1];
-			$limit_page = $reg_array[1] + $limit_pitch;
-			$limit_pitch = $reg_array[2];
-		} else {
-			return $_err_calendar_viewer_param2;
-		}
-		if (isset($func_vars_array[2]) && preg_match('/^(past|view|future)$/si', $func_vars_array[2])){
-			// モード指定
-			$mode = $func_vars_array[2];
-		}
+	$pagename = $func_vars_array[0];
 
-
-	} else {
-		return $_err_calendar_viewer_param;
+	if (isset($func_vars_array[3])){
+		$date_sep = $func_vars_array[3];
 	}
+	if (preg_match('/[0-9]{4}' . $date_sep . '[0-9]{2}/', $func_vars_array[1])){
+		// 指定年月の一覧表示
+		$page_YM = $func_vars_array[1];
+		$limit_base = 0;
+		$limit_page = 31;	// 手抜き。31日分をリミットとする。
+	} else if (preg_match('/this/si', $func_vars_array[1])){
+		// 今月の一覧表示
+		$page_YM = get_date('Y' . $date_sep . 'm');
+		$limit_base = 0;
+		$limit_page = 31;
+	} else if (preg_match('/^[0-9]+$/', $func_vars_array[1])){
+		// n日分表示
+		$page_YM = '';
+		$limit_page  = $func_vars_array[1];
+		$limit_base  = 0;
+		$limit_pitch = $func_vars_array[1];
+	} else if (preg_match('/([0-9]+)\*([0-9]+)/', $func_vars_array[1], $reg_array)){
+		$page_YM = '';
+		$limit_base  = $reg_array[1];
+		$limit_page  = $reg_array[1] + $reg_array[2];
+		$limit_pitch = $reg_array[2];
+	} else {
+		return $_err_calendar_viewer_param2;
+	}
+
+	if (isset($func_vars_array[2]) && preg_match('/^(past|view|future)$/si', $func_vars_array[2])){
+		// モード指定
+		$mode = $func_vars_array[2];
+	}
+
 
 	// *一覧表示するページ名とファイル名のパターン　ファイル名には年月を含む
 	if ($pagename == ''){
