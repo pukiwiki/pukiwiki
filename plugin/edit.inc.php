@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.21 2004/11/20 05:12:01 henoheno Exp $
+// $Id: edit.inc.php,v 1.22 2004/11/20 06:38:32 henoheno Exp $
 //
 
 // Edit plugin
@@ -89,15 +89,17 @@ function plugin_edit_inline()
 	$s_label = array_pop($args); // {label}
 	$page    = array_shift($args);
 	if($page == NULL) $page = '';
-	$_noicon = $_nolabel = FALSE;
+	$_noicon = $_nolabel = $_paraedit = FALSE;
 	foreach($args as $arg){
 		switch($arg){
 		case '': break;
-		case 'noicon':  $_noicon  = TRUE; break;
-		case 'nolabel': $_nolabel = TRUE; break;
+		case 'noicon':   $_noicon   = TRUE; break;
+		case 'nolabel':  $_nolabel  = TRUE; break;
+		case 'paraedit': $_paraedit = TRUE; break; // Paragraph-edit
 		default: return $usage;
 		}
 	}
+	if($_paraedit) $_nolabel = TRUE;
 
 	// Separate a page-name and a fixed anchor
 	list($s_page, $id, $editable) = anchor_explode($page, TRUE);
@@ -109,22 +111,31 @@ function plugin_edit_inline()
 
 	// Paragraph edit enabled or not
 	$short = htmlspecialchars('Edit');
-	if ($fixed_heading_anchor_edit && $editable === TRUE && $ispage === TRUE) {
-		$title = htmlspecialchars(sprintf('Edit %s', $page));
+	if ($fixed_heading_anchor_edit && $editable && $ispage && ! $isfreeze) {
+		// Paragraph editing
 		$id    = rawurlencode($id);
+		$title = htmlspecialchars(sprintf('Edit %s', $page));
 		$icon = '<img src="' . IMAGE_DIR . 'paraedit.png' .
 			'" width="9" height="9" alt="' .
 			$short . '" title="' . $title . '" /> ';
 		$class = 'anchor_super';
 	} else {
-		$title = htmlspecialchars(sprintf('Edit %s', $s_page));
+		// Normal editing / unfreeze
 		$id    = '';
-		$icon = '<img src="' . IMAGE_DIR . 'edit.png' .
+		if ($isfreeze) {
+			$title = 'Unfreeze %s';
+			$icon  = 'unfreeze.png';
+		} else {
+			$title = 'Edit %s';
+			$icon  = 'edit.png';
+		}
+		$title = htmlspecialchars(sprintf($title, $s_page));
+		$icon = '<img src="' . IMAGE_DIR . $icon .
 			'" width="20" height="20" alt="' .
 			$short . '" title="' . $title . '" />';
 		$class = '';
 	}
-	if ($_noicon || $isfreeze) $icon = ''; // No more icon
+	if ($_noicon || $_paraedit) $icon = ''; // No more icon
 	if ($_nolabel) {
 		if (!$_noicon) {
 			$s_label = '';     // No label with an icon
@@ -135,9 +146,8 @@ function plugin_edit_inline()
 		if ($s_label == '') $s_label = $title; // Rich label with an icon
 	}
 
-	// Anchor tag
+	// URL
 	if ($isfreeze) {
-		$title = htmlspecialchars(sprintf('Unfreeze %s', $page));
 		$url   = $script . '?cmd=unfreeze&amp;page=' . rawurlencode($s_page);
 	} else {
 		if ($id != '') {
