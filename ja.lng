@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.20 2003/07/10 03:21:12 arino Exp $
+// $Id: ja.lng,v 1.21 2003/07/11 10:29:56 arino Exp $
 //
 // PukiWiki message file (japanese)
 
@@ -379,6 +379,7 @@ $_title_template = '$1 をテンプレートにして作成';
 $_tracker_messages = array(
 	'msg_list' => '$1 の項目一覧',
 	'msg_back' => '<p>$1</p>',
+	'msg_limit' => '全$1件中、上位$2件を表示しています。',
 	'btn_page' => 'ページ名',
 	'btn_name' => 'ページ名',
 	'btn_real' => 'ページ名',

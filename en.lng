@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.20 2003/07/10 03:21:12 arino Exp $
+// $Id: en.lng,v 1.21 2003/07/11 10:29:56 arino Exp $
 //
 // PukiWiki message file (english)
 
@@ -378,6 +378,7 @@ $_title_template = 'create new page, using $1 as template.';
 $_tracker_messages = array(
 	'msg_list' => 'List items of $1',
 	'msg_back' => '<p>$1</p>',
+	'msg_limit' => 'top $2 results out of $1.',
 	'btn_page' => 'Page',
 	'btn_name' => 'Name',
 	'btn_real' => 'Realname',

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.1 2003/07/10 02:49:35 arino Exp $
+// $Id: tracker.inc.php,v 1.2 2003/07/11 10:29:57 arino Exp $
 //
 
 function plugin_tracker_convert()
@@ -416,32 +416,31 @@ EOD;
 // 一覧表示
 function plugin_tracker_list_convert()
 {
-	global $script,$vars;
+	global $vars;
 	
+	$config = 'default';
 	$page = $vars['page'];
-	
-	$config_name = 'default';
 	$field = '_page';
 	$order = -1;
+	$limit = NULL;
 	if (func_num_args())
 	{
 		$args = func_get_args();
 		switch (count($args))
 		{
+			case 5:
+				$limit = is_numeric($args[4]) ? $args[4] : $limit;
 			case 4:
-				$order = is_numeric($args[3]) ? $args[3] : -1;
+				$order = is_numeric($args[3]) ? $args[3] : $order;
 			case 3:
-				$field = $args[2];
+				$field = ($args[2] != '') ? $args[2] : $field;
 			case 2:
-				if (is_pagename($page))
-				{
-					$page = $args[1];
-				}
+				$page = is_pagename($args[1]) ? $args[1] : $page;
 			case 1:
-				$config_name = array_shift($args);
+				$config = ($args[0] != '') ? $args[0] : $config;
 		}
 	}
-	return plugin_tracker_getlist($page,$config_name,$field,$order);
+	return plugin_tracker_getlist($page,$config,$field,$order,$limit);
 }
 function plugin_tracker_list_action()
 {
@@ -460,7 +459,7 @@ function plugin_tracker_list_action()
 			plugin_tracker_getlist($page,$config,$field,$order)
 	);
 }
-function plugin_tracker_getlist($page,$config_name,$field=NULL,$order=1)
+function plugin_tracker_getlist($page,$config_name,$field=NULL,$order=1,$limit=NULL)
 {
 	$config = new Config('plugin/tracker/'.$config_name);
 	
@@ -471,7 +470,7 @@ function plugin_tracker_getlist($page,$config_name,$field=NULL,$order=1)
 	$config->config_name = $config_name;
 	$list = &new Tracker_list($page,$config);
 	$list->sort($field,$order);
-	return $list->toString();
+	return $list->toString($limit);
 }
 
 // 一覧クラス
@@ -497,13 +496,19 @@ class Tracker_list
 		// ブロックプラグインを削除
 		$pattern = preg_replace('/^\#([^\(]+)(?:\((.*)\))?\s*$/m','',$pattern);
 		// パターンを生成
+		$this->pattern = '';
 		$this->pattern_fields = array();
-		$pattern = preg_replace_callback('/\\\\\[(\w+)\\\\\]/',
-			array(&$this,'get_num'),
-			preg_quote($pattern,'/')
-		);
-		$this->pattern = preg_replace('/\s+/','\\s*',trim($pattern));
-		
+		$pattern = preg_split('/\\\\\[(\w+)\\\\\]/',preg_quote($pattern,'/'),-1,PREG_SPLIT_DELIM_CAPTURE);
+		while (count($pattern))
+		{
+			$this->pattern .= preg_replace('/\s+/','\\s*','(?>\\s*'.trim(array_shift($pattern)).'\\s*)');
+			if (count($pattern))
+			{
+				$field = array_shift($pattern);
+				$this->pattern_fields[] = $field;
+				$this->pattern .= '(.*)';
+			}
+		}
 		// ページの列挙と取り込み
 		$this->rows = array();
 		$pattern = "$page/";
@@ -518,14 +523,15 @@ class Tracker_list
 			}
 		}
 	}
-	function get_num($arr)
-	{
-		$this->pattern_fields[] = $arr[1];
-		return '(.*)';
-	}
 	function add($page,$name)
 	{
 		global $WikiName,$BracketName;
+		
+		// 無限ループ防止
+		if (array_key_exists($name,$this->rows))
+		{
+			return;
+		}
 		
 		$source = plugin_tracker_get_source($page);
 		if (preg_match("/move\s*to\s*($WikiName|\[\[$BracketName\]\])/",$source[0],$matches))
@@ -549,6 +555,13 @@ class Tracker_list
 			}
 		}
 	}
+	function filter($field,$pred,$value)
+	{
+		switch (strtolower($pred))
+		{
+			case 'eq':
+				,ne,gt,ge,lt,le,in
+			
 	function sort($field=NULL,$order=1)
 	{
 		$this->sort_order = $order;
@@ -620,13 +633,23 @@ class Tracker_list
 		
 		return "[[$title$arrow>$script?plugin=tracker_list&refer=$r_page&config=$r_config&field=$r_field&order=$order]]";
 	}
-	function toString()
+	function toString($limit=NULL)
 	{
+		global $_tracker_messages;
+		
+		$list = $body = '';
+		if ($limit !== NULL and count($this->rows) > $limit)
+		{
+			$list .= str_replace(
+				array('$1','$2'),
+				array(count($this->rows),$limit),
+				$_tracker_messages['msg_limit'])."\n";
+			$this->rows = array_splice($this->rows,0,$limit);
+		}
 		if (count($this->rows) == 0)
 		{
 			return '';
 		}
-		$list = $body = '';
 		foreach (plugin_tracker_get_source($this->config->page.'/list') as $line)
 		{
 			if (preg_match('/^\|(.+)\|[hHfFcC]$/',$line))
