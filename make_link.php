@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.43 2003/05/28 04:50:45 arino Exp $
+// $Id: make_link.php,v 1.44 2003/06/02 09:58:27 arino Exp $
 //
 
 // リンクを付加する
@@ -448,7 +448,7 @@ class Link_interwikiname extends Link
 )?
 (?:
  (\[\[)?                # (3) open bracket
- ([^\s:]+)              # (4) InterWiki
+ ((?:(?!\s|:|\]\]).)+)  # (4) InterWiki
  (                      # (5)
   (?($s1)\]\]           #  close bracket if (1)
   |(?($s3)\]\])         #   or (3)
@@ -559,16 +559,20 @@ EOD;
 		{
 			$alias = $name.$this->anchor;
 		}
-		if ($name == '' and $this->anchor == '')
+		if ($name == '')
 		{
-			return FALSE;
+			if ($this->anchor == '')
+			{
+				return FALSE;
+			}
 		}
-		
-		$name = get_fullname($name,$page);
-		
-		if ($name != '' and !is_pagename($name))
+		else
 		{
-			return FALSE;
+			$name = get_fullname($name,$page);
+			if (!is_pagename($name))
+			{
+				return FALSE;
+			}
 		}
 		return parent::setParam($page,$name,'pagename',$alias);
 	}
@@ -780,6 +784,11 @@ function make_pagelink($page,$alias='',$anchor='',$refer='')
 function get_fullname($name,$refer)
 {
 	global $defaultpage;
+	
+	if ($name == '')
+	{
+		return $refer;
+	}
 	
 	if ($name{0} == '/')
 	{
