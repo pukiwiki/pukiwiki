@@ -1,5 +1,5 @@
 <?php
-// $Id: ref.inc.php,v 1.2 2002/12/07 09:43:43 panda Exp $
+// $Id: ref.inc.php,v 1.2.2.1 2003/02/28 06:15:42 panda Exp $
 /*
 Last-Update:2002-10-29 rev.33
 
@@ -131,10 +131,6 @@ function plugin_ref_convert() {
 // 画像かどうか
 function is_picture($text) {
 	return preg_match('/(\.gif|\.png|\.jpeg|\.jpg)$/i', $text);
-}
-// URLかどうか
-function is_url($text) {
-	return preg_match('/^(https?|ftp|news)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/', $text);
 }
 // divで包む
 function wrap_div($text, $align, $around) {

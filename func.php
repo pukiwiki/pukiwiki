@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.9.2.1 2003/02/23 04:19:32 panda Exp $
+// $Id: func.php,v 1.9.2.2 2003/02/28 06:15:49 panda Exp $
 /////////////////////////////////////////////////
 
 // 検索
@@ -372,5 +372,9 @@ function sanitize_null_character($param)
 		$result = str_replace("\0",'',$param);
 	}
 	return $result;
+}
+// URLかどうか
+function is_url($text) {
+	return preg_match('/^(https?|ftp|news)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/', $text);
 }
 ?>
