@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.1 2003/06/05 06:20:49 arino Exp $
+// $Id: trackback.php,v 1.2 2003/06/05 06:41:25 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -32,7 +32,7 @@
  * tb_xg_dummy($parser, $name)	xml_set_element_handler関数でセットした EndElementHandler
  *
  */
-error_reporting(E_ALL);
+
 if (!defined('TRACKBACK_DIR')) {
   define('TRACKBACK_DIR','./trackback/');
 }
