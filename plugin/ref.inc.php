@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.31 2004/08/23 14:59:11 henoheno Exp $
+// $Id: ref.inc.php,v 1.32 2004/08/25 13:39:48 henoheno Exp $
 //
 
 // UPLOAD_DIR のデータ(画像ファイルのみ)に直接アクセスさせる
@@ -127,24 +127,7 @@ function plugin_ref_body($args)
 {
 	global $script, $vars, $WikiName, $BracketName;
 
-	$params = array(); // 戻り値
-	$page = isset($vars['page']) ? $vars['page'] : '';
-
-	// 添付ファイル名を取得
-	$name = array_shift($args);
-
-	// 次の引数がページ名かどうか
-	if (! empty($args) &&
-		preg_match("/^($WikiName|\[\[$BracketName\]\])$/", $args[0]))
-	{
-		$_page = get_fullname(strip_bracket($args[0]), $page);
-		if (is_pagename($_page)) {
-			$page = $_page;
-			array_shift($args);
-		}
-	}
-
-	// パラメータ
+	// 戻り値
 	$params = array(
 		'left'   => FALSE, // 左寄せ
 		'center' => FALSE, // 中央寄せ
@@ -165,6 +148,22 @@ function plugin_ref_body($args)
 		'_error' => ''
 	);
 
+	// 第一引数: 添付ファイル名を取得
+	$name = array_shift($args);
+
+	// 第二引数がページ名かどうか
+	$page = isset($vars['page']) ? $vars['page'] : '';
+	if (! empty($args) &&
+		preg_match("/^($WikiName|\[\[$BracketName\]\])$/", $args[0]))
+	{
+		$_page = get_fullname(strip_bracket($args[0]), $page);
+		if (is_pagename($_page)) {
+			$page = $_page;
+			array_shift($args);
+		}
+	}
+
+	// 残りの引数の処理
 	if (! empty($args))
 		foreach ($args as $arg)
 			ref_check_arg($arg, $params);
@@ -205,7 +204,7 @@ function plugin_ref_body($args)
 		}
 
 		// ページ名とファイル名の分解 (pagename/separated/with/slash/FILENAME)
-		if (preg_match('/^(.+)\/([^\/]+)$/', $name, $matches)) {
+		if (preg_match('#^(.+)/([^/]+)$#', $name, $matches)) {
 			if ($matches[1] == '.' || $matches[1] == '..') {
 				$matches[1] .= '/';
 			}
