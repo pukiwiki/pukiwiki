@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.13 2003/02/04 12:18:13 panda Exp $
+// $Id: make_link.php,v 1.14 2003/02/14 07:09:22 panda Exp $
 //
 
 // リンクを付加する
@@ -168,7 +168,7 @@ class Link_auto extends Link
 	}
 	function set($arr,$page)
 	{
-		$arr = $this->splice($arr); 
+		$arr = $this->splice($arr);
 		$name = $alias = $arr[0];
 		return parent::setParam($page,$name,'pagename',$alias);
 	}
@@ -421,7 +421,7 @@ EOD;
 		
 		$name = $arr[1];
 		$this->param = $arr[2];
-		$this->body = $arr[3];
+		$this->body = ($arr[3] == '') ? '' : make_link($arr[3]);
 		
 		if (!exist_plugin_inline($name)) {
 			$this->valid = FALSE;
@@ -439,22 +439,11 @@ EOD;
 	}
 	function make_inline($func,$param,$body)
 	{
-		static $pattern = '/
-			&amp;(\w+)
-			(?: \( ([^)]*) \) )?
-			(?: \{ (.*)    \} )?
-			;
-		/ex';
-		
-		if ($body != '') {
-			$body = make_link($body);
-		}
-		
 		//&hoge(){...}; &fuga(){...}; のbodyが'...}; &fuga(){...'となるので、前後に分ける
 		$after = '';
-		if (preg_match("/^ (.*) }; ( .+ &amp; \w+ (?: \( [^()]* \) )? { .+ ) $/x",$body,$matches)) {
+		if (preg_match("/^ ((?!};).*?) }; (.*?) &amp; (\w+) (?: \( ([^()]*) \) )? { (.+)$/x",$body,$matches)) {
 			$body = $matches[1];
-			$after = make_link($matches[2].'};');
+			$after = $matches[2].$this->make_inline($matches[3],$matches[4],$matches[5]);
 		}
 		
 		// プラグイン呼び出し
