@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.57 2004/08/14 23:01:29 henoheno Exp $
+//  $Id: attach.inc.php,v 1.58 2004/08/14 23:12:18 henoheno Exp $
 //
 
 /*
@@ -285,7 +285,14 @@ function attach_showform()
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
 	$vars['refer'] = $page;
-	$body = ini_get('file_uploads') ? attach_form($page) : 'file_uploads disabled.';
+
+	if (! ini_get('file_uploads')) {
+		$body = '#attach(): file_uploads disabled.';
+	} else if (! is_page($page)) {
+		$body = '#attach(): No such page';
+	} else {
+		$body = attach_form($page);
+	}
 
 	return array('msg'=>$_attach_messages['msg_upload'], 'body'=>$body);
 }
