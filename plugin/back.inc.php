@@ -1,59 +1,74 @@
 <?php
-// $Id: back.inc.php,v 1.5 2004/07/31 03:09:20 henoheno Exp $
 /*
- * PukiWiki back プラグイン
- * (C) 2002, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
+ * back plugin
+ * (C) 2003-2004 PukiWiki Developer Team
+ * (C) 2002 Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
  *
- * [使用例]
- * #back(,,0)
- * #back(,left)
- * #back(,right,0)
- * #back(戻る,center,0,http://localhost)
- *
- * [引数]
- * 1 - 文言                  省略時:戻る
- * 2 - left, center, right   省略時:center
- * 3 - <hr> タグの有無       省略時:出力
- * 4 - 通常は、戻るなわけなんですが、どうしてもの場合の飛び先を指定可能
+ * $Id: back.inc.php,v 1.6 2004/11/27 09:51:52 henoheno Exp $
  */
 
+// Allow specifying back link by page name and anchor, or
+// by relative or site-abusolute path
+define('PLUGIN_BACK_ALLOW_PAGELINK', FALSE); // FALSE(Compat), TRUE, PKWK_SAFE_MODE
+
+// Allow JavaScript (Compat)
+define('PLUGIN_BACK_ALLOW_JAVASCRIPT', TRUE); // TRUE(Compat), FALSE, PKWK_ALLOW_JAVASCRIPT
+
+// ----
+define('PLUGIN_BACK_USAGE', '#back([text],[center|left|right][,0(no hr)[,Page-or-URI-to-back]])');
 function plugin_back_convert()
 {
-	global $_msg_back_word;
+	global $_msg_back_word, $script;
 
-	$argv = func_get_args();
+	if (func_num_args() > 4) return PLUGIN_BACK_USAGE;
+	list($word, $align, $hr, $href) = array_pad(func_get_args(), 4, '');
 
-	// 初期値設定
-	$word  = $_msg_back_word;
-	$align = 'center';
-	$hr    = 1;
-	$href  = 'javascript:history.go(-1)';
-	$ret   = '';
+	$word = trim($word);
+	$word = ($word == '') ? $_msg_back_word : htmlspecialchars($word);
 
-	// パラメータの判断
-	if (func_num_args() > 0) {
-		$word = htmlspecialchars(trim(strip_tags($argv[0])));
-		if ($word == '') $word = $_msg_back_word;
-	}
-	if (func_num_args() > 1) {
-		$align = htmlspecialchars(trim(strip_tags($argv[1])));
-		if ($align == '') $align = 'center';
-	}
-	if (func_num_args() > 2) {
-		$hr = trim(strip_tags($argv[2]));
-	}
-	if (func_num_args() > 3) {
-		$href = rawurlencode(trim(strip_tags($argv[3])));
-		if ($href == '') $href = 'javascript:history.go(-1)';
+	$align = strtolower(trim($align));
+	switch($align){
+	case ''      : $align = 'center';
+	               /*FALLTHROUGH*/
+	case 'center': /*FALLTHROUGH*/
+	case 'left'  : /*FALLTHROUGH*/
+	case 'right' : break;
+	default      : return PLUGIN_BACK_USAGE;
 	}
 
-	// <hr> タグを出力するかどうか
-	if ($hr) {
-		$ret = "<hr class=\"full_hr\" />\n";
+	$hr = (trim($hr) != '0') ? '<hr class="full_hr" />' . "\n" : '';
+
+	$link = TRUE;
+	$href = trim($href);
+	if ($href != '') {
+		if (PLUGIN_BACK_ALLOW_PAGELINK) {
+			if (is_url($href)) {
+				$href = rawurlencode($href);
+			} else {
+				$array = anchor_explode($href);
+				$array[0] = rawurlencode($array[0]);
+				$array[1] = ($array[1] != '') ? '#' . rawurlencode($array[1]) : '';
+				$href = $script . '?' . $array[0] .  $array[1];
+				$link = is_page($array[0]);
+			}
+		} else {
+			$href = rawurlencode($href);
+		}
+	} else {
+		if (! PLUGIN_BACK_ALLOW_JAVASCRIPT)
+			return PLUGIN_BACK_USAGE . ': Set a page name or an URI';
+		$href  = 'javascript:history.go(-1)';
 	}
 
-	$ret.= "<div style=\"text-align:$align\">[ <a href=\"$href\">$word</a> ]</div>\n";
-
-	return $ret;
+	if($link){
+		// Normal link
+		return $hr . '<div style="text-align:' . $align . '">' .
+			'[ <a href="' . $href . '">' . $word . '</a> ]</div>' . "\n";
+	} else {
+		// Dangling link
+		return $hr . '<div style="text-align:' . $align . '">' .
+			'[ <span class="noexists">' . $word . '<a href="' . $href .
+			'">?</a></span> ]</div>' . "\n";
+	}
 }
 ?>
