@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.14 2002/11/29 00:09:00 panda Exp $
+// $Id: pukiwiki.ini.php,v 1.15 2002/12/02 02:50:26 panda Exp $
 //
 // PukiWiki setting file
 
@@ -205,9 +205,6 @@ $line_rules = array(
 "SIZE\(([^\(\)]*)\){([^}]*)}" => "<span style=\"font-size:\\1px;display:inline-block;line-height:130%;text-indent:0px\">\\2</span>",
 "COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)" => "<span style=\"color:\\1\">\\2</span>",
 "SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)" => "<span class=\"size\\1\">\\2</span>",
-"LEFT:((?:(?!LEFT\:).)*)" => "<div style=\"text-align:left\">\\1</div>",
-"CENTER:((?:(?!CENTER\:).)*)" => "<div style=\"text-align:center\">\\1</div>",
-"RIGHT:((?:(?!RIGHT\:).)*)" => "<div style=\"text-align:right\">\\1</div>",
 "%%((?:(?!%%).)*)%%" => "<del>\\1</del>",
 "'''((?:(?!''').)*)'''" => "<em>\\1</em>",
 "''((?:(?!'').)*)''" => "<strong>\\1</strong>",

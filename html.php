@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.41 2002/11/29 00:09:00 panda Exp $
+// $Id: html.php,v 1.42 2002/12/02 02:50:26 panda Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -247,7 +247,13 @@ function convert_html($string)
 				array_push($result,"<tr>");
 				foreach($arytable as $td)
 				{
-					array_push($result,"<td class=\"style_td\">");
+					if (preg_match("/^(LEFT|CENTER|RIGHT):(.*)$/",$td,$tmp)) {
+						$style = ' align="'.strtolower($tmp[1]).'"';
+						$td = $tmp[2];
+					} else {
+						$style = '';
+					}
+					array_push($result,"<td class=\"style_td\"$style>");
 					array_push($result,ltrim(inline($td)));
 					array_push($result,"</td>");
 				}
@@ -292,8 +298,17 @@ function convert_html($string)
 				$_p = FALSE;
 			}
 			else if( substr($line,0,1) != '' && !$_p) {
-				array_push($result, "<p>");
-				$_p = TRUE;
+				if (preg_match("/^(LEFT|CENTER|RIGHT):(.*)$/",$line,$tmp)) {
+					if ($tmp[2] != '') {
+						array_push($result,'<p align="'.strtolower($tmp[1]).'">');
+						array_push($result,inline($tmp[2]));
+						array_push($result,"</p>");
+						$line = '';
+					}
+				} else {
+					array_push($result, "<p>");
+					$_p = TRUE;
+				}
 			}
 			if( substr($line,0,1) != '' ){
 				array_push($result, inline($line));
