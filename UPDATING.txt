@@ -1,9 +1,13 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.17 2004/09/04 15:04:10 henoheno Exp $
+$Id: UPDATING.txt,v 1.17.2.1 2004/10/18 14:23:14 henoheno Exp $
 
 
 互換性に関する記述
 ==================
+
+PukiWiki 1.4.4_php5: PukiWiki 1.4.4との非互換点
+    1. PHP5環境で動作します (残念ながら、PHP4環境でも動作します)
+
 
 PukiWiki 1.4.4: PukiWiki 1.4.3との非互換点
 
@@ -44,6 +48,12 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
 
 更新履歴
 ========
+
+    *   2004-09-04 1.4.4_php5 by PukiWiki Developers Team
+
+        PHP5対応 (branch_r1_4_4_php5)
+            BugTrack/632 PHP5で動作しない
+
 
     *   2004-09-04 1.4.4 by PukiWiki Developers Team
 

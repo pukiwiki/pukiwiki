@@ -2,10 +2,15 @@ NAME
 
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
-        PukiWiki 1.4.4
+        PukiWiki 1.4.4_php5
         Copyright (C) 2001-2004 PukiWiki Developers Team
         License is GNU GPL
         Based on "PukiWiki" 1.3 by yu-ji
+
+SPECIAL_NOTE
+        このリリースは、PukiWiki 1.4.4 に対し PHP5 対応を加えた
+        ものです。それ以外は PukiWiki 1.4.4 と同一です。
+        (branch_r1_4_4_php5 ブランチに由来しています)
 
 SYNOPSIS
 

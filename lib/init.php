@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.7 2004/09/04 03:01:39 henoheno Exp $
+// $Id: init.php,v 1.7.2.1 2004/10/18 14:23:14 henoheno Exp $
 //
 
 // 初期設定 (エラー出力レベル)
@@ -28,7 +28,7 @@ define('INI_FILE',  DATA_HOME . 'pukiwiki.ini.php');
 
 /////////////////////////////////////////////////
 // バージョン / 著作権
-define('S_VERSION', '1.4.4');
+define('S_VERSION', '1.4.4_php5');
 define('S_COPYRIGHT',
 	'<strong>PukiWiki ' . S_VERSION . '</strong>' .
 	' Copyright &copy; 2001-2004' .
