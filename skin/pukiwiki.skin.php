@@ -2,14 +2,14 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.11 2004/10/16 04:14:00 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.12 2004/10/17 13:29:52 henoheno Exp $
 //
 
 // Prohibit direct access
-if (! defined('SKIN_LANG')) exit;
+if (! defined('UI_LANG')) exit;
 
 // Load language resources
-$skin_lang = 'skin.' . SKIN_LANG . '.lng';
+$skin_lang = 'skin.' . UI_LANG . '.lng';
 $lang = array();
 if (! file_exists(SKIN_DIR . $skin_lang)) {
 	die($skin_lang . ' is not found');  // die_message() causes a loop!
@@ -42,7 +42,7 @@ $image = $_IMAGE['skin'];
 
 // Decide charset for CSS
 $css_charset = 'iso-8859-1';
-switch(SKIN_LANG){
+switch(UI_LANG){
 	case 'ja': $css_charset = 'Shift_JIS'; break;
 }
 

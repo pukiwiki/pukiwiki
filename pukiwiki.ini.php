@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.88 2004/10/16 05:45:13 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.89 2004/10/17 13:29:52 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -10,11 +10,11 @@
 // 初期設定 (文字エンコード、言語)
 
 // Internal Language ('en' or 'ja')
-define('LANG', 'ja');	// For internal messages
+define('LANG', 'ja');	// For internal message encoding
 
-// Skin UI Language ('en' or 'ja')
-if (! defined('SKIN_LANG'))
-	define('SKIN_LANG', 'ja');
+// UI Language (Language for buttons, menus,  etc)
+if (! defined('UI_LANG'))
+	define('UI_LANG', 'ja');	// 'en' or 'ja'
 
 /////////////////////////////////////////////////
 // ディレクトリ指定 最後に / が必要 属性は 777

@@ -2,11 +2,11 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.skin.php,v 1.2 2004/10/03 07:05:34 henoheno Exp $
+// $Id: keitai.skin.php,v 1.3 2004/10/17 13:29:52 henoheno Exp $
 //
 
 // Prohibit direct access
-if (! defined('SKIN_LANG')) exit;
+if (! defined('UI_LANG')) exit;
 
 global $max_size, $accesskey, $menubar;
 $link = $_LINK;

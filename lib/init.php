@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.15 2004/10/17 13:19:23 henoheno Exp $
+// $Id: init.php,v 1.16 2004/10/17 13:29:52 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -80,8 +80,8 @@ mb_http_output('pass');
 mb_detect_order('auto');
 
 /////////////////////////////////////////////////
-// INI_FILE: LANG 初期設定(言語ファイルの場所)
-define('LANG_FILE', DATA_HOME . LANG . '.lng');
+// INI_FILE: UI_LANG 初期設定(言語ファイルの場所)
+define('LANG_FILE', DATA_HOME . UI_LANG . '.lng');
 
 // ファイル読み込み
 $die = '';
