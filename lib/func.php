@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.16 2004/12/08 13:18:41 henoheno Exp $
+// $Id: func.php,v 1.17 2004/12/08 13:31:15 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -108,9 +108,10 @@ function auto_template($page)
 		// #freezeを削除
 		$body = preg_replace('/^#freeze\s*$/m', '', $body);
 
-		for ($i = 0; $i < count($matches); $i++) {
+		$count = count($matches);
+		for ($i = 0; $i < $count; $i++)
 			$body = str_replace("\$$i", $matches[$i], $body);
-		}
+
 		break;
 	}
 	return $body;
@@ -123,8 +124,7 @@ function get_search_words($words, $special = FALSE)
 	// Perlメモ - 正しくパターンマッチさせる
 	// http://www.din.or.jp/~ohzaki/perl.htm#JP_Match
 	$eucpre = $eucpost = '';
-	if (SOURCE_ENCODING == 'EUC-JP')
-	{
+	if (SOURCE_ENCODING == 'EUC-JP') {
 		$eucpre = '(?<!\x8F)';
 		// # JIS X 0208 が 0文字以上続いて # ASCII, SS2, SS3 または終端
 		$eucpost = '(?=(?:[\xA1-\xFE][\xA1-\xFE])*(?:[\x00-\x7F\x8E\x8F]|\z))';
@@ -137,30 +137,25 @@ function get_search_words($words, $special = FALSE)
 			'return mb_convert_kana($str, $option);' : 'return $str;'
 	);
 
-	foreach ($words as $word)
-	{
+	foreach ($words as $word) {
 		// 英数字は半角,カタカナは全角,ひらがなはカタカナに
 		$word_zk = $convert_kana($word, 'aKCV');
 		$chars = array();
-		for ($pos = 0; $pos < mb_strlen($word_zk); $pos++)
-		{
-			$char = mb_substr($word_zk, $pos,1);
+		for ($pos = 0; $pos < mb_strlen($word_zk); $pos++) {
+			$char = mb_substr($word_zk, $pos, 1);
 			// $special : htmlspecialchars()を通すか
 			$arr = array($quote_func($special ? htmlspecialchars($char) : $char));
-			if (strlen($char) == 1) // 英数字
-			{
-				foreach (array(strtoupper($char), strtolower($char)) as $_char)
-				{
-					if ($char != '&') {
+			if (strlen($char) == 1) {
+				// 英数字
+				foreach (array(strtoupper($char), strtolower($char)) as $_char) {
+					if ($char != '&')
 						$arr[] = $quote_func($_char);
-					}
 					$ord = ord($_char);
 					$arr[] = sprintf('&#(?:%d|x%x);', $ord, $ord); // 実体参照
 					$arr[] = $quote_func($convert_kana($_char, 'A')); // 全角
 				}
-			}
-			else // マルチバイト文字
-			{
+			} else {
+				// マルチバイト文字
 				$arr[] = $quote_func($convert_kana($char, 'c')); // ひらがな
 				$arr[] = $quote_func($convert_kana($char, 'k')); // 半角カタカナ
 			}
@@ -186,8 +181,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE)
 	$_pages = get_existpages();
 	$pages = array();
 
-	foreach ($_pages as $page)
-	{
+	foreach ($_pages as $page) {
 		if ($page == $whatsnew || (! $search_non_list && preg_match("/$non_list/", $page)))
 			continue;
 
@@ -203,15 +197,12 @@ function do_search($word, $type = 'AND', $non_format = FALSE)
 		$b_match = FALSE;
 		foreach ($keys as $key) {
 			$tmp     = preg_grep("/$key/", $source);
-			$b_match = (count($tmp) > 0);
-			if ($b_match xor $b_type)
-				break;
+			$b_match = (! empty($tmp));
+			if ($b_match xor $b_type) break;
 		}
-		if ($b_match)
-			$pages[$page] = get_filetime($page);
+		if ($b_match) $pages[$page] = get_filetime($page);
 	}
-	if ($non_format)
-		return array_keys($pages);
+	if ($non_format) return array_keys($pages);
 
 	$r_word = rawurlencode($word);
 	$s_word = htmlspecialchars($word);
@@ -224,9 +215,11 @@ function do_search($word, $type = 'AND', $non_format = FALSE)
 		$r_page  = rawurlencode($page);
 		$s_page  = htmlspecialchars($page);
 		$passage = get_passage($time);
-		$retval .= " <li><a href=\"$script?cmd=read&amp;page=$r_page&amp;word=$r_word\">$s_page</a>$passage</li>\n";
+		$retval .= ' <li><a href="' . $script . '?cmd=read&amp;page=' .
+			$r_page . '&amp;word=' . $r_word . '">' . $s_page .
+			'</a>' . $passage . '</li>' . "\n";
 	}
-	$retval .= "</ul>\n";
+	$retval .= '</ul>' . "\n";
 
 	$retval .= str_replace('$1', $s_word, str_replace('$2', count($pages),
 		str_replace('$3', count($_pages), $b_type ? $_msg_andresult : $_msg_orresult)));
@@ -238,7 +231,6 @@ function do_search($word, $type = 'AND', $non_format = FALSE)
 function arg_check($str)
 {
 	global $vars;
-
 	return isset($vars['cmd']) && (strpos($vars['cmd'], $str) === 0);
 }
 
@@ -284,35 +276,34 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 	}
 
 	$list = $matches = array();
-	foreach($pages as $file=>$page)
-	{
+	foreach($pages as $file=>$page) {
 		$r_page  = rawurlencode($page);
 		$s_page  = htmlspecialchars($page, ENT_QUOTES);
 		$passage = get_pg_passage($page);
 
-		$str = "   <li><a href=\"$script?cmd=$cmd&amp;page=$r_page\">$s_page</a>$passage";
+		$str = '   <li><a href="' .
+			$script . '?cmd=' . $cmd . '&amp;page=' . $r_page .
+			'">' . $s_page . '</a>' . $passage;
 
 		if ($withfilename) {
 			$s_file = htmlspecialchars($file);
-			$str .= "\n    <ul><li>$s_file</li></ul>\n   ";
+			$str .= "\n" . '    <ul><li>' . $s_file . '</li></ul>' .
+				"\n" . '   ';
 		}
-		$str .= "</li>";
+		$str .= '</li>';
 
+		// WARNING: Japanese code hard-wired
 		if($pagereading_enable) {
 			if(mb_ereg('^([A-Za-z])', mb_convert_kana($page, 'a'), $matches)) {
 				$head = $matches[1];
-			}
-			elseif(mb_ereg('^([ァ-ヶ])', $readings[$page], $matches)) {
+			} elseif(mb_ereg('^([ァ-ヶ])', $readings[$page], $matches)) { // here
 				$head = $matches[1];
-			}
-			elseif (mb_ereg('^[ -~]|[^ぁ-ん亜-熙]', $page)) {
+			} elseif (mb_ereg('^[ -~]|[^ぁ-ん亜-熙]', $page)) { // and here
 				$head = $symbol;
-			}
-			else {
+			} else {
 				$head = $other;
 			}
-		}
-		else {
+		} else {
 			$head = (preg_match('/^([A-Za-z])/', $page, $matches)) ? $matches[1] :
 				(preg_match('/^([ -~])/', $page, $matches) ? $symbol : $other);
 		}
@@ -323,9 +314,8 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 
 	$cnt = 0;
 	$arr_index = array();
-	$retval .= "<ul>\n";
-	foreach ($list as $head=>$pages)
-	{
+	$retval .= '<ul>' . "\n";
+	foreach ($list as $head=>$pages) {
 		if ($head === $symbol) {
 			$head = $_msg_symbol;
 		} else if ($head === $other) {
@@ -334,22 +324,26 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 
 		if ($list_index) {
 			++$cnt;
-			$arr_index[] = "<a id=\"top_$cnt\" href=\"#head_$cnt\"><strong>$head</strong></a>";
-			$retval .= " <li><a id=\"head_$cnt\" href=\"#top_$cnt\"><strong>$head</strong></a>\n  <ul>\n";
+			$arr_index[] = '<a id="top_' . $cnt .
+				'" href="#head_' . $cnt . '"><strong>' .
+				$head . '</strong></a>';
+			$retval .= ' <li><a id="head_' . $cnt . '" href="#top_' . $cnt .
+				'"><strong>' . $head . '</strong></a>' . "\n" .
+				'  <ul>' . "\n";
 		}
 		ksort($pages);
 		$retval .= join("\n", $pages);
 		if ($list_index)
 			$retval .= "\n  </ul>\n </li>\n";
 	}
-	$retval .= "</ul>\n";
+	$retval .= '</ul>' . "\n";
 	if ($list_index && $cnt > 0) {
 		$top = array();
-		while (count($arr_index) > 0) {
-			$top[] = join(" | \n", array_splice($arr_index, 0, 16)) . "\n";
-		}
-		$retval = "<div id=\"top\" style=\"text-align:center\">\n" .
-			join('<br />', $top) . "</div>\n" . $retval;
+		while (! empty($arr_index))
+			$top[] = join(' | ' . "\n", array_splice($arr_index, 0, 16)) . "\n";
+
+		$retval = '<div id="top" style="text-align:center">' . "\n" .
+			join('<br />', $top) . '</div>' . "\n" . $retval;
 	}
 	return $retval;
 }
