@@ -1,5 +1,5 @@
 *PukiWiki
-aaa
+
 ここはFrontPageです。
 自由に編集してください。
 
