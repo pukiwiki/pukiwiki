@@ -1,5 +1,5 @@
 @charset "shift_jis";
-// this @charset is for mozilla's bug
+/* this @charset is for mozilla's bug */
 
 pre, dl, ol, p, blockquote { line-height:130%; }
 
