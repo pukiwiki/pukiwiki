@@ -14,5 +14,5 @@
 -InterWikiSandBox
 --InterWikiを試してみてください
 
--[[sng's PukiWiki:http://factage.com/sng/pukiwiki]]
---スクリプト作者のPukiWikiです
+-[[PukiWiki.org:http://pukiwiki.org]]
+--開発チームの公式PukiWikiです

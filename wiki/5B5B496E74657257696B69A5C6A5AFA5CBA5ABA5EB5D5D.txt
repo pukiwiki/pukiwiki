@@ -8,24 +8,24 @@
 [[編集:InterWikiName]] のページに以下のようにサーバの定義をする。
 
  [URL サーバ名] タイプ
- [http://factage.com/sng/pukiwiki/pukiwiki.php?read&page= sng] pw
+ [http://pukiwiki.org/index.php pukiwiki] pw
 
 **InterWikiNameの追加
 サーバ名:WikiNameを[[BracketName]]で作ればInterWikiNameの完成
 
  [[サーバ名:WikiName]]
- [[sng:FrontPage]]
+ [[pukiwiki:FrontPage]]
 
 **WikiNameの挿入位置
 要求しようとするURLへのWikiNameの挿入位置を $1 で指定することができます。省略するとお尻にくっつきます。
 
- -[http://factage.com/sng/pukiwiki/pukiwiki.php?backup&page=$1&age=1 sng] pw
+ -[http://pukiwiki.org/index.php?cmd=backup&page=$1&age=1 pukiwiki] pw
 
 **文字コード変換タイプ
 
 PukiWikiページ以外にも飛ばせます。日本語をURLに含む可能性もあるのでその場合のエンコーディングの指定をタイプとして指定できます。
 
- -[http://factage.com/sng/pukiwiki/pukiwiki.php?read&page=$1 sng] pw
+ -[http://pukiwiki.org/index.php?cmd=read&page=$1 sng] pw
 
 :std 省略時:内部文字エンコーディング(標準はSJIS)のままURLエンコードします。
 :raw asis:URLエンコードしないでそのまま使用。

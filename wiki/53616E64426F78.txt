@@ -22,7 +22,7 @@
 ----
 *大見出し2
 **小見出し2-1
-http://www.factage.com/
+http://pukiwiki.org/
 **小見出し2-2
 
 [[sng]]
@@ -61,11 +61,11 @@ http://www.factage.com/
 
 -オートリンク
 --URLの最後が各種画像ファイル拡張子だとそのまま表示する
---- http://factage.com/sng/pukiwiki/pukiwiki.gif
+--- http://pukiwiki.org/pukiwiki.gif
 --ホームページ
---- http://factage.com/
+--- http://pukiwiki.org/
 --メールアドレス
---- sng@factage.com
+--- info@pukiwiki.org
 
  整形済みテキスト整形済みテキスト整形済みテキスト
  整形済みテキスト整形済みテキスト整形済みテキスト
@@ -77,11 +77,11 @@ http://www.factage.com/
  now?
 2001-12-06 (木) 15:00:37
 
-COLOR(993333):色の変更も可能なルール(COLOR(993333))
+COLOR(#993333){ 色の変更も可能なルール(COLOR(#993333)) }
 
-SIZE(5):サイズの変更も可能なルール(SIZE(5))
+SIZE(10){ サイズの変更も可能なルール(SIZE(10)) }
 
-SIZE(4):COLOR(333399):両方指定(SIZE(4)COLOR(333399))
+SIZE(20){ COLOR(#333399){ 両方指定(SIZE(20)COLOR(#333399)) } }
 
 %%打ち消し線%%
 
