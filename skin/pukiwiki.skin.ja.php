@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.ja.php,v 1.15.2.5 2004/08/08 02:23:30 henoheno Exp $
+// $Id: pukiwiki.skin.ja.php,v 1.15.2.6 2004/08/08 05:25:23 henoheno Exp $
 //
 
 if (!defined('DATA_DIR')) { exit; }
@@ -32,7 +32,7 @@ global $page_title;
 	<table border="0">
 		<tr>
 		<td rowspan="2">
-			<a href="http://pukiwiki.org/"><img src="image/pukiwiki.png" width="80" height="80" border="0" alt="[PukiWiki]" /></a><br />
+			<a href="http://pukiwiki.org/"><img src="<?php echo IMAGE_DIR ?>pukiwiki.png" width="80" height="80" border="0" alt="[PukiWiki]" /></a><br />
 		</td>
 		<td rowspan="2" style="width:20px">
 		</td>
@@ -100,24 +100,24 @@ global $page_title;
 	?>
 	<div style="text-align:right">
 		<?php if($is_page) { ?>
-			<a href="<?php echo "$script?".rawurlencode($vars[page]) ?>"><img src="./image/reload.gif" width="20" height="20" border="0" alt="リロード" /></a>
+			<a href="<?php echo "$script?".rawurlencode($vars[page]) ?>"><img src="<?php echo IMAGE_DIR ?>reload.gif" width="20" height="20" border="0" alt="リロード" /></a>
 			&nbsp;
-			<a href="<?php echo $script ?>?plugin=newpage"><img src="./image/new.gif" width="20" height="20" border="0" alt="新規" /></a>
-			<a href="<?php echo $link_edit ?>"><img src="./image/edit.gif" width="20" height="20" border="0" alt="編集" /></a>
-			<a href="<?php echo $link_diff ?>"><img src="./image/diff.gif" width="20" height="20" border="0" alt="差分" /></a>
+			<a href="<?php echo $script ?>?plugin=newpage"><img src="<?php echo IMAGE_DIR ?>new.gif" width="20" height="20" border="0" alt="新規" /></a>
+			<a href="<?php echo $link_edit ?>"><img src="<?php echo IMAGE_DIR ?>edit.gif" width="20" height="20" border="0" alt="編集" /></a>
+			<a href="<?php echo $link_diff ?>"><img src="<?php echo IMAGE_DIR ?>diff.gif" width="20" height="20" border="0" alt="差分" /></a>
 			&nbsp;
 		<?php } ?>
-		<a href="<?php echo $link_top ?>"><img src="./image/top.gif" width="20" height="20" border="0" alt="トップ" /></a>
-		<a href="<?php echo $link_list ?>"><img src="./image/list.gif" width="20" height="20" border="0" alt="一覧" /></a>
-		<a href="<?php echo $link_search ?>"><img src="./image/search.gif" width="20" height="20" border="0" alt="検索" /></a>
-		<a href="<?php echo $link_whatsnew ?>"><img src="./image/recentchanges.gif" width="20" height="20" border="0" alt="最終更新" /></a>
+		<a href="<?php echo $link_top ?>"><img src="<?php echo IMAGE_DIR ?>top.gif" width="20" height="20" border="0" alt="トップ" /></a>
+		<a href="<?php echo $link_list ?>"><img src="<?php echo IMAGE_DIR ?>list.gif" width="20" height="20" border="0" alt="一覧" /></a>
+		<a href="<?php echo $link_search ?>"><img src="<?php echo IMAGE_DIR ?>search.gif" width="20" height="20" border="0" alt="検索" /></a>
+		<a href="<?php echo $link_whatsnew ?>"><img src="<?php echo IMAGE_DIR ?>recentchanges.gif" width="20" height="20" border="0" alt="最終更新" /></a>
 		<?php if($do_backup) { ?>
-			<a href="<?php echo $link_backup ?>"><img src="./image/backup.gif" width="20" height="20" border="0" alt="バックアップ" /></a>
+			<a href="<?php echo $link_backup ?>"><img src="<?php echo IMAGE_DIR ?>backup.gif" width="20" height="20" border="0" alt="バックアップ" /></a>
 		<?php } ?>
 		&nbsp;
-		<a href="<?php echo "$script?".rawurlencode("[[ヘルプ]]") ?>"><img src="./image/help.gif" width="20" height="20" border="0" alt="ヘルプ" /></a>
+		<a href="<?php echo "$script?".rawurlencode("[[ヘルプ]]") ?>"><img src="<?php echo IMAGE_DIR ?>help.gif" width="20" height="20" border="0" alt="ヘルプ" /></a>
 		&nbsp;
-		<a href="<?php echo $script ?>?cmd=rss"><img src="./image/rss.gif" width="36" height="14" border="0" alt="最終更新のRSS" /></a>
+		<a href="<?php echo $script ?>?cmd=rss"><img src="<?php echo IMAGE_DIR ?>rss.gif" width="36" height="14" border="0" alt="最終更新のRSS" /></a>
 	</div>
 	<?php if($fmt) { ?>
 		 <span class="small">Last-modified: <?php echo date("D, d M Y H:i:s T",$fmt) ?></span> <?php echo get_pg_passage($vars["page"]) ?><br />

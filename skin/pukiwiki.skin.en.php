@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.en.php,v 1.14.2.5 2004/08/08 02:23:30 henoheno Exp $
+// $Id: pukiwiki.skin.en.php,v 1.14.2.6 2004/08/08 05:25:23 henoheno Exp $
 //
 
 if (!defined('DATA_DIR')) { exit; }
@@ -32,7 +32,7 @@ global $page_title;
 	<table border="0">
 		<tr>
 		<td rowspan="2">
-			<a href="http://pukiwiki.org/"><img src="image/pukiwiki.png" width="80" height="80" border="0" alt="[PukiWiki]" /></a><br />
+			<a href="http://pukiwiki.org/"><img src="<?php echo IMAGE_DIR ?>pukiwiki.png" width="80" height="80" border="0" alt="[PukiWiki]" /></a><br />
 		</td>
 		<td rowspan="2" style="width:20px">
 		</td>
@@ -100,24 +100,24 @@ global $page_title;
 	?>
 	<div style="text-align:right">
 		<?php if($is_page) { ?>
-			<a href="<?php echo $script;?>?<?php echo rawurlencode($vars[page]) ?>"><img src="./image/reload.gif" width="20" height="20" border="0" alt="Reload" /></a>
+			<a href="<?php echo $script;?>?<?php echo rawurlencode($vars[page]) ?>"><img src="<?php echo IMAGE_DIR ?>reload.gif" width="20" height="20" border="0" alt="Reload" /></a>
 			&nbsp;
-			<a href="<?php echo $script ?>?plugin=newpage"><img src="./image/new.gif" width="20" height="20" border="0" alt="New" /></a>
-			<a href="<?php echo $link_edit ?>"><img src="./image/edit.gif" width="20" height="20" border="0" alt="Edit" /></a>
-			<a href="<?php echo $link_diff ?>"><img src="./image/diff.gif" width="20" height="20" border="0" alt="Diff" /></a>
+			<a href="<?php echo $script ?>?plugin=newpage"><img src="<?php echo IMAGE_DIR ?>new.gif" width="20" height="20" border="0" alt="New" /></a>
+			<a href="<?php echo $link_edit ?>"><img src="<?php echo IMAGE_DIR ?>edit.gif" width="20" height="20" border="0" alt="Edit" /></a>
+			<a href="<?php echo $link_diff ?>"><img src="<?php echo IMAGE_DIR ?>diff.gif" width="20" height="20" border="0" alt="Diff" /></a>
 			&nbsp;
 		<?php } ?>
-		<a href="<?php echo $link_top ?>"><img src="./image/top.gif" width="20" height="20" border="0" alt="Front page" /></a>
-		<a href="<?php echo link_list ?>"><img src="./image/list.gif" width="20" height="20" border="0" alt="List of pages" /></a>
-		<a href="<?php echo $link_search ?>"><img src="./image/search.gif" width="20" height="20" border="0" alt="Search" /></a>
-		<a href="<?php echo $link_whatsnew ?>"><img src="./image/recentchanges.gif" width="20" height="20" border="0" alt="Recent changes" /></a>
+		<a href="<?php echo $link_top ?>"><img src="<?php echo IMAGE_DIR ?>top.gif" width="20" height="20" border="0" alt="Front page" /></a>
+		<a href="<?php echo link_list ?>"><img src="<?php echo IMAGE_DIR ?>list.gif" width="20" height="20" border="0" alt="List of pages" /></a>
+		<a href="<?php echo $link_search ?>"><img src="<?php echo IMAGE_DIR ?>search.gif" width="20" height="20" border="0" alt="Search" /></a>
+		<a href="<?php echo $link_whatsnew ?>"><img src="<?php echo IMAGE_DIR ?>recentchanges.gif" width="20" height="20" border="0" alt="Recent changes" /></a>
 		<?php if($do_backup) { ?>
-			<a href="<?php echo $link_backup ?>"><img src="./image/backup.gif" width="20" height="20" border="0" alt="Backup" /></a>
+			<a href="<?php echo $link_backup ?>"><img src="<?php echo IMAGE_DIR ?>backup.gif" width="20" height="20" border="0" alt="Backup" /></a>
 		<?php } ?>
 		&nbsp;
-		<a href="<?php echo "$script?".rawurlencode("[[Help]]") ?>"><img src="./image/help.gif" width="20" height="20" border="0" alt="Help" /></a>
+		<a href="<?php echo "$script?".rawurlencode("[[Help]]") ?>"><img src="<?php echo IMAGE_DIR ?>help.gif" width="20" height="20" border="0" alt="Help" /></a>
 		&nbsp;
-		<a href="<?php echo $script ?>?cmd=rss"><img src="./image/rss.gif" width="36" height="14" border="0" alt="RSS of recent changes" /></a>
+		<a href="<?php echo $script ?>?cmd=rss"><img src="<?php echo IMAGE_DIR ?>rss.gif" width="36" height="14" border="0" alt="RSS of recent changes" /></a>
 	</div>
 	<?php if($fmt) { ?>
 		 <span class="small">Last-modified: <?php echo date("D, d M Y H:i:s T",$fmt) ?></span> <?php echo get_pg_passage($vars["page"]) ?><br />
