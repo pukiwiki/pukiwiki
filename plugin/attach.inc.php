@@ -2,7 +2,7 @@
 // プラグイン attach
 
 // changed by Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
-// $Id: attach.inc.php,v 1.10.2.1 2004/06/20 04:53:39 henoheno Exp $
+// $Id: attach.inc.php,v 1.10.2.2 2004/06/22 12:08:32 henoheno Exp $
 
 // set PHP value to enable file upload
 ini_set("file_uploads","1");
@@ -14,7 +14,10 @@ ini_set("upload_max_filesize","2M");
 define("MAX_FILESIZE",1000000);
 
 // file icon image
-define("FILE_ICON","<img src=\"./image/file.gif\" width=\"20\" height=\"20\" alt=\"file\" style=\"border-width:0px\">");
+if (!defined('FILE_ICON'))
+{
+	define('FILE_ICON','<img src="' . IMAGE_DIR . 'file.gif" width="20" height="20" alt="file" style="border-width:0px" />');
+}
 
 function plugin_attach_convert()
 {

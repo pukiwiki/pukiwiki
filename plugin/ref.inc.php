@@ -1,5 +1,5 @@
 <?php
-// $Id: ref.inc.php,v 1.2.2.2 2004/06/20 04:55:13 henoheno Exp $
+// $Id: ref.inc.php,v 1.2.2.3 2004/06/22 12:08:32 henoheno Exp $
 /*
 Last-Update:2002-10-29 rev.33
 
@@ -24,7 +24,10 @@ Last-Update:2002-10-29 rev.33
 */
 
 // file icon image
-define('REF_FILE_ICON','<img src="./image/file.gif" alt="file" width="20" height="20" />');
+if (!defined('FILE_ICON'))
+{
+	define('FILE_ICON','<img src="' . IMAGE_DIR . 'file.gif" width="20" height="20" alt="file" style="border-width:0px" />');
+}
 
 // default alignment
 define('REF_DEFAULT_ALIGN','left'); // 'left','center','right'
@@ -62,7 +65,7 @@ function plugin_ref_convert() {
 		$icon = $size = '';
 		if (preg_match('/([^\/]+)$/', $name, $match)) { $ext = $match[1]; }
 	} else { //添付ファイル
-		$icon = REF_FILE_ICON;
+		$icon = FILE_ICON;
 		if (!is_dir(UPLOAD_DIR)) return 'no UPLOAD_DIR.';
 		//ページ指定のチェック
 		$page = $vars['page'];
