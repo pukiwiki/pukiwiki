@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.81 2004/07/03 05:02:06 henoheno Exp $
+// $Id: init.php,v 1.82 2004/07/03 05:28:33 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -84,10 +84,9 @@ if (!isset($script) or $script == '') {
 }
 
 /////////////////////////////////////////////////
-// INI_FILE: $agents:  UserAgentの識別
+// INI_FILE: $agents, $user_agent:  UserAgentの識別
 
 $ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-$user_agent = array();
 foreach ($agents as $agent) {
 	if (preg_match($agent['pattern'], $ua, $matches)) {
 		$user_agent = $agent;	// array to array
@@ -101,7 +100,7 @@ unset($agents, ${$ua}, $_SERVER[$ua], $HTTP_SERVER_VARS[$ua], $ua);
 // UserAgent別の設定ファイル読み込み
 define('UA_INI_FILE' ,$user_agent['name'] . '.ini.php');
 if (!file_exists(UA_INI_FILE) || !is_readable(UA_INI_FILE)) {
-	die_message("UA_INI_FILE not found.");
+	die_message('UA_INI_FILE for "' . $user_agent['name'] . '" not found.');
 }
 require(UA_INI_FILE);
 unset($user_agent);
