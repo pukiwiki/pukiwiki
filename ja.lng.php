@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng.php,v 1.4 2004/11/07 13:09:37 henoheno Exp $
+// $Id: ja.lng.php,v 1.5 2004/12/05 10:16:18 henoheno Exp $
 //
 // PukiWiki message file (japanese)
 
@@ -223,19 +223,6 @@ $_msg_calendar_viewer_restrict = '$1 は閲覧制限がかかっているためcalendar_viewer
 // calendar2.inc.php
 $_calendar2_plugin_edit  = '[この日記を編集]';
 $_calendar2_plugin_empty = '%sは空です。';
-
-///////////////////////////////////////
-// chmod.inc.php
-$_chmod_messages = array(
-	'title_chmod' => 'パーミッションの変更',
-	'msg_chmod' => 'チェックしたディレクトリ内の、ドット(.)で始まるファイルを除く全てのファイルの属性を変更します。',
-	'msg_execute' => '実行',
-	'msg_complete' => '処理が完了しました。',
-	'msg_adminpass' => '管理者パスワード',
-	'err_invalid_pass' => 'パスワードが違います。',
-	'err_cannot_opendir' => '$1 ディレクトリが開けませんでした。<br />',
-	'err_cannot_change_permit' => '$1 のパーミッション変更に失敗しました。<br />'
-);
 
 ///////////////////////////////////////
 // comment.inc.php

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng.php,v 1.4 2004/11/07 13:09:37 henoheno Exp $
+// $Id: en.lng.php,v 1.5 2004/12/05 10:16:18 henoheno Exp $
 //
 // PukiWiki message file (english)
 
@@ -221,19 +221,6 @@ $_msg_calendar_viewer_restrict = 'Due to the blocking, the calendar_viewer canno
 // calendar2.inc.php
 $_calendar2_plugin_edit  = '[edit]';
 $_calendar2_plugin_empty = '%s is empty.';
-
-///////////////////////////////////////
-// chmod.inc.php
-$_chmod_messages = array(
-	'title_chmod' => 'Change Permissions',
-	'msg_chmod' => 'change permission of all files (excluding dot file) in the checked directory.',
-	'msg_execute' => 'Execute',
-	'msg_complete' => 'Done processing.',
-	'msg_adminpass' => 'Administrator Password.',
-	'err_invalid_pass' => 'Wrong Password.',
-	'err_cannot_opendir' => 'Cannot open directory  $1.<br />',
-	'err_cannot_change_permit' => 'Cannot change permissions  $1.<br />'
-);
 
 ///////////////////////////////////////
 // comment.inc.php
