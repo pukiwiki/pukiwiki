@@ -29,7 +29,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.22 2003/03/07 07:03:08 panda Exp $
+// $Id: pukiwiki.php,v 1.23 2003/03/13 14:13:17 panda Exp $
 /////////////////////////////////////////////////
 
 
@@ -50,10 +50,15 @@ require('config.php');
 // プログラムファイル読み込み
 require('init.php');
 
-if (defined('LINK_DB')) {
+if (defined('LINK_DB'))
+{
 	require(LINK_DB.'.php');
+	require('link_db.php');
 }
-
+else
+{
+	require('link.php');
+}
 /////////////////////////////////////////////////
 // メイン処理
 
