@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.39 2003/05/16 05:45:46 arino Exp $
+// $Id: func.php,v 1.40 2003/05/17 11:08:26 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -121,8 +121,9 @@ function edit_auth($page)
 		header('WWW-Authenticate: Basic realm="'.$_msg_auth.'"');
 		header('HTTP/1.0 401 Unauthorized');
 		// press cancel.
-		$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($page)),$_title_cannotedit);
-		$page = str_replace('$1',make_search($page),$_title_cannotedit);
+ 		$body  = str_replace('$1',make_pagelink($page),   $_title_cannotedit);
+		$title = str_replace('$1',htmlspecialchars($page),$_title_cannotedit);
+		$page  = str_replace('$1',make_search($page),     $_title_cannotedit);
 		
 		catbody($title,$page,$body);
 		exit;
