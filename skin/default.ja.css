@@ -213,3 +213,18 @@ address {
 .vote_td2{
 	background-color: #EEF5FF;
 }
+
+.recent_list{
+	margin:0px;
+	margin-left:1em;
+	padding:0px;
+	border:0px;
+	word-wrap:break-word;
+	word-break:break-all;
+}
+
+.side_label{
+	margin:auto;
+	margin-top:0px;
+	margin-bottom:.5em;
+}

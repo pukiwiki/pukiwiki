@@ -10,21 +10,21 @@
  *              化けるのを修正
  * 
  *  2002.06.17: plugin_recent_init()を設定
+ *  2002.07.02: <ul>による出力に変更し構造化
  *
- * $Id: recent.inc.php,v 1.3 2002/07/01 07:08:57 masui Exp $
+ * $id$
  */
 
 function plugin_recent_init()
 {
   $_plugin_recent_messages = array(
-    '_recent_plugin_li'=>'・',
-    '_recent_plugin_frame '=>'<h5 class="side_label">最新の%d件</h5><span class="small">%s</span>');
+    '_recent_plugin_frame '=>'<h5 class="side_label" style="margin:auto;margin-top:0px;margin-bottom:.5em">最新の%d件</h5><div class="small" style="margin-left:.8em;margin-right:.8em">%s</div>');
   set_plugin_messages($_plugin_recent_messages);
 }
 
 function plugin_recent_convert()
 {
-	global $_recent_plugin_li,$_recent_plugin_frame;
+	global $_recent_plugin_frame;
 	global $WikiName,$BracketName,$script,$whatsnew;
 	
 	$recent_lines = 10;
@@ -53,17 +53,18 @@ function plugin_recent_convert()
 			if(preg_match("/([0-9]{4}-[0-9]{2}-[0-9]{2})/",$line,$match)) {
 				if($date != $match[0]) {
 					if($date != '') {
-						$items .= "<br />";
+						$items .= "</ul>";
 					}
-					$items .= "<strong>".$match[0]."</strong><br />";
+					$items .= "<strong>".$match[0]."</strong><ul class=\"recent_list\">";
 					$date = $match[0];
 				}
 			}
 			$title = htmlspecialchars($title);
-			$items .= $_recent_plugin_li."<a href=\"".$script."?".rawurlencode($name)."\" title=\"$title ".get_pg_passage($name,false)."\">".$title."</a><br />\n";
+			$items .="<li><a href=\"".$script."?".rawurlencode($name)."\" title=\"$title ".get_pg_passage($name,false)."\">".$title."</a></li>\n";
 			$cnt++;
 		}
 	}
+	$items .="</ul>";
 	return sprintf($_recent_plugin_frame,$cnt,$items);
 }
 ?>
