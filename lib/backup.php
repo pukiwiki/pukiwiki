@@ -11,7 +11,7 @@
  * @access  public
  * @author
  * @create
- * @version $Id: backup.php,v 1.4 2004/10/21 12:55:50 henoheno Exp $
+ * @version $Id: backup.php,v 1.5 2004/10/30 07:42:49 henoheno Exp $
  **/
 
 /**
@@ -26,7 +26,7 @@
  */
 function make_backup($page, $delete = FALSE)
 {
-	global $splitter, $cycle, $maxage;
+	global $cycle, $maxage;
 	global $do_backup, $del_backup;
 
 	if (! $do_backup) return;
@@ -50,14 +50,14 @@ function make_backup($page, $delete = FALSE)
 
 		$strout = '';
 		foreach($backups as $age=>$data) {
-			$strout .= "$splitter {$data['time']}\n";
+			$strout .= PKWK_SPLITTER . ' ' . $data['time'] . "\n"; // Splitter format
 			$strout .= join('', $data['data']);
 		}
 		$strout = preg_replace("/([^\n])\n*$/", "$1\n", $strout);
 
-		// Escape lines equal to '$splitter', by inserting a space
-		$body = preg_replace('/^(' . preg_quote($splitter) . "\s\d+)$/", '$1 ', get_source($page));
-		$body = "$splitter " . get_filetime($page) . "\n" . join('', $body);
+		// Escape 'lines equal to PKWK_SPLITTER', by inserting a space
+		$body = preg_replace('/^(' . preg_quote(PKWK_SPLITTER) . "\s\d+)$/", '$1 ', get_source($page));
+		$body = PKWK_SPLITTER . ' ' . get_filetime($page) . "\n" . join('', $body);
 		$body = preg_replace("/\n*$/", "\n", $body);
 
 		$fp = _backup_fopen($page, 'wb')
@@ -84,15 +84,14 @@ function make_backup($page, $delete = FALSE)
  */
 function get_backup($page, $age = 0)
 {
-	global $splitter;
-
 	$lines = _backup_file($page);
 	if (! is_array($lines)) return array();
 
 	$_age = 0;
 	$retvars = $match = array();
+	$regex_splitter = '/^' . preg_quote(PKWK_SPLITTER) . '\s(\d+)$/';
 	foreach($lines as $line) {
-		if (preg_match("/^$splitter\s(\d+)$/", $line, $match)) {
+		if (preg_match($regex_splitter, $line, $match)) {
 			++$_age;
 			if ($age > 0 && $_age > $age)
 				return $retvars[$age];

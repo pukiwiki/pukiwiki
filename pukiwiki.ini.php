@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.91 2004/10/30 07:02:46 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.92 2004/10/30 07:42:49 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -262,7 +262,7 @@ $maxage = 120;	// 世代数
 //          3   x   120   / 24 = 15
 
 // バックアップの世代を区切る文字列
-$splitter = ">>>>>>>>>>";
+define('PKWK_SPLITTER', '>>>>>>>>>>');
 
 /////////////////////////////////////////////////
 // ページの更新時にバックグランドで実行するコマンド(mknmzなど)
