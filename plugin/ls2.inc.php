@@ -1,6 +1,6 @@
 <?php
 /*
-$Id: ls2.inc.php,v 1.5 2003/02/27 00:48:37 panda Exp $
+$Id: ls2.inc.php,v 1.6 2003/02/28 03:35:07 panda Exp $
 
 *プラグイン ls2
 配下のページの見出し(*,**,***)の一覧を表示する
@@ -26,7 +26,7 @@ $Id: ls2.inc.php,v 1.5 2003/02/27 00:48:37 panda Exp $
 define('LS2_CONTENT_HEAD','#content_1_');
 
 //見出しアンカーの開始番号
-define('LS2_ANCHOR_ORIGIN',1);
+define('LS2_ANCHOR_ORIGIN',0);
 
 function plugin_ls2_init() {
 	$messages = array('_ls2_messages'=>array(
