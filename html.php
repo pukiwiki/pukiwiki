@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.93 2003/08/08 07:27:33 arino Exp $
+// $Id: html.php,v 1.94 2003/08/20 10:58:47 arino Exp $
 //
 
 // 本文を出力
@@ -266,13 +266,15 @@ function make_related($page,$tag='')
 function make_line_rules($str)
 {
 	global $line_rules;
+	static $pattern,$replace;
 	
-	foreach($line_rules as $rule => $replace)
+	if (!isset($pattern))
 	{
-		$str = preg_replace("/$rule/",$replace,$str);
+		$pattern = array_map(create_function('$a','return "/$a/";'),array_keys($line_rules));
+		$replace = array_values($line_rules);
+		unset($line_rules);
 	}
-	
-	return $str;
+	return preg_replace($pattern,$replace,$str);
 }
 
 // HTMLタグを取り除く
