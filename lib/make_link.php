@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.5 2004/10/31 05:12:24 henoheno Exp $
+// $Id: make_link.php,v 1.6 2004/11/23 09:39:42 henoheno Exp $
 //
 
 // リンクを付加する
@@ -752,7 +752,7 @@ function get_interwiki_url($name, $param)
 	static $encode_aliases = array('sjis'=>'SJIS', 'euc'=>'EUC-JP', 'utf8'=>'UTF-8');
 
 	if (! isset($interwikinames)) {
-		$interwikinames = array();
+		$interwikinames = $matches = array();
 		foreach (get_source($interwiki) as $line) {
 			if (preg_match('/\[((?:(?:https?|ftp|news):\/\/|\.\.?\/)[!~*\'();\/?:\@&=+\$,%#\w.-]*)\s([^\]]+)\]\s?([^\s]*)/', $line, $matches))
 				$interwikinames[$matches[2]] = array($matches[1], $matches[3]);
@@ -761,7 +761,7 @@ function get_interwiki_url($name, $param)
 
 	if (! isset($interwikinames[$name])) return FALSE;
 
-	list($url,$opt) = $interwikinames[$name];
+	list($url, $opt) = $interwikinames[$name];
 
 	// 文字エンコーディング
 	switch ($opt) {
@@ -799,6 +799,9 @@ function get_interwiki_url($name, $param)
 	} else {
 		$url .= $param;
 	}
+
+	$len = strlen($url);
+	if ($len > 512) die_message('InterWiki URL too long: ' . $len . ' characters');
 
 	return $url;
 }
