@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.29 2003/04/13 05:13:10 arino Exp $
+// $Id: convert_html.php,v 1.30 2003/04/25 00:53:11 arino Exp $
 //
 function convert_html($lines)
 {
@@ -262,7 +262,7 @@ class ListElement extends Block
 		$this->level = $level;
 		$this->head = $head;
 		$this->insert($obj);
-		$this->last = NULL;
+		$this->last =& $obj;
 		if (isset($obj->last) and is_object($obj->last)) {
 			$this->last =& $obj->last;
 		}
