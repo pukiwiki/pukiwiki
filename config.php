@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: config.php,v 1.2 2003/03/10 11:32:23 panda Exp $
+// $Id: config.php,v 1.3 2003/03/14 04:05:48 panda Exp $
 //
 /*
  * プラグインの設定をPukiWikiのページに記述する
@@ -47,7 +47,7 @@ class Config
 	function read()
 	{
 		$this->objs = array();
-		$obj = &new ConfigTable();
+		$obj = &new ConfigTable('');
 		foreach (get_source($this->page) as $line)
 		{
 			if ($line == '')
@@ -68,15 +68,14 @@ class Config
 			{
 				if ($level == 1)
 				{
-					$this->objs[$obj->title] = &$obj;
-					$obj = &new ConfigTable();
-					$obj->add_line($line);
+					$this->objs[$obj->title] = $obj;
+					$obj = &new ConfigTable($line);
 				}
 				else
 				{
 					if (!is_a($obj,'ConfigTable_Direct'))
 					{
-						$obj = &new ConfigTable_Direct($obj->after);
+						$obj = &new ConfigTable_Direct('',$obj);
 					}
 					$obj->set_key($line);
 				}
@@ -85,7 +84,7 @@ class Config
 			{
 				if (!is_a($obj,'ConfigTable_Direct'))
 				{
-					$obj = &new ConfigTable_Direct($obj->after);
+					$obj = &new ConfigTable_Direct('',$obj);
 				}
 				$obj->add_value($line);
 			}
@@ -93,7 +92,7 @@ class Config
 			{
 				if (!is_a($obj,'ConfigTable_Sequential'))
 				{
-					$obj = &new ConfigTable_Sequential($obj->after);
+					$obj = &new ConfigTable_Sequential('',$obj);
 				}
 				$obj->add_value(explode('|',$matches[1]));
 			}
@@ -102,7 +101,7 @@ class Config
 				$obj->add_line($line);
 			}
 		}
-		$this->objs[$obj->title] = &$obj;
+		$this->objs[$obj->title] = $obj;
 	}
 	// 配列を取得する
 	function &get($title)
@@ -159,12 +158,17 @@ class ConfigTable
 	// ページの内容(テーブル以外の部分)
 	var $after = array();
 	
-	function ConfigTable($lines=NULL)
+	function ConfigTable($title,$obj=NULL)
 	{
-		if ($lines !== NULL)
+		if ($obj !== NULL)
 		{
-			$this->title = trim(substr($lines[0],strspn($lines[0],'*')));
-			$this->before = $lines;
+			$this->title = $obj->title;
+			$this->before = array_merge($obj->before,$obj->after);
+		}
+		else
+		{
+			$this->title = trim(substr($title,strspn($title,'*')));
+			$this->before[] = $title;
 		}
 	}
 	// 説明の追加
@@ -196,7 +200,8 @@ class ConfigTable_Sequential extends ConfigTable
 				$retval .= "|$value|\n";
 			}
 		}
-		return $retval.join('',$this->after);
+		$retval .= join('',$this->after);
+		return $retval;
 	}
 }
 class ConfigTable_Direct extends ConfigTable
@@ -224,10 +229,10 @@ class ConfigTable_Direct extends ConfigTable
 	// 書式化
 	function toString($values = NULL,$level = 2)
 	{
-		$retval = join('',$this->before);
-		if ($values == NULL)
+		$retval = '';
+		if ($root = ($values == NULL))
 		{
-			$retval = parent::toString();
+			$retval = join('',$this->before);
 			$values = &$this->values;
 		}
 		foreach ($values as $key=>$value)
@@ -239,10 +244,14 @@ class ConfigTable_Direct extends ConfigTable
 			}
 			else
 			{
-				$retval .= str_repeat('-',$level).$value."\n";
+				$retval .= str_repeat('-',$level - 1).$value."\n";
 			}
 		}
-		return $retval.join('',$this->after);
+		if ($root)
+		{
+			$retval .= join('',$this->after);
+		}
+		return $retval;
 	}
 }
 ?>
