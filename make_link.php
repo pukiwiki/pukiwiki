@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.31 2003/03/23 08:24:19 panda Exp $
+// $Id: make_link.php,v 1.32 2003/03/28 15:13:02 panda Exp $
 //
 
 // リンクを付加する
@@ -261,7 +261,13 @@ class Link_note extends Link
 \(\(    # open paren
  (      # (1) note body
   (?:
-   (?R)|(?!\)\)).
+   (?>  # once-only 
+    (?:
+     (?!\(\()(?!\)\)(?:[^\)]|$)).
+    )+
+   )
+   |
+   (?R) # or recursive of me
   )*
  )
 \)\)
