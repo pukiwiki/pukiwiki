@@ -1,9 +1,8 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: vote.inc.php,v 1.19 2005/01/04 14:37:07 henoheno Exp $
 //
-// $Id: vote.inc.php,v 1.18 2004/10/09 07:36:33 henoheno Exp $
-//
+// Vote plugin
 
 function plugin_vote_action()
 {
@@ -18,33 +17,28 @@ function plugin_vote_action()
 	$matches = array();
 	foreach($postdata_old as $line) {
 
-		if (preg_match("/^#vote\((.*)\)(.*)$/i", $line, $matches)) {
-			$args  = explode(',', $matches[1]);
-			$lefts = isset($matches[2]) ? $matches[2] : '';
-		} else {
+		if (! preg_match('/^#vote\((.*)\)(.*)$/i', $line, $matches) ||
+		    $vote_no++ != $vars['vote_no']) {
 			$postdata .= $line;
 			continue;
 		}
-
-		if ($vote_no++ != $vars['vote_no']) {
-			$postdata .= $line;
-			continue;
-		}
+		$args  = explode(',', $matches[1]);
+		$lefts = isset($matches[2]) ? $matches[2] : '';
 
 		foreach($args as $arg) {
 			$cnt = 0;
-			if (preg_match("/^(.+)\[(\d+)\]$/", $arg, $matches)) {
+			if (preg_match('/^(.+)\[(\d+)\]$/', $arg, $matches)) {
 				$arg = $matches[1];
 				$cnt = $matches[2];
 			}
 			$e_arg = encode($arg);
-			if (! empty($vars["vote_$e_arg"]) && $vars["vote_$e_arg"] == $_vote_plugin_votes)
+			if (! empty($vars['vote_' . $e_arg]) && $vars['vote_' . $e_arg] == $_vote_plugin_votes)
 				++$cnt;
 
 			$votes[] = $arg . '[' . $cnt . ']';
 		}
 
-		$vote_str       = '#vote(' . @join(',', $votes) . ")$lefts\n";
+		$vote_str       = '#vote(' . @join(',', $votes) . ')' . $lefts . "\n";
 		$postdata_input = $vote_str;
 		$postdata      .= $vote_str;
 	}
@@ -114,7 +108,7 @@ EOD;
 	foreach($args as $arg) {
 		$cnt = 0;
 
-		if (preg_match("/^(.+)\[(\d+)\]$/", $arg, $matches)) {
+		if (preg_match('/^(.+)\[(\d+)\]$/', $arg, $matches)) {
 			$arg = $matches[1];
 			$cnt = $matches[2];
 		}
