@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar.inc.php,v 1.12 2003/02/28 02:45:23 panda Exp $
+// $Id: calendar.inc.php,v 1.13 2003/02/28 03:16:26 panda Exp $
 
 function plugin_calendar_convert()
 {
@@ -8,8 +8,7 @@ function plugin_calendar_convert()
 	$args = func_get_args();
 	
 	$date_str = get_date("Ym");
-	$pre = $vars['page'];
-	$prefix = preg_replace("/^\[\[(.*)\]\]$/","$1",$vars['page'])."/";
+	$page = '';
 	
 	if (func_num_args() == 1)
 	{
@@ -19,12 +18,7 @@ function plugin_calendar_convert()
 		}
 		else
 		{
-			$page = get_fullname(strip_bracket($args[0]));
-			if (is_pagename($page))
-			{
-				$pre = $page;
-				$prefix = $page.'/';
-			}
+			$page = $args[0];
 		}
 	}
 	else if (func_num_args() == 2)
@@ -32,24 +26,26 @@ function plugin_calendar_convert()
 		if (is_numeric($args[0]) && strlen($args[0]) == 6)
 		{
 			$date_str = $args[0];
-			$page = get_fullname(strip_bracket($args[1]));
-			if (is_pagename($page))
-			{
-				$pre = $page;
-				$prefix = $page.'/';
-			}
+			$page = $args[1];
 		}
 		else if (is_numeric($args[1]) && strlen($args[1]) == 6)
 		{
 			$date_str = $args[1];
-			$page = get_fullname(strip_bracket($args[0]));
-			if (is_pagename($page))
-			{
-				$pre = $page;
-				$prefix = $page.'/';
-			}
+			$page = $args[0];
 		}
 	}
+	
+	if ($page == '')
+	{
+		$page = $vars['page']
+	}
+	else if (!is_pagename($page))
+	{
+		return FALSE;
+	}
+	$pre = $page;
+	$prefix = $page.'/';
+
 
 	if (!$command) $cmd = "read";
 	else          $cmd = $command;
