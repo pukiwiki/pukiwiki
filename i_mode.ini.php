@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: i_mode.ini.php,v 1.2 2003/02/26 01:28:53 panda Exp $
+// $Id: i_mode.ini.php,v 1.3 2003/03/07 04:09:43 panda Exp $
 //
 // PukiWiki setting file (user agent:DoCoMo)
 
@@ -101,16 +101,19 @@ $line_rules = array(
 '&amp;br;' => '<br>',
 '&amp;(#[0-9]+|#x[0-9a-f]+|[0-9a-zA-Z]+);' => '&$1;',
 "\r" => "<br>", /* 行末にチルダは改行 */
-'#related' => '<del>#related</del>',
+'#related' => '<del>#related</del>'
 );
 
 /////////////////////////////////////////////////
 // max_size (SKINで使用)
-$max_size = 4; //KByte
-if ($user_agent['matches'][1] == '1.0') {
-	$max_size = $user_agent['matches'][2];
+$max_size = 5; //KByte
+if ($user_agent['matches'][1] == '1.0'
+	and array_key_exists(2,$user_agent['matches']))
+{
+	$max_size =  $user_agent['matches'][2];
 }
-else if ($user_agent['matches'][1] == '2.0') {
+else if ($user_agent['matches'][1] == '2.0')
+{
 	$max_size = min($user_agent['matches'][2],30);
 }
 
