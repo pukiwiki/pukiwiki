@@ -1,36 +1,36 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: popular.inc.php,v 1.12 2005/01/10 05:17:00 henoheno Exp $
 //
-// $Id: popular.inc.php,v 1.11 2004/09/04 15:00:56 henoheno Exp $
-//
+// Popular pages plugin: Show an access ranking of this wiki
+// -- like recent plugin, using counter plugin's count --
 
 /*
- * PukiWiki popular プラグイン
+ * (C) 2003-2005 PukiWiki Developer Team
  * (C) 2002, Kazunori Mizushima <kazunori@uc.netyou.jp>
  *
- * 人気のある(アクセス数の多い)ページの一覧を recent プラグインのように表示します。
  * 通算および今日に別けて一覧を作ることができます。
- * counter プラグインのアクセスカウント情報を使っています。
  *
- * [使用例]
- * #popular
- * #popular(20)
- * #popular(20,FrontPage|MenuBar)
- * #popular(20,FrontPage|MenuBar,true)
+ * [Usage]
+ *   #popular
+ *   #popular(20)
+ *   #popular(20,FrontPage|MenuBar)
+ *   #popular(20,FrontPage|MenuBar,true)
  *
- * [引数]
- * 1 - 表示する件数                             default 10
- * 2 - 表示させないページの正規表現             default なし
- * 3 - 通算(true)か今日(false)の一覧かのフラグ  default false
+ * [Arguments]
+ *   1 - 表示する件数                             default 10
+ *   2 - 表示させないページの正規表現             default なし
+ *   3 - 通算(true)か今日(false)の一覧かのフラグ  default false
  */
+
+define('PLUGIN_POPULAR_DEFAULT', 10);
 
 function plugin_popular_convert()
 {
 	global $vars, $whatsnew, $non_list;
 	global $_popular_plugin_frame, $_popular_plugin_today_frame;
 
-	$max = 10;
+	$max    = PLUGIN_POPULAR_DEFAULT;
 	$except = '';
 
 	$array = func_get_args();
@@ -38,16 +38,16 @@ function plugin_popular_convert()
 	switch (func_num_args()) {
 	case 3: if ($array[2]) $today = get_date('Y/m/d');
 	case 2: $except = $array[1];
-	case 1: $max = $array[0];
+	case 1: $max    = $array[0];
 	}
 
+	$non_list_pattern = '/' . $non_list . '/';
 	$counters = array();
 	foreach (get_existpages(COUNTER_DIR, '.count') as $file=>$page) {
 		if (($except != '' && ereg($except, $page)) ||
-		    $page == $whatsnew || preg_match("/$non_list/", $page) ||
-		    ! is_page($page)) {
+		    $page == $whatsnew || preg_match($non_list, $page) ||
+		    ! is_page($page))
 			continue;
-		}
 
 		$array = file(COUNTER_DIR . $file);
 		$count = rtrim($array[0]);
@@ -57,9 +57,10 @@ function plugin_popular_convert()
 		if ($today) {
 			// $pageが数値に見える(たとえばencode('BBS')=424253)とき、
 			// array_splice()によってキー値が変更されてしまうのを防ぐ
-			if ($today == $date) $counters["_$page"] = $today_count;
+			// ため、キーに '_' を連結する
+			if ($today == $date) $counters['_' . $page] = $today_count;
 		} else {
-			$counters["_$page"] = $count;
+			$counters['_' . $page] = $count;
 		}
 	}
 
@@ -68,7 +69,7 @@ function plugin_popular_convert()
 
 	$items = '';
 	if (! empty($counters)) {
-		$items = "<ul class=\"popular_list\">\n";
+		$items = '<ul class="popular_list">' . "\n";
 
 		foreach ($counters as $page=>$count) {
 			$page = substr($page, 1);
@@ -77,12 +78,16 @@ function plugin_popular_convert()
 			if ($page == $vars['page']) {
 				// No need to link itself, notifies where you just read
 				$pg_passage = get_pg_passage($page,FALSE);
-				$items .= " <li><span title=\"$s_page $pg_passage\">$s_page<span class=\"counter\">($count)</span></span></li>\n";
+				$items .= ' <li><span title="' . $s_page . ' ' . $pg_passage . '">' .
+					$s_page . '<span class="counter">(' . $count .
+					')</span></span></li>' . "\n";
 			} else {
-				$items .= ' <li>' . make_pagelink($page, "$s_page<span class=\"counter\">($count)</span>") . "</li>\n";
+				$items .= ' <li>' . make_pagelink($page,
+					$s_page . '<span class="counter">(' . $count . ')</span>') .
+					'</li>' . "\n";
 			}
 		}
-		$items .= "</ul>\n";
+		$items .= '</ul>' . "\n";
 	}
 
 	return sprintf($today ? $_popular_plugin_today_frame : $_popular_plugin_frame, count($counters), $items);
