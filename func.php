@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.38 2003/05/14 10:08:40 arino Exp $
+// $Id: func.php,v 1.39 2003/05/16 05:45:46 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -537,21 +537,27 @@ PHPはfopen("hoge.php\0.txt")で"hoge.php"を開いてしまうなどの問題あり
 
 http://ns1.php.gr.jp/pipermail/php-users/2003-January/012742.html
 [PHP-users 12736] null byte attack
+
+2003-05-16: magic quotes gpcの復元処理を統合
 */ 
-function sanitize_null_character($param)
+function sanitize($param)
 {
 	if (is_array($param))
 	{
 		$result = array();
-		foreach ($param as $key => $value)
+		foreach ($param as $key=>$value)
 		{
-			$key = sanitize_null_character($key);
-			$result[$key] = sanitize_null_character($value);
+			$key = str_replace("\0",'',$key);
+			$result[$key] = sanitize($value);
 		}
 	}
 	else
 	{
 		$result = str_replace("\0",'',$param);
+		if (get_magic_quotes_gpc())
+		{
+			$result = stripslashes($result);
+		}
 	}
 	return $result;
 }
