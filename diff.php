@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.php,v 1.6 2003/03/05 06:45:41 panda Exp $
+// $Id: diff.php,v 1.7 2003/06/11 00:00:51 arino Exp $
 //
 //衝突時に対応表を出す
 define('DIFF_SHOW_TABLE',TRUE);
@@ -49,14 +49,14 @@ EOD;
 		{
 			$do_update_diff_table .= '<tr>';
 			$params = array($_obj->get('left'),$_obj->get('right'),$_obj->text());
-			foreach ($params as $key=>$param)
+			foreach ($params as $key=>$text)
 			{
-				$text = htmlspecialchars($param);
-				if (trim($param) == '')
+				$text = htmlspecialchars($text);
+				if (trim($text) == '')
 				{
-					$param = '&nbsp;';
+					$text = '&nbsp;';
 				}
-				$do_update_diff_table .= "<{$tags[$key]} class=\"style_{$tags[$key]}\">$param</{$tags[$key]}>";
+				$do_update_diff_table .= "<{$tags[$key]} class=\"style_{$tags[$key]}\">$text</{$tags[$key]}>";
 			}
 			$do_update_diff_table .= '</tr>'."\n";
 		}
