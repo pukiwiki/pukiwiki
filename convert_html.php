@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.55 2003/11/02 14:04:21 arino Exp $
+// $Id: convert_html.php,v 1.56 2003/11/03 14:59:39 arino Exp $
 //
 function convert_html($lines)
 {
@@ -213,7 +213,7 @@ class ListContainer extends Block
 		$this->level = $level;
 		
 		if ($text != '') {
-			$this->insert(new Inline($text));
+			$this->last = &$this->insert(new Inline($text));
 		}
 	}
 
