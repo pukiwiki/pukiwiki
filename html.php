@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.51 2003/02/04 01:33:34 panda Exp $
+// $Id: html.php,v 1.52 2003/02/04 09:46:16 panda Exp $
 //
 
 // 本文を出力
@@ -234,7 +234,7 @@ function make_note($str)
 	}
 	
 	$str= str_replace("\\'","'",$str);
-	$str = inline2(make_user_rules($str));
+	$str = inline2($str);
 	
 	$foot_explain[] = "<a id=\"notefoot_$note\" href=\"#notetext_$note\" class=\"note_super\">*$note</a> <span class=\"small\">$str</span><br />\n";
 	
