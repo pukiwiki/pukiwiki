@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.16 2003/04/26 05:12:29 arino Exp $
+// $Id: ref.inc.php,v 1.17 2003/05/12 10:32:13 arino Exp $
 //
 
 /*
@@ -180,13 +180,13 @@ function plugin_ref_body($args,$page)
          添付ファイルのとき : ファイルの最終更新日とサイズ
          URLのとき : URLそのもの
 */
-	$file = $title = $url = $url2 = $info = $title = '';
+	$file = $title = $url = $url2 = $info = '';
 	$width = $height = 0;
 	
 	if (is_url($name))	//URL
 	{
 		$url = $url2 = htmlspecialchars($name);
-		$title = preg_match('/([^\/]+)$/', $name, $match) ? $match[1] : $url;
+		$title = htmlspecialchars(preg_match('/([^\/]+)$/', $name, $match) ? $match[1] : $url);
 		
 		$is_image = (!$params['noimg'] and preg_match("/\.(gif|png|jpe?g)$/i",$name));
 		if (REF_URL_GETIMAGESIZE and $is_image and (bool)ini_get('allow_url_fopen'))
@@ -219,7 +219,7 @@ function plugin_ref_body($args,$page)
 			$page = get_fullname($matches[1],$page);
 			$name = $matches[2];
 		}
-		$title = $name;
+		$title = htmlspecialchars($name);
 		$file = UPLOAD_DIR.encode($page).'_'.encode($name);
 		if (!is_file($file))
 		{
@@ -270,7 +270,7 @@ function plugin_ref_body($args,$page)
 		if (count($_title))
 		{
 			$title = join(',', $_title);
-			$title = $is_image ? htmlspecialchars($title) : make_line_rules($title);
+			$title = $is_image ? htmlspecialchars($title) : make_line_rules(htmlspecialchars($title));
 		}
 	}
 	

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ruby.inc.php,v 1.2 2003/04/24 14:42:29 arino Exp $
+// $Id: ruby.inc.php,v 1.3 2003/05/12 10:32:12 arino Exp $
 //
 
 function plugin_ruby_inline()
@@ -19,6 +19,7 @@ function plugin_ruby_inline()
 		return FALSE;
 	}
 	
-	return "<ruby><rb>$body</rb><rp>(</rp><rt>$ruby</rt><rp>)</rp></ruby>";
+	$s_ruby = htmlspecialchars($ruby);
+	return "<ruby><rb>$body</rb><rp>(</rp><rt>$s_ruby</rt><rp>)</rp></ruby>";
 }
 ?>
