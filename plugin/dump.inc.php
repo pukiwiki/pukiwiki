@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.24 2004/09/29 14:40:45 henoheno Exp $
+// $Id: dump.inc.php,v 1.25 2004/09/29 14:42:48 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [¹¹¿·ÍúÎò]
@@ -43,8 +43,8 @@ function plugin_dump_action()
 {
 	global $vars;
 
-	$pass = isset($vars['pass']) ? $vars['pass'] : NULL;
-	$act  = isset($vars['act'])  ? $vars['act']  : NULL;
+	$pass = isset($_POST['pass']) ? $_POST['pass'] : NULL;
+	$act  = isset($vars['act'])   ? $vars['act']   : NULL;
 
 	$body = '';
 
