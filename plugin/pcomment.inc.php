@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.25 2003/09/29 02:59:50 arino Exp $
+// $Id: pcomment.inc.php,v 1.26 2003/10/01 07:00:34 arino Exp $
 //
 
 /*
@@ -44,9 +44,9 @@ define('PCMT_COLS_COMMENT',70);
 define('PCMT_INSERT_INS',1);
 //
 //コメントの挿入フォーマット
-define('PCMT_FORMAT_NAME','[[%s]]');
-define('PCMT_FORMAT_MSG','%s');
-define('PCMT_FORMAT_DATE','SIZE(10){%s}');
+define('PCMT_NAME_FORMAT','[[$name]]');
+define('PCMT_MSG_FORMAT','$msg');
+define('PCMT_NOW_FORMAT','&new{$now};');
 // \x08は、投稿された文字列中に現れない文字であればなんでもいい。
 define('PCMT_FORMAT',"\x08MSG\x08 -- \x08NAME\x08 \x08DATE\x08");
 //
@@ -198,10 +198,10 @@ function pcmt_insert()
 	);
 	
 	//コメントフォーマットを適用
-	$msg = sprintf(PCMT_FORMAT_MSG,rtrim($post['msg']));
+	$msg = str_replace('$msg',rtrim($post['msg']),PCMT_MSG_FORMAT);
 	$name = $post['name'] == '' ? $_no_name : $post['name'];
-	$name = ($name == '') ? '' : sprintf(PCMT_FORMAT_NAME,$name);
-	$date = ($post['nodate'] == '1') ? '' : sprintf(PCMT_FORMAT_DATE,$now);
+	$name = ($name == '') ? '' : str_replace('$name',$name,PCMT_NAME_FORMAT);
+	$date = ($post['nodate'] == '1') ? '' : str_replace('$now',$now,PCMT_NOW_FORMAT);
 	if ($date != '' or $name != '')
 	{
 		$msg = str_replace("\x08MSG\x08", $msg,  PCMT_FORMAT);

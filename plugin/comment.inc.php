@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: comment.inc.php,v 1.20 2003/07/10 03:21:12 arino Exp $
+// $Id: comment.inc.php,v 1.21 2003/10/01 07:00:36 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -15,7 +15,7 @@ define('COMMENT_COLS',70);
 // コメントの挿入フォーマット
 define('COMMENT_NAME_FORMAT','[[$name]]');
 define('COMMENT_MSG_FORMAT','$msg');
-define('COMMENT_NOW_FORMAT','SIZE(10){$now}');
+define('COMMENT_NOW_FORMAT','&new{$now};');
 /////////////////////////////////////////////////
 // コメントの挿入フォーマット(コメント内容)
 define('COMMENT_FORMAT',"\x08MSG\x08 -- \x08NAME\x08 \x08NOW\x08");

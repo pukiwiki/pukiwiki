@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: paint.inc.php,v 1.11 2003/07/27 14:15:29 arino Exp $
+// $Id: paint.inc.php,v 1.12 2003/10/01 07:00:37 arino Exp $
 //
 
 /*
@@ -37,13 +37,13 @@ define('PAINT_APPLET_WIDTH',800);
 define('PAINT_APPLET_HEIGHT',300);
 //
 //コメントの挿入フォーマット
-define('PAINT_FORMAT_NAME','[[%s]]');
-define('PAINT_FORMAT_MSG','%s');
-define('PAINT_FORMAT_DATE','SIZE(10){%s}');
+define('PAINT_NAME_FORMAT','[[$name]]');
+define('PAINT_MSG_FORMAT','$msg');
+define('PAINT_NOW_FORMAT','&new{$now};');
 //メッセージがある場合
-define('PAINT_FORMAT',"\x08MSG\x08 -- \x08NAME\x08 \x08DATE\x08");
+define('PAINT_FORMAT',"\x08MSG\x08 -- \x08NAME\x08 \x08NOW\x08");
 //メッセージがない場合
-define('PAINT_FORMAT_NOMSG',"\x08NAME\x08 \x08DATE\x08"); 
+define('PAINT_FORMAT_NOMSG',"\x08NAME\x08 \x08NOW\x08"); 
 
 function plugin_paint_action()
 {
@@ -56,8 +56,7 @@ function plugin_paint_action()
 	$retval['body'] = '';
 	
 	if (array_key_exists('attach_file',$_FILES)
-		and array_key_exists('refer',$vars)
-		and is_page($vars['refer']))
+		and array_key_exists('refer',$vars))
 	{
 		$file = $_FILES['attach_file'];
 		//BBSPaiter.jarは、shift-jisで内容を送ってくる。面倒なのでページ名はエンコードしてから送信させるようにした。
@@ -215,27 +214,24 @@ EOD;
 function paint_insert_ref($filename)
 {
 	global $script,$vars,$now,$do_backup;
-	global $_paint_messages;
+	global $_paint_messages,$_no_name;
 	
 	$ret['msg'] = $_paint_messages['msg_title'];
+
+	$msg = mb_convert_encoding(rtrim($vars['msg']),SOURCE_ENCODING,'auto');
+	$name = mb_convert_encoding($vars['yourname'],SOURCE_ENCODING,'auto');
 	
-	$msg = sprintf(PAINT_FORMAT_MSG, rtrim($vars['msg']));
-	
-	if ($vars['yourname'] != '')
-	{
-		$name = sprintf(PAINT_FORMAT_NAME, $vars['yourname']);
-	}
-	$date = sprintf(PAINT_FORMAT_DATE, $now);
-	
-	$msg = mb_convert_encoding($msg,SOURCE_ENCODING,'auto');
-	$name = mb_convert_encoding($name,SOURCE_ENCODING,'auto');
+	$msg  = str_replace('$msg',$msg,PAINT_MSG_FORMAT);
+	$name = ($name == '') ? $_no_name : $vars['yourname'];
+	$name = ($name == '') ? '' : str_replace('$name',$name,PAINT_NAME_FORMAT);
+	$now  = str_replace('$now',$now,PAINT_NOW_FORMAT);
 	
 	$msg = trim($msg);
 	$msg = ($msg == '') ?
 		PAINT_FORMAT_NOMSG :
 		str_replace("\x08MSG\x08", $msg, PAINT_FORMAT);
 	$msg = str_replace("\x08NAME\x08",$name, $msg);
-	$msg = str_replace("\x08DATE\x08",$date, $msg);
+	$msg = str_replace("\x08NOW\x08",$now, $msg);
 	//ブロックに食われないように、#imgの直前に\nを2個書いておく。
 	$msg = "#ref($filename,wrap,around)\n".trim($msg)."\n\n#img(,clear)\n";
 	
