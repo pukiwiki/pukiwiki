@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: backup.inc.php,v 1.4 2003/02/17 07:20:37 panda Exp $
+// $Id: backup.inc.php,v 1.5 2003/02/20 12:37:16 panda Exp $
 //
 // バックアップ
 function plugin_backup_action()
@@ -157,9 +157,7 @@ EOD;
 		}
 	}
 	else {
-		$title = $s_page . get_pg_passage($page,FALSE);
-		$link = "<a href=\"$script?cmd=read&amp;page=$r_page\" title=\"$title\">$s_page</a>";
-		$msg = str_replace('$1',$link,$_msg_nobackup);
+		$msg = str_replace('$1',make_pagelink($page),$_msg_nobackup);
 		$retval .= "   <li>$msg</li>\n";
 	}
 	$retval .= "  </ul>\n </li>\n</ul>\n";
