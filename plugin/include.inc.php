@@ -2,13 +2,13 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: include.inc.php,v 1.10 2004/08/06 14:13:02 henoheno Exp $
+// $Id: include.inc.php,v 1.11 2004/08/06 14:14:36 henoheno Exp $
 //
 
 // ページをインクルードする
 function plugin_include_convert()
 {
-	global $script, $vars, $get, $post, $_msg_include_restrict;
+	global $script, $vars, $get, $post, $menubar, $_msg_include_restrict;
 	static $included = array();
 
 	// Get an argument
@@ -40,7 +40,7 @@ function plugin_include_convert()
 	$r_page = rawurlencode($page);
 	$link = "<a href=\"$script?cmd=edit&page=$r_page\">$s_page</a>";
 
-	if ($page == 'MenuBar') {
+	if ($page == $menubar) {
 		$body = "<span align=\"center\"><h5 class=\"side_label\">$link</h5></span>" .
 			"<small>$body</small>";
 	} else {
