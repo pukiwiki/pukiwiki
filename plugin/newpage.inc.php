@@ -1,5 +1,5 @@
 <?php
-// $Id: newpage.inc.php,v 1.6 2003/02/18 09:20:02 panda Exp $
+// $Id: newpage.inc.php,v 1.7 2003/05/28 04:47:10 arino Exp $
 
 function plugin_newpage_init()
 {
@@ -20,7 +20,7 @@ function plugin_newpage_convert()
 	if (!preg_match("/^$BracketName$/",$newpage)) {
 		$newpage = '';
 	}
-	$s_page = htmlspecialchars($vars['page']);
+	$s_page = htmlspecialchars(array_key_exists('refer',$vars) ? $vars['refer'] : $vars['page']);
 	$s_newpage = htmlspecialchars($newpage);
 	$ret = <<<EOD
 <form action="$script" method="post">
@@ -46,8 +46,9 @@ function plugin_newpage_action()
 		$retvars['body'] = plugin_newpage_convert();
 		return $retvars;
 	}
-
-	$r_page = rawurlencode(strip_bracket($vars['page']));
+	$page = strip_bracket($vars['page']);
+	$r_page = rawurlencode(array_key_exists('refer',$vars) ?
+		get_fullname($page,$vars['refer']) : $page);
 	$r_refer = rawurlencode($vars['refer']);
 	
 	header("Location: $script?cmd=read&page=$r_page&refer=$r_refer");
