@@ -1,16 +1,17 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: navi.inc.php,v 1.20 2004/12/30 13:26:43 henoheno Exp $
+// $Id: navi.inc.php,v 1.21 2005/04/02 02:42:39 henoheno Exp $
 //
 // Navi plugin: Show DocBook-like navigation bar and contents
 
 /*
  * Usage:
  *   #navi(contents-page-name)   <for ALL child pages>
- *   #navi([contents-page-name]) <for contents page>
+ *   #navi([contents-page-name][,reverse]) <for contents page>
  *
  * Parameter:
  *   contents-page-name - Page name of home of the navigation (default:itself)
+ *   reverse            - Show contents revese
  *
  * Behaviour at contents page:
  *   Always show child-page list like 'ls' plugin
@@ -50,8 +51,9 @@ function plugin_navi_convert()
 	static $navi = array();
 
 	$current = $vars['page'];
+	$reverse = FALSE;
 	if (func_num_args()) {
-		list($home) = func_get_args();
+		list($home, $reverse) = array_pad(func_get_args(), 2, '');
 		// strip_bracket() is not necessary but compatible
 		$home    = get_fullname(strip_bracket($home), $current);
 		$is_home = ($home == $current);
@@ -59,12 +61,13 @@ function plugin_navi_convert()
 			return '#navi(contents-page-name): No such page: ' .
 				htmlspecialchars($home) . '<br/>';
 		} else if (! $is_home &&
-		    ! preg_match('|^' . preg_quote($home, '|') . '|', $current)) {
+		    ! preg_match('/^' . preg_quote($home, '/') . '/', $current)) {
 			return '#navi(' . htmlspecialchars($home) .
 				'): Not a child page like: ' .
 				htmlspecialchars($home . '/' . basename($current)) .
 				'<br/>';
 		}
+		$reverse = (strtolower($reverse) == 'reverse');
 	} else {
 		$home    = $vars['page'];
 		$is_home = TRUE; // $home == $current
@@ -93,6 +96,8 @@ function plugin_navi_convert()
 		$pages[] = $current; // Sentinel :)
 		$pages   = array_unique($pages);
 		natcasesort($pages);
+		if ($reverse) $pages = array_reverse($pages);
+
 		$prev = $home;
 		foreach ($pages as $page) {
 			if ($page == $current) break;
@@ -137,7 +142,7 @@ function plugin_navi_convert()
 	$ret = '';
 
 	if ($is_home) {
-		// Contents
+		// Show contents
 		$count = count($pages);
 		if ($count == 0) {
 			return '#navi(contents-page-name): You already view the result<br/>';
