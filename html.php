@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.7 2002/06/24 12:19:47 masui Exp $
+// $Id: html.php,v 1.8 2002/06/25 12:08:05 uid20282 Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -466,8 +466,6 @@ function edit_form($postdata,$page,$add=0)
 
 return '
 <form action="'.$script.'" method="post">
-<input type="hidden" name="page" value="'.$page.'">
-<input type="hidden" name="digest" value="'.$digest.'">
 '.$addtag.'
 <table cellspacing="3" cellpadding="0" border="0">
  <tr>
@@ -477,6 +475,8 @@ return '
  </tr>
  <tr>
   <td align="right">
+   <input type="hidden" name="page" value="'.$page.'">
+   <input type="hidden" name="digest" value="'.$digest.'">
    <textarea name="msg" rows="'.$rows.'" cols="'.$cols.'" wrap="virtual">
 '.htmlspecialchars($refer.$postdata).'</textarea>
   </td>
