@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.2 2003/06/05 06:41:25 arino Exp $
+// $Id: trackback.php,v 1.3 2003/06/17 00:30:59 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -472,7 +472,9 @@ function tb_http($url, $method="GET", $headers="", $post=array(""))
 
 // 文章中に trackback:ping を埋め込むためのデータを生成
 function tb_PutId($page) {
-  global $script;
+  global $script,$trackback;
+
+  if (!$trackback) return "";
 
   $r_page = rawurlencode($page);
   $page_enc = md5($r_page);
