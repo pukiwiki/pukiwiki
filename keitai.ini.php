@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.ini.php,v 1.4 2004/07/13 13:12:15 henoheno Exp $
+// $Id: keitai.ini.php,v 1.5 2004/07/15 12:33:15 henoheno Exp $
 //
 // PukiWiki setting file (Cell phones, PDAs and other thin clients)
 
@@ -304,7 +304,8 @@ switch ($ua_name) {
 
     case 'UP.Browser':
 
-	// UP.Browser for KDDI cell phones
+	// UP.Browser for KDDI cell phones' built-in icons
+	// http://www.au.kddi.com/ezfactory/tec/spec/3.html
 	if (preg_match('#^KDDI#', $ua_agent)) {
 	$facemark_rules = array(
 	// Face marks
@@ -315,14 +316,14 @@ switch ($ua_name) {
 	'\s(XD)'	=>	'<img localsrc="260">',	// oh
 	'\s(X\()'	=>	'<img localsrc="260">',	// oh
 	'\s(;\))'	=>	'<img localsrc="348">',	// wink
-	'\s(;\()'	=>	'<img localsrc="258">',	// sad
-	'\s(\:\()'	=>	'<img localsrc="258">',	// sad
+	'\s(;\()'	=>	'<img localsrc="259">',	// sad
+	'\s(\:\()'	=>	'<img localsrc="259">',	// sad
 	'&amp;(smile);'	=>	'<img localsrc="68">',
 	'&amp;(bigsmile);'=>	'<img localsrc="257">',
 	'&amp;(huh);'	=>	'<img localsrc="264">',
 	'&amp;(oh);'	=>	'<img localsrc="260">',
 	'&amp;(wink);'	=>	'<img localsrc="348">',
-	'&amp;(sad);'	=>	'<img localsrc="258">',
+	'&amp;(sad);'	=>	'<img localsrc="259">',
 	'&amp;(heart);'	=>	'<img localsrc="415">',
 	'&amp;(sweat);'	=>	'<img localsrc="351">',
 
@@ -331,7 +332,7 @@ switch ($ua_name) {
 	'(\(\^-\^)'	=>	'<img localsrc="68">',	// smile
 	'(\(\.\.;)'	=>	'<img localsrc="260">',	// oh
 	'(\(\^_-\))'	=>	'<img localsrc="348">',	// wink
-	'(\(--;)'	=>	'<img localsrc="258">',	// sad
+	'(\(--;)'	=>	'<img localsrc="259">',	// sad
 	'(\(\^\^;\))'	=>	'<img localsrc="351">',	// sweat
 	'(\(\^\^;)'	=>	'<img localsrc="351">',	// sweat
 
@@ -347,6 +348,16 @@ switch ($ua_name) {
 	'&amp;(pb9);'	=>	'<img localsrc="188">',
 	'&amp;(pb0);'	=>	'<img localsrc="325">',
 	'&amp;(pb#);'	=>	'<img localsrc="818">',
+
+	// Others
+	'&amp;(zzz);'	=>	'<img localsrc="261">',
+	'&amp;(man);'	=>	'<img localsrc="80">',	// Face of male
+	'&amp;(clock);'	=>	'<img localsrc="46">',
+	'&amp;(mail);'	=>	'<img localsrc="108">',
+	'&amp;(phone);'	=>	'<img localsrc="85">',
+	'&amp;(phoneto);'=>	'<img localsrc="155">',	// An ear receiver
+	'&amp;(mailto);'=>	'<img localsrc="784">',
+	'&amp;(faxto);'	=>	'<img localsrc="166">',	// A FAX
 	);
 	}
 	break;
