@@ -1,7 +1,7 @@
 <?php header('Content-Type: text/html; charset=iso-8859-1') ?>
 <?php echo '<?xml version="1.0" encoding="iso-8859-1"?>' ?>
 
-<?php global $html_transitional; if ($html_transitional) { ?>
+<?php if ($html_transitional) { ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <?php } else { ?>
@@ -16,13 +16,13 @@
  <meta name="robots" content="NOINDEX,NOFOLLOW" />
 <?php } ?>
 
- <title><?php global $page_title; echo "$page_title - $title" ?></title>
+ <title><?php echo "$page_title - $title" ?></title>
  <link rel="stylesheet" href="skin/default.en.css" type="text/css" media="screen" charset="iso-8859-1" />
 </head>
 <body>
 
 <div id="header">
- <a href="<?php global $modifierlink; echo $modifierlink ?>"><img id="logo" src="pukiwiki.png" width="80" height="80" alt="[PukiWiki]" /></a>
+ <a href="<?php echo $modifierlink ?>"><img id="logo" src="pukiwiki.png" width="80" height="80" alt="[PukiWiki]" /></a>
  <h1 class="title"><?php echo $page ?></h1>
 
 <?php if($is_page) { ?>
@@ -68,7 +68,7 @@
  | <a href="<?php echo $link_search ?>">Search</a>
  | <a href="<?php echo $link_whatsnew ?>">Recent changes</a>
 
-<?php global $do_backup; if($do_backup) { ?>
+<?php if($do_backup) { ?>
  | <a href="<?php echo $link_backup ?>">Backup</a>
 <?php } ?>
 
@@ -153,7 +153,7 @@
 
 
 <div id="footer">
- Modified by <a href="<?php global $modifierlink; echo $modifierlink ?>"><?php global $modifier; echo $modifier ?></a>
+ Modified by <a href="<?php echo $modifierlink ?>"><?php echo $modifier ?></a>
  <br /><br />
  <?php echo S_COPYRIGHT ?>
  <br />
