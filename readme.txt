@@ -1,8 +1,8 @@
 NAME
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
-       PukiWiki 1.3.3 by
-        Copyright (C) 2001,2002 by sng, PukiWiki Developers Team
+       PukiWiki 1.3.4 by
+        Copyright (C) 2001,2002,2003 by sng, PukiWiki Developers Team
         http://pukiwiki.org/
 
 SYNOPSIS
@@ -305,6 +305,12 @@ RDF/RSS
     *   http://pukiwiki.org/index.php?rss10
 
 更新履歴
+    *   2003-03-15 1.3.4 by PukiWiki Developers Team
+        重要なセキュリティ上の問題をfix(BugTrack/210 null byte attack)
+        XSS脆弱性を多数fix
+        その他いくつかのバグを修正
+        :heart:は廃止されました。代わりに &heart;を使用してください。
+
     *   2002-12-04 1.3.3 by PukiWiki Developers Team
 
         make_link()を独立
