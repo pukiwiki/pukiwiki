@@ -1,90 +1,94 @@
 #contents
 
-*大見出し1
-**中見出し1-1
-***小見出し1-1-1
--項目1
--項目2
--項目3
-段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1
-段落1段落1段落1段落1段落1段落''強調''1段落1段落1段落1段落1段落1
-段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1
-段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2
-段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2
-段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2
-**小見出し1-2
-:用語1:いろいろ書いた解説文1と''強調単語''((注釈1。WikiName。))
-段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1
-段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1
-段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1
-:用語2:いろいろ書いた解説文2((注釈2。[[BracketName]]。))
-:用語3:いろいろ書いた解説文3((注釈3。注釈の中に((注釈))は作れません。))
+* Heading 1 [#vbd41e7f]
+** Heading 1-1 [#kfb7ed51]
+*** Heading1-1-1 [#r4f19051]
+- Item 1
+- Item 2
+- Item 3
+
+Paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 ''emphasis'' paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+
+Paragraph 2 paragraph 2 paragraph 2 paragraph 2 paragraph 2 
+paragraph 2 paragraph 2 paragraph 2 paragraph 2 paragraph 2 
+paragraph 2 paragraph 2 paragraph 2 paragraph 2 paragraph 2 
+
+** Heading 1-2 [#v25da732]
+:Term 1|Someting described, and ''Emphatic words'' ((Foot note 1. WikiName.))
+Paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+:Term 2|Someting described 2((Foot note 2. [[BracketName]]. ))
+:Term 3|Someting described 3((Foot note 3. It's disable ((footnotes)) in a footnote.))
 ----
-*大見出し2
-**小見出し2-1
+* Heading2 [#e330e49e]
+** Heading 2-1 [#jdc9672d]
 http://pukiwiki.org/
-**小見出し2-2
+** Heading2-2 [#ge656fc5]
 
-[[sng]]
+[[FrontPage]]
 
-段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1
-段落1段落1段落1段落'''イタリック'''1段落1段落1段落1段落1段落1段落1段落1
-段落1段落1段落1段落'''''イタボールド'''''1段落1段落1段落1段落1段落1段落1段落1段落1
->段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2
->段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2
->段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2段落2
+Paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 ''Italic'' paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 '''''Italic Bold'''''paragraph 1 paragraph 1 
+>Paragraph 2 paragraph 2 paragraph 2 paragraph 2 paragraph 2 
+>paragraph 2 paragraph 2 paragraph 2 paragraph 2 paragraph 2 
+>paragraph 2 paragraph 2 paragraph 2 paragraph 2 paragraph 2 
 
-レベル0レベル0レベル0レベル0レベル0レベル0
+Level 0 level 0 level 0 level 0 level 0 level 0
 
->レベル1
->レベル1
->レベル1
->>レベル2
->>レベル2
->>レベル2
->>>レベル3
--はろ1
---はろ2
-ろろろろ2
----はろ3
---はろ2
----はろ3
---はろ2
----はろ3
->>>レベル3
->>>レベル3
->>>レベル3
+>Level 1
+>Level 1
+>Level 1
+>>Level 2
+>>Level 2
+>>Level 2
+>>>Level 3
+- Hello 1
+-- Hello 2
+lolololo2
+--- Hello 3
+-- Hello 2
+--- Hello 3
+-- Hello 2
+--- Hello 3
+>>>Level 3
+>>>Level 3
+>>>Level 3
 
--日付 2001-12-06
--時刻 15:00:08
--日時 2001-12-06 (木) 15:00:08
+- Date 2001-12-06
+- Time 15:00:08
+- Date-and-time 2001-12-06 (Thu) 15:00:08
 
--オートリンク
---URLの最後が各種画像ファイル拡張子だとそのまま表示する
+- Auto hyperlink
+-- URL suffix seems a image, show it as an inline image
 --- http://pukiwiki.org/pukiwiki.gif
---ホームページ
+-- Home
 --- http://pukiwiki.org/
---メールアドレス
+-- Mail address
 --- info@pukiwiki.org
 
- 整形済みテキスト整形済みテキスト整形済みテキスト
- 整形済みテキスト整形済みテキスト整形済みテキスト
+ Preformatted text preformatted text preformatted text 
+ Preformatted text preformatted text preformatted text 
 
  date?
 2001-12-06
  time?
 15:00:37
  now?
-2001-12-06 (木) 15:00:37
+2001-12-06 (Thu) 15:00:37
 
-COLOR(#993333){ 色の変更も可能なルール(COLOR(#993333)) }
+COLOR(#993333){ Enable to change text coloring (COLOR(#993333)) }
 
-SIZE(10){ サイズの変更も可能なルール(SIZE(10)) }
+SIZE(10){ Enable to change text size (SIZE(10)) }
 
-SIZE(20){ COLOR(#333399){ 両方指定(SIZE(20)COLOR(#333399)) } }
+SIZE(20){ COLOR(#333399){ Specifying both (SIZE(20)COLOR(#333399)) } }
 
-%%打ち消し線%%
+%%Delete line%%
 
-左寄せ
-CENTER:中寄せ
-RIGHT:右寄せ
+Align-left
+CENTER:Align-center
+RIGHT:Align-right
