@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.24 2003/01/29 10:09:46 panda Exp $
+// $Id: init.php,v 1.25 2003/02/14 07:11:18 panda Exp $
 //
 
 /////////////////////////////////////////////////
@@ -22,9 +22,11 @@ mb_internal_encoding(ENCODING);
 /*
 define('ENCODING','UTF-8');
 // HTTP_ACCEPT_LANGUAGEからスキンを決定する(experimental)
-$lang = 'en'; // デフォルト
+$lang = 'ja'; // デフォルト
 $support = array('ja','en');
-if (preg_match_all('/([a-z]{2})(?:;q=([0-9.]+))?/',$_SERVER['HTTP_ACCEPT_LANGUAGE'],$matches,PREG_SET_ORDER)) {
+
+if (array_key_exists('HTTP_ACCEPT_LANGUAGE',$_SERVER) and
+	preg_match_all('/([a-z]{2})(?:;q=([0-9.]+))?/',$_SERVER['HTTP_ACCEPT_LANGUAGE'],$matches,PREG_SET_ORDER)) {
 	$matches[0][2] = 1;
 	$q = 0;
 	foreach ($matches as $arr) {
@@ -40,7 +42,7 @@ mb_internal_encoding(ENCODING);
 */
 /////////////////////////////////////////////////
 // 初期設定 (バージョン/著作権)
-define('S_VERSION','1.4pre3');
+define('S_VERSION','1.4pre4');
 define('S_COPYRIGHT','
 <strong>"PukiWiki" '.S_VERSION.'</strong> Copyright &copy; 2001,2002
 <a href="http://pukiwiki.org">PukiWiki Developers Team</a>.
