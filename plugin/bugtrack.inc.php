@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.2.2.1 2003/01/22 05:41:14 panda Exp $
+ * $Id: bugtrack.inc.php,v 1.2.2.2 2003/02/25 03:58:47 panda Exp $
  */
 
 function plugin_bugtrack_init()
@@ -148,9 +148,9 @@ $body
 
 function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $state, $category, $version, $body)
 {
-  global $WikiName;
+  global $WikiName,$BracketName;
   
-  $base = strip_bracket($base);
+//  $base = strip_bracket($base);
   $pagename = strip_bracket($pagename);
   
   $postdata = plugin_bugtrack_template($base, $summary, $name, $priority, $state, $category, $version, $body);
@@ -159,7 +159,7 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
   $i = 0;
   do {
     $i++;
-    $page = "[[$base/$i]]";
+    $page = "[[".strip_bracket($base)."/$i]]";
   } while(is_page($page));
   
   if($pagename == '') {
@@ -169,7 +169,9 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
     if(!preg_match("/^$WikiName$$/",$pagename)) {
       $pagename = "[[$pagename]]";
     }
-    if (is_page($pagename))
+    $pagename = get_fullname($pagename,$base);
+    if (is_page($pagename)
+    	or !preg_match("/^(($BracketName)|($WikiName))$/",$pagename))
       $pagename = $page;
     else
       file_write(DATA_DIR,$page,"move to $pagename");
