@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.41 2003/07/03 04:49:40 arino Exp $
+// $Id: pukiwiki.ini.php,v 1.42 2003/07/14 04:27:07 arino Exp $
 //
 // PukiWiki setting file
 
@@ -42,6 +42,9 @@ $whatsnew = 'RecentChanges';
 /////////////////////////////////////////////////
 // InterWikiNameページの名前
 $interwiki = 'InterWikiName';
+/////////////////////////////////////////////////
+// MenuBarページの名前
+$menubar = 'MenuBar';
 /////////////////////////////////////////////////
 // 編集者の名前(自由に変えてください)
 $modifier = 'me';

@@ -101,12 +101,12 @@
 <?php echo $hr ?>
 
 
-<?php if (arg_check('read') and is_page('MenuBar')) { ?>
+<?php if (arg_check('read') and exist_plugin_convert('menu')) { ?>
 <table border="0" style="width:100%">
  <tr>
   <td class="menubar">
    <div id="menubar">
-    <?php echo preg_replace('/<ul[^>]*>/','<ul>',convert_html(get_source('MenuBar'))) ?>
+    <?php echo do_plugin_convert('menu') ?>
    </div>
   </td>
   <td valign="top">

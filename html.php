@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.89 2003/07/05 04:46:37 arino Exp $
+// $Id: html.php,v 1.90 2003/07/14 04:27:07 arino Exp $
 //
 
 // 本文を出力
@@ -96,9 +96,6 @@ function catbody($title,$page,$body)
 	
 	$longtaketime = getmicrotime() - MUTIME;
 	$taketime = sprintf('%01.03f',$longtaketime);
-	
-	// 文字エンコーディング検出用 hidden フィールドを挿入する
-	$body = preg_replace('/(<form[^>]*>)/',"$1\n<div><input type=\"hidden\" name=\"encode_hint\" value=\"ぷ\" /></div>",$body);
 	
 	if (!file_exists(SKIN_FILE)||!is_readable(SKIN_FILE))
 	{
