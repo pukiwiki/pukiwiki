@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.4 2004/08/01 14:23:20 henoheno Exp $
+// $Id: file.php,v 1.5 2004/10/07 14:50:15 henoheno Exp $
 //
 
 // ソースを取得
@@ -66,7 +66,7 @@ function make_str_rules($str)
 	$retvars = $matches = array();
 	foreach ($arr as $str)
 	{
-		if ($str != '' and $str{0} != ' ' and $str{0} != "\t")
+		if ($str != '' && $str{0} != ' ' && $str{0} != "\t")
 		{
 			foreach ($str_rules as $rule => $replace)
 			{
@@ -74,7 +74,7 @@ function make_str_rules($str)
 			}
 		}
 		// 見出しに固有IDを付与する
-		if ($fixed_heading_anchor and
+		if ($fixed_heading_anchor &&
 			preg_match('/^(\*{1,3}(.(?!\[#[A-Za-z][\w-]+\]))+)$/', $str, $matches))
 		{
 			// 固有IDを生成する
@@ -106,7 +106,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	$timestamp = FALSE;
 	$file = $dir . encode($page) . '.txt';
 
-	if ($dir == DATA_DIR and $str == '' and file_exists($file)) {
+	if ($dir == DATA_DIR && $str == '' && file_exists($file)) {
 		unlink($file);
 		put_recentdeleted($page);
 	}
@@ -115,7 +115,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		$str = preg_replace("/\r/", '', $str);
 		$str = rtrim($str) . "\n";
 
-		if ($notimestamp and file_exists($file)) {
+		if ($notimestamp && file_exists($file)) {
 			$timestamp = filemtime($file) - LOCALZONE;
 		}
 
@@ -130,29 +130,24 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		fputs($fp, $str);
 		flock($fp, LOCK_UN);
 		fclose($fp);
-		if ($timestamp) {
+		if ($timestamp) 
 			touch($file, $timestamp + LOCALZONE);
-		}
 	}
 
 	// is_pageのキャッシュをクリアする
 	is_page($page, TRUE);
 
-	if (! $timestamp and $dir == DATA_DIR) {
+	if (! $timestamp && $dir == DATA_DIR)
 		put_lastmodified();
-	}
 
-	if ($update_exec and $dir == DATA_DIR) {
+	if ($update_exec && $dir == DATA_DIR)
 		system($update_exec . ' > /dev/null &');
-	}
 
-	if ($notify and $dir == DIFF_DIR) {
-		if ($notify_diff_only) { // 差分だけを送信する
+	if ($notify && $dir == DIFF_DIR) {
+		if ($notify_diff_only) // 差分だけを送信する
 			$str = preg_replace('/^[^-+].*\n/m', '', $str);
-		}
-		if ($smtp_auth) {
+		if ($smtp_auth)
 			pop_before_smtp();
-		}
  		$subject = str_replace('$page', $page, $notify_subject);
 		ini_set('SMTP', $smtp_server);
  		mb_language(LANG);
@@ -202,7 +197,7 @@ function put_lastmodified()
 	$pages = get_existpages();
 	$recent_pages = array();
 	foreach($pages as $page) {
-		if ($page != $whatsnew and ! preg_match("/$non_list/", $page))
+		if ($page != $whatsnew && ! preg_match("/$non_list/", $page))
 			$recent_pages[$page] = get_filetime($page);
 	}
 
@@ -218,9 +213,8 @@ function put_lastmodified()
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
-	foreach ($recent_pages as $page=>$time) {
+	foreach ($recent_pages as $page=>$time)
 		fputs($fp, "$time\t$page\n");
-	}
 	flock($fp, LOCK_UN);
 	fclose($fp);
 
@@ -234,9 +228,9 @@ function put_lastmodified()
 	flock($fp, LOCK_EX);
 	rewind($fp);
 	foreach (array_splice(array_keys($recent_pages), 0, $maxshow) as $page) {
-		$time = $recent_pages[$page];
+		$time      = $recent_pages[$page];
 		$s_lastmod = htmlspecialchars(format_date($time));
-		$s_page = htmlspecialchars($page);
+		$s_page    = htmlspecialchars($page);
 		fputs($fp, "-$s_lastmod - [[$s_page]]\n");
 	}
 	fputs($fp, "#norelated\n"); // :)
@@ -245,7 +239,8 @@ function put_lastmodified()
 
 	// for autolink
 	if ($autolink) {
-		list($pattern, $pattern_a, $forceignorelist) = get_autolink_pattern($pages);
+		list($pattern, $pattern_a, $forceignorelist) =
+			get_autolink_pattern($pages);
 
 		$fp = fopen(CACHE_DIR . 'autolink.dat', 'w') or
 			die_message('Cannot write autolink file ' .
@@ -279,7 +274,7 @@ function header_lastmod($page = NULL)
 {
 	global $lastmod;
 
-	if ($lastmod and is_page($page)) {
+	if ($lastmod && is_page($page)) {
 		header('Last-Modified: ' .
 			date('D, d M Y H:i:s', get_filetime($page)) . ' GMT');
 	}
@@ -317,9 +312,8 @@ function get_readings()
 	$pages = get_existpages();
 
 	$readings = array();
-	foreach ($pages as $page) {
+	foreach ($pages as $page) 
 		$readings[$page] = '';
-	}
 
 	$deletedPage = FALSE;
 	$matches = array();
@@ -367,7 +361,7 @@ function get_readings()
 
 				$chasen = "$pagereading_chasen_path -F %y $tmpfname";
 				$fp = popen($chasen, "r");
-				if(! $fp) {
+				if($fp === FALSE) {
 					unlink($tmpfname);
 					die_message("ChaSen execution failed: $chasen");
 				}
@@ -381,7 +375,8 @@ function get_readings()
 				}
 				pclose($fp);
 
-				unlink($tmpfname) or die_message("Temporary file can not be removed: $tmpfname");
+				unlink($tmpfname) or
+					die_message("Temporary file can not be removed: $tmpfname");
 				break;
 
 			case 'kakasi':
@@ -401,7 +396,7 @@ function get_readings()
 
 				$kakasi = "$pagereading_kakasi_path -kK -HK -JK < $tmpfname";
 				$fp = popen($kakasi, "r");
-				if(!$fp) {
+				if($fp === FALSE) {
 					unlink($tmpfname);
 					die_message("KAKASI execution failed: $kakasi");
 				}
@@ -415,7 +410,8 @@ function get_readings()
 				}
 				pclose($fp);
 
-				unlink($tmpfname) or die_message("Temporary file can not be removed: $tmpfname");
+				unlink($tmpfname) or
+					die_message("Temporary file can not be removed: $tmpfname");
 				break;
 
 			case 'none':
@@ -443,15 +439,14 @@ function get_readings()
 			}
 		}
 
-		if($unknownPage or $deletedPage) {
+		if($unknownPage || $deletedPage) {
 
 			asort($readings); // 読みでソート
+			$body = '';
+			foreach ($readings as $page => $reading)
+				$body .= "-[[$page]] $reading\n";
 
 			// ページを書き込み
-			$body = '';
-			foreach ($readings as $page => $reading) {
-				$body .= "-[[$page]] $reading\n";
-			}
 			page_write($pagereading_config_page, $body);
 		}
 	}
@@ -460,9 +455,8 @@ function get_readings()
 	// び出しが無効に設定されている場合や、ChaSen/KAKASI 呼び出しに
 	// 失敗した時の為)
 	foreach ($pages as $page) {
-		if($readings[$page] == '') {
+		if($readings[$page] == '')
 			$readings[$page] = $page;
-		}
 	}
 
 	return $readings;
