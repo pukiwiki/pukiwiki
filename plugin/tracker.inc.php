@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.25 2004/11/30 13:15:40 henoheno Exp $
+// $Id: tracker.inc.php,v 1.26 2004/12/02 11:34:25 henoheno Exp $
 //
 
 // tracker_listで表示しないページ名(正規表現で)
@@ -171,6 +171,7 @@ function plugin_tracker_action()
 
 	$r_page = rawurlencode($page);
 
+	pkwk_headers_sent();
 	header('Location: ' . get_script_uri() . '?' . $r_page);
 	exit;
 }

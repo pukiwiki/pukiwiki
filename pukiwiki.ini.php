@@ -2,9 +2,18 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.98 2004/11/30 14:20:50 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.99 2004/12/02 11:29:47 henoheno Exp $
 //
 // PukiWiki setting file
+
+/////////////////////////////////////////////////
+// Init
+
+if (! defined('PKWK_SAFE_MODE'))
+	define('PKWK_SAFE_MODE', FALSE);	// FALSE or TRUE
+
+if (! defined('PKWK_OPTIMISE'))
+	define('PKWK_OPTIMISE', FALSE);	// FALSE or TRUE
 
 /////////////////////////////////////////////////
 // 初期設定 (文字エンコード、言語)

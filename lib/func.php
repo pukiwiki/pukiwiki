@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.13 2004/11/23 14:00:11 henoheno Exp $
+// $Id: func.php,v 1.14 2004/12/02 11:42:37 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -375,6 +375,7 @@ EOD;
 	if(defined('SKIN_FILE') && file_exists(SKIN_FILE) && is_readable(SKIN_FILE)) {
 		catbody($title, $page, $body);
 	} else {
+		pkwk_headers_sent();
 		header('Content-Type: text/html; charset=euc-jp');
 		print <<<EOD
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">

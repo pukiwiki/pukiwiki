@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.65 2004/11/27 11:02:34 henoheno Exp $
+//  $Id: attach.inc.php,v 1.66 2004/12/02 11:34:25 henoheno Exp $
 //
 
 /*
@@ -610,6 +610,7 @@ EOD;
 		ini_set('default_charset', '');
 		mb_http_output('pass');
 
+		pkwk_headers_sent();
 		header('Content-Disposition: inline; filename="' . $filename . '"');
 		header('Content-Length: ' . $this->size);
 		header('Content-Type: '   . $this->type);

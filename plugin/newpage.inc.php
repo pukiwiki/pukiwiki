@@ -1,5 +1,5 @@
 <?php
-// $Id: newpage.inc.php,v 1.10 2004/10/10 10:20:59 henoheno Exp $
+// $Id: newpage.inc.php,v 1.11 2004/12/02 11:39:08 henoheno Exp $
 
 function plugin_newpage_convert()
 {
@@ -43,6 +43,7 @@ function plugin_newpage_action()
 		get_fullname($page,$vars['refer']) : $page);
 	$r_refer = rawurlencode($vars['refer']);
 
+	pkwk_headers_sent();
 	header('Location: ' . get_script_uri() . '?cmd=read&page=' . $r_page . '&refer=' . $r_refer);
 	die();
 }

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss.inc.php,v 1.10 2004/11/28 04:23:13 henoheno Exp $
+// $Id: rss.inc.php,v 1.11 2004/12/02 11:34:25 henoheno Exp $
 //
 // Publishing RSS feed of RecentChanges
 // HOW TO USE: rss.inc.php?ver=[0.91(default)|1.0|2.0]
@@ -74,6 +74,7 @@ EOD;
 	}
 
 	// Feeding start
+	pkwk_headers_sent();
 	header('Content-type: application/xml');
 	print '<?xml version="1.0" encoding="UTF-8"?>' . "\n\n";
 

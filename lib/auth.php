@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: auth.php,v 1.3 2004/10/07 13:25:41 henoheno Exp $
+// $Id: auth.php,v 1.4 2004/12/02 11:42:37 henoheno Exp $
 //
 
 // 編集不可能なページを編集しようとしたとき
@@ -97,6 +97,7 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 		|| $auth_users[$_SERVER['PHP_AUTH_USER']] != $_SERVER['PHP_AUTH_PW'])
 	{
 		if ($auth_flag) {
+			pkwk_headers_sent();
 			header('WWW-Authenticate: Basic realm="'.$_msg_auth.'"');
 			header('HTTP/1.0 401 Unauthorized');
 		}

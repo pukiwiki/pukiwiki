@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.27 2004/11/24 12:29:21 henoheno Exp $
+// $Id: edit.inc.php,v 1.28 2004/12/02 11:36:52 henoheno Exp $
 //
 
 // Edit plugin
@@ -209,6 +209,7 @@ function plugin_edit_write()
 		page_write($page, $postdata, $notimestamp);
 
 		if ($postdata) {
+			pkwk_headers_sent();
 			header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
 			exit;
 		}
@@ -225,6 +226,7 @@ function plugin_edit_write()
 function plugin_edit_cancel()
 {
 	global $vars;
+	pkwk_headers_sent();
 	header('Location: ' . get_script_uri() . '?' . rawurlencode($vars['page']));
 	exit;
 }

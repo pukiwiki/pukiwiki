@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.31 2004/10/31 07:55:24 henoheno Exp $
+// $Id: dump.inc.php,v 1.32 2004/12/02 11:34:25 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [¹¹¿·ÍúÎò]
@@ -206,6 +206,7 @@ function download_tarfile($tempnam, $arc_kind)
 		$filename .= '.tar';
 	}
 
+	pkwk_headers_sent();
 	header('Content-Disposition: attachment; filename="' . $filename . '"');
 	header('Content-Length: ' . $size);
 	header('Content-Type: application/octet-stream');

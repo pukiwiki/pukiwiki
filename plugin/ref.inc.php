@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.45 2004/11/27 11:02:34 henoheno Exp $
+// $Id: ref.inc.php,v 1.46 2004/12/02 11:34:25 henoheno Exp $
 //
 // Include an attached image-file as an inline-image
 
@@ -414,6 +414,7 @@ function plugin_ref_action()
 	$size = filesize($ref);
 
 	// Output
+	pkwk_headers_sent();
 	header('Content-Disposition: inline; filename="' . $filename . '"');
 	header('Content-Length: ' . $size);
 	header('Content-Type: '   . $type);

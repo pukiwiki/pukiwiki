@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.13 2004/07/31 13:41:20 henoheno Exp $
+// $Id: tb.inc.php,v 1.14 2004/12/02 11:34:25 henoheno Exp $
 /*
  * PukiWiki TrackBack ¥×¥í¥°¥é¥à
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -109,6 +109,7 @@ function tb_save()
 // XML ·ë²Ì½ÐÎÏ
 function tb_xml_msg($rc, $msg)
 {
+	pkwk_headers_sent();
 	header('Content-Type: text/xml');
 	echo '<?xml version="1.0" encoding="iso-8859-1"?>';
 	echo <<<EOD
@@ -170,6 +171,8 @@ EOD;
 </response>
 EOD;
 	$rc = mb_convert_encoding($rc, 'UTF-8', SOURCE_ENCODING);
+
+	pkwk_headers_sent();
 	header('Content-Type: text/xml');
 	echo '<?xml version="1.0" encoding="utf-8" ?>';
 	echo $rc;
@@ -242,6 +245,7 @@ EOD;
 </html>
 EOD;
 	// BugTrack/466 ¥¨¥ó¥³¡¼¥É¸íÇ§ÂÐºö
+	pkwk_headers_sent();
 	header('Content-type: text/html; charset=UTF-8');
 	echo '<?xml version="1.0" encoding="UTF-8"?>';
 	echo mb_convert_encoding($msg, 'UTF-8', SOURCE_ENCODING);

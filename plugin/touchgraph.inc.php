@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: touchgraph.inc.php,v 1.4 2004/07/31 03:09:20 henoheno Exp $
+// $Id: touchgraph.inc.php,v 1.5 2004/12/02 11:34:25 henoheno Exp $
 //
 // TouchGraph WikiBrowser用のインデックスを作ります。
 //
@@ -17,6 +17,7 @@
 
 function plugin_touchgraph_action()
 {
+	pkwk_headers_sent();
 	header('Content-type: text/plain');
 	plugin_touchgraph_rel();
 //	plugin_touchgraph_ref(); // reverse

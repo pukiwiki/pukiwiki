@@ -44,7 +44,7 @@
 //
 
 /////////////////////////////////////////////////
-// $Id: amazon.inc.php,v 1.3 2004/10/10 10:20:59 henoheno Exp $
+// $Id: amazon.inc.php,v 1.4 2004/12/02 11:34:25 henoheno Exp $
 // - modified by arino <arino@users.sourceforge.jp>
 // -- replace plugin_amazon_get_page().
 // -- AMAZON_XML 'xml.amazon.com' -> 'xml.amazon.co.jp'
@@ -180,6 +180,7 @@ function plugin_amazon_action() {
   $r_page = $s_page . '/' . $asin;
   $r_page_url = rawurlencode($r_page);
 
+  pkwk_headers_sent();
   if ($edit_auth and (!isset($_SERVER['PHP_AUTH_USER']) or !array_key_exists($_SERVER['PHP_AUTH_USER'],$edit_auth_users) or
       $edit_auth_users[$_SERVER['PHP_AUTH_USER']] != $_SERVER['PHP_AUTH_PW'])) {
     header('Location: ' . get_script_uri() . '?cmd=read&page=' . $r_page_url);

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rename.inc.php,v 1.16 2004/10/10 10:20:59 henoheno Exp $
+// $Id: rename.inc.php,v 1.17 2004/12/02 11:37:53 henoheno Exp $
 //
 
 /*
@@ -472,6 +472,8 @@ function rename_proceed($pages, $files, $exists)
 	{
 		$page = RENAME_LOGPAGE;
 	}
+
+	pkwk_headers_sent();
 	header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
 	die();
 }

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.7 2004/11/23 01:58:53 henoheno Exp $
+// $Id: file.php,v 1.8 2004/12/02 11:42:37 henoheno Exp $
 //
 
 // ソースを取得
@@ -261,9 +261,11 @@ function header_lastmod($page = NULL)
 {
 	global $lastmod;
 
-	if ($lastmod && is_page($page))
+	if ($lastmod && is_page($page)) {
+		pkwk_headers_sent();
 		header('Last-Modified: ' .
 			date('D, d M Y H:i:s', get_filetime($page)) . ' GMT');
+	}
 }
 
 // 全ページ名を配列に

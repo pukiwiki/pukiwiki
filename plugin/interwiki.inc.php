@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: interwiki.inc.php,v 1.7 2004/07/31 03:09:20 henoheno Exp $
+// $Id: interwiki.inc.php,v 1.8 2004/12/02 11:35:02 henoheno Exp $
 //
 // InterWikiNameの判別とページの表示
 
@@ -38,6 +38,7 @@ function plugin_interwiki_action()
 		return $retvars;
 	}
 
+	pkwk_headers_sent();
 	header("Location: $url");
 	die();
 }

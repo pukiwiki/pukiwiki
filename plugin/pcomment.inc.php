@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.34 2004/10/10 10:20:59 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.35 2004/12/02 11:34:25 henoheno Exp $
 //
 
 /*
@@ -71,6 +71,7 @@ function plugin_pcomment_action()
 		return $retval;
 	}
 
+	pkwk_headers_sent();
 	header('Location: ' . get_script_uri() . '?' . rawurlencode($refer));
 	exit;
 }
