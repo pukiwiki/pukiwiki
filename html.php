@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.53 2003/02/07 15:09:38 panda Exp $
+// $Id: html.php,v 1.54 2003/02/11 05:42:44 panda Exp $
 //
 
 // 本文を出力
@@ -266,7 +266,7 @@ function make_user_rules($str)
 	global $user_rules;
 	
 	foreach($user_rules as $rule => $replace) {
-		$str = preg_replace("/$rule/","$replace",$str);
+		$str = preg_replace("/$rule/",$replace,$str);
 	}
 	
 	return $str;
