@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.10 2003/04/13 14:34:41 arino Exp $
+// $Id: pcomment.inc.php,v 1.11 2003/04/17 02:37:02 arino Exp $
 //
 
 /*
@@ -304,6 +304,10 @@ function pcmt_check_arg($val, $key, &$params)
 {
 	foreach (array_keys($params) as $key)
 	{
+		if ($val == '')
+		{
+			return;
+		}
 		if (strpos($key, strtolower($val)) === 0)
 		{
 			$params[$key] = TRUE;
