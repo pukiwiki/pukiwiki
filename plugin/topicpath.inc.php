@@ -1,11 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: topicpath.inc.php,v 1.5 2005/01/29 14:08:46 henoheno Exp $
+// $Id: topicpath.inc.php,v 1.6 2005/01/29 14:31:04 henoheno Exp $
 //
 // 'topicpath' plugin for PukiWiki, available under GPL
 
 // Show a link to $defaultpage or not
-define('PLUGIN_TOPICPATH_TOP_DISPLAY', TRUE);
+define('PLUGIN_TOPICPATH_TOP_DISPLAY', 1);
 
 // Label for $defaultpage
 define('PLUGIN_TOPICPATH_TOP_LABEL', 'Top');
@@ -14,10 +14,10 @@ define('PLUGIN_TOPICPATH_TOP_LABEL', 'Top');
 define('PLUGIN_TOPICPATH_TOP_SEPARATOR', ' / ');
 
 // Show the page itself or not
-define('PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY', TRUE);
+define('PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY', 1);
 
 // If PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY, add a link to itself
-define('PLUGIN_TOPICPATH_THIS_PAGE_LINK', FALSE);
+define('PLUGIN_TOPICPATH_THIS_PAGE_LINK', 0);
 
 function plugin_topicpath_convert()
 {
@@ -33,23 +33,29 @@ function plugin_topicpath_inline()
 
 	$parts = explode('/', $page);
 
+	$b_link = TRUE;
 	if (PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY) {
 		$b_link = PLUGIN_TOPICPATH_THIS_PAGE_LINK;
 	} else {
-		array_pop($parts); // Remove itself
-		$b_link = TRUE;    // Link to the parent
+		array_pop($parts); // Remove the page itself
 	}
 
 	$topic_path = array();
 	while (! empty($parts)) {
-		$landing = rawurlencode(join('/', $parts));
+		$_landing = join('/', $parts);
+		$landing  = rawurlencode($_landing);
 		$element = htmlspecialchars(array_pop($parts));
-		if ($b_link)  {
+		if (! $b_link)  {
+			// This page ($_landing == $page)
+			$b_link = TRUE;
+			$topic_path[] = $element;
+		} else if (PKWK_READONLY && ! is_page($_landing)) {
+			// Page not exists
+			$topic_path[] = $element;
+		} else {
+			// Page exists or not exists
 			$topic_path[] = '<a href="' . $script . '?' . $landing . '">' .
 				$element . '</a>';
-		} else {
-			$b_link = TRUE; // Maybe reacheable once at a time
-			$topic_path[] = $element;
 		}
 	}
 
