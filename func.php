@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.51 2003/09/12 06:43:04 arino Exp $
+// $Id: func.php,v 1.52 2003/09/12 07:12:15 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -293,6 +293,7 @@ function page_list($pages, $cmd = 'read', $withfilename=FALSE)
 	$retval = '';
 	
 	if($pagereading_enable) {
+		mb_regex_encoding(SOURCE_ENCODING);
 		$readings = get_readings($pages);
 	}
 	
