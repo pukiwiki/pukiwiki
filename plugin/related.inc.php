@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: related.inc.php,v 1.1 2005/01/12 14:02:05 henoheno Exp $
+// $Id: related.inc.php,v 1.2 2005/01/15 14:11:12 henoheno Exp $
 //
 // Related plugin: Show Backlinks for the page
 
@@ -29,15 +29,16 @@ function plugin_related_action()
 
 	// Result
 	$s_word = htmlspecialchars($_page);
-	$msg = '<a href="' . $script . '?' . $s_word . '">' .
-		'Backlinks for: ' . $s_word . '</a>';
+	$msg = 'Backlinks for: ' . $s_word;
+	$retval  = '<a href="' . $script . '?' . $s_word . '">' .
+		'Return ' . $s_word .'</a><br/>'. "\n";
 
 	if (empty($data)) {
-		return array('msg'=>$msg, 'body'=>'No related pages found.');
+		$retval .= '<ul><li>No related pages found.</li></ul>' . "\n";	
 	} else {
 		// Show count($data)?
 		ksort($data);
-		$retval = '<ul>' . "\n";
+		$retval .= '<ul>' . "\n";
 		foreach ($data as $page=>$time) {
 			$r_page  = rawurlencode($page);
 			$s_page  = htmlspecialchars($page);
@@ -46,7 +47,7 @@ function plugin_related_action()
 				'</a> ' . $passage . '</li>' . "\n";
 		}
 		$retval .= '</ul>' . "\n";
-		return array('msg'=>$msg, 'body'=>$retval);
 	}
+	return array('msg'=>$msg, 'body'=>$retval);
 }
 ?>
