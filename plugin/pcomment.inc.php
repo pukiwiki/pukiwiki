@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.24 2003/09/24 00:06:57 arino Exp $
+// $Id: pcomment.inc.php,v 1.25 2003/09/29 02:59:50 arino Exp $
 //
 
 /*
@@ -297,12 +297,13 @@ function pcmt_insert()
 		
 		$postdata = join('',$postdata);
 	}
+	page_write($page,$postdata,PCMT_TIMESTAMP);
 	if (PCMT_TIMESTAMP)
 	{
-		// 親ページのタイムスタンプを更新しておく
+		// 親ページのタイムスタンプを更新する
 		touch(get_filename($post['refer']));
+		put_lastmodified();
 	}
-	page_write($page,$postdata,PCMT_TIMESTAMP);
 	return $ret;
 }
 // 過去ログ処理
