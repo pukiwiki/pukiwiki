@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.17.2.2 2005/03/20 10:31:29 teanan Exp $
+// $Id: make_link.php,v 1.17.2.3 2005/03/21 17:57:41 teanan Exp $
 //
 // Hyperlink-related functions
 
@@ -694,18 +694,18 @@ class Link_autoalias extends Link
 
 	function Link_autoalias($start)
 	{
-		global $autoalias, $autoalias_min_len;
+		global $autoalias, $aliaspage;
 
 		parent::Link($start);
 
-		if (!$autoalias_min_len || !file_exists(CACHE_DIR.'autoalias.dat') || $this->page==$autoalias)
+		if (!$autoalias || !file_exists(CACHE_DIR.'autoalias.dat') || $this->page==$aliaspage)
 		{
 			return;
 		}
 		@list($auto,$auto_a,$forceignorepages) = file(CACHE_DIR.'autoalias.dat');
 		$this->auto = $auto;
 		$this->auto_a = $auto_a;
-		$this->forceignorepages = explode("\t",trim($forceignorepages));
+		$this->forceignorepages = explode("\t", trim($forceignorepages));
 	}
 	function get_pattern()
 	{
@@ -717,11 +717,9 @@ class Link_autoalias extends Link
 	}
 	function set($arr,$page)
 	{
-		global $WikiName;
-
 		list($name) = $this->splice($arr);
 		// Ignore pages listed
-		if (in_array($name,$this->forceignorepages)) {
+		if (in_array($name, $this->forceignorepages)) {
 			return FALSE;
 		}
 		return parent::setParam($page,$name,'','pagename',$name);

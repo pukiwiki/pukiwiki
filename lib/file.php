@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.13.2.2 2005/03/20 10:31:29 teanan Exp $
+// $Id: file.php,v 1.13.2.3 2005/03/21 17:57:41 teanan Exp $
 //
 // File related functions
 
@@ -90,7 +90,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	global $notify, $notify_diff_only, $notify_to, $notify_subject, $notify_header;
 	global $smtp_server, $smtp_auth;
 	global $whatsdeleted, $maxshow_deleted;
-	global $autoalias_min_len, $autoalias;
+	global $autoalias, $aliaspage;
 
 	if (PKWK_READONLY) return; // Do nothing
 
@@ -154,12 +154,12 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
  		mb_send_mail($notify_to, $subject, $str, $notify_header);
 	}
 	// for AutoAlias
-	if ($autoalias_min_len>0 && $page==$autoalias) {
+	if ($autoalias>0 && $page==$aliaspage) {
 		// AutoAliasName is updated
 		$pages = array_keys(get_autoaliases());
 		if(count($pages)>0) {
 			autolink_pattern_write(CACHE_DIR . 'autoalias.dat',
-				get_autolink_pattern($pages, $autoalias_min_len));
+				get_autolink_pattern($pages, $autoalias));
 		} else {
 			@unlink(CACHE_DIR . 'autoalias.dat');
 		}
