@@ -1,15 +1,15 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.7 2005/02/05 06:47:10 henoheno Exp $
+// $Id: plugin.php,v 1.8 2005/04/05 14:42:02 henoheno Exp $
 //
 // Plugin related functions
 
-// プラグイン用に未定義のグローバル変数を設定
+// Set global variables for plugins
 function set_plugin_messages($messages)
 {
-	foreach ($messages as $name=>$val) {
-		if (! isset($GLOBALS[$name])) $GLOBALS[$name] = $val;
-	}
+	foreach ($messages as $name=>$val)
+		if (! isset($GLOBALS[$name]))
+			$GLOBALS[$name] = $val;
 }
 
 // Check plugin '$name' is here
