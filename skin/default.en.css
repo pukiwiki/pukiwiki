@@ -96,11 +96,10 @@ address {
 }
 
 .style_table {
-	border: 0px;
-	background-color: #CCD5DD;
-	margin: .5em;
-	margin-left: 3em;
-	padding: 0px;
+	margin:auto;
+	border:0px;
+	padding:0px;
+	text-align:left;
 }
 
 .style_td {
@@ -227,9 +226,15 @@ address {
 	margin-top:0px;
 	margin-bottom:.5em;
 }
+
 span.diff_added {
 	color: blue;
 }
+
 span.diff_removed {
 	color: red;
+}
+
+.ie5 {
+	text-align:center;
 }
