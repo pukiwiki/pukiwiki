@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.13 2004/10/16 05:48:53 henoheno Exp $
+// $Id: init.php,v 1.14 2004/10/16 05:56:24 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -64,9 +64,9 @@ if (! file_exists(LANG_FILE) || ! is_readable(LANG_FILE)) {
 if ($die) die_message(nl2br("\n\n" . $die));
 
 /////////////////////////////////////////////////
-// INI_FILE / LANG_FILE: mbstring extension 関連
+// LANG_FILE: mbstring extension 関連
 
-mb_language('Japanese');
+mb_language(MB_LANGUAGE);
 mb_internal_encoding(SOURCE_ENCODING);
 ini_set('mbstring.http_input', 'pass');
 mb_http_output('pass');
