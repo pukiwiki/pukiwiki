@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.98 2004/07/31 10:18:37 henoheno Exp $
+// $Id: init.php,v 1.99 2004/08/01 01:22:37 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -105,7 +105,7 @@ unset($agents, $matches);
 define('UA_PROFILE', isset($user_agent['profile']) ? $user_agent['profile'] : '');
 
 //// Not needed now
-// define('INI_PRO_FILE', SUB_DIR . 'init.' . UA_PROFILE . '.php');
+// define('INI_PRO_FILE', LIB_DIR . 'init.' . UA_PROFILE . '.php');
 // if (file_exists(INI_PRO_FILE) && is_readable(INI_PRO_FILE)) {
 //	require(INI_PRO_FILE);	// A chance to set or rewrite $user_agent['name'] and ['vers'] automatically
 // }

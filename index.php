@@ -1,11 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: index.php,v 1.1 2004/07/24 12:55:18 henoheno Exp $
+// $Id: index.php,v 1.2 2004/08/01 01:22:37 henoheno Exp $
 
 // Directory definition
 // (Ended with a slash like '../path/to/pkwk/', or '')
 define('DATA_HOME',	'');
-define('SUB_DIR',	'');
+define('LIB_DIR',	'');
 
-require(SUB_DIR . 'pukiwiki.php');
+require(LIB_DIR . 'pukiwiki.php');
 ?>
