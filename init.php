@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.74 2004/06/22 13:39:23 henoheno Exp $
+// $Id: init.php,v 1.75 2004/06/24 13:05:35 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -12,9 +12,10 @@ error_reporting(E_ERROR | E_PARSE);
 
 /////////////////////////////////////////////////
 // 初期設定 (文字エンコード、言語)
+define('LANG','ja');	// Select 'ja' or 'en'
 define('SOURCE_ENCODING','EUC-JP');
-define('LANG','ja');
 
+// mbstring extension 関連
 mb_language('Japanese');
 mb_internal_encoding(SOURCE_ENCODING);
 ini_set('mbstring.http_input', 'pass');
@@ -24,13 +25,14 @@ mb_detect_order('auto');
 
 /////////////////////////////////////////////////
 // 初期設定(設定ファイルの場所)
+define('LANG_FILE', LANG.'.lng');
 define('INI_FILE','./pukiwiki.ini.php');
 
 /////////////////////////////////////////////////
 // 初期設定 (バージョン/著作権)
 define('S_VERSION','1.4.3');
 define('S_COPYRIGHT','
-<strong>"PukiWiki" '.S_VERSION.'</strong> Copyright &copy; 2001,2002,2003
+<strong>"PukiWiki" '.S_VERSION.'</strong> Copyright &copy; 2001-2004
 <a href="http://pukiwiki.org">PukiWiki Developers Team</a>.
 License is <a href="http://www.gnu.org/">GNU/GPL</a>.<br />
 Based on "PukiWiki" 1.3 by <a href="http://factage.com/sng/">sng</a>
@@ -60,31 +62,29 @@ define('UTIME',time() - LOCALZONE);
 define('MUTIME',getmicrotime());
 
 /////////////////////////////////////////////////
-// 言語ファイル読み込み
-if (!file_exists(LANG.'.lng')||!is_readable(LANG.'.lng')) {
-	die_message(LANG.'.lng(language file) is not found.');
+// ファイル読み込み
+$die = FALSE; $message = '';
+foreach(array('LANG_FILE', 'INI_FILE') as $file){
+	if (!file_exists(constant($file)) || !is_readable(constant($file))) {
+		$die = TRUE; $message = "${message}File is not found. ($file)\n";
+	}
 }
-require(LANG.'.lng');
+if ($die) { die_message(nl2br("\n\n" . $message . "\n")); }
+
+require(LANG_FILE);	// 言語ファイル
+require(INI_FILE);	// 設定ファイル
 
 /////////////////////////////////////////////////
-// 設定ファイル読み込み
-if (!file_exists(INI_FILE)||!is_readable(INI_FILE)) {
-	die_message(INI_FILE.' is not found.');
-}
-require(INI_FILE);
-
-/////////////////////////////////////////////////
-// 初期設定($script)
+// INI_FILE: $script: 初期設定
 if (!isset($script) or $script == '') {
 	$script = get_script_uri();
-}
-if ($script === FALSE or (php_sapi_name() == 'cgi' and !is_url($script,TRUE)))
-{
-	die_message('please set "$script" in pukiwiki.ini.php.');
+	if ($script === FALSE or (php_sapi_name() == 'cgi' and !is_url($script,TRUE))) {
+		die_message("get_script_uri() failed: Please set \$script at INI_FILE manually.");
+	}
 }
 
 /////////////////////////////////////////////////
-// 設定ファイル読み込み(UserAgent)
+// INI_FILE: $agents:  UserAgent別の設定ファイル読み込み
 foreach ($agents as $agent) {
 	if (preg_match($agent['pattern'],HTTP_USER_AGENT,$matches)) {
 		$agent['matches'] = $matches;
@@ -92,33 +92,44 @@ foreach ($agents as $agent) {
 		break;
 	}
 }
-define('UA_INI_FILE',$user_agent['name'].'.ini.php');
 
-if (!file_exists(UA_INI_FILE)||!is_readable(UA_INI_FILE)) {
-	die_message(UA_INI_FILE.' is not found.');
+define('UA_INI_FILE' ,$user_agent['name'] . '.ini.php');
+if (!file_exists(UA_INI_FILE) || !is_readable(UA_INI_FILE)) {
+	die_message("UA_INI_FILE not found.");
 }
 require(UA_INI_FILE);
 
 /////////////////////////////////////////////////
-// 設定ファイルの変数チェック
+// ディレクトリのチェック
 $die = FALSE; $message = $temp = '';
 
 foreach(array('DATA_DIR', 'DIFF_DIR', 'BACKUP_DIR', 'CACHE_DIR') as $dir){
-	if(!is_writable(constant($dir))) { $die = TRUE; $temp = "${temp}Directory is not found or not writable ($dir)\n"; }
+	if(!is_writable(constant($dir))) {
+		$die = TRUE;
+		$temp = "${temp}Directory is not found or not writable ($dir)\n";
+	}
 }
 if ($temp) { $message = "$temp\n"; }
 
+// 設定ファイルの変数チェック
 $temp = '';
-foreach(array('rss_max', 'page_title', 'note_hr', 'related_link', 'show_passage', 'rule_related_str', 'load_template_func') as $var){
-	if (!isset(${$var})){ $temp .= "\$$var\n"; }
+foreach(array('rss_max', 'page_title', 'note_hr', 'related_link', 'show_passage',
+	'rule_related_str', 'load_template_func') as $var){
+	if (!isset(${$var})) { $temp .= "\$$var\n"; }
 }
-if ($temp) { $die = TRUE; $message = "${message}Variable(s) not found: (Maybe the old *.ini.php?)\n" . $temp . "\n"; }
+if ($temp) {
+	$die = TRUE;
+	$message = "${message}Variable(s) not found: (Maybe the old *.ini.php?)\n" . $temp . "\n";
+}
 
 $temp = '';
 foreach(array('LANG', 'PLUGIN_DIR') as $def){
 	if (!defined($def)) $temp .= "$def\n";
 }
-if ($temp) { $die = TRUE; $message = "${message}Define(s) not found: (Maybe the old *.ini.php?)\n" . $temp . "\n"; }
+if ($temp) {
+	$die = TRUE;
+	$message = "${message}Define(s) not found: (Maybe the old *.ini.php?)\n" . $temp . "\n";
+}
 
 if($die){ die_message(nl2br("\n\n" . $message)); }
 
@@ -263,12 +274,16 @@ if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars))
 // $WikiName = '\b[A-Z][a-z]+(?:[A-Z][a-z]+)+\b';
 // $WikiName = '(?<![[:alnum:]])(?:[[:upper:]][[:lower:]]+){2,}(?![[:alnum:]])';
 // $WikiName = '(?<!\w)(?:[A-Z][a-z]+){2,}(?!\w)';
+
 // BugTrack/304暫定対処
 $WikiName = '(?:[A-Z][a-z]+){2,}(?!\w)';
+
 // $BracketName = ':?[^\s\]#&<>":]+:?';
 $BracketName = '(?!\s):?[^\r\n\t\f\[\]<>#&":]+:?(?<!\s)';
+
 // InterWiki
 $InterWikiName = "(\[\[)?((?:(?!\s|:|\]\]).)+):(.+)(?(1)\]\])";
+
 // 注釈
 $NotePattern = '/\(\(((?:(?>(?:(?!\(\()(?!\)\)(?:[^\)]|$)).)+)|(?R))*)\)\)/ex';
 
@@ -278,25 +293,28 @@ require('rules.ini.php');
 
 /////////////////////////////////////////////////
 // 初期設定(その他のグローバル変数)
+
 // 現在時刻
 $now = format_date(UTIME);
+
 // skin内でDTD宣言を切り替えるのに使用。paint.inc.php対策
+$html_transitional = FALSE;
 // FALSE:XHTML 1.1
 // TRUE :XHTML 1.0 Transitional
-$html_transitional = FALSE;
+
 // フェイスマークを$line_rulesに加える
-if ($usefacemark)
-{
-	$line_rules += $facemark_rules;
-}
+if ($usefacemark) { $line_rules += $facemark_rules; }
 unset($facemark_rules);
+
 // 実体参照パターンおよびシステムで使用するパターンを$line_rulesに加える
 //$entity_pattern = '[a-zA-Z0-9]{2,8}';
 $entity_pattern = trim(join('',file(CACHE_DIR.'entities.dat')));
+
 $line_rules = array_merge(array(
-	'&amp;(#[0-9]+|#x[0-9a-f]+|'.$entity_pattern.');'=>'&$1;',
-	"\r"=>"<br />\n", /* 行末にチルダは改行 */
-	'#related$'=>'<del>#related</del>',
-	'^#contents$'=>'<del>#contents</del>'
-),$line_rules);
+	'&amp;(#[0-9]+|#x[0-9a-f]+|' . $entity_pattern . ');' => '&$1;',
+	"\r"          => "<br />\n",	/* 行末にチルダは改行 */
+	'#related$'   => '<del>#related</del>',
+	'^#contents$' => '<del>#contents</del>'
+), $line_rules);
+
 ?>
