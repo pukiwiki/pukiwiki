@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.20 2003/02/17 07:31:45 panda Exp $
+// $Id: convert_html.php,v 1.21 2003/02/20 12:22:51 panda Exp $
 //
 function &convert_html(&$lines)
 {
@@ -686,7 +686,7 @@ class Body extends Block
 		
 		$this->id = $id;
 		$this->count = 0;
-		$this->top = "<a href=\"#contents_$id\">$top</a>";
+		$this->top = $top ? "<a href=\"#contents_$id\">$top</a>" : '';
 		$this->contents = new Block();
 		$this->contents_last =& $this->contents;
 		parent::Block();
