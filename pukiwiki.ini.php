@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.6 2002/06/26 05:53:17 masui Exp $
+// $Id: pukiwiki.ini.php,v 1.7 2002/06/28 03:49:14 masui Exp $
 //
 // PukiWiki setting file
 
@@ -192,7 +192,7 @@ $str_rules = array(
 // ユーザ定義ルール(コンバート時に置換、直接しない)
 $line_rules = array(
 "COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)" => "<font color=\"\\1\">\\2</font>",
-"SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)" => "<font size=\"\\1\">\\2</font>",
+"SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)" => "<font size=\"\\1\" style=\"display:inline-block;line-height:130%\">\\2</font>",
 "CENTER:((?:(?!CENTER\:).)*)" => "<div align=\"center\">\\1</div>",
 "RIGHT:((?:(?!RIGHT\:).)*)" => "<div align=\"right\">\\1</div>",
 "%%((?:(?!%%).)*)%%" => "<strike>\\1</strike>",
@@ -363,7 +363,7 @@ now? を書くと、更新時の日付と時間に置換されます。
 <li>
 > を行頭に書くと、
 引用文が書けます。
->の数が多いとインデントが深くなります > >> >>> の3レベルまであります。
+>の数が多いとインデントが深くなります &gt; &gt;&gt; &gt;&gt;&gt; の3レベルまであります。
 
 <li>
 行末にチルダ ~ があると改行します。
