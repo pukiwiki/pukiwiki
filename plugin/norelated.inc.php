@@ -1,9 +1,9 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: norelated.inc.php,v 1.3 2005/01/16 13:05:22 henoheno Exp $
 //
-// $Id: norelated.inc.php,v 1.2 2004/07/31 03:09:20 henoheno Exp $
-//
+// norelated plugin
+// - Stop showing related link automatically if $related_link = 1
 
 function plugin_norelated_convert()
 {
@@ -11,5 +11,4 @@ function plugin_norelated_convert()
 	$related_link = 0;
 	return '';
 }
-
 ?>
