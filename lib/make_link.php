@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.8 2004/12/31 09:33:59 henoheno Exp $
+// $Id: make_link.php,v 1.9 2005/01/08 11:24:21 henoheno Exp $
 //
 // Hyperlink-related functions
 
@@ -760,10 +760,11 @@ function get_interwiki_url($name, $param)
 
 	if (! isset($interwikinames)) {
 		$interwikinames = $matches = array();
-		foreach (get_source($interwiki) as $line) {
-			if (preg_match('/\[((?:(?:https?|ftp|news):\/\/|\.\.?\/)[!~*\'();\/?:\@&=+\$,%#\w.-]*)\s([^\]]+)\]\s?([^\s]*)/', $line, $matches))
+		foreach (get_source($interwiki) as $line)
+			if (preg_match('/\[(' . '(?:(?:https?|ftp|news):\/\/|\.\.?\/)' .
+			    '[!~*\'();\/?:\@&=+\$,%#\w.-]*)\s([^\]]+)\]\s?([^\s]*)/',
+			    $line, $matches))
 				$interwikinames[$matches[2]] = array($matches[1], $matches[3]);
-		}
 	}
 
 	if (! isset($interwikinames[$name])) return FALSE;
