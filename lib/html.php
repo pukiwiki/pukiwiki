@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.15 2004/11/23 11:33:25 henoheno Exp $
+// $Id: html.php,v 1.16 2004/11/28 14:29:48 henoheno Exp $
 //
 
 // 本文を出力
@@ -340,7 +340,7 @@ function make_heading(& $str, $strip = TRUE)
 	// Cut fixed-anchors
 	$id = '';
 	$matches = array();
-	if (preg_match('/^(\*{0,3})(.*?)\[#([a-z][a-f0-9]{7})\](.*?)$/m', $str, $matches)) {
+	if (preg_match('/^(\*{0,3})(.*?)\[#([A-Za-z][\w-]+)\](.*?)$/m', $str, $matches)) {
 		$str = $matches[2] . $matches[4];
 		$id  = $matches[3];
 	} else {
