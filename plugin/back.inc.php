@@ -1,5 +1,5 @@
 <?php
-// $Id: back.inc.php,v 1.2 2003/02/28 02:40:52 panda Exp $
+// $Id: back.inc.php,v 1.3 2003/03/17 00:29:33 panda Exp $
 /*
  * PukiWiki back プラグイン
  * (C) 2002, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -17,12 +17,22 @@
  * 4 - 通常は、戻るなわけなんですが、どうしてもの場合の飛び先を指定可能
  */
 
+function plugin_back_init()
+{
+	$messages = array(
+		'_msg_back_word' => '戻る'
+	);
+	set_plugin_messages($messages);
+}
+
 function plugin_back_convert()
 {
+	global $_msg_back_word;
+	
 	$argv = func_get_args();
 
 	// 初期値設定
-	$word  = '戻る';
+	$word  = $_msg_back_word;
 	$align = 'center';
 	$hr    = 1;
 	$href  = 'javascript:history.go(-1)';
@@ -31,7 +41,7 @@ function plugin_back_convert()
 	// パラメータの判断
 	if (func_num_args() > 0) {
 		$word = htmlspecialchars(trim(strip_tags($argv[0])));
-		if ($word == '') $word = '戻る';
+		if ($word == '') $word = $_msg_back_word;
 	}
 	if (func_num_args() > 1) {
 		$align = htmlspecialchars(trim(strip_tags($argv[1])));
