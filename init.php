@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.29 2003/02/18 12:02:32 panda Exp $
+// $Id: init.php,v 1.30 2003/02/21 07:04:44 panda Exp $
 //
 
 /////////////////////////////////////////////////
@@ -19,7 +19,7 @@ define('INI_FILE','./pukiwiki.ini.php');
 
 /////////////////////////////////////////////////
 // 初期設定 (バージョン/著作権)
-define('S_VERSION','1.4pre4');
+define('S_VERSION','1.4pre5');
 define('S_COPYRIGHT','
 <strong>"PukiWiki" '.S_VERSION.'</strong> Copyright &copy; 2001,2002
 <a href="http://pukiwiki.org">PukiWiki Developers Team</a>.
@@ -63,6 +63,35 @@ if (!file_exists(INI_FILE)||!is_readable(INI_FILE)) {
 require(INI_FILE);
 
 /////////////////////////////////////////////////
+// 初期設定($script)
+if (!isset($script) or $script == '') {
+	$script =
+		 ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://')
+		. $_SERVER['SERVER_NAME']
+		.($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT'])
+		. $_SERVER['SCRIPT_NAME'];
+}
+if (php_sapi_name() == 'cgi' && !preg_match("/^http:\/\/[-a-zA-Z0-9\@:;_.]+\//",$script)) {
+	die_message("please set '\$script' in ".INI_FILE);
+}
+
+/////////////////////////////////////////////////
+// 設定ファイル読み込み(UserAgent)
+foreach ($agents as $agent) {
+	if (preg_match($agent['pattern'],HTTP_USER_AGENT,$matches)) {
+		$agent['matches'] = $matches;
+		$user_agent = $agent;
+		break;
+	}
+}
+define('UA_INI_FILE',$user_agent['name'].'.ini.php');
+
+if (!file_exists(UA_INI_FILE)||!is_readable(UA_INI_FILE)) {
+	die_message(UA_INI_FILE.' is not found.');
+}
+require(UA_INI_FILE);
+
+/////////////////////////////////////////////////
 // 設定ファイルの変数チェック
 if(!is_writable(DATA_DIR)) {
 	die_message('DATA_DIR is not found or not writable.');
@@ -100,19 +129,6 @@ if (!is_page($interwiki)) {
 }
 
 /////////////////////////////////////////////////
-// 初期設定($script)
-if (!isset($script) or $script == '') {
-	$script =
-		 ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://')
-		. $_SERVER['SERVER_NAME']
-		.($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT'])
-		. $_SERVER['SCRIPT_NAME'];
-}
-if (php_sapi_name() == 'cgi' && !preg_match("/^http:\/\/[-a-zA-Z0-9\@:;_.]+\//",$script)) {
-	die_message("please set '\$script' in ".INI_FILE);
-}
-
-/////////////////////////////////////////////////
 // 入力値の整形
 if (get_magic_quotes_gpc()) {
 	$get = $post = $cookie = array();
@@ -133,6 +149,19 @@ else {
 	$get = is_array($HTTP_GET_VARS) ? $HTTP_GET_VARS : array();
 	$cookie = is_array($HTTP_COOKIE_VARS) ? $HTTP_COOKIE_VARS : array();
 }
+
+// ポストされた文字のコードを変換
+// original by nitoyon (2003/02/20)
+$encode = mb_detect_encoding(join('',array_merge($post,$get)));
+if ($encode != 'ASCII' and $encode != SOURCE_ENCODING) {
+	foreach(array_keys($get) as $key) {
+		$get[$key] = mb_convert_encoding($get[$key],SOURCE_ENCODING,$encode);
+	}
+	foreach(array_keys($post) as $key) {
+		$post[$key] = mb_convert_encoding($post[$key],SOURCE_ENCODING,$encode);
+	}
+}
+
 if (!empty($get['page'])) {
 	$get['page']  = preg_replace('/^(\[\[)?(.*)(?(1)\]\])$/','$2',$get['page']);
 }

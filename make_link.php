@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.15 2003/02/17 07:31:25 panda Exp $
+// $Id: make_link.php,v 1.16 2003/02/21 07:04:44 panda Exp $
 //
 
 // リンクを付加する
@@ -515,7 +515,7 @@ EOD;
 // ページ名のリンクを作成
 function make_pagelink($page,$alias='',$anchor='',$refer='')
 {
-	global $script,$vars,$show_passage,$related;
+	global $script,$vars,$show_title,$show_passage,$link_compact,$related;
 	
 	$s_page = htmlspecialchars(strip_bracket($page));
 	$s_alias = ($alias == '') ? $s_page : $alias;
@@ -532,11 +532,14 @@ function make_pagelink($page,$alias='',$anchor='',$refer='')
 	}
 	
 	if (is_page($page)) {
-		$passage = $show_passage ? ' '.get_pg_passage($page,FALSE) : '';
-		return "<a href=\"$script?$r_page$anchor\" title=\"$s_page$passage\">$s_alias</a>";
+		$passage = get_pg_passage($page,FALSE);
+		$title = $link_compact ? '' : " title=\"$s_page$passage\"";
+		return "<a href=\"$script?$r_page$anchor\"$title>$s_alias</a>";
 	}
 	else {
-		return "<span class=\"noexists\">$s_alias<a href=\"$script?cmd=edit&amp;page=$r_page$r_refer\">?</a></span>";
+		return $link_compact ?
+			"$s_alias<a href=\"$script?cmd=edit&amp;page=$r_page$r_refer\">?</a>" :
+			"<span class=\"noexists\">$s_alias<a href=\"$script?cmd=edit&amp;page=$r_page$r_refer\">?</a></span>";
 	}
 }
 // 相対参照を展開
