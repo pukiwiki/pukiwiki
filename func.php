@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.26 2003/03/06 05:42:21 panda Exp $
+// $Id: func.php,v 1.27 2003/03/07 07:04:44 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -410,16 +410,18 @@ function drop_submit($str)
 function get_autolink_pattern(&$pages)
 {
 	global $WikiName,$autolink,$nowikiname;
-	global $ignorelistpage,$forceignorelistpage;
 	
-	$auto_pages = array_merge(
-		get_autolink_ignorepages($ignorelistpage),
-		get_autolink_ignorepages($forceignorelistpage)
-	);
+	$config = &new Config('AutoLink');
+	$config->read();
+	$ignorepages = $config->get('IgnoreList');
+	$forceignorepages = $config->get('ForceIgnoreList');
+	unset($config);
+	$auto_pages = array_merge($ignorepages,$forceignorepages);
+	
 	foreach ($pages as $page)
 	{
-		$match = preg_match("/^$WikiName$/",$page);
-		if($match ? $nowikiname : strlen($page) >= $autolink)
+		if (preg_match("/^$WikiName$/",$page) ?
+			$nowikiname : strlen($page) >= $autolink)
 		{
 			$auto_pages[] = $page;
 		}
@@ -433,32 +435,12 @@ function get_autolink_pattern(&$pages)
 	
 	$result = get_autolink_pattern_sub($auto_pages,0,count($auto_pages),0);
 
-	if(!$nowikiname)
+	if (!$nowikiname)
 	{
 		$result .= '|(?:'.$WikiName.')';
 	}
 	
-	return $result;
-}
-function get_autolink_ignorepages($page)
-{
-	$pages = array();
-	
-	foreach (get_source($page) as $line)
-	{
-		if ($line == '' or $line{0} != '-')
-		{
-			continue;
-		}
-		$pagename = trim(ltrim($line,'-'));
-		
-		if (!is_pagename($pagename))
-		{
-			continue;
-		}
-		$pages[] = $pagename;
-	}
-	return $pages;
+	return array($result,$forceignorepages);
 }
 function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 {
@@ -466,7 +448,8 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 	$count = 0;
 	$x = (mb_strlen($pages[$start]) <= $pos);
 	
-	if ($x) {
+	if ($x)
+	{
 		$start++;
 	}
 	for ($i = $start; $i < $end; $i = $j)
@@ -495,7 +478,7 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 		}
 		$count++;
 	}
-	if ($count > 1)
+	if ($x or $count > 1)
 	{
 		$result = '(?:'.$result.')';
 	}

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.12 2003/03/04 06:45:57 panda Exp $
+// $Id: file.php,v 1.13 2003/03/07 07:05:14 panda Exp $
 //
 
 // ソースを取得
@@ -167,10 +167,13 @@ function put_lastmodified()
 	// for autolink
 	if ($autolink)
 	{
+		list($pattern,$forceignorelist) = get_autolink_pattern($pages);
+		
 		$fp = fopen(CACHE_DIR.'autolink.dat','w')
 			or die_message('cannot write autolink file '.CACHE_DIR.'/autolink.dat<br>maybe permission is not writable');
 		flock($fp,LOCK_EX);
-		fputs($fp,get_autolink_pattern($pages));
+		fputs($fp,$pattern."\n");
+		fputs($fp,join("\t",$forceignorelist));
 		flock($fp,LOCK_UN);
 		fclose($fp);
 	}
