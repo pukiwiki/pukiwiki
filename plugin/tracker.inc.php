@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.10 2003/09/24 00:16:33 arino Exp $
+// $Id: tracker.inc.php,v 1.11 2003/09/27 15:28:12 arino Exp $
 //
 
 function plugin_tracker_convert()
@@ -630,10 +630,9 @@ class Tracker_list
 		$pattern_len = strlen($pattern);
 		foreach (get_existpages() as $_page)
 		{
-			if (strpos($_page,$pattern) === 0)
-				//and is_numeric($num = substr($_page,$pattern_len)))
+			if (strpos($_page,$pattern) === 0
+				and strpos($name = substr($_page,$pattern_len),'/') === FALSE)
 			{
-				$name = substr($_page,$pattern_len);
 				$this->add($_page,$name);
 			}
 		}
