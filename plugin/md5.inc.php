@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.6 2004/11/28 13:20:23 henoheno Exp $
+// $Id: md5.inc.php,v 1.7 2005/01/23 05:29:10 henoheno Exp $
 //  MD5 plugin
 
 define('PLUGIN_MD5_LIMIT_LENGTH', 512);
@@ -8,6 +8,8 @@ define('PLUGIN_MD5_LIMIT_LENGTH', 512);
 function plugin_md5_action()
 {
 	global $script, $get, $post;
+
+	if (PKWK_SAFE_MODE || PKWK_READONLY) die_message('Prohibited');
 
 	// Wait POST
 	$key = isset($post['key']) ? $post['key'] : '';
