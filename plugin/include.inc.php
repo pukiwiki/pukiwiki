@@ -2,10 +2,10 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: include.inc.php,v 1.16 2004/08/19 11:36:08 henoheno Exp $
+// $Id: include.inc.php,v 1.17 2004/08/24 11:24:39 henoheno Exp $
 //
 
-define('INCLUDE_MAX', 4); // 一度にインクルードできるページの最大数
+define('PLUGIN_INCLUDE_MAX', 4); // 一度にインクルードできるページの最大数
 
 // ページを(可能ならば再帰的に)インクルードする
 function plugin_include_convert()
@@ -33,7 +33,7 @@ function plugin_include_convert()
 		return "#include(): Included already: $link<br />\n";
 	} if (! is_page($page)) {
 		return "#include(): No such page: $s_page<br />\n";
-	} if ($count > INCLUDE_MAX) {
+	} if ($count > PLUGIN_INCLUDE_MAX) {
 		return "#include(): Limit exceeded: $link<br />\n";
 	} else {
 		++$count;
