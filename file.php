@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.11 2003/03/02 16:08:04 panda Exp $
+// $Id: file.php,v 1.12 2003/03/04 06:45:57 panda Exp $
 //
 
 // ソースを取得
@@ -59,7 +59,7 @@ function make_str_rules($str)
 	// 日付・時刻置換処理
 	foreach ($arr as $str)
 	{
-		if ($str{0} != ' ' and $str{0} != "\t")
+		if ($str != '' and $str{0} != ' ' and $str{0} != "\t")
 		{
 			foreach ($str_rules as $rule => $replace)
 			{
