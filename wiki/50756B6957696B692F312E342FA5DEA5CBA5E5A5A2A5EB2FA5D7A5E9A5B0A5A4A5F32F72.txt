@@ -80,9 +80,6 @@
 &color(blue){URL};
 [,&color(blue){ページ名};]
 {,
-[&color(blue){left};|&color(blue){center};|&color(blue){right};],
-[&color(blue){wrap};|&color(blue){nowrap};],
-[&color(blue){around};],
 [&color(blue){noicon};],
 [&color(blue){noimg};],
 [&color(blue){nolink};],
@@ -109,13 +106,22 @@
 --999% − サイズを指定(拡大率)します。省略時は100%です、
 --タイトル − 上記以外のパラメータは画像の代替文字列、リンクのタイトル属性として使用されます。ページ名やパラメータに見える文字列を使用するときは、#ref(hoge.png,,zoom)のようにタイトルの前にカンマを余分に入れます。
 :プラグイン内設定|~
---UPLOAD_DIR　添付ファイルを置くフォルダ
+--PLUGIN_REF_USAGE　引数未指定時に表示されるヘルプ
+--PLUGIN_REF_IMAGE　マッチ時に指定ファイルを画像とみなす正規表現
 --FILE_ICON　アイコンイメージのファイル
 --REF_DEFAULT_ALIGN　left,center,right省略時の表示位置
 --REF_WRAP_TABLE　wrap,nowrap省略時にテーブルタグで囲むか
 --REF_URL_GETIMAGESIZE　URL指定時に画像サイズを取得するか
 :備考|
 ~aroundで行った回り込み指定を解除するには clearプラグイン、あるいはimgプラグインを使用して下さい。
+~"ほげ"という別ページの添付ファイル"fuga.jpg"をインラインプラグイン形式で参照する場合、下記２通りの記述方法が存在します。
+ (1) &ref(ほげ/fuga.jpg);
+ (2) &ref(fuga.jpg,[[ほげ]]);
+~上記２通りの記述のうち、(2)の記述方式は旧バージョンと互換性を維持するために用意されたもので、推奨される記述方式は(1)です。&br;
+いずれの記述方法であっても一般的な動作は同じですが、いわゆるバナー画像のように表示した画像が別ページへのリンクとなるよう以下の指定をした場合、
+ (1)  [[&ref(ほげ/fuga.jpg,nolink,ウェブ名);>ウェブのURL]] 
+ (2)  [[&ref(fuga.jpg,[[ほげ]],nolink,ウェブ名);>ウェブのURL]] 
+(1)の記述方法は期待通りの動作をしますが、(2)の記述方法ではうまくリンクされません。
 
 
 **referer [#l8d62a01]
