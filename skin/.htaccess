@@ -1,4 +1,4 @@
-<FilesMatch \.(en\.php|ja\.php|\.lng)$>
+<FilesMatch "\.(skin\.php)$">
         Order allow,deny
         Deny from all
 </FilesMatch>
