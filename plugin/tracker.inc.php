@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.7 2003/08/02 02:02:27 arino Exp $
+// $Id: tracker.inc.php,v 1.8 2003/08/08 02:59:24 arino Exp $
 //
 
 function plugin_tracker_convert()
@@ -143,15 +143,21 @@ function plugin_tracker_get_fields($page,&$config)
 	global $now,$_tracker_messages;
 	
 	$fields = array();
-	// 規定のオブジェクト
-	$fields['_date']   = &new Tracker_field_text(  array('_date',  $_tracker_messages['btn_date'],  '','20',''),$page,$config);
-	$fields['_update'] = &new Tracker_field_text(  array('_update',$_tracker_messages['btn_update'],'','20',''),$page,$config);
-	$fields['_past']   = &new Tracker_field_text(  array('_past',  $_tracker_messages['btn_past'],  '','20',''),$page,$config);
-	$fields['_page']   = &new Tracker_field_page(  array('_page',  $_tracker_messages['btn_page'],  '','20',''),$page,$config);
-	$fields['_name']   = &new Tracker_field_text(  array('_name',  $_tracker_messages['btn_name'],  '','20',''),$page,$config);
-	$fields['_real']   = &new Tracker_field_text(  array('_real',  $_tracker_messages['btn_real'],  '','20',''),$page,$config);
-	$fields['_refer']  = &new Tracker_field_page(  array('_refer', $_tracker_messages['btn_refer'], '','20',''),$page,$config);
-	$fields['_submit'] = &new Tracker_field_submit(array('_submit',$_tracker_messages['btn_submit'],'','',  ''),$page,$config);
+	// 予約語
+	foreach (array(
+		'_date'=>'text',    // 投稿日時
+		'_update'=>'date',  // 最終更新
+		'_past'=>'past',    // 経過(passage)
+		'_page'=>'page',    // ページ名
+		'_name'=>'text',    // 指定されたページ名
+		'_real'=>'text',    // 実際のページ名
+		'_refer'=>'page',   // 参照元(フォームのあるページ)
+		'_submit'=>'submit' // 追加ボタン
+		) as $field=>$class)
+	{
+		$class = 'Tracker_field_'.$class;
+		$fields[$field] = &new $class(array($field,$_tracker_messages["btn$field"],'','20',''),$page,$config);
+	}
 	
 	foreach ($config->get('fields') as $field)
 	{
@@ -242,29 +248,6 @@ class Tracker_field_title extends Tracker_field_text
 		return $str;
 	}
 }
-class Tracker_field_file extends Tracker_field_format
-{
-	function get_tag()
-	{
-		$s_name = htmlspecialchars($this->name);
-		$s_size = htmlspecialchars($this->values[0]);
-		return "<input type=\"file\" name=\"$s_name\" size=\"$s_size\" />";
-	}
-	function format_value($str)
-	{
-		if (array_key_exists($this->name,$_FILES))
-		{
-			require_once(PLUGIN_DIR.'attach.inc.php');
-			$result = attach_upload($_FILES[$this->name],$this->page);
-			if ($result['result']) // アップロード成功
-			{
-				return parent::format_value($this->page.'/'.$_FILES[$this->name]['name']);
-			}
-		}
-		// ファイルが指定されていないか、アップロードに失敗
-		return parent::format_value('');
-	}
-}
 class Tracker_field_textarea extends Tracker_field
 {
 	function get_tag()
@@ -330,6 +313,29 @@ class Tracker_field_format extends Tracker_field
 	{
 		$key = $this->get_key($str);
 		return array_key_exists($key,$this->styles) ? $this->styles[$key] : '%s';
+	}
+}
+class Tracker_field_file extends Tracker_field_format
+{
+	function get_tag()
+	{
+		$s_name = htmlspecialchars($this->name);
+		$s_size = htmlspecialchars($this->values[0]);
+		return "<input type=\"file\" name=\"$s_name\" size=\"$s_size\" />";
+	}
+	function format_value($str)
+	{
+		if (array_key_exists($this->name,$_FILES))
+		{
+			require_once(PLUGIN_DIR.'attach.inc.php');
+			$result = attach_upload($_FILES[$this->name],$this->page);
+			if ($result['result']) // アップロード成功
+			{
+				return parent::format_value($this->page.'/'.$_FILES[$this->name]['name']);
+			}
+		}
+		// ファイルが指定されていないか、アップロードに失敗
+		return parent::format_value('');
 	}
 }
 class Tracker_field_radio extends Tracker_field_format
@@ -433,6 +439,28 @@ class Tracker_field_submit extends Tracker_field
 <input type="hidden" name="_refer" value="$s_page" />
 <input type="hidden" name="_config" value="$s_config" />
 EOD;
+	}
+}
+class Tracker_field_date extends Tracker_field
+{
+	function format_cell($timestamp)
+	{
+		return format_date($timestamp);
+	}
+	function compare($time1,$time2)
+	{
+		return $time1 - $time2;
+	}
+}
+class Tracker_field_past extends Tracker_field
+{
+	function format_cell($timestamp)
+	{
+		return get_passage($timestamp,FALSE);
+	}
+	function compare($time1,$time2)
+	{
+		return $time1 - $time2;
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -570,8 +598,8 @@ class Tracker_list
 			'_page'  => "[[$page]]",
 			'_refer' => $this->page,
 			'_real'  => $name,
-			'_update'=> format_date(get_filetime($page)),
-			'_past'  => get_passage(get_filetime($page),FALSE)
+			'_update'=> get_filetime($page),
+			'_past'  => get_filetime($page)
 		);
 		if (preg_match("/{$this->pattern}/s",$source,$matches))
 		{
