@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.23 2004/09/26 14:20:38 henoheno Exp $
+// $Id: dump.inc.php,v 1.24 2004/09/29 14:40:45 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -19,7 +19,10 @@
 // ・リストア時ファイルの更新時刻を元に戻すように修正
 
 /////////////////////////////////////////////////
-// User define
+// User defines
+
+// Allow using resture function
+define('PLUGIN_DUMP_ALLOW_RESTORE', FALSE); // FALSE, TRUE
 
 // ページ名をディレクトリ構造に変換する際の文字コード (for mbstring)
 define('PLUGIN_DUMP_FILENAME_ENCORDING', 'SJIS');
@@ -28,7 +31,7 @@ define('PLUGIN_DUMP_FILENAME_ENCORDING', 'SJIS');
 define('PLUGIN_DUMP_MAX_FILESIZE', 1024); // Kbyte
 
 /////////////////////////////////////////////////
-// Internal
+// Internal defines
 
 // Action
 define('PLUGIN_DUMP_DUMP',    'dump');    // Dump & download
@@ -54,11 +57,12 @@ function plugin_dump_action()
 			case PLUGIN_DUMP_RESTORE:
 				$retcode = plugin_dump_upload();
 				if ($retcode['code'] == TRUE) {
-					// 正常終了
 					$msg = 'アップロードが完了しました';
-					$body .= $retcode['msg'];
-					return array('msg' => $msg, 'body' => $body);
+				} else {
+					$msg = 'アップロードに失敗しました';
 				}
+				$body .= $retcode['msg'];
+				return array('msg' => $msg, 'body' => $body);
 				break;
 			}
 		} else {
@@ -68,8 +72,14 @@ function plugin_dump_action()
 
 	// 入力フォームを表示
 	$body .= plugin_dump_disp_form();
-	
-	return array('msg' => 'dump & restore', 'body' => $body);
+
+	$msg = '';
+	if (PLUGIN_DUMP_ALLOW_RESTORE) {
+		$msg = 'dump & restore';
+	} else {
+		$msg = 'dump';
+	}
+	return array('msg' => $msg, 'body' => $body);
 }
 
 /////////////////////////////////////////////////
@@ -121,6 +131,9 @@ function plugin_dump_download()
 function plugin_dump_upload()
 {
 	global $vars;
+
+	if (! PLUGIN_DUMP_ALLOW_RESTORE)
+		return array('code' => FALSE , 'msg' => 'Restoring function is not allowed');
 
 	$code = FALSE;
 	$msg  = '';
@@ -180,7 +193,6 @@ function plugin_dump_upload()
 			$msg = '<p>ファイルがみつかりませんでした。</p>';
 			$code = FALSE;
 		}
-		// 処理が終了したらアップロードしたファイルは削除する
 		@unlink($uploadfile);
 	}
 	else
@@ -252,7 +264,10 @@ function plugin_dump_disp_form()
 </p>
  </div>
 </form>
+EOD;
 
+	if(PLUGIN_DUMP_ALLOW_RESTORE) {
+		$data .= <<<EOD
 <h3>データのリストア (*.tar, *.tar.gz)</h3>
 <form enctype="multipart/form-data" action="$script" method="post">
  <div>
@@ -272,6 +287,7 @@ function plugin_dump_disp_form()
  </div>
 </form>
 EOD;
+	}
 
 	return $data;
 }
@@ -553,6 +569,8 @@ class tarlib
 	////////////////////////////////////////////////////////////
 	function open($name = '', $kind = 'tgz')
 	{
+		if (! PLUGIN_DUMP_ALLOW_RESTORE) return FALSE; // Not allowed
+
 		if ($name != '') $this->filename = $name;
 
 		if ($kind == 'tgz') {
