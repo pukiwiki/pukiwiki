@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.26 2004/08/18 13:36:45 henoheno Exp $
+// $Id: ref.inc.php,v 1.27 2004/08/19 11:55:19 henoheno Exp $
 //
 
 /*
@@ -15,13 +15,13 @@ URLを展開する
  #ref(filename[,page][,parameters][,title])
 
 * パラメータ
-- filename~
+- filename
 添付ファイル名、あるいはURL
 
 'ページ名/添付ファイル名'を指定すると、そのページの添付ファイルを参照する
 
-- page~
-ファイルを添付したページ名(省略可)~
+- page
+ファイルを添付したページ名(省略可)
 
 - Left|Center|Right
 横の位置合わせ
@@ -57,6 +57,8 @@ imgのalt/hrefのtitleとして使用~
 
 */
 
+define('PLUGIN_REF_USAGE', "(attached-file-name[,page][,parameters][,title])");
+
 // File icon image
 if (! defined('FILE_ICON')) {
 	define('FILE_ICON',
@@ -65,7 +67,7 @@ if (! defined('FILE_ICON')) {
 }
 
 // Default alignment
-define('REF_DEFAULT_ALIGN', 'left'); // 'left','center','right'
+define('REF_DEFAULT_ALIGN', 'left'); // 'left', 'center', 'right'
 
 // Force wrap on default
 define('REF_WRAP_TABLE', FALSE); // TRUE,FALSE
@@ -76,11 +78,13 @@ define('REF_URL_GETIMAGESIZE', FALSE);
 function plugin_ref_inline()
 {
 	// Not reached, because of "$aryargs[] = & $body" at plugin.php
-	// if (! func_num_args()) return '&amp;ref(): No arguments;';
+	// if (! func_num_args())
+	//	return '&amp;ref(): Usage:' . PLUGIN_REF_USAGE . ';';
 
 	$params = plugin_ref_body(func_get_args());
 
 	if (isset($params['_error']) && $params['_error'] != '') {
+		// Error
 		return '&amp;ref(): ' . $params['_error'] . ';';
 	} else {
 		return $params['_body'];
@@ -89,7 +93,8 @@ function plugin_ref_inline()
 
 function plugin_ref_convert()
 {
-	if (! func_num_args()) return '<p>#ref(): No arguments</p>';
+	if (! func_num_args())
+		return '<p>#ref(): Usage:' . PLUGIN_REF_USAGE . "</p>\n";
 
 	$params = plugin_ref_body(func_get_args());
 
@@ -172,11 +177,9 @@ function plugin_ref_body($args)
 		'_error' => ''
 	);
 
-	if (! empty($args)) {
-		foreach ($args as $arg) {
+	if (! empty($args))
+		foreach ($args as $arg)
 			ref_check_arg($arg, $params);
-		}
-	}
 
 /*
  $nameをもとに以下の変数を設定
