@@ -1,8 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: search.inc.php,v 1.3 2005/01/02 05:38:44 henoheno Exp $
+// $Id: search.inc.php,v 1.4 2005/01/02 05:47:52 henoheno Exp $
 //
 // Search plugin
+
+define('PLUGIN_SEARCH_MAX_LENGTH', 80);
 
 function plugin_search_action()
 {
@@ -10,14 +12,19 @@ function plugin_search_action()
 	global $_msg_searching, $_btn_and, $_btn_or, $_btn_search;
 
 	$s_word = isset($post['word']) ? htmlspecialchars($post['word']) : '';
+	if (strlen($s_word) > PLUGIN_SEARCH_MAX_LENGTH) {
+		unset($vars['word']);
+		die_message('Search words too long');
+	}
+
 	$type   = isset($vars['type']) ? $vars['type'] : '';
 
-	if ($s_word != '') {
-		$msg  = str_replace('$1', $s_word, $_title_result);
-		$body = do_search($vars['word'], $type);
-	} else {
+	if ($s_word == '') {
 		$msg  = $_title_search;
 		$body = '<br />' . "\n" . $_msg_searching . "\n";
+	} else {
+		$msg  = str_replace('$1', $s_word, $_title_result);
+		$body = do_search($vars['word'], $type);
 	}
 
 	$and_check = $or_check = '';
