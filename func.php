@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.67 2004/07/18 09:53:05 henoheno Exp $
+// $Id: func.php,v 1.68 2004/07/18 10:38:54 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -666,6 +666,18 @@ function csv_implode($glue, $pieces)
 		$arr[] = $str;
 	}
 	return join($glue, $arr);
+}
+
+function pkwk_login($pass = '')
+{
+	global $adminpass;
+
+	if ($pass != '' && md5($pass) == $adminpass) {
+		return TRUE;
+	} else {
+		sleep (2);	// Blocking brute force attack
+		return FALSE;
+	}
 }
 
 //is_a

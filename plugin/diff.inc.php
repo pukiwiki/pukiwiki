@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.inc.php,v 1.8 2004/07/18 10:12:40 henoheno Exp $
+// $Id: diff.inc.php,v 1.9 2004/07/18 10:38:54 henoheno Exp $
 //
 
 //ページの差分を表示する
@@ -87,7 +87,7 @@ function plugin_diff_delete($page)
 	if ($body) return array('msg'=>$_title_diff_delete, 'body'=>$body);
 
 	if (isset($vars['pass'])) {
-		if (md5($vars['pass']) == $adminpass) {
+		if (pkwk_login($vars['pass'])) {
 			unlink($filename);
 			return array(
 				'msg'  => $_title_diff_delete,
@@ -95,7 +95,6 @@ function plugin_diff_delete($page)
 			);
 		} else {
 			$body .= "<p><strong>$_msg_invalidpass</strong></p>\n";
-			sleep(2); // Blocking brute force attack
 		}
 	}
 
