@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: update_entities.inc.php,v 1.1 2003/06/24 01:19:00 arino Exp $
+// $Id: update_entities.inc.php,v 1.2 2003/07/22 05:56:49 arino Exp $
 //
 
 // DTD¤Î¾ì½ê
@@ -98,11 +98,11 @@ function plugin_update_entities_create($do=FALSE)
 			$entities = array_merge($entities,$matches[1]);
 		}
 	}
-	$entities = array_unique($entities);
 	if (!$do)
 	{
 		return $items;
 	}
+	$entities = array_unique($entities);
 	sort($entities,SORT_STRING);
 	$min = 999;
 	$max = 0;
