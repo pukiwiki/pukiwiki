@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mbstring.php,v 1.7 2003/11/16 13:28:06 arino Exp $
+// $Id: mbstring.php,v 1.8 2003/11/17 00:14:57 arino Exp $
 //
 
 /*
@@ -211,9 +211,9 @@ function mb_strlen($str,$encoding='')
 }
 
 // mb_substr -- 文字列の一部を得る
-function mb_substr($str,$start,$length=0,$encoding='')
+function mb_substr($str,$start,$length=NULL,$encoding='')
 {
 	// 注: EUC-JP専用, $encodingを使用しない
-	return jsubstr($str,$start,($length == 0) ? jstrlen($str) : $length);
+	return jsubstr($str,$start,($length == NULL) ? jstrlen($str) : $length);
 }
 ?>
