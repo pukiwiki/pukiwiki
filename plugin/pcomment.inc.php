@@ -1,5 +1,5 @@
 <?php
-// $Id: pcomment.inc.php,v 1.5 2002/12/07 09:43:43 panda Exp $
+// $Id: pcomment.inc.php,v 1.5.2.1 2004/07/28 13:12:40 henoheno Exp $
 /*
 Last-Update:2002-09-12 rev.15
 
@@ -259,6 +259,7 @@ function pcmt_check_arg($val, $key, &$params) {
 }
 function pcmt_get_comments($page,$count,$dir,$reply) {
 	$data = @file(get_filename(encode($page)));
+	$data = preg_replace('/^#pcomment\(?.*/', '', $data);	// Avoid eternal recurse
 
 	if (!is_array($data)) { return array('',0); }
 
