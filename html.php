@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.72 2003/04/30 08:16:30 arino Exp $
+// $Id: html.php,v 1.73 2003/05/12 10:29:48 arino Exp $
 //
 
 // 本文を出力
@@ -100,7 +100,7 @@ function catbody($title,$page,$body)
 	require(SKIN_FILE);
 }
 
-// インライン要素のパース
+// インライン要素のパース (obsolete)
 function inline($line,$remove=FALSE)
 {
 	global $NotePattern;
@@ -283,5 +283,13 @@ function make_search($page)
 	//	$name = preg_replace("/([A-Z][a-z]+)/","$1 ",$name);
 	
 	return "<a href=\"$script?cmd=search&amp;word=$r_page\">$s_page</a> ";
+}
+
+// 見出しを生成 (注釈やHTMLタグを除去)
+function make_heading($str)
+{
+	global $NotePattern;
+	
+	return strip_htmltag(inline2(preg_replace($NotePattern,'',$str)));
 }
 ?>

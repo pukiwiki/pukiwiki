@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.35 2003/05/01 01:15:43 arino Exp $
+// $Id: convert_html.php,v 1.36 2003/05/12 10:28:48 arino Exp $
 //
 function convert_html($lines)
 {
@@ -49,7 +49,7 @@ class Inline extends Element
 			$this->setParent($parent);
 		}
 		else {
-			$this->text = trim((substr($text,0,1) == "\n") ? $text : inline2(inline($text)));
+			$this->text = trim((substr($text,0,1) == "\n") ? $text : inline2($text));
 		}
 	}
 	function &add(&$obj)
@@ -318,7 +318,7 @@ class DList extends ListContainer
 		}
 		parent::ListContainer('dl','dd',$level,$out[1]);
 		if ($out[0] != '') {
-			array_unshift($this->elements,new Inline("\n<dt>".inline2(inline($out[0]))."</dt>\n"));
+			array_unshift($this->elements,new Inline("\n<dt>".inline2($out[0])."</dt>\n"));
 		}
 	}
 }
@@ -583,7 +583,7 @@ class YTable extends Block
 					$colspan[$i]++;
 				}
 				$colspan[$i] = ($colspan[$i] > 1) ? " colspan=\"{$colspan[$i]}\"" : '';
-				$str .= "<td class=\"style_td\"{$align[$i]}{$colspan[$i]}>".inline2(inline($value[$i])).'</td>';
+				$str .= "<td class=\"style_td\"{$align[$i]}{$colspan[$i]}>".inline2($value[$i]).'</td>';
 			}
 		}
 		$this->elements[] = $str;
@@ -808,9 +808,12 @@ class Contents_UList extends ListContainer
 {
 	function Contents_UList($text,$id,$level,$id)
 	{
+		global $NotePattern;
+		
 		// テキストのリフォーム
 		// 行頭\nで整形済みを表す ... X(
-		$text = "\n<a href=\"#$id\">".trim(strip_htmltag(inline2(inline($text,TRUE))))."</a>\n";
+		$text = trim(make_heading($text));
+		$text = "\n<a href=\"#$id\">$text</a>\n";
 		parent::ListContainer('ul', 'li', --$level, $text);
 	}
 	function setParent(&$parent)
