@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar.inc.php,v 1.15 2003/06/03 05:17:15 arino Exp $
+// $Id: calendar.inc.php,v 1.16 2003/06/04 13:08:35 arino Exp $
 
 function plugin_calendar_convert()
 {
@@ -81,41 +81,39 @@ function plugin_calendar_convert()
 	$ret = <<<EOD
 <table class="style_calendar" cellspacing="1" width="150" border="0">
  <tr>
-  <td align="middle" class="style_td_caltop" colspan="7">
-   <span class="small" style="text_align:center"><strong>$m_name</strong><br />
-   [<a href="$script?$prefix_url">$pre</a>]</span>
+  <td class="style_td_caltop" colspan="7">
+   <strong>$m_name</strong><br />
+   [<a href="$script?$prefix_url">$pre</a>]
   </td>
  </tr>
  <tr>
 EOD;
 
 	foreach($weeklabels as $label)
-		$ret .= <<<EOD
-  <td align="middle" class="style_td_week">
-   <span class="small" style="text-align:center"><strong>$label</strong></span>
-  </td>
-EOD;
-
+	{
+		$ret .= "  <td class=\"style_td_week\"><strong>$label</strong></span></td>\n";
+	}
 	$ret .= " </tr>\n <tr>\n";
+	
 	// Blank 
 	for ($i = 0; $i < $wday; $i++)
 	{
-		$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n"; 
+		$ret .= "    <td class=\"style_td_blank\">&nbsp;</td>\n"; 
 	} 
 
 	while(checkdate($m_num,$day,$year))
 	{
-		$dt = sprintf('%4d%02d%02d', $year, $m_num, $day);
+		$dt = sprintf('%04d%02d%02d', $year, $m_num, $day);
 		$name = "$prefix$dt";
-		$page = "[[$name]]";
-		$r_page = rawurlencode($page);
+		$r_page = rawurlencode($name);
+		$s_page = htmlspecialchars($name);
 		
-		$refer = ($cmd == "edit") ? "&amp;refer=$r_page" : '';
+		$refer = ($cmd == "edit") ? '&amp;refer='.rawurlencode($page) : '';
 		
-		if ($cmd == 'read' && !is_page($page))
+		if ($cmd == 'read' and !is_page($page))
 			$link = "<strong>$day</strong>";
 		else
-			$link = "<a href=\"$script?cmd=$cmd&amp;page=$r_page$refer\" title=\"$name\"><strong>$day</strong></a>";
+			$link = "<a href=\"$script?cmd=$cmd&amp;page=$r_page$refer\" title=\"$s_page\"><strong>$day</strong></a>";
 
 		if ($wday == 0 and $day > 1)
 		{
@@ -124,22 +122,22 @@ EOD;
 		if (!$other_month && ($day == $today['mday']) && ($m_num == $today['mon']) && ($year == $today['year']))
 		{
 			//  Today 
-			$ret .= "    <td align=\"center\" class=\"style_td_today\"><span class=\"small\">$link</span></td>\n"; 
+			$ret .= "    <td class=\"style_td_today\"><span class=\"small\">$link</span></td>\n"; 
 		}
 		else if ($wday == 0)
 		{
 			//  Sunday 
-			$ret .= "    <td align=\"center\" class=\"style_td_sun\"><span class=\"small\">$link</span></td>\n";
+			$ret .= "    <td class=\"style_td_sun\"><span class=\"small\">$link</span></td>\n";
 		}
 		else if ($wday == 6)
 		{
 			//  Saturday 
-			$ret .= "    <td align=\"center\" class=\"style_td_sat\"><span class=\"small\">$link</span></td>\n";
+			$ret .= "    <td class=\"style_td_sat\"><span class=\"small\">$link</span></td>\n";
 		}
 		else
 		{
 			// Weekday 
-			$ret .= "    <td align=\"center\" class=\"style_td_day\"><span class=\"small\">$link</span></td>\n";
+			$ret .= "    <td class=\"style_td_day\"><span class=\"small\">$link</span></td>\n";
 		}
 		$day++;
 		$wday++;
@@ -149,7 +147,7 @@ EOD;
 	{
 		while($wday < 7)
 		{ // Blank 
-			$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n";
+			$ret .= "    <td class=\"style_td_blank\">&nbsp;</td>\n";
 		$wday++;
 		} 
 	}
