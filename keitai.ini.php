@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.ini.php,v 1.13 2004/09/20 04:25:38 henoheno Exp $
+// $Id: keitai.ini.php,v 1.14 2004/09/24 23:54:22 henoheno Exp $
 //
 // PukiWiki setting file (Cell phones, PDAs and other thin clients)
 
@@ -113,15 +113,20 @@ switch ($ua_name) {
 		$cols = 22; $rows = 5;	// i_mode
 		break;
 
-	// Vodafone (ex. J-PHONE) 技術資料: ユーザーエージェントについて
+	// Vodafone (ex. J-PHONE)
+	// ボーダフォンライブ！向けウェブコンテンツ開発ガイド [概要編] (Version 1.2.0 P13)
+	// http://www.dp.j-phone.com/dp/tool_dl/download.php?docid=110
+	// 技術資料: ユーザーエージェントについて
 	// http://www.dp.j-phone.com/dp/tool_dl/web/useragent.php
 	case 'J-PHONE':
-		if (preg_match('#\bProfile/#', $ua_agent)) {
-			$max_size = 12; // パケット対応機
-		} else {
-			$max_size =  6; // パケット非対応機
+		$matches = array("");
+		preg_match('/^([0-9]+)\./', $user_agent['vers'], $matches);
+		switch($matches[1]){
+		case '3': $max_size =   6; break; // C type: lt   6000bytes
+		case '4': $max_size =  12; break; // P type: lt  12Kbytes
+		case '5': $max_size = 200; break; // W type: lt 200Kbytes
 		}
-		$cols = 24; $rows = 20; // jphone
+		$cols = 24; $rows = 20;
 		break;
 
 	// UP.Browser
