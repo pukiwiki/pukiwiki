@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.83 2004/09/25 00:56:58 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.84 2004/09/25 01:11:34 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -370,7 +370,7 @@ $agents = array(
 	// Sample: "Mozilla/4.0 (PS2; PlayStation BB Navigator 1.0) NetFront/3.0"
 	array('pattern'=>'#\bPlayStation\b.*\b(NetFront)/([0-9\.]+)#',	'profile'=>'default'),
 
-	// Windows CE (MSIE 5.5 or upper)
+	// Windows CE (Microsoft(R) Internet Explorer 5.5 for Windows(R) CE)
 	// Sample: "Mozilla/4.0 (compatible; MSIE 5.5; Windows CE; sigmarion3)" (sigmarion, Hand-held PC)
 	array('pattern'=>'#\b(?:MSIE [5-9]).*\b(Windows CE)\b#', 'profile'=>'default'),
 
