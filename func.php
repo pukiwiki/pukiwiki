@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.41 2003/05/26 13:55:37 arino Exp $
+// $Id: func.php,v 1.42 2003/06/09 01:48:39 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -97,15 +97,15 @@ function check_editable($page)
 	}
 	
 	$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($page)),$_title_cannotedit);
-	$page = str_replace('$1',make_search($page),$_title_cannotedit);
-
-	if(is_freeze($page))
+	$_page = str_replace('$1',make_search($page),$_title_cannotedit);
+	
+	if (is_freeze($page))
 	{
 		$body .= "(<a href=\"$script?cmd=unfreeze&amp;page=".
 			rawurlencode($page)."\">$_msg_unfreeze</a>)";
 	}
 	
-	catbody($title,$page,$body);
+	catbody($title,$_page,$body);
 	exit;
 }
 
@@ -168,11 +168,6 @@ function auto_template($page)
 // 検索語を展開する
 function get_search_words($words,$special=FALSE)
 {
-	$quote_func = create_function('$str',$special ?
-		'return preg_quote($str,"/");' :
-		'return preg_quote(htmlspecialchars($str),"/");'
-	);
-	
 	$retval = array();
 	// Perlメモ - 正しくパターンマッチさせる
 	// http://www.din.or.jp/~ohzaki/perl.htm#JP_Match
@@ -183,18 +178,21 @@ function get_search_words($words,$special=FALSE)
 		// # JIS X 0208 が 0文字以上続いて # ASCII, SS2, SS3 または終端
 		$eucpost = '(?=(?:[\xA1-\xFE][\xA1-\xFE])*(?:[\x00-\x7F\x8E\x8F]|\z))';
 	}
-	if (!function_exists('mb_convert_case'))
-	{
-		foreach ($words as $word)
-		{
-			$retval[$word] = $eucpre.$quote_func($word).$eucpost;
-		}
-		return $retval;
-	}	
+	// $special : htmlspecialchars()を通すか
+	$quote_func = create_function('$str',$special ?
+		'return preg_quote($str,"/");' :
+		'return preg_quote(htmlspecialchars($str),"/");'
+	);
+	// LANG=='ja'で、mb_convert_kanaが使える場合はmb_convert_kanaを使用
+	$convert_kana = create_function('$str,$option',
+		(LANG == 'ja' and function_exists('mb_convert_kana')) ?
+			'return mb_convert_kana($str,$option);' : 'return $str;'
+	);
+	
 	foreach ($words as $word)
 	{
 		// 英数字は半角,カタカナは全角,ひらがなはカタカナに
-		$word_zk = mb_convert_kana($word,'aKCV');
+		$word_zk = $convert_kana($word,'aKCV');
 		$chars = array();
 		for ($pos = 0; $pos < mb_strlen($word_zk);$pos++)
 		{
@@ -204,15 +202,15 @@ function get_search_words($words,$special=FALSE)
 			{
 				$_char = strtoupper($char); // 大文字
 				$arr[] = $quote_func($_char);
-				$arr[] = $quote_func(mb_convert_kana($_char,"A")); // 全角
+				$arr[] = $quote_func($convert_kana($_char,"A")); // 全角
 				$_char = strtolower($char); // 小文字
 				$arr[] = $quote_func($_char);
-				$arr[] = $quote_func(mb_convert_kana($_char,"A")); // 全角
+				$arr[] = $quote_func($convert_kana($_char,"A")); // 全角
 			}
 			else // マルチバイト文字
 			{
-				$arr[] = $quote_func(mb_convert_kana($char,"c")); // ひらがな
-				$arr[] = $quote_func(mb_convert_kana($char,"k")); // 半角カタカナ
+				$arr[] = $quote_func($convert_kana($char,"c")); // ひらがな
+				$arr[] = $quote_func($convert_kana($char,"k")); // 半角カタカナ
 			}
 			$chars[] = '(?:'.join('|',array_unique($arr)).')';
 		}
