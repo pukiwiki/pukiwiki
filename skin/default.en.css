@@ -598,3 +598,18 @@ div.jumpmenu{
 	font-size:60%;
 	text-align:right;
 }
+
+/* new.inc.php */
+.comment_date
+{
+	font-size:x-small;
+}
+.new
+{
+	color:white;
+	background-color:darkcyan;
+	font-size:xx-small;
+	font-weight:bold;
+	padding:1px;
+	margin:0px .5em 0px .5em;
+}
