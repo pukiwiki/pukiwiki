@@ -230,9 +230,10 @@ function plugin_calendar2_action()
 	if($date=='') {
 		$date = date("Ym");
 	}
+	$yy = sprintf("%04d.%02d",substr($date,0,4),substr($date,4,2));
 	
 	$aryargs = array($vars['page'],$date);
-	$ret["msg"] = "calendar ".$vars['page']."/".$vars['date'];
+	$ret["msg"] = "calendar ".$vars['page']."/".$yy;
 	$ret["body"] = call_user_func_array("plugin_calendar2_convert",$aryargs);
 	
 	$vars['page'] = $page;
