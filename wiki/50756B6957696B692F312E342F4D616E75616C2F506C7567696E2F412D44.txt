@@ -58,12 +58,12 @@
 --deltitle − 対応するタイトルキャッシュを削除します。
 --delete − 対応するイメージキャッシュ,タイトルキャッシュを削除します。
 :プラグイン内設定|
---AMAZON_AID　amazon のアソシエイト ID(ないなら 一般ユーザ)
---AMAZON_EXPIRE_IMG　expire イメージキャッシュを何日で削除するか
---AMAZON_EXPIRE_TIT　expire タイトルキャッシュを何日で削除するか
---NO_IMAGE　画像なしの場合の画像
---AMAZON_SHOP　amazon ショップのURI
---AMAZON_XML　amazon 商品情報問合せ URI
+--PLUGIN_AMAZON_AID　amazon のアソシエイト ID(ないなら 一般ユーザ)
+--PLUGIN_AMAZON_EXPIRE_IMAGECACHE　expire イメージキャッシュを何日で削除するか
+--PLUGIN_AMAZON_EXPIRE_TITLECACHE　expire タイトルキャッシュを何日で削除するか
+--PLUGIN_AMAZON_NO_IMAGE　画像なしの場合の画像
+--PLUGIN_AMAZON_SHOP_URI　amazon ショップのURI
+--PLUGIN_AMAZON_XML　amazon 商品情報問合せ URI
 :備考|
 ~著作権が関連する為、アマゾンのアソシエイトプログラムを確認の上ご利用下さい。
 ~イメージなしの場合に使用する画像が別途必要です。デフォルトは image/noimage.jpg を使用します。
@@ -150,17 +150,17 @@
 --nolist − ページの添付ファイルの一覧を表示しません。省略時は一覧を表示します。
 --noform − ファイル添付のための入力フォームを表示しません。省略時は入力フォームを表示します。
 :プラグイン内設定|~
---MAX_FILESIZE　ファイルアップロードの上限
---ATTACH_UPLOAD_ADMIN_ONLY　管理者だけが添付ファイルをアップロードできるようにするか
---ATTACH_DELETE_ADMIN_ONLY　管理者だけが添付ファイルを削除できるようにするか
---ATTACH_DELETE_ADMIN_NOBACKUP ATTACH_DELETE_ADMIN_ONLY=TRUEのとき、管理者が添付ファイルを削除するときは、バックアップを作らない
---ATTACH_PASSWORD_REQUIRE　アップロード/削除時にパスワードを要求するか(ADMIN_ONLYが優先)
---ATTACH_FILE_MODE  アップロードされたファイルのアクセス権
---FILE_ICON　アイコンイメージのファイル
---ATTACH_CONFIG_PAGE_MIME　ダウンロード時のmime-typeを記述したページ
+--PLUGIN_ATTACH_MAX_FILESIZE　ファイルアップロードの上限
+--PLUGIN_ATTACH_UPLOAD_ADMIN_ONLY　管理者だけが添付ファイルをアップロードできるようにするか
+--PLUGIN_ATTACH_DELETE_ADMIN_ONLY　管理者だけが添付ファイルを削除できるようにするか
+--PLUGIN_ATTACH_DELETE_ADMIN_NOBACKUP　PLUGIN_ATTACH_DELETE_ADMIN_ONLYのとき、管理者が添付ファイルを削除するときは、バックアップを作らない
+--PLUGIN_ATTACH_PASSWORD_REQUIRE　アップロード/削除時にパスワードを要求するか(PLUGIN_ATTACH_〜_ADMIN_ONLYが優先)
+--PLUGIN_ATTACH_FILE_MODE  アップロードされたファイルのアクセス権
+--PLUGIN_ATTACH_FILE_ICON　アイコンイメージのファイル
+--PLUGIN_ATTACH_CONFIG_PAGE_MIME　ダウンロード時のmime-typeを記述したページ
 :備考|
 ~デフォルトのskinのメニューの「添付」で呼び出されているため、デフォルトのskinを使う場合には必ず組み込む必要があります。
-~プラグイン内設定の MAX_FILESIZEを増やす場合は、php.iniの upload_max_filesize やApache の LimitRequestBodyなどPukiWiki以外での上限設定がある事に注意して下さい。
+~プラグイン内設定の PLUGIN_ATTACH_MAX_FILESIZE を増やす場合は、php.iniの upload_max_filesize やApache の LimitRequestBodyなどPukiWiki以外での上限設定がある事に注意して下さい。
 
 
 ------------------------------
@@ -376,7 +376,7 @@
 ~★★★★☆
 :書式|
 ~''&color(''
-&color(blue){文字色};
+[&color(blue){文字色};]
 [,&color(blue){背景色};]
 ''){''
 &color(blue){文章};
@@ -385,6 +385,7 @@
 ~引数で指定したインライン要素(主に文章)の、文字色・背景色を指定します。
 :引数|
 ~文字色・背景色はそれぞれ色名(red、blueなど)、シャープで始まる3桁の16進数値(#000〜#FFF)、同じく6桁の16進数値(#000000 〜 #FFFFFF)のいずれかで指定することができます。大文字小文字は問いません。
+~文字色・背景色の両方を省略する事はできません。一方を省略した場合は省略した側の色の変更はされません。
 :プラグイン内設定|~
 --PLUGIN_COLOR_ALLOW_CSS　色の変更に(fontタグではなく)CSSを利用する
 --PLUGIN_COLOR_USAGE　エラー時に表示される使用方法
@@ -505,6 +506,41 @@ Yellow = "#FFFF00"
 ~ページ名に変更差分を表示するページを指定します。ページ名はエンコードされていなければなりません。
 :備考|
 ~最後のバックアップ以外との差分を表示する場合はbackupを利用します。
+
+
+**dump [#k344e979]
+:種別|
+~コマンド
+:重要度|
+~★☆☆☆☆
+:書式|
+~''?plugin=dump''
+:概要|
+~指定ディレクトリ内のファイルをまとめてtar(tar.gz, tgz)形式でバックアップ/リストアします。~
+バックアップ/リストアの実行には管理者パスワードが必要です。~
+バックアップはファイル名をページ名に変換して取得する事ができます。
+この変換でリストアには利用出来なくなりますが、
+ファイル名からページ名の類推は容易になります。~
+バックアップは取得するディレクトリを任意に指定する事ができます。~
+リストアは該当ファイルの上書きによって行われます。
+そのため、ファイルの削除を行う事はできません。~
+バックアップ/リストア対象として指定可能なディレクトリは、以下の通りです。
+--DATA_DIR (wiki/*.txt)
+--UPLOAD_DIR (attach/*)
+--BACKUP_DIR (backup/*)
+
+:プラグイン内設定|~
+--PLUGIN_DUMP_ALLOW_RESTORE　リストアを許可するかどうか
+--PLUGIN_DUMP_FILENAME_ENCORDING　ページ名をディレクトリ構造に変換する際の文字コード
+--PLUGIN_DUMP_MAX_FILESIZE　最大アップロードサイズ(Kbyte)
+--PLUGIN_DUMP_DUMP　バックアップ時にプラグイン内で利用する引数
+--PLUGIN_DUMP_RESTORE　リストア時にプラグイン内で利用する引数
+
+:備考|
+~PukiWikiが内部管理するファイルを直接取得/更新するという性質上、
+セキュリティ上の問題を引き起こす可能性があります。十分ご注意ください。
+~DATA_DIRのリストアを行った場合は、[[links>../L-N#m5bbd018]]プラグインで
+ページ間のリンク情報キャッシュを更新する必要があります。
 
 
 #navi(PukiWiki/1.4/Manual/Plugin)

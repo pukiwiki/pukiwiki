@@ -181,6 +181,8 @@
 ~最近更新されたページのうち、最新の数件を表示します。
 :引数|
 ~件数には表示件数を指定します。省略時は10件です。
+:プラグイン内設定|~
+--PLUGIN_RECENT_CACHE　RecentChangesのキャッシュの場所
 
 
 **ref [#h9e797dc]
@@ -326,9 +328,9 @@
 ~ページの本文のほか、指定されたページ名の差分、バックアップ、添付ファイル、カウンターを一気にリネームします。 
 :引数|
 ~ページ名には変更するページの名前を指定します。省略時はページ名の選択または正規表現置換用文字列入力画面が表示されます。 
-~実行結果は変換結果のページ（RENAME_LOGPAGE で指定。標準はRenameLog）に追記されます。
+~実行結果は変換結果のページ（PLUGIN_RENAME_LOGPAGE で指定。標準は :RenameLog）に追記されます。
 :プラグイン内設定|~
---RENAME_LOGPAGE　ページ名の変換結果を出力するページ名
+--PLUGIN_RENAME_LOGPAGE　ページ名の変換結果を出力するページ名
 :備考|
 ~ページ内のリンクの書き換えは行ないません。yetlistなどを駆使して対処してください。
 ~TrackBackやRefererの情報は更新されません。
@@ -344,15 +346,18 @@
 ~★☆☆☆☆
 :書式|
 ~''?plugin=rss''
-[&color(blue){&ver=};[&color(blue){0.91};|
+[&color(blue){&ver=};&color(blue){0.91};|
 &color(blue){1.0};|
-&color(blue){2.0};]]
+&color(blue){2.0};]
 :概要|
-~RecentChangesをRSS(RDF Site Summary)に変換して出力します。
+~RecentChangesをRSSに変換して出力します。
 :引数|
-~verで出力するRSSのバージョンを指定します。省略時は0.91を出力します。
+~verで出力するRSSを指定します。省略時は0.91を出力します。
 :備考|
-~RSSはサイトの要約を提供するのに使われるXMLフォーマットです。
+~RSSはサイトの要約を配信するために使われるXMLフォーマットです。RSS 1.0はRDF(Resource Description Framework)にもとづいたRSS 0.9の後継フォーマットです。RSS 0.91は RDFにもとづかないRSSの実装で、RSS 2.0は RSS 0.91および 0.92の後継フォーマットです。RSSという頭字語が何の略であるかは、それぞれ異なります。
+~''RSS 0.9および1.0'': RDF Site Summary
+~''RSS 0.91および0.92'': Rich Site Summary
+~''RSS 2.0'': Really Simple Syndication
 
 
 **rss10 [#v879eb4d]
@@ -389,6 +394,8 @@
 :引数|
 ~ルビには表示するルビを指定します。
 ~対象文字列にはルビがふられる文字列を指定します。
+:プラグイン内設定|~
+--PLUGIN_RUBY_USAGE　引数未指定時に表示されるヘルプ
 :備考|
 ~XHTML 1.1のルビに対応したブラウザでないと、ルビとして表示されません。IE5.5/6では表示できます。Netscape 7/Mozillaでは[[XHTML Ruby Support:http://white.sakura.ne.jp/~piro/xul/_rubysupport.html]]を組み込めば表示できます。
 ~ルビに対応していないブラウザではルビをふる文字列の直後にルビが( )に入れられて表示されます。
