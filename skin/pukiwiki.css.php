@@ -1,12 +1,27 @@
-@charset "Shift_JIS";
-/* this @charset is for mozilla's bug */
-/*
+<?php
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: default.ja.css,v 1.32 2004/07/31 03:09:20 henoheno Exp $
+// $Id: pukiwiki.css.php,v 1.1 2004/09/18 09:45:14 henoheno Exp $
 //
-*/
+header('Content-Type: text/css');
+
+$charset = isset($_REQUEST['charset']) ? $_REQUEST['charset']  : '';
+$media   = isset($_REQUEST['media'])   ? $_REQUEST['media']    : 'en';
+
+switch ($charset) {
+	case 'Shift_JIS': break; /* this @charset is for Mozilla's bug */
+	default: $charset ='iso-8859-1';
+}
+
+if ($media == 'print') {
+	;
+} else {
+	$media = 'screen';
+}
+
+?>
+@charset "<?php echo $charset ?>";
 
 pre, dl, ol, p, blockquote
 {
@@ -30,9 +45,13 @@ body,td
 
 a:link
 {
+<?php	if ($media == 'print') { ?>
+	text-decoration: underline;
+<?php	} else { ?>
 	color:#215dc6;
 	background-color:inherit;
 	text-decoration:none;
+<?php	} ?>
 }
 
 a:active
@@ -44,9 +63,13 @@ a:active
 
 a:visited
 {
+<?php	if ($media == 'print') { ?>
+	text-decoration: underline;
+<?php	} else { ?>
 	color:#a63d21;
 	background-color:inherit;
 	text-decoration:none;
+<?php	} ?>
 }
 
 a:hover
@@ -355,25 +378,37 @@ div#header
 
 div#navigator
 {
+<?php   if ($media == 'print') { ?>
+	display:none;
+<?php   } else { ?>
 	clear:both;
 	padding:4px 0px 0px 0px;
 	margin:0px;
+<?php   } ?>
 }
 
 td.menubar
 {
+<?php   if ($media == 'print') { ?>
+	display:none;
+<?php   } else { ?>
 	width:9em;
 	vertical-align:top;
+<?php   } ?>
 }
 
 div#menubar
 {
+<?php   if ($media == 'print') { ?>
+	display:none;
+<?php   } else { ?>
 	width:9em;
 	padding:0px;
 	margin:4px;
 	word-break:break-all;
 	font-size:90%;
 	overflow:hidden;
+<?php   } ?>
 }
 
 div#menubar ul
@@ -407,17 +442,25 @@ div#note
 
 div#attach
 {
+<?php   if ($media == 'print') { ?>
+	display:none;
+<?php   } else { ?>
 	clear:both;
 	padding:0px;
 	margin:0px;
+<?php   } ?>
 }
 
 div#toolbar
 {
+<?php   if ($media == 'print') { ?>
+        display:none;
+<?php   } else { ?>
 	clear:both;
 	padding:0px;
 	margin:0px;
 	text-align:right;
+<?php   } ?>
 }
 
 div#lastmodified
@@ -429,9 +472,13 @@ div#lastmodified
 
 div#related
 {
+<?php   if ($media == 'print') { ?>
+        display:none;
+<?php   } else { ?>
 	font-size:80%;
 	padding:0px;
 	margin:16px 0px 0px 0px;
+<?php   } ?>
 }
 
 div#footer
@@ -449,8 +496,12 @@ div#preview
 
 img#logo
 {
+<?php   if ($media == 'print') { ?>
+	display:none;
+<?php   } else { ?>
 	float:left;
 	margin-right:20px;
+<?php   } ?>
 }
 
 /* aname.inc.php */

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.ja.php,v 1.34 2004/08/08 05:33:43 henoheno Exp $
+// $Id: pukiwiki.skin.ja.php,v 1.35 2004/09/18 09:45:14 henoheno Exp $
 //
 if (!defined('DATA_DIR')) { exit; }
 header('Cache-control: no-cache');
@@ -27,8 +27,8 @@ echo '<?xml version="1.0" encoding="EUC-JP"?>';
 <?php } ?>
 
  <title><?php echo "$title - $page_title" ?></title>
- <link rel="stylesheet" href="skin/default.ja.css" type="text/css" media="screen" charset="Shift_JIS" />
- <link rel="stylesheet" href="skin/print.ja.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=Shift_JIS" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=Shift_JIS&media=print" type="text/css" media="print" charset="Shift_JIS" />
 <?php
   global $trackback, $referer;
   if ($trackback) {
