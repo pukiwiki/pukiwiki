@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.17 2003/05/12 10:32:13 arino Exp $
+// $Id: ref.inc.php,v 1.18 2003/06/28 05:48:07 arino Exp $
 //
 
 /*
@@ -167,7 +167,10 @@ function plugin_ref_body($args,$page)
 	
 	if (count($args) > 0)
 	{
-		array_walk($args,'ref_check_arg',&$params);
+		foreach ($args as $key=>$val)
+		{
+			ref_check_arg($key,$val,$params);
+		}
 	}
 	
 /*
