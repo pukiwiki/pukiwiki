@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.19 2003/11/27 06:09:23 arino Exp $
+// $Id: tracker.inc.php,v 1.20 2003/12/03 12:36:02 arino Exp $
 //
 
 // tracker_listで表示しないページ名(正規表現で)
@@ -35,7 +35,7 @@ function plugin_tracker_convert()
 				$base = is_pagename($args[1]) ? $args[1] : $base; 
 			case 1:
 				$config_name = ($args[0] != '') ? $args[0] : $config_name;
-				list($config_name,$_form) = array_pad(explode('/',$config_name,2),2,$form);
+				list($config_name,$form) = array_pad(explode('/',$config_name,2),2,$form);
 		}
 	}
 	
@@ -50,8 +50,12 @@ function plugin_tracker_convert()
 	
 	$fields = plugin_tracker_get_fields($base,$refer,$config);
 	
-	$form = is_page($config->page.'/'.$_form) ? $_form : $form;
-	$retval = convert_html(plugin_tracker_get_source($config->page.'/'.$form));
+	$form = $config->page.'/'.$form;
+	if (!is_page($form))
+	{
+		return "<p>config file '".make_pagelink($form)."' not found.</p>";
+	}
+	$retval = convert_html(plugin_tracker_get_source($form));
 	$hiddens = '';
 	
 	foreach (array_keys($fields) as $name)
@@ -602,7 +606,14 @@ function plugin_tracker_getlist($page,$refer,$config_name,$list,$order='',$limit
 	{
 		return "<p>config file '".htmlspecialchars($config_name)."' is not exist.";
 	}
+	
 	$config->config_name = $config_name;
+	
+	if (!is_page($config->page.'/'.$list))
+	{
+		return "<p>config file '".make_pagelink($config->page.'/'.$list)."' not found.</p>";
+	}
+	
 	$list = &new Tracker_list($page,$refer,$config,$list);
 	$list->sort($order);
 	return $list->toString($limit);
@@ -624,7 +635,7 @@ class Tracker_list
 	{
 		$this->page = $page;
 		$this->config = &$config;
-		$this->list = is_page($config->page.'/'.$list) ? $list : 'list';
+		$this->list = $list;
 		$this->fields = plugin_tracker_get_fields($page,$refer,$config);
 		
 		$pattern = join('',plugin_tracker_get_source($config->page.'/page'));
