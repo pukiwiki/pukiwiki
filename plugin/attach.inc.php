@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.33 2003/09/27 15:25:24 arino Exp $
+//  $Id: attach.inc.php,v 1.34 2003/09/30 07:08:43 arino Exp $
 //
 
 /*
@@ -84,6 +84,7 @@ function plugin_attach_action()
 {
 	global $vars;
 	
+	// backward compatible
 	if (array_key_exists('openfile',$vars))
 	{
 		$vars['pcmd'] = 'open';
@@ -94,14 +95,24 @@ function plugin_attach_action()
 		$vars['pcmd'] = 'delete';
 		$vars['file'] = $vars['delfile'];
 	}
+	
+	$age = array_key_exists('age',$vars) ? $vars['age'] : 0;
+	$pcmd = array_key_exists('pcmd',$vars) ? $vars['pcmd'] : '';
+	
+	// Authentication
+	if (array_key_exists('refer',$vars) and is_pagename($vars['refer']))
+	{
+		$read_cmds = array('info','open','list');
+		in_array($pcmd,$read_cmds) ?
+			check_readable($vars['refer']) : check_editable($vars['refer']);
+	}
+	
+	// Upload
 	if (array_key_exists('attach_file',$_FILES))
 	{
 		$pass = array_key_exists('pass',$vars) ? md5($vars['pass']) : NULL;
 		return attach_upload($_FILES['attach_file'],$vars['refer'],$pass);
 	}
-	
-	$age = array_key_exists('age',$vars) ? $vars['age'] : 0;
-	$pcmd = array_key_exists('pcmd',$vars) ? $vars['pcmd'] : '';
 	
 	switch ($pcmd)
 	{
@@ -176,7 +187,7 @@ function attach_upload($file,$page,$pass=NULL)
 	$obj->status['pass'] = ($pass !== TRUE and $pass !== NULL) ? $pass : '';
 	$obj->putstatus();
 
-	return array('result'=>TRUE,'msg'=>$_attach_messages['msg_uploaded']);;
+	return array('result'=>TRUE,'msg'=>$_attach_messages['msg_uploaded']);
 }
 //詳細フォームを表示
 function attach_info($err='')
@@ -634,6 +645,12 @@ class AttachFiles
 	// ファイル一覧を取得
 	function toString($flat)
 	{
+		global $_title_cannotread;
+		
+		if (!check_readable($this->page,FALSE,FALSE))
+		{
+			return str_replace('$1',make_pagelink($this->page),$_title_cannotread);
+		}
 		if ($flat)
 		{
 			return $this->to_flat();
