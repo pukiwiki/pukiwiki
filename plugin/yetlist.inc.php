@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: yetlist.inc.php,v 1.20 2005/01/23 09:45:57 henoheno Exp $
+// $Id: yetlist.inc.php,v 1.21 2005/01/29 02:59:37 henoheno Exp $
 //
 // Yet list plugin - Show a dangling link list (not yet created)
 
@@ -48,8 +48,16 @@ function plugin_yetlist_action()
 			$link_refs[] = "<a href=\"$script?$r_refer\">$s_refer</a>";
 		}
 		$link_ref = join(' ',$link_refs);
-		// 参照元ページが複数あった場合、referは最後のページを指す(いいのかな)
-		$retval['body'] .= "<li><a href=\"$script?cmd=edit&amp;page=$r_page&amp;refer=$r_refer\">$s_page</a> <em>($link_ref)</em></li>\n";
+
+		if (PKWK_READONLY) {
+			$href = $s_page;
+		} else {
+			// Show edit link
+			// 参照元ページが複数あった場合、referは最後のページを指す(いいのかな)
+			$href = '<a href="' . $script . '?cmd=edit&amp;page=' . $r_page .
+				'&amp;refer=' . $r_refer . '">' . $s_page . '</a>';
+		}
+		$retval['body'] .= '<li>' . $href . ' <em>(' . $link_ref . ')</em></li>' . "\n";
 	}
 
 	if ($retval['body'] != '')
