@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.38 2003/12/03 12:40:35 arino Exp $
+// $Id: file.php,v 1.39 2004/02/29 08:01:45 arino Exp $
 //
 
 // ソースを取得
@@ -233,8 +233,9 @@ function put_lastmodified()
 	$fp = fopen(get_filename($whatsnew),'w')
 		or die_message('cannot write page file '.htmlspecialchars($whatsnew).'<br />maybe permission is not writable or filename is too long');
 	flock($fp,LOCK_EX);
-	foreach (array_splice($recent_pages,0,$maxshow) as $page=>$time)
+	foreach (array_splice(array_keys($recent_pages),0,$maxshow) as $page)
 	{
+		$time = $recent_pages[$page];
 		$s_lastmod = htmlspecialchars(format_date($time));
 		$s_page = htmlspecialchars($page);
 		fputs($fp, "-$s_lastmod - [[$s_page]]\n");
