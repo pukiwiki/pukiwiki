@@ -2,9 +2,47 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: jphone.ini.php,v 1.8 2004/07/04 11:37:33 henoheno Exp $
+// $Id: keitai.ini.php,v 1.1 2004/07/05 12:13:21 henoheno Exp $
 //
-// PukiWiki setting file (user agent:J-PHONE)
+// PukiWiki setting file (Cell phones, PDAs and other thin clients)
+
+/////////////////////////////////////////////////
+// max_size (SKINで使用)
+
+$max_size = 5;	//KByte (default)
+
+$matches = array();
+switch ($user_agent['name']) {
+
+	// DoCoMo Net For MOBILE: ｉモード対応HTMLの考え方: ユーザエージェント
+	// http://www.nttdocomo.co.jp/mc-user/i/tag/imodetag.html
+	// DDI POCKET: 機種ラインナップ: AirH"PHONE用ホームページの作成方法
+	// http://www.ddipocket.co.jp/p_s/products/airh_phone/homepage.html
+	case 'DoCoMo':
+	case 'CNF':
+		if (preg_match('#[/\(]c([0-9]+)[/\);]#',
+		    $user_agent['agent'], $matches))
+			$max_size = $matches[1];
+		break;
+
+	// Vodafone 技術資料: ユーザーエージェントについて
+	// http://www.dp.j-phone.com/dp/tool_dl/web/useragent.php
+	case 'J-PHONE':
+		if (preg_match('#Profile/#', $user_agent['agent'])) {
+			// パケット対応機
+			$max_size = 12; // SKINで使用, KByte
+		} else {
+			// パケット非対応機
+			$max_size =  6;
+		}
+		break;
+
+}
+switch ($user_agent['name'] . '/' . $user_agent['vers']) {
+	case 'DoCoMo/2.0':	$max_size = min($max_size, 30); break;
+}
+unset($matches);
+
 
 /////////////////////////////////////////////////
 // スキンファイルの場所
@@ -33,12 +71,10 @@ $_dl_margin = 16;        // リストの階層間の間隔(px)
 $_list_pad_str = '';
 
 /////////////////////////////////////////////////
-// テキストエリアのカラム数
-$cols = 24;
+// cols: テキストエリアのカラム数 rows: 行数
 
-/////////////////////////////////////////////////
-// テキストエリアの行数
-$rows = 20;
+$cols = 22; $rows = 5;	// i_mode
+$cols = 24; $rows = 20; // jphone
 
 /////////////////////////////////////////////////
 // 大・小見出しから目次へ戻るリンクの文字
@@ -102,21 +138,8 @@ $line_rules = array(
 );
 
 /////////////////////////////////////////////////
-// Vodafone 技術資料: ユーザーエージェントについて
-// http://www.dp.j-phone.com/dp/tool_dl/web/useragent.php
-
-if (preg_match('#Profile/#', $user_agent['agent'])) {
-	// パケット対応機
-	$max_size = 12;	// SKINで使用, KByte
-} else {
-	// パケット非対応機
-	$max_size =  6;
-}
-
-/////////////////////////////////////////////////
 // $scriptを短縮
 if (preg_match('#([^/]+)$#',$script,$matches)) {
 	$script = $matches[1];
 }
-
 ?>
