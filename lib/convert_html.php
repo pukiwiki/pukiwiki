@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.3 2004/10/07 14:15:27 henoheno Exp $
+// $Id: convert_html.php,v 1.4 2004/11/16 11:32:14 henoheno Exp $
 //
 
 function convert_html($lines)
@@ -111,6 +111,7 @@ function & Factory_DList(& $root, $text)
 	}
 }
 
+// '|'-separated table
 function & Factory_Table(& $root, $text)
 {
 	if (! preg_match("/^\|(.+)\|([hHfFcC]?)$/", $text, $out)) {
@@ -120,13 +121,13 @@ function & Factory_Table(& $root, $text)
 	}
 }
 
+// Comma-separated table
 function & Factory_YTable(& $root, $text)
 {
-	$_value = csv_explode(',', substr($text, 1));
-	if (count($_value) == 0) {
+	if ($text == ',') {
 		return Factory_Inline($text);
 	} else {
-		return new YTable($_value);
+		return new YTable(csv_explode(',', substr($text, 1)));
 	}
 }
 
@@ -173,8 +174,9 @@ class Inline extends Element
 	}
 }
 
+// Paragraph: blank-line-separated sentences
 class Paragraph extends Element
-{ // ÃÊÍî
+{
 	var $param;
 
 	function Paragraph($text, $param = '')
@@ -185,7 +187,7 @@ class Paragraph extends Element
 
 		if ($text == '') return;
 
-		if (substr($text,0,1) == '~')
+		if (substr($text, 0, 1) == '~')
 			$text = ' ' . substr($text, 1);
 
 		$this->insert(Factory_Inline($text));
@@ -239,6 +241,7 @@ class Heading extends Element
 }
 
 // ----
+// Horizontal Rule
 class HRule extends Element
 {
 	function HRule(& $root, $text)
@@ -343,7 +346,7 @@ class ListElement extends Element
 	{
 		parent::Element();
 		$this->level = $level;
-		$this->head = $head;
+		$this->head  = $head;
 	}
 
 	function canContain(& $obj)
@@ -389,8 +392,7 @@ class DList extends ListContainer
 		parent::ListContainer('dl', 'dt', ':', $out[0]);
 
 		$this->last = & Element::insert(new ListElement($this->level, 'dd'));
-		if ($out[1] != '')
-		{
+		if ($out[1] != '') {
 			$this->last = & $this->last->insert(Factory_Inline($out[1]));
 		}
 	}
@@ -470,22 +472,17 @@ class TableCell extends Element
 		parent::Element();
 		$this->style = $matches = array();
 
-		while (preg_match('/^(?:(LEFT|CENTER|RIGHT)|(BG)?COLOR\(([#\w]+)\)|SIZE\((\d+)\)):(.*)$/',$text,$matches))
-		{
-			if ($matches[1])
-			{
-				$this->style['align'] = 'text-align:'.strtolower($matches[1]).';';
+		while (preg_match('/^(?:(LEFT|CENTER|RIGHT)|(BG)?COLOR\(([#\w]+)\)|SIZE\((\d+)\)):(.*)$/',
+		    $text, $matches)) {
+			if ($matches[1]) {
+				$this->style['align'] = 'text-align:' . strtolower($matches[1]) . ';';
 				$text = $matches[5];
-			}
-			else if ($matches[3])
-			{
+			} else if ($matches[3]) {
 				$name = $matches[2] ? 'background-color' : 'color';
-				$this->style[$name] = $name.':'.htmlspecialchars($matches[3]).';';
+				$this->style[$name] = $name . ':' . htmlspecialchars($matches[3]) . ';';
 				$text = $matches[5];
-			}
-			else if ($matches[4])
-			{
-				$this->style['size'] = 'font-size:'.htmlspecialchars($matches[4]).'px;';
+			} else if ($matches[4]) {
+				$this->style['size'] = 'font-size:' . htmlspecialchars($matches[4]) . 'px;';
 				$text = $matches[5];
 			}
 		}
