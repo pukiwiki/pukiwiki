@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rename.inc.php,v 1.5 2003/05/07 04:21:52 arino Exp $
+// $Id: rename.inc.php,v 1.6 2003/06/05 05:03:11 arino Exp $
 //
 
 /*
@@ -177,7 +177,7 @@ $msg
   {$_rename_messages['msg_regex']}:<br />
   From:<br />
   <input type="text" name="src" size="80" value="$s_src" /><br />
-  To:<br>
+  To:<br />
   <input type="text" name="dst" size="80" value="$s_dst" /><br />
   <input type="submit" value="{$_rename_messages['btn_next']}" /><br />
  </div>

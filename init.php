@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.46 2003/06/02 09:58:54 arino Exp $
+// $Id: init.php,v 1.47 2003/06/05 05:03:10 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -124,7 +124,7 @@ if (!isset($load_template_func)) $wrong_ini_file .= '$load_template_func ';
 if (!defined('LANG')) $wrong_ini_file .= 'LANG ';
 if (!defined('PLUGIN_DIR')) $wrong_ini_file .= 'PLUGIN_DIR ';
 if ($wrong_ini_file) {
-	die_message('The setting file runs short of information.<br>The version of a setting file may be old.<br><br>These option are not found : '.$wrong_ini_file);
+	die_message('The setting file runs short of information.<br />The version of a setting file may be old.<br /><br />These option are not found : '.$wrong_ini_file);
 }
 if (!is_page($defaultpage)) {
 	touch(get_filename($defaultpage));

@@ -11,7 +11,7 @@
  * @access  public
  * @author  
  * @create  
- * @version $Id: backup.php,v 1.12 2003/05/19 14:36:48 arino Exp $
+ * @version $Id: backup.php,v 1.13 2003/06/05 05:03:10 arino Exp $
  **/
 
 /**
@@ -74,7 +74,7 @@ function make_backup($page,$delete = FALSE)
 		$body = preg_replace("/\n*$/","\n",$body);
 
 		$fp = backup_fopen($page,'wb')
-			or die_message('cannot write file '.htmlspecialchars($realfilename).'<br>maybe permission is not writable or filename is too long');
+			or die_message('cannot write file '.htmlspecialchars($realfilename).'<br />maybe permission is not writable or filename is too long');
 		backup_fputs($fp,$strout);
 		backup_fputs($fp,$body);
 		backup_fclose($fp);
