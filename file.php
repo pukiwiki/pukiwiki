@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.19 2003/05/26 13:46:31 arino Exp $
+// $Id: file.php,v 1.20 2003/06/05 05:02:38 arino Exp $
 //
 
 // ソースを取得
@@ -27,7 +27,7 @@ function get_filename($page)
 }
 
 // ページの出力
-function page_write($page,$postdata)
+function page_write($page,$postdata,$notimestamp=FALSE)
 {
 	$postdata = make_str_rules($postdata);
 	
@@ -40,7 +40,7 @@ function page_write($page,$postdata)
 	make_backup($page,$postdata == '');
 	
 	// ファイルの書き込み
-	file_write(DATA_DIR,$page,$postdata);
+	file_write(DATA_DIR,$page,$postdata,$notimestamp);
 	
 	// is_pageのキャッシュをクリアする。
 	is_page($page,TRUE);
@@ -82,7 +82,7 @@ function make_str_rules($str)
 }
 
 // ファイルへの出力
-function file_write($dir,$page,$str)
+function file_write($dir,$page,$str,$notimestamp=FALSE)
 {
 	global $post,$update_exec;
 	global $_msg_invalidiwn;
@@ -106,12 +106,12 @@ function file_write($dir,$page,$str)
 		$str = preg_replace("/\r/",'',$str);
 		$str = rtrim($str)."\n";
 		
-		if (!empty($post['notimestamp']) and file_exists($file)) {
+		if ($notimestamp and file_exists($file)) {
 			$timestamp = filemtime($file) - LOCALZONE;
 		}
 		
 		$fp = fopen($file,'w')
-			or die_message('cannot write page file or diff file or other'.htmlspecialchars($page).'<br>maybe permission is not writable or filename is too long');
+			or die_message('cannot write page file or diff file or other'.htmlspecialchars($page).'<br />maybe permission is not writable or filename is too long');
 		flock($fp,LOCK_EX);
 		fputs($fp,$str);
 		flock($fp,LOCK_UN);
@@ -133,7 +133,7 @@ function file_write($dir,$page,$str)
 // 最終更新ページの更新
 function put_lastmodified()
 {
-	global $script,$post,$maxshow,$whatsnew,$non_list,$autolink;
+	global $maxshow,$whatsnew,$non_list,$autolink;
 
 	$pages = get_existpages();
 	$recent_pages = array();
@@ -150,7 +150,7 @@ function put_lastmodified()
 	
 	// create recent.dat (for recent.inc.php)
 	$fp = fopen(CACHE_DIR.'recent.dat','w')
-		or die_message('cannot write cache file '.CACHE_DIR.'recent.dat<br>maybe permission is not writable or filename is too long');
+		or die_message('cannot write cache file '.CACHE_DIR.'recent.dat<br />maybe permission is not writable or filename is too long');
 	flock($fp,LOCK_EX);
 	foreach ($recent_pages as $page=>$time)
 	{
@@ -161,7 +161,7 @@ function put_lastmodified()
 
 	// create RecentChanges
 	$fp = fopen(get_filename($whatsnew),'w')
-		or die_message('cannot write page file '.htmlspecialchars($whatsnew).'<br>maybe permission is not writable or filename is too long');
+		or die_message('cannot write page file '.htmlspecialchars($whatsnew).'<br />maybe permission is not writable or filename is too long');
 	flock($fp,LOCK_EX);
 	foreach (array_splice($recent_pages,0,$maxshow) as $page=>$time)
 	{
@@ -179,7 +179,7 @@ function put_lastmodified()
 		list($pattern,$forceignorelist) = get_autolink_pattern($pages);
 		
 		$fp = fopen(CACHE_DIR.'autolink.dat','w')
-			or die_message('cannot write autolink file '.CACHE_DIR.'/autolink.dat<br>maybe permission is not writable');
+			or die_message('cannot write autolink file '.CACHE_DIR.'/autolink.dat<br />maybe permission is not writable');
 		flock($fp,LOCK_EX);
 		fputs($fp,$pattern."\n");
 		fputs($fp,join("\t",$forceignorelist));
