@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.6 2004/10/12 15:00:15 henoheno Exp $
+// $Id: html.php,v 1.7 2004/10/16 01:18:58 henoheno Exp $
 //
 
 // 本文を出力
@@ -51,6 +51,27 @@ function catbody($title,$page,$body)
 	}
 	$_LINK['unfreeze'] = "$script?cmd=unfreeze&amp;page=$r_page";
 	$_LINK['upload']   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
+
+	// Compat: Skins for 1.4.4 and before
+	$link_add       = & $_LINK['add'];
+	$link_new       = & $_LINK['new'];	// New!
+	$link_edit      = & $_LINK['edit'];
+	$link_diff      = & $_LINK['diff'];
+	$link_top       = & $_LINK['top'];
+	$link_list      = & $_LINK['list'];
+	$link_filelist  = & $_LINK['filelist'];
+	$link_search    = & $_LINK['search'];
+	$link_whatsnew  = & $_LINK['recent'];
+	$link_backup    = & $_LINK['backup'];
+	$link_help      = & $_LINK['help'];
+	$link_trackback = & $_LINK['trackback'];	// New!
+	$link_rss       = & $_LINK['rss'];
+	$link_freeze    = & $_LINK['freeze'];
+	$link_unfreeze  = & $_LINK['unfreeze'];
+	$link_upload    = & $_LINK['upload'];
+	$link_template  = & $_LINK['copy'];
+	$link_refer     = & $_LINK['refer'];	// New!
+	$link_rename    = & $_LINK['rename'];
 
 	// ページの表示時TRUE(バックアップの表示、RecentChangesの表示を除く)
 	$is_page = (is_pagename($_page) && ! arg_check('backup') && $_page != $whatsnew);
