@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.inc.php,v 1.13 2003/02/03 10:27:42 panda Exp $
+// $Id: comment.inc.php,v 1.14 2003/04/01 07:17:40 panda Exp $
 
 /////////////////////////////////////////////////
 // コメントの名前テキストエリアのカラム数
@@ -14,7 +14,7 @@ define('COMMENT_MSG_FORMAT','$msg');
 define('COMMENT_NOW_FORMAT','SIZE(10){$now}');
 /////////////////////////////////////////////////
 // コメントの挿入フォーマット(コメント内容)
-define('COMMENT_FORMAT','$msg -- $name $now');
+define('COMMENT_FORMAT',"\x08MSG\x08 -- \x08NAME\x08 \x08NOW\x08");
 /////////////////////////////////////////////////
 // コメントを挿入する位置 1:欄の前 0:欄の後
 define('COMMENT_INS',1);
@@ -54,9 +54,9 @@ function plugin_comment_action()
 		$post['msg'] = $match[2];
 	}
 	
-	$comment = str_replace('$msg',str_replace('$msg',$post['msg'],COMMENT_MSG_FORMAT),$comment_format);
-	$comment = str_replace('$name',$name,$comment);
-	$comment = str_replace('$now',str_replace('$now',$now,COMMENT_NOW_FORMAT),$comment);
+	$comment = str_replace("\x08MSG\x08",str_replace('$msg',$post['msg'],COMMENT_MSG_FORMAT),$comment_format);
+	$comment = str_replace("\x08NAME\x08",$name,$comment);
+	$comment = str_replace("\x08NOW\x08",str_replace('$now',$now,COMMENT_NOW_FORMAT),$comment);
 	$comment = $head.$comment;
 	
 	foreach($postdata_old as $line) {
