@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.84 2004/09/25 01:11:34 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.85 2004/09/29 13:20:26 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -362,9 +362,10 @@ $line_break = 0;
 // 'profile'=>'keitai' と修正して下さい。
 
 $agents = array(
-// pattern: デバイス[ブラウザ]名およびバージョンの検出パターン  profile: 所属するグループ
+// pattern: A regular-expression that matches device(browser)'s name and version
+// profile: A group of browsers
 
-    // 組み込みブラウザ (リッチクライアント:PukiWikiがそのまま使えるという意味の)
+    // Embedded browsers (Rich-clients for PukiWiki)
 
 	// "PlayStation BB Navigator" (ACCESS NetFront, for SONY PlayStation 2)
 	// Sample: "Mozilla/4.0 (PS2; PlayStation BB Navigator 1.0) NetFront/3.0"
@@ -374,11 +375,24 @@ $agents = array(
 	// Sample: "Mozilla/4.0 (compatible; MSIE 5.5; Windows CE; sigmarion3)" (sigmarion, Hand-held PC)
 	array('pattern'=>'#\b(?:MSIE [5-9]).*\b(Windows CE)\b#', 'profile'=>'default'),
 
-    // 組み込みブラウザ (リッチクライアントではないもの)
+	// ACCESS "NetFront" / "Compact NetFront" and thier OEM, expects to be "Mozilla/4.0"
+	// Sample: "Mozilla/4.0 (PDA; PalmOS/sony/model crdb/Revision:1.1.19) NetFront/3.0" (SONY Clie series)
+	// Sample: "Mozilla/4.0 (PDA; SL-A300/1.0,Embedix/Qtopia/1.1.0) NetFront/3.0" (SHARP Zaurus)
+	array('pattern'=>'#^(?:Mozilla/4).*\b(NetFront)/([0-9\.]+)#',	'profile'=>'default'),
+
+    // Embedded browsers (Non-rich)
 
 	// Windows CE (the others)
 	// Sample: "Mozilla/2.0 (compatible; MSIE 3.02; Windows CE; 240x320 )" (GFORT, NTT DoCoMo)
 	array('pattern'=>'#\b(Windows CE)\b#', 'profile'=>'keitai'),
+
+	// ACCESS "NetFront" / "Compact NetFront" and thier OEM
+	// Sample: "Mozilla/3.0 (AveFront/2.6)" ("SUNTAC OnlineStation", USB-Modem for PlayStation 2)
+	// Sample: "Mozilla/3.0(DDIPOCKET;JRC/AH-J3001V,AH-J3002V/1.0/0100/c50)CNF/2.0" (DDI Pocket: AirH" Phone by JRC)
+	array('pattern'=>'#\b(NetFront)/([0-9\.]+)#',	'profile'=>'keitai'),
+	array('pattern'=>'#\b(CNF)/([0-9\.]+)#',	'profile'=>'keitai'),
+	array('pattern'=>'#\b(AveFront)/([0-9\.]+)#',	'profile'=>'keitai'),
+	array('pattern'=>'#\b(AVE-Front)/([0-9\.]+)#',	'profile'=>'keitai'), // The same?
 
 	// NTT-DoCoMo, i-mode (embeded Compact NetFront) and FOMA (embedded NetFront) phones
 	// Sample: "DoCoMo/1.0/F501i", "DoCoMo/1.0/N504i/c10/TB/serXXXX" // c以降は可変
@@ -393,16 +407,6 @@ $agents = array(
 	// Openwave(R) Mobile Browser (EZweb, WAP phone, etc)
 	// Sample: "OPWV-SDK/62K UP.Browser/6.2.0.5.136 (GUI) MMP/2.0"
 	array('pattern'=>'#\b(UP\.Browser)/([0-9\.]+)#',	'profile'=>'keitai'),
-
-	// ACCESS "NetFront" / "Compact NetFront" and thier OEM
-	// Sample: "Mozilla/4.0 (PDA; PalmOS/sony/model crdb/Revision:1.1.19) NetFront/3.0" (SONY Clie series)
-	// Sample: "Mozilla/4.0 (PDA; SL-A300/1.0,Embedix/Qtopia/1.1.0) NetFront/3.0" (Sharp Zaurus)
-	// Sample: "Mozilla/3.0 (AveFront/2.6)" ("SUNTAC OnlineStation", USB-Modem for PlayStation 2)
-	// Sample: "Mozilla/3.0(DDIPOCKET;JRC/AH-J3001V,AH-J3002V/1.0/0100/c50)CNF/2.0" (DDI Pocket: AirH" Phone by JRC)
-	array('pattern'=>'#\b(NetFront)/([0-9\.]+)#',	'profile'=>'keitai'),
-	array('pattern'=>'#\b(CNF)/([0-9\.]+)#',	'profile'=>'keitai'),
-	array('pattern'=>'#\b(AveFront)/([0-9\.]+)#',	'profile'=>'keitai'),
-	array('pattern'=>'#\b(AVE-Front)/([0-9\.]+)#',	'profile'=>'keitai'), // The same?
 
 	// Opera, dressing up as other embedded browsers
 	// Sample: "Mozilla/3.0(DDIPOCKET;KYOCERA/AH-K3001V/1.4.1.67.000000/0.1/C100) Opera 7.0" (Like CNF at 'keitai'-mode)
@@ -425,7 +429,7 @@ $agents = array(
 	array('pattern'=>'#^(Palmscape)/([0-9\.]+)#',	'profile'=>'keitai'),
 	array('pattern'=>'#^(Xiino)/([0-9\.]+)#',	'profile'=>'keitai'),
 
-	// Sharp PDA Browser (Sharp Zaurus)
+	// SHARP PDA Browser (SHARP Zaurus)
 	// Sample: "sharp pda browser/6.1[ja](MI-E1/1.0) "
 	array('pattern'=>'#^(sharp [a-z]+ browser)/([0-9\.]+)#',	'profile'=>'keitai'),
 
