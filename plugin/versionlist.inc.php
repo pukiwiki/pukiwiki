@@ -1,5 +1,5 @@
 <?php
-// $Id: versionlist.inc.php,v 1.14 2005/01/23 09:37:05 henoheno Exp $
+// $Id: versionlist.inc.php,v 1.15 2005/01/29 02:12:52 henoheno Exp $
 /*
  * PukiWiki versionlist plugin
  *
@@ -11,7 +11,7 @@ function plugin_versionlist_action()
 {
 	global $_title_versionlist;
 
-	if (PKWK_SAFE_MODE) die_message('PKWK_SAFE_MODE prohibit this');
+	if (PKWK_SAFE_MODE) die_message('PKWK_SAFE_MODE prohibits this');
 
 	return array(
 		'msg' => $_title_versionlist,
