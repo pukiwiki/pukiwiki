@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.20 2002/07/15 06:57:20 masui Exp $
+// $Id: html.php,v 1.21 2002/07/15 07:43:57 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -460,6 +460,7 @@ function get_list($withfilename)
 		$etc_sw = 0;
 		$symbol_sw = 0;
 		$top_link = "";
+		$link_counter = 0;
 		foreach($retval as $page => $link)
 		{
 			$head = substr($page,0,1);
@@ -477,8 +478,13 @@ function get_list($withfilename)
 					if($head_str) $retval2[$page] = "</ul>\n";
 					$retval2[$page] .= "<li><a href=\"#top:$head_nm\" name=\"$head_nm\"><strong>$head</strong></a></li>\n<ul>\n";
 					$head_str = $head;
-					if($top_link) $top_link .= "|";
+					if($link_counter) $top_link .= "|";
+					$link_counter = $link_counter + 1;
 					$top_link .= "<a href=\"#$head_nm\" name=\"top:$head_nm\"><strong>&nbsp;".$head."&nbsp;</strong></a>";
+					if($link_counter==16) {
+					        $top_link .= "<br />";
+						$link_counter = 0;
+					}
 				}
 				else if(preg_match("/[ -~]/",$head))
 				{
@@ -487,7 +493,8 @@ function get_list($withfilename)
 						if($head_str) $retval2[$page] = "</ul>\n";
 						$retval2[$page] .= "<li><a href=\"#top:symbol\" name=\"symbol\"><strong>$_msg_symbol</strong></a></li>\n<ul>\n";
 						$head_str = $head;
-						if($top_link) $top_link .= "|";
+						if($link_counter) $top_link .= "|";
+						$link_counter = $link_counter + 1;
 						$top_link .= "<a href=\"#symbol\" name=\"top:symbol\"><strong>$_msg_symbol</strong></a>";
 						$symbol_sw = 1;
 					}
@@ -497,7 +504,8 @@ function get_list($withfilename)
 					if($head_str) $retval2[$page] = "</ul>\n";
 					$retval2[$page] .= "<li><a href=\"#top:etc\" name=\"etc\"><strong>$_msg_other</strong></a></li>\n<ul>\n";
 					$etc_sw = 1;
-					if($top_link) $top_link .= "|";
+					if($link_counter) $top_link .= "|";
+					$link_counter = $link_counter + 1;
 					$top_link .= "<a href=\"#etc\" name=\"top:etc\"><strong>$_msg_other</strong></a>";
 				}
 			}
