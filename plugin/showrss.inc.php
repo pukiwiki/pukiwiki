@@ -22,7 +22,7 @@
  * 
  * 避難所       ->   http://do3ob.s20.xrea.com/
  *
- * version: $Id: showrss.inc.php,v 1.6 2003/03/02 06:53:50 panda Exp $
+ * version: $Id: showrss.inc.php,v 1.7 2003/03/12 03:29:41 panda Exp $
  * 
  */
 
@@ -162,7 +162,7 @@ function plugin_showrss_convert() {
 
 // エラーメッセージ（簡易）
 function plugin_showrss_private_error_message($msg) {
-	return '<strong>showrss:</strong>' . $msg;
+	return '<strong>showrss:</strong>' . htmlspecialchars($msg);
 }
 
 // urlチェック
