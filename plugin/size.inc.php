@@ -1,30 +1,26 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: size.inc.php,v 1.7 2005/01/01 10:43:46 henoheno Exp $
 //
-// $Id: size.inc.php,v 1.6 2004/07/31 03:09:20 henoheno Exp $
-//
+// Text-size changing via CSS plugin
+
+define('PLUGIN_SIZE_MAX', 36); // px
+define('PLUGIN_SIZE_MIN', 8);  // px
+
+// ----
+define('PLUGIN_SIZE_USAGE', '&size(px){Text string};');
 
 function plugin_size_inline()
 {
-	if (func_num_args() != 2)
-	{
-		return FALSE;
-	}
+	if (func_num_args() != 2) return PLUGIN_SIZE_USAGE;
 
-	list($size,$body) = func_get_args();
+	list($size, $body) = func_get_args();
+	if ($size == '' || $body == '' || ! preg_match('/^\d+$/', $size))
+		return PLUGIN_SIZE_USAGE;
 
-	if ($size == '' or $body == '')
-	{
-		return FALSE;
-	}
-
-	if (!preg_match('/^\d+$/',$size))
-	{
-		return $body;
-	}
-
-	$s_size = htmlspecialchars($size);
-	return "<span style=\"font-size:{$s_size}px;display:inline-block;line-height:130%;text-indent:0px\">$body</span>";
+	$size = max(PLUGIN_SIZE_MIN, min(PLUGIN_SIZE_MAX, $size));
+	return '<span style="font-size:' . $size .
+		'px;display:inline-block;line-height:130%;text-indent:0px">' .
+		$body . '</span>';
 }
 ?>
