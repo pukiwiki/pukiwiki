@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.20 2004/09/26 13:42:20 henoheno Exp $
+// $Id: dump.inc.php,v 1.21 2004/09/26 14:13:29 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [¹¹¿·ÍúÎò]
@@ -208,7 +208,7 @@ function download_tarfile($tempnam, $arc_kind)
 	header('Content-Length: ' . $size);
 	header('Content-Type: application/octet-stream');
 	header('Pragma: no-cache');
-	@readfile($name);
+	@readfile($tempnam);
 }
 
 /////////////////////////////////////////////////
