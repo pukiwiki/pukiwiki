@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.6.2.3 2004/06/19 00:54:33 henoheno Exp $
+// $Id: make_link.php,v 1.6.2.4 2004/06/19 04:13:09 henoheno Exp $
 //
 
 // リンクを付加する
@@ -282,7 +282,7 @@ class link_wikiname extends link
 function get_interwiki_url($name,$param)
 {
 	global $WikiName;
-	static $interwikis, $mb;
+	static $interwikis;
 
 	if (!isset($interwikis))
 	{
@@ -294,28 +294,12 @@ function get_interwiki_url($name,$param)
 		return FALSE;
 	}
 
-	if(!isset($mb))
-	{
-		if(function_exists("mb_convert_encoding"))
-		{
-			$mb = 1;
-		} else {
-			$mb = 0;
-		}
-	}
-
 	// 文字エンコーディング
 	if($interwikis[$name]["opt"] == "yw")
 	{
 		// YukiWiki系
 		if(!preg_match("/$WikiName/",$param))
-		{
-			if($mb){
-				$param = "[[".mb_convert_encoding($param,"SJIS","EUC-JP")."]]";
-			} else {
-				return "Not support mb_jstring.";
-			}
-		}
+			$param = "[[".mb_convert_encoding($param,"SJIS","EUC-JP")."]]";
 	}
 	else if($interwikis[$name]["opt"] == "moin")
 	{
@@ -344,11 +328,7 @@ function get_interwiki_url($name,$param)
 			$interwikis[$name]["opt"] = "UTF-8";
 
 		// その他、指定された文字コードへエンコードしてURLエンコード
-		if($mb){
-			$param = rawurlencode(mb_convert_encoding($param,$interwikis[$name]["opt"],"EUC-JP"));
-		} else {
-			return "Not support mb_jstring.";
-		}
+		$param = rawurlencode(mb_convert_encoding($param,$interwikis[$name]["opt"],"EUC-JP"));
 	}
 
 	// パラメータを置換

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mbstring.php,v 1.12 2004/06/19 04:03:24 henoheno Exp $
+// $Id: mbstring.php,v 1.12.2.1 2004/06/19 04:09:39 henoheno Exp $
 //
 
 /*
