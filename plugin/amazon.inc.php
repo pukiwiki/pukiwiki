@@ -1,9 +1,9 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: amazon.inc.php,v 1.5 2004/12/25 01:47:20 henoheno Exp $
+// $Id: amazon.inc.php,v 1.6 2004/12/25 02:12:05 henoheno Exp $
 // Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 閑舎
+//
+// Amazon plugin: Book-review maker via amazon.com/amazon.jp
 //
 // Copyright:
 //	2004 PukiWiki Developer Team
@@ -14,7 +14,7 @@
 // ChangeLog:
 // * 2004/04/03 PukiWiki Developer Team (arino <arino@users.sourceforge.jp>)
 //        - replace plugin_amazon_get_page().
-//        - AMAZON_XML 'xml.amazon.com' -> 'xml.amazon.co.jp'
+//        - PLUGIN_AMAZON_XML 'xml.amazon.com' -> 'xml.amazon.co.jp'
 // * 0.6  URL が存在しない場合、No image を表示、画像配置など修正。
 //        インラインプラグインの呼び出し方を修正。
 //	  ASIN 番号部分をチェックする。
@@ -43,34 +43,53 @@
 // * 著作権が関連する為、www.amazon.co.jp のアソシエイトプログラムを確認の上ご利用下さい。
 // * レビューは、amazon プラグインが呼び出す編集画面はもう出来て PukiWiki に登録されているので、
 //   中止するなら全文を削除してページの更新ボタンを押すこと。
-// * 下の AMAZON_AID、PROXY サーバの部分、expire の部分を適当に編集して使用してください(他はそのままでも Ok)。
+// * 下の PLUGIN_AMAZON_AID、PROXY サーバの部分、expire の部分を適当に編集して使用してください(他はそのままでも Ok)。
 //
 
 /////////////////////////////////////////////////
-// amazon のアソシエイト ID(ないなら 一般ユーザ)
-define('AMAZON_AID','');
+// Settings
+
+// Amazon associate ID
+//define('PLUGIN_AMAZON_AID',''); // None
+define('PLUGIN_AMAZON_AID','');
+
+// Expire caches per ? days
+define('PLUGIN_AMAZON_EXPIRE_IMAGECACHE',   1);
+define('PLUGIN_AMAZON_EXPIRE_TITLECACHE', 356);
+
+// Alternative image for 'Image not found'
+define('PLUGIN_AMAZON_NO_IMAGE', './image/noimage.jpg');
+
+// URI prefixes
+switch(LANG){
+case 'ja':
+	// Amazon shop
+	define('PLUGIN_AMAZON_SHOP_URI', 'http://www.amazon.co.jp/exec/obidos/ASIN/');
+
+	// Amazon information inquiry (dev-t = default value in the manual)
+	define('PLUGIN_AMAZON_XML', 'http://xml.amazon.co.jp/onca/xml3?t=webservices-20&' .
+		'dev-t=GTYDRES564THU&type=lite&page=1&f=xml&locale=jp&AsinSearch=');
+	break;
+default:
+	// Amazon shop
+	define('PLUGIN_AMAZON_SHOP_URI', 'http://www.amazon.com/exec/obidos/ASIN/');
+
+	// Amazon information inquiry (dev-t = default value in the manual)
+	define('PLUGIN_AMAZON_XML', 'http://xml.amazon.com/onca/xml3?t=webservices-20&' .
+		'dev-t=GTYDRES564THU&type=lite&page=1&f=xml&locale=us&AsinSearch=');
+	break;
+}
+
 /////////////////////////////////////////////////
-// expire 画像/タイトルキャッシュを何日で削除するか
-define('AMAZON_EXPIRE_IMG',1);
-define('AMAZON_EXPIRE_TIT',356);
-/////////////////////////////////////////////////
-// 画像なしの場合の画像
-define('NO_IMAGE','./image/noimage.jpg');
-/////////////////////////////////////////////////
-// amazon ショップ
-define('AMAZON_SHOP','http://www.amazon.co.jp/exec/obidos/ASIN/');
-/////////////////////////////////////////////////
-// amazon 商品情報問合せ URI(dev-t はマニュアルのディフォルト値)
-define('AMAZON_XML','http://xml.amazon.co.jp/onca/xml3?t=webservices-20&dev-t=GTYDRES564THU&type=lite&page=1&f=xml&locale=jp&AsinSearch=');
 
 function plugin_amazon_init()
 {
   global $amazon_aid, $amazon_body;
 
-  if (AMAZON_AID == '') {
+  if (PLUGIN_AMAZON_AID == '') {
     $amazon_aid = '';
   } else {
-    $amazon_aid = AMAZON_AID . '/';
+    $amazon_aid = PLUGIN_AMAZON_AID . '/';
   }
   $amazon_body = <<<EOD
 -作者: [[ここ編集のこと]]
@@ -208,7 +227,7 @@ function plugin_amazon_inline()
   if ($title == '')
     return false;
   else
-    return '<a href="' . AMAZON_SHOP . "$asin/$amazon_aid" . 'ref=nosim">' . "$title</a>\n";
+    return '<a href="' . PLUGIN_AMAZON_SHOP_URI . "$asin/$amazon_aid" . 'ref=nosim">' . "$title</a>\n";
 }
 
 function plugin_amazon_print_object($align, $alt, $title)
@@ -220,16 +239,16 @@ function plugin_amazon_print_object($align, $alt, $title)
 
   if ($title == '') { // タイトルがなければ、画像のみ表示
     $div = '<div style="float:' . $align . ';margin:16px 16px 16px 16px;text-align:center">' . "\n";
-    $div .= ' <a href="' . AMAZON_SHOP . $asin . '/' . $amazon_aid . 'ref=nosim">' .
+    $div .= ' <a href="' . PLUGIN_AMAZON_SHOP_URI . $asin . '/' . $amazon_aid . 'ref=nosim">' .
     	'<img src="' . $url . '" alt="' . $alt . '" /></a>' . "\n";
     $div .= '</div>' . "\n";
   } else {	      // 通常表示
     $div = '<div style="float:' . $align . ';padding:.5em 1.5em .5em 1.5em;text-align:center">' . "\n";
     $div .= ' <table style="width:110px;border:0;text-align:center"><tr><td style="text-align:center">' . "\n";
-    $div .= '  <a href="' . AMAZON_SHOP . $asin . '/' . $amazon_aid . 'ref=nosim">' .
+    $div .= '  <a href="' . PLUGIN_AMAZON_SHOP_URI . $asin . '/' . $amazon_aid . 'ref=nosim">' .
     	'<img src="' . $url . '" alt="' . $alt  .'" /></a></td></tr>' . "\n";
     $div .= '  <tr><td style="text-align:center"><a href="' .
-    	AMAZON_SHOP . $asin . '/' . $amazon_aid . 'ref=nosim">' . $title . '</a></td>' . "\n";
+    	PLUGIN_AMAZON_SHOP_URI . $asin . '/' . $amazon_aid . 'ref=nosim">' . $title . '</a></td>' . "\n";
     $div .= ' </tr></table>' . "\n" . '</div>' . "\n";
   }
   return $div;
@@ -243,7 +262,7 @@ function plugin_amazon_get_asin_title()
 
   $nocache = $nocachable = 0;
 
-  $url = AMAZON_XML . $asin;
+  $url = PLUGIN_AMAZON_XML . $asin;
 
   if (file_exists(CACHE_DIR) === false || is_writable(CACHE_DIR) === false) $nocachable = 1; // キャッシュ不可の場合
 
@@ -278,7 +297,7 @@ function plugin_amazon_cache_title_fetch($dir)
   $get_tit = 0;
   if (!is_readable($filename)) {
     $get_tit = 1;
-  } elseif (AMAZON_EXPIRE_TIT * 3600 * 24 < time() - filemtime($filename)) {
+  } elseif (PLUGIN_AMAZON_EXPIRE_TITLECACHE * 3600 * 24 < time() - filemtime($filename)) {
     $get_tit = 1;
   }
 
@@ -308,7 +327,7 @@ function plugin_amazon_cache_image_fetch($dir)
   $get_img = 0;
   if (!is_readable($filename)) {
     $get_img = 1;
-  } elseif (AMAZON_EXPIRE_IMG * 3600 * 24 < time() - filemtime($filename)) {
+  } elseif (PLUGIN_AMAZON_EXPIRE_IMAGECACHE * 3600 * 24 < time() - filemtime($filename)) {
     $get_img = 1;
   }
 
@@ -326,7 +345,7 @@ function plugin_amazon_cache_image_fetch($dir)
       unlink($tmpfile);
     }
     if ($body == '' || $size[1] <= 1) { // 通常は1が返るが念のため0の場合も(reimy)
-      // キャッシュを NO_IMAGE のコピーとする
+      // キャッシュを PLUGIN_AMAZON_NO_IMAGE のコピーとする
       if ($asin_ext == '09') {
         $url = 'http://images-jp.amazon.com/images/P/' . $asin . '.01.MZZZZZZZ.jpg';
         $body = plugin_amazon_get_page($url);
@@ -340,7 +359,7 @@ function plugin_amazon_cache_image_fetch($dir)
 	}
       }
       if ($body == '' || $size[1] <= 1) {
-        $fp = fopen(NO_IMAGE, 'rb');
+        $fp = fopen(PLUGIN_AMAZON_NO_IMAGE, 'rb');
         if (! $fp) return false;
         $body = '';
         while (!feof($fp)) {
