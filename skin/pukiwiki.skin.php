@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.39 2005/01/23 11:54:26 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.40 2005/01/26 12:58:57 henoheno Exp $
 //
 // PukiWiki default skin
 
@@ -12,6 +12,11 @@ $_IMAGE['skin']['logo']     = 'pukiwiki.png';
 //   0 = Show topicpath
 if (! defined('SKIN_DEFAULT_DISABLE_TOPICPATH'))
 	define('SKIN_DEFAULT_DISABLE_TOPICPATH', 1); // 1, 0
+
+// Show / Hide navigation bar UI at your choice
+// NOTE: This is not stop their functionalities!
+if (! defined('PKWK_SKIN_SHOW_NAVBAR'))
+	define('PKWK_SKIN_SHOW_NAVBAR', 0); // 1, 0
 
 // Show / Hide toolbar UI at your choice
 // NOTE: This is not stop their functionalities!
@@ -84,6 +89,7 @@ if (isset($pkwk_dtd)) {
 </div>
 
 <div id="navigator">
+<?php if(PKWK_SKIN_SHOW_NAVBAR) { ?>
 <?php
 function _navigator($key, $value = '', $javascript = ''){
 	$lang = & $GLOBALS['_LANG']['skin'];
@@ -140,7 +146,7 @@ function _navigator($key, $value = '', $javascript = ''){
 <?php if ($referer)   { ?> &nbsp;
  [ <?php _navigator('refer') ?> ]
 <?php } ?>
-
+<?php } // PKWK_SKIN_SHOW_NAVBAR ?>
 </div>
 
 <?php echo $hr ?>

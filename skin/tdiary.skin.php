@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.16 2005/01/23 11:54:26 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.17 2005/01/26 12:58:57 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -14,6 +14,11 @@ if (! defined('TDIARY_THEME')) define('TDIARY_THEME', 'loose-leaf'); // Default
 //   1    = Show reload URL
 if (! defined('TDIARY_CALENDAR_DESIGN'))
 	define('TDIARY_CALENDAR_DESIGN', NULL); // NULL, 0, 1
+
+// Show / Hide navigation bar UI at your choice
+// NOTE: This is not stop their functionalities!
+if (! defined('PKWK_SKIN_SHOW_NAVBAR'))
+	define('PKWK_SKIN_SHOW_NAVBAR', 1); // 1, 0
 
 // Show toolbar at your choice, with <div class="footer"> design
 // NOTE: Some theme become looking worse with this!
@@ -382,7 +387,9 @@ if (isset($pkwk_dtd)) {
 <?php } // if ($menu && $sidebar == 'strict') ?>
 
 <!-- Navigation buttuns -->
-<div id="navigator"><div class="adminmenu">
+<div id="navigator">
+<?php if (PKWK_SKIN_SHOW_NAVBAR) { ?>
+<div class="adminmenu">
 <?php
 function _navigator($key, $value = '', $javascript = ''){
 	$lang = $GLOBALS['_LANG']['skin'];
@@ -436,7 +443,9 @@ function _navigator($key, $value = '', $javascript = ''){
 <?php if ($referer)   { ?> &nbsp;
    <?php _navigator('refer') ?>
 <?php } ?>
-</div></div>
+</div>
+<?php } // PKWK_SKIN_SHOW_NAVBAR ?>
+</div>
 
 <h1><?php echo $page_title ?></h1>
 
