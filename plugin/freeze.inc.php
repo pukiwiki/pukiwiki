@@ -1,14 +1,11 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: freeze.inc.php,v 1.9 2004/12/16 13:32:19 henoheno Exp $
 //
-// $Id: freeze.inc.php,v 1.8 2004/12/16 13:09:48 henoheno Exp $
-//
-// 凍結
-function plugin_freeze_convert()
-{
-	return '';
-}
+// Freeze(Lock) plugin
+
+// Reserve 'Do nothing'. '^#freeze' is for internal use only.
+function plugin_freeze_convert() { return ''; }
 
 function plugin_freeze_action()
 {
@@ -17,32 +14,35 @@ function plugin_freeze_action()
 	global $_msg_invalidpass, $_msg_freezing, $_btn_freeze;
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
-
-	if (!$function_freeze or !is_page($page))
+	if (! $function_freeze || ! is_page($page))
 		return array('msg' => '', 'body' => '');
 
 	$pass = isset($vars['pass']) ? $vars['pass'] : NULL;
+	$msg = $body = '';
 	if (is_freeze($page)) {
-		return array(
-			'msg'  => $_title_isfreezed,
-			'body' => str_replace('$1', htmlspecialchars(strip_bracket($page)), $_title_isfreezed)
-		);
+		// Freezed already
+		$msg  = & $_title_isfreezed;
+		$body = str_replace('$1', htmlspecialchars(strip_bracket($page)),
+			$_title_isfreezed);
+
 	} else if ($pass !== NULL && pkwk_login($pass)) {
+		// Freeze
 		$postdata = get_source($page);
 		array_unshift($postdata, "#freeze\n");
-		$postdata = join('', $postdata);
+		file_write(DATA_DIR, $page, join('', $postdata), TRUE);
 
-		file_write(DATA_DIR,$page, $postdata, TRUE);
-
+		// Update
 		is_freeze($page, TRUE);
 		$vars['cmd'] = 'read';
-		return array('msg' => $_title_freezed, 'body' => '');
-	}
-	// 凍結フォームを表示
-	$s_page = htmlspecialchars($page);
+		$msg  = & $_title_freezed;
+		$body = '';
 
-	$body = ($pass === NULL) ? '' : "<p><strong>$_msg_invalidpass</strong></p>\n";
-	$body .= <<<EOD
+	} else {
+		// Show a freeze form
+		$msg    = & $_title_freeze;
+		$s_page = htmlspecialchars($page);
+		$body   = ($pass === NULL) ? '' : "<p><strong>$_msg_invalidpass</strong></p>\n";
+		$body  .= <<<EOD
 <p>$_msg_freezing</p>
 <form action="$script" method="post">
  <div>
@@ -53,7 +53,8 @@ function plugin_freeze_action()
  </div>
 </form>
 EOD;
+	}
 
-	return array('msg'=>$_title_freeze, 'body'=>$body);
+	return array('msg'=>$msg, 'body'=>$body);
 }
 ?>
