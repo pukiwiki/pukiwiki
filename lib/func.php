@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.28 2005/01/15 03:01:41 henoheno Exp $
+// $Id: func.php,v 1.29 2005/01/23 05:25:21 henoheno Exp $
 //
 // General functions
 
@@ -640,7 +640,7 @@ function pkwk_login($pass = '')
 {
 	global $adminpass;
 
-	if ($pass != '' && md5($pass) == $adminpass) {
+	if (! PKWK_READONLY && $pass != '' && md5($pass) == $adminpass) {
 		return TRUE;
 	} else {
 		sleep(2);	// Blocking brute force attack
