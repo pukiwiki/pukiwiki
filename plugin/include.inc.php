@@ -1,4 +1,10 @@
 <?php
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: include.inc.php,v 1.6 2003/03/03 07:07:28 panda Exp $
+//
+
 /*
  include.inc.php
  ページをインクルードする
@@ -9,18 +15,21 @@ function plugin_include_convert()
 	global $script,$vars,$get,$post,$hr,$WikiName,$BracketName;
 	global $include_list; //処理済ページ名の配列
 	
-	if (!isset($include_list)) {
+	if (!isset($include_list))
+	{
 		$include_list = array($vars['page']=>TRUE);
 	}
 	
-	if (func_num_args() == 0) {
+	if (func_num_args() == 0)
+	{
 		return;
 	}
 	
 	list($page) = func_get_args();
 	$page = strip_bracket($page);
 	
-	if (!is_page($page) or isset($include_list[$page])) {
+	if (!is_page($page) or isset($include_list[$page]))
+	{
 		return '';
 	}
 	$include_list[$page] = TRUE;
@@ -33,13 +42,15 @@ function plugin_include_convert()
 	$s_page = htmlspecialchars($page);
 	$r_page = rawurlencode($page);
 	$link = "<a href=\"$script?cmd=edit&amp;page=$r_page\">$s_page</a>";
-	if ($page == 'MenuBar') {
+	if ($page == 'MenuBar')
+	{
 		$body = <<<EOD
 <span align="center"><h5 class="side_label">$link</h5></span>
 <small>$body</small>
 EOD;
 	}
-	else {
+	else
+	{
 		$body = "<h1>$link</h1>\n$body\n";
 	}
 	

@@ -1,7 +1,11 @@
 <?php
-/*
-Last-Update:2002-10-30 rev.20
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: paint.inc.php,v 1.5 2003/03/03 07:07:28 panda Exp $
+//
 
+/*
 *プラグイン paint
 絵を描く
 
@@ -43,18 +47,20 @@ define('PAINT_FORMAT_NOMSG',"\x08NAME\x08 \x08DATE\x08");
 
 function plugin_paint_init()
 {
-	$messages = array('_paint_messages'=>array(
-		'field_name'    => 'お名前',
-		'field_filename'=> 'ファイル名',
-		'field_comment' => 'コメント',
-		'btn_submit'    => 'paint',
-		'msg_max'       => '(最大 %d x %d)',
-		'msg_title'     => 'Paint and Attach to $1',
-		'msg_title_collided' => '$1 で【更新の衝突】が起きました',
-		'msg_collided'  => 'あなたが画像を編集している間に、他の人が同じページを更新してしまったようです。<br />
+	$messages = array(
+		'_paint_messages'=>array(
+			'field_name'    => 'お名前',
+			'field_filename'=> 'ファイル名',
+			'field_comment' => 'コメント',
+			'btn_submit'    => 'paint',
+			'msg_max'       => '(最大 %d x %d)',
+			'msg_title'     => 'Paint and Attach to $1',
+			'msg_title_collided' => '$1 で【更新の衝突】が起きました',
+			'msg_collided'  => 'あなたが画像を編集している間に、他の人が同じページを更新してしまったようです。<br />
 画像とコメントを追加しましたが、違う位置に挿入されているかもしれません。<br />',
-	));
-  set_plugin_messages($messages);
+		)
+	);
+	set_plugin_messages($messages);
 }
 function plugin_paint_action()
 {

@@ -1,4 +1,10 @@
 <?php
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: popular.inc.php,v 1.3 2003/03/03 07:07:28 panda Exp $
+//
+
 /*
  * PukiWiki popular プラグイン
  * (C) 2002, Kazunori Mizushima <kazunori@uc.netyou.jp>

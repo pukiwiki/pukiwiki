@@ -1,7 +1,11 @@
 <?php
-/*
- $Id: ref.inc.php,v 1.9 2003/03/02 16:07:43 panda Exp $
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: ref.inc.php,v 1.10 2003/03/03 07:07:28 panda Exp $
+//
 
+/*
 *プラグイン ref
 ページに添付されたファイルを展開する
 

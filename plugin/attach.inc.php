@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.17 2003/02/26 12:28:12 panda Exp $
+//  $Id: attach.inc.php,v 1.18 2003/03/03 07:07:28 panda Exp $
 //
 
 /*
@@ -386,7 +386,7 @@ function attach_open($page,$file,$age=0)
 	$obj->status['count'][$age]++;
 	$obj->putstatus();
 	
-	$type = attach_mime_content_type($obj->file);
+	$type = attach_mime_content_type($obj->filename);
 	$name = htmlspecialchars($obj->file);
 	
 	// for japanese (???)
@@ -437,6 +437,10 @@ function attach_mime_content_type($filename)
 	$type = 'application/octet-stream'; //default
 	$config = ':config/plugin/attach/mime-type';
 	
+	if (!file_exists($filename))
+	{
+		return $type;
+	}
 	$size = getimagesize($filename);
 	if (is_array($size))
 	{
@@ -537,7 +541,10 @@ EOD;
 class AttachFile
 {
 	var $page,$file,$age,$basename,$filename,$logname;
-	var $time,$size,$time_str,$size_str;
+	var $time = 0;
+	var $size = 0;
+	var $time_str = '';
+	var $size_str = '';
 	var $status = array('count'=>array(0),'age'=>'','pass'=>'','freeze'=>FALSE);
 	
 	function AttachFile($page,$file,$age=0)
@@ -555,6 +562,10 @@ class AttachFile
 	// ファイル情報取得
 	function getstatus()
 	{
+		if (!$this->exist)
+		{
+			return;
+		}
 		// ログファイル取得
 		if (file_exists($this->logname))
 		{

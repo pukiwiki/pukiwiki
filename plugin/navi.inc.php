@@ -1,6 +1,11 @@
 <?php
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: navi.inc.php,v 1.8 2003/03/03 07:07:28 panda Exp $
+//
+
 /*
-Last-Update:2002-10-30 rev.4
 
 *プラグイン navi
 DobBook風のナビゲーションバーを表示する
@@ -46,23 +51,28 @@ function plugin_navi_convert()
 	static $_navi_pages;
 	
 	$home = $vars['page'];
-	if (func_num_args()) {
+	if (func_num_args())
+	{
 		list($home) = func_get_args();
 	}
 	$is_home = ($home == $vars['page']);
 	$current = $vars['page'];
 	
-	if (!$footer = isset($_navi_pages)) {
+	if (!$footer = isset($_navi_pages))
+	{
 		$pages = array($current=>strip_bracket($current));
 		$_pages = preg_grep('/^(\[\[)?'.strip_bracket($home).'\//',get_existpages());
-		foreach ($_pages as $_page) {
+		foreach ($_pages as $_page)
+		{
 			$pages[$_page] = strip_bracket($_page);
 		}
 		natcasesort($pages);
 		$pages = array_keys($pages);
 		$prev = $home;
-		foreach ($pages as $page) {
-			if ($page == $current) {
+		foreach ($pages as $page)
+		{
+			if ($page == $current)
+			{
 				break;
 			}
 			$prev = $page;
@@ -80,15 +90,18 @@ function plugin_navi_convert()
 		);
 
 		$pos = strrpos($current, '/');
-		if ($pos > 0) {
+		if ($pos > 0)
+		{
 			$up = substr($current, 0, $pos).(substr($current,0,2)=='[[' ? ']]' : '');
 			$_navi_pages['up'] = navi_make_link($up,'none',$_navi_messages['msg_up']);
 		}
-		if (!$is_home) {
+		if (!$is_home)
+		{
 			$_navi_pages['prev'] = navi_make_link($prev,'left');
 			$_navi_pages['prev1'] = navi_make_link($prev,'left',$_navi_messages['msg_prev']);
 		}
-		if ($next != '') {
+		if ($next != '')
+		{
 			$_navi_pages['next'] = navi_make_link($next,'right');
 			$_navi_pages['next1'] = navi_make_link($next,'right',$_navi_messages['msg_next']);
 		}
@@ -97,7 +110,8 @@ function plugin_navi_convert()
 	}
 
 	$ret = '';
-	if ($footer) { //フッタ
+	if ($footer) //フッタ
+	{
 		$ret = <<<EOD
 <hr class="full_hr" />
 <ul class="navi">
@@ -107,17 +121,20 @@ function plugin_navi_convert()
 </ul>
 EOD;
 	}
-	else if ($is_home) { //目次
+	else if ($is_home) //目次
+	{
 		$ret .= '<ul>';
 		foreach ($pages as $page) {
-			if (strip_bracket($page) == strip_bracket($home)) {
+			if (strip_bracket($page) == strip_bracket($home))
+			{
 				continue;
 			}
 			$ret .= '<li>'.make_link("[[$page]]").'</li>';
 		}
 		$ret .= '</ul>';
 	}
-	else {
+	else
+	{
 		$ret = <<<EOD
 <ul class="navi">
   <li class="navi_left">{$_navi_pages['prev1']}</li>
