@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.12 2004/09/26 11:30:48 henoheno Exp $
+// $Id: dump.inc.php,v 1.13 2004/09/26 11:47:35 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -605,9 +605,9 @@ class tarlib
 				// LongLink対応
 				$size = strlen($filename);
 				// LonkLinkヘッダ生成
-				$tar_data = $this->make_header(TARLIB_DATA_LONGLINK, $size, $mtime, TARLIB_HDR_LINK);
+				$tar_data = $this->_make_header(TARLIB_DATA_LONGLINK, $size, $mtime, TARLIB_HDR_LINK);
 				// ファイル出力
-	 			$this->write_data(join('', $tar_data), $filename, $size);
+	 			$this->_write_data(join('', $tar_data), $filename, $size);
 			}
 
 			// ファイルサイズを取得
@@ -618,7 +618,7 @@ class tarlib
 			}
 
 			// ヘッダ生成
-			$tar_data = $this->make_header($filename, $size, $mtime, TARLIB_HDR_FILE);
+			$tar_data = $this->_make_header($filename, $size, $mtime, TARLIB_HDR_FILE);
 
 			// ファイルデータの取得
 			$fpr = @fopen($name , 'rb');
@@ -626,7 +626,7 @@ class tarlib
 			fclose( $fpr );
 
 			// ファイル出力
-			$this->write_data(join('', $tar_data), $data, $size);
+			$this->_write_data(join('', $tar_data), $data, $size);
 			++$retvalue;
 		}
 		return $retvalue;
@@ -642,7 +642,7 @@ class tarlib
 	// 戻り値: tarヘッダ情報
 	//
 	////////////////////////////////////////////////////////////
-	function make_header($filename, $size, $mtime, $typeflag)
+	function _make_header($filename, $size, $mtime, $typeflag)
 	{
 		$tar_data = array_fill(0, TARLIB_HDR_LEN, "\0");
 		
@@ -711,12 +711,12 @@ class tarlib
 	// 戻り値: なし
 	//
 	////////////////////////////////////////////////////////////
-	function write_data($header, $body, $size)
+	function _write_data($header, $body, $size)
 	{
 		$fixsize  = ceil($size / TARLIB_BLK_LEN) * TARLIB_BLK_LEN - $size;
 
 		flock($this->fp, LOCK_EX);
-		fwrite($this->fp, $header, TARLIB_HDR_LEN);       // Header
+		fwrite($this->fp, $header, TARLIB_HDR_LEN);    // Header
 		fwrite($this->fp, $body, $size);               // Body
 		fwrite($this->fp, $this->dummydata, $fixsize); // Padding
 		flock($this->fp, LOCK_UN);
