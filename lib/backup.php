@@ -11,7 +11,7 @@
  * @access  public
  * @author
  * @create
- * @version $Id: backup.php,v 1.2 2004/08/01 13:39:35 henoheno Exp $
+ * @version $Id: backup.php,v 1.3 2004/10/07 13:07:40 henoheno Exp $
  **/
 
 /**
@@ -24,55 +24,47 @@
  *
  * @return    Void
  */
-function make_backup($page,$delete = FALSE)
+function make_backup($page, $delete = FALSE)
 {
-	global $splitter,$cycle,$maxage;
-	global $do_backup,$del_backup;
+	global $splitter, $cycle, $maxage;
+	global $do_backup, $del_backup;
 
-	if (!$do_backup)
-	{
-		return;
-	}
+	if (! $do_backup) return;
 
-	if ($del_backup and $delete)
-	{
+	if ($del_backup && $delete) {
 		backup_delete($page);
 		return;
 	}
 
-	if (!is_page($page))
-	{
-		return;
-	}
+	if (! is_page($page)) return;
 
 	$lastmod = backup_get_filetime($page);
-	if (($lastmod == 0) or (UTIME - $lastmod) > (60 * 60 * $cycle))
+	if ($lastmod == 0 || UTIME - $lastmod > 60 * 60 * $cycle)
 	{
 		$backups = get_backup($page);
-		$count = count($backups) + 1;
-		if ($count > $maxage)
-		{
+		$count   = count($backups) + 1;
+		if ($count > $maxage) {
 			//直後に1件追加するので、(最大件数-1)を超える要素を捨てる
-			array_splice($backups,0,$count - $maxage);
+			array_splice($backups, 0, $count - $maxage);
 		}
 
 		$strout = '';
-		foreach($backups as $age=>$data)
-		{
+		foreach($backups as $age=>$data) {
 			$strout .= "$splitter {$data['time']}\n";
-			$strout .= join('',$data['data']);
+			$strout .= join('', $data['data']);
 		}
-		$strout = preg_replace("/([^\n])\n*$/","$1\n",$strout);
+		$strout = preg_replace("/([^\n])\n*$/", "$1\n", $strout);
 
 		// 本文に含まれる$splitterをエスケープする(半角スペースを一個付加)
-		$body = preg_replace('/^('.preg_quote($splitter)."\s\d+)$/",'$1 ',get_source($page));
-		$body = "$splitter ".get_filetime($page)."\n".join('',$body);
-		$body = preg_replace("/\n*$/","\n",$body);
+		$body = preg_replace('/^(' . preg_quote($splitter) . "\s\d+)$/", '$1 ', get_source($page));
+		$body = "$splitter " . get_filetime($page) . "\n" . join('', $body);
+		$body = preg_replace("/\n*$/", "\n", $body);
 
-		$fp = backup_fopen($page,'wb')
-			or die_message('cannot write file '.htmlspecialchars($realfilename).'<br />maybe permission is not writable or filename is too long');
-		backup_fputs($fp,$strout);
-		backup_fputs($fp,$body);
+		$fp = backup_fopen($page, 'wb')
+			or die_message('cannot write file ' . htmlspecialchars($realfilename) .
+			'<br />maybe permission is not writable or filename is too long');
+		backup_fputs($fp, $strout);
+		backup_fputs($fp, $body);
 		backup_fclose($fp);
 	}
 }
@@ -80,8 +72,8 @@ function make_backup($page,$delete = FALSE)
 /**
  * get_backup
  * バックアップを取得する
- * $age=0または省略 : 全てのバックアップデータを配列で取得する
- * $age>0          : 指定した世代のバックアップデータを取得する
+ * $age = 0または省略 : 全てのバックアップデータを配列で取得する
+ * $age > 0           : 指定した世代のバックアップデータを取得する
  *
  * @access    public
  * @param     String    $page        ページ名
@@ -90,24 +82,19 @@ function make_backup($page,$delete = FALSE)
  * @return    String    バックアップ($age!=0)
  *            Array     バックアップの配列($age==0)
  */
-function get_backup($page,$age = 0)
+function get_backup($page, $age = 0)
 {
 	global $splitter;
 
 	$lines = backup_file($page);
-
-	if (!is_array($lines))
-	{
-		return array();
-	}
+	if (! is_array($lines)) return array();
 
 	$_age = 0;
 	$retvars = $match = array();
-	foreach($lines as $line)
-	{
+	foreach($lines as $line) {
 		if (preg_match("/^$splitter\s(\d+)$/", $line, $match)) {
 			++$_age;
-			if ($age > 0 and $_age > $age) {
+			if ($age > 0 && $_age > $age) {
 				return $retvars[$age];
 			}
 			$retvars[$_age] = array('time'=>$match[1], 'data'=>array());
@@ -130,7 +117,7 @@ function get_backup($page,$age = 0)
  */
 function backup_get_filename($page)
 {
-	return BACKUP_DIR.encode($page).BACKUP_EXT;
+	return BACKUP_DIR . encode($page) . BACKUP_EXT;
 }
 
 /**
@@ -160,8 +147,7 @@ function backup_file_exists($page)
 function backup_get_filetime($page)
 {
 	return backup_file_exists($page) ?
-		filemtime(backup_get_filename($page)) - LOCALZONE :
-		0;
+		filemtime(backup_get_filename($page)) - LOCALZONE : 0;
 }
 
 /**
@@ -180,11 +166,10 @@ function backup_delete($page)
 
 /////////////////////////////////////////////////
 
-if (function_exists('gzfile'))
-{
+if (extension_loaded('zlib')) {
 	// ファイルシステム関数
 	// zlib関数を使用
-	define('BACKUP_EXT','.gz');
+	define('BACKUP_EXT', '.gz');
 
 /**
  * backup_fopen
@@ -196,9 +181,9 @@ if (function_exists('gzfile'))
  *
  * @return    Boolean   FALSE:失敗
  */
-	function backup_fopen($page,$mode)
+	function backup_fopen($page, $mode)
 	{
-		return gzopen(backup_get_filename($page),$mode);
+		return gzopen(backup_get_filename($page), $mode);
 	}
 
 /**
@@ -211,9 +196,9 @@ if (function_exists('gzfile'))
  *
  * @return    Boolean   FALSE:失敗 その他:書き込んだバイト数
  */
-	function backup_fputs($zp,$str)
+	function backup_fputs($zp, $str)
 	{
-		return gzputs($zp,$str);
+		return gzputs($zp, $str);
 	}
 
 /**
@@ -250,7 +235,7 @@ if (function_exists('gzfile'))
 else
 {
 	// ファイルシステム関数
-	define('BACKUP_EXT','.txt');
+	define('BACKUP_EXT', '.txt');
 
 /**
  * backup_fopen
@@ -262,9 +247,9 @@ else
  *
  * @return    Boolean   FALSE:失敗
  */
-	function backup_fopen($page,$mode)
+	function backup_fopen($page, $mode)
 	{
-		return fopen(backup_get_filename($page),$mode);
+		return fopen(backup_get_filename($page), $mode);
 	}
 
 /**
@@ -277,9 +262,9 @@ else
  *
  * @return    Boolean   FALSE:失敗 その他:書き込んだバイト数
  */
-	function backup_fputs($zp,$str)
+	function backup_fputs($zp, $str)
 	{
-		return fputs($zp,$str);
+		return fputs($zp, $str);
 	}
 
 /**
