@@ -1,7 +1,7 @@
 <?php
 /**
- *
- * showrss プラグイン
+ * 
+ * showrss プラグイン (Created by hiro_do3ob@yahoo.co.jp)
  * 
  * ライセンスは PukiWiki 本体と同じく GNU General Public License (GPL) です。
  * http://www.gnu.org/licenses/gpl.txt
@@ -11,18 +11,8 @@
  * 
  * 今のところ動作させるためにはPHP の xml extension が必須です。PHPに組み込まれてない場合はそっけないエラーが出ると思います。
  * 正規表現 or 文字列関数でなんとかならなくもなさげなんですが需要ってどれくらいあるのかわからいので保留です。
- * mbstring もあるほうがいいです。
  * 
- * ない場合は、 jcode.phps をちょこっといじって mb_convert_encoding という関数を宣言しておけばとりあえずそれっぽく変換できるかもです。
- * http://www.spencernetwork.org/
- * 
- * ご連絡先:
- * do3ob wiki   ->   http://do3ob.com/
- * email        ->   hiro_do3ob@yahoo.co.jp
- * 
- * 避難所       ->   http://do3ob.s20.xrea.com/
- *
- * version: $Id: showrss.inc.php,v 1.1.2.3 2004/06/20 03:46:22 henoheno Exp $
+ * version: $Id: showrss.inc.php,v 1.1.2.4 2004/06/20 04:20:00 henoheno Exp $
  * 
  */
 
