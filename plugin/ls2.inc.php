@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ls2.inc.php,v 1.13 2003/05/16 05:54:35 arino Exp $
+// $Id: ls2.inc.php,v 1.14 2003/05/17 11:18:22 arino Exp $
 //
 
 /*
@@ -189,10 +189,11 @@ function ls2_get_headings($page,&$params,$level,$include = FALSE)
 	{
 		if ($params['title'] and preg_match('/^(\*{1,3})/',$line,$matches))
 		{
+			$id = make_heading($line);
 			$level = strlen($matches[1]);
 			$id = LS2_CONTENT_HEAD.$anchor++;
 			ls2_list_push($params,$level + strlen($level));
-			array_push($params['result'], '<li>'.make_heading($line).
+			array_push($params['result'], '<li>'.$line.
 				'<a href="'.$href.$id.'">'.$_ls2_messages['msg_go'].'</a>'
 			);
 		}

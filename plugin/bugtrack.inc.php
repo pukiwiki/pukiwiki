@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.13 2003/05/14 10:13:31 arino Exp $
+ * $Id: bugtrack.inc.php,v 1.14 2003/05/17 11:18:22 arino Exp $
  */
 
 function plugin_bugtrack_init()
@@ -263,7 +263,8 @@ function plugin_bugtrack_pageinfo($page,$no = NULL)
 	}
 	
 	if (preg_match("/\*([^\n]+)/",$body,$matches)) {
-		$summary = make_heading($matches[1]);
+		$summary = $matches[1];
+		make_heading($summary);
 	}
 	
 	return array($page, $no, $summary, $name, $priority, $state, $category);
