@@ -39,7 +39,7 @@
 <?php if ($is_page) { ?>
  [ <a href="<?php echo "$script?$r_page" ?>">リロード</a> ]
  &nbsp;
- [ <a href="<?php echo "$script?plugin=newpage" ?>">新規</a>
+ [ <a href="<?php echo "$script?plugin=newpage&amp;refer=$r_page" ?>">新規</a>
  | <a href="<?php echo $link_edit ?>">編集</a>
 
 <?php   if ($is_read and $function_freeze) { ?>

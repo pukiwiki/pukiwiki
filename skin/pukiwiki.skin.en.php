@@ -39,7 +39,7 @@
 <?php if ($is_page) { ?>
  [ <a href="<?php echo "$script?$r_page" ?>">Reload</a> ]
  &nbsp;
- [ <a href="<?php echo "$script?plugin=newpage" ?>">New</a>
+ [ <a href="<?php echo "$script?plugin=newpage&amp;refer=$r_page" ?>">New</a>
  | <a href="<?php echo $link_edit ?>">Edit</a>
 
 <?php   if ($is_read and $function_freeze) { ?>

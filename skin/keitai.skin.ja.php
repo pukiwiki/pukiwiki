@@ -24,7 +24,7 @@ $r_page = rawurlencode($vars['page']);
 // ナビゲーション
 $navi = array();
 $navi[] = "<a href=\"$link_top\" $accesskey=\"0\">0.Top</a>";
-$navi[] = "<a href=\"$script?plugin=newpage\" $accesskey=\"1\">1.New</a>";
+$navi[] = "<a href=\"$script?plugin=newpage&amp;refer=$r_page\" $accesskey=\"1\">1.New</a>";
 $navi[] = "<a href=\"$link_edit\" $accesskey=\"2\">2.Edit</a>";
 if ($is_read and $function_freeze) {
 	if ($is_freeze) {
