@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: backup.inc.php,v 1.17 2004/10/21 12:55:50 henoheno Exp $
+// $Id: backup.inc.php,v 1.18 2004/11/01 12:12:27 henoheno Exp $
 //
 // バックアップ
 function plugin_backup_action()
@@ -117,13 +117,13 @@ function plugin_backup_delete($page)
 	global $_title_backup_delete, $_title_pagebackuplist, $_msg_backup_deleted;
 	global $_msg_backup_adminpass, $_btn_delete, $_msg_invalidpass;
 
-	if (!backup_file_exists($page))
+	if (! _backup_file_exists($page))
 		return array('msg'=>$_title_pagebackuplist, 'body'=>get_backup_list($page)); // Say "is not found"
 
 	$body = '';
 	if (isset($vars['pass'])) {
 		if (pkwk_login($vars['pass'])) {
-			backup_delete($page);
+			_backup_delete($page);
 			return array(
 				'msg'  => $_title_backup_delete,
 				'body' => str_replace('$1',make_pagelink($page),$_msg_backup_deleted)
