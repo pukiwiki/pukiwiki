@@ -11,7 +11,7 @@
  * @access  public
  * @author
  * @create
- * @version $Id: backup.php,v 1.3 2004/10/07 13:07:40 henoheno Exp $
+ * @version $Id: backup.php,v 1.4 2004/10/21 12:55:50 henoheno Exp $
  **/
 
 /**
@@ -32,21 +32,21 @@ function make_backup($page, $delete = FALSE)
 	if (! $do_backup) return;
 
 	if ($del_backup && $delete) {
-		backup_delete($page);
+		_backup_delete($page);
 		return;
 	}
 
 	if (! is_page($page)) return;
 
-	$lastmod = backup_get_filetime($page);
+	$lastmod = _backup_get_filetime($page);
 	if ($lastmod == 0 || UTIME - $lastmod > 60 * 60 * $cycle)
 	{
 		$backups = get_backup($page);
 		$count   = count($backups) + 1;
-		if ($count > $maxage) {
-			//直後に1件追加するので、(最大件数-1)を超える要素を捨てる
+
+		// 直後に1件追加するので、(最大件数 - 1)を超える要素を捨てる
+		if ($count > $maxage)
 			array_splice($backups, 0, $count - $maxage);
-		}
 
 		$strout = '';
 		foreach($backups as $age=>$data) {
@@ -55,17 +55,17 @@ function make_backup($page, $delete = FALSE)
 		}
 		$strout = preg_replace("/([^\n])\n*$/", "$1\n", $strout);
 
-		// 本文に含まれる$splitterをエスケープする(半角スペースを一個付加)
+		// Escape lines equal to '$splitter', by inserting a space
 		$body = preg_replace('/^(' . preg_quote($splitter) . "\s\d+)$/", '$1 ', get_source($page));
 		$body = "$splitter " . get_filetime($page) . "\n" . join('', $body);
 		$body = preg_replace("/\n*$/", "\n", $body);
 
-		$fp = backup_fopen($page, 'wb')
+		$fp = _backup_fopen($page, 'wb')
 			or die_message('cannot write file ' . htmlspecialchars($realfilename) .
 			'<br />maybe permission is not writable or filename is too long');
-		backup_fputs($fp, $strout);
-		backup_fputs($fp, $body);
-		backup_fclose($fp);
+		_backup_fputs($fp, $strout);
+		_backup_fputs($fp, $body);
+		_backup_fclose($fp);
 	}
 }
 
@@ -79,14 +79,14 @@ function make_backup($page, $delete = FALSE)
  * @param     String    $page        ページ名
  * @param     Integer   $age         バックアップの世代番号 省略時は全て
  *
- * @return    String    バックアップ($age!=0)
- *            Array     バックアップの配列($age==0)
+ * @return    String    バックアップ       ($age != 0)
+ *            Array     バックアップの配列 ($age == 0)
  */
 function get_backup($page, $age = 0)
 {
 	global $splitter;
 
-	$lines = backup_file($page);
+	$lines = _backup_file($page);
 	if (! is_array($lines)) return array();
 
 	$_age = 0;
@@ -94,9 +94,9 @@ function get_backup($page, $age = 0)
 	foreach($lines as $line) {
 		if (preg_match("/^$splitter\s(\d+)$/", $line, $match)) {
 			++$_age;
-			if ($age > 0 && $_age > $age) {
+			if ($age > 0 && $_age > $age)
 				return $retvars[$age];
-			}
+
 			$retvars[$_age] = array('time'=>$match[1], 'data'=>array());
 		} else {
 			$retvars[$_age]['data'][] = $line;
@@ -107,7 +107,7 @@ function get_backup($page, $age = 0)
 }
 
 /**
- * backup_get_filename
+ * _backup_get_filename
  * バックアップファイル名を取得する
  *
  * @access    private
@@ -115,13 +115,13 @@ function get_backup($page, $age = 0)
  *
  * @return    String    バックアップのファイル名
  */
-function backup_get_filename($page)
+function _backup_get_filename($page)
 {
 	return BACKUP_DIR . encode($page) . BACKUP_EXT;
 }
 
 /**
- * backup_file_exists
+ * _backup_file_exists
  * バックアップファイルが存在するか
  *
  * @access    private
@@ -129,13 +129,13 @@ function backup_get_filename($page)
  *
  * @return    Boolean   TRUE:ある FALSE:ない
  */
-function backup_file_exists($page)
+function _backup_file_exists($page)
 {
-	return file_exists(backup_get_filename($page));
+	return file_exists(_backup_get_filename($page));
 }
 
 /**
- * backup_get_filetime
+ * _backup_get_filetime
  * バックアップファイルの更新時刻を得る
  *
  * @access    private
@@ -144,14 +144,14 @@ function backup_file_exists($page)
  * @return    Integer   ファイルの更新時刻(GMT)
  */
 
-function backup_get_filetime($page)
+function _backup_get_filetime($page)
 {
-	return backup_file_exists($page) ?
-		filemtime(backup_get_filename($page)) - LOCALZONE : 0;
+	return _backup_file_exists($page) ?
+		filemtime(_backup_get_filename($page)) - LOCALZONE : 0;
 }
 
 /**
- * backup_delete
+ * _backup_delete
  * バックアップファイルを削除する
  *
  * @access    private
@@ -159,9 +159,9 @@ function backup_get_filetime($page)
  *
  * @return    Boolean   FALSE:失敗
  */
-function backup_delete($page)
+function _backup_delete($page)
 {
-	return unlink(backup_get_filename($page));
+	return unlink(_backup_get_filename($page));
 }
 
 /////////////////////////////////////////////////
@@ -172,7 +172,7 @@ if (extension_loaded('zlib')) {
 	define('BACKUP_EXT', '.gz');
 
 /**
- * backup_fopen
+ * _backup_fopen
  * バックアップファイルを開く
  *
  * @access    private
@@ -181,13 +181,13 @@ if (extension_loaded('zlib')) {
  *
  * @return    Boolean   FALSE:失敗
  */
-	function backup_fopen($page, $mode)
+	function _backup_fopen($page, $mode)
 	{
-		return gzopen(backup_get_filename($page), $mode);
+		return gzopen(_backup_get_filename($page), $mode);
 	}
 
 /**
- * backup_fputs
+ * _backup_fputs
  * バックアップファイルに書き込む
  *
  * @access    private
@@ -196,13 +196,13 @@ if (extension_loaded('zlib')) {
  *
  * @return    Boolean   FALSE:失敗 その他:書き込んだバイト数
  */
-	function backup_fputs($zp, $str)
+	function _backup_fputs($zp, $str)
 	{
 		return gzputs($zp, $str);
 	}
 
 /**
- * backup_fclose
+ * _backup_fclose
  * バックアップファイルを閉じる
  *
  * @access    private
@@ -210,13 +210,13 @@ if (extension_loaded('zlib')) {
  *
  * @return    Boolean   FALSE:失敗
  */
-	function backup_fclose($zp)
+	function _backup_fclose($zp)
 	{
 		return gzclose($zp);
 	}
 
 /**
- * backup_file
+ * _backup_file
  * バックアップファイルの内容を取得する
  *
  * @access    private
@@ -224,10 +224,10 @@ if (extension_loaded('zlib')) {
  *
  * @return    Array     ファイルの内容
  */
-	function backup_file($page)
+	function _backup_file($page)
 	{
-		return backup_file_exists($page) ?
-			gzfile(backup_get_filename($page)) :
+		return _backup_file_exists($page) ?
+			gzfile(_backup_get_filename($page)) :
 			array();
 	}
 }
@@ -238,7 +238,7 @@ else
 	define('BACKUP_EXT', '.txt');
 
 /**
- * backup_fopen
+ * _backup_fopen
  * バックアップファイルを開く
  *
  * @access    private
@@ -247,13 +247,13 @@ else
  *
  * @return    Boolean   FALSE:失敗
  */
-	function backup_fopen($page, $mode)
+	function _backup_fopen($page, $mode)
 	{
-		return fopen(backup_get_filename($page), $mode);
+		return fopen(_backup_get_filename($page), $mode);
 	}
 
 /**
- * backup_fputs
+ * _backup_fputs
  * バックアップファイルに書き込む
  *
  * @access    private
@@ -262,13 +262,13 @@ else
  *
  * @return    Boolean   FALSE:失敗 その他:書き込んだバイト数
  */
-	function backup_fputs($zp, $str)
+	function _backup_fputs($zp, $str)
 	{
 		return fputs($zp, $str);
 	}
 
 /**
- * backup_fclose
+ * _backup_fclose
  * バックアップファイルを閉じる
  *
  * @access    private
@@ -276,13 +276,13 @@ else
  *
  * @return    Boolean   FALSE:失敗
  */
-	function backup_fclose($zp)
+	function _backup_fclose($zp)
 	{
 		return fclose($zp);
 	}
 
 /**
- * backup_file
+ * _backup_file
  * バックアップファイルの内容を取得する
  *
  * @access    private
@@ -290,10 +290,10 @@ else
  *
  * @return    Array     ファイルの内容
  */
-	function backup_file($page)
+	function _backup_file($page)
 	{
-		return backup_file_exists($page) ?
-			file(backup_get_filename($page)) :
+		return _backup_file_exists($page) ?
+			file(_backup_get_filename($page)) :
 			array();
 	}
 }

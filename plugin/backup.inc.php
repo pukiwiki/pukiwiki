@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: backup.inc.php,v 1.16 2004/09/20 02:14:00 henoheno Exp $
+// $Id: backup.inc.php,v 1.17 2004/10/21 12:55:50 henoheno Exp $
 //
 // バックアップ
 function plugin_backup_action()
@@ -191,7 +191,7 @@ EOD;
 </ul>
 EOD;
 
-	$backups = backup_file_exists($page) ? get_backup($page) : array();
+	$backups = _backup_file_exists($page) ? get_backup($page) : array();
 	if (count($backups) == 0)
 	{
 		$msg = str_replace('$1',make_pagelink($page), $_msg_nobackup);
