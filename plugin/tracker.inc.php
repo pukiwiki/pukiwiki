@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.16 2003/11/02 14:03:30 arino Exp $
+// $Id: tracker.inc.php,v 1.17 2003/11/03 15:08:25 arino Exp $
 //
 
 // tracker_listで表示しないページ名(正規表現で)
@@ -144,11 +144,9 @@ function plugin_tracker_action()
 	
 	foreach (array_keys($fields) as $key)
 	{
-		if (!array_key_exists($key,$_post))
-		{
-			continue;
-		}
-		$value = $fields[$key]->format_value($_post[$key]);
+		$value = array_key_exists($key,$_post) ?
+			$fields[$key]->format_value($_post[$key]) : '';
+		
 		foreach (array_keys($postdata) as $num)
 		{
 			if (trim($postdata[$num]) == '')
