@@ -1,5 +1,5 @@
 <?
-// $Id: calendar2.inc.php,v 1.6 2002/07/03 08:46:19 masui Exp $
+// $Id: calendar2.inc.php,v 1.7 2002/07/05 08:57:37 masui Exp $
 
 function plugin_calendar2_convert()
 {
@@ -209,7 +209,7 @@ function plugin_calendar2_convert()
 		$page_ = $vars['page'];
 		$get['page'] = $post['page'] = $vars['page'] = $page;
 		$str = convert_html(join("",file(get_filename(encode($page)))));
-		$str .= "<hr /><a class=\"small\" href=\"$script?cmd=edit&amp;page=$page\">[この日記を編集]</a>";
+		$str .= "<hr /><a class=\"small\" href=\"$script?cmd=edit&amp;page=".rawurlencode($page)."\">[この日記を編集]</a>";
 		$get['page'] = $post['page'] = $vars['page'] = $page_;
 	}
 	else {
