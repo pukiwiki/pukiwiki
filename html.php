@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.39 2002/10/15 05:42:23 masui Exp $
+// $Id: html.php,v 1.40 2002/10/15 06:14:46 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -163,13 +163,13 @@ function convert_html($string)
 				$headform[$_cnt] = $out[1];
 				$str = inline($out[2]);
 				
-				$level = strlen($out[1]) + 1;
-
-				array_push($result, "<h$level><a name=\"content_{$content_id_local}_$content_count\"></a>$str $top_link</h$level>");
-				$arycontents[] = str_repeat("-",$level-1)."<a href=\"#content_{$content_id_local}_$content_count\">".strip_htmltag(make_user_rules($str))."</a>\n";
-				$content_count++;
-			}
-			else if(preg_match("/^(-{1,4})(.*)/",$line,$out))
+  				$level = strlen($out[1]) + 1;
+  
+  				array_push($result, "<h$level><a name=\"content_{$content_id}_$content_count\"></a>$str $top_link</h$level>");
++ 				$arycontents[] = str_repeat("-",$level-1)."<a href=\"#content_{$content_id}_$content_count\">".strip_htmltag(make_user_rules(inline($out[2],TRUE)))."</a>\n";
+  				$content_count++;
+  			}
+  			else if(preg_match("/^(-{1,4})(.*)/",$line,$out))
 			{
 				$headform[$_cnt] = $out[1];
 				if(strlen($out[1]) == 4)
@@ -394,11 +394,12 @@ function list_push(&$result,&$saved,$tag,$level) {
 }
 
 // インライン要素のパース (注釈)
-function inline($line)
+function inline($line,$remove=FALSE)
 {
 	$line = htmlspecialchars($line);
 	
-	$line = preg_replace("/\(\(((?:(?!\)\)).)*)\)\)/ex","make_note(\"$1\")",$line);
+	$replace = $remove ? '' : 'make_note("$1")';
+	$line = preg_replace("/\(\(((?:(?!\)\)).)*)\)\)/ex",$replace,$line);
 
 	return $line;
 }
