@@ -2,14 +2,22 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.23 2003/06/10 14:22:51 arino Exp $
+// $Id: file.php,v 1.24 2003/06/12 00:19:43 arino Exp $
 //
 
 // ソースを取得
 function get_source($page)
 {
-	if (!is_page($page)) {
+	global $lastmod_time;
+	
+	if (!is_page($page))
+	{
 		return array();
+	}
+	$filetime = get_filetime($page);
+	if ($lastmod_time < $filetime)
+	{
+		$lastmod_time = $filetime;
 	}
 	return str_replace("\r",'',file(get_filename($page)));
 }
@@ -226,13 +234,19 @@ function get_pg_passage($page,$sw=TRUE)
 }
 
 // Last-Modified ヘッダ
-function header_lastmod()
+function header_lastmod($page=NULL)
 {
-	global $lastmod;
+	global $lastmod,$lastmod_time;
 	
-	if ($lastmod and is_page($page)) {
-		header('Last-Modified: '.date('D, d M Y H:i:s',get_filetime($page)).' GMT');
+	if (!$lastmod)
+	{
+		return;
 	}
+	if ($page !== NULL and is_page($page))
+	{
+		$lastmod_time = get_filetime($page);
+	}	
+	header('Last-Modified: '.date('D, d M Y H:i:s',$lastmod_time).' GMT');
 }
 
 // 全ページ名を配列に

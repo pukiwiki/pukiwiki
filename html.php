@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.80 2003/06/05 06:20:48 arino Exp $
+// $Id: html.php,v 1.81 2003/06/12 00:19:43 arino Exp $
 //
 
 // 本文を出力
@@ -100,6 +100,10 @@ function catbody($title,$page,$body)
 	if (!file_exists(SKIN_FILE)||!is_readable(SKIN_FILE))
 	{
 		die_message(SKIN_FILE.'(skin file) is not found.');
+	}
+	if ($is_read)
+	{
+		header_lastmod();
 	}
 	require(SKIN_FILE);
 }
