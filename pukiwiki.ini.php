@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.57 2004/06/19 14:27:35 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.58 2004/07/03 01:36:01 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -306,5 +306,6 @@ $agents = array(
 	array('name'=>'i_mode','pattern'=>'#DoCoMo/(1\.0)/(?:[^/]+/c([0-9]+))?#'),
 	array('name'=>'i_mode','pattern'=>'#DoCoMo/(2\.0) [^(]+\(c([0-9]+)#'),
 	array('name'=>'i_mode','pattern'=>'#DDIPOCKET;JRC/[^/]+/(1\.0)/0100/c([0-9]+)#'),
+	array('name'=>'i_mode','pattern'=>'#UP\.Browser#'),	// EZWEB
 );
 ?>
