@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: include.inc.php,v 1.15 2004/08/10 11:38:21 henoheno Exp $
+// $Id: include.inc.php,v 1.16 2004/08/19 11:36:08 henoheno Exp $
 //
 
 define('INCLUDE_MAX', 4); // 一度にインクルードできるページの最大数
@@ -13,8 +13,9 @@ function plugin_include_convert()
 	global $script, $vars, $get, $post, $menubar, $_msg_include_restrict;
 	static $included = array();
 	static $count = 1;
+        $usage = "#include(): Usage: (a-page-name-you-want-to-include)<br />\n";
 
-	if (func_num_args() == 0) return '#include(): No argument<br />';
+	if (func_num_args() == 0) return $usage;
 
 	// Get an argument
 	list($page) = func_get_args();
@@ -29,11 +30,11 @@ function plugin_include_convert()
 
 	// I'm stuffed
 	if (isset($included[$page])) {
-		return "#include(): Included already: $link<br />";
+		return "#include(): Included already: $link<br />\n";
 	} if (! is_page($page)) {
-		return "#include(): No such page: $s_page<br />";
+		return "#include(): No such page: $s_page<br />\n";
 	} if ($count > INCLUDE_MAX) {
-		return "#include(): Limit exceeded: $link<br />";
+		return "#include(): Limit exceeded: $link<br />\n";
 	} else {
 		++$count;
 	}
