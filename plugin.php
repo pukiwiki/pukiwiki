@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: plugin.php,v 1.9 2003/09/27 15:26:19 arino Exp $
+// $Id: plugin.php,v 1.10 2004/03/18 09:52:52 arino Exp $
 //
 
 // プラグイン用に未定義の変数を設定
@@ -104,7 +104,7 @@ function do_plugin_convert($name,$args='')
 	// digestを退避
 	$_digest = $digest;
 	
-	$aryargs = ($args !== '') ? explode(',',$args) : array();
+	$aryargs = ($args !== '') ? csv_explode(',', $args) : array();
 
 	do_plugin_init($name);
 	$retvar = call_user_func_array('plugin_'.$name.'_convert',$aryargs);
@@ -129,7 +129,7 @@ function do_plugin_inline($name,$args,$body)
 	// digestを退避
 	$_digest = $digest;
 	
-	$aryargs = ($args !== '') ? explode(',',$args) : array();
+	$aryargs = ($args !== '') ? csv_explode(',',$args) : array();
 	$aryargs[] =& $body;
 
 	do_plugin_init($name);

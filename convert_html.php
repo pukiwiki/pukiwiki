@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.61 2004/02/29 16:01:20 arino Exp $
+// $Id: convert_html.php,v 1.62 2004/03/18 09:52:52 arino Exp $
 //
 function convert_html($lines)
 {
@@ -623,18 +623,13 @@ class YTable extends Element
 	{
 		parent::Element();
 		
-		if (!preg_match_all('/("[^"]*(?:""[^"]*)*"|[^,]*),/', "$text,", $out))
+		$_value = csv_explode(',', substr($text,1));
+		if (count($_value) == 0)
 		{
 			$this = new Inline($text);
 			$this->last = &$this;
 			
 			return;
-		}
-		array_shift($out[1]);
-		$_value = array();
-		foreach ($out[1] as $val)
-		{
-			$_value[] = preg_match('/^"(.*)"$/', $val, $matches) ? str_replace('""', '"', $matches[1]) : $val;
 		}
 		$align = array();
 		$value = array();
