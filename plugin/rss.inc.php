@@ -2,44 +2,37 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss.inc.php,v 1.8 2004/11/07 12:18:14 henoheno Exp $
+// $Id: rss.inc.php,v 1.9 2004/11/07 12:48:59 henoheno Exp $
 //
-// RecentChanges の RSS を出力
-// 使い方 :
-//  rss.inc.php?ver=[version]
-//  versionは0.91か1.0か2.0のうちどれか。
+// Publishing RSS feed of RecentChanges
+// HOW TO USE: rss.inc.php?ver=[0.91(default)|1.0|2.0]
+
 function plugin_rss_action()
 {
-	global $vars,$script,$rss_max,$page_title,$whatsnew,$trackback;
+	global $vars, $script, $rss_max, $page_title, $whatsnew, $trackback;
 
-	$version = isset($vars['ver']) ? $vars['ver'] : '0.91';
+	$self = (preg_match('#^https?://#', $script) ? $script : get_script_uri());
+	if ($self === FALSE) die('please set "$script" at INI_FILE');
 
-	$self = (preg_match('#^https?://#',$script) ? $script : get_script_uri());
-	if ($self === FALSE) {
-		die_message("please set '\$script' in ".INI_FILE);
-	}
+	$recent = CACHE_DIR . 'recent.dat';
+	if (! file_exists($recent)) die('recent.dat is not found');
 
-	$page_title_utf8 = mb_convert_encoding($page_title,'UTF-8',SOURCE_ENCODING);
+	$version = (isset($vars['ver']) && $vars['ver'] != '') ? $vars['ver'] : '0.91'; // default
+	$page_title_utf8 = mb_convert_encoding($page_title, 'UTF-8', SOURCE_ENCODING);
 
 	$items = $rdf_li = '';
-
-	if (!file_exists(CACHE_DIR.'recent.dat')) {
-		return '';
-	}
-	$recent = file(CACHE_DIR.'recent.dat');
-	$lines = array_splice($recent,0,$rss_max);
-	foreach ($lines as $line) {
-		list($time,$page) = explode("\t",rtrim($line));
+	foreach (array_splice(file($recent), 0, $rss_max) as $line) {
+		list($time, $page) = explode("\t", rtrim($line));
 		$r_page = rawurlencode($page);
-		$title = mb_convert_encoding($page,'UTF-8',SOURCE_ENCODING);
+		$title  = mb_convert_encoding($page, 'UTF-8', SOURCE_ENCODING);
+
 		switch ($version) {
-		case '0.91':
-			/* FALLTHROUGH */
+		case '0.91': /* FALLTHROUGH */
 		case '2.0':
-			$date = get_date('D, d M Y H:i:s T',$time);
+			$date = get_date('D, d M Y H:i:s T', $time);
 			$date = ($version == '0.91') ?
-						" <description>" . $date . "</description>" :
-						" <pubDate>" . $date . "</pubDate>";
+				' <description>' . $date . '</description>' :
+				' <pubDate>' . $date . '</pubDate>';
 			$items .= <<<EOD
 <item>
  <title>$title</title>
@@ -51,7 +44,7 @@ EOD;
 			break;
 
 		case '1.0':
-			$dc_date = substr_replace(get_date('Y-m-d\TH:i:sO',$time),':',-2,0);
+			$dc_date = substr_replace(get_date('Y-m-d\TH:i:sO', $time), ':', -2, 0);
 			$dc_identifier = " <dc:identifier>$self?$r_page</dc:identifier>";
 			$trackback_ping = '';
 			$rdf_li .= "    <rdf:li rdf:resource=\"$self?$r_page\" />\n";
@@ -71,16 +64,15 @@ $trackback_ping
 EOD;
 			break;
 		default:
-			die("Invalid RSS version!!");
-			break;
+			die('Invalid RSS version!!');
 		}
 	}
 
+	// Feeding start
 	header('Content-type: application/xml');
+	print '<?xml version="1.0" encoding="UTF-8"?>' . "\n\n";
 
 	$r_whatsnew = rawurlencode($whatsnew);
-
-	print '<?xml version="1.0" encoding="UTF-8"?>' . "\n\n";
 	switch ($version) {
 	case '0.91':
 		print '<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"' .
@@ -101,6 +93,7 @@ $items
 </rss>
 EOD;
 		break;
+
 	case '1.0':
 		$xmlns_trackback = $trackback ?
 			'  xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"' : '';
