@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.30 2003/03/07 07:03:28 panda Exp $
+// $Id: pukiwiki.ini.php,v 1.31 2003/03/07 08:25:33 panda Exp $
 //
 // PukiWiki setting file
 
@@ -163,7 +163,8 @@ $auto_template_rules = array(
 $user_agent = array('name'=>'default');
 // ·ÈÂÓÃ¼Ëö
 $agents = array(
-	array('name'=>'jphone','pattern'=>'#^J-PHONE.+(Profile/)?#'),
+	array('name'=>'jphone','pattern'=>'#^J-PHONE.+(Profile/)#'),
+	array('name'=>'jphone','pattern'=>'#^J-PHONE#'),
 	array('name'=>'i_mode','pattern'=>'#DoCoMo/(1\.0)/(?:[^/]+/c([0-9]+))?#'),
 	array('name'=>'i_mode','pattern'=>'#DoCoMo/(2\.0) [^(]+\(c([0-9]+)#'),
 );
