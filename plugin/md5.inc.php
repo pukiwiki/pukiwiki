@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.10 2005/03/30 14:27:26 henoheno Exp $
+// $Id: md5.inc.php,v 1.11 2005/03/30 15:07:57 henoheno Exp $
 //  MD5 plugin
 
 define('PLUGIN_MD5_LIMIT_LENGTH', 512);
@@ -22,7 +22,7 @@ function plugin_md5_action()
 		return array('msg'=>'MD5', 'body'=>$body);
 
 	} else {
-		// If plugin=md4&md5=password, only set it (Don't compute)
+		// If plugin=md5&md5=password, only set it (Don't compute)
 		$value = isset($get['md5']) ? $get['md5'] : '';
 
 		plugin_md5_checklimit($value);
