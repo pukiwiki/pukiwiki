@@ -2,9 +2,28 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.41 2004/09/21 11:57:23 henoheno Exp $
+// $Id: ref.inc.php,v 1.42 2004/09/21 12:04:54 henoheno Exp $
 //
 // Include an attached image-file as an inline-image
+
+// File icon image
+if (! defined('FILE_ICON')) {
+	define('FILE_ICON',
+	'<img src="' . IMAGE_DIR . 'file.png" width="20" height="20"' .
+	' alt="file" style="border-width:0px" />');
+}
+
+/////////////////////////////////////////////////
+// Default settings
+
+// Horizontal alignment
+define('PLUGIN_REF_DEFAULT_ALIGN', 'left'); // 'left', 'center', 'right'
+
+// Text wrapping
+define('PLUGIN_REF_WRAP_TABLE', FALSE); // TRUE, FALSE
+
+// URL指定時に画像サイズを取得するか
+define('PLUGIN_REF_URL_GET_IMAGE_SIZE', FALSE); // FALSE, TRUE
 
 // UPLOAD_DIR のデータ(画像ファイルのみ)に直接アクセスさせる
 define('PLUGIN_REF_DIRECT_ACCESS', FALSE); // FALSE or TRUE
@@ -16,27 +35,13 @@ define('PLUGIN_REF_DIRECT_ACCESS', FALSE); // FALSE or TRUE
 // - ブラウザによってはインラインイメージの表示や、「インライン
 //   イメージだけを表示」させた時などに不具合が出る場合があります
 
-// Usage
-define('PLUGIN_REF_USAGE', "([pagename/]attached-file-name[,parameters, ... ][,title])");
+/////////////////////////////////////////////////
 
-// Image suffixes
+// Image suffixes allowed
 define('PLUGIN_REF_IMAGE', '/\.(gif|png|jpe?g)$/i');
 
-// File icon image
-if (! defined('FILE_ICON')) {
-	define('FILE_ICON',
-	'<img src="' . IMAGE_DIR . 'file.png" width="20" height="20"' .
-	' alt="file" style="border-width:0px" />');
-}
-
-// Default alignment
-define('PLUGIN_REF_DEFAULT_ALIGN', 'left'); // 'left', 'center', 'right'
-
-// Force wrap on default
-define('PLUGIN_REF_WRAP_TABLE', FALSE); // TRUE, FALSE
-
-// URL指定時に画像サイズを取得するか
-define('PLUGIN_REF_URL_GET_IMAGE_SIZE', FALSE); // FALSE, TRUE
+// Usage (a part of)
+define('PLUGIN_REF_USAGE', "([pagename/]attached-file-name[,parameters, ... ][,title])");
 
 function plugin_ref_inline()
 {
