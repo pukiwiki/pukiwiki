@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.101 2005/01/02 07:26:15 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.102 2005/01/02 08:51:29 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -19,6 +19,7 @@ if (! defined('PKWK_SAFE_MODE'))
 	define('PKWK_SAFE_MODE', FALSE); // FALSE or TRUE
 
 // Max length of GET method (prohibits some worm attack ASAP)
+// Beware: (page-name-length + attach-file-length) <= PKWK_QUERY_STRING_MAX
 define('PKWK_QUERY_STRING_MAX', 512);
 
 /////////////////////////////////////////////////
