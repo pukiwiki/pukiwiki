@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.52 2003/07/31 08:22:47 arino Exp $
+// $Id: convert_html.php,v 1.53 2003/09/03 01:35:51 arino Exp $
 //
 function convert_html($lines)
 {
@@ -833,15 +833,10 @@ class Body extends Block
 	}
 	function replace_contents($arr)
 	{
-		static $contents = NULL;
-		
-		if (is_null($contents))
-		{
-			$contents  = "<div class=\"contents\">\n";
-			$contents .= "<a id=\"contents_{$this->id}\"></a>";
-			$contents .= $this->contents->toString();
-			$contents .= "</div>\n";
-		}
+		$contents  = "<div class=\"contents\">\n";
+		$contents .= "<a id=\"contents_{$this->id}\"></a>";
+		$contents .= $this->contents->toString();
+		$contents .= "</div>\n";
 		array_shift($arr);
 		return ($arr[1] != '') ? $contents.join('',$arr) : $contents;
 	}
