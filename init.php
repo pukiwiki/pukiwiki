@@ -2,44 +2,14 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.25 2003/02/14 07:11:18 panda Exp $
+// $Id: init.php,v 1.26 2003/02/15 13:10:38 panda Exp $
 //
 
 /////////////////////////////////////////////////
-// エラーハンドラを設定
-ini_set('error_reporting', E_ALL);
-$old_error_handler = set_error_handler('myErrorHandler');
-
-/////////////////////////////////////////////////
-// 初期設定 (for EUC-JP)
+// 初期設定
 define('ENCODING','EUC-JP');
 define('LANG','ja');
-mb_http_output(ENCODING);
-mb_internal_encoding(ENCODING);
 
-/////////////////////////////////////////////////
-// 初期設定 (for UTF-8)
-/*
-define('ENCODING','UTF-8');
-// HTTP_ACCEPT_LANGUAGEからスキンを決定する(experimental)
-$lang = 'ja'; // デフォルト
-$support = array('ja','en');
-
-if (array_key_exists('HTTP_ACCEPT_LANGUAGE',$_SERVER) and
-	preg_match_all('/([a-z]{2})(?:;q=([0-9.]+))?/',$_SERVER['HTTP_ACCEPT_LANGUAGE'],$matches,PREG_SET_ORDER)) {
-	$matches[0][2] = 1;
-	$q = 0;
-	foreach ($matches as $arr) {
-		if ((array_search($arr[1],$support) !== FALSE) and ($arr[2] > $q)) { //supported and qualify is greater
-			$lang = $arr[1];
-			$q = $arr[2];
-		}
-	}
-}
-define('LANG',$lang);
-mb_http_output(ENCODING);
-mb_internal_encoding(ENCODING);
-*/
 /////////////////////////////////////////////////
 // 初期設定 (バージョン/著作権)
 define('S_VERSION','1.4pre4');

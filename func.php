@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.13 2003/02/11 04:51:58 panda Exp $
+// $Id: func.php,v 1.14 2003/02/15 13:10:19 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -393,59 +393,6 @@ function drop_submit($str)
 		'<input$1type="hidden"',
 		$str
 	);
-}
-
-// エラーハンドラ関数
-function myErrorHandler($no, $str, $file, $line, $variable)
-{
-	global $vars;
-	
-	$messages = array(
-		1=>'ERROR',
-		2=>'WARNING',
-		4=>'PARSE',
-		8=>'NOTICE',
-		16=>'CORE_ERROR',
-		32=>'CORE_WARNING',
-		64=>'COMPILE_ERROR',
-		128=>'COMPILE_WARNING',
-		256=>'USER_ERROR',
-		512=>'USER_WARNING',
-		1024=>'USER_NOTICE'
-	);
-	$fatal_errors = array(E_ERROR,E_CORE_ERROR,E_COMPILE_ERROR,E_USER_ERROR);
-	
-	$error = '-'.get_date("Y-m-d H:i:s");
-	
-	if ($vars['page'] != '') {
-		$error .= " [[{$vars['page']}]]";
-	}
-
-	foreach ($messages as $_no=>$mes) {
-		if ($no & $_no) {
-			$error .=  " ''$mes''";
-		}
-	}
-	
-	$error .= "($no)";
-	$error .= "~\n$str on $file line $line\n";
-	$fp = fopen('./wiki/'.encode(':ErrorLog').'.txt','a') or exit -1;
-	fwrite($fp,$error);
-	fclose($fp);
-	
-	if (in_array($no,$fatal_errors)) {
-		exit -1;
-	}
-}
-
-//変数ダンプを返す
-function dumpvar($var)
-{
-	ob_start();
-	print_r($var);
-	$body = ob_get_contents();
-	ob_end_clean();
-	return $body;
 }
 
 //AutoLinkのパターンを生成する
