@@ -1,5 +1,5 @@
 <?php
-// $Id: insert.inc.php,v 1.12 2005/01/23 07:34:39 henoheno Exp $
+// $Id: insert.inc.php,v 1.13 2005/01/23 07:35:55 henoheno Exp $
 //
 // Text inserting box plugin
 
@@ -12,6 +12,7 @@ function plugin_insert_action()
 	global $script, $vars, $cols, $rows;
 	global $_title_collided, $_msg_collided, $_title_updated;
 
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 	if (! isset($vars['msg']) || $vars['msg'] == '') return;
 
 	$vars['msg'] = preg_replace('/' . "\r" . '/', '', $vars['msg']);
@@ -70,6 +71,8 @@ function plugin_insert_convert()
 	global $script, $vars, $digest;
 	global $_btn_insert;
 	static $numbers = array();
+
+	if (PKWK_READONLY) return ''; // Show nothing
 
 	if (! isset($numbers[$vars['page']])) $numbers[$vars['page']] = 0;
 
