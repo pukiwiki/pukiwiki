@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rename.inc.php,v 1.10 2004/03/18 09:32:05 arino Exp $
+// $Id: rename.inc.php,v 1.11 2004/03/20 13:37:43 arino Exp $
 //
 
 /*
@@ -22,7 +22,7 @@ define('RENAME_LOGPAGE',':RenameLog');
 
 function plugin_rename_action()
 {
-	global $adminpass,$whatsnew,$WikiName,$BracketName;
+	global $adminpass,$whatsnew;
 	global $_rename_messages;
 	
 	$method = rename_getvar('method');
@@ -41,10 +41,12 @@ function plugin_rename_action()
 			return rename_phase1('nomatch');
 		}
 		$arr1 = preg_replace($src_pattern,$dst,$arr0);
-		$arr2 = preg_grep("/^$BracketName$/",$arr1);
-		if (count($arr2) != count($arr1))
+		foreach ($arr1 as $page)
 		{
-			return rename_phase1('notvalid');
+			if (!is_pagename($page))
+			{
+				return rename_phase1('notvalid');
+			}
 		}
 		return rename_regex($arr0,$arr1);
 	}
@@ -68,7 +70,7 @@ function plugin_rename_action()
 		{
 			return rename_phase2();
 		}
-		if (!preg_match("/^$BracketName$/",$page))
+		if (!is_pagename($page))
 		{
 			return rename_phase2('notvalid');
 		}
