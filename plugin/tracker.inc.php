@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.3 2003/07/12 12:22:01 arino Exp $
+// $Id: tracker.inc.php,v 1.4 2003/07/17 01:25:51 arino Exp $
 //
 
 function plugin_tracker_convert()
@@ -88,10 +88,15 @@ function plugin_tracker_action()
 	$base = $post['_refer'];
 	$num = 0;
 	$name = (array_key_exists('_name',$post)) ? $post['_name'] : '';
-	$real = is_pagename($name) ? $name : ++$num;
-	
-	$page = get_fullname('./'.$real,$base);
-	
+	if (array_key_exists('_page',$post))
+	{
+		$page = $real = $post['_page'];
+	}
+	else
+	{
+		$real = is_pagename($name) ? $name : ++$num;
+		$page = get_fullname('./'.$real,$base);
+	}
 	if (!is_pagename($page))
 	{
 		$page = $base;
@@ -140,6 +145,8 @@ function plugin_tracker_get_fields($page,&$config)
 	$fields = array();
 	// 規定のオブジェクト
 	$fields['_date']   = &new Tracker_field_text(  array('_date',  $_tracker_messages['btn_date'],  '','20',''),$page,$config);
+	$fields['_update'] = &new Tracker_field_text(  array('_update',$_tracker_messages['btn_update'],'','20',''),$page,$config);
+	$fields['_past']   = &new Tracker_field_text(  array('_past',  $_tracker_messages['btn_past'],  '','20',''),$page,$config);
 	$fields['_page']   = &new Tracker_field_page(  array('_page',  $_tracker_messages['btn_page'],  '','20',''),$page,$config);
 	$fields['_name']   = &new Tracker_field_text(  array('_name',  $_tracker_messages['btn_name'],  '','20',''),$page,$config);
 	$fields['_real']   = &new Tracker_field_text(  array('_real',  $_tracker_messages['btn_real'],  '','20',''),$page,$config);
@@ -493,8 +500,10 @@ class Tracker_list
 		$this->fields = plugin_tracker_get_fields($page,$config);
 		
 		$pattern = join('',plugin_tracker_get_source($config->page.'/page'));
-		// ブロックプラグインを削除
-		$pattern = preg_replace('/^\#([^\(]+)(?:\((.*)\))?\s*$/m','',$pattern);
+		// ブロックプラグインをフィールドに置換
+		// #commentなどで前後に文字列の増減があった場合に、[_block_xxx]に吸い込ませるようにする
+		$pattern = preg_replace('/^\#([^\(\s]+)(?:\((.*)\))?\s*$/m','[_block_$1]',$pattern);
+		
 		// パターンを生成
 		$this->pattern = '';
 		$this->pattern_fields = array();
@@ -544,7 +553,9 @@ class Tracker_list
 		$this->rows[$name] = array(
 			'_page'  => "[[$page]]",
 			'_refer' => $this->page,
-			'_real'  => $name
+			'_real'  => $name,
+			'_update'=> format_date(get_filetime($page)),
+			'_past'  => get_passage(get_filetime($page),FALSE)
 		);
 		if (preg_match("/{$this->pattern}/s",$source,$matches))
 		{
@@ -587,16 +598,21 @@ class Tracker_list
 		{
 			$str = '';
 		}
-		else if (!array_key_exists($name,$this->items))
+		else if (array_key_exists($name,$this->items))
 		{
-			return $arr[0];
+			$str = $this->items[$name];
+			if (array_key_exists($name,$this->fields))
+			{
+				$str = $this->fields[$name]->format_cell($str);
+			}
 		}
 		else
 		{
-			$str = $this->fields[$name]->format_cell($this->items[$name]);
+			return $arr[0];
 		}
 		$style = count($params) ? $params[0] : $name;
-		if (array_key_exists($style,$this->items))
+		if (array_key_exists($style,$this->items)
+			and array_key_exists($style,$this->fields))
 		{
 			$str = sprintf($this->fields[$style]->get_style($this->items[$style]),$str);
 		}
