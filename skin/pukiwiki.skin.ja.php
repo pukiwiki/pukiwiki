@@ -1,7 +1,7 @@
-<? header("Content-Type: text/html; charset=EUC_JP") ?>
+<? global $page_title; header("Content-Type: text/html; charset=euc-jp") ?>
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html; charset=EUC_JP">
+<meta http-equiv="content-type" content="text/html; charset=euc-jp">
 <title><?=$page_title ?> - <?=$title?></title>
 <style>
 <!--
