@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.48 2003/07/05 01:40:49 arino Exp $
+// $Id: convert_html.php,v 1.49 2003/07/27 13:37:42 arino Exp $
 //
 function convert_html($lines)
 {
@@ -351,9 +351,10 @@ class BQuote extends Block
 	}
 	function &insert(&$obj)
 	{
-		if (is_a($obj, 'BQuote') and $obj->level == $this->level) {
+		if (is_a($obj, 'BQuote') and $obj->level == $this->level
+			and count($obj->elements)) {
 			if (is_a($this->last,'Paragraph')
-				and array_key_exists(0,$obj->elements[0])
+				and array_key_exists(0,$obj->elements[0]->elements)
 				and is_object($obj->elements[0]->elements[0])) {
 				$this->last->insert($obj->elements[0]->elements[0]);
 			} else {
@@ -748,7 +749,7 @@ class Body extends Block
 			}
 			
 			$line = preg_replace("/[\r\n]*$/",'',$line);
-			
+			print "<pre>$line</pre>";
 			// 行頭文字
 			$head = substr($line,0,1);
 			
