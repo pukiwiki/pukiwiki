@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.70 2004/07/31 03:09:19 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.71 2004/08/01 02:56:21 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -275,32 +275,42 @@ $no_proxy = array(
 );
 
 ////////////////////////////////////////////////
+// Mail notify
+
 // ページの更新時にメールを送信する
 $notify = 0;
-// 差分だけを送信する
-$notify_diff_only = 0;
-// To:（宛先）
-$notify_to = 'xxx@yyy.zz';
-// From:（送り主）
-$notify_from = 'xxx@yyy.zz';
+$notify_diff_only = 0;	// 差分だけを送信するか
+
+$notify_to = 'xxx@yyy.zz';	// To:（宛先）
+$notify_from = 'xxx@yyy.zz';	// From:（送り主）
+
 // Subject:（件名） $pageにページ名が入る
 $notify_subject = '[pukiwiki] $page';
-// 追加ヘッダ
-$notify_header = "From: $notify_from\r\nX-Mailer: PukiWiki/".S_VERSION." PHP/".phpversion();
-// POP Before SMTP を実施
+
+// 追加メールヘッダ
+$notify_header = "From: $notify_from\r\nX-Mailer: PukiWiki/" .
+	S_VERSION . ' PHP/' . phpversion();
+
+/////////////////////////////////////////////////
+// POP / APOP Before SMTP
+
+// メール送信前にPOPまたはAPOPによる認証を行う
 $smtp_auth = 0;
-// SMTPサーバ名を指定する (Windows のみ, 通常は php.ini で指定)
+
+// SMTPサーバ (Windows のみ, 通常は php.ini で指定)
 $smtp_server = 'localhost';
-// POPサーバ名を指定する
-$pop_server = 'localhost';
-// POP のポート番号 (通常 110)
-$pop_port = 110;
-// 認証に APOP を利用するかどうか (APOP 利用時は 1、以外は POP3)
-$pop_auth_use_apop = 0;
-// POP ユーザ名
-$pop_userid = '';
-// POP パスワード
-$pop_passwd = '';
+
+$pop_server = 'localhost';	// POPサーバ
+$pop_port = 110;	// ポート番号
+
+// 認証に APOP を利用するかどうか (※サーバ側の対応が必要)
+//   未設定 = 自動 (可能であればAPOPを使用する)
+//   1 = APOP固定  (必ずAPOPを使用する)
+//   0 = POP固定   (必ずPOPを使用する)
+// $pop_auth_use_apop = 1;
+
+$pop_userid = '';	// POPユーザ名
+$pop_passwd = '';	// POPパスワード
 
 /////////////////////////////////////////////////
 // 一覧・更新一覧に含めないページ名(正規表現で)
