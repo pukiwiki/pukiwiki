@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.11 2003/01/31 01:49:35 panda Exp $
+// $Id: func.php,v 1.12 2003/02/03 10:25:11 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -220,9 +220,7 @@ function decode($key)
 // [[ ]] を取り除く
 function strip_bracket($str)
 {
-	global $strip_link_wall;
-	
-	if ($strip_link_wall and preg_match('/^\[\[(.*)\]\]$/',$str,$match)) {
+	if (preg_match('/^\[\[(.*)\]\]$/',$str,$match)) {
 		$str = $match[1];
 	}
 	return $str;
@@ -285,12 +283,12 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 	}
 	$retval .= "</ul>\n";
 	if ($list_index and $cnt > 0) {
-		$top = "<div id=\"top\" style=\"text-align:center\">\n";
+		$top = array();
 		while (count($arr_index) > 0) {
-			$top .= join(" | \n",array_splice($arr_index,0,16))."<br />\n";
+			$top[] = join(" | \n",array_splice($arr_index,0,16))."\n";
 		}
-		$top .= "</div>\n";
-		$retval = $top.$retval;
+		$retval = "<div id=\"top\" style=\"text-align:center\">\n".
+			join("<br />",$top)."</div>\n".$retval;
 	}
 	return $retval;
 }
