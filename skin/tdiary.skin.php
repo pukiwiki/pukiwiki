@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.3 2004/12/31 01:08:47 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.4 2005/01/08 02:36:11 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -242,18 +242,18 @@ switch(UI_LANG){
 	case 'ja': $css_charset = 'Shift_JIS'; break;
 }
 
-// Output header
+// Output HTTP headers
 pkwk_common_headers();
 header('Cache-control: no-cache');
 header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
-// Output body
+// Output HTML DTD, <html>, and receive content-type
+$meta_content_type = pkwk_output_dtd(PKWK_DTD_HTML_4_01);
+
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="<?php echo LANG ?>">
 <head>
- <meta http-equiv="content-type" content="text/html; charset=<?php echo CONTENT_CHARSET ?>" />
+ <?php echo $meta_content_type ?>
  <meta http-equiv="content-style-type" content="text/css" />
 <?php if (! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
 <?php if (PKWK_ALLOW_JAVASCRIPT && isset($javascript)) { ?> <meta http-equiv="Content-Script-Type" content="text/javascript" /><?php } ?>
@@ -407,7 +407,7 @@ if ($disable_reverse_link === TRUE) {
 	</div>
 </div><!-- class="body" -->
 
-<?php if ($notes) { ?>
+<?php if ($notes != '') { ?>
 <div class="comment"><!-- Design for tDiary "Comments" -->
 	<div class="caption">&nbsp;</div>
 	<div class="commentbody"><br/>
@@ -422,7 +422,7 @@ if ($disable_reverse_link === TRUE) {
 </div>
 <?php } ?>
 
-<?php if ($attaches) { ?>
+<?php if ($attaches != '') { ?>
 <div class="comment">
 	<div class="caption">&nbsp;</div>
 	<div class="commentshort">
@@ -431,7 +431,7 @@ if ($disable_reverse_link === TRUE) {
 </div>
 <?php } ?>
 
-<?php if ($related) { ?>
+<?php if ($related != '') { ?>
 <div class="comment">
 	<div class="caption">&nbsp;</div>
 	<div class="commentshort">
@@ -441,7 +441,7 @@ if ($disable_reverse_link === TRUE) {
 <?php } ?>
 
 <!-- Design for tDiary "Today's referrer" -->
-<div class="referer"><?php if ($lastmodified) echo 'Last-modified: ' . $lastmodified; ?></div>
+<div class="referer"><?php if ($lastmodified != '') echo 'Last-modified: ' . $lastmodified; ?></div>
 
 </div><!-- class="day" -->
 
