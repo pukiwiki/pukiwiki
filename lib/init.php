@@ -1,11 +1,9 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: init.php,v 1.22 2005/01/02 07:19:44 henoheno Exp $
 //
-// $Id: init.php,v 1.21 2004/12/30 14:05:34 henoheno Exp $
-//
+// Init PukiWiki here
 
-/////////////////////////////////////////////////
 // PukiWiki version / Copyright / Licence
 
 define('S_VERSION', '1.4.5_alpha');
@@ -250,9 +248,16 @@ if (isset($_GET['encode_hint']) && $_GET['encode_hint'] != '')
 // ページ名かInterWikiNameであるとみなす
 $arg = '';
 if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING']) {
-	$arg = $_SERVER['QUERY_STRING'];
-} else if (isset($_SERVER['argv']) && count($_SERVER['argv'])) {
-	$arg = $_SERVER['argv'][0];
+	$arg = & $_SERVER['QUERY_STRING'];
+} else if (isset($_SERVER['argv']) && ! empty($_SERVER['argv'])) {
+	$arg = & $_SERVER['argv'][0];
+}
+if (strlen($arg) > PKWK_QUERY_STRING_MAX) {
+	// Something nasty attack?
+	pkwk_common_headers();
+	sleep(1);	// Fake processing, and/or process other threads
+	echo('Query string too long');
+	exit;
 }
 $arg = input_filter($arg); // \0 除去
 
