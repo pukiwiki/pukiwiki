@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.82 2004/07/03 05:28:33 henoheno Exp $
+// $Id: init.php,v 1.83 2004/07/03 09:52:36 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -94,16 +94,16 @@ foreach ($agents as $agent) {
 		break;
 	}
 }
+define('UA_TYPE', $user_agent['name']);
 $ua = 'HTTP_USER_AGENT';
-unset($agents, ${$ua}, $_SERVER[$ua], $HTTP_SERVER_VARS[$ua], $ua);
+unset($agents, $user_agent, ${$ua}, $_SERVER[$ua], $HTTP_SERVER_VARS[$ua], $ua);
 
 // UserAgent別の設定ファイル読み込み
-define('UA_INI_FILE' ,$user_agent['name'] . '.ini.php');
+define('UA_INI_FILE' , UA_TYPE . '.ini.php');
 if (!file_exists(UA_INI_FILE) || !is_readable(UA_INI_FILE)) {
-	die_message('UA_INI_FILE for "' . $user_agent['name'] . '" not found.');
+	die_message('UA_INI_FILE for "' . UA_TYPE . '" not found.');
 }
 require(UA_INI_FILE);
-unset($user_agent);
 
 /////////////////////////////////////////////////
 // ディレクトリのチェック
