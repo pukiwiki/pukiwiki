@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.9 2004/10/11 03:13:09 henoheno Exp $
+// $Id: func.php,v 1.10 2004/11/23 02:35:57 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -521,9 +521,10 @@ function get_script_uri($init_uri = '')
 	static $script;
 
 	if ($init_uri == '') {
+		// Get
 		if (isset($script)) return $script;
 
-		// Init automatically
+		// Set automatically
 		$msg     = 'get_script_uri() failed: Please set $script at INI_FILE manually';
 		$script  = (SERVER_PORT == 443 ? 'https://' : 'http://'); // scheme
 		$script .= SERVER_NAME;	// host
@@ -547,15 +548,10 @@ function get_script_uri($init_uri = '')
 			die_message($msg);
 
 	} else {
-		// Init manually
-		if (isset($script))
-			die_message('$script: Already init');
-
-		if(is_url($init_uri, TRUE)) {
-			$script = $uri;
-		} else {
-			die_message('$script: Invalid URI');
-		}
+		// Set manually
+		if (isset($script)) die_message('$script: Already init');
+		if (! is_url($init_uri, TRUE)) die_message('$script: Invalid URI');
+		$script = $init_uri;
 	}
 	return $script;
 }
