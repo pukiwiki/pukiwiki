@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.31 2003/09/12 06:43:04 arino Exp $
+// $Id: file.php,v 1.32 2003/09/12 09:10:16 arino Exp $
 //
 
 // ソースを取得
@@ -288,7 +288,7 @@ function get_readings()
 	}
 	if($pagereading_enable) {
 		// ChaSen/KAKASI 呼び出しが有効に設定されている場合
-		
+		$unknownPage = FALSE;
 		// 読みが不明のページがあるかチェック
 		foreach ($readings as $page => $reading) {
 			if($reading=='') {
