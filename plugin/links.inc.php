@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: links.inc.php,v 1.17 2003/05/19 09:22:08 arino Exp $
+// $Id: links.inc.php,v 1.18 2004/02/29 07:45:20 arino Exp $
 //
 
 // メッセージ設定
@@ -57,7 +57,6 @@ EOD;
 	}
 	else if ($vars['action'] == 'update')
 	{
-		error_reporting(E_ALL);
 		links_init();
 		
 		// 注釈を空にする
