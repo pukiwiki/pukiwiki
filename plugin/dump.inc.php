@@ -20,15 +20,15 @@
 
 /////////////////////////////////////////////////
 // ファイル名をページ名にする際の日本語の文字コード
-define('PLUGIN_TARFILE_FILENAME_ENCORDING','SJIS');
+define('PLUGIN_DUMP_FILENAME_ENCORDING','SJIS');
 
 // 最大アップロードサイズ
-define('PLUGIN_TARFILE_MAX_FILESIZE',1024);	// Kbyte
+define('PLUGIN_DUMP_MAX_FILESIZE',1024);	// Kbyte
 
 /////////////////////////////////////////////////
 // 拡張子
-define('PLUGIN_TARFILE_SFX_TAR' , '.tar');
-define('PLUGIN_TARFILE_SFX_GZIP', '.tar.gz');
+define('PLUGIN_DUMP_SFX_TAR' , '.tar');
+define('PLUGIN_DUMP_SFX_GZIP', '.tar.gz');
 
 // TARファイル用定義
 define('TAR_HDR_LEN',           512);	// ヘッダの大きさ
@@ -65,8 +65,8 @@ define('ARCFILE_GZIP', 0);
 define('ARCFILE_TAR',  1);
 
 // action定義
-define('PLUGIN_TARFILE_CREATE', 'act_download');	// Create & download
-define('PLUGIN_TARFILE_RESTORE',   'act_upload');	// Upload & restore
+define('PLUGIN_DUMP_CREATE', 'act_download');	// Create & download
+define('PLUGIN_DUMP_RESTORE',   'act_upload');	// Upload & restore
 
 
 /////////////////////////////////////////////////
@@ -85,10 +85,10 @@ function plugin_tarfile_action()
 	if ($pass !== NULL) {
 		if((md5($pass) == $adminpass) && ($act !== NULL) ) {
 			switch($act){
-			case PLUGIN_TARFILE_CREATE:
+			case PLUGIN_DUMP_CREATE:
 				$body = plugin_tarfile_download();
 				break;
-			case PLUGIN_TARFILE_RESTORE:
+			case PLUGIN_DUMP_RESTORE:
 				$retcode = plugin_tarfile_upload();
 				$body .= $retcode['msg'];
 				if($retcode['code'] == true) {
@@ -224,9 +224,9 @@ function download_tarfile($name, $arc_kind)
 	$filename = strftime("tar%Y%m%d", time()) . $file_ext;
 
 	if($arc_kind == ARCFILE_GZIP) {
-		$filename .= PLUGIN_TARFILE_SFX_GZIP;
+		$filename .= PLUGIN_DUMP_SFX_GZIP;
 	} else {
-		$filename .= PLUGIN_TARFILE_SFX_TAR;
+		$filename .= PLUGIN_DUMP_SFX_TAR;
 	}
 
 	$size = filesize($name);
@@ -244,10 +244,10 @@ function plugin_tarfile_disp_form()
 {
 	global $script, $defaultpage;
 
-	$act_down  = PLUGIN_TARFILE_CREATE;
-	$act_up    = PLUGIN_TARFILE_RESTORE;
-	$maxsize   = PLUGIN_TARFILE_MAX_FILESIZE * 1024;
-	$maxsizekb = PLUGIN_TARFILE_MAX_FILESIZE;
+	$act_down  = PLUGIN_DUMP_CREATE;
+	$act_up    = PLUGIN_DUMP_RESTORE;
+	$maxsize   = PLUGIN_DUMP_MAX_FILESIZE * 1024;
+	$maxsizekb = PLUGIN_DUMP_MAX_FILESIZE;
 
 	$data = <<<EOD
 <span class="small">
@@ -588,7 +588,7 @@ class compact_tarlib
 				$filename = $dirname . $filename;
 				if(function_exists('mb_convert_encoding')) {
 					// ファイル名の文字コードを変換
-					$filename = mb_convert_encoding($filename, PLUGIN_TARFILE_FILENAME_ENCORDING);
+					$filename = mb_convert_encoding($filename, PLUGIN_DUMP_FILENAME_ENCORDING);
 				}
 			}
 			else
