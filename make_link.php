@@ -76,22 +76,22 @@ class link_wrapper
 function &expand_bracket($name,$refer)
 {
 	global $WikiName,$BracketName,$LinkPattern,$defaultpage;
-
+	
 	if (is_array($name))
 		$arr = $name;
 	else if (preg_match("/^$WikiName$/",$name))
 		return new link_wikiname($name);
 	else if (!preg_match($LinkPattern,$name,$arr) or $arr[12] == '')
 		return new link($name);
-
+	
 	$arr = array_slice($arr,8,7);
 	$_name = array_shift($arr);
-
+	
 	$bracket = ($arr[0] or $arr[2]);
 	$alias = $arr[1];
 	$name = $arr[3];
 	$anchor = $arr[5];
-
+	
 	if ($name != '')
 	{
 		if ($alias == '' and $anchor == '')
@@ -101,19 +101,34 @@ function &expand_bracket($name,$refer)
 		else
 			$name = "[[$name]]";
 	}
-
+	
 	if ($alias == '')
 		$alias = strip_bracket($name).$anchor;
-
+	
 	if ($name == '')
 		return ($anchor == '') ? new link($_name) : new link_wikiname($name,$alias,$anchor,$refer);
-
-	if ($name == '[[./]]' and preg_match("/^$WikiName$/",$refer))
-		return new link_wikiname($refer,$alias,$anchor,$refer); 
+	
+	$name = get_fullname($name,$refer);
+	
+	if ($name == '' or preg_match("/^$WikiName$/",$name))
+		return new link_wikiname($name,$alias,$anchor,$refer);
+	else if (!preg_match("/^$BracketName$/",$name)) 
+		return new link($_name);
+	
+	return new link_wikiname($name,$alias,$anchor,$refer);
+}
+// 相対参照を展開
+function get_fullname($name,$refer)
+{
+	global $defaultpage;
+	
+	if ($name == '[[./]]')
+		return $refer;
 
 	if (substr($name,0,4) == '[[./')
-		$name = '[['.strip_bracket($refer).substr($name,(strlen($name) > 6) ? 3:4); // ひー ^^;)
-	else if (substr($name,0,5) == '[[../')
+		return '[['.strip_bracket($refer).substr($name,3);
+	
+	if (substr($name,0,5) == '[[../')
 	{
 		$arrn = preg_split("/\//",strip_bracket($name),-1,PREG_SPLIT_NO_EMPTY);
 		$arrp = preg_split("/\//",strip_bracket($refer),-1,PREG_SPLIT_NO_EMPTY);
@@ -121,13 +136,8 @@ function &expand_bracket($name,$refer)
 		$name = (count($arrp)) ? '[['.join('/',array_merge($arrp,$arrn)).']]' :
 			((count($arrn)) ? "[[$defaultpage/".join('/',$arrn).']]' : $defaultpage);
 	}
-
-	if ($name == '' or preg_match("/^$WikiName$/",$name))
-		return new link_wikiname($name,$alias,$anchor,$refer);
-	else if (!preg_match("/^$BracketName$/",$name)) 
-		return new link($_name);
-
-	return new link_wikiname($name,$alias,$anchor,$refer);
+	
+	return $name;
 }
 class link
 {
