@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: links.inc.php,v 1.15 2003/03/14 04:12:33 panda Exp $
+// $Id: links.inc.php,v 1.16 2003/03/30 02:44:09 panda Exp $
 //
 
 // メッセージ設定
@@ -35,7 +35,6 @@ function plugin_links_action()
 {
 	global $script,$post,$vars,$adminpass;
 	global $_links_messages;
-	global $whatsnew;
 	
 	if (empty($vars['action']) or empty($post['adminpass']) or md5($post['adminpass']) != $adminpass)
 	{
