@@ -2,12 +2,12 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.27 2003/02/17 07:31:31 panda Exp $
+// $Id: init.php,v 1.28 2003/02/18 04:31:19 panda Exp $
 //
 
 /////////////////////////////////////////////////
 // 初期設定
-define('ENCODING','EUC-JP');
+define('SOURCE_ENCODING','EUC-JP');
 define('LANG','ja');
 
 /////////////////////////////////////////////////

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.14 2003/02/15 13:10:19 panda Exp $
+// $Id: func.php,v 1.15 2003/02/18 04:31:09 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -19,11 +19,11 @@ function is_pagename($str)
 	
 	$is_pagename = (!is_interwiki($str) and preg_match("/^(?!\.{0,}\/)$BracketName(?<!\/)$/",$str));
 	
-	if (defined('ENCODING')) {
-		if (ENCODING == 'UTF-8') {
+	if (defined('SOURCE_ENCODING')) {
+		if (SOURCE_ENCODING == 'UTF-8') {
 			$is_pagename = ($is_pagename and preg_match('/^(?:[\x00-\x7F]|(?:[\xC0-\xDF][\x80-\xBF])|(?:[\xE0-\xEF][\x80-\xBF][\x80-\xBF]))+$/',$str)); // UTF-8
 		}
-		else if (ENCODING == 'EUC-JP') {
+		else if (SOURCE_ENCODING == 'EUC-JP') {
 			$is_pagename = ($is_pagename and preg_match('/^(?:[\x00-\x7F]|(?:[\x8E\xA1-\xFE][\xA1-\xFE])|(?:\x8F[\xA1-\xFE][\xA1-\xFE]))+$/',$str)); // EUC-JP
 		}
 	}
