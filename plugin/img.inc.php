@@ -2,13 +2,14 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: img.inc.php,v 1.9 2004/08/18 14:25:52 henoheno Exp $
+// $Id: img.inc.php,v 1.10 2004/08/18 14:40:11 henoheno Exp $
 //
 
 // 画像をインライン表示
 function plugin_img_convert()
 {
-	static $usage = '#img(): USAGE: (URI-to-image,r|right|l|left[,clear])';
+	$usage = "#img(): USAGE: (URI-to-image[,right|left[,clear]])<br />\n";
+	$clear = '<div style="clear:both"></div>'; // No word-wrap
 
 	$args = func_get_args();
 
@@ -17,20 +18,18 @@ function plugin_img_convert()
 		return $usage;
 
 	$arg = isset($args[1]) ? strtoupper($args[1]) : '';
-	if ($arg == 'R' || $arg == 'RIGHT') {
-		$align = 'right';
-	} else if ($arg == 'L' || $arg == 'LEFT') {
+	if ($arg == '' || $arg == 'L' || $arg == 'LEFT') {
 		$align = 'left';
+	} else if ($arg == 'R' || $arg == 'RIGHT') {
+		$align = 'right';
 	} else {
-		return '<div style="clear:both"></div>'; // Ugly but compatible
+		// Stopping word-wrap only (Ugly but compatible)
+		return $clear;
 	}
 
+	// Before output
 	$arg = isset($args[2]) ? strtoupper($args[2]) : '';
-	if ($arg == 'C' || $arg == 'CLEAR') {
-		$clear = '<div style="clear:both"></div>'; // No word-wrap
-	} else {
-		$clear = '';
-	}
+	if (! $arg == 'C' && $arg != 'CLEAR') $clear = '';
 
 	return <<<EOD
 
