@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.11 2004/11/23 03:30:59 henoheno Exp $
+// $Id: func.php,v 1.12 2004/11/23 13:58:48 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -564,7 +564,7 @@ function get_script_uri($init_uri = '')
 			die_message('Directory index file not found: ' .
 				htmlspecialchars($script_directory_index));
 		$matches = array();
-		if (preg_match('#^(.+/)' . quotemeta($script_directory_index) . '$#',
+		if (preg_match('#^(.+/)' . preg_quote($script_directory_index) . '$#',
 			$script, $matches)) $script = $matches[1];
 	}
 
