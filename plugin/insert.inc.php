@@ -1,5 +1,5 @@
 <?php
-// $Id: insert.inc.php,v 1.8 2003/04/13 06:28:52 arino Exp $
+// $Id: insert.inc.php,v 1.9 2004/07/19 01:42:35 henoheno Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -13,20 +13,20 @@ define('INSERT_INS',1);
 
 function plugin_insert_action()
 {
-	global $script,$post,$vars,$cols,$rows;
-	global $_title_collided,$_msg_collided,$_title_updated;
+	global $script, $vars, $cols, $rows;
+	global $_title_collided, $_msg_collided, $_title_updated;
 	
-	if ($post['msg'] == '') {
+	if (! isset($vars['msg']) || $vars['msg'] == '') {
 		return;
 	}
 	
-	$post["msg"] = preg_replace("/\r/",'',$post['msg']);
+	$vars['msg'] = preg_replace("/\r/", '', $vars['msg']);
+	$insert = ($vars['msg'] != '') ? "\n{$vars['msg']}\n" : '';
 	
 	$postdata = '';
-	$postdata_old  = get_source($post['refer']);
+	$postdata_old  = get_source($vars['refer']);
 	$insert_no = 0;
 
-	$insert = ($post['msg'] == '') ? '' : "\n{$post['msg']}\n";
 
 	foreach($postdata_old as $line)
 	{
@@ -34,7 +34,7 @@ function plugin_insert_action()
 			$postdata .= $line;
 		}
 		if (preg_match('/^#insert$/',$line)) {
-			if ($insert_no == $post['insert_no']) {
+			if ($insert_no == $vars['insert_no']) {
 				$postdata .= $insert;
 			}
 			$insert_no++;
@@ -46,12 +46,12 @@ function plugin_insert_action()
 	
 	$postdata_input = "$insert\n";
 	
-	if (md5(@join('',get_source($post['refer']))) != $post['digest']) {
+	if (md5(@join('', get_source($vars['refer']))) != $vars['digest']) {
 		$title = $_title_collided;
 		$body = "$_msg_collided\n";
 
-		$s_refer = htmlspecialchars($post['refer']);
-		$s_digest = htmlspecialchars($post['digest']);
+		$s_refer  = htmlspecialchars($vars['refer']);
+		$s_digest = htmlspecialchars($vars['digest']);
 		$s_postdata_input = htmlspecialchars($postdata_input);
 		
 		$body .= <<<EOD
@@ -65,30 +65,30 @@ function plugin_insert_action()
 EOD;
 	}
 	else {
-		page_write($post['refer'],$postdata);
+		page_write($vars['refer'], $postdata);
 		
 		$title = $_title_updated;
 	}
 	$retvars['msg'] = $title;
 	$retvars['body'] = $body;
 
-	$post['page'] = $vars['page'] = $post['refer'];
+	$vars['page'] = $vars['refer'];
 
 	return $retvars;
 }
 function plugin_insert_convert()
 {
-	global $script,$vars,$digest;
+	global $script, $vars, $digest;
 	global $_btn_insert;
 	static $numbers = array();
 	
-	if (!array_key_exists($vars['page'],$numbers))
+	if (! isset($numbers[$vars['page']]))
 	{
 		$numbers[$vars['page']] = 0;
 	}
 	$insert_no = $numbers[$vars['page']]++;
 	
-	$s_page = htmlspecialchars($vars['page']);
+	$s_page   = htmlspecialchars($vars['page']);
 	$s_digest = htmlspecialchars($digest);
 	$s_cols = INSERT_COLS;
 	$s_rows = INSERT_ROWS;
@@ -96,7 +96,7 @@ function plugin_insert_convert()
 <form action="$script" method="post">
  <div>
   <input type="hidden" name="insert_no" value="$insert_no" />
-  <input type="hidden" name="refer" value="$s_page" />
+  <input type="hidden" name="refer"  value="$s_page" />
   <input type="hidden" name="plugin" value="insert" />
   <input type="hidden" name="digest" value="$s_digest" />
   <textarea name="msg" rows="$s_rows" cols="$s_cols"></textarea><br />
