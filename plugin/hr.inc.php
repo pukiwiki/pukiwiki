@@ -1,9 +1,8 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: hr.inc.php,v 1.3 2005/01/04 14:20:26 henoheno Exp $
 //
-// $Id: hr.inc.php,v 1.2 2004/07/31 03:09:20 henoheno Exp $
-//
+// Horizontal rule plugin
 
 function plugin_hr_convert()
 {
