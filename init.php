@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.80 2004/06/30 14:20:29 henoheno Exp $
+// $Id: init.php,v 1.81 2004/07/03 05:02:06 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -39,8 +39,10 @@ Based on "PukiWiki" 1.3 by <a href="http://factage.com/sng/">sng</a>
 
 /////////////////////////////////////////////////
 // 初期設定 (サーバ変数)
-foreach (array('HTTP_USER_AGENT','PHP_SELF','SERVER_NAME','SERVER_SOFTWARE','SERVER_ADMIN') as $key) {
-	define($key,array_key_exists($key,$_SERVER) ? $_SERVER[$key] : '');
+foreach (array('SCRIPT_NAME', 'SERVER_ADMIN', 'SERVER_NAME',
+	'SERVER_PORT', 'SERVER_SOFTWARE') as $key) {
+	define($key, isset($_SERVER[$key]) ? $_SERVER[$key] : '');
+	unset(${$key}, $_SERVER[$key], $HTTP_SERVER_VARS[$key]);
 }
 
 /////////////////////////////////////////////////
@@ -82,20 +84,27 @@ if (!isset($script) or $script == '') {
 }
 
 /////////////////////////////////////////////////
-// INI_FILE: $agents:  UserAgent別の設定ファイル読み込み
+// INI_FILE: $agents:  UserAgentの識別
+
+$ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+$user_agent = array();
 foreach ($agents as $agent) {
-	if (preg_match($agent['pattern'],HTTP_USER_AGENT,$matches)) {
-		$agent['matches'] = $matches;
-		$user_agent = $agent;
+	if (preg_match($agent['pattern'], $ua, $matches)) {
+		$user_agent = $agent;	// array to array
+		$user_agent['matches'] = $matches;	// for UA_INI_FILE
 		break;
 	}
 }
+$ua = 'HTTP_USER_AGENT';
+unset($agents, ${$ua}, $_SERVER[$ua], $HTTP_SERVER_VARS[$ua], $ua);
 
+// UserAgent別の設定ファイル読み込み
 define('UA_INI_FILE' ,$user_agent['name'] . '.ini.php');
 if (!file_exists(UA_INI_FILE) || !is_readable(UA_INI_FILE)) {
 	die_message("UA_INI_FILE not found.");
 }
 require(UA_INI_FILE);
+unset($user_agent);
 
 /////////////////////////////////////////////////
 // ディレクトリのチェック
@@ -138,13 +147,17 @@ foreach(array($defaultpage, $whatsnew, $interwiki) as $page){
 }
 
 /////////////////////////////////////////////////
-// 外部からくる変数をサニタイズ
+// 外部からくる変数をチェック
+
+// Prohibit $_GET['msg'] attack
+if (isset($_GET['msg'])) die_message('Sorry, already reserved: msg=');
+
 $get    = sanitize($_GET);
 $post   = sanitize($_POST);
 $cookie = sanitize($_COOKIE);
 
 // Expire risk
-unset($_GET, $_POST, $_COOKIE);	//, 'SERVER', 'ENV', 'REQUEST', 'SESSION', ...
+unset($_GET, $_POST, $HTTP_GET_VARS, $HTTP_POST_VARS, $_REQUEST, $_COOKIE);	//, 'SERVER', 'ENV', 'SESSION', ...
 
 /////////////////////////////////////////////////
 // 文字コードを変換
@@ -194,14 +207,18 @@ if (array_key_exists('encode_hint',$get))
 // cmdもpluginも指定されていない場合は、QUERY_STRINGをページ名かInterWikiNameであるとみなす為
 // また、URI を urlencode せずに手打ちで入力した場合に対処する為
 $arg = '';
-if (array_key_exists('QUERY_STRING',$_SERVER) and $_SERVER['QUERY_STRING'] != '')
-{
+if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING']) {
 	$arg = $_SERVER['QUERY_STRING'];
-}
-else if (array_key_exists('argv',$_SERVER) and count($_SERVER['argv']))
-{
+} else if (isset($_SERVER['argv']) && count($_SERVER['argv'])) {
 	$arg = $_SERVER['argv'][0];
 }
+
+// unset QUERY_STRINGs
+foreach (array('QUERY_STRING', 'argv', 'argc') as $key) {
+	unset(${$key}, $_SERVER[$key], $HTTP_SERVER_VARS[$key]);
+}
+// $_SERVER['REQUEST_URI'] is used by func.php NOW
+unset($REQUEST_URI, $HTTP_SERVER_VARS['REQUEST_URI']);
 
 // サニタイズ (\0 除去)
 $arg = sanitize($arg);
@@ -224,7 +241,7 @@ foreach (explode('&',$arg) as $tmp_string)
 /////////////////////////////////////////////////
 // GET + POST = $vars
 
-$vars = array_merge($post,$get);
+$vars = array_merge($get, $post);
 
 // 入力チェック: cmd, plugin の文字列は英数字以外ありえない
 foreach(array('cmd', 'plugin') as $var){
