@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rename.inc.php,v 1.4 2003/03/15 04:25:53 panda Exp $
+// $Id: rename.inc.php,v 1.5 2003/05/07 04:21:52 arino Exp $
 //
 
 /*
@@ -441,6 +441,10 @@ function rename_proceed($pages,$files,$exists)
 				unlink($new); 
 			}
 			rename($old,$new);
+			
+			// linkデータベースを更新する BugTrack/327 arino
+			links_update($old);
+			links_update($new);
 		}
 	}
 	
