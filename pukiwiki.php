@@ -26,7 +26,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.10 2002/07/09 13:47:09 kawara Exp $
+// $Id: pukiwiki.php,v 1.11 2002/07/10 06:07:17 kawara Exp $
 /////////////////////////////////////////////////
 
 
@@ -522,18 +522,21 @@ else if($do_backup && arg_check("backup"))
 			$title = str_replace('$1',$pagename,$_title_backupdiff)."(No.$get[age])";
 			$page = str_replace('$1',make_search($get["page"]),$_title_backupdiff)."(No.$get[age])";
 			
-			$backupdata = htmlspecialchars(@join("",get_backup($get[age]-1,encode($get["page"]).".txt")));
+			$backupdata = @join("",get_backup($get[age]-1,encode($get["page"]).".txt"));
 			$postdata = @join("",get_backup($get[age],encode($get["page"]).".txt"));
 			$diffdata = split("\n",do_diff($backupdata,$postdata));
+			$backupdata = htmlspecialchars($backupdata);
 		}
 		else if(arg_check("backup_nowdiff"))
 		{
 			$title = str_replace('$1',$pagename,$_title_backupnowdiff)."(No.$get[age])";
 			$page = str_replace('$1',make_search($get["page"]),$_title_backupnowdiff)."(No.$get[age])";
 			
-			$backupdata = htmlspecialchars(@join("",get_backup($get["age"],encode($get["page"]).".txt")));
+			$backupdata = @join("",get_backup($get["age"],encode($get["page"]).".txt"));
 			$postdata = @join("",get_source($get["page"]));
 			$diffdata = split("\n",do_diff($backupdata,$postdata));
+			$backupdata = htmlspecialchars($backupdata);
+
 		}
 		else if(arg_check("backup_source"))
 		{
