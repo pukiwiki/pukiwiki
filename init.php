@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.96 2004/07/31 03:51:29 henoheno Exp $
+// $Id: init.php,v 1.97 2004/07/31 09:29:06 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -169,96 +169,100 @@ foreach (array('msg', 'pass') as $key) {
 	if (isset($_GET[$key])) die_message("Sorry, already reserved: $key=");
 }
 
-$_GET    = input_filter($_GET);    $get    = & $_GET;
-$_POST   = input_filter($_POST);   $post   = & $_POST;
-$_COOKIE = input_filter($_COOKIE); $cookie = & $_COOKIE;
-
 // Expire risk
 unset($HTTP_GET_VARS, $HTTP_POST_VARS);	//, 'SERVER', 'ENV', 'SESSION', ...
 unset($_REQUEST);	// Seems not reliable
 
-/////////////////////////////////////////////////
-// 文字コードを変換
+// Remove null character etc.
+$_GET    = input_filter($_GET);
+$_POST   = input_filter($_POST);
+$_COOKIE = input_filter($_COOKIE);
 
+// 文字コード変換 ($_POST)
 // <form> で送信された文字 (ブラウザがエンコードしたデータ) のコードを変換
-// post は常に <form> なので、必ず変換
-if (isset($post['encode_hint']) && $post['encode_hint'] != '')
+// POST method は常に form 経由なので、必ず変換する
+if (isset($_POST['encode_hint']) && $_POST['encode_hint'] != '')
 {
 	// html.php の中で、<form> に encode_hint を仕込んでいるので、
 	// encode_hint を用いてコード検出する。
 	// 全体を見てコード検出すると、機種依存文字や、妙なバイナリ
 	// コードが混入した場合に、コード検出に失敗する恐れがある。
-	$encode = mb_detect_encoding($post['encode_hint']);
-	mb_convert_variables(SOURCE_ENCODING, $encode, $post);
+	$encode = mb_detect_encoding($_POST['encode_hint']);
+	mb_convert_variables(SOURCE_ENCODING, $encode, $_POST);
 }
-else if (isset($post['charset']) && $post['charset'] != '')
+else if (isset($_POST['charset']) && $_POST['charset'] != '')
 {
 	// TrackBack Pingに含まれていることがある
 	// 指定された場合は、その内容で変換を試みる
 	// うまくいかなかった場合はコード検出の設定で変換しなおし
-	if (mb_convert_variables(SOURCE_ENCODING, $post['charset'], $post) !== $post['charset'])
-		mb_convert_variables(SOURCE_ENCODING, 'auto', $post);
+	if (mb_convert_variables(SOURCE_ENCODING, $_POST['charset'], $_POST) !== $_POST['charset'])
+		mb_convert_variables(SOURCE_ENCODING, 'auto', $_POST);
 }
-else if (count($post) > 0)
+else if (count($_POST) > 0)
 {
 	// デバッグ用に、取りあえず、警告メッセージを出しておきます。
 	// echo "<p>Warning: 'encode_hint' field is not found in the posted data.</p>\n";
 
 	// 全部まとめて、コード検出、変換
-	mb_convert_variables(SOURCE_ENCODING, 'auto', $post);
+	mb_convert_variables(SOURCE_ENCODING, 'auto', $_POST);
 }
 
-// get は <form> からの場合と、<a href="http;//script/?query> の場合がある
-if (isset($get['encode_hint']) && $get['encode_hint'] != '')
+// 文字コード変換 ($_GET)
+// GET method は form からの場合と、<a href="http://script/?key=value> の場合がある
+if (isset($_GET['encode_hint']) && $_GET['encode_hint'] != '')
 {
-	// <form> の場合は、ブラウザがエンコードしているので、コード検出・変換が必要。
+	// form 経由の場合は、ブラウザがエンコードしているので、コード検出・変換が必要。
 	// encode_hint が含まれているはずなので、それを見て、コード検出した後、変換する。
 	// 理由は、post と同様
-	$encode = mb_detect_encoding($get['encode_hint']);
-	mb_convert_variables(SOURCE_ENCODING, $encode, $get);
+	$encode = mb_detect_encoding($_GET['encode_hint']);
+	mb_convert_variables(SOURCE_ENCODING, $encode, $_GET);
 }
 // <a href...> の場合は、サーバーが rawurlencode しているので、コード変換は不要
 
+
+/////////////////////////////////////////////////
 // QUERY_STRINGを取得
-// cmdもpluginも指定されていない場合は、QUERY_STRINGをページ名かInterWikiNameであるとみなす為
-// また、URI を urlencode せずに手打ちで入力した場合に対処する為
-$arg = '';
+
+// cmdもpluginも指定されていない場合は、QUERY_STRINGを
+// ページ名かInterWikiNameであるとみなす
 if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING']) {
 	$arg = $_SERVER['QUERY_STRING'];
 } else if (isset($_SERVER['argv']) && count($_SERVER['argv'])) {
 	$arg = $_SERVER['argv'][0];
 }
-// \0 除去
-$arg = input_filter($arg);
+$arg = input_filter($arg); // \0 除去
 
 // unset QUERY_STRINGs
 foreach (array('QUERY_STRING', 'argv', 'argc') as $key) {
 	unset(${$key}, $_SERVER[$key], $HTTP_SERVER_VARS[$key]);
 }
-// $_SERVER['REQUEST_URI'] is used by func.php NOW
+// $_SERVER['REQUEST_URI'] is used at func.php NOW
 unset($REQUEST_URI, $HTTP_SERVER_VARS['REQUEST_URI']);
 
-// URI 手打の場合、コード変換し、get[] に上書き
 // mb_convert_variablesのバグ(?)対策 配列で渡さないと落ちる
 $arg = array($arg);
 mb_convert_variables(SOURCE_ENCODING, 'auto', $arg);
 $arg = $arg[0];
 
+/////////////////////////////////////////////////
+// QUERY_STRINGを分解してコード変換し、$_GET に上書き
+
+// URI を urlencode せずに入力した場合に対処する
 $matches = array();
-foreach (explode('&', $arg) as $tmp_string)
-{
-	if (preg_match('/^([^=]+)=(.+)/', $tmp_string, $matches)
-		and mb_detect_encoding($matches[2]) != 'ASCII')
-	{
-		$get[$matches[1]] = $matches[2];
-	}
+foreach (explode('&', $arg) as $key_and_value) {
+	if (preg_match('/^([^=]+)=(.+)/', $key_and_value, $matches) &&
+	    mb_detect_encoding($matches[2]) != 'ASCII')
+		$_GET[$matches[1]] = $matches[2];
 }
 unset($matches);
 
 /////////////////////////////////////////////////
 // GET + POST = $vars
 
-$vars = array_merge($get, $post);	// Seems more reliable than using $_REQUEST
+$get    = & $_GET;
+$post   = & $_POST;
+$cookie = & $_COOKIE;
+$vars   = array_merge($_GET, $_POST);	// Seems more reliable than using $_REQUEST
 
 // 入力チェック: cmd, plugin の文字列は英数字以外ありえない
 foreach(array('cmd', 'plugin') as $var){
