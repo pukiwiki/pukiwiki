@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.33 2003/04/23 08:05:16 arino Exp $
+// $Id: make_link.php,v 1.34 2003/04/24 14:42:30 arino Exp $
 //
 
 // リンクを付加する
@@ -213,7 +213,7 @@ EOD;
 		
 		$name = $arr[1];
 		$this->param = $arr[2];
-		$this->body = $arr[3];
+		$this->body = ($arr[3] == '') ? '' : make_link($arr[3]);
 		
 		if (!exist_plugin_inline($name))
 		{

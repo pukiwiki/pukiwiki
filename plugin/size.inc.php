@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: size.inc.php,v 1.2 2003/04/23 08:05:16 arino Exp $
+// $Id: size.inc.php,v 1.3 2003/04/24 14:42:29 arino Exp $
 //
 
 function plugin_size_inline()
@@ -18,7 +18,6 @@ function plugin_size_inline()
 	{
 		return FALSE;
 	}
-	$body = make_link($body);
 
 	return "<span style=\"font-size:{$size}px;display:inline-block;line-height:130%;text-indent:0px\">$body</span>";
 }
