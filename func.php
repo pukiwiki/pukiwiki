@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.5 2002/07/01 10:21:20 masui Exp $
+// $Id: func.php,v 1.6 2002/07/18 15:48:55 masui Exp $
 /////////////////////////////////////////////////
 
 // ¸¡º÷
@@ -190,9 +190,9 @@ function strip_bracket($str)
 	
 	if($strip_link_wall)
 	{
-		preg_match("/^\[\[(.*)\]\]$/",$str,$match);
-		if($match[1])
-			$str = $match[1];
+	  if(preg_match("/^\[\[(.*)\]\]$/",$str,$match)) {
+	    $str = $match[1];
+	  }
 	}
 	return $str;
 }
