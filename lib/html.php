@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.5 2004/10/11 02:05:12 henoheno Exp $
+// $Id: html.php,v 1.6 2004/10/12 15:00:15 henoheno Exp $
 //
 
 // 本文を出力
@@ -196,11 +196,11 @@ $template
   <textarea name="msg" rows="$rows" cols="$cols">$s_postdata</textarea>
   <br />
   <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
-  <input type="submit" name="write"   value="$_btn_update" accesskey="s" /> &nbsp;
-  <input type="submit" name="cancel"  value="$_btn_cancel" accesskey="c" />
+  <input type="submit" name="write"   value="$_btn_update" accesskey="s" />
   $add_top
   <input type="checkbox" name="notimestamp" value="true"$checked_time />
-  <span style="small">$_btn_notchangetimestamp</span>
+  <span style="small">$_btn_notchangetimestamp</span> &nbsp;
+  <input type="submit" name="cancel"  value="$_btn_cancel" accesskey="c" />
   <textarea name="original" rows="1" cols="1" style="display:none">$s_original</textarea>
  </div>
 </form>
