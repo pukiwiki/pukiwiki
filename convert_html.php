@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.54 2003/09/03 02:07:56 arino Exp $
+// $Id: convert_html.php,v 1.55 2003/11/02 14:04:21 arino Exp $
 //
 function convert_html($lines)
 {
@@ -861,8 +861,8 @@ class Body extends Block
 		array_shift($lines);
 		while (count($lines))
 		{
-			$line = array_shift($lines);
-			if (rtrim($line) == $end)
+			$line = preg_replace('/[\r\n]*$/','',array_shift($lines));
+			if ($line == $end)
 			{
 				return;
 			}
