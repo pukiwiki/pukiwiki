@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.25 2004/09/29 14:42:48 henoheno Exp $
+// $Id: dump.inc.php,v 1.26 2004/09/29 14:46:07 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -105,9 +105,9 @@ function plugin_dump_download()
 	if ($tar->create(CACHE_DIR, $arc_kind))
 	{
 		$filecount = 0;		// ファイル数
-		if ($bk_wiki)   $filecount .= $tar->add(DATA_DIR,   '^[0-9A-F]+\.txt', $namedecode);
-		if ($bk_attach) $filecount .= $tar->add(UPLOAD_DIR, '^[0-9A-F_]+',     $namedecode);
-		if ($bk_backup) $filecount .= $tar->add(BACKUP_DIR, '^[0-9A-F]+\.gz',  $namedecode);
+		if ($bk_wiki)   $filecount .= $tar->add_dir(DATA_DIR,   '^[0-9A-F]+\.txt', $namedecode);
+		if ($bk_attach) $filecount .= $tar->add_dir(UPLOAD_DIR, '^[0-9A-F_]+',     $namedecode);
+		if ($bk_backup) $filecount .= $tar->add_dir(BACKUP_DIR, '^[0-9A-F]+\.gz',  $namedecode);
 		$tar->close();
 
 		if ($filecount > 0) {
@@ -373,13 +373,13 @@ class tarlib
 	}
 
 	////////////////////////////////////////////////////////////
-	// 関数  : tarファイルに追加する
+	// 関数  : tarファイルにディレクトリを追加する
 	// 引数  : $dir    .. ディレクトリ名
 	//         $mask   .. 追加するファイル(正規表現)
 	//         $decode .. ページ名の変換をするか
 	// 返り値: 作成したファイル数
 	////////////////////////////////////////////////////////////
-	function add($dir, $mask, $decode = FALSE)
+	function add_dir($dir, $mask, $decode = FALSE)
 	{
 		$retvalue = 0;
 		
