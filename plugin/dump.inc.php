@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.19 2004/09/26 13:12:20 henoheno Exp $
+// $Id: dump.inc.php,v 1.20 2004/09/26 13:42:20 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -21,21 +21,18 @@
 /////////////////////////////////////////////////
 // User define
 
-// ページ名をディレクトリ構造に変換する際の日本語の文字コード
+// ページ名をディレクトリ構造に変換する際の文字コード (for mbstring)
 define('PLUGIN_DUMP_FILENAME_ENCORDING', 'SJIS');
 
 // 最大アップロードサイズ
 define('PLUGIN_DUMP_MAX_FILESIZE', 1024); // Kbyte
 
 /////////////////////////////////////////////////
+// Internal
 
 // Action
 define('PLUGIN_DUMP_DUMP',    'dump');    // Dump & download
 define('PLUGIN_DUMP_RESTORE', 'restore'); // Upload & restore
-
-// Suffixes
-define('PLUGIN_DUMP_SFX_TAR' , '.tar');
-define('PLUGIN_DUMP_SFX_GZIP', '.tar.gz');
 
 /////////////////////////////////////////////////
 // プラグイン本体
@@ -136,15 +133,15 @@ function plugin_dump_upload()
 	} else { 
 		$matches[1] = strtolower($matches[1]);
 		switch ($matches[1]) {
-		case '.tar':    $arc_kind = 'tar';  break;
+		case '.tar':    $arc_kind = 'tar'; break;
 		case '.tgz':    $arc_kind = 'tar'; break;
 		case '.tar.gz': $arc_kind = 'tgz'; break;
-		default: die_message("Invalid file suffix: " . $matches[1]);
+		default: die_message('Invalid file suffix: ' . $matches[1]);
 		}
 	}
 
 	if ($_FILES['upload_file']['size'] >  PLUGIN_DUMP_MAX_FILESIZE * 1024)
-		die_message("Max file size exceeded: " . PLUGIN_DUMP_MAX_FILESIZE . "KB");
+		die_message('Max file size exceeded: ' . PLUGIN_DUMP_MAX_FILESIZE . 'KB');
 
 	// アップロードファイル
 	$uploadfile = tempnam(CACHE_DIR, 'upload' );
@@ -196,17 +193,16 @@ function plugin_dump_upload()
 
 /////////////////////////////////////////////////
 // tarファイルのダウンロード
-function download_tarfile($name, $arc_kind)
+function download_tarfile($tempnam, $arc_kind)
 {
-	// ファイル名
+	$size = filesize($tempnam);
+
 	$filename = strftime('tar%Y%m%d', time());
 	if ($arc_kind == 'tgz') {
-		$filename .= PLUGIN_DUMP_SFX_GZIP;
+		$filename .= '.tar.gz';
 	} else {
-		$filename .= PLUGIN_DUMP_SFX_TAR;
+		$filename .= '.tar';
 	}
-
-	$size = filesize($name);
 
 	header('Content-Disposition: attachment; filename="' . $filename . '"');
 	header('Content-Length: ' . $size);
