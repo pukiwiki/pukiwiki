@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-//  $Id: attach.inc.php,v 1.72 2005/02/27 07:38:15 henoheno Exp $
+//  $Id: attach.inc.php,v 1.73 2005/02/27 07:44:53 henoheno Exp $
 //
 // File attach plugin
 
@@ -368,7 +368,7 @@ EOD;
   <span class="small">
    $msg_maxsize
   </span><br />
-  {$_attach_messages['msg_file']}: <input type="file" name="attach_file" />
+  <label for="_p_attach_file">{$_attach_messages['msg_file']}:</label> <input type="file" name="attach_file" id="_p_attach_file" />
   $pass
   <input type="submit" value="{$_attach_messages['btn_upload']}" />
  </div>
@@ -529,7 +529,8 @@ $s_err
   <input type="hidden" name="age" value="{$this->age}" />
   $msg_delete
   $msg_freeze
-  {$_attach_messages['msg_password']}: <input type="password" name="pass" size="8" />
+  <label for="_p_attach_password">{$_attach_messages['msg_password']}:</label>
+  <input type="password" name="pass" id="_p_attach_password" size="8" />
   <input type="submit" value="{$_attach_messages['btn_submit']}" />
  </div>
 </form>
