@@ -1,10 +1,10 @@
 NAME
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
-        PukiWiki 1.3.7
+        PukiWiki 1.3.8rc1
         Copyright (C) 2001-2004 by sng, PukiWiki Developers Team
 	License is GNU/GPL.
-	Based on "PukiWiki" 1.3 by sng
+	Based on "PukiWiki" 1.3 by yu-ji
         http://pukiwiki.org/
 
 SYNOPSIS
@@ -19,8 +19,8 @@ DESCRIPTION
     PukiWikiは、Webページ全体を自由に変更することができます。
 
     PukiWikiは、結城浩さんのYukiWikiの仕様を参考にして独自に作られました。
-    1.3まではsngさんが作成し、1.3.1b以降はPukiWiki Developers Teamによって
-    開発が続けられています。
+    1.3まではyu-ji(sng)さんが作成し、1.3.1b以降はPukiWiki Developers Team
+    によって開発が続けられています。
 
     PukiWikiはPHPで書かれたPHPスクリプトとして実現されていますので、
     PHPが動作するWebサーバならば比較的容易に設置できます。
@@ -68,8 +68,8 @@ DESCRIPTION
         cache          777
         counter        777
         diff           777
-        face           755
         image          755
+        image/face     755
         plugin         755
         skin           755
         wiki           777
@@ -77,11 +77,10 @@ DESCRIPTION
         ファイル       パーミッション 転送モード
         *.php          644            ASCII
         *.lng          644            ASCII
-        pukiwiki.png   644            BINARY
 
         cache/*        666            ASCII
-        face/*         644            BINARY
         image/*        644            BINARY
+        image/face/*   644            BINARY
         plugin/*       644            ASCII
         skin/*         644            ASCII
         wiki/*         666            ASCII
