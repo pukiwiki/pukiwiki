@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.inc.php,v 1.6 2004/07/18 02:39:06 henoheno Exp $
+// $Id: diff.inc.php,v 1.7 2004/07/18 02:58:00 henoheno Exp $
 //
 
 //ページの差分を表示する
@@ -81,12 +81,10 @@ function plugin_diff_delete($page)
 	global $_msg_diff_adminpass, $_btn_delete, $_msg_invalidpass;
 	
 	$filename = DIFF_DIR . encode($page) . '.txt'; 
-	$s_page = htmlspecialchars($page);
 	$body = '';
-	if (! is_pagename($page) || ! file_exists($filename)) {
-		$body = make_pagelink($page) . "'s diff seems not found";
-		return array('msg'=>$_title_diff_delete, 'body'=>$body); 
-	}
+	if (! is_pagename($page))     $body = "Invalid page name";
+	if (! file_exists($filename)) $body = make_pagelink($page) . "'s diff seems not found";
+	if ($body) return array('msg'=>$_title_diff_delete, 'body'=>$body);
 
 	if (isset($vars['pass'])) {
 		if (md5($vars['pass']) == $adminpass) {
@@ -100,6 +98,7 @@ function plugin_diff_delete($page)
 		}
 	}
 
+	$s_page = htmlspecialchars($page);
 	$body .= <<<EOD
 <p>$_msg_diff_adminpass</p>
 <form action="$script" method="post">
