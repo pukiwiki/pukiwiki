@@ -2,28 +2,33 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: freeze.inc.php,v 1.1 2003/01/27 05:38:46 panda Exp $
+// $Id: freeze.inc.php,v 1.2 2003/02/14 07:28:34 panda Exp $
 //
 // Åà·ë
+function plugin_freeze_convert()
+{
+	return '';
+}
+
 function plugin_freeze_action()
 {
 	global $script,$post,$vars,$function_freeze,$adminpass;
-	global $_title_isfreezed,$_title_freezed,$_title_freeze,$_msg_invalidpass,$_msg_freezing,$_btn_freeze;
+	global $_title_isfreezed,$_title_freezed,$_title_freeze;
+	global $_msg_invalidpass,$_msg_freezing,$_btn_freeze;
 	
 	$msg = $body = '';
 	
-	if (!$function_freeze or !is_page($vars['page']))
+	if (!$function_freeze or !is_page($vars['page'])) {
 		return array('msg'=>$msg,'body'=>$body);
+	}
 	
 	$pass = array_key_exists('pass',$post) ? $post['pass'] : NULL;
 	
-	if (is_freeze($vars['page']))
-	{
+	if (is_freeze($vars['page'])) {
 		$msg = $_title_isfreezed;
 		$body = str_replace('$1',htmlspecialchars(strip_bracket($vars['page'])),$_title_isfreezed);
 	}
-	else if (md5($pass) == $adminpass)
-	{
+	else if (md5($pass) == $adminpass) {
 		$postdata = get_source($post['page']);
 		array_unshift($postdata,"#freeze\n");
 		$postdata = join('',$postdata);
@@ -37,14 +42,14 @@ function plugin_freeze_action()
 		$msg = $_title_freezed;
 		$body = '';
 	}
-	else
-	{
+	else {
 		$msg = $_title_freeze;
 
 		$body = "<br />\n";
 		
-		if ($pass !== NULL)
+		if ($pass !== NULL) {
 			$body .= "<strong>$_msg_invalidpass</strong><br />\n";
+		}
 		
 		$body.= "$_msg_freezing<br />\n";
 		
