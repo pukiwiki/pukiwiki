@@ -1,7 +1,8 @@
 <?php
-// $Id: trackback.php,v 1.2 2004/10/10 12:49:56 henoheno Exp $
+// $Id: trackback.php,v 1.3 2004/12/11 15:44:45 henoheno Exp $
 /*
  * PukiWiki TrackBack プログラム
+ * (C) 2003-2004 PukiWiki Developer Team
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
  * License: GPL
  *
@@ -21,6 +22,8 @@
  * == Referer 対応分 ==
  * ref_save($page)         Referer データ保存(更新) // pukiwiki.php
  */
+
+define('PLUGIN_TRACKBACK_VERSION', 'PukiWiki/TrackBack 0.2');
 
 // TrackBack Ping IDを取得
 function tb_get_id($page)
@@ -60,36 +63,50 @@ function tb_count($page, $ext = '.txt')
 	return file_exists($filename) ? count(file($filename)) : 0;
 }
 
-// TrackBack Ping 送信
-function tb_send($page, $data)
+// Send TrackBack Ping
+// $plus  = Newly added lines
+// $minus = Removed lines
+function tb_send($page, $plus, $minus = '')
 {
 	global $script, $trackback;
 
 	if (! $trackback) return;
 
-	// 処理実行時間制限(php.ini オプション max_execution_time )
+	// Disable 'max execution time' (php.ini: max_execution_time)
 	if (ini_get('safe_mode') == '0') set_time_limit(0);
 
-	$data = convert_html($data);
+	// Get URLs from <a>(anchor) tag from convert_html()
+	$links = array();
+	$plus  = convert_html($plus); // WARNING: heavy and may cause side-effect
+	preg_match_all('#href="(https?://[^"]+)"#', $plus, $links, PREG_PATTERN_ORDER);
 
-	// convert_html() 変換結果の <a> タグから URL 抽出
-	preg_match_all('#href="(https?://[^"]+)"#', $data, $links, PREG_PATTERN_ORDER);
+	// Reject own URL (= URL started from '$script')
+	$links = preg_grep('|^' . preg_quote($script) . '\?.|',
+		array_unique($links[1]),   PREG_GREP_INVERT);
 
-	// 自ホスト($scriptで始まるurl)を除く
-	$links = preg_grep("/^(?!".preg_quote($script,'/')."\?)./", $links[1]);
+	// Reject from minus list
+	if ($minus != '') {
+		$minus = convert_html($minus); // WARNING: heavy and may cause side-effect
+		$links_m = array();
+		preg_match_all('#href="(https?://[^"]+)"#', $minus, $links_m, PREG_PATTERN_ORDER);
+		$links_m = preg_grep('|^' . preg_quote($script) . '\?.|',
+			array_unique($links_m[1]), PREG_GREP_INVERT);
+		foreach($links_m as $m_link)
+			$links = preg_grep('|^' . preg_quote($m_link) . '$|', $links, PREG_GREP_INVERT);
+	}
 
-	// リンク無しは終了
+	// No link, END
 	if (! is_array($links) || empty($links)) return;
 
-	$r_page = rawurlencode($page);
+	$r_page  = rawurlencode($page);
 	$excerpt = strip_htmltag(convert_html(get_source($page)));
 
 	// 自文書の情報
 	$putdata = array(
-		'title'     => $page, // タイトルはページ名
+		'title'     => $page, // Title = It's page name
 		'url'       => "$script?$r_page", // 送信時に再度、rawurlencode される
 		'excerpt'   => mb_strimwidth(preg_replace("/[\r\n]/", ' ', $excerpt), 0, 255, '...'),
-		'blog_name' => 'PukiWiki/TrackBack 0.1',
+		'blog_name' => PLUGIN_TRACKBACK_VERSION,
 		'charset'   => SOURCE_ENCODING // 送信側文字コード(未既定)
 	);
 
