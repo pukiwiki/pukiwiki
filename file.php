@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.13 2003/03/07 07:05:14 panda Exp $
+// $Id: file.php,v 1.14 2003/03/10 11:30:50 panda Exp $
 //
 
 // ソースを取得
@@ -264,45 +264,73 @@ function links_get_related($page)
 	global $vars,$related;
 	static $links;
 	
-	if (!isset($links)) {
+	if (!isset($links))
+	{
 		$links = array();
 	}
 	
-	if (array_key_exists($page,$links)) {
+	if (array_key_exists($page,$links))
+	{
 		return $links[$page];
 	}
 	
 	// 可能ならmake_link()で生成した関連ページを取り込む
 	$links[$page] = ($page == $vars['page']) ? $related : array();
 	
-	$a_page = addslashes($page);
-	
-	if (defined('LINK_DB')) {
-		$sql = <<<EOD
-SELECT refpage.name,refpage.lastmod FROM page left join link on page.id = page_id left join page as refpage on ref_id = refpage.id where page.name = '$a_page'
-UNION
-SELECT DISTINCT refpage.name,refpage.lastmod FROM page left join link on page.id = ref_id left join page as refpage on page_id = refpage.id where page.name = '$a_page';
-EOD;
-		$rows = db_query($sql);
-		
-		foreach ($rows as $row) {
-			if (empty($row['name']) or substr($row['name'],0,1) == ':') {
-				continue;
-			}
-			$links[$page][$row['name']] = $row['lastmod'];
-		}
-	}
-	else {
-//		$links[$page] = array_merge($links[$page],do_search($page,'OR',1));
-		$ref_name = CACHE_DIR.encode($page).'.ref';
-		if (file_exists($ref_name)) {
-			foreach (file($ref_name) as $line) {
-				list($_page,$time) = explode("\t",rtrim($line));
-				$links[$page][$_page] = $time;
-			}
-		}
-	}
+	// データベースから関連ページを得る
+	$links[$page] += links_get_related_db($vars['page']);
 	
 	return $links[$page];
+}
+// データベースから関連ページを得る
+function links_get_related_db($page)
+{
+	$links = array();
+	
+	if (defined('LINK_DB'))
+	{
+		$a_page = addslashes($page);
+		
+		// $pageが参照しているページ
+		$sql = <<<EOD
+SELECT refpage.name,refpage.lastmod
+ FROM page
+  LEFT JOIN link ON page.id = page_id
+   LEFT JOIN page AS refpage ON ref_id = refpage.id
+    WHERE page.name = '$a_page' and refpage.lastmod > 0;
+EOD;
+		$rows = db_query($sql);
+		// $pageを参照しているページ
+		$sql = <<<EOD
+SELECT DISTINCT refpage.name,refpage.lastmod
+ FROM page
+  LEFT JOIN link ON page.id = ref_id
+   LEFT JOIN page AS refpage ON page_id = refpage.id
+    WHERE page.name = '$a_page';
+EOD;
+		$rows += db_query($sql);
+		
+		foreach ($rows as $row)
+		{
+			if (empty($row['name']) or substr($row['name'],0,1) == ':')
+			{
+				continue;
+			}
+			$links[$row['name']] = $row['lastmod'];
+		}
+	}
+	else
+	{
+		$ref_name = CACHE_DIR.encode($page).'.ref';
+		if (file_exists($ref_name))
+		{
+			foreach (file($ref_name) as $line)
+			{
+				list($_page,$time) = explode("\t",rtrim($line));
+				$links[$_page] = $time;
+			}
+		}
+	}
+	return $links;
 }
 ?>

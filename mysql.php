@@ -2,14 +2,14 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mysql.php,v 1.1 2003/01/27 05:44:11 panda Exp $
+// $Id: mysql.php,v 1.2 2003/03/10 11:30:50 panda Exp $
 //
 
 function db_exec($sql)
 {
-	$conn = mysql_pconnect()
+	$conn = mysql_pconnect(MYSQL_HOST,MYSQL_USER,MYSQL_PASS)
 		or die_message('cannot connect db.');
-	mysql_select_db('pukiwiki',$conn)
+	mysql_select_db(MYSQL_DB,$conn)
 		or die_message('cannot select db.');
 	$result = mysql_query($sql,$conn)
 		or die_message("query '$sql' failure.\n".mysql_error($conn));
