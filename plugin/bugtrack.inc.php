@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.4 2003/01/27 05:38:44 panda Exp $
+ * $Id: bugtrack.inc.php,v 1.5 2003/01/31 10:53:26 panda Exp $
  */
 
 function plugin_bugtrack_init()
@@ -204,7 +204,7 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 	}
 
 	// is_pageのキャッシュをクリアする。
-	is_page($post['refer'],true);
+	is_page($post['refer'],TRUE);
 	
 	return $page;
 }
