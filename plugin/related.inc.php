@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: related.inc.php,v 1.4 2005/02/12 04:05:34 henoheno Exp $
+// $Id: related.inc.php,v 1.5 2005/04/02 06:33:39 henoheno Exp $
 //
 // Related plugin: Show Backlinks for the page
 
@@ -36,7 +36,7 @@ function plugin_related_action()
 	$s_word = htmlspecialchars($_page);
 	$msg = 'Backlinks for: ' . $s_word;
 	$retval  = '<a href="' . $script . '?' . $r_word . '">' .
-		'Return to ' . $s_word .'</a><br/>'. "\n";
+		'Return to ' . $s_word .'</a><br />'. "\n";
 
 	if (empty($data)) {
 		$retval .= '<ul><li>No related pages found.</li></ul>' . "\n";	

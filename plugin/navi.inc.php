@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: navi.inc.php,v 1.21 2005/04/02 02:42:39 henoheno Exp $
+// $Id: navi.inc.php,v 1.22 2005/04/02 06:33:39 henoheno Exp $
 //
 // Navi plugin: Show DocBook-like navigation bar and contents
 
@@ -59,13 +59,13 @@ function plugin_navi_convert()
 		$is_home = ($home == $current);
 		if (! is_page($home)) {
 			return '#navi(contents-page-name): No such page: ' .
-				htmlspecialchars($home) . '<br/>';
+				htmlspecialchars($home) . '<br />';
 		} else if (! $is_home &&
 		    ! preg_match('/^' . preg_quote($home, '/') . '/', $current)) {
 			return '#navi(' . htmlspecialchars($home) .
 				'): Not a child page like: ' .
 				htmlspecialchars($home . '/' . basename($current)) .
-				'<br/>';
+				'<br />';
 		}
 		$reverse = (strtolower($reverse) == 'reverse');
 	} else {
@@ -145,7 +145,7 @@ function plugin_navi_convert()
 		// Show contents
 		$count = count($pages);
 		if ($count == 0) {
-			return '#navi(contents-page-name): You already view the result<br/>';
+			return '#navi(contents-page-name): You already view the result<br />';
 		} else if ($count == 1) {
 			// Sentinel only: Show usage and warning
 			$home = htmlspecialchars($home);

@@ -1,5 +1,5 @@
 <?php
-// $Id: stationary.inc.php,v 1.3 2005/04/02 03:36:37 henoheno Exp $
+// $Id: stationary.inc.php,v 1.4 2005/04/02 06:33:39 henoheno Exp $
 //
 // Stationary plugin
 // License: The same as PukiWiki
@@ -40,7 +40,7 @@ function plugin_stationary_convert()
 		$result = '(' . join(',', $args) . ')';
 	}
 
-	return '#stationary' . $result . '<br/>';
+	return '#stationary' . $result . '<br />';
 }
 
 // In-line type plugin: &stationary; or &stationary(foo); , or &stationary(foo){bar};

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.116 2005/03/21 08:29:18 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.117 2005/04/02 06:34:50 henoheno Exp $
 //
 // PukiWiki main setting file
 
@@ -375,7 +375,7 @@ $fixed_heading_anchor = 1;
 $preformat_ltrim = 1;
 
 /////////////////////////////////////////////////
-// Convert linebreaks into <br/>
+// Convert linebreaks into <br />
 $line_break = 0;
 
 /////////////////////////////////////////////////
