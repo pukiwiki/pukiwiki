@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: include.inc.php,v 1.13 2004/08/09 14:47:55 henoheno Exp $
+// $Id: include.inc.php,v 1.14 2004/08/09 15:01:42 henoheno Exp $
 //
 
 define('INCLUDE_MAX', 4); // 一度に(連鎖的に)インクルードできる最大数
@@ -12,9 +12,10 @@ function plugin_include_convert()
 {
 	global $script, $vars, $get, $post, $menubar, $_msg_include_restrict;
 	static $included = array();
-	static $count = 0;
+	static $count = 1;
 
 	if (func_num_args() == 0) return '#include(): No argument<br />';
+	if ($count > INCLUDE_MAX) return '#include(): Include-max reached(' . INCLUDE_MAX . ")<br />";
 
 	// Get an argument
 	list($page) = func_get_args();
@@ -28,7 +29,7 @@ function plugin_include_convert()
 	// I'm stuffed
 	if (isset($included[$page])) return "#include(): Already included: $s_page<br />";
 	if (! is_page($page))        return "#include(): No such page: $s_page<br />";
-	if(++$count > INCLUDE_MAX)   return '#include(): Include-max reached(' . INCLUDE_MAX . ")<br />";
+	++$count;
 
 	// One page, only one time, at a time
 	$included[$page] = TRUE;
