@@ -2,8 +2,20 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: link.php,v 1.1 2003/03/13 14:08:17 panda Exp $
+// $Id: link.php,v 1.2 2003/03/15 11:38:50 panda Exp $
 //
+
+/*
+ * データ形式
+ * CACHE_DIR/encode(ページ名).ref
+ * 参照元ページ名<tab>AutoLinkによるリンクのみのとき1\n
+ * 参照元ページ名<tab>AutoLinkによるリンクのみのとき1\n
+ * ...
+ * 
+ * CACHE_DIR/encode(ページ名).rel
+ * 参照先ページ名<tab>参照先ページ名<tab>...
+ *
+ */
 
 // データベースから関連ページを得る
 function links_get_related_db($page)
@@ -14,8 +26,8 @@ function links_get_related_db($page)
 	{
 		foreach (file($ref_name) as $line)
 		{
-			list($_page,$time) = explode("\t",rtrim($line));
-			$links[$_page] = $time;
+			list($_page) = explode("\t",rtrim($line));
+			$links[$_page] = get_filetime($_page);
 		}
 	}
 	return $links;
@@ -101,9 +113,9 @@ function links_update($page)
 	{
 		foreach (file($ref_file) as $line)
 		{
-			list($ref_page,$time,$auto) = explode("\t",rtrim($line));
+			list($ref_page,$ref_auto) = explode("\t",rtrim($line));
 			//$pageをAutoLinkでしか参照していないページを一斉更新する(おいおい)
-			if ($auto)
+			if ($ref_auto)
 			{
 				links_delete($ref_page,array($page));
 			}
@@ -135,7 +147,6 @@ function links_init()
 		{
 			continue;
 		}
-		$time = get_filetime($page);
 		$rel = array(); // 参照先
 		$links = links_get_objects($page);
 		foreach ($links as $_obj)
@@ -149,7 +160,7 @@ function links_init()
 			{
 				$ref_notauto[$_obj->name][$page] = TRUE;
 			}
-			$ref[$_obj->name][$page] = $time;
+			$ref[$_obj->name][] = $page;
 		}
 		$rel = array_unique($rel);
 		if (count($rel))
@@ -167,13 +178,14 @@ function links_init()
 		{
 			continue;
 		}
+		$arr = array_unique($arr);
 		$fp = fopen(CACHE_DIR.encode($page).'.ref','w')
 			or die_message('cannot write '.htmlspecialchars(CACHE_DIR.encode($page).'.ref'));
-		foreach ($arr as $_page=>$time)
+		foreach ($arr as $ref_page)
 		{
-			$auto = (array_key_exists($page,$ref_notauto)
-				and array_key_exists($_page,$ref_notauto[$page])) ? 0 : 1;
-			fputs($fp,"$_page\t$time\t$auto\n");
+			$ref_auto = (array_key_exists($page,$ref_notauto)
+				and array_key_exists($ref_page,$ref_notauto[$page])) ? 0 : 1;
+			fputs($fp,"$ref_page\t$ref_auto\n");
 		}
 		fclose($fp);
 	}
@@ -185,15 +197,15 @@ function links_add($page,$add,$rel_auto)
 	{
 		$all_auto = array_key_exists($_page,$rel_auto);
 		$is_page = is_page($_page);
-		$ref = "$page\t$time\t".($all_auto ? 1 : 0)."\n";
+		$ref = "$page\t".($all_auto ? 1 : 0)."\n";
 		
 		$ref_file = CACHE_DIR.encode($_page).'.ref';
 		if (file_exists($ref_file))
 		{
 			foreach (file($ref_file) as $line)
 			{
-				list($ref_page,$time,$auto) = explode("\t",rtrim($line));
-				if (!$auto)
+				list($ref_page,$ref_auto) = explode("\t",rtrim($line));
+				if (!$ref_auto)
 				{
 					$all_auto = FALSE;
 				}
@@ -228,10 +240,10 @@ function links_delete($page,$del)
 		$ref = '';
 		foreach (file($ref_file) as $line)
 		{
-			list($ref_page,$time,$auto) = explode("\t",rtrim($line));
+			list($ref_page,$ref_auto) = explode("\t",rtrim($line));
 			if ($ref_page != $page)
 			{
-				if (!$auto)
+				if (!$ref_auto)
 				{
 					$all_auto = FALSE;
 				}

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: yetlist.inc.php,v 1.14 2003/03/10 12:37:23 panda Exp $
+// $Id: yetlist.inc.php,v 1.15 2003/03/15 11:39:04 panda Exp $
 //
 
 function plugin_yetlist_init()
@@ -53,7 +53,7 @@ EOD;
 		{
 			foreach (file(CACHE_DIR.encode($page).'.ref') as $line)
 			{
-				list($_page,$lastmod) = explode("\t",$line);
+				list($_page) = explode("\t",$line);
 				$refer[$page][] = $_page;
 			}
 		}
