@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.49 2003/07/01 10:16:56 arino Exp $
+// $Id: make_link.php,v 1.50 2003/07/14 04:41:10 arino Exp $
 //
 
 // リンクを付加する
@@ -429,6 +429,8 @@ EOD;
 //InterWikiName
 class Link_interwikiname extends Link
 {
+	var $url = '';
+	var $param = '';
 	var $anchor = '';
 	
 	function Link_interwikiname($start)
@@ -455,7 +457,7 @@ class Link_interwikiname extends Link
   )
  )?
  (?<! > | >\[\[ )       # not '>' or '>[['
- (\:(?:(?<!>|\]\]).)+)  # (6) param
+ \:((?:(?<!>|\]\]).)+)  # (6) param
  (?($s5) |              # if !(5)
   (?($s1)\]\]           #  close bracket if (1)
   |(?($s3)\]\])         #   or (3)
@@ -471,24 +473,29 @@ EOD;
 	}
 	function set($arr,$page)
 	{
+		global $script;
+		
 		$arr = $this->splice($arr);
 		
-		$param = $arr[6];
-		if (preg_match('/^([^#]+)(#[A-Za-z][\w-]*)$/',$param,$matches))
+		$this->param = $arr[6];
+		if (preg_match('/^([^#]+)(#[A-Za-z][\w-]*)$/',$arr[6],$matches))
 		{
 			$this->anchor = $matches[2];
-			$param = $matches[1];
+			$this->param = $matches[1];
 		}
-		$name = rawurlencode('[['.$arr[4].$param.']]');
-		$alias = ($arr[2] != '') ? $arr[2] : $arr[4].$arr[6];
+		$name = htmlspecialchars($arr[4].':'.$this->param);
+		$alias = ($arr[2] != '') ? $arr[2] : $arr[4].':'.$arr[6];
+		$this->url = get_interwiki_url($arr[4],$this->param);
+		if ($this->url === FALSE)
+		{
+			$this->url = $script.'?'.rawurlencode('[['.$arr[4].':'.$this->param.']]');
+		}
 		
 		return parent::setParam($page,$name,'InterWikiName',$alias);
 	}
 	function toString()
 	{
-		global $script; //,$interwiki_target;
-		
-		return "<a href=\"$script?{$this->name}{$this->anchor}\">{$this->alias}</a>";
+		return "<a href=\"{$this->url}{$this->anchor}\" title=\"{$this->name}\">{$this->alias}</a>";
 	}
 }
 // BracketName
@@ -822,5 +829,78 @@ function get_fullname($name,$refer)
 			(count($arrn) ? "$defaultpage/".join('/',$arrn) : $defaultpage);
 	}
 	return $name;
+}
+
+// InterWikiNameを展開
+function get_interwiki_url($name,$param)
+{
+	global $interwiki;
+	static $interwikinames;
+	
+	if (!isset($interwikinames))
+	{
+		$interwikinames = array();
+		foreach (get_source($interwiki) as $line)
+		{
+			if (preg_match('/\[((?:(?:https?|ftp|news):\/\/|\.\.?\/)[!~*\'();\/?:\@&=+\$,%#\w.-]*)\s([^\]]+)\]\s?([^\s]*)/',$line,$matches))
+			{
+				$interwikinames[$matches[2]] = array($matches[1],$matches[3]);
+			}
+		}
+	}
+	if (!array_key_exists($name,$interwikinames))
+	{
+		return FALSE;
+	}
+	list($url,$opt) = $interwikinames[$name];
+	
+	// 文字エンコーディング
+	switch ($opt)
+	{
+		// YukiWiki系
+		case 'yw':
+			if (!preg_match("/$WikiName/",$param))
+			{
+				$param = '[['.mb_convert_encoding($param,'SJIS',SOURCE_ENCODING).']]';
+			}
+			break;
+		
+		// moin系
+		case 'moin':
+			$param = str_replace('%','_',rawurlencode($param));
+			break;
+		
+		// 内部文字エンコーディングのままURLエンコード
+		case '':
+		case 'std':
+			$param = rawurlencode($param);
+			break;
+		
+		// URLエンコードしない
+		case 'asis':
+		case 'raw':
+			break;
+		
+		default:
+			// エイリアスの変換
+			if (array_key_exists($opt,$encode_aliases))
+			{
+				$opt = $encode_aliases[$opt];
+			}
+			// 指定された文字コードへエンコードしてURLエンコード
+			$param = rawurlencode(mb_convert_encoding($param,$opt,'auto'));
+	}
+	
+	// パラメータを置換
+	if (strpos($url,'$1') !== FALSE)
+	{
+		$url = str_replace('$1',$param,$url);
+	}
+	else
+	{
+		$url .= $param;
+	}
+	
+	return $url;
 }
 ?>

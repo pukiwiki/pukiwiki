@@ -2,13 +2,13 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: interwiki.inc.php,v 1.5 2003/05/16 05:53:38 arino Exp $
+// $Id: interwiki.inc.php,v 1.6 2003/07/14 04:41:10 arino Exp $
 //
 // InterWikiNameの判別とページの表示
 
 function plugin_interwiki_action()
 {
-	global $script,$vars,$interwiki,$WikiName,$InterWikiName;
+	global $vars,$InterWikiName;
 	global $_title_invalidiwn,$_msg_invalidiwn;
 	
 	$retvars = array();
@@ -26,26 +26,8 @@ function plugin_interwiki_action()
 	$name = $match[2];
 	$param = $match[3];
 	
-	$url = $opt = '';
-	foreach (get_source($interwiki) as $line)
-	{
-		if (preg_match('/\[((?:(?:https?|ftp|news):\/\/|\.\.?\/)[!~*\'();\/?:\@&=+\$,%#\w.-]*)\s([^\]]+)\]\s?([^\s]*)/',$line,$match)
-			and $match[2] == $name)
-		{
-			$url = $match[1];
-			$opt = $match[3];
-			
-			if (!is_url($url))
-			{
-//				$url = substr($script,0,strrpos($script,'/')).substr($url,strspn($url,'.'));
-				$q_name = preg_quote(basename($_SERVER['SCRIPT_NAME']));
-				$url = preg_replace("/$q_name$/",'',$script).$match[1];
-			}
-			break;
-		}
-	}
-	
-	if ($url == '')
+	$url = get_interwiki_url($name,$param);
+	if ($url === FALSE)
 	{
 		$retvars['msg'] = $_title_invalidiwn;
 		$retvars['body'] = str_replace(
@@ -54,59 +36,6 @@ function plugin_interwiki_action()
 			$_msg_invalidiwn
 		);
 		return $retvars;
-	}
-	
-	// 文字エンコーディング
-	if ($opt == 'yw')
-	{
-		// YukiWiki系
-		if (!preg_match("/$WikiName/",$param))
-		{
-			$param = '[['.mb_convert_encoding($param,'SJIS',SOURCE_ENCODING).']]';
-		}
-	}
-	else if ($opt == 'moin')
-	{
-		// moin系
-		$param = str_replace('%','_',rawurlencode($param));
-	}
-	else if ($opt == '' or $opt == 'std')
-	{
-		// 内部文字エンコーディングのままURLエンコード
-		$param = rawurlencode($param);
-	}
-	else if ($opt == 'asis' or $opt == 'raw')
-	{
-		// URLエンコードしない
-		// $match[3] = $match[3];
-	}
-	else if ($opt != '')
-	{
-		// エイリアスの変換
-		if ($opt == 'sjis')
-		{
-			$opt = 'SJIS';
-		}
-		else if ($opt == 'euc')
-		{
-			$opt = 'EUC-JP';
-		}
-		else if ($opt == 'utf8')
-		{
-			$opt = 'UTF-8';
-		}
-
-		// 指定された文字コードへエンコードしてURLエンコード
-		$param = rawurlencode(mb_convert_encoding($param,$opt,'auto'));
-	}
-	
-	if (strpos($url,'$1') !== FALSE)
-	{
-		$url = str_replace('$1',$param,$url);
-	}
-	else
-	{
-		$url .= $param;
 	}
 	
 	header("Location: $url");
