@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: config.php,v 1.2 2004/10/10 02:13:25 henoheno Exp $
+// $Id: config.php,v 1.3 2004/12/23 02:04:14 henoheno Exp $
 //
 /*
  * プラグインの設定をPukiWikiのページに記述する
@@ -96,7 +96,8 @@ class Config
 				if (! is_a($obj, 'ConfigTable_Sequential')) {
 					$obj = & new ConfigTable_Sequential('', $obj);
 				}
-				$obj->add_value(explode('|', $matches[1]));
+				// Trim() each table cell
+				$obj->add_value(array_map('trim', explode('|', $matches[1])));
 			} else {
 				$obj->add_line($line);
 			}
