@@ -1,3 +1,4 @@
+#freeze
 #navi(PukiWiki/1.4/マニュアル/プラグイン)
 
 **paint [#v8e0f909]

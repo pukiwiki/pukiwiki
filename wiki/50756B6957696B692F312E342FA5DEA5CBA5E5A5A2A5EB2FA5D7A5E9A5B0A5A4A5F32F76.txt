@@ -1,3 +1,4 @@
+#freeze
 #navi(PukiWiki/1.4/マニュアル/プラグイン)
 
 **version [#v924021a]

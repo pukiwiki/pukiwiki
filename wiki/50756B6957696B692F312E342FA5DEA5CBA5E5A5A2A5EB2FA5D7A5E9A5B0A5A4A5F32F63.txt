@@ -1,3 +1,4 @@
+#freeze
 #navi(PukiWiki/1.4/マニュアル/プラグイン)
 
 **calendar、calendar_edit、calendar_read [#v5a54211]

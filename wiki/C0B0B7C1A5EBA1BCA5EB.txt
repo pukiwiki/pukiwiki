@@ -1,3 +1,4 @@
+#freeze
 #norelated
 * テキスト整形のルール [#oca54177]
 

@@ -1,3 +1,4 @@
+#freeze
 * PukiWiki [#v1621880]
 
 http://pukiwiki.org/

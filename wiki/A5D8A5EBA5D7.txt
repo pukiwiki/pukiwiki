@@ -1,3 +1,4 @@
+#freeze
 * PukiWikiヘルプ [#s14a5adf]
 
 - [[FAQ(pukiwiki.org)>pukiwiki:FAQ]](日本語)

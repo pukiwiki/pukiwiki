@@ -1,3 +1,4 @@
+#freeze
 #navi(PukiWiki/1.4/マニュアル/プラグイン)
 
 **map [#i89f687e]

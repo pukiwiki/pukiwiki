@@ -1,3 +1,4 @@
+#freeze
 #navi(PukiWiki/1.4/マニュアル/プラグイン)
 
 **hr [#i56a8485]

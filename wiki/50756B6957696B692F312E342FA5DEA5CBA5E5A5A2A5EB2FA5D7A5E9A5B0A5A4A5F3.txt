@@ -1,3 +1,4 @@
+#freeze
 #contents
 
 *プラグインマニュアル [#v0ed77c7]
