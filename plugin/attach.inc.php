@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.13 2003/02/24 10:17:49 panda Exp $
+//  $Id: attach.inc.php,v 1.14 2003/02/26 11:45:35 panda Exp $
 //
 
 /*
@@ -603,7 +603,7 @@ class AttachFile
 		{
 			$_title = str_replace('$1',rawurlencode($this->file),$_attach_messages['msg_info']);
 			$info = "\n<span class=\"small\">[<a href=\"$script?plugin=attach&amp;pcmd=info$param\" title=\"$_title\">{$_attach_messages['btn_info']}</a>]</span>";
-			$count = ($icon and !empty($this->status['count'][$this->age])) ?
+			$count = ($showicon and !empty($this->status['count'][$this->age])) ?
 				sprintf($_attach_messages['msg_count'],$this->status['count'][$this->age]) : '';
 		}
 		return "<a href=\"$script?plugin=attach&amp;pcmd=open$param\" title=\"$title\">$label</a>$count$info";
