@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.18 2003/07/03 06:35:52 arino Exp $
+// $Id: en.lng,v 1.19 2003/07/03 06:39:17 arino Exp $
 //
 // PukiWiki message file (english)
 
@@ -290,8 +290,8 @@ $_msg_pcomment_restrict = 'Since perusal restrictions have started, a comment ca
 
 ///////////////////////////////////////
 // popular.inc.php
-$_popular_plugin_frame = '<h5>popular(%d)</h5><div>%s</div>',
-$_popular_plugin_today_frame = '<h5>today\'s(%d)</h5><div>%s</div>',
+$_popular_plugin_frame = '<h5>popular(%d)</h5><div>%s</div>';
+$_popular_plugin_today_frame = '<h5>today\'s(%d)</h5><div>%s</div>';
 
 ///////////////////////////////////////
 // recent.inc.php
@@ -389,7 +389,7 @@ $_btn_unfreeze = 'Unfreeze';
 
 ///////////////////////////////////////
 // versionlist.inc.php
-$_title_versionlist' = 'version list';
+$_title_versionlist = 'version list';
 
 ///////////////////////////////////////
 // vote.inc.php
@@ -398,6 +398,6 @@ $_vote_plugin_votes = 'Vote';
 
 ///////////////////////////////////////
 // yetlist.inc.php
-$_title_yetlist = 'List of pages, are not made yet',
-$_err_notexist = 'All pages are made.'
+$_title_yetlist = 'List of pages, are not made yet';
+$_err_notexist = 'All pages are made.';
 ?>
