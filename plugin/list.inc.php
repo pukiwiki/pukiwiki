@@ -2,14 +2,12 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: list.inc.php,v 1.2 2003/04/01 08:05:26 panda Exp $
+// $Id: list.inc.php,v 1.3 2003/06/13 06:27:28 arino Exp $
 //
 // 一覧の表示
 function plugin_list_action()
 {
 	global $vars,$_title_list,$_title_filelist,$whatsnew;
-	
-	header_lastmod($whatsnew);
 	
 	$filelist = (array_key_exists('cmd',$vars) and $vars['cmd']=='filelist'); //姑息だ…
 	
