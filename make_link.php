@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.63 2003/11/07 03:14:32 arino Exp $
+// $Id: make_link.php,v 1.64 2003/11/22 04:50:26 arino Exp $
 //
 
 // リンクを付加する
@@ -41,7 +41,6 @@ class InlineConverter
 				'bracketname',   // BracketName
 				'wikiname',      // WikiName
 				'autolink_a',    // AutoLink(アルファベット)
-//				'rules',         // ユーザ定義ルール
 			);
 		}
 		if ($excludes !== NULL)
@@ -103,6 +102,10 @@ class InlineConverter
 			if ($obj->set($match,$page) !== FALSE)
 			{
 				$arr[] = $obj; // copy
+				if ($obj->body != '')
+				{
+					$arr = array_merge($arr,$this->get_objects($obj->body,$page));
+				}
 			}
 		}
 		return $arr;
@@ -128,6 +131,7 @@ class Link
 	var $type;
 	var $page;
 	var $name;
+	var $body;
 	var $alias;
 
 	// constructor
@@ -162,12 +166,13 @@ class Link
 		return $arr;
 	}
 	// 基本パラメータを設定する
-	function setParam($page,$name,$type='',$alias='')
+	function setParam($page,$name,$body,$type='',$alias='')
 	{
 		static $converter = NULL;
 		
 		$this->page = $page;
 		$this->name = $name;
+		$this->body = $body;
 		$this->type = $type;
 		if ($type != 'InterWikiName' and preg_match('/\.(gif|png|jpe?g)$/i',$alias))
 		{
@@ -191,7 +196,7 @@ class Link
 class Link_plugin extends Link
 {
 	var $pattern;
-	var $plain,$param,$body;
+	var $plain,$param;
 	
 	function Link_plugin($start)
 	{
@@ -226,7 +231,7 @@ EOD;
 	}
 	function set($arr,$page)
 	{
-		list($all,$this->plain,$name,$this->param,$this->body) = $this->splice($arr);
+		list($all,$this->plain,$name,$this->param,$body) = $this->splice($arr);
 		
 		// 本来のプラグイン名およびパラメータを取得しなおす PHP4.1.2 (?R)対策
 		if (preg_match("/^{$this->pattern}/x",$all,$matches)
@@ -234,7 +239,7 @@ EOD;
 		{
 			list(,$this->plain,$name,$this->param) = $matches;
 		}
-		return parent::setParam($page,$name,'plugin');
+		return parent::setParam($page,$name,$body,'plugin');
 	}
 	function toString()
 	{
@@ -251,7 +256,8 @@ EOD;
 		}
 		
 		// プラグインが存在しないか、変換に失敗
-		return make_line_rules(htmlspecialchars('&'.$this->plain).($body == '' ? ';' : "\{$body};"));
+		$body = ($body == '') ? ';' : "\{$body};";
+		return make_line_rules(htmlspecialchars('&'.$this->plain).$body);
 	}
 }
 // 注釈
@@ -290,7 +296,7 @@ EOD;
 EOD;
 		$name = "<a id=\"notetext_$id\" href=\"#notefoot_$id\" class=\"note_super\">*$id</a>";
 		
-		return parent::setParam($page,$name);
+		return parent::setParam($page,$name,$body);
 	}
 	function toString()
 	{
@@ -325,7 +331,7 @@ EOD;
 	function set($arr,$page)
 	{
 		list(,,$alias,$name) = $this->splice($arr);
-		return parent::setParam($page,htmlspecialchars($name),'url',$alias == '' ? $name : $alias);
+		return parent::setParam($page,htmlspecialchars($name),'','url',$alias == '' ? $name : $alias);
 	}
 	function toString()
 	{
@@ -358,7 +364,7 @@ EOD;
 	function set($arr,$page)
 	{
 		list(,$name,$alias) = $this->splice($arr);
-		return parent::setParam($page,htmlspecialchars($name),'url',$alias);
+		return parent::setParam($page,htmlspecialchars($name),'','url',$alias);
 	}
 	function toString()
 	{
@@ -393,7 +399,7 @@ EOD;
 	function set($arr,$page)
 	{
 		list(,$alias,$name) = $this->splice($arr);
-		return parent::setParam($page,$name,'mailto',$alias == '' ? $name : $alias);
+		return parent::setParam($page,$name,'','mailto',$alias == '' ? $name : $alias);
 	}
 	function toString()
 	{
@@ -455,6 +461,7 @@ EOD;
 		return parent::setParam(
 			$page,
 			htmlspecialchars($name.':'.$this->param),
+			'',
 			'InterWikiName',
 			$alias == '' ? $name.':'.$this->param : $alias
 		);
@@ -508,7 +515,7 @@ EOD;
 		}
 		if ($name != '' and preg_match("/^$WikiName$/",$name))
 		{
-			return parent::setParam($page,$name,'pagename',$alias);
+			return parent::setParam($page,$name,'','pagename',$alias);
 		}
 		if ($alias == '')
 		{
@@ -529,7 +536,7 @@ EOD;
 				return FALSE;
 			}
 		}
-		return parent::setParam($page,$name,'pagename',$alias);
+		return parent::setParam($page,$name,'','pagename',$alias);
 	}
 	function toString()
 	{
@@ -561,7 +568,7 @@ class Link_wikiname extends Link
 	function set($arr,$page)
 	{
 		list($name) = $this->splice($arr);
-		return parent::setParam($page,$name,'pagename',$name);
+		return parent::setParam($page,$name,'','pagename',$name);
 	}
 	function toString()
 	{
@@ -613,7 +620,7 @@ class Link_autolink extends Link
 		{
 			return FALSE;
 		}
-		return parent::setParam($page,$name,'pagename',$name);
+		return parent::setParam($page,$name,'','pagename',$name);
 	}
 	function toString()
 	{
@@ -636,75 +643,7 @@ class Link_autolink_a extends Link_autolink
 		return isset($this->auto_a) ? "({$this->auto_a})" : FALSE;
 	}
 }
-// ユーザ定義ルール
-/*
-class Link_rules extends Link
-{
-	var $replaces;
-	var $count;
-	
-	function Link_rules($start)
-	{
-		parent::Link($start);
-	}
-	function get_pattern()
-	{
-		global $line_rules;
-		
-		$rules = array();
-		$this->replaces = array();
-		$this->count = 0;
-		
-		foreach ($line_rules as $pattern=>$replace)
-		{
-			$rules[] = "($pattern)";
-			$this->replaces[++$this->count] = $replace;
-			if (preg_match_all('/\$\d/',$replace,$matches,PREG_SET_ORDER))
-			{
-				$this->count += count($matches);
-			}
-		}
-		$this->replaces[++$this->count] = ''; // sentinel
-		return join("|",$rules);
-	}
-	function get_count()
-	{
-		return $this->count;
-	}
-	function set($arr,$page)
-	{
-		list($name) = $this->splice($arr);
-		
-		reset($this->replaces);
-		while (list($start,$replace) = each($this->replaces))
-		{
-			if ($replace == '')
-			{
-				$name = htmlspecialchars($name);
-				break;
-			}
-			if (!array_key_exists($start,$arr) or $arr[$start] == '')
-			{
-				continue;
-			}
-			list($end,$dummy) = each($this->replaces);
-			$count = $end - $start;
-			$_arr = array_splice($arr,$start,$count);
-			$name = $replace;
-			for ($n = 1; $n < $count; $n++)
-			{
-				$name = str_replace('$'.$n,make_link($_arr[$n]),$name);
-			}
-			break;
-		}
-		return parent::setParam($page,$name,'rule','');
-	}
-	function toString()
-	{
-		return $this->name;
-	}
-}
-*/
+
 // ページ名のリンクを作成
 function make_pagelink($page,$alias='',$anchor='',$refer='')
 {
