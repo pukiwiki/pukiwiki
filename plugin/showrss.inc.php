@@ -22,7 +22,7 @@
  * 
  * ÈòÆñ½ê       ->   http://do3ob.s20.xrea.com/
  *
- * version: $Id: showrss.inc.php,v 1.5 2003/03/02 02:40:27 panda Exp $
+ * version: $Id: showrss.inc.php,v 1.6 2003/03/02 06:53:50 panda Exp $
  * 
  */
 
@@ -428,14 +428,17 @@ function plugin_showrss_private_cache_save($data, $target, $dir) {
 function plugin_showrss_private_cache_garbage_collection($dir, $expire) {
 
 	$dh = dir($dir);
-	while (($filename = $dh->read()) !== false) {
-		if (!preg_match('/\.tmp$/',$filename)) {
+	while (($filename = $dh->read()) !== false)
+	{
+		if (substr($filename,-4) != '.tmp')
+		{
 			continue;
 		}
 
 		$last = time() - filemtime($dir . $filename);
 
-		if ($last > $expire) {
+		if ($last > $expire)
+		{
 			unlink($dir . $filename);
 		}
 	}
