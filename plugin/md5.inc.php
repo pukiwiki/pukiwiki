@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.8 2005/03/28 14:23:41 henoheno Exp $
+// $Id: md5.inc.php,v 1.9 2005/03/28 14:34:46 henoheno Exp $
 //  MD5 plugin
 
 define('PLUGIN_MD5_LIMIT_LENGTH', 512);
@@ -35,7 +35,7 @@ function plugin_md5_action()
  <div>
   <input type="hidden" name="plugin" value="md5" />
   <label for="_p_md5_phrase">Phrase:</label>
-  <input type="text"  name="key"    id="_p_md5_phrase" size="30" $value/><br />
+  <input type="text"  name="key"    id="_p_md5_phrase" size="60" $value/><br />
   <input type="radio" name="scheme" id="_p_md5_sha1" value="php_sha1" />
   <label for="_p_md5_sha1">PHP sha1()</label><br />
   <input type="radio" name="scheme" id="_p_md5_md5"  value="php_md5" checked="checked" />
