@@ -123,6 +123,15 @@ $_recent_plugin_frame = '<h5 class="side_label">recent(%d)</h5><span class="smal
 $_recent_plugin_li = '.';
 
 ///////////////////////////////////////
+// calendar2
+$_calendar2_plugin_edit = '[edit]';
+$_calendar2_plugin_empty = '%s is empty.';
+
+///////////////////////////////////////
+// attach
+$_attach_plugin_files = '%s downloads';
+
+///////////////////////////////////////
 // help 'wiki format rule'.
 $rule_body = '
 sorry. Japanese only

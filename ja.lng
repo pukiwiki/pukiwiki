@@ -131,6 +131,15 @@ $_recent_plugin_frame = '<h5 class="side_label">最新の%d件</h5><span class="smal
 $_recent_plugin_li = '・';
 
 ///////////////////////////////////////
+// calendar2
+$_calendar2_plugin_edit = '[この日記を編集]';
+$_calendar2_plugin_empty = '%sは空です。';
+
+///////////////////////////////////////
+// attach
+$_attach_plugin_files = '%s件';
+
+///////////////////////////////////////
 // help 'wiki format rule'.
 $rule_body = '
 <h3>テキスト整形のルール</h3>
