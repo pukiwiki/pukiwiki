@@ -25,7 +25,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.16.2.1 2003/01/27 04:13:29 panda Exp $
+// $Id: pukiwiki.php,v 1.16.2.2 2003/03/02 04:20:10 panda Exp $
 /////////////////////////////////////////////////
 
 
@@ -246,7 +246,9 @@ else if($post["write"])
 	}
 	else
 	{
+		print "<pre>$postdata</pre>";
 		$postdata = user_rules_str($postdata);
+		print "<pre>$postdata</pre>";
 
 		// 差分ファイルの作成
 		if(is_page($post["page"]))
@@ -597,8 +599,8 @@ else if(arg_check("help"))
 // MD5パスワードへの変換
 else if($vars["md5"])
 {
-	$title = $page = "Make password of MD5";
-	$body = "$vars[md5] : ".md5($vars["md5"]);
+	$title = $page = 'Make password of MD5';
+	$body = htmlspecialchars($vars['md5']).' : '.md5($vars['md5']);
 }
 else if(arg_check("rss"))
 {
