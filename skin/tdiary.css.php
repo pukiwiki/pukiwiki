@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.css.php,v 1.4 2005/01/22 15:03:33 henoheno Exp $
+// $Id: tdiary.css.php,v 1.5 2005/01/25 15:07:26 henoheno Exp $
 //
 // tDiary-css-wrapper
 
@@ -463,6 +463,25 @@ br.spacer {}
 	font-size:80%;
 	font-weight:bold;
 	text-align:center;
+}
+
+/* calendar_viewer.inc.php */
+div.calendar_viewer {
+	color:inherit;
+	background-color:inherit;
+	margin-top:20px;
+	margin-bottom:10px;
+	padding-bottom:10px;
+}
+span.calendar_viewer_left {
+	color:inherit;
+	background-color:inherit;
+	float:left;
+}
+span.calendar_viewer_right {
+	color:inherit;
+	background-color:inherit;
+	float:right;
 }
 
 /* clear.inc.php */

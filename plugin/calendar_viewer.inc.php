@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: calendar_viewer.inc.php,v 1.29 2005/01/15 02:51:44 henoheno Exp $
+// $Id: calendar_viewer.inc.php,v 1.30 2005/01/25 15:07:26 henoheno Exp $
 //
 // Calendar viewer plugin - List pages that calendar/calnedar2 plugin created
 // (Based on calendar and recent plugin)
@@ -236,10 +236,10 @@ function plugin_calendar_viewer_convert()
 				'date=' . $right_YM . '">' . $right_text . '</a>';
 		// past modeは<<新 旧>> 他は<<旧 新>>
 		$return_body .=
-			'<table width ="100%"><tr>' .
-			'<td align="left">'  . $left_link  . '</td>' .
-			'<td align="right">' . $right_link . '</td>' .
-			'</tr></table>';
+			'<div class="calendar_viewer">' .
+			'<span class="calendar_viewer_left">'  . $left_link  . '</span>' .
+			'<span class="calendar_viewer_right">' . $right_link . '</span>' .
+			'</div>';
 	}
 
 	$get['page'] = $post['page'] = $vars['page'] = $tmppage;

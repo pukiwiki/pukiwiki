@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.css.php,v 1.9 2004/11/27 11:40:53 henoheno Exp $
+// $Id: pukiwiki.css.php,v 1.10 2005/01/25 15:07:26 henoheno Exp $
 //
 // Defaul CSS
 
@@ -514,6 +514,25 @@ br.spacer {}
 	font-size:80%;
 	font-weight:bold;
 	text-align:center;
+}
+
+/* calendar_viewer.inc.php */
+div.calendar_viewer {
+	color:inherit;
+	background-color:inherit;
+	margin-top:20px;
+	margin-bottom:10px;
+	padding-bottom:10px;
+}
+span.calendar_viewer_left {
+	color:inherit;
+	background-color:inherit;
+	float:left;
+}
+span.calendar_viewer_right {
+	color:inherit;
+	background-color:inherit;
+	float:right;
 }
 
 /* clear.inc.php */
