@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.20.2.19 2004/06/28 12:07:18 henoheno Exp $
+// $Id: init.php,v 1.20.2.20 2004/06/30 13:41:08 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -101,10 +101,14 @@ else {
 	$get = $HTTP_GET_VARS;
 }
 
+/////////////////////////////////////////////////
 // 外部からくる変数をサニタイズ
 $get    = sanitize_null_character($get);
 $post   = sanitize_null_character($post);
 $cookie = sanitize_null_character($cookie);
+
+// Expire risk
+unset($_GET, $_POST, $_COOKIE); //, 'SERVER', 'ENV', 'REQUEST', 'SESSION', ...
 
 /////////////////////////////////////////////////
 // GET + POST = $vars
@@ -132,7 +136,7 @@ if (array_key_exists('word', $vars)) {
 }
 
 // 整形: msg
-if (!empty($vars['msg']))  {
+if (isset($vars['msg']))  {
 	$get['msg'] = $post['msg'] = $vars['msg'] = preg_replace("/((\x0D\x0A)|(\x0D)|(\x0A))/", "\n", $vars["msg"]);
 }
 
