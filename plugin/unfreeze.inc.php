@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: unfreeze.inc.php,v 1.2 2003/05/14 10:07:38 arino Exp $
+// $Id: unfreeze.inc.php,v 1.3 2003/06/05 05:00:45 arino Exp $
 //
 // Åà·ë²ò½ü
 
@@ -35,10 +35,7 @@ function plugin_unfreeze_action()
 		array_shift($postdata);
 		$postdata = join('',$postdata);
 		
-		$file = get_filename($vars['page']);
-		$time = get_filetime($vars['page']);
-		file_write(DATA_DIR,$vars['page'],$postdata);
-		touch($file,$time + LOCALZONE);
+		file_write(DATA_DIR,$vars['page'],$postdata,TRUE);
 		
 		$vars['cmd'] = 'read';
 		$msg = $_title_unfreezed;

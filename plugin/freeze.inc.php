@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: freeze.inc.php,v 1.2 2003/02/14 07:28:34 panda Exp $
+// $Id: freeze.inc.php,v 1.3 2003/06/05 05:00:45 arino Exp $
 //
 // ≈‡∑Î
 function plugin_freeze_convert()
@@ -33,10 +33,7 @@ function plugin_freeze_action()
 		array_unshift($postdata,"#freeze\n");
 		$postdata = join('',$postdata);
 		
-		$file = get_filename($vars['page']);
-		$time = get_filetime($vars['page']);
-		file_write(DATA_DIR,$vars['page'],$postdata);
-		touch($file,$time + LOCALZONE);
+		file_write(DATA_DIR,$vars['page'],$postdata,TRUE);
 		
 		$vars['cmd'] = 'read';
 		$msg = $_title_freezed;

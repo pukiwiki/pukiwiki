@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.8 2003/05/14 10:08:48 arino Exp $
+// $Id: edit.inc.php,v 1.9 2003/06/05 05:00:45 arino Exp $
 //
 //  ‘Ω∏
 // cmd=edit
@@ -110,7 +110,7 @@ function plugin_edit_write()
 	else {
 		$postdata = $post['msg'];
 	}
-
+	
 	$oldpagesrc = join('',get_source($post['page']));
 	$oldpagemd5 = md5($oldpagesrc);
 	
@@ -130,7 +130,8 @@ function plugin_edit_write()
 		$retvars['body'] .= edit_form($post['page'],$postdata_input,$oldpagemd5,FALSE);
 	}
 	else {
-		page_write($post['page'],$postdata);
+		$notimestamp = !empty($post['notimestamp']);
+		page_write($post['page'],$postdata,$notimestamp);
 		
 		if ($postdata != '') {
 			header("Location: $script?".rawurlencode($post['page']));
