@@ -1,7 +1,7 @@
 <?php
 /*
  * PukiWiki calendar_viewerプラグイン
- * $Id: calendar_viewer.inc.php,v 1.24 2004/08/11 13:36:38 henoheno Exp $
+ * $Id: calendar_viewer.inc.php,v 1.25 2004/08/11 14:19:48 henoheno Exp $
  * calendarrecentプラグインを元に作成
  */
 
@@ -50,6 +50,8 @@ function plugin_calendar_viewer_convert()
 	global $_msg_calendar_viewer_right, $_msg_calendar_viewer_left;
 	global $_msg_calendar_viewer_restrict;
 
+	static $viewed = array();
+
 	// 引数の確認
 	if (func_num_args() < 2)
 		return '#calendar_viewer(): ' . $_err_calendar_viewer_param . '<br />';
@@ -65,10 +67,7 @@ function plugin_calendar_viewer_convert()
 	$mode        = 'past';	// 動作モード
 	$date_sep    = '-';	// 日付のセパレータ calendar2なら '-', calendarなら ''
 
-	if (isset($func_args[3])) {
-		$date_sep = $func_args[3];
-	}
-
+	// $func_args[1] のチェック
 	if (preg_match('/[0-9]{4}' . $date_sep . '[0-9]{2}/', $func_args[1])) {
 		// 指定年月の一覧表示
 		$page_YM     = $func_args[1];
@@ -94,6 +93,18 @@ function plugin_calendar_viewer_convert()
 	    preg_match('/^(past|view|future)$/si', $func_args[2])) {
 		// モード指定
 		$mode = $func_args[2];
+	}
+
+	if (isset($func_args[3])) {
+		$date_sep = $func_args[3];
+	}
+
+	// Avoid Loop etc.
+	if (isset($viewed[$pagename])) {
+		$s_page = htmlspecialchars($pagename);
+		return "#calendar_viewer(): You already view: $s_page<br />";
+	} else {
+		$viewed[$pagename] = TRUE; // Valid
 	}
 
 	// 一覧表示するページ名とファイル名のパターン　ファイル名には年月を含む
