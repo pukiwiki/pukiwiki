@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: rss.php,v 1.5.2.5 2004/07/31 11:37:10 henoheno Exp $
+// $Id: rss.php,v 1.5.2.6 2004/07/31 11:40:48 henoheno Exp $
 /////////////////////////////////////////////////
 
 // RecentChanges の RSS を出力
@@ -39,10 +39,9 @@ function catrss($rss)
 			$title = htmlspecialchars($title);
 
 			$filemtime = filemtime(get_filename(encode($match[1])));
-			$dcdate = substr_replace(date('Y-m-d\TH:i:sO', $filemtime), ':', -2, 0);
 			$desc = date('D, d M Y H:i:s T', $filemtime);
 
-			if($rss==2) {
+			if($rss == 2) {
 				$items .= "<item rdf:about=\"$self?" . rawurlencode($url) . "\">\n";
 			} else {
 				$items .= "<item>\n";
@@ -50,6 +49,7 @@ function catrss($rss)
 			$items .= " <title>$title</title>\n";
 			$items .= " <link>$self?".rawurlencode($url)."</link>\n";
 			if($rss == 2) {
+				$dcdate = substr_replace(date('Y-m-d\TH:i:sO', $filemtime), ':', -2, 0);
 				$items.= " <dc:date>$dcdate</dc:date>\n";
 			}
 			$items .= " <description>$desc</description>\n";
