@@ -1,0 +1,4 @@
+#freeze
+[[:config]]
+
+#ls2
