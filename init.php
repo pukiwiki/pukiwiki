@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.34 2003/02/23 04:47:18 panda Exp $
+// $Id: init.php,v 1.35 2003/02/28 03:36:59 panda Exp $
 //
 
 /////////////////////////////////////////////////
@@ -20,7 +20,7 @@ define('INI_FILE','./pukiwiki.ini.php');
 // 初期設定 (バージョン/著作権)
 define('S_VERSION','1.4pre5');
 define('S_COPYRIGHT','
-<strong>"PukiWiki" '.S_VERSION.'</strong> Copyright &copy; 2001,2002
+<strong>"PukiWiki" '.S_VERSION.'</strong> Copyright &copy; 2001,2002,2003
 <a href="http://pukiwiki.org">PukiWiki Developers Team</a>.
 License is <a href="http://www.gnu.org/">GNU/GPL</a>.<br />
 Based on "PukiWiki" 1.3 by <a href="http://factage.com/sng/">sng</a>
