@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.25 2004/11/23 12:16:20 henoheno Exp $
+// $Id: edit.inc.php,v 1.26 2004/11/23 12:19:14 henoheno Exp $
 //
 
 // Edit plugin
@@ -24,9 +24,7 @@ function plugin_edit_action()
 	}
 
 	$postdata = @join('', get_source($page));
-	if ($postdata == '') {
-		$postdata = auto_template($page);
-	}
+	if ($postdata == '') $postdata = auto_template($page);
 
 	return array('msg'=>$_title_edit, 'body'=>edit_form($page, $postdata));
 }
