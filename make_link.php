@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.48 2003/06/30 06:30:49 arino Exp $
+// $Id: make_link.php,v 1.49 2003/07/01 10:16:56 arino Exp $
 //
 
 // リンクを付加する
@@ -174,6 +174,7 @@ class Link
 		$this->type = $type;
 		if ($type != 'InterWikiName' and preg_match('/\.(gif|png|jpe?g)$/i',$alias))
 		{
+			$alias = htmlspecialchars($alias);
 			$alias = "<img src=\"$alias\" alt=\"$name\" />";
 		}
 		else if ($alias != '')
