@@ -5,14 +5,15 @@
  * CopyRight 2002 S.YOSHIMURA GPL2
  * http://masui.net/pukiwiki/ yosimura@excellence.ac.jp
  *
- * $Id: versionlist.inc.php,v 1.2.2.2 2004/04/03 17:49:35 arino Exp $
+ * $Id: versionlist.inc.php,v 1.2.2.3 2004/06/20 05:53:26 henoheno Exp $
  */
 
 function plugin_versionlist_convert()
 {
   global $vars, $script;
-  $SCRIPT_DIR = array("./","./plugin/","./skin/");
-  /* 探索ディレクトリ設定。本当は、pukiwiki.ini.php かな */
+
+  $SCRIPT_DIR = array(SUB_DIR, PLUGIN_DIR, SKIN_DIR);
+  /* 探索ディレクトリ設定 */
 
   if(func_num_args())
     $aryargs = func_get_args();
