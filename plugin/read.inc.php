@@ -2,14 +2,13 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: read.inc.php,v 1.6 2004/08/04 13:35:40 henoheno Exp $
+// $Id: read.inc.php,v 1.7 2004/08/04 13:43:23 henoheno Exp $
 //
 // ページの表示とInterWikiNameの解釈
 
 function plugin_read_action()
 {
-	global $get, $post, $vars;
-	global $_title_invalidwn, $_msg_invalidiwn;
+	global $vars, $_title_invalidwn, $_msg_invalidiwn;
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
@@ -23,7 +22,7 @@ function plugin_read_action()
 		return do_plugin_action('interwiki'); // InterWikiNameを処理
 
 	} else if (is_pagename($page)) {
-		$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'edit';
+		$vars['cmd'] = 'edit';
 		return do_plugin_action('edit'); // 存在しないので、編集フォームを表示
 
 	} else {
