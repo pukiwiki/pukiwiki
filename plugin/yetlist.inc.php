@@ -1,9 +1,8 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: yetlist.inc.php,v 1.20 2005/01/23 09:45:57 henoheno Exp $
 //
-// $Id: yetlist.inc.php,v 1.19 2004/07/31 03:09:20 henoheno Exp $
-//
+// Yet list plugin - Show a dangling link list (not yet created)
 
 function plugin_yetlist_action()
 {
