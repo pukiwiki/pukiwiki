@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.6 2004/11/23 09:39:42 henoheno Exp $
+// $Id: make_link.php,v 1.7 2004/12/30 13:45:23 henoheno Exp $
 //
 
 // リンクを付加する
@@ -710,28 +710,31 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '')
 	}
 }
 
-// 相対参照を展開
+// Resolve relative/(Unix-like)absolute path of the page
 function get_fullname($name, $refer)
 {
 	global $defaultpage;
 
-	if ($name == '') return $refer;
+	// 'Here'
+	if ($name == '' || $name == './') return $refer;
 
+	// Absolute path
 	if ($name{0} == '/') {
 		$name = substr($name, 1);
 		return ($name == '') ? $defaultpage : $name;
 	}
 
-	if ($name == './') return $refer;
+	// Relative path from 'Here'
 	if (substr($name, 0, 2) == './') {
-		$arrn = preg_split('/\//', $name, -1, PREG_SPLIT_NO_EMPTY);
+		$arrn    = preg_split('#/#', $name, -1, PREG_SPLIT_NO_EMPTY);
 		$arrn[0] = $refer;
 		return join('/', $arrn);
 	}
 
+	// Relative path from dirname()
 	if (substr($name, 0, 3) == '../') {
-		$arrn = preg_split('/\//', $name,  -1, PREG_SPLIT_NO_EMPTY);
-		$arrp = preg_split('/\//', $refer, -1, PREG_SPLIT_NO_EMPTY);
+		$arrn = preg_split('#/#', $name,  -1, PREG_SPLIT_NO_EMPTY);
+		$arrp = preg_split('#/#', $refer, -1, PREG_SPLIT_NO_EMPTY);
 
 		while (! empty($arrn) && $arrn[0] == '..') {
 			array_shift($arrn);
