@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: amazon.inc.php,v 1.9 2004/12/25 07:01:07 henoheno Exp $
+// $Id: amazon.inc.php,v 1.10 2004/12/25 07:39:37 henoheno Exp $
 // Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 ´×¼Ë
 //
 // Amazon plugin: Book-review maker via amazon.com/amazon.jp
@@ -58,7 +58,7 @@ define('PLUGIN_AMAZON_EXPIRE_IMAGECACHE',   1);
 define('PLUGIN_AMAZON_EXPIRE_TITLECACHE', 356);
 
 // Alternative image for 'Image not found'
-define('PLUGIN_AMAZON_NO_IMAGE', './image/noimage.jpg');
+define('PLUGIN_AMAZON_NO_IMAGE', IMAGE_DIR . 'noimage.png');
 
 // URI prefixes
 switch(LANG){
