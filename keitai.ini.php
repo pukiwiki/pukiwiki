@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.ini.php,v 1.1 2004/07/05 12:13:21 henoheno Exp $
+// $Id: keitai.ini.php,v 1.2 2004/07/08 12:20:13 henoheno Exp $
 //
 // PukiWiki setting file (Cell phones, PDAs and other thin clients)
 
@@ -12,23 +12,26 @@
 $max_size = 5;	//KByte (default)
 
 $matches = array();
+
+// Browser-name only
 switch ($user_agent['name']) {
 
-	// DoCoMo Net For MOBILE: ｉモード対応HTMLの考え方: ユーザエージェント
-	// http://www.nttdocomo.co.jp/mc-user/i/tag/imodetag.html
-	// DDI POCKET: 機種ラインナップ: AirH"PHONE用ホームページの作成方法
-	// http://www.ddipocket.co.jp/p_s/products/airh_phone/homepage.html
-	case 'DoCoMo':
+	// NetFront / Compact NetFront
+	//   DoCoMo Net For MOBILE: ｉモード対応HTMLの考え方: ユーザエージェント
+	//   http://www.nttdocomo.co.jp/mc-user/i/tag/imodetag.html
+	//   DDI POCKET: 機種ラインナップ: AirH"PHONE用ホームページの作成方法
+	//   http://www.ddipocket.co.jp/p_s/products/airh_phone/homepage.html
+	case 'NetFront':
 	case 'CNF':
-		if (preg_match('#[/\(]c([0-9]+)[/\);]#',
-		    $user_agent['agent'], $matches))
-			$max_size = $matches[1];
+	case 'DoCoMo':
+		if (preg_match('#\bc([0-9]+)\b#', $user_agent['agent'], $matches))
+			$max_size = $matches[1];	// Cache size
 		break;
 
 	// Vodafone 技術資料: ユーザーエージェントについて
 	// http://www.dp.j-phone.com/dp/tool_dl/web/useragent.php
 	case 'J-PHONE':
-		if (preg_match('#Profile/#', $user_agent['agent'])) {
+		if (preg_match('#\bProfile/#', $user_agent['agent'])) {
 			// パケット対応機
 			$max_size = 12; // SKINで使用, KByte
 		} else {
@@ -38,6 +41,8 @@ switch ($user_agent['name']) {
 		break;
 
 }
+
+// Browser-name + version
 switch ($user_agent['name'] . '/' . $user_agent['vers']) {
 	case 'DoCoMo/2.0':	$max_size = min($max_size, 30); break;
 }

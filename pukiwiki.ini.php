@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.64 2004/07/05 12:13:21 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.65 2004/07/08 12:20:13 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -303,15 +303,10 @@ $agents = array(
 
     // 組み込みブラウザ(リッチクライアントではないもの)
 
-	// NTT-DoCoMo, i-mode (using Compact NetFront) and FOMA (using NetFront) phones
+	// NTT-DoCoMo, i-mode (embeded Compact NetFront) and FOMA (embedded NetFront) phones
 	// Sample: "DoCoMo/1.0/F501i", "DoCoMo/1.0/N504i/c10/TB/serXXXX" // c以降は可変
 	// Sample: "DoCoMo/2.0 MST_v_SH2101V(c100;TB;W22H12;serXXXX;iccxxxx)" // ()の中は可変
 	array('pattern'=>'#^(DoCoMo)/([0-9\.]+)#',	'profile'=>'keitai'),
-
-	// Compact NetFront 2.0 (DDI Pocket: AirH" Phone by JRC)
-	// Sample: "Mozilla/3.0(DDIPOCKET;JRC/AH-J3001V,AH-J3002V/1.0/0100/c50)CNF/2.0"
-	array('pattern'=>'#DDIPOCKET;JRC/[^/]+/1.0/0100/c[0-9]+\)([A-Za-z]+)/([0-9\.]+)#',
-		'profile'=>'keitai'),
 
 	// Vodafone's embedded browser
 	// Sample: "J-PHONE/2.0/J-T03"	// 2.0は"ブラウザの"バージョン
@@ -320,9 +315,14 @@ $agents = array(
 
 	// Openwave(R) Mobile Browser (EZweb, WAP phone, etc)
 	// Sample: "OPWV-SDK/62K UP.Browser/6.2.0.5.136 (GUI) MMP/2.0"
-	array('pattern'=>'#(UP\.Browser)/([0-9\.]+)#',	'profile'=>'keitai'),
+	array('pattern'=>'#\b(UP\.Browser)/([0-9\.]+)#',	'profile'=>'keitai'),
+
+	// ACCESS NetFront / Compact NetFront
+	// Sample: "Mozilla/3.0(DDIPOCKET;JRC/AH-J3001V,AH-J3002V/1.0/0100/c50)CNF/2.0" (DDI Pocket: AirH" Phone by JRC)
+	array('pattern'=>'#\b(NetFront)/([0-9\.]+)#', 'profile'=>'keitai'),
+	array('pattern'=>'#\b(CNF)/([0-9\.]+)#',      'profile'=>'keitai'),
 
     // デスクトップあるいはリッチクライアント (デバイスを識別する必要がないもの)
-	array('pattern'=>'#.#',	'profile'=>'default'),	// default
+	array('pattern'=>'#^#',	'profile'=>'default'),	// default
 );
 ?>
