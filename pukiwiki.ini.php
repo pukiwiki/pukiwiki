@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.16.2.12 2004/08/08 03:28:35 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.16.2.13 2004/08/08 04:05:17 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -44,11 +44,19 @@ define('IMAGE_DIR', 'image/');
 define('SKIN_FILE', SKIN_DIR . 'pukiwiki.skin.' . LANG . '.php');
 
 /////////////////////////////////////////////////
+// ホームページのタイトル(修正してください)
+// * RSS に出力するチャンネル名を兼ねる
+$page_title = "PukiWiki";
+
 // index.php などに変更した場合のスクリプト名の設定
 // とくに設定しなくても問題なし
 //$script = "http://hogehoge/pukiwiki/";
 
-/////////////////////////////////////////////////
+// 編集者の名前 (修正してください)
+$modifier = 'anonymous';
+
+// 編集者のホームページ (修正してください)
+$modifierlink = 'http://pukiwiki.example.com/';
 
 // トップページの名前
 $defaultpage = "FrontPage";
@@ -58,19 +66,6 @@ $whatsnew = "RecentChanges";
 
 // InterWikiNameページの名前
 $interwiki = "InterWikiName";
-
-/////////////////////////////////////////////////
-
-// 編集者の名前(自由に変えてください)
-$modifier = 'me';
-
-// 編集者のホームページ(自由に変えてください)
-$modifierlink = 'http://change me!/';
-
-/////////////////////////////////////////////////
-// ホームページのタイトル(自由に変えてください)
-// RSS に出力するチャンネル名
-$page_title = "PukiWiki";
 
 /////////////////////////////////////////////////
 // 凍結機能を有効にするか
@@ -127,7 +122,7 @@ $cantedit = array( $whatsnew, );
 
 /////////////////////////////////////////////////
 // プレビューを表示するときのテーブルの背景色
-$preview_color = "#F5F8FF";
+$preview_color = '#F5F8FF';
 
 /////////////////////////////////////////////////
 // [[ページ]] へのリンク時[[]]を外すか
@@ -140,10 +135,10 @@ $list_index = 1;
 /////////////////////////////////////////////////
 
 // http:// リンクのウィンドウ名指定(_top,_blank,etc)
-$link_target = "_top";
+$link_target = '_top';
 
 // InterWikiNameのウィンドウ名指定(_top,_blank,etc)
-$interwiki_target = "_top";
+$interwiki_target = '_top';
 
 /////////////////////////////////////////////////
 // リスト構造の左マージン
@@ -152,6 +147,7 @@ $_list_margin = 16;      // リストの階層間の間隔(px)
 $_list_pad_str = ' class="list%d" style="padding-left:%dpx;margin-left:%dpx"';
 
 /////////////////////////////////////////////////
+// 編集時
 
 // テキストエリアのカラム数
 $cols = 80;
@@ -167,7 +163,6 @@ $top = $_msg_content_back_to_top;
 // 関連ページ表示のページ名の区切り文字
 $related_str = " ";
 
-/////////////////////////////////////////////////
 // 整形ルールでの関連ページ表示のページ名の区切り文字
 $rule_related_str = "\n<li>";
 
@@ -192,10 +187,10 @@ $show_passage = 1;
 $lastmod = 0;
 
 // 日付フォーマット
-$date_format = "Y-m-d";
+$date_format = 'Y-m-d';
 
 // 時刻フォーマット
-$time_format = "H:i:s";
+$time_format = 'H:i:s';
 
 // 曜日配列
 $weeklabels = $_msg_week;
@@ -220,14 +215,14 @@ $maxage = 20;
 // バックアップの世代を区切る文字列
 // (通常はこのままで良いが、文章中で使われる可能性
 // があれば、使われそうにない文字を設定する)
-$splitter = ">>>>>>>>>>";
+$splitter = '>>>>>>>>>>';
 
 /////////////////////////////////////////////////
 // ページの更新時にバックグランドで実行されるコマンド(mknmzなど)
 //$update_exec = '/usr/local/bin/mknmz -O /vhosts/www.factage.com/sng/pukiwiki/nmz -L ja -k -K /vhosts/www.factage.com/sng/pukiwiki/wiki';
 
 // 一覧・更新一覧に含めないページ名(正規表現で)
-$non_list = "^(\[\[\:)";
+$non_list = '^(\[\[\:)';
 
 /////////////////////////////////////////////////
 // 雛形とするページの読み込みを表示させるか
@@ -280,16 +275,16 @@ $line_rules = array(
 // 必要のない方は $usefacemarkを0にしてください。
 $usefacemark = 1;
 $facemark_rules = array(
-	"\s(\:\))"	=> " <img alt=\"\\1\" src=\"image/face/smile.gif\" />",
-	"\s(\:D)"	=> " <img alt=\"\\1\" src=\"image/face/bigsmile.gif\" />",
-	"\s(\:p)"	=> " <img alt=\"\\1\" src=\"image/face/huh.gif\" />",
-	"\s(\:d)"	=> " <img alt=\"\\1\" src=\"image/face/huh.gif\" />",
-	"\s(XD)"	=> " <img alt=\"\\1\" src=\"image/face/oh.gif\" />",
-	"\s(X\()"	=> " <img alt=\"\\1\" src=\"image/face/oh.gif\" />",
-	"\s(;\))"	=> " <img alt=\"\\1\" src=\"image/face/wink.gif\" />",
-	"\s(;\()"	=> " <img alt=\"\\1\" src=\"image/face/sad.gif\" />",
-	"\s(\:\()"	=> " <img alt=\"\\1\" src=\"image/face/sad.gif\" />",
-	"&amp;(heart);" => " <img alt=\"\\1\" src=\"image/face/heart.gif\" />",
+	'\s(\:\))'	=> ' <img alt="\1" src="image/face/smile.gif" />',
+	'\s(\:D)'	=> ' <img alt="\1" src="image/face/bigsmile.gif" />',
+	'\s(\:p)'	=> ' <img alt="\1" src="image/face/huh.gif" />',
+	'\s(\:d)'	=> ' <img alt="\1" src="image/face/huh.gif" />',
+	'\s(XD)'	=> ' <img alt="\1" src="image/face/oh.gif" />',
+	'\s(X\()'	=> ' <img alt="\1" src="image/face/oh.gif" />',
+	'\s(;\))'	=> ' <img alt="\1" src="image/face/wink.gif" />',
+	'\s(;\()'	=> ' <img alt="\1" src="image/face/sad.gif" />',
+	'\s(\:\()'	=> ' <img alt="\1" src="image/face/sad.gif" />',
+	'&amp;(heart);' => ' <img alt="\1" src="image/face/heart.gif" />',
 );
 
 ?>
