@@ -2,10 +2,13 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: include.inc.php,v 1.17 2004/08/24 11:24:39 henoheno Exp $
+// $Id: include.inc.php,v 1.18 2004/10/02 00:45:14 henoheno Exp $
 //
 
 define('PLUGIN_INCLUDE_MAX', 4); // 一度にインクルードできるページの最大数
+
+define('PLUGIN_INCLUDE_WITH_TITLE', TRUE);	// Default: TRUE
+
 
 // ページを(可能ならば再帰的に)インクルードする
 function plugin_include_convert()
@@ -13,13 +16,21 @@ function plugin_include_convert()
 	global $script, $vars, $get, $post, $menubar, $_msg_include_restrict;
 	static $included = array();
 	static $count = 1;
-        $usage = "#include(): Usage: (a-page-name-you-want-to-include)<br />\n";
 
+        $usage = "#include(): Usage: (a-page-name-you-want-to-include[,title|,notitle])<br />\n";
 	if (func_num_args() == 0) return $usage;
 
-	// Get an argument
-	list($page) = func_get_args();
-	$page = strip_bracket($page);
+	// Get arguments
+	$args = func_get_args();
+	$page = isset($args[0]) ? strip_bracket(array_shift($args)) : '';
+	$with_title = PLUGIN_INCLUDE_WITH_TITLE;
+	if (isset($args[0])) {
+		switch(array_shift($args)) {
+		case 'title'  : $with_title = TRUE;  break;
+		case 'notitle': $with_title = FALSE; break;
+		}
+	}
+
 	$s_page = htmlspecialchars($page);
 	$r_page = rawurlencode($page);
 	$link = "<a href=\"$script?$r_page\">$s_page</a>"; // Read link
@@ -52,14 +63,15 @@ function plugin_include_convert()
 	$get['page'] = $post['page'] = $vars['page'] = $root;
 
 	// Add a title with edit link, before included document
-	$link = "<a href=\"$script?cmd=edit&amp;page=$r_page\">$s_page</a>";
+	if ($with_title) {
+		$link = "<a href=\"$script?cmd=edit&amp;page=$r_page\">$s_page</a>";
 
-	if ($page == $menubar) {
-		$body = "<span align=\"center\"><h5 class=\"side_label\">$link</h5></span>" .
-			"<small>$body</small>";
-	} else {
-		$body = "<h1>$link</h1>\n" .
-			"$body\n";
+		if ($page == $menubar) {
+			$body = '<span align="center"><h5 class="side_label">' .
+			$link . '</h5></span>' .  "<small>$body</small>";
+		} else {
+			$body = "<h1>$link</h1>\n" . "$body\n";
+		}
 	}
 
 	return $body;
