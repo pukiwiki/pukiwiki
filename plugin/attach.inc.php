@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.19 2003/03/03 08:47:13 panda Exp $
+//  $Id: attach.inc.php,v 1.20 2003/03/05 06:59:52 panda Exp $
 //
 
 /*
@@ -66,6 +66,9 @@ function plugin_attach_init()
 			'msg_filesize' => 'サイズ',
 			'msg_date'     => '登録日時',
 			'msg_dlcount'  => 'アクセス数',
+			'msg_md5hash'  => 'MD5ハッシュ値',
+			'msg_page'     => 'ページ',
+			'msg_filename' => '格納ファイル名',
 			'err_noparm'   => '$1 へはアップロード・削除はできません',
 			'err_exceed'   => '$1 へのファイルサイズが大きすぎます',
 			'err_exists'   => '$1 に同じファイル名が存在します',
@@ -261,9 +264,13 @@ EOD;
 	$info = $obj->to_string(TRUE,FALSE);
 	$type = attach_mime_content_type($obj->filename);
 	$age = (array_key_exists('age',$vars) and is_numeric($vars['age'])) ? $vars['age'] : 0;
+	$s_page = htmlspecialchars($obj->page);
 	$retval['body'] .= <<< EOD
 <dl>
  <dt>$info</dt>
+ <dd>{$_attach_messages['msg_page']}:$s_page</dd>
+ <dd>{$_attach_messages['msg_filename']}:{$obj->filename}</dd>
+ <dd>{$_attach_messages['msg_md5hash']}:{$obj->md5hash}</dd>
  <dd>{$_attach_messages['msg_filesize']}:{$obj->size_str} ({$obj->size} bytes)</dd>
  <dd>Content-type:$type</dd>
  <dd>{$_attach_messages['msg_date']}:{$obj->time_str}</dd>
@@ -563,6 +570,7 @@ class AttachFile
 		$this->logname = $this->basename.'.log';
 		$this->exist = file_exists($this->filename);
 		$this->time = $this->exist ? filemtime($this->filename) - LOCALZONE : 0;
+		$this->md5hash = $this->exist ? md5_file($this->filename) : '';
 	}
 	// ファイル情報取得
 	function getstatus()
@@ -584,7 +592,7 @@ class AttachFile
 		$this->time_str = get_date('Y/m/d H:i:s',$this->time);
 		$this->size = filesize($this->filename);
 		$this->size_str = sprintf('%01.1f',round($this->size)/1000,1).'KB';
-	}		
+	}
 	//ステータス保存
 	function putstatus()
 	{
