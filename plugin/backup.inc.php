@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: backup.inc.php,v 1.3 2003/02/03 10:28:51 panda Exp $
+// $Id: backup.inc.php,v 1.4 2003/02/17 07:20:37 panda Exp $
 //
 // バックアップ
 function plugin_backup_action()
@@ -171,7 +171,7 @@ function get_backup_list_all($withfilename = FALSE)
 {
 	global $cantedit;
 	
-	$_pages = get_existpages(BACKUP_DIR);
+	$_pages = get_existpages(BACKUP_DIR,BACKUP_EXT);
 	if (count($_pages) == 0) {
 		return '';
 	}
