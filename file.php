@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.42 2004/07/01 14:52:30 henoheno Exp $
+// $Id: file.php,v 1.43 2004/07/10 10:59:38 henoheno Exp $
 //
 
 // ソースを取得
@@ -94,8 +94,8 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 {
 	global $update_exec;
 	global $_msg_invalidiwn;
-	global $notify,$notify_diff_only,$notify_to,$notify_from,$notify_subject,$notify_header;
-	global $smtp_server,$smtp_auth;
+	global $notify, $notify_diff_only, $notify_to, $notify_subject, $notify_header;
+	global $smtp_server, $smtp_auth;
 	
 	if (!is_pagename($page))
 	{
