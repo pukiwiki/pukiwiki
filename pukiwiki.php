@@ -26,7 +26,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.7 2002/07/02 04:15:10 masui Exp $
+// $Id: pukiwiki.php,v 1.8 2002/07/02 05:04:44 masui Exp $
 /////////////////////////////////////////////////
 
 
@@ -60,7 +60,7 @@ if(!empty($vars["plugin"]) && exist_plugin_action($vars["plugin"]))
 	if($retvars["msg"])
 	{
 		$title =  str_replace("$1",$title,$retvars["msg"]);
-		$page =  str_replace("$1",htmlspecialchars($page),$retvars["msg"]);
+		$page =  str_replace("$1",$page,$retvars["msg"]);
 	}
 	
 	if(!empty($retvars["body"]))
