@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.19 2004/10/11 02:05:12 henoheno Exp $
+// $Id: edit.inc.php,v 1.20 2004/11/20 04:32:49 henoheno Exp $
 //
 
 // Edit plugin
@@ -74,6 +74,89 @@ function plugin_edit_preview()
 	$body .= edit_form($page, $vars['msg'], $vars['digest'], FALSE);
 
 	return array('msg'=>$_title_preview, 'body'=>$body);
+}
+
+// Inline: Show edit (or unfreeze text) link
+function plugin_edit_inline()
+{
+	static $usage = '&edit(pagename#anchor[[,noicon],nolabel])[{label}];';
+
+	global $script, $vars;
+	global $_symbol_paraedit, $fixed_heading_anchor_edit;
+
+	// Arguments
+	$args = func_get_args();
+	$s_label = array_pop($args); // {label}
+	$page    = array_shift($args);
+	if($page == NULL) $page = '';
+	$_noicon = $_nolabel = FALSE;
+	foreach($args as $arg){
+		switch($arg){
+		case '': break;
+		case 'noicon':  $_noicon  = TRUE; break;
+		case 'nolabel': $_nolabel = TRUE; break;
+		default: return $usage;
+		}
+	}
+
+	// Separate a page-name and a fixed anchor
+	list($s_page, $id, $editable) = anchor_explode($page, TRUE);
+	// Default: This one
+	if ($s_page == '') $s_page = isset($vars['page']) ? $vars['page'] : '';
+	// $s_page fixed
+	$isfreeze = is_freeze($s_page);
+
+	// Paragraph edit or not
+	$short = htmlspecialchars('Edit');
+	if ($fixed_heading_anchor_edit && $editable === TRUE) {
+		$title = htmlspecialchars(sprintf('Edit %s', $page));
+		$id    = rawurlencode($id);
+		$icon = '<img src="' . IMAGE_DIR . 'paraedit.png' .
+			'" width="9" height="9" alt="' .
+			$short . '" title="' . $title . '" /> ';
+		$class = 'anchor_super';
+	} else {
+		$title = htmlspecialchars(sprintf('Edit %s', $s_page));
+		$id    = '';
+		$icon = '<img src="' . IMAGE_DIR . 'edit.png' .
+			'" width="20" height="20" alt="' .
+			$short . '" title="' . $title . '" />';
+		$class = '';
+	}
+	if ($_noicon || $isfreeze) $icon = ''; // No more icon
+	if ($_nolabel) {
+		if (!$_noicon) {
+			$s_label = '';     // No label with an icon
+		} else {
+			$s_label = $short; // Short label without an icon
+		}
+	} else {
+		if ($s_label == '') $s_label = $title; // Rich label with an icon
+	}
+
+	// Anchor tag
+	if ($isfreeze) {
+		$title = htmlspecialchars(sprintf('Unfreeze %s', $page));
+		$url   = $script . '?cmd=unfreeze&amp;page=' . rawurlencode($s_page);
+	} else {
+		if ($id != '') {
+			$s_id = '&amp;id=' . $id;
+		} else {
+			$s_id = '';
+		}
+		$url  = $script . '?cmd=edit&amp;page=' . rawurlencode($s_page) . $s_id;
+	}
+	$atag  = '<a class="' . $class . '" href="' . $url . '" title="' . $title . '">';
+	static $atags = '</a>';
+
+	if (is_page($s_page)) {
+		// Normal edit link
+		return $atag . $icon . $s_label . $atags;
+	} else {
+		// Dangling edit link
+		return $atag . $icon . $atags . '<span class="noexists">' .
+			$s_label . $atag . '?' . $atags . '</span>';
+	}
 }
 
 // Write, add, or insert new comment

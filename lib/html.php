@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.13 2004/11/07 13:09:37 henoheno Exp $
+// $Id: html.php,v 1.14 2004/11/20 04:32:49 henoheno Exp $
 //
 
 // 本文を出力
@@ -350,5 +350,28 @@ function make_heading(& $str, $strip = TRUE)
 		$str = strip_htmltag(make_link(preg_replace($NotePattern, '', $str)));
 
 	return $id;
+}
+
+// Separate a page-name(or URL or null string) and an anchor
+// (last one standing) without sharp
+function anchor_explode($page, $strict_editable = FALSE)
+{
+	$pos = strrpos($page, '#');
+	if ($pos === FALSE) return array($page, '', FALSE);
+
+	// Ignore the last sharp letter
+	if ($pos + 1 == strlen($page)) {
+		$pos = strpos(substr($page, $pos + 1), '#');
+		if ($pos === FALSE) return array($page, '', FALSE);
+	}
+
+	$s_page = substr($page, 0, $pos);
+	$anchor = substr($page, $pos + 1);
+
+	if($strict_editable === TRUE &&  preg_match('/^[a-z][a-f0-9]{7}$/', $anchor)) {
+		return array ($s_page, $anchor, TRUE); // Seems fixed-anchor
+	} else {
+		return array ($s_page, $anchor, FALSE);
+	}
 }
 ?>
