@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.4 2004/08/02 13:11:09 henoheno Exp $
+// $Id: func.php,v 1.5 2004/08/02 13:17:36 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -45,6 +45,7 @@ function is_url($str, $only_http = FALSE)
 // ページが存在するか
 function is_page($page, $reload = FALSE)
 {
+	if ($reload) clearstatcache();
 	return file_exists(get_filename($page));
 }
 
