@@ -458,13 +458,13 @@ Yellow = "#FFFF00"
 ~''#counter''
 ~''&counter(''
 [&color(blue){total};|
-&color(blue){yesterday};|
-&color(blue){total};]
+&color(blue){today};|
+&color(blue){yesterday};]
 '');''
 :概要|
 ~設置したページの参照回数を表示します。
 :引数|
-~カウンタ表示方法として today,yesterday,total いずれかを指定します。省略時やその他の文字列を指定した場合はtotalが指定されたとみなします。ブロック型プラグインでは常にtotalが指定されたとみなします。
+~カウンタ表示方法として total, today, yesterday いずれかを指定します。省略時やその他の文字列を指定した場合はtotalが指定されたとみなします。ブロック型プラグインでは常にtotalが指定されたとみなします。
 --total − そのページが参照された回数の総計を表示します。
 --today − そのページが参照された回数（当日分）を表示します。
 --yesterday − そのページが参照された回数（昨日分）を表示します。
