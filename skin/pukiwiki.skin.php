@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.23 2004/11/23 13:43:43 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.24 2004/11/23 13:47:04 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -192,8 +192,9 @@ function _toolbar($key, $x = 20, $y = 20){
 }
 ?>
  <?php _toolbar('top') ?>
- &nbsp;
+
 <?php if ($is_page) { ?>
+ &nbsp;
  <?php _toolbar('reload') ?>
  <?php _toolbar('edit') ?>
  <?php if ($is_read and $function_freeze) { ?>
@@ -208,8 +209,8 @@ function _toolbar($key, $x = 20, $y = 20){
  <?php } ?>
  <?php _toolbar('copy') ?>
  <?php _toolbar('rename') ?>
- &nbsp;
 <?php } ?>
+ &nbsp;
  <?php _toolbar('new')    ?>
  <?php _toolbar('list')   ?>
  <?php _toolbar('search') ?>
