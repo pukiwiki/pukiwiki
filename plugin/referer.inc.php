@@ -1,5 +1,5 @@
 <?php
-// $Id: referer.inc.php,v 1.5 2003/08/20 10:54:27 arino Exp $
+// $Id: referer.inc.php,v 1.6 2004/03/22 14:57:32 arino Exp $
 /*
  * PukiWiki Referer プラグイン(リンク元表示プラグイン)
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -112,9 +112,8 @@ function referer_body($page,$sort)
 		list($ltime,$stime,$count,$url,$enable) = $arr;
 		
 		// 非ASCIIキャラクタ(だけ)をURLエンコードしておく BugTrack/440
-		$url = preg_replace('/([" \x80-\xff]+)/e','rawurlencode("$1")',$url);
-		
-		$s_url = htmlspecialchars($url);
+		$e_url = htmlspecialchars(preg_replace('/([" \x80-\xff]+)/e','rawurlencode("$1")',$url));
+		$s_url = htmlspecialchars(mb_convert_encoding(rawurldecode($url),SOURCE_ENCODING,'auto'));
 		
 		$lpass = get_passage($ltime,FALSE); // 最終更新日時からの経過時間
 		$spass = get_passage($stime,FALSE); // 初回登録日時からの経過時間
@@ -127,7 +126,7 @@ function referer_body($page,$sort)
 		
 		// 適用不可データのときはアンカーをつけない
 		$body .= referer_ignore_check($url) ?
-			"  <td>$s_url</td>\n" : "  <td><a href=\"$s_url\">$s_url</a></td>\n";
+			"  <td>$s_url</td>\n" : "  <td><a href=\"$e_url\">$s_url</a></td>\n";
 		$body .= " </tr>\n";
 	}
 	$href = $script.'?plugin=referer&amp;page='.rawurlencode($page);
@@ -194,7 +193,7 @@ function referer_ignore_check($url)
 	
 	foreach ($ignore_url as $x)
 	{
-		if (strpos($url,$x) === 0)
+		if (strpos($url,$x) !== FALSE)
 		{
 			return 1;
 		}
