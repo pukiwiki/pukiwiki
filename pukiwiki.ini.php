@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.34 2003/04/03 01:42:02 panda Exp $
+// $Id: pukiwiki.ini.php,v 1.35 2003/04/26 05:15:42 arino Exp $
 //
 // PukiWiki setting file
 
@@ -147,6 +147,10 @@ $auto_template_func = 1;
 $auto_template_rules = array(
 '((.+)\/([^\/]+))' => '\2/template'
 );
+
+/////////////////////////////////////////////////
+// 見出し行に固有のアンカーを自動挿入する
+$fixed_heading_anchor = 0;
 
 /////////////////////////////////////////////////
 // ユーザーエージェント対応設定
