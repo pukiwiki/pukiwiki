@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ls2.inc.php,v 1.21 2004/08/12 14:56:22 henoheno Exp $
+// $Id: ls2.inc.php,v 1.22 2004/08/12 15:28:58 henoheno Exp $
 //
 
 /*
@@ -214,7 +214,7 @@ function ls2_list_push(& $params, $level)
 		array_unshift($saved, $close);
 
 		$left = ($level == $margin) ? $_ul_left_margin : 0;
-		if (isset($params['compact'])) {
+		if ($params['compact']) {
 			$left  += $_ul_margin;   // マージンを固定
 			$level -= ($margin - 1); // レベルを修正
 		} else {
@@ -237,7 +237,8 @@ function ls2_check_arg($value, $key, & $params)
 
 	if (! $params['_done']) {
 		foreach (array_keys($params) as $param) {
-			if (strpos($param, strtolower($value)) === 0) {
+			if (strtolower($value)  == $param &&
+			    preg_match('/^[a-z]/', $param)) {
 				$params[$param] = TRUE;
 				return;
 			}
@@ -245,6 +246,6 @@ function ls2_check_arg($value, $key, & $params)
 		$params['_done'] = TRUE;
 	}
 
-	$params['_args'][] = $value;
+	$params['_args'][] = $value; // Link title
 }
 ?>
