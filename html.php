@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.57 2003/02/26 01:31:36 panda Exp $
+// $Id: html.php,v 1.58 2003/02/26 08:52:26 panda Exp $
 //
 
 // 本文を出力
@@ -199,8 +199,8 @@ EOD;
 // 関連するページ
 function make_related($page,$tag='')
 {
-	global $script,$vars,$related,$rule_related_str,$related_str;
-	global $_list_left_margin, $_list_margin, $_list_pad_str;
+	global $script,$vars,$related,$rule_related_str,$related_str,$non_list;
+	global $_ul_left_margin, $_ul_margin, $_list_pad_str;
 	
 	$links = links_get_related($page);
 	
@@ -211,7 +211,12 @@ function make_related($page,$tag='')
 		arsort($links);
 	}
 	$_links = array();
-	foreach ($links as $page=>$lastmod) {
+	foreach ($links as $page=>$lastmod)
+	{
+		if (preg_match("/$non_list/",$page))
+		{
+			continue;
+		}
 		$r_page = rawurlencode($page);
 		$s_page = htmlspecialchars($page);
 		$passage = get_passage($lastmod);
@@ -223,7 +228,7 @@ function make_related($page,$tag='')
 	if ($tag) {
 		$retval = join($rule_related_str,$_links);
 		if ($tag == 'p') {
-			$margin = $_list_left_margin + $_list_margin;
+			$margin = $_ul_left_margin + $_ul_margin;
 			$style = sprintf($_list_pad_str,1,$margin,$margin);
 			$retval =  "\n<ul class=\"list1\" style=\"$style\">\n<li>$retval</li>\n</ul>\n";
 		}
