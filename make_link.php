@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.27 2003/03/18 07:09:51 panda Exp $
+// $Id: make_link.php,v 1.28 2003/03/18 07:19:39 panda Exp $
 //
 
 // リンクを付加する
@@ -189,21 +189,15 @@ class Link_plugin extends Link
 	function get_pattern()
 	{
 		return <<<EOD
-&amp;(\w+)     # (1) plugin name
+&amp;(\w+) # (1) plugin name
 (?:
  \(
-  ([^)]*)      # (2) parameter
+  ([^)]*)  # (2) parameter
  \)
 )?
 (?:
  \{
-  (            # (3) body
-   (?:
-    (?R)       # recursive
-    |          # or
-    (?!};).    # anything except closure
-   )*
-  )     
+  (.*)     # (3) body
  \}
 )?
 ;
@@ -234,15 +228,22 @@ EOD;
 	}
 	function make_inline($func,$param,$body)
 	{
+		//&hoge(){...}; &fuga(){...}; のbodyが'...}; &fuga(){...'となるので、前後に分ける
+		$after = '';
+		if (preg_match("/^ ((?!};).*?) }; (.*?) &amp; (\w+) (?: \( ([^()]*) \) )? { (.+)$/x",$body,$matches)) {
+			$body = $matches[1];
+			$after = $matches[2].$this->make_inline($matches[3],$matches[4],$matches[5]);
+		}
+		
 		// プラグイン呼び出し
 		if (exist_plugin_inline($func))
 		{
 			$str = do_plugin_inline($func,$param,$body);
-			if ($str !== FALSE) //成功
-			{
-				return $str;
+			if ($str !== FALSE) { //成功
+				return $str.$after;
 			}
 		}
+		
 		// プラグインが存在しないか、変換に失敗
 		return $this->text;
 	}
@@ -257,12 +258,16 @@ class Link_note extends Link
 	function get_pattern()
 	{
 		return <<<EOD
-\(\(         # open paren
- (           # (1) note body
+\(\(    # open paren
+ (      # (1) note body
   (?:
-   (?R)      # recursive
+   (?>  # once-only 
+    (?:
+     (?!\(\()(?!\)\)(?:[^\)]|$)).
+    )+
+   )
    |
-   (?!\)\)). # anything except closure
+   (?R) # or recursive of me
   )*
  )
 \)\)
@@ -280,9 +285,9 @@ EOD;
 		$arr = $this->splice($arr);
 		
 		$id = ++$note_id;
-		$note = make_link($arr[1]);
+		$note = inline2($arr[1]);
 		
-		$foot_explain[$id] = <<<EOD
+		$foot_explain[] = <<<EOD
 <a id="notefoot_$id" href="#notetext_$id" class="note_super">*$id</a>
 <span class="small">$note</span>
 <br />
@@ -590,7 +595,6 @@ class Link_autolink extends Link
 			$forceignorepages = explode("\t",$forceignorepages);
 		}
 		$this->forceignorepages = $forceignorepages;
-		
 		return "($auto)";
 	}
 	function get_count()
@@ -602,8 +606,7 @@ class Link_autolink extends Link
 		global $WikiName;
 		
 		$arr = $this->splice($arr);
-		
-		$name = $alias = $arr[1];
+		$name = $alias = $arr[0];
 		// 無視リストに含まれている、あるいは存在しないページを捨てる
 		if (in_array($name,$this->forceignorepages) or !is_page($name))
 		{
