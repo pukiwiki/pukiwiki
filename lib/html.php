@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.17 2004/12/02 11:28:56 henoheno Exp $
+// $Id: html.php,v 1.18 2004/12/02 13:05:02 henoheno Exp $
 //
 
 // 本文を出力
@@ -381,14 +381,13 @@ function anchor_explode($page, $strict_editable = FALSE)
 // there're blank lines or something out of php blocks
 function pkwk_headers_sent()
 {
-	if(PKWK_OPTIMISE) return;
+	if (PKWK_OPTIMISE) return;
 
-	// PHP_VERSION >= 4.3.0
-	if(version_compare(PHP_VERSION, '4.3.0', '>=')) {
-		if (headers_sent($_file_sent, $_line_sent)) {
+	if (version_compare(PHP_VERSION, '4.3.0', '>=')) {
+		if (headers_sent($file, $line)) {
 			print('Headers already sent at ' .
-				htmlspecialchars($_file_sent) .
-				' line ' . $_line_sent . '.');
+				htmlspecialchars($file) .
+				' line ' . $line . '.');
 			exit;
 		}
 	} else {
