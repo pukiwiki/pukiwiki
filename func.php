@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.2 2002/06/22 09:31:43 masui Exp $
+// $Id: func.php,v 1.3 2002/06/28 10:39:57 masui Exp $
 /////////////////////////////////////////////////
 
 // ¸¡º÷
@@ -159,7 +159,7 @@ function decode($key)
 		$ch = substr($key,$i,2);
 		$dekey .= chr(intval("0x".$ch,16));
 	}
-	return urldecode($dekey);
+	return $dekey;
 }
 
 // InterWikiName List ¤Î²ò¼á(ÊÖÃÍ:£²¼¡¸µÇÛÎó)
