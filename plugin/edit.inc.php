@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.16 2004/09/20 04:02:27 henoheno Exp $
+// $Id: edit.inc.php,v 1.17 2004/10/09 08:25:29 henoheno Exp $
 //
 
 // 編集
@@ -47,7 +47,7 @@ function plugin_edit_preview()
 	}
 
 	// 手書きの#freezeを削除
-	$vars['msg'] = preg_replace('/^#freeze\s*$/m', '' ,$vars['msg']);
+	$vars['msg'] = preg_replace('/^#freeze\s*$/im', '' ,$vars['msg']);
 	$postdata = $vars['msg'];
 
 	if (isset($vars['add']) && $vars['add']) {
@@ -84,7 +84,7 @@ function plugin_edit_write()
 	$retvars = array();
 
 	// 手書きの#freezeを削除
-	$vars['msg'] = preg_replace('/^#freeze\s*$/m','',$vars['msg']);
+	$vars['msg'] = preg_replace('/^#freeze\s*$/im','',$vars['msg']);
 	$postdata = $postdata_input = $vars['msg'];
 
 	if (isset($vars['add']) && $vars['add']) {

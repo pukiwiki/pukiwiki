@@ -1,5 +1,5 @@
 <?php
-// $Id: template.inc.php,v 1.17 2004/07/31 03:09:20 henoheno Exp $
+// $Id: template.inc.php,v 1.18 2004/10/09 08:25:29 henoheno Exp $
 
 define('MAX_LEN',60);
 
@@ -19,10 +19,8 @@ function plugin_template_action()
 	$lines = get_source($vars['refer']);
 
 	// #freeze¤òºï½ü
-	if (count($lines) and rtrim($lines[0]) == '#freeze')
-	{
+	if (! empty($lines) && strtolower(rtrim($lines[0])) == '#freeze')
 		array_shift($lines);
-	}
 
 	$begin = (array_key_exists('begin',$vars) and is_numeric($vars['begin'])) ? $vars['begin'] : 0;
 	$end = (array_key_exists('end',$vars) and is_numeric($vars['end'])) ? $vars['end'] : count($lines) - 1;

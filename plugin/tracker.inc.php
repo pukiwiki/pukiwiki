@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.22 2004/08/21 12:57:57 henoheno Exp $
+// $Id: tracker.inc.php,v 1.23 2004/10/09 08:25:29 henoheno Exp $
 //
 
 // tracker_listで表示しないページ名(正規表現で)
@@ -895,6 +895,6 @@ function plugin_tracker_get_source($page)
 	// 見出しの固有ID部を削除
 	$source = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m','$1$2',$source);
 	// #freezeを削除
-	return preg_replace('/^#freeze\s*$/m','',$source);
+	return preg_replace('/^#freeze\s*$/im', '', $source);
 }
 ?>
