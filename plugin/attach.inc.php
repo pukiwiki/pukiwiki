@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.43 2004/08/05 13:26:44 henoheno Exp $
+//  $Id: attach.inc.php,v 1.44 2004/08/05 13:28:00 henoheno Exp $
 //
 
 /*
@@ -570,6 +570,8 @@ EOD;
 
 	function freeze($freeze, $pass)
 	{
+		global $_attach_messages;
+
 		if (! pkwk_login($pass)) return attach_info('err_adminpass');
 
 		$this->getstatus();
