@@ -1,5 +1,5 @@
 <?
-// $Id: comment.inc.php,v 1.7 2002/07/02 04:20:20 masui Exp $
+// $Id: comment.inc.php,v 1.8 2002/07/16 11:26:55 masui Exp $
 
 global $name_cols, $comment_cols, $msg_format, $name_format;
 global $msg_format, $now_format, $comment_format;
@@ -16,7 +16,7 @@ $comment_cols = 70;
 // コメントの挿入フォーマット
 $name_format = '[[$name]]';
 $msg_format = '$msg';
-$now_format = 'SIZE(10):$now';
+$now_format = 'SIZE(10){$now}';
 /////////////////////////////////////////////////
 // コメントの挿入フォーマット(コメント内容)
 $comment_format = '$msg -- $name $now';
