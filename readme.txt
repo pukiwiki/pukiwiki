@@ -1,5 +1,5 @@
 NAME
-    PukiWiki - 帺桼偵儁乕僕傪捛壛丒嶍彍丒曇廤偱偒傞Web儁乕僕峔抸PHP僗僋儕僾僩
+    PukiWiki - 极统にペ〖ジを纳裁ˇ猴近ˇ试礁できるWebペ〖ジ菇蜜PHPスクリプト
 
        PukiWiki 1.3.7 by
         Copyright (C) 2001,2002,2003 by sng, PukiWiki Developers Team
@@ -9,64 +9,64 @@ SYNOPSIS
         http://pukiwiki.org/
 
 DESCRIPTION
-    PukiWiki偼嶲壛幰偑帺桼偵儁乕僕傪捛壛丒嶍彍丒曇廤偱偒傞
-    Web儁乕僕孮傪嶌傞PHP僗僋儕僾僩偱偡丅
-    Web偱摦嶌偡傞宖帵斅偲偪傚偭偲帡偰偄傑偡偑丄
-    Web宖帵斅偑扨偵儊僢僙乕僕傪捛壛偡傞偩偗側偺偵懳偟偰丄
-    PukiWiki偼丄Web儁乕僕慡懱傪帺桼偵曄峏偡傞偙偲偑偱偒傑偡丅
+    PukiWikiは徊裁荚が极统にペ〖ジを纳裁ˇ猴近ˇ试礁できる
+    Webペ〖ジ凡を侯るPHPスクリプトです。
+    Webで瓢侯する非绩饶とちょっと击ていますが、
+    Web非绩饶が帽にメッセ〖ジを纳裁するだけなのに滦して、
+    PukiWikiは、Webペ〖ジ链挛を极统に恃构することができます。
 
-    PukiWiki偼丄寢忛峗偝傫偺YukiWiki偺巇條傪嶲峫偵偟偰撈帺偵嶌傜傟傑偟偨丅
-    1.3傑偱偼sng偝傫偑嶌惉偟丄1.3.1b埲崀偼PukiWiki Developers Team偵傛偭偰
-    奐敪偑懕偗傜傟偰偄傑偡丅
+    PukiWikiは、冯倦估さんのYukiWikiの慌屯を徊雇にして迫极に侯られました。
+    1.3まではsngさんが侯喇し、1.3.1b笆惯はPukiWiki Developers Teamによって
+    倡券が鲁けられています。
 
-    PukiWiki偼PHP偱彂偐傟偨PHP僗僋儕僾僩偲偟偰幚尰偝傟偰偄傑偡偺偱丄
-    PHP偑摦嶌偡傞Web僒乕僶側傜偽斾妑揑梕堈偵愝抲偱偒傑偡丅
+    PukiWikiはPHPで今かれたPHPスクリプトとして悸附されていますので、
+    PHPが瓢侯するWebサ〖バならば孺秤弄推白に肋弥できます。
 
-    PukiWiki偼僼儕乕僜僼僩偱偡丅 偛帺桼偵偍巊偄偔偩偝偄丅
+    PukiWikiはフリ〖ソフトです。 ご极统にお蝗いください。
 
-愝抲曽朄
-  擖庤
+肋弥数恕
+  掐缄
 
-    PukiWiki偺嵟怴斉偼丄 http://pukiwiki.org/ 偐傜擖庤偱偒傑偡丅
+    PukiWikiの呵糠惹は、 http://pukiwiki.org/ から掐缄できます。
 
-  僀儞僗僩乕儖
+  インスト〖ル
 
-    1.  傾乕僇僀僽傪夝偔丅
+    1.  ア〖カイブを豺く。
 
-    2.  昁梫偵墳偠偰pukiwiki.ini.php偺愝掕傪妋擣偟傑偡丅
-        1.11 偐傜愝掕僼傽僀儖偑暿僼傽僀儖偺pukiwiki.ini.php偵側傝傑偟偨丅
+    2.  涩妥に炳じてpukiwiki.ini.phpの肋年を澄千します。
+        1.11 から肋年ファイルが侍ファイルのpukiwiki.ini.phpになりました。
 
-    3.  *.php偲pukiwiki.gif傪摨偠偲偙傠偵愝抲偟傑偡丅
+    3.  *.phpとpukiwiki.gifを票じところに肋弥します。
 
-    4.  *.php偲摨偠偲偙傠偵pukiwiki.ini.php傪愝抲偟傑偡丅
+    4.  *.phpと票じところにpukiwiki.ini.phpを肋弥します。
 
-    5.  pukiwiki.ini.php撪偱巜掕偟偨僗僉儞僼傽僀儖傪愝抲偟傑偡丅
-        skin僨傿儗僋僩儕撪偵丄pukiwiki.skin.ja.php(擔杮岅)偍傛傃
-        pukiwiki.skin.en.php(塸岅)偑梡堄偝傟偰偄傑偡丅
+    5.  pukiwiki.ini.php柒で回年したスキンファイルを肋弥します。
+        skinディレクトリ柒に、pukiwiki.skin.ja.php(泣塑胳)および
+        pukiwiki.skin.en.php(毖胳)が脱罢されています。
 
-    6.  pukiwiki.ini.php撪偱巜掕偟偨僨乕僞僼傽僀儖僨傿儗僋僩儕傪
-        懏惈 777 偱嶌惉偡傞丅(僨傿僼僅儖僩偼 wiki )
-        偙偺僨傿儗僋僩儕埲壓偵僼傽僀儖偑偁傞応崌偵偼丄偦偺僼傽僀儖傕
-        懏惈 666偵曄峏偟偰偔偩偝偄丅
+    6.  pukiwiki.ini.php柒で回年したデ〖タファイルディレクトリを
+        掳拉 777 で侯喇する。(ディフォルトは wiki )
+        このディレクトリ笆布にファイルがある眷圭には、そのファイルも
+        掳拉 666に恃构してください。
 
-    7.  pukiwiki.ini.php撪偱巜掕偟偨嵎暘僼傽僀儖僨傿儗僋僩儕傪
-        懏惈 777 偱嶌惉偡傞丅(僨傿僼僅儖僩偼 diff )
+    7.  pukiwiki.ini.php柒で回年した汗尸ファイルディレクトリを
+        掳拉 777 で侯喇する。(ディフォルトは diff )
 
-    8.  帺摦僶僢僋傾僢僾婡擻(僨傿僼僅儖僩偱偼 off)傪巊偆応崌丄
-        pukiwiki.ini.php撪偱巜掕偟偨嵎暘僼傽僀儖僨傿儗僋僩儕傪
-        懏惈 777 偱嶌惉偡傞丅(僨傿僼僅儖僩偼 backup )
+    8.  极瓢バックアップ怠墙(ディフォルトでは off)を蝗う眷圭、
+        pukiwiki.ini.php柒で回年した汗尸ファイルディレクトリを
+        掳拉 777 で侯喇する。(ディフォルトは backup )
 
-    9.  attach.inc.php撪偱巜掕偟偨揧晅僼傽僀儖僨傿儗僋僩儕傪
-        懏惈 777 偱嶌惉偡傞丅(僨傿僼僅儖僩偼 attach )
+    9.  attach.inc.php柒で回年した藕烧ファイルディレクトリを
+        掳拉 777 で侯喇する。(ディフォルトは attach )
 
-    10. counter.inc.php撪偱巜掕偟偨僇僂儞僞乕僼傽僀儖僨傿儗僋僩儕傪
-        懏惈 777 偱嶌惉偡傞丅(僨傿僼僅儖僩偼 counter )
+    10. counter.inc.php柒で回年したカウンタ〖ファイルディレクトリを
+        掳拉 777 で侯喇する。(ディフォルトは counter )
 
-    11. pukiwiki.php偵僽儔僂僓偐傜傾僋僙僗偟傑偡丅
+    11. pukiwiki.phpにブラウザからアクセスします。
 
-  僷乕儈僢僔儑儞
+  パ〖ミッション
 
-       僼傽僀儖                  僷乕儈僢僔儑儞 揮憲儌乕僪
+       ファイル                  パ〖ミッション 啪流モ〖ド
        pukiwiki.php              644            ASCII
        pukiwiki.ini.php          644            ASCII
        en.lng                    644            ASCII
@@ -87,7 +87,7 @@ DESCRIPTION
        skin/default.ja.css       644            ASCII
        skin/default.js           644            ASCII
 
-       僨傿儗僋僩儕             僷乕儈僢僔儑儞
+       ディレクトリ             パ〖ミッション
        attach                   777
        backup                   777
        counter                  777
@@ -96,219 +96,219 @@ DESCRIPTION
        skin                     755
        wiki                     777
 
-   僨乕僞偺僶僢僋傾僢僾曽朄
+   デ〖タのバックアップ数恕
 
-            僨乕僞僼傽僀儖僨傿儗僋僩儕埲壓傪僶僢僋傾僢僾偟傑偡丅
-            (僨傿僼僅儖僩僨傿儗僋僩儕柤偼 wiki )
+            デ〖タファイルディレクトリ笆布をバックアップします。
+            (ディフォルトディレクトリ叹は wiki )
 
-怴偟偄儁乕僕偺嶌傝曽
-    1.  傑偢丄揔摉側儁乕僕乮椺偊偽FrontPage乯傪慖傃丄
-        儁乕僕偺壓偵偁傞乽曇廤乿儕儞僋傪偨偳傝傑偡丅
+糠しいペ〖ジの侯り数
+    1.  まず、努碰なペ〖ジ∈毋えばFrontPage∷を联び、
+        ペ〖ジの布にある≈试礁∽リンクをたどります。
 
-    2.  偡傞偲僥僉僗僩擖椡偑偱偒傞忬懺偵側傞偺偱丄 偦偙偵NewPage偺傛偆側扨岅
-        乮戝暥帤彫暥帤崿嵼偟偰偄傞塸暥帤楍乯 傪彂偄偰乽曐懚乿偟傑偡丅
+    2.  するとテキスト掐蜗ができる觉轮になるので、 そこにNewPageのような帽胳
+        ∈络矢机井矢机寒哼している毖矢机误∷ を今いて≈瘦赂∽します。
 
-    3.  曐懚偡傞偲丄FrontPage偺儁乕僕偑彂偒姺傢傝丄
-        偁側偨偑彂偄偨NewPage偲偄偆暥帤楍偺屻傠偵 ?
-        偲偄偆儕儞僋偑昞帵偝傟傑偡丅 偙偺 ?
-        偼偦偺儁乕僕偑傑偩懚嵼偟側偄偙偲傪帵偡報偱偡丅
+    3.  瘦赂すると、FrontPageのペ〖ジが今き垂わり、
+        あなたが今いたNewPageという矢机误の稿ろに ?
+        というリンクが山绩されます。 この ?
+        はそのペ〖ジがまだ赂哼しないことを绩す磅です。
 
-    4.  偦偺 ? 傪僋儕僢僋偡傞偲怴偟偄儁乕僕NewPage偑偱偒傑偡偺偱丄
-        偁側偨偺岲偒側暥復傪偦偺怴偟偄儁乕僕偵彂偄偰曐懚偟傑偡丅
+    4.  その ? をクリックすると糠しいペ〖ジNewPageができますので、
+        あなたの攻きな矢鞠をその糠しいペ〖ジに今いて瘦赂します。
 
-    5.  NewPage儁乕僕偑偱偒傞偲FrontPage偺 ? 偼徚偊偰丄儕儞僋偲側傝傑偡丅
+    5.  NewPageペ〖ジができるとFrontPageの ? は久えて、リンクとなります。
 
-僥僉僗僩惍宍偺儖乕儖
-    *   楢懕偟偨暋悢峴偼僼傿儖偝傟偰昞帵偝傟傑偡丅
+テキスト腊妨のル〖ル
+    *   息鲁した剩眶乖はフィルされて山绩されます。
 
-    *   嬻峴偼抜棊`<p>'偺嬫愗傝偲側傝傑偡丅
+    *   鄂乖は檬皖`<p>'の惰磊りとなります。
 
-    *   HTML偺僞僌偼彂偗傑偣傫丅
+    *   HTMLのタグは今けません。
 
-    *   ''儃乕儖僪''偺傛偆偵僔儞僌儖僋僅乕僩擇偮偱偼偝傓偲丄
-        儃乕儖僪`<b>'偵側傝傑偡丅
+    *   ''ボ〖ルド''のようにシングルクォ〖ト企つではさむと、
+        ボ〖ルド`<b>'になります。
 
-    *   '''僀僞儕僢僋'''偺傛偆偵僔儞僌儖僋僅乕僩嶰偮偱偼偝傓偲丄
-        僀僞儕僢僋`<i>'偵側傝傑偡丅
+    *   '''イタリック'''のようにシングルクォ〖ト话つではさむと、
+        イタリック`<i>'になります。
 
-    *   ----偺傛偆偵儅僀僫僗4偮偑偁傞偲丄 悈暯慄`<hr>'偵側傝傑偡丅
+    *   ----のようにマイナス4つがあると、 垮士俐`<hr>'になります。
 
-    *   峴傪*偱偼偠傔傞偲丄 戝尒弌偟`<h2>'偵側傝傑偡丅
+    *   乖を*ではじめると、 络斧叫し`<h2>'になります。
 
-    *   峴傪**偱偼偠傔傞偲丄 拞尒弌偟`<h3>'偵側傝傑偡丅
+    *   乖を**ではじめると、 面斧叫し`<h3>'になります。
 
-    *   峴傪***偱偼偠傔傞偲丄 彫尒弌偟`<h3>'偵側傝傑偡丅
+    *   乖を***ではじめると、 井斧叫し`<h3>'になります。
 
-    *   #contents 傪峴摢偵彂偔偲丄戝尒弌偟偲彫尒弌偟偺栚師偑嶌惉偝傟傑偡丅 
+    *   #contents を乖片に今くと、络斧叫しと井斧叫しの誊肌が侯喇されます。 
 
-    *   峴傪儅僀僫僗-偱偼偠傔傞偲丄 売忦彂偒`<ul>'偵側傝傑偡丅
-        儅僀僫僗偺悢偑憹偊傞偲儗儀儖偑壓偑傝傑偡乮3儗儀儖傑偱乯
+    *   乖をマイナス-ではじめると、 舱掘今き`<ul>'になります。
+        マイナスの眶が笼えるとレベルが布がります∈3レベルまで∷
 
-            -崁栚1
-            --崁栚1-1
-            --崁栚1-2
-            -崁栚2
-            -崁栚3
-            --崁栚3-1
-            ---崁栚3-1-1
-            ---崁栚3-1-2
-            --崁栚3-2
+            -灌誊1
+            --灌誊1-1
+            --灌誊1-2
+            -灌誊2
+            -灌誊3
+            --灌誊3-1
+            ---灌誊3-1-1
+            ---灌誊3-1-2
+            --灌誊3-2
 
-    *   峴傪僾儔僗+偱偼偠傔傞偲丄 売忦彂偒`<ol>'偵側傝傑偡丅
-        僾儔僗偺悢偑憹偊傞偲儗儀儖偑壓偑傝傑偡乮3儗儀儖傑偱乯
+    *   乖をプラス+ではじめると、 舱掘今き`<ol>'になります。
+        プラスの眶が笼えるとレベルが布がります∈3レベルまで∷
 
-            +崁栚1
-            ++崁栚1-1
-            ++崁栚1-2
-            +崁栚2
-            +崁栚3
-            ++崁栚3-1
-            +++崁栚3-1-1
-            +++崁栚3-1-2
-            ++崁栚3-2
+            +灌誊1
+            ++灌誊1-1
+            ++灌誊1-2
+            +灌誊2
+            +灌誊3
+            ++灌誊3-1
+            +++灌誊3-1-1
+            +++灌誊3-1-2
+            ++灌誊3-2
 
-    *   僐儘儞傪巊偆偲丄 梡岅偲夝愢暥偺儕僗僩`<dl>'偑彂偗傑偡丅
+    *   コロンを蝗うと、 脱胳と豺棱矢のリスト`<dl>'が今けます。
 
-            :梡岅1:偄傠偄傠彂偄偨夝愢暥1
-            :梡岅2:偄傠偄傠彂偄偨夝愢暥2
-            :梡岅3:偄傠偄傠彂偄偨夝愢暥3
+            :脱胳1:いろいろ今いた豺棱矢1
+            :脱胳2:いろいろ今いた豺棱矢2
+            :脱胳3:いろいろ今いた豺棱矢3
 
-    *   峴摢偐傜 | 偱暥帤楍傪嬫愗傞偲昞慻傒偵側傝傑偡丅
+    *   乖片から | で矢机误を惰磊ると山寥みになります。
 
             |''Category:A''|''Category:B''|''Category:C''|
             |Objective|for AI|Other|
             |Java|LISP|Assembla|
 
-    *   儕儞僋
+    *   リンク
 
-        *   LinkToSomePage傗FrontPage偺傛偆偵丄
-            塸扨岅偺嵟弶偺堦暥帤傪戝暥帤偵偟偨傕偺偑
-            擇偮埲忋楢懕偟偨傕偺偼PukiWiki偺儁乕僕柤偲側傝丄
-            偦傟偑暥復拞偵娷傑傟傞偲儕儞僋偵側傝傑偡丅
+        *   LinkToSomePageやFrontPageのように、
+            毖帽胳の呵介の办矢机を络矢机にしたものが
+            企つ笆惧息鲁したものはPukiWikiのペ〖ジ叹となり、
+            それが矢鞠面に崔まれるとリンクになります。
 
-        *   擇廳偺戝偐偭偙[[ ]]偱偔偔偭偨暥帤楍傕丄
-            PukiWiki偺儁乕僕柤偵側傝傑偡丅
-            戝偐偭偙偺拞偵偼僗儁乕僗傪娷傔偰偼偄偗傑偣傫丅
-            擔杮岅傕巊偊傑偡丅
+        *   企脚の络かっこ[[ ]]でくくった矢机误も、
+            PukiWikiのペ〖ジ叹になります。
+            络かっこの面にはスペ〖スを崔めてはいけません。
+            泣塑胳も蝗えます。
 
-        *   傑偨丄[[pukiwiki:http://pukiwiki.org/]] 偺傛偆偵偡傞偲 factage 偺暥帤偵
-            http://pukiwiki.org/ 傊偺儕儞僋偑揬傟傑偡丅
+        *   また、[[pukiwiki:http://pukiwiki.org/]] のようにすると factage の矢机に
+            http://pukiwiki.org/ へのリンクが沤れます。
 
-        *   [[僒乕僶柤:WikiName]] 偺傛偆偵偡傞偲 InterWikiName 偵側傝傑偡丅
+        *   [[サ〖バ叹:WikiName]] のようにすると InterWikiName になります。
 
-        *   http://pukiwiki.org/ 偺傛偆側URL偼帺摦揑偵儕儞僋偵側傝傑偡丅
+        *   http://pukiwiki.org/ のようなURLは极瓢弄にリンクになります。
 
-        *   team@pukiwiki.org 偺傛偆側儊乕儖傾僪儗僗傕帺摦揑偵儕儞僋偵側傝傑偡丅
+        *   team@pukiwiki.org のようなメ〖ルアドレスも极瓢弄にリンクになります。
 
-    *   峴摢偑僗儁乕僗傗僞僽偱巒傑偭偰偄傞偲丄
-        偦傟偼惍宍嵪傒偺抜棊`<pre>'偲偟偰埖傢傟傑偡丅
-        僾儘僌儔儉偺昞帵側偳偵巊偆偲曋棙偱偡丅
+    *   乖片がスペ〖スやタブで幌まっていると、
+        それは腊妨貉みの檬皖`<pre>'として胺われます。
+        プログラムの山绩などに蝗うと守网です。
 
-    *   峴傪 > 偱偼偠傔傞偲丄 堷梡暥`<blockquote>'偑彂偗傑偡丅
-        >偺悢偑懡偄偲僀儞僨儞僩偑怺偔側傝傑偡乮3儗儀儖傑偱乯丅
+    *   乖を > ではじめると、 苞脱矢`<blockquote>'が今けます。
+        >の眶が驴いとインデントが考くなります∈3レベルまで∷。
 
-            >暥復
-            >暥復
-            >>偝傜側傞堷梡
-            >暥復
+            >矢鞠
+            >矢鞠
+            >>さらなる苞脱
+            >矢鞠
 
-    *   峴傪 // 偱巒傔傞偲僐儊儞僩傾僂僩`<!-- -->'偑彂偗傑偡丅
+    *   乖を // で幌めるとコメントアウト`<!-- -->'が今けます。
 
-    *   #comment 傪峴摢偵彂偔偲僐儊儞僩傪憓擖偱偒傞僼僅乕儉偑杽傔崬傑傟傑偡丅
+    *   #comment を乖片に今くとコメントを赁掐できるフォ〖ムが虽め哈まれます。
 
-    *   #related 傪彂偔偲丄尰嵼偺儁乕僕柤傪娷傓暿偺儁乕僕(娭楢儁乕僕)傊偺儕儞僋傪昞帵偟傑偡丅 
+    *   #related を今くと、附哼のペ〖ジ叹を崔む侍のペ〖ジ(簇息ペ〖ジ)へのリンクを山绩します。 
 
-    * #norelated 傪峴摢偵彂偔偲丄偦偺儁乕僕偺堦斣壓偵昞帵偝傟傞娭楢儁乕僕傪旕昞帵偵偟傑偡丅 
+    * #norelated を乖片に今くと、そのペ〖ジの办戎布に山绩される簇息ペ〖ジを润山绩にします。 
 
-    * #calendar_read(200202) 傪峴摢偵彂偔偲丄偦偺擔晅偺儁乕僕傪昞帵偡傞僇儗儞僟乕偑昞帵偝傟傑偡丅妵屖撪偼擭寧傪昞偟傑偡偑丄徣棯偡傞偲尰嵼偺擭寧偑巊梡偝傟傑偡丅(擔婰岦偗) 
+    * #calendar_read(200202) を乖片に今くと、その泣烧のペ〖ジを山绩するカレンダ〖が山绩されます。崇柑柒は钳奉を山しますが、臼维すると附哼の钳奉が蝗脱されます。(泣淡羹け) 
 
-    * #calendar_edit(200202) 傪峴摢偵彂偔偲丄偦偺擔晅偺儁乕僕傪曇廤偡傞僇儗儞僟乕偑昞帵偝傟傑偡丅妵屖撪偼擭寧傪昞偟傑偡偑丄徣棯偡傞偲尰嵼偺擭寧偑巊梡偝傟傑偡丅(擔婰岦偗) 
+    * #calendar_edit(200202) を乖片に今くと、その泣烧のペ〖ジを试礁するカレンダ〖が山绩されます。崇柑柒は钳奉を山しますが、臼维すると附哼の钳奉が蝗脱されます。(泣淡羹け) 
 
-    *   偦偺懠丄pukiwiki.php 傪曇廤偡傞偙偲偵傛傝懠偺儖乕儖傪僗僋儕僾僩愝抲幰偑掕媊偱偒傑偡丅
+    *   その戮、pukiwiki.php を试礁することにより戮のル〖ルをスクリプト肋弥荚が年盗できます。
 
 InterWiki
-    1.11 偐傜InterWiki偑幚憰偝傟傑偟偨丅
+    1.11 からInterWikiが悸刘されました。
 
-    InterWiki 偲偼丄Wiki僒乕僶乕傪偮側偘傞婡擻偱偡丅嵟弶偼偦偆偩偭偨傫偱 InterWiki 偲偄偆
-    柤慜側偺偩偦偆偱偡偑丄崱偼丄Wiki僒乕僶乕偩偗偱偼側偔偰丄偄傠傫側僒乕僶乕傪堷偗傑偡丅
-    側偐側偐曋棙偱偡丅偦偆側傞偲 InterWiki 偲偄偆柤慜偼偁傑傝婡擻傪昞偟偰偄側偄偙偲偵
-    側傝傑偡丅 偙偺婡擻偼 Tiki 偐傜傎傏姰慡偵堏怉偟偰偄傑偡丅
+    InterWiki とは、Wikiサ〖バ〖をつなげる怠墙です。呵介はそうだったんで InterWiki という
+    叹涟なのだそうですが、海は、Wikiサ〖バ〖だけではなくて、いろんなサ〖バ〖を苞けます。
+    なかなか守网です。そうなると InterWiki という叹涟はあまり怠墙を山していないことに
+    なります。 この怠墙は Tiki からほぼ窗链に败竣しています。
 
-  僒乕僶乕儕僗僩傊偺捛壛
-    InterWikiName 偺儁乕僕偵埲壓偺傛偆偵僒乕僶偺掕媊傪偡傞丅 
+  サ〖バ〖リストへの纳裁
+    InterWikiName のペ〖ジに笆布のようにサ〖バの年盗をする。 
 
-    *   [URL 僒乕僶柤] 僞僀僾
+    *   [URL サ〖バ叹] タイプ
     *   [http://pukiwiki.org/index.php?read&page= pukiwiki] pw
 
 
-  InterWikiName偺捛壛 
-    僒乕僶柤:WikiName傪BracketName偱嶌傟偽InterWikiName偺姰惉 
+  InterWikiNameの纳裁 
+    サ〖バ叹:WikiNameをBracketNameで侯ればInterWikiNameの窗喇 
 
-    *   [[僒乕僶柤:WikiName]]
+    *   [[サ〖バ叹:WikiName]]
     *   [[pukiwiki:FrontPage]]
 
-  WikiName偺憓擖埵抲 
-    梫媮偟傛偆偲偡傞URL傊偺WikiName偺憓擖埵抲傪 $1 偱巜掕偡傞偙偲偑偱偒傑偡丅
-    徣棯偡傞偲偍怟偵偔偭偮偒傑偡丅 
+  WikiNameの赁掐疤弥 
+    妥滇しようとするURLへのWikiNameの赁掐疤弥を $1 で回年することができます。
+    臼维するとお楷にくっつきます。 
 
     *   [http://pukiwiki.org/index.php?backup&page=$1&age=1 pukiwiki] pw
 
 
-  暥帤僐乕僪曄姺僞僀僾 
-    PukiWiki儁乕僕埲奜偵傕旘偽偣傑偡丅擔杮岅傪URL偵娷傓壜擻惈傕偁傞偺偱偦偺応崌偺
-    僄儞僐乕僨傿儞僌偺巜掕傪僞僀僾偲偟偰巜掕偱偒傑偡丅 
+  矢机コ〖ド恃垂タイプ 
+    PukiWikiペ〖ジ笆嘲にも若ばせます。泣塑胳をURLに崔む材墙拉もあるのでその眷圭の
+    エンコ〖ディングの回年をタイプとして回年できます。 
 
     *   [http://pukiwiki.org/index.php?read&page=$1 pukiwiki] pw
 
 
-    *   std 徣棯帪
-        *   撪晹暥帤僄儞僐乕僨傿儞僌(昗弨偼SJIS)偺傑傑URL僄儞僐乕僪偟傑偡丅 
+    *   std 臼维箕
+        *   柒婶矢机エンコ〖ディング(筛洁はSJIS)のままURLエンコ〖ドします。 
 
     *   raw asis
-        *   URL僄儞僐乕僪偟側偄偱偦偺傑傑巊梡丅 
+        *   URLエンコ〖ドしないでそのまま蝗脱。 
 
     *   sjis
-        *   暥帤楍傪SJIS偵曄姺偟丄URL僄儞僐乕僪偟傑偡丅(mb_string偺SJIS傊偺僄僀儕傾僗偱偡) 
+        *   矢机误をSJISに恃垂し、URLエンコ〖ドします。(mb_stringのSJISへのエイリアスです) 
 
     *   euc
-        *   暥帤楍傪擔杮岅EUC偵曄姺偟丄URL僄儞僐乕僪偟傑偡丅(mb_string偺EUC-JP傊偺僄僀儕傾僗偱偡) 
+        *   矢机误を泣塑胳EUCに恃垂し、URLエンコ〖ドします。(mb_stringのEUC-JPへのエイリアスです) 
 
     *   utf8
-        *   暥帤楍傪UTF-8偵曄姺偟丄URL僄儞僐乕僪偟傑偡丅(mb_string偺UTF-8傊偺僄僀儕傾僗偱偡) 
+        *   矢机误をUTF-8に恃垂し、URLエンコ〖ドします。(mb_stringのUTF-8へのエイリアスです) 
 
     *   yw
-        *   YukiWiki宯傊偺僄儞僐乕僨傿儞僌丅 
+        *   YukiWiki废へのエンコ〖ディング。 
 
     *   moin
-        *   MoinMoin梡偵曄姺偟傑偡丅 
+        *   MoinMoin脱に恃垂します。 
 
-    *   偦偺懠丄PHP4偺mb_string偱僒億乕僩偝傟偰偄傞埲壓偺僄儞僐乕僪暥帤偑巊梡偱偒傑偡丅 
+    *   その戮、PHP4のmb_stringでサポ〖トされている笆布のエンコ〖ド矢机が蝗脱できます。 
 
         *   UCS-4, UCS-4BE, UCS-4LE, UCS-2, UCS-2BE, UCS-2LE, UTF-32, UTF-32BE, UTF-32LE, UCS-2LE, UTF-16, UTF-16BE, UTF-16LE, UTF-8, UTF-7, ASCII, EUC-JP, SJIS, eucJP-win, SJIS-win, ISO-2022-JP, JIS, ISO-8859-1, ISO-8859-2, ISO-8859-3, ISO-8859-4, ISO-8859-5, ISO-8859-6, ISO-8859-7, ISO-8859-8, ISO-8859-9, ISO-8859-10, ISO-8859-13, ISO-8859-14, ISO-8859-15, byte2be, byte2le, byte4be, byte4le, BASE64, 7bit, 8bit, UTF7-IMAP 
 
 
-  YukiWiki宯傊偺僄儞僐乕僨傿儞僌 
+  YukiWiki废へのエンコ〖ディング 
 
-    *   WikiName偺傕偺傊偼偦偺傑傑URL僄儞僐乕僪丅 
-    *   BracketName偺傕偺偼[[ ]]傪晅壛偟偰URL僄儞僐乕僪丅 
+    *   WikiNameのものへはそのままURLエンコ〖ド。 
+    *   BracketNameのものは[[ ]]を烧裁してURLエンコ〖ド。 
 
 RDF/RSS
-    1.2.1偐傜丄RecentChanges偺RDF/RSS傪弌椡偱偒傞傛偆偵側傝傑偟偨丅
-    幚梡偱偒傞偐偼傢偐傜側偄偱偡偑丄彨棃壗偐偵巊偊傟偽丄偲巚偭偰傑偡丅
+    1.2.1から、RecentChangesのRDF/RSSを叫蜗できるようになりました。
+    悸脱できるかはわからないですが、经丸部かに蝗えれば、と蛔ってます。
 
-  RSS 0.91 偺弌椡曽朄偺椺
+  RSS 0.91 の叫蜗数恕の毋
 
     *   http://pukiwiki/index.php?rss
 
-  RSS 1.0 偺弌椡曽朄偺椺
+  RSS 1.0 の叫蜗数恕の毋
 
     *   http://pukiwiki.org/index.php?rss10
 
-峏怴棜楌
+构糠旺悟
     *   2004-04-04 1.3.7 by PukiWiki Developers Team
-        BugTrack/547 rename僾儔僌僀儞偑惓忢偵摦嶌偟側偄?
+        BugTrack/547 renameプラグインが赖撅に瓢侯しない?
             [[cvs:plugin/rename.inc.php]](v1.3:r1.1.2.1)
-        BugTrack/566 [cvs] $Id 偑柍偄/擇偮偁傞 (儅僀僌儗乕僔儑儞嶌嬈岦偗) 
+        BugTrack/566 [cvs] $Id が痰い/企つある (マイグレ〖ション侯度羹け) 
             [[cvs:skin/default.en.css]](v1.3:r1.13.2.1)
             [[cvs:skin/default.ja.css]](v1.3:r1.14.2.1)
             [[cvs:skin/default.js]](v1.3:r1.1.2.1)
@@ -319,153 +319,153 @@ RDF/RSS
             [[cvs:en.lng]](v1.3:r1.8.2.2)
             [[cvs:ja.lng]](v1.3:r1.10.2.1)
             [[cvs:make_link.php]](v1.3:r1.6.2.1)
-        僨僼僅儖僩偺$adminpass偑 md5("pass") 偱偼側偐偭偨 
+        デフォルトの$adminpassが md5("pass") ではなかった 
             [[cvs:pukiwiki.ini.php]](v1.3:r1.16.2.2)
 
     *   2003-11-10 1.3.6 by PukiWiki Developers Team
-        BugTrack/278 攝晍僼傽僀儖揥奐偩偗偱昁恵僨傿儗僋僩儕傪嶌惉偡傞
-        BugTrack/351 img僾儔僌僀儞偱僀儞儔僀儞梫慺偺僞僌偵clear懏惈偑
-                     巜掕偝傟偰偄傞
-        BugTrack/362 婰崋偱巒傑傞儁乕僕偑偁傞偲丄堦棗偱婰崋僷乕僩偺
-                     </ul>偑側偔偰偢傟傞
-        BugTrack/372 img.inc.php偺URL暥帤楍惛嵏偺岆傝偱夋憸偑弌側偄
-        BugTrack/386 memo僾儔僌僀儞偵XSS惼庛惈
-        BugTrack/387 pulgin/anchor.inc.php 偵僗僋儕僾僩崿擖栤戣
-        BugTrack/442 億乕僩80埲奜偺応崌偺RSS
-        BugTrack/458 #contents棙梡帪儐乕僓掕媊偑昞帵偝傟傞
-        BugTrack/479 CGI斉PHP偺応崌丄HTTPS偱棙梡偱偒側偄
-        BugTrack/486 header偱僉儍僢僔儏柍岠傪
-        InterWikiName儁乕僕廋惓(PukiWiki.org => utf8)
+        BugTrack/278 芹邵ファイル鸥倡だけで涩寇ディレクトリを侯喇する
+        BugTrack/351 imgプラグインでインライン妥燎のタグにclear掳拉が
+                     回年されている
+        BugTrack/362 淡规で幌まるペ〖ジがあると、办枉で淡规パ〖トの
+                     </ul>がなくてずれる
+        BugTrack/372 img.inc.phpのURL矢机误篮汉の疙りで茶咙が叫ない
+        BugTrack/386 memoプラグインにXSS廊煎拉
+        BugTrack/387 pulgin/anchor.inc.php にスクリプト寒掐啼玛
+        BugTrack/442 ポ〖ト80笆嘲の眷圭のRSS
+        BugTrack/458 #contents网脱箕ユ〖ザ年盗が山绩される
+        BugTrack/479 CGI惹PHPの眷圭、HTTPSで网脱できない
+        BugTrack/486 headerでキャッシュ痰跟を
+        InterWikiNameペ〖ジ饯赖(PukiWiki.org => utf8)
 
     *   2003-05-28 1.3.5 by PukiWiki Developers Team
-        XSS惼庛惈傪fix
-        偦偺懠僶僌廋惓
+        XSS廊煎拉をfix
+        その戮バグ饯赖
 
     *   2003-03-15 1.3.4 by PukiWiki Developers Team
-        廳梫側僙僉儏儕僥傿忋偺栤戣傪fix(BugTrack/210 null byte attack)
-        XSS惼庛惈傪懡悢fix
-        偦偺懠偄偔偮偐偺僶僌傪廋惓
-        :heart:偼攑巭偝傟傑偟偨丅戙傢傝偵 &heart;傪巊梡偟偰偔偩偝偄丅
+        脚妥なセキュリティ惧の啼玛をfix(BugTrack/210 null byte attack)
+        XSS廊煎拉を驴眶fix
+        その戮いくつかのバグを饯赖
+        :heart:は茄贿されました。洛わりに &heart;を蝗脱してください。
 
     *   2002-12-04 1.3.3 by PukiWiki Developers Team
 
-        make_link()傪撈棫
-        LEFT:/CENTER:/RIGHT:彂幃傪convert_html()撪偱張棟
-        埲慜偺儕儕乕僗偵娷傑傟偰偄偨XSS惼庛惈傪廋惓丅
-        偦偺懠懡悢偺僶僌傪廋惓
-        偄偔偮偐偺僾儔僌僀儞傪摨崼
+        make_link()を迫惟
+        LEFT:/CENTER:/RIGHT:今及をconvert_html()柒で借妄
+        笆涟のリリ〖スに崔まれていたXSS廊煎拉を饯赖。
+        その戮驴眶のバグを饯赖
+        いくつかのプラグインを票涵
 
     *   2002-07-15 1.3.2 by PukiWiki Developers Team
 
-        奐敪傪PukiWiki Developers Team (http://pukiwiki.org/)偵堏峴偟偰弶傔偰偺儕儕乕僗丅
-        埲慜偺儕儕乕僗偵娷傑傟偰偄偨XSS惼庛惈傪廋惓丅
-        HTML偑HTML4.01偵弨嫆偡傞傛偆偵廋惓
-        偦偺懠懡悢偺僶僌傪廋惓
+        倡券をPukiWiki Developers Team (http://pukiwiki.org/)に败乖して介めてのリリ〖ス。
+        笆涟のリリ〖スに崔まれていたXSS廊煎拉を饯赖。
+        HTMLがHTML4.01に洁凋するように饯赖
+        その戮驴眶のバグを饯赖
 
     *   2002-06-10 1.3.1beta MASUI'z Edition
 
-        PukiWiki 1.3傪儀乕僗偵丄MASUI偑彑庤偵僾儔僌僀儞偲偐傑偲傔偰傒傑偟偨丅
-        僜乕僗僼傽僀儖傪暘妱丅
-        calendar2, include, article, memo, aname, anchor, counter, vote, ls, yetlist, recent, source, img僾儔僌僀儞傪揧晅丅
-        attach, comment僾儔僌僀儞僶乕僕儑儞傾僢僾丅
-        杮暥偵丄僞僌偑擖偭偰偄偨応崌丄曇廤偑偆傑偔偱偒側偐偭偨晄嬶崌傪廋惓丅
-        峏怴徴撍帪偵diff傾儖僑儕僘儉偱嵎暘傪偲傝丄儅乕僕傪峴偆條偵曄峏丅
-	&amp; &lt;側偳傪娷傫偩暥復傪曇廤偡傞偲丄偦傟偑徚偊偰偟傑偆応崌偑偁傞晄嬶崌傪廋惓丅
-	帺摦僥儞僾儗乕僩婡擻傪捛壛丅[[SandBox/template]]
-        僜乕僗僼傽僀儖傪暘妱丅
+        PukiWiki 1.3をベ〖スに、MASUIが尽缄にプラグインとかまとめてみました。
+        ソ〖スファイルを尸充。
+        calendar2, include, article, memo, aname, anchor, counter, vote, ls, yetlist, recent, source, imgプラグインを藕烧。
+        attach, commentプラグインバ〖ジョンアップ。
+        塑矢に、タグが掐っていた眷圭、试礁がうまくできなかった稍恶圭を饯赖。
+        构糠咀仆箕にdiffアルゴリズムで汗尸をとり、マ〖ジを乖う屯に恃构。
+	&amp; &lt;などを崔んだ矢鞠を试礁すると、それが久えてしまう眷圭がある稍恶圭を饯赖。
+	极瓢テンプレ〖ト怠墙を纳裁。[[SandBox/template]]
+        ソ〖スファイルを尸充。
 
     *   2002-03-18 1.3 by sng.
 
-        偁傞暥帤楍傊WikiName/BracketName傊偺儕儞僋傪揬傞丅(僄僀儕傾僗婡擻)
-        媈帡僨傿儗僋僩儕峔憐丅./ 傗 ../ 側偳傪BracketName偲偟偰巊梡偡傞偙偲偱幚尰丅 
-        僇儗儞僟乕婡擻偱丄prefix傪巜掕偱偒傞傛偆偵偡傞丅
-        Tiki:TikiPluginSandBox偵偁傞傛偆側懳榖宆InterWiki(lookup)丅
-        懡尵岅壔偵懳墳偱偒傞傛偆偵丄奺庬儊僢僙乕僕側偳傪曇廤壜擻偵偡傞丅 
-        儁乕僕偵揧晅僼傽僀儖傪揧晅偡傞偙偲偑偱偒傞丅
-        堦晹偺惍宍儖乕儖傪僾儔僌僀儞壔偡傞丅
-        Win32偱傕惓忢偵摦嶌偡傞傛偆偵廋惓
+        ある矢机误へWikiName/BracketNameへのリンクを沤る。(エイリアス怠墙)
+        悼击ディレクトリ菇鳞。./ や ../ などをBracketNameとして蝗脱することで悸附。 
+        カレンダ〖怠墙で、prefixを回年できるようにする。
+        Tiki:TikiPluginSandBoxにあるような滦厦房InterWiki(lookup)。
+        驴咐胳步に滦炳できるように、称硷メッセ〖ジなどを试礁材墙にする。 
+        ペ〖ジに藕烧ファイルを藕烧することができる。
+        办婶の腊妨ル〖ルをプラグイン步する。
+        Win32でも赖撅に瓢侯するように饯赖
 
     *   2002-02-15 1.2.12 by sng.
 
-        僶僢僋傾僢僾偺嫇摦偺曄峏 
-        尰嵼昞帵偟偰偄傞儁乕僕偺傒偺僶僢僋傾僢僾堦棗傪昞帵偡傞 
-        尰嵼昞帵偟偰偄傞儁乕僕偵僶僢僋傾僢僾偑側偗傟偽丄偡傋偰偺儁乕僕偺傕偺傪昞帵 
-        僶僢僋傾僢僾嵎暘傪丄慜夞偺僶僢僋傾僢僾偲偺嵎暘偵 
-        僼傽僀儖柤堦棗偺捛壛 
-        僞僀儉僗僞儞僾傪曄峏偟側偄僠僃僢僋儃僢僋僗偺捛壛 
-        峏怴偺徴撍偺僠僃僢僋偵MD5偱僠僃僢僋僒儉傪巊偆傛偆偵曄峏 
-        僐儊儞僩憓擖帪丄峴摢偱偼側偄#comment晹暘偵憓擖偟偰偟傑偆僶僌傪廋惓 
-        pat偝傫偺梫朷偵傛傝丄昞慻傒儖乕儖傪捛壛 
-        pat偝傫偺梫朷偵傛傝HTML僐儊儞僩傾僂僩儖乕儖傪捛壛 
-        kawara?偝傫偺梫朷偵傛傝尒弌偟傪堦偮憹傗偟偨 
-        #norelated 傪峴摢偵彂偔偲娭楢儁乕僕傪昞帵偟側偄儖乕儖傪捛壛 
-        娭楢儁乕僕偺嬫愗傝暥帤傪惍宍儖乕儖梡偲暘偗偨 
+        バックアップの刁瓢の恃构 
+        附哼山绩しているペ〖ジのみのバックアップ办枉を山绩する 
+        附哼山绩しているペ〖ジにバックアップがなければ、すべてのペ〖ジのものを山绩 
+        バックアップ汗尸を、涟搀のバックアップとの汗尸に 
+        ファイル叹办枉の纳裁 
+        タイムスタンプを恃构しないチェックボックスの纳裁 
+        构糠の咀仆のチェックにMD5でチェックサムを蝗うように恃构 
+        コメント赁掐箕、乖片ではない#comment婶尸に赁掐してしまうバグを饯赖 
+        patさんの妥司により、山寥みル〖ルを纳裁 
+        patさんの妥司によりHTMLコメントアウトル〖ルを纳裁 
+        kawara?さんの妥司により斧叫しを办つ笼やした 
+        #norelated を乖片に今くと簇息ペ〖ジを山绩しないル〖ルを纳裁 
+        簇息ペ〖ジの惰磊り矢机を腊妨ル〖ル脱と尸けた 
 
-    *   2002-02-09 1.2.11 by sng. 娭楢儕儞僋忢帪昞帵婡擻丄宱夁帪娫昞帵婡擻丄僙僉儏儕僥傿懳嶔丄僐儅儞僪傪 cmd= 偵廋惓丅偦偺懠僶僌廋惓丅 
+    *   2002-02-09 1.2.11 by sng. 簇息リンク撅箕山绩怠墙、沸册箕粗山绩怠墙、セキュリティ滦忽、コマンドを cmd= に饯赖。その戮バグ饯赖。 
 
-    *   2002-02-09 1.2.1 by sng. 僶僌廋惓丄崅懍壔丄RDF/RSS(1.0,0.91)偺幚憰丅
+    *   2002-02-09 1.2.1 by sng. バグ饯赖、光庐步、RDF/RSS(1.0,0.91)の悸刘。
 
-    *   2002-02-07 1.2.0 by sng. 愝掕僼傽僀儖傪奜晹傊丄InterWiki搵嵹丄娭楢儁乕僕儖乕儖丄拲庍儖乕儖丄http儕儞僋儖乕儖丄僶僌廋惓丅
+    *   2002-02-07 1.2.0 by sng. 肋年ファイルを嘲婶へ、InterWiki烹很、簇息ペ〖ジル〖ル、庙坚ル〖ル、httpリンクル〖ル、バグ饯赖。
 
-    *   2002-02-05 1.10 by sng. 僗僉儞婡擻丄僐儊儞僩憓擖丄尒弌偟栚師嶌惉丄偦偺懠僶僌廋惓丅
+    *   2002-02-05 1.10 by sng. スキン怠墙、コメント赁掐、斧叫し誊肌侯喇、その戮バグ饯赖。
 
-    *   2002-02-01 1.07 by sng. 捛壛婡擻丄儐乕僓掕媊儖乕儖丄扨岅AND/OR専嶕偺幚憰丅
+    *   2002-02-01 1.07 by sng. 纳裁怠墙、ユ〖ザ年盗ル〖ル、帽胳AND/OR浮瑚の悸刘。
 
-    *   2001-01-22 1.06 by sng. 儁乕僕曇廤帪僄儔乕偺廋惓丅儁乕僕僞僀僩儖偺[[]]傕庢傝彍偔傛偆偵丅
+    *   2001-01-22 1.06 by sng. ペ〖ジ试礁箕エラ〖の饯赖。ペ〖ジタイトルの[[]]も艰り近くように。
 
-    *   2001-12-12 1.05 by sng. 嵎暘傾儖僑儕僘儉偺廋惓丄帺摦僶僢僋傾僢僾婡擻捛壛丅
+    *   2001-12-12 1.05 by sng. 汗尸アルゴリズムの饯赖、极瓢バックアップ怠墙纳裁。
 
-    *   2001-12-10 1.01 by sng. 儊乕儖傾僪儗僗儕儞僋偺晄旛偺廋惓(thanks to s.sawada)
+    *   2001-12-10 1.01 by sng. メ〖ルアドレスリンクの稍洒の饯赖(thanks to s.sawada)
 
-    *   2001-12-05 1.00 by sng. 惓幃岞奐丅専嶕寢壥偐傜偺僴僀儔僀僩昞帵婡擻偺嶍彍丅
+    *   2001-12-05 1.00 by sng. 赖及给倡。浮瑚冯蔡からのハイライト山绩怠墙の猴近。
 
-    *   2001-11-29 0.96 by sng. 傑偨傑偨偄偔偮偐偺僶僌偺廋惓丅嵎暘偺捛壛丅傑偩傑偩枹姰丄偲傝偁偊偢丅 
+    *   2001-11-29 0.96 by sng. またまたいくつかのバグの饯赖。汗尸の纳裁。まだまだ踏窗、とりあえず。 
 
-    *   2001-11-28 0.94 by sng. 偄偔偮偐偺僶僌偺廋惓丅擔晅丒帪崗憓擖儖乕儖偺捛壛丅 
+    *   2001-11-28 0.94 by sng. いくつかのバグの饯赖。泣烧ˇ箕癸赁掐ル〖ルの纳裁。 
 
-    *   2001-11-27 0.93 by sng. 僐乕僪偺惔彂丅専嶕寢壥偐傜偺儁乕僕昞帵帪僴僀儔僀僩昞帵丅 
+    *   2001-11-27 0.93 by sng. コ〖ドの蓝今。浮瑚冯蔡からのペ〖ジ山绩箕ハイライト山绩。 
 
-    *   2001-11-26 0.92 by sng. 僨乕僞僼傽僀儖柤傪 YukiWiki 偲嫟捠偺曄姺曽朄偵偟偨丅 
+    *   2001-11-26 0.92 by sng. デ〖タファイル叹を YukiWiki と鼎奶の恃垂数恕にした。 
 
-    *   2001-11-25 0.91 by sng. 懄擔偵偟偰扨岅専嶕婡擻偑捛壛丅嵎暘偼寢峔偐偐傝偦偆丅 
+    *   2001-11-25 0.91 by sng. 篓泣にして帽胳浮瑚怠墙が纳裁。汗尸は冯菇かかりそう。 
 
-    *   2001-11-25 0.90 by sng. 堦墳岞奐丅YukiWiki 偺専嶕偲嵎暘偼傑偩丅
+    *   2001-11-25 0.90 by sng. 办炳给倡。YukiWiki の浮瑚と汗尸はまだ。
 
 TODO
         - http://pukiwiki.org/?BugTrack
 
-嶌幰
+侯荚
         PukiWiki 1.3.3 by PukiWiki Developers Team
          Copyright (C) 2002 by sng & PukiWiki Developers Team
          http://pukiwiki.org/
 
-    幙栤丄堄尒丄僶僌曬崘偼 http://pukiwiki.org/ 傑偱偍婅偄偟傑偡丅
+    剂啼、罢斧、バグ鼠桂は http://pukiwiki.org/ までお搓いします。
 
-攝晍忦審
-    PukiWiki偼丄 GNU General Public License偵偰岞奐偟傑偡丅
+芹邵掘凤
+    PukiWikiは、 GNU General Public Licenseにて给倡します。
 
-    PukiWiki偼僼儕乕僜僼僩偱偡丅 偛帺桼偵偍巊偄偔偩偝偄丅
+    PukiWikiはフリ〖ソフトです。 ご极统にお蝗いください。
 
-幱帿
-    PukiWiki Develpers Team偺奆偝傫丄PukiWiki儐乕僓偺奆偝傫偵姶幱偟傑偡丅
+颊辑
+    PukiWiki Develpers Teamの厂さん、PukiWikiユ〖ザの厂さんに炊颊します。
 
-    PukiWiki 傪奐敪偟偨丄sng偝傫偵姶幱偟傑偡丅
+    PukiWiki を倡券した、sngさんに炊颊します。
 
-    YukiWiki 偺僋儘乕儞壔傪嫋壜偟偰偄偨偩偄偨寢忛峗偝傫偵姶幱偟傑偡丅
+    YukiWiki のクロ〖ン步を钓材していただいた冯倦估さんに炊颊します。
 
-    杮壠偺WikiWiki傪嶌偭偨Cunningham & Cunningham, Inc.偵 姶幱偟傑偡丅
+    塑踩のWikiWikiを侯ったCunningham & Cunningham, Inc.に 炊颊します。
 
-嶲徠儕儞僋
-    *   PukiWiki儂乕儉儁乕僕 http://pukiwiki.org/
+徊救リンク
+    *   PukiWikiホ〖ムペ〖ジ http://pukiwiki.org/
 
-    *   sng偺儂乕儉儁乕僕 http://factage.com/sng/
+    *   sngのホ〖ムペ〖ジ http://factage.com/sng/
 
-    *   寢忛峗偝傫偺儂乕儉儁乕僕 http://www.hyuki.com/
+    *   冯倦估さんのホ〖ムペ〖ジ http://www.hyuki.com/
 
-    *   YukiWiki儂乕儉儁乕僕 http://www.hyuki.com/yukiwiki/
+    *   YukiWikiホ〖ムペ〖ジ http://www.hyuki.com/yukiwiki/
 
     *   Tiki http://todo.org/cgi-bin/jp/tiki.cgi
 
-    *   杮壠偺WikiWiki http://c2.com/cgi/wiki?WikiWikiWeb
+    *   塑踩のWikiWiki http://c2.com/cgi/wiki?WikiWikiWeb
 
-    *   杮壠偺WikiWiki偺嶌幰(Cunningham & Cunningham, Inc.) http://c2.com/
+    *   塑踩のWikiWikiの侯荚(Cunningham & Cunningham, Inc.) http://c2.com/
