@@ -1,5 +1,5 @@
 <?php
-// $Id: img.inc.php,v 1.5 2002/11/29 00:09:01 panda Exp $
+// $Id: img.inc.php,v 1.5.2.1 2003/02/28 06:15:14 panda Exp $
 function plugin_img_convert()
 {
 	if(func_num_args()!=2) {
@@ -17,7 +17,10 @@ function plugin_img_convert()
 	else {
 		return "<br style=\"clear:both\">";
 	}
-	if(preg_match("/^http:\/\/(\S+?)(\.jpg|\.jpeg|\.gif|\.png)$/si", $url) == false) return;
+	if (!is_url($url) or preg_match('/(\.gif|\.png|\.jpeg|\.jpg)$/i', $url))
+	{
+		return;
+	}
 	return "<div style=\"float:$align;padding:.5em 1.5em .5em 1.5em\"><img src=\"$url\" alt=\"\" /></div>";
 }
 ?>
