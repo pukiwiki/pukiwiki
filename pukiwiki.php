@@ -29,7 +29,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.19 2003/02/15 13:25:15 panda Exp $
+// $Id: pukiwiki.php,v 1.20 2003/02/20 12:34:56 panda Exp $
 /////////////////////////////////////////////////
 
 
@@ -67,7 +67,9 @@ if (!empty($vars['plugin'])) {
 	}
 	else {
 		$retvars = do_plugin_action($vars['plugin']);
-		$base = array_key_exists('refer',$vars) ? $vars['refer'] : '';
+		if ($retvars !== FALSE) {
+			$base = array_key_exists('refer',$vars) ? $vars['refer'] : '';
+		}
 	}
 }
 // Command action
@@ -82,31 +84,32 @@ else if (!empty($vars['cmd'])) {
 	}
 }
 
-$title = htmlspecialchars(strip_bracket($base));
-$page = make_search($base);
-
-if (array_key_exists('msg',$retvars) and $retvars['msg'] != '') {
-	$title = str_replace('$1',$title,$retvars['msg']);
-	$page = str_replace('$1',$page,$retvars['msg']);
-}
-
-if (array_key_exists('body',$retvars) and $retvars['body'] != '') {
-	$body = $retvars['body'];
-}
-else {
-	if ($base == '' or !is_page($base)) {
-		$base = $defaultpage;
-		$title = htmlspecialchars(strip_bracket($base));
-		$page = make_search($base);
+if ($retvars !== FALSE) {
+	$title = htmlspecialchars(strip_bracket($base));
+	$page = make_search($base);
+	
+	if (array_key_exists('msg',$retvars) and $retvars['msg'] != '') {
+		$title = str_replace('$1',$title,$retvars['msg']);
+		$page = str_replace('$1',$page,$retvars['msg']);
 	}
 	
-	$vars['cmd'] = 'read';
-	$vars['page'] = $base;
-	$body = convert_html(get_source($base));
+	if (array_key_exists('body',$retvars) and $retvars['body'] != '') {
+		$body = $retvars['body'];
+	}
+	else {
+		if ($base == '' or !is_page($base)) {
+			$base = $defaultpage;
+			$title = htmlspecialchars(strip_bracket($base));
+			$page = make_search($base);
+		}
+		
+		$vars['cmd'] = 'read';
+		$vars['page'] = $base;
+		$body = convert_html(get_source($base));
+	}
+	
+	// ** 出力処理 **
+	catbody($title,$page,$body);
 }
-
-// ** 出力処理 **
-catbody($title,$page,$body);
-
 // ** 終了 **
 ?>
