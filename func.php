@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.59 2004/03/18 09:52:52 arino Exp $
+// $Id: func.php,v 1.60 2004/03/20 13:45:19 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -632,18 +632,41 @@ function sanitize($param)
 }
 
 // CSV形式の文字列を配列に
-function csv_explode($separator, $str)
+function csv_explode($separator, $string)
 {
-	if (!preg_match_all('/("[^"]*(?:""[^"]*)*"|[^,]*)'.$separator.'/', $str.$separator, $matches))
+	
+	$q_sep = preg_quote($separator,'/');
+	if (!preg_match_all('/("[^"]*(?:""[^"]*)*"|[^'.$q_sep.']*)'.$q_sep.'/', $string.$separator, $matches))
 	{
 		return array();
 	}
-	$retval = $matches[1];
-//	array_shift($retval);
-	
-	return array_map(create_function('$a',
-		'return preg_match(\'/^"(.*)"$/\', $a, $matches) ? str_replace(\'""\', \'"\', $matches[1]) : $a;'),
-		$retval);
+
+	$retval = array();
+	foreach ($matches[1] as $str)
+	{
+		$len = strlen($str);
+		if ($len > 1 and $str{0} == '"' and $str{$len - 1} == '"')
+		{
+			$str = str_replace('""', '"', substr($str, 1, -1));
+		}
+		$retval[] = $str;
+	}
+	return $retval;
+}
+
+// 配列をCSV形式の文字列に
+function csv_implode($glue, $pieces)
+{
+	$arr = array();
+	foreach ($pieces as $str)
+	{
+		if (ereg("[,\"\n\r]",$str))
+		{
+			$str = '"'.str_replace('"', '""', $str).'"';
+		}
+		$arr[] = $str;
+	}
+	return join($glue, $arr);
 }
 
 //is_a
