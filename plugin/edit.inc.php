@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.13 2004/07/02 13:07:31 henoheno Exp $
+// $Id: edit.inc.php,v 1.14 2004/07/02 13:34:36 henoheno Exp $
 //
 
 // 編集
@@ -47,15 +47,14 @@ function plugin_edit_preview()
 	
 	// 手書きの#freezeを削除
 	$vars['msg'] = preg_replace('/^#freeze\s*$/m', '' ,$vars['msg']);
+	$postdata = $vars['msg'];
 
-	if (isset($vars['add'])) {
+	if (isset($vars['add']) && $vars['add']) {
 		if (isset($vars['add_top']) && $vars['add_top']) {
-			$postdata  = $vars['msg'] . "\n\n" . @join('', get_source($page));
+			$postdata  = $postdata . "\n\n" . @join('', get_source($page));
 		} else {
-			$postdata  = @join('', get_source($page)) . "\n\n" . $vars['msg'];
+			$postdata  = @join('', get_source($page)) . "\n\n" . $postdata;
 		}
-	} else {
-		$postdata = $vars['msg'];
 	}
 
 	$body = "$_msg_preview<br />\n";
@@ -77,40 +76,32 @@ function plugin_edit_preview()
 // 書き込みもしくは追加もしくはコメントの挿入
 function plugin_edit_write()
 {
-	global $script,$post,$vars;
-	global $_title_collided,$_msg_collided_auto,$_msg_collided,$_title_deleted;
-	
+	global $script, $vars;
+	global $_title_collided, $_msg_collided_auto, $_msg_collided, $_title_deleted;
+
+	$page = isset($vars['page']) ? $vars['page'] : '';
 	$retvars = array();
-	
+
 	// 手書きの#freezeを削除
-	$post['msg'] = preg_replace('/^#freeze\s*$/m','',$post['msg']);
-	
-	$postdata_input = $post['msg'];
-	
-	if (!empty($post['add'])) {
-		if (!empty($post['add_top'])) {
-			$postdata  = $post['msg'];
-			$postdata .= "\n\n";
-			$postdata .= @join('',get_source($post['page']));
-		}
-		else {
-			$postdata  = @join('',get_source($post['page']));
-			$postdata .= "\n\n";
-			$postdata .= $post['msg'];
+	$vars['msg'] = preg_replace('/^#freeze\s*$/m','',$vars['msg']);
+	$postdata = $postdata_input = $vars['msg'];
+
+	if (isset($vars['add']) && $vars['add']) {
+		if (isset($vars['add_top']) && $vars['add_top']) {
+			$postdata  = $postdata . "\n\n" . @join('', get_source($page));
+		} else {
+			$postdata  = @join('', get_source($page)) . "\n\n" . $postdata;
 		}
 	}
-	else {
-		$postdata = $post['msg'];
-	}
 	
-	$oldpagesrc = join('',get_source($post['page']));
+	$oldpagesrc = join('', get_source($page));
 	$oldpagemd5 = md5($oldpagesrc);
 	
-	if ($oldpagemd5 != $post['digest']) {
+	if (! isset($vars['digest']) || $vars['digest'] != $oldpagemd5) {
+		$vars['digest'] = $oldpagemd5;
+
 		$retvars['msg'] = $_title_collided;
-		
-		$post['digest'] = $vars['digest'] = $oldpagemd5;
-		list($postdata_input,$auto) = do_update_diff($oldpagesrc,$postdata_input,$post['original']);
+		list($postdata_input, $auto) = do_update_diff($oldpagesrc, $postdata_input, $vars['original']);
 		
 		$retvars['body'] = ($auto ? $_msg_collided_auto : $_msg_collided)."\n";
 		
@@ -119,20 +110,20 @@ function plugin_edit_write()
 			$retvars['body'] .= $do_update_diff_table;
 		}
 		
-		$retvars['body'] .= edit_form($post['page'],$postdata_input,$oldpagemd5,FALSE);
+		$retvars['body'] .= edit_form($page, $postdata_input, $oldpagemd5, FALSE);
 	}
 	else {
-		$notimestamp = !empty($post['notimestamp']);
-		page_write($post['page'],$postdata,$notimestamp);
+		$notimestamp = (isset($vars['notimestamp']) && $vars['notimestamp'] != '');
+		page_write($page, $postdata, $notimestamp);
 		
-		if ($postdata != '') {
-			header("Location: $script?".rawurlencode($post['page']));
+		if ($postdata) {
+			header("Location: $script?" . rawurlencode($page));
 			exit;
 		}
 		
 		$retvars['msg'] = $_title_deleted;
-		$retvars['body'] = str_replace('$1',htmlspecialchars($post['page']),$_title_deleted);
-		tb_delete($post['page']);
+		$retvars['body'] = str_replace('$1', htmlspecialchars($page), $_title_deleted);
+		tb_delete($page);
 	}
 	
 	return $retvars;
