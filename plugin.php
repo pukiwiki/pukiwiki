@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: plugin.php,v 1.11 2004/07/10 11:45:23 henoheno Exp $
+// $Id: plugin.php,v 1.12 2004/07/10 12:00:25 henoheno Exp $
 //
 
 // プラグイン用に未定義の変数を設定
@@ -34,17 +34,20 @@ function exist_plugin($name)
 
 //プラグイン関数(action)が存在するか
 function exist_plugin_action($name) {
-	return function_exists('plugin_' . $name . '_action')	? TRUE : exist_plugin($name);
+	return	function_exists('plugin_' . $name . '_action') ? TRUE : exist_plugin($name) ?
+		function_exists('plugin_' . $name . '_action') : FALSE;
 }
 
 //プラグイン関数(convert)が存在するか
 function exist_plugin_convert($name) {
-	return function_exists('plugin_' . $name . '_convert')	? TRUE : exist_plugin($name);
+	return	function_exists('plugin_' . $name . '_convert') ? TRUE : exist_plugin($name) ?
+		function_exists('plugin_' . $name . '_convert') : FALSE;
 }
 
 //プラグイン関数(inline)が存在するか
 function exist_plugin_inline($name) {
-	return function_exists('plugin_' . $name . '_inline')	? TRUE : exist_plugin($name);
+	return	function_exists('plugin_' . $name . '_inline') ? TRUE : exist_plugin($name) ?
+		function_exists('plugin_' . $name . '_inline') : FALSE;
 }
 
 //プラグインの初期化を実行
