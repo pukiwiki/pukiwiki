@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.6.2.2 2004/05/27 13:42:53 arino Exp $
+// $Id: make_link.php,v 1.6.2.3 2004/06/19 00:54:33 henoheno Exp $
 //
 
 // リンクを付加する
@@ -223,7 +223,7 @@ class link_interwiki extends link
 		$url = get_interwiki_url($match[1],$match[2]);
 
 		if($url == FALSE){
-			return "{$this->alias}";
+			return "[[{$this->alias}]]";
 		} else {
 			return "<a href=\"$url\" target=\"$interwiki_target\">{$this->alias}</a>";
 		}
