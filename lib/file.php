@@ -1,44 +1,44 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: file.php,v 1.11 2005/01/10 04:24:31 henoheno Exp $
 //
-// $Id: file.php,v 1.10 2004/12/30 14:45:01 henoheno Exp $
-//
+// File related functions
 
-// ソースを取得
+// Get source(wiki text) data of the page
 function get_source($page = NULL)
 {
+	// Removing line-feeds: Because file() doesn't remove them.
 	return is_page($page) ? str_replace("\r", '', file(get_filename($page))) : array();
 }
 
-// ページの更新時刻を得る
+// Get last-modified filetime of the page
 function get_filetime($page)
 {
 	return is_page($page) ? filemtime(get_filename($page)) - LOCALZONE : 0;
 }
 
-// ページのファイル名を得る
+// Get physical file name of the page
 function get_filename($page)
 {
 	return DATA_DIR . encode($page) . '.txt';
 }
 
-// ページの出力
+// Put a data(wiki text) into a physical file(diff, backup, text)
 function page_write($page, $postdata, $notimestamp = FALSE)
 {
 	global $trackback;
 
 	$postdata = make_str_rules($postdata);
 
-	// 差分ファイルの作成
+	// Create and write diff
 	$oldpostdata = is_page($page) ? join('', get_source($page)) : '';
 	$diffdata    = do_diff($oldpostdata, $postdata);
 	file_write(DIFF_DIR, $page, $diffdata);
 
-	// バックアップの作成
+	// Create backup
 	make_backup($page, $postdata == ''); // Is $postdata null?
 
-	// ファイルの書き込み
+	// Create wiki text
 	file_write(DATA_DIR, $page, $postdata, $notimestamp);
 
 	if ($trackback) {
@@ -52,7 +52,7 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	links_update($page);
 }
 
-// ユーザ定義ルール(ソースを置換する)
+// User-defined rules (replace the source)
 function make_str_rules($str)
 {
 	global $str_rules, $fixed_heading_anchor;
@@ -66,12 +66,12 @@ function make_str_rules($str)
 				$str = preg_replace("/$rule/", $replace, $str);
 		}
 		
-		// 見出しに固有IDを付与する
+		// Adding fixed anchor into headings
 		if ($fixed_heading_anchor &&
 			preg_match('/^(\*{1,3}(.(?!\[#[A-Za-z][\w-]+\]))+)$/', $str, $matches))
 		{
-			// 固有IDを生成する
-			// ランダムな英字(1文字) + md5ハッシュのランダムな部分文字列(7文字)
+			// Generate ID:
+			// A random alphabetic letter + 7 letters of random strings from md()
 			$anchor = chr(mt_rand(ord('a'), ord('z'))) .
 				substr(md5(uniqid(substr($matches[1], 0, 100), 1)), mt_rand(0, 24), 7);
 			$str = rtrim($matches[1]) . " [#$anchor]";
@@ -82,7 +82,7 @@ function make_str_rules($str)
 	return join("\n", $retvars);
 }
 
-// ファイルへの出力
+// Output to a file
 function file_write($dir, $page, $str, $notimestamp = FALSE)
 {
 	global $update_exec;
@@ -92,8 +92,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 
 	if (! is_pagename($page))
 		die_message(str_replace('$1', htmlspecialchars($page),
-		            str_replace('$2', 'WikiName', $_msg_invalidiwn))
-		);
+		            str_replace('$2', 'WikiName', $_msg_invalidiwn)));
 
 	$page      = strip_bracket($page);
 	$timestamp = FALSE;
@@ -126,12 +125,13 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 			touch($file, $timestamp + LOCALZONE);
 	}
 
-	// is_pageのキャッシュをクリアする
+	// Clear is_page() cache
 	is_page($page, TRUE);
 
 	if (! $timestamp && $dir == DATA_DIR)
 		put_lastmodified();
 
+	// Execute $update_exec here
 	if ($update_exec && $dir == DATA_DIR)
 		system($update_exec . ' > /dev/null &');
 
@@ -151,24 +151,22 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	}
 }
 
-// 削除履歴ページの更新
+// Update RecentDeleted
 function put_recentdeleted($page)
 {
 	global $whatsdeleted, $maxshow_deleted;
 
 	if ($maxshow_deleted == 0) return;
 
-	// Update RecentDeleted
 	$lines = $matches = array();
-	foreach (get_source($whatsdeleted) as $line) {
+	foreach (get_source($whatsdeleted) as $line)
 		if (preg_match('/^-(.+) - (\[\[.+\]\])$/', $line, $matches))
 			$lines[$matches[2]] = $line;
-	}
 
-	$_page = "[[$page]]";
+	$_page = '[[' . $page . ']]';
 	if (isset($lines[$_page])) unset($lines[$_page]);
 
-	array_unshift($lines, '-' . format_date(UTIME) . " - $_page\n");
+	array_unshift($lines, '-' . format_date(UTIME) . ' - ' . $_page . "\n");
 	$lines = array_splice($lines, 0, $maxshow_deleted);
 
 	$fp = fopen(get_filename($whatsdeleted), 'w') or
@@ -180,27 +178,27 @@ function put_recentdeleted($page)
 	flock($fp, LOCK_EX);
 	rewind($fp);
 	fputs($fp, join('', $lines));
-	fputs($fp, "#norelated\n"); // :)
+	fputs($fp, '#norelated' . "\n"); // :)
 	flock($fp, LOCK_UN);
 	fclose($fp);
 }
 
-// 最終更新ページの更新
+// Update RecentChanges
 function put_lastmodified()
 {
 	global $maxshow, $whatsnew, $non_list, $autolink;
 
 	$pages = get_existpages();
 	$recent_pages = array();
-	foreach($pages as $page) {
-		if ($page != $whatsnew && ! preg_match("/$non_list/", $page))
+	$non_list_pattern = '/' . $non_list . '/';
+	foreach($pages as $page)
+		if ($page != $whatsnew && ! preg_match($non_list_pattern, $page))
 			$recent_pages[$page] = get_filetime($page);
-	}
 
-	//時刻降順でソート
+	// Sort decending order of last-modification date
 	arsort($recent_pages, SORT_NUMERIC);
 
-	// create recent.dat (for recent.inc.php)
+	// Create recent.dat (for recent.inc.php)
 	$fp = fopen(CACHE_DIR . 'recent.dat', 'w') or
 		die_message('Cannot write cache file ' .
 		CACHE_DIR . 'recent.dat' .
@@ -210,11 +208,11 @@ function put_lastmodified()
 	flock($fp, LOCK_EX);
 	rewind($fp);
 	foreach ($recent_pages as $page=>$time)
-		fputs($fp, "$time\t$page\n");
+		fputs($fp, $time . "\t" . $page . "\n");
 	flock($fp, LOCK_UN);
 	fclose($fp);
 
-	// create RecentChanges
+	// Create RecentChanges
 	$fp = fopen(get_filename($whatsnew), 'w') or
 		die_message('Cannot write page file ' .
 		htmlspecialchars($whatsnew) .
@@ -227,13 +225,13 @@ function put_lastmodified()
 		$time      = $recent_pages[$page];
 		$s_lastmod = htmlspecialchars(format_date($time));
 		$s_page    = htmlspecialchars($page);
-		fputs($fp, "-$s_lastmod - [[$s_page]]\n");
+		fputs($fp, '-' . $s_lastmod . ' - [[' . $s_page . ']]' . "\n");
 	}
-	fputs($fp, "#norelated\n"); // :)
+	fputs($fp, '#norelated' . "\n"); // :)
 	flock($fp, LOCK_UN);
 	fclose($fp);
 
-	// for autolink
+	// For AutoLink
 	if ($autolink) {
 		list($pattern, $pattern_a, $forceignorelist) =
 			get_autolink_pattern($pages);
@@ -253,7 +251,7 @@ function put_lastmodified()
 	}
 }
 
-// 指定されたページの経過時刻
+// Get elapsed date of the pate
 function get_pg_passage($page, $sw = TRUE)
 {
 	global $show_passage;
@@ -265,7 +263,7 @@ function get_pg_passage($page, $sw = TRUE)
 	return $sw ? "<small>$pg_passage</small>" : " $pg_passage";
 }
 
-// Last-Modified ヘッダ
+// Last-Modified header
 function header_lastmod($page = NULL)
 {
 	global $lastmod;
@@ -277,28 +275,27 @@ function header_lastmod($page = NULL)
 	}
 }
 
-// 全ページ名を配列に
+// Get a page list of this wiki
 function get_existpages($dir = DATA_DIR, $ext = '.txt')
 {
 	$aryret = array();
 
-	$pattern = '^((?:[0-9A-F]{2})+)';
-	if ($ext != '')
-		$pattern .= preg_quote($ext, '/') . '$';
+	$pattern = '((?:[0-9A-F]{2})+)';
+	if ($ext != '') $ext = preg_quote($ext, '/');
+	$pattern = '/^' . $pattern . $ext . '$/';
 
 	$dp = @opendir($dir) or
 		die_message($dir . ' is not found or not readable.');
 	$matches = array();
-	while ($file = readdir($dp)) {
-		if (preg_match("/$pattern/", $file, $matches))
+	while ($file = readdir($dp))
+		if (preg_match($pattern, $file, $matches))
 			$aryret[$file] = decode($matches[1]);
-	}
 	closedir($dp);
 
 	return $aryret;
 }
 
-// ページ名の読みを配列に
+// Get PageReading(pronounce-annotated) data in an array()
 function get_readings()
 {
 	global $pagereading_enable, $pagereading_kanji2kana_converter;
@@ -318,19 +315,19 @@ function get_readings()
 		$line = chop($line);
 		if(preg_match('/^-\[\[([^]]+)\]\]\s+(.+)$/', $line, $matches)) {
 			if(isset($readings[$matches[1]])) {
-				// 読みが不明のページ
+				// This page is not clear how to be pronounced
 				$readings[$matches[1]] = $matches[2];
 			} else {
-				// 削除されたページ
+				// This page seems deleted
 				$deletedPage = TRUE;
 			}
 		}
 	}
 
-	// ChaSen/KAKASI 呼び出しが有効に設定されている場合
+	// If enabled ChaSen/KAKASI execution
 	if($pagereading_enable) {
 
-		// 読みが不明のページがあるかチェック
+		// Check there's non-clear-pronouncing page
 		$unknownPage = FALSE;
 		foreach ($readings as $page => $reading) {
 			if($reading == '') {
@@ -339,19 +336,19 @@ function get_readings()
 			}
 		}
 
-		// 読みが不明のページがある場合、ChaSen/KAKASI を実行
+		// Execute ChaSen/KAKASI, and get annotation
 		if($unknownPage) {
 			switch(strtolower($pagereading_kanji2kana_converter)) {
 			case 'chasen':
 				if(! file_exists($pagereading_chasen_path))
-					die_message("ChaSen not found: $pagereading_chasen_path");
+					die_message('ChaSen not found: ' . $pagereading_chasen_path);
 
 				$tmpfname = tempnam(CACHE_DIR, 'PageReading');
-				$fp = fopen($tmpfname, "w") or
-					die_message("Cannot write temporary file '$tmpfname'.\n");
+				$fp = fopen($tmpfname, 'w') or
+					die_message('Cannot write temporary file "' . $tmpfname . '".' . "\n");
 				foreach ($readings as $page => $reading) {
 					if($reading != '') continue;
-					fputs($fp, mb_convert_encoding("$page\n",
+					fputs($fp, mb_convert_encoding($page . "\n",
 						$pagereading_kanji2kana_encoding, SOURCE_ENCODING));
 				}
 				fclose($fp);
@@ -360,7 +357,7 @@ function get_readings()
 				$fp     = popen($chasen, 'r');
 				if($fp === FALSE) {
 					unlink($tmpfname);
-					die_message("ChaSen execution failed: $chasen");
+					die_message('ChaSen execution failed: ' . $chasen);
 				}
 				foreach ($readings as $page => $reading) {
 					if($reading != '') continue;
@@ -374,20 +371,20 @@ function get_readings()
 				pclose($fp);
 
 				unlink($tmpfname) or
-					die_message("Temporary file can not be removed: $tmpfname");
+					die_message('Temporary file can not be removed: ' . $tmpfname);
 				break;
 
-			case 'kakasi':
+			case 'kakasi':	/*FALLTHROUGH*/
 			case 'kakashi':
 				if(! file_exists($pagereading_kakasi_path))
-					die_message("KAKASI not found: $pagereading_kakasi_path");
+					die_message('KAKASI not found: ' . $pagereading_kakasi_path);
 
 				$tmpfname = tempnam(CACHE_DIR, 'PageReading');
 				$fp       = fopen($tmpfname, 'w') or
-					die_message("Cannot write temporary file '$tmpfname'.\n");
+					die_message('Cannot write temporary file "' . $tmpfname . '".' . "\n");
 				foreach ($readings as $page => $reading) {
 					if($reading != '') continue;
-					fputs($fp, mb_convert_encoding("$page\n",
+					fputs($fp, mb_convert_encoding($page . "\n",
 						$pagereading_kanji2kana_encoding, SOURCE_ENCODING));
 				}
 				fclose($fp);
@@ -396,7 +393,7 @@ function get_readings()
 				$fp     = popen($kakasi, 'r');
 				if($fp === FALSE) {
 					unlink($tmpfname);
-					die_message("KAKASI execution failed: $kakasi");
+					die_message('KAKASI execution failed: ' . $kakasi);
 				}
 
 				foreach ($readings as $page => $reading) {
@@ -411,7 +408,7 @@ function get_readings()
 				pclose($fp);
 
 				unlink($tmpfname) or
-					die_message("Temporary file can not be removed: $tmpfname");
+					die_message('Temporary file can not be removed: ' . $tmpfname);
 				break;
 
 			case 'none':
@@ -429,31 +426,28 @@ function get_readings()
 					$readings[$page] = $page;
 					foreach ($patterns as $no => $pattern)
 						$readings[$page] = mb_convert_kana(mb_ereg_replace($pattern,
-							$replacements[$no], $readings[$page]), "aKCV");
+							$replacements[$no], $readings[$page]), 'aKCV');
 				}
 				break;
 
 			default:
-				die_message("Unknown kanji-kana converter: $pagereading_kanji2kana_converter.");
+				die_message('Unknown kanji-kana converter: ' . $pagereading_kanji2kana_converter . '.');
 				break;
 			}
 		}
 
 		if($unknownPage || $deletedPage) {
 
-			asort($readings); // 読みでソート
+			asort($readings); // Sort by pronouncing(alphabetical/reading) order
 			$body = '';
 			foreach ($readings as $page => $reading)
-				$body .= "-[[$page]] $reading\n";
+				$body .= '-[[' . $page . ']] ' . $reading . "\n";
 
-			// ページを書き込み
 			page_write($pagereading_config_page, $body);
 		}
 	}
 
-	// 読み不明のページは、そのままページ名を返す (ChaSen/KAKASI 呼
-	// び出しが無効に設定されている場合や、ChaSen/KAKASI 呼び出しに
-	// 失敗した時の為)
+	// Pages that are not prounouncing-clear, return pagenames of themselves
 	foreach ($pages as $page) {
 		if($readings[$page] == '')
 			$readings[$page] = $page;
@@ -462,23 +456,20 @@ function get_readings()
 	return $readings;
 }
 
-//ファイル名の一覧を配列に(エンコード済み、拡張子を指定)
+// Get a list of encoded files (must specify a directory and a suffix)
 function get_existfiles($dir, $ext)
 {
+	$pattern = '/^(?:[0-9A-F]{2})+' . preg_quote($ext, '/') . '$/';
 	$aryret = array();
-
-	$pattern = '^(?:[0-9A-F]{2})+' . preg_quote($ext, '/') . '$';
-	$dp = @opendir($dir) or
-		die_message($dir . ' is not found or not readable.');
-	while ($file = readdir($dp)) {
-		if (preg_match("/$pattern/", $file))
+	$dp = @opendir($dir) or die_message($dir . ' is not found or not readable.');
+	while ($file = readdir($dp))
+		if (preg_match($pattern, $file))
 			$aryret[] = $dir . $file;
-	}
 	closedir($dp);
 	return $aryret;
 }
 
-//あるページの関連ページを得る
+// Get a list of related pages of the page
 function links_get_related($page)
 {
 	global $vars, $related;
@@ -486,10 +477,10 @@ function links_get_related($page)
 
 	if (isset($links[$page])) return $links[$page];
 
-	// 可能ならmake_link()で生成した関連ページを取り込む
+	// If possible, merge related pages generated by make_link()
 	$links[$page] = ($page == $vars['page']) ? $related : array();
 
-	// データベースから関連ページを得る
+	// Get repated pages from DB
 	$links[$page] += links_get_related_db($vars['page']);
 
 	return $links[$page];
