@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.17 2003/04/13 06:10:37 arino Exp $
+// $Id: file.php,v 1.18 2003/04/26 05:14:25 arino Exp $
 //
 
 // ソースを取得
@@ -52,11 +52,10 @@ function page_write($page,$postdata)
 // ユーザ定義ルール(ソースを置換する)
 function make_str_rules($str)
 {
-	global $str_rules;
+	global $str_rules,$fixed_heading_anchor;
 	
 	$arr = explode("\n",$str);
 	
-	// 日付・時刻置換処理
 	foreach ($arr as $str)
 	{
 		if ($str != '' and $str{0} != ' ' and $str{0} != "\t")
@@ -65,6 +64,16 @@ function make_str_rules($str)
 			{
 				$str = preg_replace("/$rule/",$replace,$str);
 			}
+		}
+		// 見出しに固有IDを付与する
+		if ($fixed_heading_anchor and
+			preg_match('/^(\*{1,3}(.(?!\[#[A-Za-z][\w-]+\]))+)$/',$str,$matches))
+		{
+			// 固有IDを生成する
+			// ランダムな英字(1文字)+md5ハッシュのランダムな部分文字列(7文字)
+			$anchor = chr(mt_rand(ord('a'),ord('z'))).
+				substr(md5(uniqid(substr($matches[1],114),1)),mt_rand(0,24),7);
+			$str = rtrim($matches[1])." [#$anchor]";
 		}
 		$retvars[] = $str;
 	}
