@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: proxy.php,v 1.4 2003/10/01 05:38:47 arino Exp $
+// $Id: proxy.php,v 1.5 2004/07/16 23:56:43 henoheno Exp $
 //
 
 /*
@@ -21,13 +21,13 @@ define('HTTP_REQUEST_URL_REDIRECT_MAX',10);
 function http_request($url,$method='GET',$headers='',$post=array(),
 	$redirect_max=HTTP_REQUEST_URL_REDIRECT_MAX)
 {
-	global $use_proxy,$proxy_host,$proxy_port;
-	global $need_proxy_auth,$proxy_auth_user,$proxy_auth_pass;
+	global $proxy_host, $proxy_port;
+	global $need_proxy_auth, $proxy_auth_user, $proxy_auth_pass;
 	
 	$rc = array();
 	$arr = parse_url($url);
 	
-	$via_proxy = $use_proxy and via_proxy($arr['host']);
+	$via_proxy = via_proxy($arr['host']);
 	
 	// query
 	$arr['query'] = isset($arr['query']) ? '?'.$arr['query'] : '';
@@ -75,7 +75,8 @@ function http_request($url,$method='GET',$headers='',$post=array(),
 	{
 		$query .= "\r\n";
 	}
-	
+
+	$errno = 0; $errstr = '';
 	$fp = fsockopen(
 		$via_proxy ? $proxy_host : $arr['host'],
 		$via_proxy ? $proxy_port : $arr['port'],
@@ -104,6 +105,7 @@ function http_request($url,$method='GET',$headers='',$post=array(),
 	$rc = (integer)$rccd[1];
 	
 	// Redirect
+	$matches = array();
 	switch ($rc)
 	{
 		case 302: // Moved Temporarily
@@ -133,10 +135,11 @@ function http_request($url,$method='GET',$headers='',$post=array(),
 		'data'   => $resp[1]  // Data
 	);
 }
+
 // プロキシを経由する必要があるかどうか判定
 function via_proxy($host)
 {
-	global $use_proxy,$no_proxy;
+	global $use_proxy, $no_proxy;
 	static $ip_pattern = '/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:\/(.+))?$/';
 	
 	if (!$use_proxy)
@@ -146,7 +149,8 @@ function via_proxy($host)
 	$ip = gethostbyname($host);
 	$l_ip = ip2long($ip);
 	$valid = (is_long($l_ip) and long2ip($l_ip) == $ip); // valid ip address
-	
+
+	$matches = array();
 	foreach ($no_proxy as $network)
 	{
 		if ($valid and preg_match($ip_pattern,$network,$matches))
