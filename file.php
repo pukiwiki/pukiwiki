@@ -1,11 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.3.2.7 2004/06/28 13:57:06 henoheno Exp $
+// $Id: file.php,v 1.3.2.8 2004/07/31 03:15:07 henoheno Exp $
 /////////////////////////////////////////////////
 
 // ソースを取得
 function get_source($page)
-{	
+{
   if(is_page($page)) {
      return file(get_filename(encode($page)));
   }
@@ -19,7 +19,7 @@ function file_write($dir,$page,$str)
 	global $post,$update_exec;
 	global $WikiName,$BracketName;
 	global $_msg_invalidiwn;
-	
+
 	if (!preg_match("/^(($BracketName)|($WikiName))$/",$page))
 	{
 		die_message(
@@ -28,9 +28,9 @@ function file_write($dir,$page,$str)
 			)
 		);
 	}
-	
+
 	$timestamp = FALSE;
-	
+
 	if($str == "")
 	{
 		@unlink($dir.encode($page).".txt");
@@ -38,7 +38,7 @@ function file_write($dir,$page,$str)
 	else
 	{
 		$str = preg_replace("/\x0D\x0A|\x0D|\x0A/","\n",$str);
-		
+
 		if($post["notimestamp"] && is_page($page))
 		{
 			$timestamp = @filemtime($dir.encode($page).".txt");
@@ -52,7 +52,7 @@ function file_write($dir,$page,$str)
 		if($timestamp)
 			touch($dir.encode($page).".txt",$timestamp);
 	}
-	
+
 	if(!$timestamp)
 		put_lastmodified();
 
@@ -84,7 +84,7 @@ function put_lastmodified()
 			$putval[$lastmodtime][] = "-$lastmod - $page";
 		}
 	}
-	
+
 	$cnt = 1;
 	krsort($putval);
 	$fp = fopen(get_filename(encode($whatsnew)),"w");
@@ -132,7 +132,7 @@ function is_editable($page)
 		$_editable = false;
 	else
 		$_editable = true;
-	
+
 	return $_editable;
 }
 
@@ -146,12 +146,12 @@ function is_freeze($page)
 
 	$lines = get_source($page);
 	$lines = preg_replace("/\x0D\x0A|\x0D|\x0A/","\n",$lines);
-	
+
 	if($lines[0] == "#freeze\n")
 		$_freeze = true;
 	else
 		$_freeze = false;
-	
+
 	return $_freeze;
 }
 
@@ -178,7 +178,7 @@ function get_pg_passage($page,$sw=true)
 			$_pg_passage[$page]["label"] = "(".ceil($pgdt / 60 / 60)."h)";
 		else
 			$_pg_passage[$page]["label"] = "(".ceil($pgdt / 60 / 60 / 24)."d)";
-		
+
 		$_pg_passage[$page]["str"] = "<small>".$_pg_passage[$page]["label"]."</small>";
 	}
 	else
@@ -197,7 +197,7 @@ function get_pg_passage($page,$sw=true)
 function header_lastmod($page)
 {
 	global $lastmod;
-	
+
 	if($lastmod && is_page($page))
 	{
 		header("Last-Modified: ".gmdate("D, d M Y H:i:s", filemtime(get_filename(encode($page))))." GMT");
@@ -219,7 +219,7 @@ function get_existpages()
 		}
 		closedir($dir);
 	}
-	
+
 	return $aryret;
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: ls2.inc.php,v 1.1.2.3 2004/07/24 00:57:23 henoheno Exp $
+// $Id: ls2.inc.php,v 1.1.2.4 2004/07/31 03:15:07 henoheno Exp $
 /*
 Last-Update:2002-10-29 rev.8
 
@@ -107,7 +107,7 @@ function ls2_show_lists($prefix, &$params) {
 function ls2_show_headings($page, &$params, $include = FALSE) {
 	global $script, $user_rules;
 	global $_ls2_anchor, $_ls2_messages;
-	
+
 	$ret = '';
 	$rules = '/\(\(((?:(?!\)\)).)*)\)\)/';
 	$is_done = (isset($params[$page]) and $params[$page] > 0); //ページが表示済みのときTrue
@@ -144,9 +144,9 @@ function ls2_show_headings($page, &$params, $include = FALSE) {
 
 function ls2_get_child_pages($prefix) {
 	global $vars;
-	
+
 	$pattern = '[[' . $prefix;
-	
+
 	$pages = array();
 	foreach (get_existpages() as $_page)
 		if (strpos($_page, $pattern) === 0)

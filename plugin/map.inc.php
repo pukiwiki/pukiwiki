@@ -1,5 +1,5 @@
 <?php
-// $Id: map.inc.php,v 1.3 2002/12/05 05:02:27 panda Exp $
+// $Id: map.inc.php,v 1.3.2.1 2004/07/31 03:15:07 henoheno Exp $
 /*
 Last-Update:2002-11-29 rev.12
  http://home.arino.jp/?map.inc.php
@@ -68,7 +68,7 @@ function plugin_map_action() {
 	//get_linkを通すことで、オブジェクトの配列とする
 	$obj = new link_wrapper($refer);
 	$pages = $obj->get_link(join(' ',$pages));
-	
+
 	//ページの属性を取得
 	$anchor = 0;
 	$_pages = array();
@@ -83,7 +83,7 @@ function plugin_map_action() {
 		$_pages[$_obj->name] =& $pages[$key];
 	}
 	$pages = $_pages; unset($_pages);
-	
+
 	//ページ内のリンクを列挙
 	foreach (array_keys($pages) as $page) {
 		$obj->page = $page; // link_wrapperの使いまわし
@@ -140,7 +140,7 @@ function plugin_map_action() {
 }
 function showReverse(&$pages,$not) {
 	$body = '';
-	
+
 	foreach (array_keys($pages) as $page) {
 		if (!$pages[$page]->_exist) { continue; }
 		if (count($pages[$page]->_from) xor $not) { continue; }
@@ -161,7 +161,7 @@ function showReverse(&$pages,$not) {
 function showNode(&$pages,$page,$level = 0) {
 	global $script,$vars;
 	$body = '';
-	
+
 	if ($pages[$page]->_level != $level) { // まだ表示する段階ではない
 		$body .= ' <li>'.$pages[$page]->_link;
 		if ($pages[$page]->_count > 0)
@@ -177,7 +177,7 @@ function showNode(&$pages,$page,$level = 0) {
 		$id = ($pages[$page]->_anchor == 0) ? '' : 'id="rel'.$pages[$page]->_anchor.'"';
 		$body .= "<a $id href=\"$script?plugin=map$url&amp;refer={$pages[$page]->rawname}\" title=\"change refer\"><sup>+</sup></a>\n";
 	}
-	
+
 	$body .= $pages[$page]->_link."\n";
 
 
@@ -196,11 +196,11 @@ function showWikiNodes(&$pages,$page,$level) {
 
 	$body = '';
 	$_level = $level + 1;
-	
+
 	foreach ($pages[$page]->_links['WikiName'] as $_obj)
 		if ($pages[$_obj->name]->_level == 0)
 			$pages[$_obj->name]->_level = $_level; //表示を予約
-	
+
 	foreach ($pages[$page]->_links['WikiName'] as $_obj) {
 		if ($_obj->_exist)
 			$body .= showNode($pages,$_obj->name,$_level);
@@ -214,23 +214,23 @@ function showHyperLinks(&$obj) {
 	global $vars;
 
 	if (!array_key_exists('url',$vars) or !array_key_exists('url',$obj->_links)) { return ''; }
-	
+
 	$body = '';
-	
+
 	foreach ($obj->_links['url'] as $_obj)
 		$body .= " <li>{$_obj->_link}</li>\n";
-	
+
 	return $body;
 }
 //InterWikiNameを出力
 function showInterWikiName(&$obj) {
 	if (!array_key_exists('InterWikiName',$vars)) { return ''; }
-	
+
 	$body = '';
-	
+
 	foreach ($obj->_links['InterWikiName'] as $_obj)
 		$body .= " <li>inter{$_obj->_link}</li>\n";
-	
+
 	return $body;
 }
 

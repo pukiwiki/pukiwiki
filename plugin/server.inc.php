@@ -1,21 +1,21 @@
 <?php
  /*
- 
+
  PukiWiki サーバー情報表示プラグイン
- 
+
  by Reimy
  http://pukiwiki.reimy.com/
- 
- 
+
+
  init.php の16行目あたりに下記の行を追加してからご使用ください
  define("SERVER_NAME",$HTTP_SERVER_VARS["SERVER_NAME"]);
  define("SERVER_SOFTWARE",$HTTP_SERVER_VARS["SERVER_SOFTWARE"]);
  define("SERVER_ADMIN",$HTTP_SERVER_VARS["SERVER_ADMIN"]);
 
  ※SERVER_NAMEはinit.phpで既に設定されているはずですので、残り2行を追加してください
- 
- $Id: server.inc.php,v 1.2 2002/12/05 05:49:41 panda Exp $
- 
+
+ $Id: server.inc.php,v 1.2.2.1 2004/07/31 03:15:07 henoheno Exp $
+
  */
 
  function plugin_server_convert()

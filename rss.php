@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: rss.php,v 1.5.2.2 2003/09/12 01:18:42 arino Exp $
+// $Id: rss.php,v 1.5.2.3 2004/07/31 03:15:07 henoheno Exp $
 /////////////////////////////////////////////////
 
 // RecentChanges の RSS を出力
@@ -43,12 +43,12 @@ function catrss($rss)
 
 				$url = $match[1];
 			}
-			
+
 			$title = htmlspecialchars($title);
-			
+
 			$dcdate = substr_replace(date("Y-m-d\TH:i:sO"),':',-2,0);
 			$desc = date("D, d M Y H:i:s T",filemtime(get_filename(encode($match[1]))));
-			
+
 			if($rss==2)
 				$items.= "<item rdf:about=\"$self?".rawurlencode($url)."\">\n";
 			else
@@ -96,10 +96,10 @@ function catrss($rss)
 <?php echo '<?xml version="1.0" encoding="utf-8"?>' ?>
 
 
-<rdf:RDF 
+<rdf:RDF
   xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns="http://purl.org/rss/1.0/"
-  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xml:lang="ja">
 
  <channel rdf:about="<?php echo "$self?rss" ?>">

@@ -1,15 +1,15 @@
 <?php
-// $Id: calendar.inc.php,v 1.10.2.1 2003/02/28 03:16:15 panda Exp $
+// $Id: calendar.inc.php,v 1.10.2.2 2004/07/31 03:15:07 henoheno Exp $
 
 function plugin_calendar_convert()
 {
 	global $script,$weeklabels,$vars,$command,$WikiName,$BracketName;
-	
+
 	$date_str = date("Ym");
 	$page = "";
-	
+
 	$args = func_get_args();
-	
+
 	if(func_num_args() == 1)
 	{
 		if(is_numeric($args[0]) && strlen($args[0]) == 6)
@@ -56,9 +56,9 @@ function plugin_calendar_convert()
 
 	if(!$command) $cmd = "read";
 	else          $cmd = $command;
-	
+
 	$prefix = strip_tags($prefix);
-	
+
 	$yr = substr($date_str,0,4);
 	$mon = substr($date_str,4,2);
 	if($yr != date("Y") || $mon != date("m"))
@@ -72,7 +72,7 @@ function plugin_calendar_convert()
 		$other_month = 0;
 	}
 	$today = getdate(mktime(0,0,0,$mon,$now_day,$yr));
-	
+
 	$m_num = $today[mon];
 	$d_num = $today[mday];
 	$year = $today[year];
@@ -117,10 +117,10 @@ function plugin_calendar_convert()
 		$name = "$prefix$dt";
 		$page = "[[$prefix$dt]]";
 		$page_url = rawurlencode("[[$prefix$dt]]");
-		
+
 		if($cmd == "edit") $refer = "&amp;refer=$page_url";
 		else               $refer = "";
-		
+
 		if($cmd == "read" && !is_page($page))
 			$link = "<strong>$day</strong>";
 		else
@@ -129,31 +129,31 @@ function plugin_calendar_convert()
 		if($fweek)
 		{
 			for($i=0;$i<$wday;$i++)
-			{ // Blank 
-				$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n"; 
-			} 
+			{ // Blank
+				$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n";
+			}
 		$fweek=false;
 		}
 
 		if($wday == 0) $ret .= "  </tr><tr>\n";
 		if(!$other_month && ($day == $today[mday]) && ($m_num == $today[mon]) && ($year == $today[year]))
 		{
-			//  Today 
-			$ret .= "    <td align=\"center\" class=\"style_td_today\"><span class=\"small\">$link</span></td>\n"; 
+			//  Today
+			$ret .= "    <td align=\"center\" class=\"style_td_today\"><span class=\"small\">$link</span></td>\n";
 		}
 		else if($wday == 0)
 		{
-			//  Sunday 
+			//  Sunday
 			$ret .= "    <td align=\"center\" class=\"style_td_sun\"><span class=\"small\">$link</span></td>\n";
 		}
 		else if($wday == 6)
 		{
-			//  Saturday 
+			//  Saturday
 			$ret .= "    <td align=\"center\" class=\"style_td_sat\"><span class=\"small\">$link</span></td>\n";
 		}
 		else
 		{
-			// Weekday 
+			// Weekday
 			$ret .= "    <td align=\"center\" class=\"style_td_day\"><span class=\"small\">$link</span></td>\n";
 		}
 		$day++;
@@ -163,10 +163,10 @@ function plugin_calendar_convert()
 	if($wday > 0)
 	{
 		while($wday < 7)
-		{ // Blank 
+		{ // Blank
 			$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n";
 		$wday++;
-		} 
+		}
 	}
 
 	$ret .= "  </tr>\n</table>\n";

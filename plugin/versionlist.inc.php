@@ -5,7 +5,7 @@
  * CopyRight 2002 S.YOSHIMURA GPL2
  * http://masui.net/pukiwiki/ yosimura@excellence.ac.jp
  *
- * $Id: versionlist.inc.php,v 1.2.2.4 2004/06/20 06:31:07 henoheno Exp $
+ * $Id: versionlist.inc.php,v 1.2.2.5 2004/07/31 03:15:07 henoheno Exp $
  */
 
 function plugin_versionlist_convert()
@@ -28,7 +28,7 @@ function plugin_versionlist_convert()
       while($file = $dir->read()){
         if($file == ".." || $file == ".") continue;
         if(!preg_match("/\.(php|lng|css|js)$/i",$file)) continue;
-        
+
         $comment = '';
         $filenp = $sdir . $file;
         $fd = fopen($filenp,'r');

@@ -1,5 +1,5 @@
 <?php
-// $Id: insert.inc.php,v 1.5.2.1 2003/01/22 05:41:14 panda Exp $
+// $Id: insert.inc.php,v 1.5.2.2 2004/07/31 03:15:07 henoheno Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -111,7 +111,7 @@ function plugin_insert_convert()
 		$button = "<input type=\"submit\" name=\"insert\" value=\"$_btn_insert\" />\n";
 
 	$s_page = htmlspecialchars($vars['page']);
-	
+
 	$string = "<form action=\"$script\" method=\"post\">\n"
 		 ."<div>\n"
 		 ."<input type=\"hidden\" name=\"insert_no\" value=\"$insert_no\" />\n"

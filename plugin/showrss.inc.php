@@ -1,19 +1,19 @@
 <?php
 /**
- * 
+ *
  * showrss プラグイン (Created by hiro_do3ob@yahoo.co.jp)
- * 
+ *
  * ライセンスは PukiWiki 本体と同じく GNU General Public License (GPL) です。
  * http://www.gnu.org/licenses/gpl.txt
  *
  * pukiwiki用のプラグインです。
  * pukiwiki1.3.2以上で動くと思います。
- * 
+ *
  * 今のところ動作させるためにはPHP の xml extension が必須です。PHPに組み込まれてない場合はそっけないエラーが出ると思います。
  * 正規表現 or 文字列関数でなんとかならなくもなさげなんですが需要ってどれくらいあるのかわからいので保留です。
- * 
- * version: $Id: showrss.inc.php,v 1.1.2.4 2004/06/20 04:20:00 henoheno Exp $
- * 
+ *
+ * version: $Id: showrss.inc.php,v 1.1.2.5 2004/07/31 03:15:07 henoheno Exp $
+ *
  */
 
 // RSS中の "&lt; &gt; &amp;" などを 一旦 "< > &" に戻すか？      ＜ "&amp;" が "&amp;amp;" になっちゃうの対策

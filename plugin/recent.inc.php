@@ -4,15 +4,15 @@
  *
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
- * 
+ *
  * 変更履歴:
  *  2002.04.08: patさん、みのるさんの指摘により、リンク先が日本語の場合に
  *              化けるのを修正
- * 
+ *
  *  2002.06.17: plugin_recent_init()を設定
  *  2002.07.02: <ul>による出力に変更し構造化
  *
- * $Id: recent.inc.php,v 1.5.2.1 2004/03/21 13:05:26 arino Exp $
+ * $Id: recent.inc.php,v 1.5.2.2 2004/07/31 03:15:07 henoheno Exp $
  */
 
 function plugin_recent_init()
@@ -26,13 +26,13 @@ function plugin_recent_convert()
 {
 	global $_recent_plugin_frame;
 	global $WikiName,$BracketName,$script,$whatsnew;
-	
+
 	$recent_lines = 10;
 	if(func_num_args()>0) {
 		$array = func_get_args();
 		$recent_lines = $array[0];
 	}
-	
+
 	$lines = file(get_filename(encode($whatsnew)));
 	$date = $items = "";
 	$cnt = 0;

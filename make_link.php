@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.6.2.4 2004/06/19 04:13:09 henoheno Exp $
+// $Id: make_link.php,v 1.6.2.5 2004/07/31 03:15:07 henoheno Exp $
 //
 
 // リンクを付加する
@@ -21,7 +21,7 @@ class link_wrapper
 	var $page;
 	function link_wrapper($page)
 	{
-		$this->page = $page; 
+		$this->page = $page;
 	}
 	function &_convert($arr)
 	{
@@ -80,22 +80,22 @@ class link_wrapper
 function &expand_bracket($name,$refer)
 {
 	global $WikiName,$BracketName,$LinkPattern,$defaultpage;
-	
+
 	if (is_array($name))
 		$arr = $name;
 	else if (preg_match("/^$WikiName$/",$name))
 		return new link_wikiname($name);
 	else if (!preg_match($LinkPattern,$name,$arr) or $arr[12] == '')
 		return new link($name);
-	
+
 	$arr = array_slice($arr,8,7);
 	$_name = array_shift($arr);
-	
+
 	$bracket = ($arr[0] or $arr[2]);
 	$alias = $arr[1];
 	$name = $arr[3];
 	$anchor = $arr[5];
-	
+
 	if ($name != '')
 	{
 		if ($alias == '' and $anchor == '')
@@ -105,33 +105,33 @@ function &expand_bracket($name,$refer)
 		else
 			$name = "[[$name]]";
 	}
-	
+
 	if ($alias == '')
 		$alias = strip_bracket($name).$anchor;
-	
+
 	if ($name == '')
 		return ($anchor == '') ? new link($_name) : new link_wikiname($name,$alias,$anchor,$refer);
-	
+
 	$name = get_fullname($name,$refer);
-	
+
 	if ($name == '' or preg_match("/^$WikiName$/",$name))
 		return new link_wikiname($name,$alias,$anchor,$refer);
-	else if (!preg_match("/^$BracketName$/",$name)) 
+	else if (!preg_match("/^$BracketName$/",$name))
 		return new link($_name);
-	
+
 	return new link_wikiname($name,$alias,$anchor,$refer);
 }
 // 相対参照を展開
 function get_fullname($name,$refer)
 {
 	global $defaultpage,$WikiName;
-	
+
 	if ($name == '[[./]]')
 		return $refer;
 
 	if (substr($name,0,4) == '[[./')
 		return '[['.strip_bracket($refer).substr($name,3);
-	
+
 	if (substr($name,0,5) == '[[../')
 	{
 		$arrn = preg_split("/\//",strip_bracket($name),-1,PREG_SPLIT_NO_EMPTY);
@@ -139,13 +139,13 @@ function get_fullname($name,$refer)
 		while ($arrn[0] == '..') { array_shift($arrn); array_pop($arrp); }
 		$name = (count($arrp)) ? '[['.join('/',array_merge($arrp,$arrn)).']]' :
 			((count($arrn)) ? "[[$defaultpage/".join('/',$arrn).']]' : $defaultpage);
-		
+
 		// [[FrontPage/hoge]]の親は[[FrontPage]]ではなくFrontPage(という仕様)
 		$_name = strip_bracket($name);
 		if (preg_match("/^$WikiName$/",$_name))
 			$name = $_name;
 	}
-	
+
 	return $name;
 }
 class link
@@ -174,7 +174,7 @@ class link_url extends link
 	function link_url($name,$alias)
 	{
 		parent::link($name,'url',($alias == '') ? $name : $alias);
-		
+
 		if ($alias == '' and preg_match("/\.(gif|png|jpeg|jpg)$/i",$name)) {
 			$this->is_image = TRUE;
 			$this->image = "<img src=\"$name\" border=\"0\" alt=\"$alias\">";

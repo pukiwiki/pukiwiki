@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.2.2.1 2003/02/28 03:12:01 panda Exp $
+// $Id: plugin.php,v 1.2.2.2 2004/07/31 03:15:07 henoheno Exp $
 /////////////////////////////////////////////////
 
 // プラグイン用に未定義の変数を設定
@@ -55,7 +55,7 @@ function do_plugin_init($name) {
     {
       return false;
     }
-  
+
   $func_check = "_funccheck_".$funcname;
   global $$func_check;
   if($$func_check)
@@ -79,7 +79,7 @@ function do_plugin_action($name) {
 function do_plugin_convert($plugin_name,$plugin_args)
 {
   $invalid_return = htmlspecialchars("#${plugin_name}(${plugin_args})");
-  
+
   if($plugin_args !== "")
     $aryargs = explode(",",$plugin_args);
   else
@@ -87,7 +87,7 @@ function do_plugin_convert($plugin_name,$plugin_args)
 
   do_plugin_init($plugin_name);
   $retvar = call_user_func_array("plugin_${plugin_name}_convert",$aryargs);
-  
+
   if($retvar === FALSE) return $invalid_return;
   else                  return $retvar;
 }

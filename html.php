@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.45.2.9 2004/06/27 14:33:52 henoheno Exp $
+// $Id: html.php,v 1.45.2.10 2004/07/31 03:15:07 henoheno Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -127,14 +127,14 @@ function convert_html($string)
 
 		// 行頭書式かどうかの判定
 		$line_head = substr($line,0,1);
-		if(	$line_head == ' ' || 
-			$line_head == ':' || 
-			$line_head == '>' || 
-			$line_head == '-' || 
-			$line_head == '+' || 
-			$line_head == '|' || 
-			$line_head == '*' || 
-			$line_head == '#' || 
+		if(	$line_head == ' ' ||
+			$line_head == ':' ||
+			$line_head == '>' ||
+			$line_head == '-' ||
+			$line_head == '+' ||
+			$line_head == '|' ||
+			$line_head == '*' ||
+			$line_head == '#' ||
 			$comment_out != ''
 		) {
 			if((! isset($headform[$_cnt -1]) || $headform[$_cnt -1] == '' ) && $_p){
@@ -149,7 +149,7 @@ function convert_html($string)
 			if(preg_match("/^\#([^\(]+)(.*)$/",$line,$out)){
 				if(exist_plugin_convert($out[1])) {
 					$result = array_merge($result,$saved); $saved = array();
-					
+
 					if($out[2]) {
 						$_plugin = preg_replace("/^\#([^\(]+)\((.*)\)$/ex","do_plugin_convert('$1','$2')",$line);
 					} else {
@@ -166,7 +166,7 @@ function convert_html($string)
 				$result = array_merge($result,$saved); $saved = array();
 				$headform[$_cnt] = $out[1];
 				$str = inline($out[2]);
-				
+
 				$level = strlen($out[1]) + 1;
 
 				array_push($result, "<h$level><a name=\"content_{$content_id_local}_$content_count\"></a>$str $top_link</h$level>");
@@ -293,7 +293,7 @@ function convert_html($string)
 					$_p = FALSE;
 				}
 			}
-			
+
 			if (preg_match("/^(LEFT|CENTER|RIGHT):(.*)$/",$line,$tmp)) {
 				if ($_p)
 					array_push($result,"</p>");
@@ -329,7 +329,7 @@ function convert_html($string)
 		array_push($result, "</p>");
 	}
 	if($table) array_push($result, "</table></div>");
-	
+
 	$result_last = $result = array_merge($result,$saved); $saved = array();
 
 	if($content_count != 0)
@@ -346,7 +346,7 @@ function convert_html($string)
 			}
 		}
 		$result = array_merge($result,$saved); $saved = array();
-		
+
 		$contents = "<a name=\"contents_$content_id_local\"></a>\n";
 		$contents .= join("\n",$result);
 		if($strip_link_wall)
@@ -357,7 +357,7 @@ function convert_html($string)
 	}
 
 	$result_last = inline2($result_last);
-	
+
 	$result_last = preg_replace("/^#contents/",$contents,$result_last);
 
 	$str = join("\n", $result_last);
@@ -387,28 +387,28 @@ function list_push(&$result,&$saved,$tag,$level) {
 	$cont = true;
 	$open = "<$tag%s>";
 	$close = "</li></$tag>";
-	
+
 	while (count($saved) > $level or
 		(count($saved) > 0 and $saved[0] != $close)) {
 		array_push($result, array_shift($saved));
 	}
-	
+
 	$margin = $level - count($saved);
-	
+
 	while (count($saved) < ($level - 1)) {
 		array_unshift($saved, ''); //count($saved)を増やすためのdummy
 	}
-	
+
 	if (count($saved) < $level) {
 		$cont = false;
 		array_unshift($saved, $close);
-		
+
 		$left = $margin * $_list_margin;
 		if ($level == $margin) $left += $_list_left_margin;
 		$str = sprintf($_list_pad_str, $level, $left, $left);
 		array_push($result, sprintf($open, $str));
 	}
-	
+
 	if ($cont)
 		array_push($result, '</li>');
 }
@@ -417,7 +417,7 @@ function list_push(&$result,&$saved,$tag,$level) {
 function inline($line,$remove=FALSE)
 {
 	$line = htmlspecialchars($line);
-	
+
 	$replace = $remove ? '' : 'make_note(\'$1\')';
 	$line = preg_replace("/\(\(((?:(?!\)\)).)*)\)\)/ex",$replace,$line);
 
@@ -461,7 +461,7 @@ function get_list($withfilename)
 {
 	global $script,$list_index,$top,$non_list,$whatsnew;
 	global $_msg_symbol,$_msg_other;
-	
+
 	$retval = array();
 	$files = get_existpages();
 	foreach($files as $page) {
@@ -478,9 +478,9 @@ function get_list($withfilename)
 		}
 		$retval[$page2] .= "</li>\n";
 	}
-	
+
 	$retval = list_sort($retval);
-	
+
 	if($list_index)
 	{
 		$head_str = "";
@@ -494,14 +494,14 @@ function get_list($withfilename)
 			if($head_str != $head && !$etc_sw)
 			{
 				$retval2[$page] = "";
-				
+
 				if(preg_match("/([A-Z])|([a-z])/",$head,$match))
 				{
 					if($match[1])
 						$head_nm = "High_$head";
 					else
 						$head_nm = "Low_$head";
-					
+
 					if($head_str != '') $retval2[$page] = "</ul></li>\n";
 					$retval2[$page] .= "<li><a href=\"#top_$head_nm\" name=\"$head_nm\"><strong>$head</strong></a>\n<ul>\n";
 					$head_str = $head;
@@ -539,20 +539,20 @@ function get_list($withfilename)
 			$retval2[$page] .= $link;
 		}
 		$retval2[] = "</ul></li>\n";
-		
+
 		$top_link = "<div style=\"text-align:center\"><a name=\"top\"></a>$top_link</div><br />\n<ul>";
-		
+
 		array_unshift($retval2,$top_link);
 	}
 	else
 	{
 		$retval2 = $retval;
-		
+
 		$top_link = "<ul>";
-		
+
 		array_unshift($retval2,$top_link);
 	}
-	
+
 	return join("",$retval2)."</ul>";
 }
 
@@ -594,7 +594,7 @@ function edit_form($postdata,$page,$add=0)
 			$vals[$name] = "    <option value=\"$s_org\">$s_name</option>";
 		}
 		@ksort($vals);
-		
+
 		$template = "   <select name=\"template_page\">\n"
 			   ."    <option value=\"\">-- $_btn_template --</option>\n"
 			   .join("\n",$vals)
@@ -680,9 +680,9 @@ function make_related($page,$_isrule)
 			foreach($_make_related as $str)
 			{
 				preg_match("/<a\shref=\"([^\"]+)\">([^<]+)<\/a>(.*)/",$str,$out);
-				
+
 				if($out[3]) $title = " title=\"$out[2] $out[3]\"";
-				
+
 				$aryret[$out[2]] = "<a href=\"$out[1]\"$title>$out[2]</a>";
 			}
 			@ksort($aryret);

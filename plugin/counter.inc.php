@@ -5,17 +5,17 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: counter.inc.php,v 1.5.2.2 2004/06/20 05:42:36 henoheno Exp $
+ * $Id: counter.inc.php,v 1.5.2.3 2004/07/31 03:15:07 henoheno Exp $
  */
 
 function plugin_counter_convert()
 {
 	global $vars,$HTTP_SERVER_VARS;
-	
+
 	if (arg_check("add") || arg_check("edit") || arg_check("preview") || $vars['preview'] != '' || $vars['write'] != '') {
 		return "";
 	}
-	
+
 	$file = COUNTER_DIR.encode($vars["page"]).".count";
 	if(!file_exists($file))
 	{
@@ -39,7 +39,7 @@ function plugin_counter_convert()
 		++$count;
 		++$today_count;
 	}
-	
+
 	$ip = $HTTP_SERVER_VARS["REMOTE_ADDR"];
 	$nf = fopen($file, "w");
 	fputs($nf,"$count\n");
@@ -48,7 +48,7 @@ function plugin_counter_convert()
 	fputs($nf,"$yesterday_count\n");
 	fputs($nf,"$ip\n");
 	fclose($nf);
-	
+
 	return "<span class=\"counter\">Counter: $count, today: $today_count, yesterday: $yesterday_count</span>";
 
 }

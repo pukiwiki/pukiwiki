@@ -1,17 +1,17 @@
 <?php
-// $Id: template.inc.php,v 1.5.2.1 2003/03/03 07:35:45 panda Exp $
+// $Id: template.inc.php,v 1.5.2.2 2004/07/31 03:15:07 henoheno Exp $
 
 define("MAX_LEN",60);
 function plugin_template_action()
 {
 	global $vars,$script,$non_list,$whatsnew,$_btn_template;
-	
+
 	global $script,$rows,$cols,$hr,$vars,$function_freeze,$WikiName,$BracketName;
 	global $_btn_addtop,$_btn_preview,$_btn_update,$_btn_freeze,$_msg_help,$_btn_notchangetimestamp;
 	global $whatsnew,$_btn_template,$_btn_load,$non_list,$load_template_func;
 
 	$ret = "";
-	
+
 	// edit
 	if($vars["refer"] &&  $vars["page"] && $vars["submit"] && !is_page($vars["refer"]))
 	{
@@ -20,11 +20,11 @@ function plugin_template_action()
 		{
 			$vars["refer"] = "[[$vars[refer]]]";
 		}
-		
+
 		$page = $vars["refer"];
-		
+
 		$lines = @file(get_filename(encode($vars["page"])));
-		
+
 		if($vars["begin"] <= $vars["end"])
 		{
 			for($i=$vars["begin"];$i<=$vars["end"];$i++)
@@ -32,7 +32,7 @@ function plugin_template_action()
 				$postdata.= $lines[$i];
 			}
 		}
-		
+
 		if($vars["help"] == "true")
 			$help = $hr.catrule();
 		else
@@ -78,7 +78,7 @@ $retvar["body"] =  '
 ' . $help;
 
 		$retvar["msg"] = "$1 の編集";
-		
+
 		$vars["page"] = $vars["refer"];
 		return $retvar;
 	}
@@ -87,7 +87,7 @@ $retvar["body"] =  '
 	{
 		if(is_page($vars["refer"]))
 		{
-			
+
 			$begin_select = "";
 			$end_select = "";
 			$lines = @file(get_filename(encode($vars["refer"])));
@@ -95,13 +95,13 @@ $retvar["body"] =  '
 			for($i=0;$i<count($lines);$i++)
 			{
 				$lines[$i] = mb_strimwidth($lines[$i],0,MAX_LEN,"...");
-				
+
 				if($i==0) $tag = "selected=\"selected\"";
 				else      $tag = "";
 				$begin_select.= "<option value=\"$i\" $tag>$lines[$i]</option>\n";
 			}
 			$begin_select.= "</select><br />\n<br />\n";
-			
+
 			$end_select.= "終了行:<br /><select name=\"end\" size=\"10\">\n";
 			for($i=0;$i<count($lines);$i++)
 			{
@@ -110,18 +110,18 @@ $retvar["body"] =  '
 				$end_select.= "<option value=\"$i\" $tag>$lines[$i]</option>\n";
 			}
 			$end_select.= "</select><br />\n<br />\n";
-			
-			
+
+
 			/*
 			$select = "";
 			$lines = @file(get_filename(encode($vars["refer"])));
 			$select.= "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"2\" border=\"0\">\n";
 			$select.= "<tr><td width=\"40\" style=\"background-color:#ddeeff\">開始</td><td width=\"40\" style=\"background-color:#ddeeff\">終了</td><td style=\"background-color:#ddeeff\">&nbsp;</td></tr>\n";
-			
+
 			for($i=0;$i<count($lines);$i++)
 			{
 				//$lines[$i] = mb_strimwidth($lines[$i],0,MAX_LEN,"...");
-				
+
 				if($i==0)
 				{
 					$begin_tag = "checked=\"checked\"";
@@ -137,7 +137,7 @@ $retvar["body"] =  '
 					$begin_tag = "";
 					$end_tag = "";
 				}
-				
+
 				if($i%2) $color = "style=\"background-color:#f0fffa\"";
 				else     $color = "";
 				$select.= "<tr>";
@@ -167,10 +167,10 @@ $retvar["body"] =  '
 		$ret.= "<input type=\"submit\" name=\"submit\" value=\"作成\" />\n";
 		$ret.= "</div>\n";
 		$ret.= "</form>\n";
-		
+
 		$retvar["msg"] = "$1 をテンプレートにして作成";
 		$retvar["body"] = $ret;
-		
+
 		return $retvar;
 	}
 

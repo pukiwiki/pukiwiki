@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.php,v 1.6.2.2 2003/06/10 06:52:37 arino Exp $
+// $Id: backup.php,v 1.6.2.3 2004/07/31 03:15:07 henoheno Exp $
 /////////////////////////////////////////////////
 
 // バックアップデータを作成する
@@ -22,7 +22,7 @@ function make_backup($filename,$body,$oldtime)
 		{
 			array_shift($aryages);
 		}
-		
+
 		foreach($aryages as $lines)
 		{
 			foreach($lines as $key => $line)
@@ -50,7 +50,7 @@ function make_backup($filename,$body,$oldtime)
 		backup_fputs($fp,$body);
 		backup_fclose($fp);
 	}
-	
+
 	return true;
 }
 
@@ -59,7 +59,7 @@ function get_backup($age,$filename)
 {
 	$aryages = read_backup($filename);
 	$retvars = array();
-	
+
 	foreach($aryages as $key => $lines)
 	{
 		if($key != $age) continue;
@@ -93,7 +93,7 @@ function get_backup_info($filename)
 			$retvars[$age] = $match[1];
 		}
 	}
-	
+
 	return $retvars;
 }
 
@@ -167,8 +167,8 @@ function get_backup_list($_page="")
 		$retvars[] = "<ul>";
 		$retvars[] .= "<li><a href=\"$script?cmd=backup\">$_msg_backuplist</a>\n";
 	}
-	
-	
+
+
 	foreach($vals as $page => $line)
 	{
 		$arybackups = get_backup_info(encode($line["name"]).".txt");
@@ -196,7 +196,7 @@ function get_backup_list($_page="")
 		$retvars[] = $line["link"];
 	}
 	$retvars[] = "</ul>";
-	
+
 	return join("\n",$retvars);
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.inc.php,v 1.9.2.3 2003/05/17 01:49:39 arino Exp $
+// $Id: comment.inc.php,v 1.9.2.4 2004/07/31 03:15:07 henoheno Exp $
 
 global $name_cols, $comment_cols, $msg_format, $name_format;
 global $msg_format, $now_format, $comment_format;
@@ -44,28 +44,28 @@ function plugin_comment_action()
 		$retvars["body"] = convert_html(join("",file(get_filename(encode($post["refer"])))));
 		return $retvars;
 	}
-	
+
 	$post["msg"] = preg_replace("/\n/","",$post["msg"]);
-	
+
 	if(preg_match("/^(-{1,2})(.*)/",$post["msg"],$match))
 	{
 		$head = $match[1];
 		$post["msg"] = $match[2];
 	}
-	
+
 	$_msg  =                                 str_replace('$msg', $post["msg"], $msg_format);
 	$_name = ($post["name"] == '')    ? '' : str_replace('$name',$post["name"],$name_format);
 	$_now  = ($post["nodate"] == "1") ? '' : str_replace('$now', $now,         $now_format);
-	
+
 	$comment = str_replace("\x08MSG\x08", $_msg, $comment_format);
 	$comment = str_replace("\x08NAME\x08",$_name,$comment);
 	$comment = str_replace("\x08NOW\x08", $_now, $comment);
 	$comment = $head.$comment;
-	
+
 	$postdata = "";
 	$postdata_old  = file(get_filename(encode($post["refer"])));
 	$comment_no = 0;
-	
+
 	foreach($postdata_old as $line)
 	{
 		if(!$comment_ins) $postdata .= $line;
@@ -84,7 +84,7 @@ function plugin_comment_action()
 		$title = $_title_comment_collided;
 		$body = $_msg_comment_collided . make_link($post["refer"]);
 	}
-	
+
 	$postdata = user_rules_str($postdata);
 
 	// 差分ファイルの作成
@@ -115,10 +115,10 @@ function plugin_comment_action()
 
 	$retvars["msg"] = $title;
 	$retvars["body"] = $body;
-	
+
 	$post["page"] = $post["refer"];
 	$vars["page"] = $post["refer"];
-	
+
 	return $retvars;
 }
 function plugin_comment_convert()
@@ -127,7 +127,7 @@ function plugin_comment_convert()
 	global $_btn_comment,$_btn_name,$_msg_comment,$vars;
 
 	$options = func_get_args();
-	
+
 	$nametags = "$_btn_name<input type=\"text\" name=\"name\" size=\"$name_cols\" />\n";
 	if(is_array($options) && in_array("noname",$options)) {
 		$nametags = $_msg_comment;

@@ -1,31 +1,31 @@
 <?php
-// $Id: include.inc.php,v 1.2.2.1 2003/02/14 08:17:22 panda Exp $
+// $Id: include.inc.php,v 1.2.2.2 2004/07/31 03:15:07 henoheno Exp $
 function plugin_include_convert()
 {
 	global $script,$get,$post,$vars,$WikiName,$BracketName,$hr;
 	static $include_list; //処理済ページ名の配列
-	
+
 	if (!isset($include_list))
 		$include_list = array($vars['page']=>TRUE);
-	
+
 	if(func_num_args() == 0)
 		return;
-	
+
 	list($page) = func_get_args();
-	
+
 	if (!preg_match("/^($WikiName|$BracketName)$/",$page))
 		$page = "[[$page]]";
-	
+
 	if (!is_page($page))
 		return '';
-	
+
 	if (isset($include_list[$page]))
 		return '';
-	
+
 	$include_list[$page] = TRUE;
-	
+
 	$tmppage = $vars['page'];
-	
+
 	$get['page'] = $post['page'] = $vars['page'] = $page;
 
 	$body = @join('',@file(get_filename(encode($page))));
@@ -42,7 +42,7 @@ function plugin_include_convert()
 	}
 
 	$get['page'] = $post['page'] = $vars['page'] = $tmppage;
-	
+
 	return $body;
 }
 ?>

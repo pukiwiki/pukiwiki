@@ -1,5 +1,5 @@
 <?php
-// $Id: newpage.inc.php,v 1.4 2002/11/29 00:09:01 panda Exp $
+// $Id: newpage.inc.php,v 1.4.2.1 2004/07/31 03:15:07 henoheno Exp $
 
 function plugin_newpage_init()
 {
@@ -12,7 +12,7 @@ function plugin_newpage_init()
 function plugin_newpage_convert()
 {
 	global $script,$vars,$_btn_edit,$_msg_newpage;
-	
+
 	$ret = "<form action=\"$script\" method=\"post\">\n";
 	$ret.= "<div>\n";
 	$ret.= "<input type=\"hidden\" name=\"plugin\" value=\"newpage\" />\n";
@@ -29,7 +29,7 @@ function plugin_newpage_convert()
 function plugin_newpage_action()
 {
 	global $vars,$script,$_btn_edit,$_msg_newpage;
-	
+
 	if(!$vars["page"]) {
 		$retvars["msg"] = $_msg_newpage;
 		$retvars["body"] = "<form action=\"$script\" method=\"post\">\n";
@@ -44,14 +44,14 @@ function plugin_newpage_action()
 
 		return $retvars;
 	}
-	
+
 	if(!preg_match("/^($BracketName)|($InterWikiName)$/",$vars["page"]))
 	{
 		$vars["page"] = "[[$vars[page]]]";
 	}
 
 	$wikiname = rawurlencode($vars["page"]);
-	
+
 	header("Location: $script?$wikiname");
 	die();
 }

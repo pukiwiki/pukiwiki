@@ -1,5 +1,5 @@
 <?php
-// $Id: navi.inc.php,v 1.6 2002/12/05 07:28:31 panda Exp $
+// $Id: navi.inc.php,v 1.6.2.1 2004/07/31 03:15:07 henoheno Exp $
 /*
 Last-Update:2002-12-05 rev.3
 
@@ -65,7 +65,7 @@ function plugin_navi_convert() {
 		// 未作成時のための番兵(プレビューとか)
 		if (in_array($current,$pages) === FALSE)
 			$pages[] = $current;
-		
+
 		natcasesort($pages);
 		$prev = $home;
 		foreach ($pages as $page) {

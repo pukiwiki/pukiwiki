@@ -5,13 +5,13 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: ls.inc.php,v 1.4 2002/11/29 00:09:01 panda Exp $
+ * $Id: ls.inc.php,v 1.4.2.1 2004/07/31 03:15:07 henoheno Exp $
  */
 
 function plugin_ls_convert()
 {
 	global $vars, $script;
-	
+
 	if(func_num_args())
 		$aryargs = func_get_args();
 	else
@@ -29,7 +29,7 @@ function plugin_ls_convert()
 		while($file = readdir($dir))
 		{
 			if($file == ".." || $file == ".") continue;
-			if(substr($file,0,$filepattern_len)!=$filepattern) continue; 
+			if(substr($file,0,$filepattern_len)!=$filepattern) continue;
 			$page = decode(trim(preg_replace("/\.txt$/"," ",$file)));
 			if($with_title) {
 			  $comment = '';
@@ -54,11 +54,11 @@ function plugin_ls_convert()
 		}
 		closedir($dir);
 	}
-	
+
 	if($ls=='') {
 	  return '';
 	}
-	
+
 	return "<ul>$ls</ul>";
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: template.php,v 1.2 2002/11/29 00:09:00 panda Exp $
+// $Id: template.php,v 1.2.2.1 2004/07/31 03:15:07 henoheno Exp $
 /////////////////////////////////////////////////
 
 function auto_template($page)

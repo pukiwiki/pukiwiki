@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.9.2.5 2004/06/27 13:49:59 henoheno Exp $
+// $Id: func.php,v 1.9.2.6 2004/07/31 03:15:07 henoheno Exp $
 /////////////////////////////////////////////////
 
 // 検索
@@ -8,14 +8,14 @@ function do_search($word,$type="AND",$non_format=0)
 {
 	global $script,$whatsnew,$vars;
 	global $_msg_andresult,$_msg_orresult,$_msg_notfoundresult;
-	
+
 	$database = array();
 	$retval = array();
 	$cnt = 0;
 
 	$arywords = preg_split("/\s+/",$word,-1,PREG_SPLIT_NO_EMPTY);
 	$result_word = $word;
-	
+
 	$files = get_existpages();
 	foreach($files as $name)
 	{
@@ -24,7 +24,7 @@ function do_search($word,$type="AND",$non_format=0)
 		if($name == $vars["page"] && $non_format) continue;
 		$lines = get_source($name);
 		$line = join("\n",$lines);
-		
+
 		$hit = 0;
 		if(strpos($result_word," ") !== FALSE)
 		{
@@ -87,7 +87,7 @@ function do_search($word,$type="AND",$non_format=0)
 	if(count($retval) && !$non_format)
 	{
 		$retvals = "<ul>\n" . join("\n",$retval) . "</ul>\n<br />\n";
-		
+
 		if($type=="AND")
 			$retvals.= str_replace('$1',htmlspecialchars($result_word),str_replace('$2',count($retval),str_replace('$3',$cnt,$_msg_andresult)));
 		else
@@ -111,7 +111,7 @@ function arg_check($str)
 function list_sort($values)
 {
 	if(!is_array($values)) return array();
-	
+
 	// ksortのみだと、[[日本語]]、[[英文字]]、英文字のみ、に順に並べ替えられる
 	ksort($values);
 
@@ -137,7 +137,7 @@ function encode($key)
 {
 	$enkey = '';
 	$arych = preg_split("//", $key, -1, PREG_SPLIT_NO_EMPTY);
-	
+
 	foreach($arych as $ch)
 	{
 		$enkey .= sprintf("%02X", ord($ch));
@@ -150,7 +150,7 @@ function encode($key)
 function decode($key)
 {
 	$dekey = '';
-	
+
 	for($i=0;$i<strlen($key);$i+=2)
 	{
 		$ch = substr($key,$i,2);
@@ -163,7 +163,7 @@ function decode($key)
 function open_interwikiname_list()
 {
 	global $interwiki;
-	
+
 	$retval = array();
 	$aryinterwikiname = get_source($interwiki);
 
@@ -184,7 +184,7 @@ function open_interwikiname_list()
 function strip_bracket($str)
 {
 	global $strip_link_wall;
-	
+
 	if($strip_link_wall)
 	{
 	  if(preg_match("/^\[\[(.*)\]\]$/",$str,$match)) {
@@ -240,9 +240,9 @@ function do_diff($strlines1,$strlines2)
 {
 	$lines1 = split("\n",$strlines1);
 	$lines2 = split("\n",$strlines2);
-	
+
 	$same_lines = $diff_lines = $del_lines = $add_lines = $retdiff = array();
-	
+
 	if(count($lines1) > count($lines2)) { $max_line = count($lines1)+2; }
 	else                                { $max_line = count($lines2)+2; }
 
@@ -258,7 +258,7 @@ function do_diff($strlines1,$strlines2)
 		{
 			$del_lines[$index] = $line;
 		}
-		
+
 		//$index = array_search($line,$lines2);
 		//if($index > -1)
 		//{
@@ -270,14 +270,14 @@ function do_diff($strlines1,$strlines2)
 	foreach($lines2 as $line)
 	{
 		$line = rtrim($line);
-		
+
 		while($del_lines[$cnt])
 		{
 			$retdiff[] = "- ".$del_lines[$cnt];
 			$del_lines[$cnt] = "";
 			$cnt++;
 		}
-		
+
 		if(in_array($line,$diff_lines))
 		{
 			$retdiff[] = "+ $line";
@@ -285,11 +285,11 @@ function do_diff($strlines1,$strlines2)
 		else
 		{
 			$retdiff[] = "  $line";
-		}		
+		}
 
 		$cnt++;
 	}
-	
+
 	foreach($del_lines as $line)
 	{
 		if(trim($line))
@@ -305,10 +305,10 @@ function do_update_diff($oldstr,$newstr)
 {
 	$oldlines = split("\n",$oldstr);
 	$newlines = split("\n",$newstr);
-	
+
 	$retdiff = $props = array();
 	$auto = true;
-	
+
 	foreach($newlines as $newline) {
 	  $flg = false;
 	  $cnt = 0;
@@ -355,7 +355,7 @@ PHPはfopen("hoge.php\0.txt")で"hoge.php"を開いてしまうなどの問題あり
 
 http://ns1.php.gr.jp/pipermail/php-users/2003-January/012742.html
 [PHP-users 12736] null byte attack
-*/ 
+*/
 function sanitize_null_character($param)
 {
 	if (is_array($param))
@@ -408,7 +408,7 @@ function get_script_uri()
 		$path = $parse_url['path'];
 	}
 	$script .= $path;
-	
+
 	return $script;
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: yetlist.inc.php,v 1.7 2002/11/29 00:09:01 panda Exp $
+// $Id: yetlist.inc.php,v 1.7.2.1 2004/07/31 03:15:07 henoheno Exp $
 
 // modified by PANDA <panda@arino.jp> http://home.arino.jp/
 // Last-Update:2002-09-12 rev.1
@@ -8,7 +8,7 @@ function plugin_yetlist_action() {
 	global $script,$LinkPattern;
 
 	$ret['msg'] = 'List of pages,are not made yet';
-	
+
 	if (!$dir = @opendir(DATA_DIR)) { return $ret; }
 
 	while($file = readdir($dir)) {
@@ -32,12 +32,12 @@ function plugin_yetlist_action() {
 	foreach($refer as $page=>$refs) {
 		$page_raw  = rawurlencode($page);
 		$page_disp = strip_bracket($page);
-		
+
 		$link_refs = array();
 		foreach(array_unique($refs) as $ref) {
 			$ref_raw  = rawurlencode($ref);
 			$ref_disp = strip_bracket($ref);
-			
+
 			$link_refs[] = "<a href=\"$script?$ref_raw\">$ref_disp</a>";
 		}
 		$link_ref = join(' ',$link_refs);

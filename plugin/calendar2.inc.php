@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar2.inc.php,v 1.14.2.1 2003/03/03 07:29:40 panda Exp $
+// $Id: calendar2.inc.php,v 1.14.2.2 2004/07/31 03:15:07 henoheno Exp $
 // *引数にoffと書くことで今日の日記を表示しないようにした。
 function plugin_calendar2_convert()
 {
@@ -8,7 +8,7 @@ function plugin_calendar2_convert()
 
 	$today_view = true;
 	$args = func_get_args();
-	
+
 	if(func_num_args() == 0)
 	{
 		$date_str = date("Ym");
@@ -113,11 +113,11 @@ function plugin_calendar2_convert()
 	}
 	$prefix_ = rawurlencode($pre);
 	$prefix = strip_tags($prefix);
-	
+
 	if(!$command) $cmd = "read";
 	else          $cmd = $command;
-	
-	
+
+
 	$yr = substr($date_str,0,4);
 	$mon = substr($date_str,4,2);
 	if($yr != date("Y") || $mon != date("m")) {
@@ -129,7 +129,7 @@ function plugin_calendar2_convert()
 		$other_month = 0;
 	}
 	$today = getdate(mktime(0,0,0,$mon,$now_day,$yr));
-	
+
 	$m_num = $today[mon];
 	$d_num = $today[mday];
 	$year = $today[year];
@@ -147,12 +147,12 @@ function plugin_calendar2_convert()
 
 	$prefix_url = rawurlencode($prefix_url);
 	$pre = strip_bracket($pre);
-	
+
 	$ret .= '<table border="0" width="100%"><tr><td valign="top">';
-	
+
 	$y = substr($date_str,0,4)+0;
 	$m = substr($date_str,4,2)+0;
-	
+
 	$prev_date_str = sprintf("%04d%02d",$y,$m-1);
 	if($m-1<1) {
 		$prev_date_str = sprintf("%04d%02d",$y-1,12);
@@ -161,7 +161,7 @@ function plugin_calendar2_convert()
 	if($m+1>12) {
 		$next_date_str = sprintf("%04d%02d",$y+1,1);
 	}
-	
+
 	if($prefix == "") {
 		$ret .= '
 <table class="style_calendar" cellspacing="1" width="150" border="0">
@@ -185,7 +185,7 @@ function plugin_calendar2_convert()
   <tr>
 ';
 	}
-	
+
 	foreach($weeklabels as $label)
 	{
 		$ret .= '
@@ -202,10 +202,10 @@ function plugin_calendar2_convert()
 		$name = "$prefix$dt";
 		$page = "[[$prefix$dt]]";
 		$page_url = rawurlencode("[[$prefix$dt]]");
-		
+
 		if($cmd == "edit") $refer = "&amp;refer=$page_url";
 		else               $refer = "";
-		
+
 		if($cmd == "read" && !is_page($page))
 			$link = "<a href=\"$script?cmd=$cmd&amp;page=$page_url$refer\" title=\"$name\" class=\"small\">$day</a>";
 		else
@@ -214,31 +214,31 @@ function plugin_calendar2_convert()
 		if($fweek)
 		{
 			for($i=0;$i<$wday;$i++)
-			{ // Blank 
-				$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n"; 
-			} 
+			{ // Blank
+				$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n";
+			}
 		$fweek=false;
 		}
 
 		if($wday == 0) $ret .= "  </tr><tr>\n";
 		if(!$other_month && ($day == $today[mday]) && ($m_num == $today[mon]) && ($year == $today[year]))
 		{
-			//  Today 
-			$ret .= "    <td align=\"center\" class=\"style_td_today\">$link</td>\n"; 
+			//  Today
+			$ret .= "    <td align=\"center\" class=\"style_td_today\">$link</td>\n";
 		}
 		else if($wday == 0)
 		{
-			//  Sunday 
+			//  Sunday
 			$ret .= "    <td align=\"center\" class=\"style_td_sun\">$link</td>\n";
 		}
 		else if($wday == 6)
 		{
-			//  Saturday 
+			//  Saturday
 			$ret .= "    <td align=\"center\" class=\"style_td_sat\">$link</td>\n";
 		}
 		else
 		{
-			// Weekday 
+			// Weekday
 			$ret .= "    <td align=\"center\" class=\"style_td_day\">$link</td>\n";
 		}
 		$day++;
@@ -248,10 +248,10 @@ function plugin_calendar2_convert()
 	if($wday > 0)
 	{
 		while($wday < 7)
-		{ // Blank 
+		{ // Blank
 			$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n";
 		$wday++;
-		} 
+		}
 	}
 
 	$ret .= "  </tr>\n</table>\n";
@@ -272,32 +272,32 @@ function plugin_calendar2_convert()
     $str = "";
   }
 	$ret .= "</td><td valign=\"top\">".$str."</td></tr></table>";
-	
+
 	return $ret;
 }
 
 function plugin_calendar2_action()
 {
 	global $command,$vars;
-	
+
 	$command = 'read';
 	$page = strip_bracket($vars['page']);
 	$vars['page'] = '*';
 	if($vars['file']) $vars['page'] = $vars['file'];
-	
+
 	$date = $vars['date'];
 	if($date=='') {
 		$date = date("Ym");
 	}
 	$yy = sprintf("%04d.%02d",substr($date,0,4),substr($date,4,2));
-	
+
 	$aryargs = array($vars['page'],$date);
 	$s_page = htmlspecialchars($vars['page']);
 	$ret["msg"] = "calendar ".$s_page."/".$yy;
 	$ret["body"] = call_user_func_array("plugin_calendar2_convert",$aryargs);
-	
+
 	$vars['page'] = $page;
-	
+
 	return $ret;
 }
 

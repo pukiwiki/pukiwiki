@@ -1,5 +1,5 @@
 <?php
-// $Id: pcomment.inc.php,v 1.5.2.1 2004/07/28 13:12:40 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.5.2.2 2004/07/31 03:15:07 henoheno Exp $
 /*
 Last-Update:2002-09-12 rev.15
 
@@ -162,7 +162,7 @@ function pcmt_insert($page) {
 	$msg = sprintf(PCMT_FORMAT_MSG, rtrim($post['msg']));
 	$name = ($post['name'] == '') ? '' :  sprintf(PCMT_FORMAT_NAME, $post['name']);
 	$date = ($post['nodate'] == '1') ? '' : sprintf(PCMT_FORMAT_DATE, $now);
-	if ($date != '' or $name != '') { 
+	if ($date != '' or $name != '') {
 		$msg = str_replace("\x08MSG\x08", $msg,  PCMT_FORMAT);
 		$msg = str_replace("\x08NAME\x08",$name, $msg);
 		$msg = str_replace("\x08DATE\x08",$date, $msg);

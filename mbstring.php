@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mbstring.php,v 1.12.2.1 2004/06/19 04:09:39 henoheno Exp $
+// $Id: mbstring.php,v 1.12.2.2 2004/07/31 03:15:07 henoheno Exp $
 //
 
 /*
@@ -15,7 +15,7 @@
  *
  *   http://www.spencernetwork.org/jcode/ よりjcodeを入手し、
  *   以下の様に展開してください。
- * 
+ *
  *   -+--- mbstring.php          -r--
  *    +-+- jcode_1.34/           dr-x
  *      +--- readme.txt          -r--
@@ -82,7 +82,7 @@ function mb_convert_variables($to_encoding,$from_encoding,&$vars)
 	if (is_array($from_encoding) or $from_encoding == '' or $from_encoding == 'auto')
 	{
 		$from_encoding = mb_detect_encoding(join_array(' ',$vars));
-	}   
+	}
 	if ($from_encoding != 'ASCII' and $from_encoding != SOURCE_ENCODING)
 	{
 		$vars = mb_convert_encoding($vars,$to_encoding,$from_encoding);
@@ -105,7 +105,7 @@ function join_array($glue,$pieces)
 function mb_detect_encoding($str,$encoding_list='')
 {
 	static $codes = array(0=>'ASCII',1=>'EUC-JP',2=>'SJIS',3=>'JIS',4=>'UTF-8');
-	
+
 	// 注: $encoding_listは使用しない。
 	$code = AutoDetect($str);
 	if (!array_key_exists($code,$codes))
@@ -115,11 +115,11 @@ function mb_detect_encoding($str,$encoding_list='')
 	return $codes[$code];
 }
 
-// mb_detect_order --  文字エンコーディング検出順序の設定/取得 
+// mb_detect_order --  文字エンコーディング検出順序の設定/取得
 function mb_detect_order($encoding_list=NULL)
 {
 	static $list = array();
-	
+
 	// 注: 他の関数に影響を及ぼさない。呼んでも無意味。
 	if ($encoding_list === NULL)
 	{
@@ -151,7 +151,7 @@ function mb_internal_encoding($encoding='')
 	return SOURCE_ENCODING;
 }
 
-// mb_language --  カレントの言語を設定/取得 
+// mb_language --  カレントの言語を設定/取得
 function mb_language($language=NULL)
 {
 	static $mb_language = FALSE;
@@ -171,7 +171,7 @@ function mb_strimwidth($str,$start,$width,$trimmarker='',$encoding='')
 	{
 		return $str;
 	}
-	
+
 	// 注: EUC-JP専用, $encodingを使用しない
 	$chars = unpack('C*', $str);
 	$substr = '';

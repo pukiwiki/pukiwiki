@@ -1,26 +1,26 @@
 <?php
  /*
- 
+
  PukiWiki BBS風プラグイン
 
  CopyRight 2002 OKAWARA,Satoshi
  http://www.dml.co.jp/~kawara/pukiwiki/pukiwiki.php
  kawara@dml.co.jp
- 
+
  メッセージを変更したい場合はLANGUAGEファイルに下記の値を追加してからご使用ください
 	$_btn_name = 'お名前';
 	$_btn_article = '記事の投稿';
 	$_btn_subject = '題名: ';
 
  ※$_btn_nameはcommentプラグインで既に設定されている場合があります
- 
+
  投稿内容の自動メール転送機能をご使用になりたい場合は
  -投稿内容のメール自動配信
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.6.2.2 2003/04/08 09:50:05 arino Exp $
- 
+ $Id: article.inc.php,v 1.6.2.3 2004/07/31 03:15:07 henoheno Exp $
+
  */
 
 global $name_format, $subject_format, $no_subject, $_mailto;
@@ -44,7 +44,7 @@ $name_format = '[[$name]]';
 // 題名の挿入フォーマット
 $subject_format = '**$subject';
 /////////////////////////////////////////////////
-// 題名が未記入の場合の表記 
+// 題名が未記入の場合の表記
 $no_subject = '無題';
 /////////////////////////////////////////////////
 // 挿入する位置 1:欄の前 0:欄の後
@@ -88,7 +88,7 @@ function plugin_article_action()
 	global $name_format, $subject_format, $no_subject, $name, $subject, $article;
 	global $_title_collided,$_msg_collided,$_title_updated;
 	global $_mailto;
-	
+
 	if($post["msg"])
 	{
 		$postdata = "";

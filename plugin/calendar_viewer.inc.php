@@ -3,7 +3,7 @@
  * PukiWiki calendar_viewerプラグイン
  *
  *
- *$Id: calendar_viewer.inc.php,v 1.1.2.3 2003/03/04 04:16:59 panda Exp $
+ *$Id: calendar_viewer.inc.php,v 1.1.2.4 2004/07/31 03:15:07 henoheno Exp $
   calendarrecentプラグインを元に作成
  */
 /**
@@ -238,7 +238,7 @@ function plugin_calendar_viewer_convert()
     if ($left_base >= 0) {
       $left_YM = $left_base . "*" . $limit_pitch;
       $left_text = sprintf($_msg_calendar_viewer_left,$limit_pitch);
-      
+
     }else{
       $left_YM = "";
     }

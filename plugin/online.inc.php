@@ -1,5 +1,5 @@
 <?php
-// $Id: online.inc.php,v 1.4.2.1 2004/06/20 05:46:09 henoheno Exp $
+// $Id: online.inc.php,v 1.4.2.2 2004/07/31 03:15:07 henoheno Exp $
 
 // user list file
 define('USR_LST', COUNTER_DIR.'user.dat');
@@ -9,7 +9,7 @@ define(TIMEOUT, 300);
 function plugin_online_convert()
 {
 	global $HTTP_SERVER_VARS;
-	
+
 	if(!file_exists(USR_LST))
 	{
 		$nf = fopen(USR_LST, "w");

@@ -1,5 +1,5 @@
 <?php
-// $Id: paint.inc.php,v 1.1.2.1 2004/06/20 04:57:36 henoheno Exp $
+// $Id: paint.inc.php,v 1.1.2.2 2004/07/31 03:15:07 henoheno Exp $
 /*
 Last-Update:2002-10-30 rev.20
 
@@ -40,7 +40,7 @@ define('PAINT_FORMAT_DATE','SIZE(10){%s}');
 //メッセージがある場合
 define('PAINT_FORMAT',"\x08MSG\x08 -- \x08NAME\x08 \x08DATE\x08");
 //メッセージがない場合
-define('PAINT_FORMAT_NOMSG',"\x08NAME\x08 \x08DATE\x08"); 
+define('PAINT_FORMAT_NOMSG',"\x08NAME\x08 \x08DATE\x08");
 
 function plugin_paint_init() {
 	$messages = array('_paint_messages'=>array(
@@ -135,7 +135,7 @@ function plugin_paint_convert() {
 
 	//戻り値
 	$ret = '';
-	
+
 	$paint_no++;
 
 	//文字列を取得
@@ -208,7 +208,7 @@ function insert_ref($filename) {
 		}
 		if (PAINT_INSERT_INS) $postdata .= $line;
 	}
-	
+
 	// 更新の衝突を検出
 	if (md5(join('',$postdata_old)) != $vars['digest']) {
 		$ret['msg'] = $_paint_messages['msg_title_collided'];
@@ -222,28 +222,28 @@ function insert_ref($filename) {
 // ページの出力
 function paint_page_write($page,$postdata) {
 	global $do_backup,$del_backup;
-	
+
 	$encode = encode($page);
 	$postdata = user_rules_str($postdata);
-	
+
 	// 差分ファイルの作成
 	$oldpostdata = is_page($page) ? join('',get_source($page)) : "\n";
 	$diffdata = ($postdata != '') ? do_diff($oldpostdata,$postdata) : '';
 	file_write(DIFF_DIR,$page,$diffdata);
-	
+
 	// バックアップの作成
 	$oldposttime = is_page($page) ? filemtime(get_filename($encode)) : time();
-	
+
 	//投稿内容が空のとき、$del_backupがTRUEならばバックアップも削除
 	if ($del_backup and $postdata == '')
 		backup_delete(BACKUP_DIR.$encode.'.txt');
 	//バックアップを行う設定のとき、すでにあるページをバックアップ
 	else if ($do_backup and is_page($page))
 		make_backup($encode.'.txt',$oldpostdata,$oldposttime);
-	
+
 	// ファイルの書き込み
 	file_write(DATA_DIR,$page,$postdata);
-	
+
 	// is_pageのキャッシュをクリアする。
 	is_page($page,true);
 }
