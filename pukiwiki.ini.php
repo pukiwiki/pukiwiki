@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.16 2002/12/02 03:33:36 panda Exp $
+// $Id: pukiwiki.ini.php,v 1.16.2.1 2003/02/14 07:41:23 panda Exp $
 //
 // PukiWiki setting file
 
@@ -231,7 +231,7 @@ $facemark_rules = array(
 "\s(;\))" => " <img src=\"./face/wink.gif\" alt=\"\\1\" />",
 "\s(;\()" => " <img src=\"./face/sad.gif\" alt=\"\\1\" />",
 "\s(\:\()" => " <img src=\"./face/sad.gif\" alt=\"\\1\" />",
-"(\:heart\:)" => "<img src=\"./face/heart.gif\" alt=\"\\1\" />",
+"&amp;(heart);" => "<img src=\"./face/heart.gif\" alt=\"\\1\" />",
 );
 
 ?>
