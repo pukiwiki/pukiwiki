@@ -2,54 +2,9 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.ini.php,v 1.3 2004/07/10 14:34:42 henoheno Exp $
+// $Id: keitai.ini.php,v 1.4 2004/07/13 13:12:15 henoheno Exp $
 //
 // PukiWiki setting file (Cell phones, PDAs and other thin clients)
-
-/////////////////////////////////////////////////
-// max_size (SKINで使用)
-
-$max_size = 5;	// SKINで使用, KByte (default)
-
-$matches = array();
-
-// Browser-name only
-$ua_name  = $user_agent['name'];
-$ua_vers  = $user_agent['vers'];
-$ua_agent = $user_agent['agent'];
-switch ($ua_name) {
-
-	// NetFront / Compact NetFront
-	//   DoCoMo Net For MOBILE: ｉモード対応HTMLの考え方: ユーザエージェント
-	//   http://www.nttdocomo.co.jp/mc-user/i/tag/imodetag.html
-	//   DDI POCKET: 機種ラインナップ: AirH"PHONE用ホームページの作成方法
-	//   http://www.ddipocket.co.jp/p_s/products/airh_phone/homepage.html
-	case 'NetFront':
-	case 'CNF':
-	case 'DoCoMo':
-	case 'Opera': // Performing CNF compatible
-		if (preg_match('#\b[cC]([0-9]+)\b#', $ua_agent, $matches))
-			$max_size = $matches[1];	// Cache max size
-		break;
-
-	// Vodafone 技術資料: ユーザーエージェントについて
-	// http://www.dp.j-phone.com/dp/tool_dl/web/useragent.php
-	case 'J-PHONE':
-		if (preg_match('#\bProfile/#', $ua_agent)) {
-			$max_size = 12; // パケット対応機
-		} else {
-			$max_size =  6; // パケット非対応機
-		}
-		break;
-
-}
-
-// Browser-name + version
-switch ("$ua_name/$ua_vers") {
-	case 'DoCoMo/2.0':	$max_size = min($max_size, 30); break;
-}
-unset($matches, $ua_name, $ua_vers, $ua_agent);
-
 
 /////////////////////////////////////////////////
 // スキンファイルの場所
@@ -76,12 +31,6 @@ $_ol_margin = 16;       // リストの階層間の間隔(px)
 $_dl_left_margin = 0;   // リストと画面左端との間隔(px)
 $_dl_margin = 16;        // リストの階層間の間隔(px)
 $_list_pad_str = '';
-
-/////////////////////////////////////////////////
-// cols: テキストエリアのカラム数 rows: 行数
-
-$cols = 22; $rows = 5;	// i_mode
-$cols = 24; $rows = 20; // jphone
 
 /////////////////////////////////////////////////
 // 大・小見出しから目次へ戻るリンクの文字
@@ -116,12 +65,83 @@ $show_passage = 0;
 $link_compact = 1;
 
 /////////////////////////////////////////////////
-// フェイスマークを使用する
-$usefacemark = 0;
+// フェイスマークを絵文字に変換する (※i-mode, Vodafone, EzWebなど携帯電話限定)
+$usefacemark = 1;
 
 /////////////////////////////////////////////////
 // accesskey (SKINで使用)
 $accesskey = 'accesskey';
+
+/////////////////////////////////////////////////
+// $scriptを短縮
+if (preg_match('#([^/]+)$#',$script,$matches)) {
+	$script = $matches[1];
+}
+
+/////////////////////////////////////////////////
+// ブラウザ調整前のデフォルト値
+
+// max_size (SKINで使用)
+$max_size = 5;	// SKINで使用, KByte
+
+// cols: テキストエリアのカラム数 rows: 行数
+$cols = 22; $rows = 5;	// i_mode
+
+
+/////////////////////////////////////////////////
+// ブラウザに合わせた調整
+
+$ua_name  = $user_agent['name'];
+$ua_vers  = $user_agent['vers'];
+$ua_agent = $user_agent['agent'];
+$matches = array();
+
+// Browser-name only
+switch ($ua_name) {
+
+	// NetFront / Compact NetFront
+	//   DoCoMo Net For MOBILE: ｉモード対応HTMLの考え方: ユーザエージェント
+	//   http://www.nttdocomo.co.jp/mc-user/i/tag/imodetag.html
+	//   DDI POCKET: 機種ラインナップ: AirH"PHONE用ホームページの作成方法
+	//   http://www.ddipocket.co.jp/p_s/products/airh_phone/homepage.html
+	case 'NetFront':
+	case 'CNF':
+	case 'DoCoMo':
+	case 'Opera': // Performing CNF compatible
+		if (preg_match('#\b[cC]([0-9]+)\b#', $ua_agent, $matches)) {
+			$max_size = $matches[1];	// Cache max size
+		}
+		$cols = 22; $rows = 5;	// i_mode
+		break;
+
+	// Vodafone (ex. J-PHONE) 技術資料: ユーザーエージェントについて
+	// http://www.dp.j-phone.com/dp/tool_dl/web/useragent.php
+	case 'J-PHONE':
+		if (preg_match('#\bProfile/#', $ua_agent)) {
+			$max_size = 12; // パケット対応機
+		} else {
+			$max_size =  6; // パケット非対応機
+		}
+		$cols = 24; $rows = 20; // jphone
+		break;
+
+	// UP.Browser
+	case 'UP.Browser':
+		// UP.Browser for KDDI cell phones
+		// http://www.au.kddi.com/ezfactory/tec/spec/xhtml.html ('About 9KB max')
+		// http://www.au.kddi.com/ezfactory/tec/spec/4_4.html (User-agent strings)
+		if (preg_match('#^KDDI#', $ua_agent)) {
+			$max_size =  9;
+		}
+}
+
+// Browser-name + version
+switch ("$ua_name/$ua_vers") {
+	// Restriction For imode:
+	//  http://www.nttdocomo.co.jp/mc-user/i/tag/s2.html
+	case 'DoCoMo/2.0':	$max_size = min($max_size, 30); break;
+}
+
 
 /////////////////////////////////////////////////
 // ユーザ定義ルール
@@ -133,20 +153,206 @@ $accesskey = 'accesskey';
 ///////////////////////////////////////////////////
 // ユーザ定義ルール(コンバート時に置換)
 $line_rules = array(
-"COLOR\(([^\(\)]*)\){([^}]*)}" => '<font color="$1">$2</font>',
-"SIZE\(([^\(\)]*)\){([^}]*)}" => '$2',
-"COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)" => '<font color="$1">$2</font>',
-"SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)" => '$2',
-"%%%(?!%)((?:(?!%%%).)*)%%%" => '<ins>$1</ins>',
-"%%(?!%)((?:(?!%%).)*)%%" => '<del>$1</del>',
-"'''(?!')((?:(?!''').)*)'''" => '<em>$1</em>',
-"''(?!')((?:(?!'').)*)''" => '<strong>$1</strong>',
-'&amp;br;' => '<br>',
+	"COLOR\(([^\(\)]*)\){([^}]*)}"	=> '<font color="$1">$2</font>',
+	"SIZE\(([^\(\)]*)\){([^}]*)}"	=> '$2',
+	"COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)"	=> '<font color="$1">$2</font>',
+	"SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)"	=> '$2',
+	"%%%(?!%)((?:(?!%%%).)*)%%%"	=> '<ins>$1</ins>',
+	"%%(?!%)((?:(?!%%).)*)%%"	=> '<del>$1</del>',
+	"'''(?!')((?:(?!''').)*)'''"	=> '<em>$1</em>',
+	"''(?!')((?:(?!'').)*)''"	=> '<strong>$1</strong>',
+	'&amp;br;'	=> '<br>',
 );
 
+
 /////////////////////////////////////////////////
-// $scriptを短縮
-if (preg_match('#([^/]+)$#',$script,$matches)) {
-	$script = $matches[1];
+// 携帯電話にあわせたフェイスマーク
+
+// $usefacemark = 1ならフェイスマークが置換されます
+// 文章内にXDなどが入った場合にfacemarkに置換されてしまうので
+// 必要のない方は $usefacemarkを0にしてください。
+
+// Browser-name only
+$facemark_rules = array();
+switch ($ua_name) {
+
+    // Graphic icons for imode HTML 4.0, with Shift-JIS text output
+    // http://www.nttdocomo.co.jp/mc-user/i/tag/emoji/e1.html
+    // http://www.nttdocomo.co.jp/mc-user/i/tag/emoji/list.html
+    case 'DoCoMo':
+
+	$facemark_rules = array(
+	// Face marks
+	'\s(\:\))'	=>	'&#63893;',	// smile
+	'\s(\:D)'	=>	'&#63893;',	// bigsmile
+	'\s(\:p)'	=>	'&#xE728;',	// huh
+	'\s(\:d)'	=>	'&#xE728;',	// huh
+	'\s(XD)'	=>	'&#63895;',	// oh
+	'\s(X\()'	=>	'&#63895;',	// oh
+	'\s(;\))'	=>	'&#xE729;',	// wink
+	'\s(;\()'	=>	'&#63894;',	// sad
+	'\s(\:\()'	=>	'&#63894;',	// sad
+	'&amp;(smile);'	=>	'&#63893;',
+	'&amp;(bigsmile);'=>	'&#63893;',
+	'&amp;(huh);'	=>	'&#xE728;',
+	'&amp;(oh);'	=>	'&#63895;',
+	'&amp;(wink);'	=>	'&#xE729;',
+	'&amp;(sad);'	=>	'&#63894;',
+	'&amp;(heart);'	=>	'&#63889;',
+	'&amp;(sweat);'	=>	'&#xE722;',
+
+	// Face marks, Japanese style
+	'(\(\^\^\))'	=>	'&#63893;',	// smile
+	'(\(\^-\^)'	=>	'&#63893;',	// smile
+	'(\(\.\.;)'	=>	'&#63895;',	// oh
+	'(\(\^_-\))'	=>	'&#xE729;',	// wink
+	'(\(--;)'	=>	'&#63894;',	// sad
+	'(\(\^\^;\))'	=>	'&#xE722;',	// sweat
+	'(\(\^\^;)'	=>	'&#xE722;',	// sweat
+
+	// Push buttons, 0-9 and sharp
+	'&amp;(pb1);'	=>	'&#63879;',
+	'&amp;(pb2);'	=>	'&#63880;',
+	'&amp;(pb3);'	=>	'&#63881;',
+	'&amp;(pb4);'	=>	'&#63882;',
+	'&amp;(pb5);'	=>	'&#63883;',
+	'&amp;(pb6);'	=>	'&#63884;',
+	'&amp;(pb7);'	=>	'&#63885;',
+	'&amp;(pb8);'	=>	'&#63886;',
+	'&amp;(pb9);'	=>	'&#63887;',
+	'&amp;(pb0);'	=>	'&#63888;',
+	'&amp;(pb#);'	=>	'&#63877;',
+
+	// Others
+	// '&amp;(zzz);'	=>	'&#63910;',
+	// '&amp;(man);'	=>	'&#63829;',
+	// '&amp;(clock);'	=>	'&#63838;',
+	// '&amp;(mail);'	=>	'&#63863;',
+	// '&amp;(phone);'	=>	'&#63720;',
+	// '&amp;(phoneto);'	=>	'&#63858;',
+	// '&amp;(mailto);'	=>	'&#63859;',
+	// '&amp;(faxto);'	=>	'&#63860;',
+	);
+	break;
+
+    // Graphic icons for Vodafone (ex. J-PHONE) cell phones
+    // http://www.dp.j-phone.com/dp/tool_dl/web/picword_top.php
+    case 'J-PHONE':
+
+	$facemark_rules = array(
+	// Face marks
+	'\s(\:\))'	=>	chr(27).'$Gv'.chr(15),	// '&#57430;',	// smile
+	'\s(\:D)'	=>	chr(27).'$Gv'.chr(15),	// '&#57430;',	// bigsmile => smile
+	'\s(\:p)'	=>	chr(27).'$E%'.chr(15),	// '&#57605;',	// huh
+	'\s(\:d)'	=>	chr(27).'$E%'.chr(15),	// '&#57605;',	// huh
+	'\s(XD)'	=>	chr(27).'$Gx'.chr(15),	// '&#57432;',	// oh
+	'\s(X\()'	=>	chr(27).'$Gx'.chr(15),	// '&#57432;',	// oh
+	'\s(;\))'	=>	chr(27).'$E&'.chr(15),	// '&#57606;',	// winkじゃないけどね(^^; (※目がハート)
+	'\s(;\()'	=>	chr(27).'$E&'.chr(15),	// '&#57606;',	// sad
+	'\s(\:\()'	=>	chr(27).'$Gy'.chr(15),	// '&#57433;',	// sad
+	'&amp;(smile);'	=>	chr(27).'$Gv'.chr(15),	// '&#57430;',
+	'&amp;(bigsmile);'=>	chr(27).'$Gw'.chr(15),	// '&#57431;',
+	'&amp;(huh);'	=>	chr(27).'$E%'.chr(15),	// '&#57605;',
+	'&amp;(oh);'	=>	chr(27).'$Gx'.chr(15),	// '&#57432;',
+	'&amp;(wink);'	=>	chr(27).'$E&'.chr(15),	// '&#57606;',	// winkじゃないけどね(^^; (※目がハート)
+	'&amp;(sad);'	=>	chr(27).'$Gy'.chr(15),	// '&#57433;',
+	'&amp;(heart);'	=>	chr(27).'$GB'.chr(15),	// '&#57378;',
+	'&amp;(sweat);'	=>	chr(27).'$E('.chr(15),	// '&#57608;',
+
+	// Face marks, Japanese style
+	'(\(\^\^\))'	=>	chr(27).'$Gv'.chr(15),	// smile
+	'(\(\^-\^)'	=>	chr(27).'$Gv'.chr(15),	// smile
+	'(\(\.\.;)'	=>	chr(27).'$Gx'.chr(15),	// oh
+	'(\(\^_-\))'	=>	chr(27).'$E&'.chr(15),	// winkじゃないけどね(^^; (※目がハート)
+	'(\(--;)'	=>	chr(27).'$E&'.chr(15),	// sad
+	'(\(\^\^;\))'	=>	chr(27).'$E('.chr(15),	// sweat
+	'(\(\^\^;)'	=>	chr(27).'$E('.chr(15),	// sweat
+
+	// Push buttons, 0-9 and sharp
+	'&amp;(pb1);'	=>	chr(27).'$F<'.chr(15),	// '&#57884;',
+	'&amp;(pb2);'	=>	chr(27).'$F='.chr(15),	// '&#57885;',
+	'&amp;(pb3);'	=>	chr(27).'$F>'.chr(15),	// '&#57886;',
+	'&amp;(pb4);'	=>	chr(27).'$F?'.chr(15),	// '&#57887;',
+	'&amp;(pb5);'	=>	chr(27).'$F@'.chr(15),	// '&#57888;',
+	'&amp;(pb6);'	=>	chr(27).'$FA'.chr(15),	// '&#57889;',
+	'&amp;(pb7);'	=>	chr(27).'$FB'.chr(15),	// '&#57890;',
+	'&amp;(pb8);'	=>	chr(27).'$FC'.chr(15),	// '&#57891;',
+	'&amp;(pb9);'	=>	chr(27).'$FD'.chr(15),	// '&#57892;',
+	'&amp;(pb0);'	=>	chr(27).'$FE'.chr(15),	// '&#57893;',
+
+	// Others
+	// '&amp;(zzz);'	=>	chr(27).'$E\\'.chr(15),
+	// '&amp;(man);'	=>	chr(27).'$G!'.chr(15),
+	// '&amp;(clock);'	=>	chr(27).'$GF'.chr(15),	// '&#xE026;',
+	// '&amp;(phone);'	=>	chr(27).'$G)'.chr(15),
+	// '&amp;(mail);'	=>	chr(27).'$Fv'.chr(15),
+	// '&amp;(phoneto);'=>	chr(27).'$E$'.chr(15),
+	// '&amp;(mailto);'=>	chr(27).'$E#'.chr(15),
+	// '&amp;(faxto);'	=>	chr(27).'$G+'.chr(15),
+
+	// 最近の顔文字 (?)
+	// '&amp;(smile);'	=>	'&#58388;',
+	// '&amp;(bigsmile);'	=>	'&#58389;',
+	// '&amp;(huh);'	=>	'&#58377;',
+	// '&amp;(oh);' 	=>	'&#58374;',
+	// '&amp;(wink);'	=>	'&#58373;',
+	// '&amp;(sad);'	=>	'&#58390;',
+	// '&amp;(heart);'	=>	'&#58152;',
+	// '&amp;(sweat);'	=>	'&#58369;',
+	);
+	break;
+
+    case 'UP.Browser':
+
+	// UP.Browser for KDDI cell phones
+	if (preg_match('#^KDDI#', $ua_agent)) {
+	$facemark_rules = array(
+	// Face marks
+	'\s(\:\))'	=>	'<img localsrc="68">',	// smile
+	'\s(\:D)'	=>	'<img localsrc="257">',	// bigsmile
+	'\s(\:p)'	=>	'<img localsrc="264">',	// huh
+	'\s(\:d)'	=>	'<img localsrc="264">',	// huh
+	'\s(XD)'	=>	'<img localsrc="260">',	// oh
+	'\s(X\()'	=>	'<img localsrc="260">',	// oh
+	'\s(;\))'	=>	'<img localsrc="348">',	// wink
+	'\s(;\()'	=>	'<img localsrc="258">',	// sad
+	'\s(\:\()'	=>	'<img localsrc="258">',	// sad
+	'&amp;(smile);'	=>	'<img localsrc="68">',
+	'&amp;(bigsmile);'=>	'<img localsrc="257">',
+	'&amp;(huh);'	=>	'<img localsrc="264">',
+	'&amp;(oh);'	=>	'<img localsrc="260">',
+	'&amp;(wink);'	=>	'<img localsrc="348">',
+	'&amp;(sad);'	=>	'<img localsrc="258">',
+	'&amp;(heart);'	=>	'<img localsrc="415">',
+	'&amp;(sweat);'	=>	'<img localsrc="351">',
+
+	// Face marks, Japanese style
+	'(\(\^\^\))'	=>	'<img localsrc="68">',	// smile
+	'(\(\^-\^)'	=>	'<img localsrc="68">',	// smile
+	'(\(\.\.;)'	=>	'<img localsrc="260">',	// oh
+	'(\(\^_-\))'	=>	'<img localsrc="348">',	// wink
+	'(\(--;)'	=>	'<img localsrc="258">',	// sad
+	'(\(\^\^;\))'	=>	'<img localsrc="351">',	// sweat
+	'(\(\^\^;)'	=>	'<img localsrc="351">',	// sweat
+
+	// Push buttons, 0-9 and sharp
+	'&amp;(pb1);'	=>	'<img localsrc="180">',
+	'&amp;(pb2);'	=>	'<img localsrc="181">',
+	'&amp;(pb3);'	=>	'<img localsrc="182">',
+	'&amp;(pb4);'	=>	'<img localsrc="183">',
+	'&amp;(pb5);'	=>	'<img localsrc="184">',
+	'&amp;(pb6);'	=>	'<img localsrc="185">',
+	'&amp;(pb7);'	=>	'<img localsrc="186">',
+	'&amp;(pb8);'	=>	'<img localsrc="187">',
+	'&amp;(pb9);'	=>	'<img localsrc="188">',
+	'&amp;(pb0);'	=>	'<img localsrc="325">',
+	'&amp;(pb#);'	=>	'<img localsrc="818">',
+	);
+	}
+	break;
+
 }
+
+unset($matches, $ua_name, $ua_vers, $ua_agent, $special_rules);
+
 ?>

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: default.ini.php,v 1.4 2004/04/03 15:56:08 arino Exp $
+// $Id: default.ini.php,v 1.5 2004/07/13 13:12:15 henoheno Exp $
 //
 // PukiWiki setting file (user agent:default)
 
@@ -87,14 +87,65 @@ $usefacemark = 1;
 /////////////////////////////////////////////////
 // ユーザ定義ルール(コンバート時に置換)
 $line_rules = array(
-"COLOR\(([^\(\)]*)\){([^}]*)}" => '<span style="color:$1">$2</span>',
-"SIZE\(([^\(\)]*)\){([^}]*)}" => '<span style="font-size:$1px">$2</span>',
-"COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)" => '<span style="color:$1">$2</span>',
-"SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)" => '<span class="size$1">$2</span>',
-"%%%(?!%)((?:(?!%%%).)*)%%%" => '<ins>$1</ins>',
-"%%(?!%)((?:(?!%%).)*)%%" => '<del>$1</del>',
-"'''(?!')((?:(?!''').)*)'''" => '<em>$1</em>',
-"''(?!')((?:(?!'').)*)''" => '<strong>$1</strong>',
-'&amp;br;' => '<br />',
+	"COLOR\(([^\(\)]*)\){([^}]*)}"	=> '<span style="color:$1">$2</span>',
+	"SIZE\(([^\(\)]*)\){([^}]*)}"	=> '<span style="font-size:$1px">$2</span>',
+	"COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)"	=> '<span style="color:$1">$2</span>',
+	"SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)"	=> '<span class="size$1">$2</span>',
+	"%%%(?!%)((?:(?!%%%).)*)%%%"	=> '<ins>$1</ins>',
+	"%%(?!%)((?:(?!%%).)*)%%"	=> '<del>$1</del>',
+	"'''(?!')((?:(?!''').)*)'''"	=> '<em>$1</em>',
+	"''(?!')((?:(?!'').)*)''"	=> '<strong>$1</strong>',
+	'&amp;br;'	=> '<br />',
 );
+
+/////////////////////////////////////////////////
+// フェイスマーク定義ルール(コンバート時に置換)
+
+// $usefacemark = 1ならフェイスマークが置換されます
+// 文章内にXDなどが入った場合にfacemarkに置換されてしまうので
+// 必要のない方は $usefacemarkを0にしてください。
+
+$facemark_rules = array(
+	// Face marks
+	'\s(\:\))'	=> ' <img alt="$1" src="./face/smile.png" />',
+	'\s(\:D)'	=> ' <img alt="$1" src="./face/bigsmile.png" />',
+	'\s(\:p)'	=> ' <img alt="$1" src="./face/huh.png" />',
+	'\s(\:d)'	=> ' <img alt="$1" src="./face/huh.png" />',
+	'\s(XD)'	=> ' <img alt="$1" src="./face/oh.png" />',
+	'\s(X\()'	=> ' <img alt="$1" src="./face/oh.png" />',
+	'\s(;\))'	=> ' <img alt="$1" src="./face/wink.png" />',
+	'\s(;\()'	=> ' <img alt="$1" src="./face/sad.png" />',
+	'\s(\:\()'	=> ' <img alt="$1" src="./face/sad.png" />',
+	'&amp;(smile);'	=> ' <img alt="$1" src="./face/smile.png" />',
+	'&amp;(bigsmile);'=> ' <img alt="$1" src="./face/bigsmile.png" />',
+	'&amp;(huh);'	=> ' <img alt="$1" src="./face/huh.png" />',
+	'&amp;(oh);'	=> ' <img alt="$1" src="./face/oh.png" />',
+	'&amp;(wink);'	=> ' <img alt="$1" src="./face/wink.png" />',
+	'&amp;(sad);'	=> ' <img alt="$1" src="./face/sad.png" />',
+	'&amp;(heart);'	=> ' <img alt="$1" src="./face/heart.png" />',
+	'&amp;(sweat);'	=> ' <img alt="$1" src="./face/sweat.png" />',
+
+	// Face marks, Japanese style
+	'(\(\^\^\))'	=> ' <img alt="$1" src="./face/smile.png" />',
+	'(\(\^-\^)'	=> ' <img alt="$1" src="./face/bigsmile.png" />',
+	'(\(\.\.;)'	=> ' <img alt="$1" src="./face/oh.png" />',
+	'(\(\^_-\))'	=> ' <img alt="$1" src="./face/wink.png" />',
+	'(\(--;)'	=> ' <img alt="$1" src="./face/sad.png" />',
+	'(\(\^\^;)'	=> ' <img alt="$1" src="./face/sweat.png" />',
+	'(\(\^\^;\))'	=> ' <img alt="$1" src="./face/sweat.png" />',
+
+	// Push buttons, 0-9 and sharp (Compatibility with cell phones)
+	'&amp;(pb1);'	=> '[1]',
+	'&amp;(pb2);'	=> '[2]',
+	'&amp;(pb3);'	=> '[3]',
+	'&amp;(pb4);'	=> '[4]',
+	'&amp;(pb5);'	=> '[5]',
+	'&amp;(pb6);'	=> '[6]',
+	'&amp;(pb7);'	=> '[7]',
+	'&amp;(pb8);'	=> '[8]',
+	'&amp;(pb9);'	=> '[9]',
+	'&amp;(pb0);'	=> '[0]',
+	'&amp;(pb#);'	=> '[#]',
+);
+
 ?>
