@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mail.php,v 1.5 2004/07/17 13:24:27 henoheno Exp $
+// $Id: mail.php,v 1.6 2004/07/17 14:56:40 henoheno Exp $
 //
 
 // APOP/POP Before SMTP
@@ -35,7 +35,7 @@ function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 
 	// Greeting message from server, may include <challenge-string> of APOP
 	$message = fgets($fp, 1024); // 512byte max
-	if (! preg_match('/^\+OK /', $message)) {
+	if (! preg_match('/^\+OK/', $message)) {
 		fclose($fp);
 		return ("pop_before_smtp(): Greeting message seems invalid");
 	}
@@ -54,7 +54,7 @@ function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 		$method = 'POP'; // POP auth
 		fputs($fp, 'USER ' . $pop_userid . "\r\n");
 		$message = fgets($fp, 1024); // 512byte max
-		if (! preg_match('/^\+OK /', $message)) {
+		if (! preg_match('/^\+OK/', $message)) {
 			fclose($fp);
 			return ("pop_before_smtp(): USER seems invalid");
 		}
@@ -62,12 +62,16 @@ function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 	}
 	$result = fgets($fp, 1024); // 512byte max, auth result
 
+	// STAT, trigger SMTP relay!
+	fputs($fp, "STAT\r\n");
+	$message = fgets($fp, 1024); // 512byte max
+
 	// Disconnect
 	fputs($fp, "QUIT\r\n");
 	$message = fgets($fp, 1024); // 512byte max, last "+OK"
 	fclose($fp);
 
-	if (! preg_match('/^\+OK /', $result)) {
+	if (! preg_match('/^\+OK/', $result)) {
 		return ("pop_before_smtp(): $method authentication failed");
 	} else {
 		return TRUE;	// Success
