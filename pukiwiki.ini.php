@@ -1,15 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.108 2005/01/23 13:55:22 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.109 2005/01/25 14:17:53 henoheno Exp $
 //
-// PukiWiki setting file
+// PukiWiki main setting file
 
 /////////////////////////////////////////////////
 // Functionality settings
-
-// PKWK_READONLY - Prohibit editing (Not work yet)
-if (! defined('PKWK_READONLY'))
-	define('PKWK_READONLY', 0); // 0 or 1
 
 // PKWK_OPTIMISE - Ignore verbose but understandable checking and warning
 //   If you end testing this PukiWiki, set '1'.
@@ -20,7 +16,12 @@ if (! defined('PKWK_OPTIMISE'))
 /////////////////////////////////////////////////
 // Security settings
 
-// PKWK_SAFE_MODE - prohibits some unsafe(but compatible) functions 
+// PKWK_READONLY - Prohibits editing and maintain via WWW
+//   NOTE: Counter-related functions will work now (counter, attach count, etc)
+if (! defined('PKWK_READONLY'))
+	define('PKWK_READONLY', 0); // 0 or 1
+
+// PKWK_SAFE_MODE - Prohibits some unsafe(but compatible) functions 
 if (! defined('PKWK_SAFE_MODE'))
 	define('PKWK_SAFE_MODE', 0);
 
@@ -93,10 +94,10 @@ $page_title = 'PukiWiki';
 // Shorten $script: Cut its file name (default: not cut)
 //$script_directory_index = 'index.php';
 
-// Site admin's name (Change this)
+// Site admin's name (CHANGE THIS)
 $modifier = 'anonymous';
 
-// Site admin's Web page (Change this)
+// Site admin's Web page (CHANGE THIS)
 $modifierlink = 'http://pukiwiki.example.com/';
 
 // Defautl page name
@@ -153,31 +154,36 @@ $function_freeze = 1;
 /////////////////////////////////////////////////
 // Wikisite admin password
 
-// Change this
+// CHANGE THIS
 $adminpass = '1a1dc91c907325c69271ddf0c944bc72'; // md5('pass')
 
 /////////////////////////////////////////////////
-// ChaSen, KAKASI による、ページ名の読みの取得 (0:無効,1:有効)
+// Page-reading feature settings
+// (Automatically creating pronounce datas, for Kanji-included page names,
+//  to show sorted page-list correctly)
+
+// Enable page-reading feature by calling ChaSen or KAKASHI command (0:Enable, 1:Disable)
 $pagereading_enable = 0;
 
-// ChaSen('chasen') or KAKASI('kakasi') or None('none')
+// Specify converter as ChaSen('chasen') or KAKASI('kakasi') or None('none')
 $pagereading_kanji2kana_converter = 'none';
 
-// ChaSen/KAKASI との受け渡しに使う漢字コード (UNIX系は EUC、Win系は SJIS が基本)
-$pagereading_kanji2kana_encoding = 'EUC';
-//$pagereading_kanji2kana_encoding = 'SJIS';
+// Specify Kanji encoding to pass data between PukiWiki and the converter
+$pagereading_kanji2kana_encoding = 'EUC'; // Default for Unix
+//$pagereading_kanji2kana_encoding = 'SJIS'; // Default for Windows
 
-// ChaSen/KAKASI の実行ファイル (各自の環境に合わせて設定)
+// Absolute path of the converter (ChaSen)
 $pagereading_chasen_path = '/usr/local/bin/chasen';
 //$pagereading_chasen_path = 'c:\progra~1\chasen21\chasen.exe';
 
+// Absolute path of the converter (KAKASI)
 $pagereading_kakasi_path = '/usr/local/bin/kakasi';
 //$pagereading_kakasi_path = 'c:\kakasi\bin\kakasi.exe';
 
-// ページ名読みを格納したページの名前
+// Page name contains pronounce data (written by the converter)
 $pagereading_config_page = ':config/PageReading';
 
-// converter ='none' の場合の読み仮名辞書
+// Page name of default pronouncing dictionary, used when converter = 'none'
 $pagereading_config_dict = ':config/PageReading/dict';
 
 /////////////////////////////////////////////////
@@ -368,15 +374,11 @@ $line_break = 0;
 /////////////////////////////////////////////////
 // User-Agent settings
 //
-// リッチクライアントを前提としたサイトを構築する
-// ために、携帯電話などに意図的に非対応としたい場合、
-// 最後のデフォルト設定以外の行を全て削除あるいは
-// コメントアウトして下さい。
+// If you want to ignore embedded browsers for rich-content-wikisite,
+// remove (or comment-out) all 'keitai' settings.
 //
-// デザインやスタイルを簡素なkeitaiプロファイルに
-// 統一したい時は、デフォルト設定以外の行を全て削除
-// あるいはコメントアウトした後に、デフォルト設定を
-// 'profile'=>'keitai' と修正して下さい。
+// If you want to to ignore desktop-PC browsers for simple wikisite,
+// copy keitai.ini.php to default.ini.php and customize it.
 
 $agents = array(
 // pattern: A regular-expression that matches device(browser)'s name and version
