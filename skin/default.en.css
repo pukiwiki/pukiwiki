@@ -611,6 +611,22 @@ span.new5
 	font-size:xx-small;
 }
 
+/* popular.inc.php */
+span.counter
+{
+	font-size:70%;
+}
+ul.popular_list
+{
+/*
+	padding:0px;
+	border:0px;
+	margin:0px 0px 0px 1em;
+	word-wrap:break-word;
+	word-break:break-all;
+*/
+}
+
 /* recent.inc.php,showrss.inc.php */
 ul.recent_list
 {

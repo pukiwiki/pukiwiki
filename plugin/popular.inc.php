@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: popular.inc.php,v 1.4 2003/07/03 05:24:43 arino Exp $
+// $Id: popular.inc.php,v 1.5 2003/07/11 11:11:17 arino Exp $
 //
 
 /*
@@ -83,7 +83,7 @@ function plugin_popular_convert()
 	
 	$items = '';
 	if (count($counters)) {
-		$items = '<ul class="recent_list">';
+		$items = '<ul class="popular_list">';
 		
 		foreach ($counters as $page=>$count) {
 			$page = substr($page,1);
