@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.26 2003/10/01 07:00:34 arino Exp $
+// $Id: pcomment.inc.php,v 1.27 2004/07/10 03:38:06 henoheno Exp $
 //
 
 /*
@@ -57,28 +57,24 @@ define('PCMT_TIMESTAMP',0);
 
 function plugin_pcomment_action()
 {
-	global $script,$post,$vars;
+	global $script, $vars;
 	
-	if ($post['msg'] == '')
-	{
-		return array();
-	}
+	if (! isset($vars['msg']) || $vars['msg'] == '') return array();
+	$refer = isset($vars['refer']) ? $vars['refer'] : '';
 	
 	$retval = pcmt_insert();
-	
-	if ($retval['collided'])
-	{
-		$vars['page'] = $post['page'] = $post['refer'];
+	if ($retval['collided']) {
+		$vars['page'] = $refer;
 		return $retval;
 	}
 	
-	header("Location: $script?".rawurlencode($post['refer']));
+	header("Location: $script?" . rawurlencode($refer));
 	exit;
 }
 
 function plugin_pcomment_convert()
 {
-	global $script,$vars;
+	global $script, $vars;
 	global $_pcmt_messages;
 	
 	//戻り値
@@ -96,38 +92,28 @@ function plugin_pcomment_convert()
 	array_walk(func_get_args(), 'pcmt_check_arg', &$params);
 	
 	//文字列を取得
-	$page = array_key_exists(0,$params['_args']) ? $params['_args'][0] : '';
-	$count = array_key_exists(1,$params['_args']) ? $params['_args'][1] : 0;
-	
-	if ($page == '')
-	{
-		$page = sprintf(PCMT_PAGE,strip_bracket($vars['page']));
-	}
-	
-	$_page = get_fullname(strip_bracket($page),$vars['page']);
-	if (!is_pagename($_page))
-	{
-		return sprintf($_pcmt_messages['err_pagename'],htmlspecialchars($_page));
-	}
-	if ($count == 0 and $count !== '0')
-	{
+	$vars_page = isset($vars['page']) ? $vars['page'] : '';
+	$page  = isset($params['_args'][0]) ? $params['_args'][0] : sprintf(PCMT_PAGE, strip_bracket($vars_page));
+	$count = isset($params['_args'][1]) ? $params['_args'][1] : 0;
+	if ($count == 0 and $count !== '0') {
 		$count = PCMT_NUM_COMMENTS;
 	}
 	
-	//向きを決定
+	$_page = get_fullname(strip_bracket($page), $vars_page);
+	if (!is_pagename($_page))
+		return sprintf($_pcmt_messages['err_pagename'], htmlspecialchars($_page));
+
+	//新しいコメントを追加する方向を決定
 	$dir = PCMT_INSERT_INS;
-	if ($params['above'])
-	{
+	if ($params['below']) {
+		$dir = 0;	// 両方指定されたら、formの下に (^^;
+	} elseif ($params['above']) {
 		$dir = 1;
 	}
-	if ($params['below']) //両方指定されたら下に (^^;
-	{
-		$dir = 0;
-	}
-	
+
 	//コメントを取得
-	list($comments, $digest) = pcmt_get_comments($_page,$count,$dir,$params['reply']);
-	
+	list($comments, $digest) = pcmt_get_comments($_page, $count, $dir, $params['reply']);
+
 	//フォームを表示
 	if ($params['noname'])
 	{
@@ -143,21 +129,21 @@ function plugin_pcomment_convert()
 	$radio = $params['reply'] ? '<input type="radio" name="reply" value="0" tabindex="0" checked="checked" />' : '';
 	$comment = '<input type="text" name="msg" size="'.PCMT_COLS_COMMENT.'" />';
 	
-	//XSS脆弱性問題 - 外部から来た変数をエスケープ
-	$s_page = htmlspecialchars($page);
-	$s_refer = htmlspecialchars($vars['page']);
+	//XSS脆弱性対策 - 外部から来た変数をエスケープ
+	$s_page   = htmlspecialchars($page);
+	$s_refer  = htmlspecialchars($vars_page);
 	$s_nodate = htmlspecialchars($params['nodate']);
-	$s_count = htmlspecialchars($count);
+	$s_count  = htmlspecialchars($count);
 	
 	$form = <<<EOD
   <div>
   <input type="hidden" name="digest" value="$digest" />
   <input type="hidden" name="plugin" value="pcomment" />
-  <input type="hidden" name="refer" value="$s_refer" />
-  <input type="hidden" name="page" value="$s_page" />
+  <input type="hidden" name="refer"  value="$s_refer" />
+  <input type="hidden" name="page"   value="$s_page" />
   <input type="hidden" name="nodate" value="$s_nodate" />
-  <input type="hidden" name="dir" value="$dir" />
-  <input type="hidden" name="count" value="$count" />
+  <input type="hidden" name="dir"    value="$dir" />
+  <input type="hidden" name="count"  value="$count" />
   $radio $title $name $comment
   <input type="submit" value="{$_pcmt_messages['btn_comment']}" />
   </div>
@@ -181,14 +167,12 @@ EOD;
 
 function pcmt_insert()
 {
-	global $script,$vars,$post,$now;
-	global $_title_updated,$_no_name,$_pcmt_messages;
+	global $script, $vars, $now;
+	global $_title_updated, $_no_name, $_pcmt_messages;
 	
-	$page = $post['page'];
+	$page = isset($vars['page']) ? $vars['page'] : '';
 	if (!is_pagename($page))
-	{
-		return array('msg'=>'invalid page name.','body'=>'cannot add comment.','collided'=>TRUE);
-	}
+		return array('msg'=>'invalid page name.', 'body'=>'cannot add comment.' , 'collided'=>TRUE);
 	
 	check_editable($page, true, true);
 	
@@ -198,36 +182,38 @@ function pcmt_insert()
 	);
 	
 	//コメントフォーマットを適用
-	$msg = str_replace('$msg',rtrim($post['msg']),PCMT_MSG_FORMAT);
-	$name = $post['name'] == '' ? $_no_name : $post['name'];
-	$name = ($name == '') ? '' : str_replace('$name',$name,PCMT_NAME_FORMAT);
-	$date = ($post['nodate'] == '1') ? '' : str_replace('$now',$now,PCMT_NOW_FORMAT);
+	$msg = str_replace('$msg', rtrim($vars['msg']), PCMT_MSG_FORMAT);
+
+	$name = (! isset($vars['name']) || $vars['name'] == '') ? $_no_name : $vars['name'];
+	$name = ($name == '') ? '' : str_replace('$name', $name, PCMT_NAME_FORMAT);
+
+	$date = (! isset($vars['nodate']) || $vars['nodate'] != '1') ? str_replace('$now', $now, PCMT_NOW_FORMAT) : '';
 	if ($date != '' or $name != '')
 	{
 		$msg = str_replace("\x08MSG\x08", $msg,  PCMT_FORMAT);
 		$msg = str_replace("\x08NAME\x08",$name, $msg);
 		$msg = str_replace("\x08DATE\x08",$date, $msg);
 	}
-	$reply_hash = array_key_exists('reply',$post) ? $post['reply'] : '';
+
+	$reply_hash = isset($vars['reply']) ? $vars['reply'] : '';
 	if ($reply_hash or !is_page($page))
 	{
 		$msg = preg_replace('/^\-+/','',$msg);
 	}
 	$msg = rtrim($msg);
-	
-	if (!is_page($page))
-	{
-		$postdata = '[['.htmlspecialchars(strip_bracket($post['refer']))."]]\n\n-$msg\n";
-	}
-	else
-	{
+
+	$refer = isset($vars['refer']) ? $vars['refer'] : '';
+	if (! is_page($page)) {
+		$postdata = '[[' . htmlspecialchars(strip_bracket($refer)) . "]]\n\n-$msg\n";
+	} else {
 		//ページを読み出す
 		$postdata = get_source($page);
 		
 		// 更新の衝突を検出
-		if (md5(join('',$postdata)) != $post['digest'])
+		$digest = isset($vars['digest']) ? $vars['digest'] : '';
+		if (md5(join('', $postdata)) != $digest)
 		{
-			$ret['msg'] = $_pcmt_messages['title_collided'];
+			$ret['msg']  = $_pcmt_messages['title_collided'];
 			$ret['body'] = $_pcmt_messages['msg_collided'];
 		}
 		
@@ -245,12 +231,15 @@ function pcmt_insert()
 			$pos++;
 		}
 		$start_pos = $pos;
+
+		$dir = isset($vars['dir']) ? $vars['dir'] : '';
 		//リプライ先のコメントを検索
 		if ($reply_hash != '')
 		{
 			while ($pos < count($postdata))
 			{
-				if (preg_match('/^(\-{1,2})(?!\-)(.*)$/',$postdata[$pos++],$matches)
+				$matches = array();
+				if (preg_match('/^(\-{1,2})(?!\-)(.*)$/', $postdata[$pos++], $matches)
 					and md5($matches[2]) == $reply_hash)
 				{
 					$level = strlen($matches[1]) + 1; //挿入するレベル
@@ -271,10 +260,10 @@ function pcmt_insert()
 		}
 		else
 		{
-			$pos = ($post['dir'] == 0) ? $start_pos : count($postdata);
+			$pos = ($dir == 0) ? $start_pos : count($postdata);
 		}
 		
-		if ($post['dir'] == '0')
+		if ($dir == '0')
 		{
 			if ($pos == count($postdata))
 			{
@@ -290,54 +279,54 @@ function pcmt_insert()
 		}
 		
 		//コメントを挿入
-		array_splice($postdata,$pos,0,str_repeat('-',$level)."$msg\n");
+		array_splice($postdata, $pos, 0, str_repeat('-', $level) . "$msg\n");
 		
 		// 過去ログ処理
-		pcmt_auto_log($page,$post['dir'],$post['count'],$postdata);
+		$count = isset($vars['count']) ? $vars['count'] : '';
+		pcmt_auto_log($page, $dir, $count, $postdata);
 		
-		$postdata = join('',$postdata);
+		$postdata = join('', $postdata);
 	}
 	page_write($page,$postdata,PCMT_TIMESTAMP);
+
 	if (PCMT_TIMESTAMP)
 	{
 		// 親ページのタイムスタンプを更新する
-		touch(get_filename($post['refer']));
+		if ($refer != '') touch(get_filename($refer));
 		put_lastmodified();
 	}
 	return $ret;
 }
+
 // 過去ログ処理
-function pcmt_auto_log($page,$dir,$count,&$postdata)
+function pcmt_auto_log($page, $dir, $count, &$postdata)
 {
 	if (!PCMT_AUTO_LOG)
-	{
 		return;
-	}
-	$keys = array_keys(preg_grep('/(?:^-(?!-).*$)/m',$postdata));
+
+	$keys = array_keys(preg_grep('/(?:^-(?!-).*$)/m', $postdata));
 	if (count($keys) < (PCMT_AUTO_LOG + $count))
-	{
 		return;
+
+	if ($dir) { //前からPCMT_AUTO_LOG件
+		$old = array_splice($postdata, $keys[0], $keys[PCMT_AUTO_LOG] - $keys[0]);
+	} else { //後ろからPCMT_AUTO_LOG件
+		$old = array_splice($postdata, $keys[count($keys) - PCMT_AUTO_LOG]);
 	}
-	if ($dir) //前からPCMT_AUTO_LOG件
-	{
-		$old = array_splice($postdata,$keys[0],$keys[PCMT_AUTO_LOG] - $keys[0]);
-	}
-	else //後ろからPCMT_AUTO_LOG件
-	{
-		$old = array_splice($postdata,$keys[count($keys) - PCMT_AUTO_LOG]);
-	}
+
 	// ページ名を決定
 	$i = 0;
 	do {
-		$i++;
+		++$i;
 		$_page = "$page/$i";
 	} while (is_page($_page));
 	
-	page_write($_page,"[[$page]]\n\n".join('',$old));
+	page_write($_page, "[[$page]]\n\n" . join('', $old));
 	
 	// 繰り返す :)
-	pcmt_auto_log($page,$dir,$count,$postdata);
+	pcmt_auto_log($page, $dir, $count, $postdata);
 }
+
 //オプションを解析する
 function pcmt_check_arg($val, $key, &$params)
 {
@@ -356,23 +345,18 @@ function pcmt_check_arg($val, $key, &$params)
 	$params['_args'][] = $val;
 }
 
-function pcmt_get_comments($page,$count,$dir,$reply)
+function pcmt_get_comments($page, $count, $dir, $reply)
 {
 	global $_msg_pcomment_restrict;
 	
 	if (!check_readable($page, false, false))
-	{
-		return array(str_replace('$1',$page,$_msg_pcomment_restrict));
-	}
+		return array(str_replace('$1', $page, $_msg_pcomment_restrict));
 	
 	$data = get_source($page);
-	
 	if (!is_array($data))
-	{
 		return array('',0);
-	}
 	
-	$digest = md5(join('',$data));
+	$digest = md5(join('', $data));
 	
 	//コメントを指定された件数だけ切り取る
 	if ($dir)
@@ -380,38 +364,34 @@ function pcmt_get_comments($page,$count,$dir,$reply)
 		$data = array_reverse($data);
 	}
 	$num = $cnt = 0;
-	$cmts = array();
+	$cmts = $matches = array();
 	foreach ($data as $line)
 	{
 		if ($count > 0 and $dir and $cnt == $count)
-		{
 			break;
-		}
+
 		if (preg_match('/^(\-{1,2})(?!\-)(.+)$/', $line, $matches))
 		{
 			if ($count > 0 and strlen($matches[1]) == 1 and ++$cnt > $count)
-			{
 				break;
-			}
+
 			if ($reply)
 			{
 				++$num;
-				$cmts[] = "$matches[1]\x01$num\x02".md5($matches[2])."\x03$matches[2]\n";
+				$cmts[] = "$matches[1]\x01$num\x02" . md5($matches[2]) . "\x03$matches[2]\n";
 				continue;
 			}
 		}
 		$cmts[] = $line;
 	}
 	$data = $cmts;
-	if ($dir)
-	{
+	if ($dir) {
 		$data = array_reverse($data);
 	}
-	unset($cmts);
+	unset($cmts, $matches);
 	
 	//コメントより前のデータを取り除く。
-	while (count($data) > 0 and substr($data[0],0,1) != '-')
-	{
+	while (count($data) > 0 and substr($data[0], 0, 1) != '-') {
 		array_shift($data);
 	}
 	
@@ -422,8 +402,8 @@ function pcmt_get_comments($page,$count,$dir,$reply)
 	//コメントにラジオボタンの印をつける
 	if ($reply)
 	{
-		$comments = preg_replace("/<li>\x01(\d+)\x02(.*)\x03/",'<li class="pcmt"><input class="pcmt" type="radio" name="reply" value="$2" tabindex="$1" />', $comments);
+		$comments = preg_replace("/<li>\x01(\d+)\x02(.*)\x03/", '<li class="pcmt"><input class="pcmt" type="radio" name="reply" value="$2" tabindex="$1" />', $comments);
 	}
-	return array($comments,$digest);
+	return array($comments, $digest);
 }
 ?>
