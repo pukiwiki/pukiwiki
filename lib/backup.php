@@ -11,7 +11,7 @@
  * @access  public
  * @author
  * @create
- * @version $Id: backup.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
+ * @version $Id: backup.php,v 1.2 2004/08/01 13:39:35 henoheno Exp $
  **/
 
 /**
@@ -44,8 +44,6 @@ function make_backup($page,$delete = FALSE)
 	{
 		return;
 	}
-
-	$arystrout = array();
 
 	$lastmod = backup_get_filetime($page);
 	if (($lastmod == 0) or (UTIME - $lastmod) > (60 * 60 * $cycle))
@@ -104,21 +102,16 @@ function get_backup($page,$age = 0)
 	}
 
 	$_age = 0;
-	$retvars = array();
-
+	$retvars = $match = array();
 	foreach($lines as $line)
 	{
-		if (preg_match("/^$splitter\s(\d+)$/",$line,$match))
-		{
-			$_age++;
-			if ($age > 0 and $_age > $age)
-			{
+		if (preg_match("/^$splitter\s(\d+)$/", $line, $match)) {
+			++$_age;
+			if ($age > 0 and $_age > $age) {
 				return $retvars[$age];
 			}
-			$retvars[$_age] = array('time'=>$match[1],'data'=>array());
-		}
-		else
-		{
+			$retvars[$_age] = array('time'=>$match[1], 'data'=>array());
+		} else {
 			$retvars[$_age]['data'][] = $line;
 		}
 	}
