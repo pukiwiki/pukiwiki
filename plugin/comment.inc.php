@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.inc.php,v 1.9 2002/11/29 00:09:01 panda Exp $
+// $Id: comment.inc.php,v 1.9.2.1 2003/04/01 07:17:51 panda Exp $
 
 global $name_cols, $comment_cols, $msg_format, $name_format;
 global $msg_format, $now_format, $comment_format;
@@ -19,7 +19,7 @@ $msg_format = '$msg';
 $now_format = 'SIZE(10){$now}';
 /////////////////////////////////////////////////
 // コメントの挿入フォーマット(コメント内容)
-$comment_format = '$msg -- $name $now';
+$comment_format = "\x08MSG\x08 -- \x08NAME\x08 \x08NOW\x08";
 /////////////////////////////////////////////////
 // コメントを挿入する位置 1:欄の前 0:欄の後
 $comment_ins = 1;
@@ -68,9 +68,9 @@ function plugin_comment_action()
 				$post["msg"] = $match[2];
 			}
 			
-			$comment = str_replace('$msg',str_replace('$msg',$post["msg"],$msg_format),$_comment_format);
-			$comment = str_replace('$name',$name,$comment);
-			$comment = str_replace('$now',str_replace('$now',$now,$now_format),$comment);
+			$comment = str_replace("\x08MSG\x08",str_replace('$msg',$post["msg"],$msg_format),$_comment_format);
+			$comment = str_replace("\x08NAME\x08",$name,$comment);
+			$comment = str_replace("\x08NOW\x08",str_replace('$now',$now,$now_format),$comment);
 			$comment = $head.$comment;
 		}
 
