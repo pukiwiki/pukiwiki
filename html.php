@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.45 2002/12/05 01:12:53 panda Exp $
+// $Id: html.php,v 1.46 2002/12/19 11:44:20 panda Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -413,7 +413,7 @@ function inline($line,$remove=FALSE)
 {
 	$line = htmlspecialchars($line);
 	
-	$replace = $remove ? '' : 'make_note("$1")';
+	$replace = $remove ? '' : 'make_note(\'$1\')';
 	$line = preg_replace("/\(\(((?:(?!\)\)).)*)\)\)/ex",$replace,$line);
 
 	return $line;
