@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.3 2002/06/21 12:33:29 masui Exp $
+// $Id: html.php,v 1.4 2002/06/22 09:31:43 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -229,7 +229,7 @@ function convert_html($string)
 
 	$longtaketime = getmicrotime() - $start_mtime;
 
-	$str = preg_replace("/&((amp)|(quot)|(nbsp)|(lt)|(gt));/","&$1;",$str);
+#	$str = preg_replace("/&((amp)|(quot)|(nbsp)|(lt)|(gt));/","&$1;",$str);
 
 	return $str;
 }
@@ -593,17 +593,14 @@ function make_link($name)
 
 	if(preg_match("/^\[\[([^\]]+)\:((https?|ftp|news)([^\]]+))\]\]$/",$name,$match))
 	{
-		$match[2] = str_replace($aryconv_htmlspecial,$aryconv_html,$match[2]);
 		return "<a href=\"$match[2]\" target=\"$link_target\">$match[1]</a>";
 	}
 	else if(preg_match("/^\[((https?|ftp|news)([^\]\s]+))\s([^\]]+)\]$/",$name,$match))
 	{
-		$match[1] = str_replace($aryconv_htmlspecial,$aryconv_html,$match[1]);
 		return "<a href=\"$match[1]\" target=\"$link_target\">$match[4]</a>";
 	}
 	else if(preg_match("/^(https?|ftp|news).*?(\.gif|\.png|\.jpeg|\.jpg)?$/",$name,$match))
 	{
-		$name = str_replace($aryconv_htmlspecial,$aryconv_html,$name);
 		if($match[2])
 			return "<a href=\"$name\" target=\"$link_target\"><img src=\"$name\" border=\"0\"></a>";
 		else
@@ -611,17 +608,13 @@ function make_link($name)
 	}
 	else if(preg_match("/^\[\[([^\]]+)\:([[:alnum:]\-_.]+@[[:alnum:]\-_]+\.[[:alnum:]\-_\.]+)\]\]/",$name,$match))
 	{
-		$match[1] = str_replace($aryconv_htmlspecial,$aryconv_html,$match[1]);
-		$match[2] = str_replace($aryconv_htmlspecial,$aryconv_html,$match[2]);
-
 		return "<a href=\"mailto:$match[2]\">$match[1]</a>";
 	}
 	else if(preg_match("/^([[:alnum:]\-_]+@[[:alnum:]\-_]+\.[[:alnum:]\-_\.]+)/",$name))
 	{
-		$name = str_replace($aryconv_htmlspecial,$aryconv_html,$name);
 		return "<a href=\"mailto:$name\">$page</a>";
 	}
-	else if(preg_match("/^($InterWikiName)$/",str_replace($aryconv_htmlspecial,$aryconv_html,$name)))
+	else if(preg_match("/^($InterWikiName)$/",$name))
 	{
 		$page = strip_bracket($page);
 		$percent_name = str_replace($aryconv_htmlspecial,$aryconv_html,$name);
@@ -629,9 +622,9 @@ function make_link($name)
 
 		return "<a href=\"$script?$percent_name\" target=\"$interwiki_target\">$page</a>";
 	}
-	else if(preg_match("/^($BracketName)|($WikiName)$/",str_replace($aryconv_htmlspecial,$aryconv_html,$name)))
+	else if(preg_match("/^($BracketName)|($WikiName)$/",$name))
 	{
-		if(preg_match("/^([^>]+)>([^>]+)$/",strip_bracket(str_replace($aryconv_htmlspecial,$aryconv_html,$name)),$match))
+		if(preg_match("/^([^>]+)>([^>]+)$/",strip_bracket($name),$match))
 		{
 			$page = $match[1];
 			$name = $match[2];
@@ -641,14 +634,14 @@ function make_link($name)
 				$name = "[[$name]]";
 		}
 		
-		if(preg_match("/^\[\[\.\/([^\]]*)\]\]/",str_replace($aryconv_htmlspecial,$aryconv_html,$name),$match))
+		if(preg_match("/^\[\[\.\/([^\]]*)\]\]/",$name,$match))
 		{
 			if(!$match[1])
 				$name = $vars["page"];
 			else
-				$name = "[[".strip_bracket($vars[page])."/$match[1]]]";
+				$name = "[[".strip_bracket($vars["page"])."/$match[1]]]";
 		}
-		else if(preg_match("/^\[\[\..\/([^\]]+)\]\]/",str_replace($aryconv_htmlspecial,$aryconv_html,$name),$match))
+		else if(preg_match("/^\[\[\..\/([^\]]+)\]\]/",$name,$match))
 		{
 			for($i=0;$i<substr_count($name,"../");$i++)
 				$name = preg_replace("/(.+)\/([^\/]+)$/","$1",strip_bracket($vars["page"]));

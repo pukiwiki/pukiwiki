@@ -26,7 +26,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.3 2002/06/21 12:33:29 masui Exp $
+// $Id: pukiwiki.php,v 1.4 2002/06/22 09:31:43 masui Exp $
 /////////////////////////////////////////////////
 
 
@@ -400,10 +400,10 @@ else if(arg_check("diff"))
 		$title = str_replace('$1',strip_bracket($get["page"]),$_title_diff);
 		$page = str_replace('$1',make_search($get["page"]),$_title_diff);
 
-		$diffdata = get_source($get["page"]);
+		$diffdata = htmlspecialchars(join("",get_source($get["page"])));
 		$body .= "<font color=\"blue\">\n"
 			."<pre>\n"
-			.join("",$diffdata)
+			.$diffdata
 			."\n"
 			."</pre>\n"
 			."</font>\n";
@@ -414,6 +414,7 @@ else if(arg_check("diff"))
 		$page = str_replace('$1',make_search($get["page"]),$_title_diff);
 
 		$diffdata = file(DIFF_DIR.encode($get["page"]).".txt");
+		$diffdata = preg_replace("/&/","&amp;",$diffdata);
 		$diffdata = preg_replace("/</","&lt;",$diffdata);
 		$diffdata = preg_replace("/>/","&gt;",$diffdata);
 		$diffdata = preg_replace("/^(\-)(.*)/","<font color=\"red\"> $2</font>",$diffdata);
@@ -430,7 +431,7 @@ else if(arg_check("search"))
 {
 	if($vars["word"])
 	{
-		$title = $page = str_replace('$1',$vars["word"],$_title_result);
+		$title = $page = str_replace('$1',htmlspecialchars($vars["word"]),$_title_result);
 	}
 	else
 	{
@@ -446,7 +447,7 @@ else if(arg_check("search"))
 	else if($vars["type"]=="OR")               $or_check = "checked";
 
 	$body .= "<form action=\"$script?cmd=search\" method=\"post\">\n"
-		."<input type=\"text\" name=\"word\" size=\"20\" value=\"".$vars["word"]."\">\n"
+		."<input type=\"text\" name=\"word\" size=\"20\" value=\"".htmlspecialchars($vars["word"])."\">\n"
 		."<input type=\"radio\" name=\"type\" value=\"AND\" $and_check>$_btn_and\n"
 		."<input type=\"radio\" name=\"type\" value=\"OR\" $or_check>$_btn_or\n"
 		."&nbsp;<input type=\"submit\" value=\"$_btn_search\">\n"
@@ -515,7 +516,7 @@ else if($do_backup && arg_check("backup"))
 			$title = str_replace('$1',$pagename,$_title_backupdiff)."(No.$get[age])";
 			$page = str_replace('$1',make_search($get["page"]),$_title_backupdiff)."(No.$get[age])";
 			
-			$backupdata = @join("",get_backup($get[age]-1,encode($get["page"]).".txt"));
+			$backupdata = htmlspecialchars(@join("",get_backup($get[age]-1,encode($get["page"]).".txt")));
 			$postdata = @join("",get_backup($get[age],encode($get["page"]).".txt"));
 			$diffdata = split("\n",do_diff($backupdata,$postdata));
 		}
@@ -524,7 +525,7 @@ else if($do_backup && arg_check("backup"))
 			$title = str_replace('$1',$pagename,$_title_backupnowdiff)."(No.$get[age])";
 			$page = str_replace('$1',make_search($get["page"]),$_title_backupnowdiff)."(No.$get[age])";
 			
-			$backupdata = @join("",get_backup($get[age],encode($get["page"]).".txt"));
+			$backupdata = htmlspecialchars(@join("",get_backup($get[age],encode($get["page"]).".txt")));
 			$postdata = @join("",get_source($get["page"]));
 			$diffdata = split("\n",do_diff($backupdata,$postdata));
 		}
@@ -532,7 +533,7 @@ else if($do_backup && arg_check("backup"))
 		{
 			$title = str_replace('$1',$pagename,$_title_backupsource)."(No.$get[age])";
 			$page = str_replace('$1',make_search($get["page"]),$_title_backupsource)."(No.$get[age])";
-			$backupdata = join("",get_backup($get[age],encode($get["page"]).".txt"));
+			$backupdata = htmlspecialchars(join("",get_backup($get[age],encode($get["page"]).".txt")));
 			
 			$body.="</ul>\n<pre>\n$backupdata</pre>\n";
 		}

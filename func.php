@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.1 2002/06/21 05:21:46 masui Exp $
+// $Id: func.php,v 1.2 2002/06/22 09:31:43 masui Exp $
 /////////////////////////////////////////////////
 
 // ¸¡º÷
@@ -92,13 +92,13 @@ function do_search($word,$type="AND",$non_format=0)
 		$retvals = "<ul>\n" . join("\n",$retval) . "</ul>\n<br>\n";
 		
 		if($type=="AND")
-			$retvals.= str_replace('$1',$result_word,str_replace('$2',count($retval),str_replace('$3',$cnt,$_msg_andresult)));
+			$retvals.= str_replace('$1',htmlspecialchars($result_word),str_replace('$2',count($retval),str_replace('$3',$cnt,$_msg_andresult)));
 		else
-			$retvals.= str_replace('$1',$result_word,str_replace('$2',count($retval),str_replace('$3',$cnt,$_msg_orresult)));
+			$retvals.= str_replace('$1',htmlspecialchars($result_word),str_replace('$2',count($retval),str_replace('$3',$cnt,$_msg_orresult)));
 
 	}
 	else
-		$retvals .= str_replace('$1',$result_word,$_msg_notfoundresult);
+		$retvals .= str_replace('$1',htmlspecialchars($result_word),$_msg_notfoundresult);
 	return $retvals;
 }
 
