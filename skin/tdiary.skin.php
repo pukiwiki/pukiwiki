@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.10 2005/01/15 04:06:11 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.11 2005/01/16 04:18:16 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -132,17 +132,22 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 
 	// Adjust sidebar's default position
 	switch(TDIARY_THEME){
+
+	// Assuming sidebar is above of the body
 	case 'autumn':	/*FALLTHROUGH*/
 	case 'cosmos':
+	case 'dice':	// Sidebar text (white) seems unreadable
 	case 'happa':
 	case 'kaeru':
 	case 'note':
+	case 'paper':	// Sidebar text (white) seems unreadable
 	case 'sunset':
 	case 'tinybox':	// For MSIE with narrow window width, seems meanless
 	case 'tinybox_green':	// The same
-		$sidebar = 'top';	// Assuming sidebar is above of the body
+		$sidebar = 'top';
 		break;
 
+	// Strict separation between sidebar and main contents needed
 	case '3minutes':	/*FALLTHROUGH*/
 	case '3pink':
 	case 'aoikuruma':
@@ -173,27 +178,23 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'spring':
 	case 'teacup':
 	case 'wine':
-		$sidebar = 'strict'; // Strict separation between sidebar and main needed
+		$sidebar = 'strict';
 		break;
 
+	// They have sidevar-design, but can not show it at the 'side' of the contents
 	case 'babypink':	/*FALLTHROUGH*/
-	case 'blog':
 	case 'bubble':
 	case 'cherry':
 	case 'darkness-pop':
 	case 'diamond_dust':
-	case 'dice':
 	case 'gear':
 	case 'pale':
-	case 'paper':
 	case 'pink-border':
-	case 'purple_sun':
 	case 'rectangle':
 	case 'russet':
 	case 'smoking_black':
 		$sidebar = 'another'; // Show as an another page below
 		break;
-
 	}
 }
 // Check menu (sidebar) is ready and $menubar is there
@@ -282,6 +283,7 @@ if (isset($pkwk_dtd)) {
 <?php } // if ($menu && $sidebar == 'strict') ?>
 
 <!-- Navigation buttuns -->
+<div id="navigator"></div>
 <div class="adminmenu">
 <?php
 function _navigator($key, $value = '', $javascript = ''){
@@ -360,8 +362,7 @@ function _navigator($key, $value = '', $javascript = ''){
 <?php if ($menu && ($sidebar == 'top' || $sidebar == 'bottom')) { ?>
 <div class="pkwk_body">
 <div class="main">
-<?php } // if ($menu && $sidebar == 'top') ?>
-
+<?php } ?>
 
 <hr class="sep" />
 
@@ -404,6 +405,7 @@ if ($disable_reverse_link === TRUE) {
 ?>
 	</div>
 </div><!-- class="body" -->
+
 
 <?php if ($notes != '') { ?>
 <div class="comment"><!-- Design for tDiary "Comments" -->
