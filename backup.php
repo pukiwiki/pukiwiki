@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.php,v 1.6.2.1 2003/05/19 14:37:27 arino Exp $
+// $Id: backup.php,v 1.6.2.2 2003/06/10 06:52:37 arino Exp $
 /////////////////////////////////////////////////
 
 // バックアップデータを作成する
@@ -139,11 +139,11 @@ function get_backup_list($_page="")
 	{
 		while($file = readdir($dir))
 		{
-			if(function_exists(gzopen))
-				$file = str_replace(".txt",".gz",$file);
-
-			if($file == ".." || $file == ".") continue;
-			$page = decode(trim(preg_replace("/(\.txt)|(\.gz)$/"," ",$file)));
+			if (!preg_match('/^((?:[0-9A-F]{2})+)\.(?:txt|gz)$/',$file,$matches))
+			{
+				continue;
+			}
+			$page = decode($matches[1]);
 			if(in_array($page,$cantedit)) continue;
 			$page_url = rawurlencode($page);
 			$name = strip_bracket($page);
