@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.20.2.13 2004/06/27 12:57:15 henoheno Exp $
+// $Id: init.php,v 1.20.2.14 2004/06/27 13:00:37 henoheno Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -113,7 +113,7 @@ foreach(array('cmd', 'plugin') as $var){
 	}
 }
 
-// 整形: page, strip_bracket()
+// 整形: page, rawurldecode()
 if (array_key_exists('page', $vars)) {
 	$get['page'] = $post['page'] = $vars['page']  = rawurldecode($vars['page']);
 } else {
