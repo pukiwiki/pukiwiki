@@ -1,5 +1,5 @@
 <?php
-// $Id: article.inc.php,v 1.21 2005/01/23 05:48:49 henoheno Exp $
+// $Id: article.inc.php,v 1.22 2005/01/23 07:01:56 henoheno Exp $
  /*
 
  PukiWiki BBS風プラグイン
@@ -48,6 +48,8 @@ function plugin_article_action()
 	global $script, $post, $vars, $cols, $rows, $now;
 	global $_title_collided, $_msg_collided, $_title_updated;
 	global $_plugin_article_mailto, $_no_subject, $_no_name;
+
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
 	if ($post['msg'] == '')
 		return array('msg'=>'','body'=>'');
@@ -142,6 +144,8 @@ function plugin_article_convert()
 	global $script, $vars, $digest;
 	global $_btn_article, $_btn_name, $_btn_subject;
 	static $numbers = array();
+
+	if (PKWK_READONLY) return ''; // Show nothing
 
 	if (! isset($numbers[$vars['page']])) $numbers[$vars['page']] = 0;
 

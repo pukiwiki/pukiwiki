@@ -1,14 +1,10 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: pcomment.inc.php,v 1.36 2005/01/23 07:01:56 henoheno Exp $
 //
-// $Id: pcomment.inc.php,v 1.35 2004/12/02 11:34:25 henoheno Exp $
-//
+// pcomment plugin - Insetring comment into specified (another) page
 
 /*
-
-*プラグイン pcomment
-指定したページにコメントを挿入
 
 *Usage
  #pcomment([ページ名][,表示するコメント数][,オプション])
@@ -61,6 +57,8 @@ define('PCMT_TIMESTAMP', 0);
 function plugin_pcomment_action()
 {
 	global $vars;
+
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
 	if (! isset($vars['msg']) || $vars['msg'] == '') return array();
 	$refer = isset($vars['refer']) ? $vars['refer'] : '';
@@ -118,25 +116,30 @@ function plugin_pcomment_convert()
 	// コメントを取得
 	list($comments, $digest) = pcmt_get_comments($_page, $count, $dir, $params['reply']);
 
-	// フォームを表示
-	if ($params['noname']) {
-		$title = $_pcmt_messages['msg_comment'];
-		$name = '';
+	if (PKWK_READONLY) {
+		$form = '';
 	} else {
-		$title = $_pcmt_messages['btn_name'];
-		$name = '<input type="text" name="name" size="' . PCMT_COLS_NAME . '" />';
-	}
+		// フォームを表示
+		if ($params['noname']) {
+			$title = $_pcmt_messages['msg_comment'];
+			$name = '';
+		} else {
+			$title = $_pcmt_messages['btn_name'];
+			$name = '<input type="text" name="name" size="' . PCMT_COLS_NAME . '" />';
+		}
 
-	$radio   = $params['reply'] ? '<input type="radio" name="reply" value="0" tabindex="0" checked="checked" />' : '';
-	$comment = '<input type="text" name="msg" size="' . PCMT_COLS_COMMENT . '" />';
+		$radio   = $params['reply'] ?
+			'<input type="radio" name="reply" value="0" tabindex="0" checked="checked" />' : '';
+		$comment = '<input type="text" name="msg" size="' . PCMT_COLS_COMMENT . '" />';
 
-	// XSS脆弱性対策 - 外部から来た変数をエスケープ
-	$s_page   = htmlspecialchars($page);
-	$s_refer  = htmlspecialchars($vars_page);
-	$s_nodate = htmlspecialchars($params['nodate']);
-	$s_count  = htmlspecialchars($count);
+		// Excape
+		$s_page   = htmlspecialchars($page);
+		$s_refer  = htmlspecialchars($vars_page);
+		$s_nodate = htmlspecialchars($params['nodate']);
+		$s_count  = htmlspecialchars($count);
 
-	$form = <<<EOD
+		$form = <<<EOD
+<form action="$script" method="post">
   <div>
   <input type="hidden" name="digest" value="$digest" />
   <input type="hidden" name="plugin" value="pcomment" />
@@ -148,7 +151,10 @@ function plugin_pcomment_convert()
   $radio $title $name $comment
   <input type="submit" value="{$_pcmt_messages['btn_comment']}" />
   </div>
+</form>
 EOD;
+	}
+
 	if (! is_page($_page)) {
 		$link   = make_pagelink($_page);
 		$recent = $_pcmt_messages['msg_none'];
@@ -159,8 +165,8 @@ EOD;
 	}
 
 	return $dir ?
-		"<div><p>$recent $link</p>\n<form action=\"$script\" method=\"post\">$comments$form</form></div>" :
-		"<div><form action=\"$script\" method=\"post\">$form$comments</form>\n<p>$recent $link</p></div>";
+		'<div><p>' . $recent . ' ' . $link . '</p>' . "\n" .  $comments . "\n" .  $form . '</div>' . "\n" :
+		'<div>' . $form . $comments. "\n" . '<p>' . $recent . ' ' . $link . '</p>' . "\n" . '</div>' . "\n";
 }
 
 function pcmt_insert()

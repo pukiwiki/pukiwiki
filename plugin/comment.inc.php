@@ -1,8 +1,6 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: comment.inc.php,v 1.25 2004/11/23 01:19:59 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: comment.inc.php,v 1.26 2005/01/23 07:01:56 henoheno Exp $
 //
 // Comment plugin
 
@@ -20,6 +18,7 @@ function plugin_comment_action()
 	global $script, $vars, $now, $_title_updated, $_no_name;
 	global $_msg_comment_collided, $_title_comment_collided;
 
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 	if (! isset($vars['msg']) || $vars['msg'] == '')
 		return array('msg'=>'', 'body'=>'');
 
@@ -81,6 +80,8 @@ function plugin_comment_convert()
 	global $script, $vars, $digest;
 	global $_btn_comment, $_btn_name, $_msg_comment;
 	static $numbers = array();
+
+	if (PKWK_READONLY) return ''; // Show nothing
 
 	if (! isset($numbers[$vars['page']])) $numbers[$vars['page']] = 0;
 	$comment_no = $numbers[$vars['page']]++;
