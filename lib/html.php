@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.25 2005/01/10 00:45:50 henoheno Exp $
+// $Id: html.php,v 1.26 2005/01/12 14:02:36 henoheno Exp $
 //
 // HTML-publishing related functions
 
@@ -300,7 +300,7 @@ function strip_htmltag($str)
 	return preg_replace('/<[^>]+>/', '', $str);
 }
 
-// Make a search-link of the page name, by the page name, for the page name
+// Make a backlink. searching-link of the page name, by the page name, for the page name
 function make_search($page)
 {
 	global $script;
@@ -308,11 +308,7 @@ function make_search($page)
 	$s_page = htmlspecialchars($page);
 	$r_page = rawurlencode($page);
 
-	//WikiWikiWeb like...
-	//if(preg_match("/^$WikiName$/", $page))
-	//	$name = preg_replace('/([A-Z][a-z]+)/', '$1 ', $name);
-
-	return '<a href="' . $script . '?cmd=search&amp;word=' . $r_page .
+	return '<a href="' . $script . '?plugin=related&amp;page=' . $r_page .
 		'">' . $s_page . '</a> ';
 }
 
