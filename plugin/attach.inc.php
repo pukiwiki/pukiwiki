@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.58 2004/08/14 23:12:18 henoheno Exp $
+//  $Id: attach.inc.php,v 1.59 2004/08/14 23:52:18 henoheno Exp $
 //
 
 /*
@@ -49,9 +49,6 @@ define('ATTACH_CONFIG_PAGE_MIME', 'plugin/attach/mime-type');
 function plugin_attach_convert()
 {
 	global $vars;
-
-	if (! ini_get('file_uploads'))
-		return '#attach(): file_uploads disabled';
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
@@ -277,22 +274,14 @@ function attach_list()
 	return array('msg'=>$msg, 'body'=>$body);
 }
 
-// アップロードフォームを表示
+// アップロードフォームを表示 (action時)
 function attach_showform()
 {
 	global $vars, $_attach_messages;
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
-
 	$vars['refer'] = $page;
-
-	if (! ini_get('file_uploads')) {
-		$body = '#attach(): file_uploads disabled.';
-	} else if (! is_page($page)) {
-		$body = '#attach(): No such page';
-	} else {
-		$body = attach_form($page);
-	}
+	$body = attach_form($page);
 
 	return array('msg'=>$_attach_messages['msg_upload'], 'body'=>$body);
 }
@@ -337,7 +326,7 @@ function attach_mime_content_type($filename)
 	return $type;
 }
 
-// アップロードフォーム
+// アップロードフォームの出力
 function attach_form($page)
 {
 	global $script, $vars, $_attach_messages;
@@ -351,7 +340,8 @@ function attach_form($page)
   </span><br />
 EOD;
 
-	if (! (bool)ini_get('file_uploads')) return $navi;
+	if (! ini_get('file_uploads')) return '#attach(): file_uploads disabled<br />' . $navi;
+	if (! is_page($page))          return '#attach(): No such page<br />'          . $navi;
 
 	$maxsize = MAX_FILESIZE;
 	$msg_maxsize = sprintf($_attach_messages['msg_maxsize'], number_format($maxsize/1024) . 'KB');
@@ -462,7 +452,7 @@ class AttachFile
 		$info = $count = '';
 		if ($showinfo) {
 			$_title = str_replace('$1', rawurlencode($this->file), $_attach_messages['msg_info']);
-			$info = "\n<span class=\"small\">[<a href=\"$script?plugin=attach&amp;pcmd=info$param\" title=\"$_title\">{$_attach_messages['btn_info']}</a>]</span>";
+			$info = "\n<span class=\"small\">[<a href=\"$script?plugin=attach&amp;pcmd=info$param\" title=\"$_title\">{$_attach_messages['btn_info']}</a>]</span><br />\n";
 			$count = ($showicon && ! empty($this->status['count'][$this->age])) ?
 				sprintf($_attach_messages['msg_count'], $this->status['count'][$this->age]) : '';
 		}
