@@ -1,6 +1,6 @@
 <?php
-// PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: rename.inc.php,v 1.20 2004/12/30 12:34:29 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: rename.inc.php,v 1.21 2004/12/30 12:55:58 henoheno Exp $
 //
 // Rename plugin: Rename page-name and related data
 //
@@ -70,10 +70,10 @@ function plugin_rename_err($err, $page = '')
 
 	if ($err == '') return '';
 
-	$body = $_rename_messages["err_$err"];
+	$body = $_rename_messages[err_ . $err];
 	if (is_array($page)) {
 		$tmp = '';
-		foreach ($page as $_page) $tmp .= "<br />$_page";
+		foreach ($page as $_page) $tmp .= '<br />' . $_page;
 		$page = $tmp;
 	}
 	if ($page != '') $body = sprintf($body, htmlspecialchars($page));
@@ -160,7 +160,7 @@ $msg
 </form>
 EOD;
 	if (! empty($related)) {
-		$ret['body'] .= "<hr /><p>{$_rename_messages['msg_related']}</p><ul>";
+		$ret['body'] .= '<hr /><p>' . $_rename_messages['msg_related'] . '</p><ul>';
 		sort($related);
 		foreach ($related as $name)
 			$ret['body'] .= '<li>' . make_pagelink($name) . '</li>';
@@ -228,18 +228,18 @@ function plugin_rename_phase3($pages)
 		$s_src = htmlspecialchars(plugin_rename_getvar('src'));
 		$s_dst = htmlspecialchars(plugin_rename_getvar('dst'));
 		$msg   .= $_rename_messages['msg_regex'] . '<br />';
-		$input .= "<input type=\"hidden\" name=\"method\" value=\"regex\" />";
-		$input .= "<input type=\"hidden\" name=\"src\"    value=\"$s_src\" />";
-		$input .= "<input type=\"hidden\" name=\"dst\"    value=\"$s_dst\" />";
+		$input .= '<input type="hidden" name="method" value="regex" />';
+		$input .= '<input type="hidden" name="src"    value="' . $s_src . '" />';
+		$input .= '<input type="hidden" name="dst"    value="' . $s_dst . '" />';
 	} else {
-		$s_refer = htmlspecialchars(plugin_rename_getvar('refer'));
-		$s_page  = htmlspecialchars(plugin_rename_getvar('page'));
+		$s_refer   = htmlspecialchars(plugin_rename_getvar('refer'));
+		$s_page    = htmlspecialchars(plugin_rename_getvar('page'));
 		$s_related = htmlspecialchars(plugin_rename_getvar('related'));
 		$msg   .= $_rename_messages['msg_page'] . '<br />';
-		$input .= "<input type=\"hidden\" name=\"method\"  value=\"page\" />";
-		$input .= "<input type=\"hidden\" name=\"refer\"   value=\"$s_refer\" />";
-		$input .= "<input type=\"hidden\" name=\"page\"    value=\"$s_page\" />";
-		$input .= "<input type=\"hidden\" name=\"related\" value=\"$s_related\" />";
+		$input .= '<input type="hidden" name="method"  value="page" />';
+		$input .= '<input type="hidden" name="refer"   value="' . $s_refer   . '" />';
+		$input .= '<input type="hidden" name="page"    value="' . $s_page    . '" />';
+		$input .= '<input type="hidden" name="related" value="' . $s_related . '" />';
 	}
 
 	if (! empty($exists)) {
@@ -252,12 +252,12 @@ function plugin_rename_phase3($pages)
 				$msg .= '<ul>' . "\n";
 				foreach ($arr as $ofile=>$nfile)
 					$msg .= '<li>' . $ofile .
-					$_rename_messages['msg_arrow'] . $nfile."</li>\n";
+					$_rename_messages['msg_arrow'] . $nfile . '</li>' . "\n";
 				$msg .= '</ul>';
 			}
-			$msg .= "</li>\n";
+			$msg .= '</li>' . "\n";
 		}
-		$msg .= "</ul><hr />\n";
+		$msg .= '</ul><hr />' . "\n";
 
 		$input .= '<input type="radio" name="exist" value="0" checked="checked" />' .
 			$_rename_messages['msg_exist_none'] . '<br />';
@@ -282,12 +282,12 @@ function plugin_rename_phase3($pages)
 EOD;
 
 	ksort($pages);
-	$ret['body'] .= "<ul>\n";
+	$ret['body'] .= '<ul>' . "\n";
 	foreach ($pages as $old=>$new)
 		$ret['body'] .= '<li>' .  make_pagelink(decode($old)) .
 			$_rename_messages['msg_arrow'] .
-			htmlspecialchars(decode($new)) .  "</li>\n";
-	$ret['body'] .= "</ul>\n";
+			htmlspecialchars(decode($new)) .  '</li>' . "\n";
+	$ret['body'] .= '</ul>' . "\n";
 	return $ret;
 }
 
@@ -344,12 +344,12 @@ function plugin_rename_proceed($pages, $files, $exists)
 	$postdata[] = '*' . $now . "\n";
 	if (plugin_rename_getvar('method') == 'regex') {
 		$postdata[] = '-' . $_rename_messages['msg_regex'] . "\n";
-		$postdata[] = '--From:[[' . plugin_rename_getvar('src') . "]]\n";
-		$postdata[] = '--To:[['   . plugin_rename_getvar('dst') . "]]\n";
+		$postdata[] = '--From:[[' . plugin_rename_getvar('src') . ']]' . "\n";
+		$postdata[] = '--To:[['   . plugin_rename_getvar('dst') . ']]' . "\n";
 	} else {
 		$postdata[] = '-' . $_rename_messages['msg_page'] . "\n";
-		$postdata[] = '--From:[[' . plugin_rename_getvar('refer') . "]]\n";
-		$postdata[] = '--To:[['   . plugin_rename_getvar('page') . "]]\n";
+		$postdata[] = '--From:[[' . plugin_rename_getvar('refer') . ']]' . "\n";
+		$postdata[] = '--To:[['   . plugin_rename_getvar('page')  . ']]' . "\n";
 	}
 
 	if (! empty($exists)) {
@@ -361,7 +361,7 @@ function plugin_rename_proceed($pages, $files, $exists)
 				$postdata[] = '--' . $ofile .
 					$_rename_messages['msg_arrow'] . $nfile . "\n";
 		}
-		$postdata[] = "----\n";
+		$postdata[] = '----' . "\n";
 	}
 
 	foreach ($pages as $old=>$new)
@@ -404,10 +404,11 @@ function plugin_rename_getselecttag($page)
 
 		$selected = ($_page == $page) ? ' selected' : '';
 		$s_page = htmlspecialchars($_page);
-		$pages[$_page] = "<option value=\"$s_page\"$selected>$s_page</option>";
+		$pages[$_page] = '<option value="' . $s_page . '"' . $selected . '>' .
+			$s_page . '</option>';
 	}
 	ksort($pages);
-	$list = join("\n ", $pages);
+	$list = join("\n" . ' ', $pages);
 
 	return <<<EOD
 <select name="refer">
