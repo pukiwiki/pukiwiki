@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.54 2004/08/13 13:54:27 henoheno Exp $
+//  $Id: attach.inc.php,v 1.55 2004/08/13 14:04:41 henoheno Exp $
 //
 
 /*
@@ -98,11 +98,12 @@ function plugin_attach_action()
 		die_message("No such page");
 	}
 
-	if ($refer != '' && is_pagename($refer) &&
-	    in_array($pcmd, array('info', 'open', 'list'))) {
-		check_readable($refer);
-	} else {
-		check_editable($refer);
+	if ($refer != '' && is_pagename($refer)) {
+		if(in_array($pcmd, array('info', 'open', 'list'))) {
+			check_readable($refer);
+		} else {
+			check_editable($refer);
+		}
 	}
 
 	// Dispatch
