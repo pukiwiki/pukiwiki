@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.inc.php,v 1.12 2003/01/31 10:53:26 panda Exp $
+// $Id: comment.inc.php,v 1.13 2003/02/03 10:27:42 panda Exp $
 
 /////////////////////////////////////////////////
 // コメントの名前テキストエリアのカラム数
@@ -43,7 +43,8 @@ function plugin_comment_action()
 	$postdata_old  = get_source($post['refer']);
 	$comment_no = 0;
 	
-	if ($post['name']) {
+	$name = '';
+	if ($post['name'] != '') {
 		$name = str_replace('$name',$post['name'],COMMENT_NAME_FORMAT);
 	}
 	
