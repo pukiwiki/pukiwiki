@@ -1,3 +1,4 @@
+<?php if (!defined('DATA_DIR')) { exit; } ?>
 <?php header('Content-Type: text/html; charset=EUC-JP') ?>
 <?php echo '<?xml version="1.0" encoding="EUC-JP"?>' ?>
 

@@ -1,3 +1,4 @@
+<?php if (!defined('DATA_DIR')) { exit; } ?>
 <?php header('Content-Type: text/html; charset=iso-8859-1') ?>
 <?php echo '<?xml version="1.0" encoding="iso-8859-1"?>' ?>
 
@@ -25,8 +26,8 @@
  <a href="<?php echo $modifierlink ?>"><img id="logo" src="pukiwiki.png" width="80" height="80" alt="[PukiWiki]" /></a>
  <h1 class="title"><?php echo $page ?></h1>
 
-<?php if($is_page) { ?>
- <a href="<?php echo "$script?$r_page" ?>"><span style="font-size:10px"><?php echo "$script?$r_page" ?></span></a>
+<?php if ($is_page) { ?>
+ <a href="<?php echo "$script?$r_page" ?>"><span class="small"><?php echo "$script?$r_page" ?></span></a>
 <?php } ?>
 
 </div>
@@ -37,7 +38,7 @@
 <?php if ($is_page) { ?>
  [ <a href="<?php echo "$script?$r_page" ?>">Reload</a> ]
  &nbsp;
- [ <a href="<?php echo $script ?>?plugin=newpage">New</a>
+ [ <a href="<?php echo "$script?plugin=newpage" ?>">New</a>
  | <a href="<?php echo $link_edit ?>">Edit</a>
 
 <?php   if ($is_read and $function_freeze) { ?>
@@ -61,14 +62,14 @@
  [ <a href="<?php echo $link_top ?>">Front page</a>
  | <a href="<?php echo $link_list ?>">List of pages</a>
 
-<?php if(arg_check('list')) { ?>
+<?php if (arg_check('list')) { ?>
  | <a href="<?php echo $link_filelist ?>">List of page files</a>
 <?php } ?>
 
  | <a href="<?php echo $link_search ?>">Search</a>
  | <a href="<?php echo $link_whatsnew ?>">Recent changes</a>
 
-<?php if($do_backup) { ?>
+<?php if ($do_backup) { ?>
  | <a href="<?php echo $link_backup ?>">Backup</a>
 <?php } ?>
 
