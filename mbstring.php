@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mbstring.php,v 1.4 2003/07/08 07:03:03 arino Exp $
+// $Id: mbstring.php,v 1.5 2003/07/27 13:50:49 arino Exp $
 //
 
 /*
@@ -27,8 +27,10 @@
  *
  */
 
-require_once('jcode_1.34/jcode_wrapper.php');
-
+if (is_readable('jcode_1.34/jcode_wrapper.php'))
+{
+	require_once('jcode_1.34/jcode_wrapper.php');
+}
 if (!function_exists('jcode_convert_encoding'))
 {
 	die_message('Multibyte functions cannot be used. Please read "mbstring.php" for an additional installation procedure.');
