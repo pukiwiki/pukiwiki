@@ -1,7 +1,7 @@
 <?php
 /////////////////////////////////////////////////
-// tarfile.inc.php
-//       by teanan / Interfair Laboratory 2004.
+// $id$
+// Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
 // 2004-09-21 version 0.0 [暫定版]
@@ -71,7 +71,7 @@ define('PLUGIN_DUMP_RESTORE',   'act_upload');	// Upload & restore
 
 /////////////////////////////////////////////////
 // プラグイン本体
-function plugin_tarfile_action()
+function plugin_dump_action()
 {
 	global $adminpass;
 	global $vars, $post;
@@ -86,10 +86,10 @@ function plugin_tarfile_action()
 		if((md5($pass) == $adminpass) && ($act !== NULL) ) {
 			switch($act){
 			case PLUGIN_DUMP_CREATE:
-				$body = plugin_tarfile_download();
+				$body = plugin_dump_download();
 				break;
 			case PLUGIN_DUMP_RESTORE:
-				$retcode = plugin_tarfile_upload();
+				$retcode = plugin_dump_upload();
 				$body .= $retcode['msg'];
 				if($retcode['code'] == true) {
 					// 正常終了
@@ -104,14 +104,14 @@ function plugin_tarfile_action()
 	}
 
 	// 入力フォームを表示
-	$body .= plugin_tarfile_disp_form();
+	$body .= plugin_dump_disp_form();
 	
-	return array('msg' => 'tarfile', 'body' => $body);
+	return array('msg' => 'dump', 'body' => $body);
 }
 
 /////////////////////////////////////////////////
 // ファイルのダウンロード
-function plugin_tarfile_download()
+function plugin_dump_download()
 {
 	global $post;
 
@@ -155,7 +155,7 @@ function plugin_tarfile_download()
 
 /////////////////////////////////////////////////
 // ファイルのアップロード
-function plugin_tarfile_upload()
+function plugin_dump_upload()
 {
 	global $post;
 
@@ -240,7 +240,7 @@ function download_tarfile($name, $arc_kind)
 
 /////////////////////////////////////////////////
 // 入力フォームを表示
-function plugin_tarfile_disp_form()
+function plugin_dump_disp_form()
 {
 	global $script, $defaultpage;
 
@@ -257,7 +257,7 @@ TARファイルバックアップ / リストアプラグイン
 <h3>Tarファイルのダウンロード</h3>
 <form action="$script" method="post">
  <div>
-  <input type="hidden" name="cmd"  value="tarfile" />
+  <input type="hidden" name="cmd"  value="dump" />
   <input type="hidden" name="page" value="$defaultpage" />
   <input type="hidden" name="act"  value="$act_down" />
 
@@ -286,7 +286,7 @@ TARファイルバックアップ / リストアプラグイン
 <h3>データのリストア</h3>
 <form enctype="multipart/form-data" action="$script" method="post">
  <div>
-  <input type="hidden" name="cmd"  value="tarfile" />
+  <input type="hidden" name="cmd"  value="dump" />
   <input type="hidden" name="page" value="$defaultpage" />
   <input type="hidden" name="act"  value="$act_up" />
   <input type="hidden" name="max_file_size" value="$maxsize" />
