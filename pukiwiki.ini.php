@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.114 2005/03/19 03:03:03 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.115 2005/03/21 06:35:27 henoheno Exp $
 //
 // PukiWiki main setting file
 
@@ -277,7 +277,7 @@ $maxage = 120; // Stock latest N backups
 // NOTE: $cycle x $maxage / 24 = Minimum days to lost your data
 //          3   x   120   / 24 = 15
 
-// Spilitter of backup data (NOTE: Too dangerous to change)
+// Splitter of backup data (NOTE: Too dangerous to change)
 define('PKWK_SPLITTER', '>>>>>>>>>>');
 
 /////////////////////////////////////////////////
