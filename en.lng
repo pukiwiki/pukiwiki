@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.21 2003/07/11 10:29:56 arino Exp $
+// $Id: en.lng,v 1.22 2003/07/28 06:06:05 arino Exp $
 //
 // PukiWiki message file (english)
 
@@ -385,6 +385,8 @@ $_tracker_messages = array(
 	'btn_submit' => 'Add',
 	'btn_date' => 'Date',
 	'btn_refer' => 'Refer page',
+	'btn_update' => 'Update',
+	'btn_past' => 'Past',
 );
 
 ///////////////////////////////////////
