@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: showrss.inc.php,v 1.10 2003/10/02 01:04:34 arino Exp $
+// $Id: showrss.inc.php,v 1.11 2003/12/03 12:30:02 arino Exp $
 //
 // modified by PANDA <panda@arino.jp>
 //
@@ -91,6 +91,10 @@ function plugin_showrss_convert()
 	}
 
 	list($rss,$time) = plugin_showrss_get_rss($rssurl,$usecache);
+	if ($rss === FALSE)
+	{
+		return "<p>showrss: cannot get rss from server.</p>\n";
+	}
 
 	$obj = new $class($rss);
 
@@ -199,7 +203,7 @@ function plugin_showrss_get_rss($target,$usecache)
 		$data = http_request($target);
 		if ($data['rc'] !== 200)
 		{
-			return FALSE;
+			return array(FALSE,0);
 		}
 		$buf = $data['data'];
 		$time = UTIME;
