@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.28 2005/01/23 08:29:20 henoheno Exp $
+// $Id: tracker.inc.php,v 1.29 2005/03/02 13:31:05 henoheno Exp $
 //
 // Issue tracker plugin (See Also bugtrack plugin)
 
@@ -256,11 +256,14 @@ class Tracker_field
 	var $config;
 	var $data;
 	var $sort_type = SORT_REGULAR;
+	var $id = 0;
 
 	function Tracker_field($field,$page,$refer,&$config)
 	{
 		global $post;
+		static $id = 0;
 
+		$this->id = ++$id;
 		$this->name = $field[0];
 		$this->title = $field[1];
 		$this->values = explode(',',$field[3]);
@@ -436,11 +439,16 @@ class Tracker_field_radio extends Tracker_field_format
 	{
 		$s_name = htmlspecialchars($this->name);
 		$retval = '';
+		$id = 0;
 		foreach ($this->config->get($this->name) as $option)
 		{
 			$s_option = htmlspecialchars($option[0]);
 			$checked = trim($option[0]) == trim($this->default_value) ? ' checked="checked"' : '';
-			$retval .= "<input type=\"radio\" name=\"$s_name\" value=\"$s_option\"$checked />$s_option\n";
+			++$id;
+			$s_id = '_p_tracker_' . $s_name . '_' . $this->id . '_' . $id;
+			$retval .= '<input type="radio" name="' .  $s_name . '" id="' . $s_id .
+				'" value="' . $s_option . '"' . $checked . ' />' .
+				'<label for="' . $s_id . '">' . $s_option . '</label>' . "\n";
 		}
 
 		return $retval;
@@ -496,12 +504,17 @@ class Tracker_field_checkbox extends Tracker_field_radio
 		$s_name = htmlspecialchars($this->name);
 		$defaults = array_flip(preg_split('/\s*,\s*/',$this->default_value,-1,PREG_SPLIT_NO_EMPTY));
 		$retval = '';
+		$id = 0;
 		foreach ($this->config->get($this->name) as $option)
 		{
 			$s_option = htmlspecialchars($option[0]);
 			$checked = array_key_exists(trim($option[0]),$defaults) ?
 				' checked="checked"' : '';
-			$retval .= "<input type=\"checkbox\" name=\"{$s_name}[]\" value=\"$s_option\"$checked />$s_option\n";
+			++$id;
+			$s_id = '_p_tracker_' . $s_name . '_' . $this->id . '_' . $id;
+			$retval .= '<input type="checkbox" name="' . $s_name .
+				'[]" id="' . $s_id . '" value="' . $s_option . '"' . $checked . ' />' .
+				'<label for="' . $s_id . '">' . $s_option . '</label>' . "\n";
 		}
 
 		return $retval;
