@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: read.inc.php,v 1.3 2003/06/22 06:37:18 arino Exp $
+// $Id: read.inc.php,v 1.4 2003/07/05 01:31:54 arino Exp $
 //
 // ページの表示とInterWikiNameの解釈
 function plugin_read_action()
@@ -13,6 +13,7 @@ function plugin_read_action()
 	// WikiName、BracketNameが示すページを表示
 	if (is_page($get['page'])) {
 		check_readable($get['page'],true,true);
+		header_lastmod($get['page']);
 		return array('msg'=>'','body'=>'');
 	}
 
