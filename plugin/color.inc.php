@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: color.inc.php,v 1.16 2004/11/22 14:09:59 henoheno Exp $
+// $Id: color.inc.php,v 1.17 2004/11/22 14:28:55 henoheno Exp $
 //
 // Text color plugin
 
@@ -12,7 +12,7 @@ define('PLUGIN_COLOR_ALLOW_CSS', TRUE); // TRUE, FALSE
 
 // ----
 define('PLUGIN_COLOR_USAGE', '&color(foreground[,background]){text};');
-define('PLUGIN_COLOR_REGEX', '/^(#[0-9a-f]{6}|[a-z-]+)$/i');
+define('PLUGIN_COLOR_REGEX', '/^(#[0-9a-f]{3}|#[0-9a-f]{6}|[a-z-]+)$/i');
 function plugin_color_inline()
 {
 	global $html_transitional;
