@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: proxy.php,v 1.2 2003/08/04 01:54:19 arino Exp $
+// $Id: proxy.php,v 1.3 2003/09/24 00:41:38 arino Exp $
 //
 
 /*
@@ -17,6 +17,7 @@
 function http_request($url,$method='GET',$headers='',$post=array())
 {
 	global $use_proxy,$proxy_host,$proxy_port;
+	global $need_proxy_auth,$proxy_auth_user,$proxy_auth_pass;
 	
 	$rc = array();
 	$arr = parse_url($url);
@@ -36,6 +37,12 @@ function http_request($url,$method='GET',$headers='',$post=array())
 	$query .= "Host: ".$arr['host']."\r\n";
 	$query .= "User-Agent: PukiWiki/".S_VERSION."\r\n";
 
+	// proxy¤ÎBasicÇ§¾Ú
+	if ($need_proxy_auth and isset($proxy_auth_user) and isset($proxy_auth_pass))
+	{
+		$query .= 'Proxy-Authorization: Basic '.
+			base64_encode($proxy_auth_user.':'.$proxy_auth_pass)."\r\n";
+	}
 	// Basic Ç§¾ÚÍÑ
 	if (isset($arr['user']) and isset($arr['pass']))
 	{
@@ -83,7 +90,7 @@ function http_request($url,$method='GET',$headers='',$post=array())
 	$response = '';
 	while (!feof($fp))
 	{
-		$response .= fgets($fp,4096);
+		$response .= fread($fp,4096);
 	}
 	fclose($fp);
 	
