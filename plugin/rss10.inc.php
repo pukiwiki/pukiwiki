@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss10.inc.php,v 1.7 2003/06/09 07:56:58 arino Exp $
+// $Id: rss10.inc.php,v 1.8 2003/07/22 09:26:28 arino Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss10_action()
@@ -68,7 +68,7 @@ $xmlns_trackback
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
   xml:lang="ja">
 
- <channel rdf:about="{$self}rss">
+ <channel rdf:about="$self$whatsnew">
   <title>$page_title_utf8</title>
   <link>$self$whatsnew</link>
   <description>PukiWiki RecentChanges</description>
