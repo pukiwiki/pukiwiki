@@ -25,26 +25,26 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.16.2.11 2004/07/31 03:15:07 henoheno Exp $
+// $Id: pukiwiki.php,v 1.16.2.12 2004/08/01 01:28:05 henoheno Exp $
 /////////////////////////////////////////////////
 
 /////////////////////////////////////////////////
 // サブルーチンの格納先ディレクトリ (他の *.phpファイル等)
-define('SUB_DIR', './');
+define('LIB_DIR', './');
 
 // プログラムファイル読み込み
-require(SUB_DIR . 'func.php');
-require(SUB_DIR . 'file.php');
-require(SUB_DIR . 'plugin.php');
-require(SUB_DIR . 'html.php');
-require(SUB_DIR . 'backup.php');
+require(LIB_DIR . 'func.php');
+require(LIB_DIR . 'file.php');
+require(LIB_DIR . 'plugin.php');
+require(LIB_DIR . 'html.php');
+require(LIB_DIR . 'backup.php');
 
-require(SUB_DIR . 'template.php');
-require(SUB_DIR . 'rss.php');
-require(SUB_DIR . 'make_link.php');
+require(LIB_DIR . 'template.php');
+require(LIB_DIR . 'rss.php');
+require(LIB_DIR . 'make_link.php');
 if (!extension_loaded('mbstring'))
 {
-	require(SUB_DIR . 'mbstring.php');
+	require(LIB_DIR . 'mbstring.php');
 }
 
 /////////////////////////////////////////////////
