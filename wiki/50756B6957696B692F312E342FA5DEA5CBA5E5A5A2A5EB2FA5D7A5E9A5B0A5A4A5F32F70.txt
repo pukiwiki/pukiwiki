@@ -16,7 +16,6 @@
 ~[[ば科学的愛情:http://www.geocities.co.jp/SiliconValley-SanJose/8609/]]で配布されている[[BBSPainter.jar:http://www.geocities.co.jp/SiliconValley-SanJose/8609/java/bbspainter/]]を使用しています。
 ~幅と高さに、デフォルトのキャンバスサイズを指定します。省略時は(80,60)となります（変更可能）
 :プラグイン内設定|~
---PAINT_UPLOAD_DIR − 描いた絵の保存先。attachプラグイン内のUPLOAD_DIRに合わせる
 --PAINT_INSERT_INS − 入力内容を先頭/末尾のどちらに挿入するか
 --PAINT_DEFAULT_WIDTH − デフォルトの描画領域の幅
 --PAINT_DEFAULT_HEIGHT − デフォルトの描画領域の高さ
@@ -100,8 +99,6 @@
 ~true, falseで、ページのカウント条件を指定します。省略時は false です。
 --true − 今日参照のあった回数順でページを表示します。
 --false − 通算の参照回数順でページを表示します。
-:プラグイン内設定|~
---COUNTER_DIR　counterプラグインがデータファイルを作成するディレクトリ
 :備考|
 ~[[counter>../c#zedb02cf]]プラグインのカウンター情報を利用しているので、counterプラグインを設置していないページはカウントの対象外となります。全てのページにcounterプラグインを設置するのは非効率であるため counterプラグインをMenubarやスキンに設置するのが一般的です。
 
