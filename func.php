@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.20 2003/02/23 03:26:22 panda Exp $
+// $Id: func.php,v 1.21 2003/02/28 03:27:12 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -17,7 +17,7 @@ function is_pagename($str)
 {
 	global $BracketName,$WikiName;
 	
-	$is_pagename = (!is_interwiki($str) and preg_match("/^(?!\.{0,}\/)$BracketName(?<!\/)$/",$str));
+	$is_pagename = (!is_interwiki($str) and preg_match("/^(?!\.{0,}\/)$BracketName$(?<!\/$)/",$str));
 	
 	if (defined('SOURCE_ENCODING')) {
 		if (SOURCE_ENCODING == 'UTF-8') {
@@ -163,7 +163,7 @@ function do_search($word,$type='AND',$non_format=FALSE)
 		
 		$b_match = FALSE;
 		foreach ($keys as $key) {
-			$tmp = preg_grep("/$key/",$source);
+			$tmp = preg_grep("/$key/i",$source);
 			$b_match = (count($tmp) > 0);
 			if ($b_match xor $b_type) {
 				break;
