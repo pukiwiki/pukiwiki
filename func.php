@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.40 2003/05/17 11:08:26 arino Exp $
+// $Id: func.php,v 1.41 2003/05/26 13:55:37 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -17,7 +17,8 @@ function is_pagename($str)
 {
 	global $BracketName,$WikiName;
 	
-	$is_pagename = (!is_interwiki($str) and preg_match("/^(?!\.{0,}\/)$BracketName$(?<!\/$)/",$str));
+	$is_pagename = (!is_interwiki($str) and preg_match("/^(?!\/)$BracketName$(?<!\/$)/",$str)
+		and !preg_match('/(^|\/)\.{1,2}(\/|$)/',$str));
 	
 	if (defined('SOURCE_ENCODING'))
 	{
@@ -164,7 +165,61 @@ function auto_template($page)
 	}
 	return $body;
 }
-
+// 検索語を展開する
+function get_search_words($words,$special=FALSE)
+{
+	$quote_func = create_function('$str',$special ?
+		'return preg_quote($str,"/");' :
+		'return preg_quote(htmlspecialchars($str),"/");'
+	);
+	
+	$retval = array();
+	// Perlメモ - 正しくパターンマッチさせる
+	// http://www.din.or.jp/~ohzaki/perl.htm#JP_Match
+	$eucpre = $eucpost = '';
+	if (SOURCE_ENCODING == 'EUC-JP')
+	{
+		$eucpre = '(?<!\x8F)';
+		// # JIS X 0208 が 0文字以上続いて # ASCII, SS2, SS3 または終端
+		$eucpost = '(?=(?:[\xA1-\xFE][\xA1-\xFE])*(?:[\x00-\x7F\x8E\x8F]|\z))';
+	}
+	if (!function_exists('mb_convert_case'))
+	{
+		foreach ($words as $word)
+		{
+			$retval[$word] = $eucpre.$quote_func($word).$eucpost;
+		}
+		return $retval;
+	}	
+	foreach ($words as $word)
+	{
+		// 英数字は半角,カタカナは全角,ひらがなはカタカナに
+		$word_zk = mb_convert_kana($word,'aKCV');
+		$chars = array();
+		for ($pos = 0; $pos < mb_strlen($word_zk);$pos++)
+		{
+			$char = mb_substr($word_zk,$pos,1);
+			$arr = array($quote_func($char));
+			if (strlen($char) == 1) // 英数字
+			{
+				$_char = strtoupper($char); // 大文字
+				$arr[] = $quote_func($_char);
+				$arr[] = $quote_func(mb_convert_kana($_char,"A")); // 全角
+				$_char = strtolower($char); // 小文字
+				$arr[] = $quote_func($_char);
+				$arr[] = $quote_func(mb_convert_kana($_char,"A")); // 全角
+			}
+			else // マルチバイト文字
+			{
+				$arr[] = $quote_func(mb_convert_kana($char,"c")); // ひらがな
+				$arr[] = $quote_func(mb_convert_kana($char,"k")); // 半角カタカナ
+			}
+			$chars[] = '(?:'.join('|',array_unique($arr)).')';
+		}
+		$retval[$word] = $eucpre.join('',$chars).$eucpost;
+	}
+	return $retval;
+}
 // 検索
 function do_search($word,$type='AND',$non_format=FALSE)
 {
@@ -175,7 +230,7 @@ function do_search($word,$type='AND',$non_format=FALSE)
 	$retval = array();
 
 	$b_type = ($type == 'AND'); // AND:TRUE OR:FALSE
-	$keys = preg_split('/\s+/',preg_quote($word,'/'),-1,PREG_SPLIT_NO_EMPTY);
+	$keys = get_search_words(preg_split('/\s+/',$word,-1,PREG_SPLIT_NO_EMPTY));
 	
 	$_pages = get_existpages();
 	$pages = array();
@@ -197,7 +252,7 @@ function do_search($word,$type='AND',$non_format=FALSE)
 		$b_match = FALSE;
 		foreach ($keys as $key)
 		{
-			$tmp = preg_grep("/$key/i",$source);
+			$tmp = preg_grep("/$key/",$source);
 			$b_match = (count($tmp) > 0);
 			if ($b_match xor $b_type)
 			{
@@ -540,17 +595,13 @@ http://ns1.php.gr.jp/pipermail/php-users/2003-January/012742.html
 [PHP-users 12736] null byte attack
 
 2003-05-16: magic quotes gpcの復元処理を統合
+2003-05-21: 連想配列のキーはbinary safe
 */ 
 function sanitize($param)
 {
 	if (is_array($param))
 	{
-		$result = array();
-		foreach ($param as $key=>$value)
-		{
-			$key = str_replace("\0",'',$key);
-			$result[$key] = sanitize($value);
-		}
+		$result = array_map('sanitize',$param);
 	}
 	else
 	{
