@@ -1,5 +1,5 @@
 <?php
-// $Id: navi.inc.php,v 1.5 2002/12/05 06:38:58 panda Exp $
+// $Id: navi.inc.php,v 1.6 2002/12/05 07:28:31 panda Exp $
 /*
 Last-Update:2002-12-05 rev.3
 
@@ -102,7 +102,7 @@ function plugin_navi_convert() {
 		}
 		if (!$is_home) {
 			$_navi_pages['home'] = make_link($home);
-			$_navi_pages['home1'] = make_link(preg_replace("/^(\[\[)?/","$1Home&gt;",$home));
+			$_navi_pages['home1'] = make_link('[[Home&gt;'.strip_bracket($home).']]');
 		}
 	}
 
