@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: paint.inc.php,v 1.7 2003/05/02 07:45:45 arino Exp $
+// $Id: paint.inc.php,v 1.8 2003/05/12 10:36:00 arino Exp $
 //
 
 /*
@@ -221,9 +221,9 @@ function plugin_paint_convert()
   <input type="hidden" name="digest" value="$digest" />
   <input type="hidden" name="plugin" value="paint" />
   <input type="hidden" name="refer" value="$f_page" />
-  <input type="text" name="width" size="3" value="$width" accesskey="w" />
+  <input type="text" name="width" size="3" value="$width" />
   x
-  <input type="text" name="height" size="3" value="$height" accesskey="h" />
+  <input type="text" name="height" size="3" value="$height" />
   $max
   <input type="submit" value="{$_paint_messages['btn_submit']}" />
   </div>

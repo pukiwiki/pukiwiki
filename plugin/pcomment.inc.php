@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.13 2003/05/08 02:51:00 arino Exp $
+// $Id: pcomment.inc.php,v 1.14 2003/05/12 10:36:00 arino Exp $
 //
 
 /*
@@ -383,7 +383,7 @@ function pcmt_get_comments($page,$count,$dir,$reply)
 	//コメントにラジオボタンの印をつける
 	if ($reply)
 	{
-		$comments = preg_replace("/\x01(\d+)\x02(.*)\x03/",'<input type="radio" name="reply" value="$2" tabindex="$1" accesskey="c" />', $comments);
+		$comments = preg_replace("/\x01(\d+)\x02(.*)\x03/",'<input type="radio" name="reply" value="$2" tabindex="$1" />', $comments);
 	}
 	return array($comments,$digest);
 }
