@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.81 2003/06/12 00:19:43 arino Exp $
+// $Id: html.php,v 1.82 2003/06/22 05:47:17 arino Exp $
 //
 
 // 本文を出力
@@ -274,6 +274,13 @@ function make_line_rules($str)
 // HTMLタグを取り除く
 function strip_htmltag($str)
 {
+	global $_symbol_noexists;
+	
+	$noexists_pattern = '#<span class="noexists">([^<]*)<a[^>]+>'.
+		preg_quote($_symbol_noexists,'#').
+		'</a></span>#';
+	
+	$str = preg_replace($noexists_pattern,'$1',$str);
 	//$str = preg_replace('/<a[^>]+>\?<\/a>/','',$str);
 	return preg_replace('/<[^>]+>/','',$str);
 }
