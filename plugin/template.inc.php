@@ -1,5 +1,5 @@
 <?php
-// $Id: template.inc.php,v 1.14 2003/07/05 15:40:32 arino Exp $
+// $Id: template.inc.php,v 1.15 2003/09/03 02:11:56 arino Exp $
 
 define('MAX_LEN',60);
 
@@ -9,6 +9,7 @@ function plugin_template_action()
 	global $_title_edit;
 	global $_msg_template_start,$_msg_template_end,$_msg_template_page,$_msg_template_refer;
 	global $_btn_template_create,$_title_template;
+	global $_err_template_already,$_err_template_invalid,$_msg_template_force;
 	
 	if (!is_page($vars['refer']))
 	{
@@ -21,95 +22,68 @@ function plugin_template_action()
 	if (count($lines) and rtrim($lines[0]) == '#freeze')
 	{
 		array_shift($lines);
-	} 
+	}
+	
+	$begin = (array_key_exists('begin',$vars) and is_numeric($vars['begin'])) ? $vars['begin'] : 0;
+	$end = (array_key_exists('end',$vars) and is_numeric($vars['end'])) ? $vars['end'] : count($lines) - 1;
+	if ($begin > $end)
+	{
+		$temp = $begin;
+		$begin = $end;
+		$end = $temp;
+	}
+	$page = array_key_exists('page',$vars) ? $vars['page'] : '';
+	$is_page = is_page($page);
 	
 	// edit
-	if (array_key_exists('begin',$vars) and is_numeric($vars['begin'])
-		and array_key_exists('end',$vars) and is_numeric($vars['end']))
+	if ($is_pagename = is_pagename($page) and (!$is_page or !empty($vars['force'])))
 	{
-		$postdata = '';
-		if ($vars['begin'] <= $vars['end'])
-		{
-			for ($i = $vars['begin']; $i <= $vars['end']; $i++)
-			{
-				$postdata .= $lines[$i];
-			}
-		}
-		
+		$postdata = join('',array_splice($lines,$begin,$end - $begin + 1));
 		$retvar['msg'] = $_title_edit;
-		$vars['refer'] = ''; // edit_formにはreferを見せたくない
 		$retvar['body'] = edit_form($vars['page'],$postdata);
 		$vars['refer'] = $vars['page'];
 		return $retvar;
 	}
-	// input mb_strwidth()
-	else
+	$begin_select = $end_select = '';
+	for ($i = 0; $i < count($lines); $i++)
 	{
-		$begin_select = $_msg_template_start."<select name=\"begin\" size=\"10\">\n";
-		for ($i = 0; $i < count($lines); $i++)
-		{
-			$lines[$i] = mb_strimwidth($lines[$i],0,MAX_LEN,'...');
-			
-			$tag = ($i==0) ? ' selected="selected"' : '';
-			$line = htmlspecialchars($lines[$i]);
-			$begin_select .= "<option value=\"$i\"$tag>$line</option>\n";
-		}
-		$begin_select.= "</select><br />\n<br />\n";
+		$line = htmlspecialchars(mb_strimwidth($lines[$i],0,MAX_LEN,'...'));
 		
-		$end_select = $_msg_template_end."<select name=\"end\" size=\"10\">\n";
-		for ($i = 0; $i < count($lines); $i++)
-		{
-			$tag = ($i == count($lines) - 1) ? ' selected="selected"' : '';
-			$line = htmlspecialchars($lines[$i]);
-			$end_select .= "<option value=\"$i\"$tag>$line</option>\n";
-		}
-		$end_select.= "</select><br />\n<br />\n";
+		$tag = ($i == $begin) ? ' selected="selected"' : '';
+		$begin_select .= "<option value=\"$i\"$tag>$line</option>\n";
 		
-/*
-		$lines = get_source($vars['refer']);
-		
-		$select = <<<EOD
-<table width="100%" cellspacing="0" cellpadding="2" border="0">
- <tr>
-  <td width="40" style="background-color:#ddeeff">開始</td>
-  <td width="40" style="background-color:#ddeeff">終了</td>
-  <td style="background-color:#ddeeff">&nbsp;</td>
- </tr>
-EOD;
-		for ($i = 0; $i < count($lines); $i++)
-		{
-			//$lines[$i] = mb_strimwidth($lines[$i],0,MAX_LEN,"...");
-			
-			$begin_tag = ($i == 0)                 ? ' checked="checked"' : '';
-			$end_tag   = ($i == count($lines) - 1) ? ' checked="checked"' : '';
-			$color = ($i % 2) ? ' style="background-color:#F0FFFA"' : '';
-			$select .= <<<EOD
-<tr>
- <td$color><input type="radio" name="begin" value="$i"$begin_tag /></td>
- <td$color><input type="radio" name="end" value="$i"$end_tag /></td>
- <td$color>{$lines[$i]}</td>
-</tr>
-EOD;
-		}
-		$select.= "</table><br />\n";
-*/
+		$tag = ($i == $end) ? ' selected="selected"' : '';
+		$end_select .= "<option value=\"$i\"$tag>$line</option>\n";
 	}
+	
+	$_page = htmlspecialchars($page);
+	$msg = $tag = '';
+	if ($is_page)
+	{
+		$msg = $_err_template_already;
+		$tag = '<input type="checkbox" name="force" value="1" />'.$_msg_template_force;
+	}
+	else if ($page != '' and !$is_pagename)
+	{
+		$msg = str_replace('$1',$_page,$_err_template_invalid);
+	}
+	
 	$s_refer = htmlspecialchars($vars['refer']);
-	$s_page = str_replace('$1',htmlspecialchars($vars['refer']),$_msg_template_page);
+	$s_page = ($page == '') ? str_replace('$1',$s_refer,$_msg_template_page) : $_page;
 	$ret = <<<EOD
 <form action="$script" method="post">
  <div>
   <input type="hidden" name="plugin" value="template" />
   <input type="hidden" name="refer" value="$s_refer" />
-  $begin_select
-  $end_select
+  $_msg_template_start <select name="begin" size="10">$begin_select</select><br /><br />
+  $_msg_template_end <select name="end" size="10">$end_select</select><br /><br />
   $_msg_template_refer <input type="text" name="page" value="$s_page" />
-  <input type="submit" name="submit" value="$_btn_template_create" />
+  <input type="submit" name="submit" value="$_btn_template_create" /> $tag
  </div>
 </form>
 EOD;
 	
-	$retvar['msg'] = $_title_template;
+	$retvar['msg'] = ($msg == '') ? $_title_template : $msg;
 	$retvar['body'] = $ret;
 	
 	return $retvar;

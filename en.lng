@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.22 2003/07/28 06:06:05 arino Exp $
+// $Id: en.lng,v 1.23 2003/09/03 02:11:56 arino Exp $
 //
 // PukiWiki message file (english)
 
@@ -370,6 +370,9 @@ $_msg_template_start = 'Start:<br />';
 $_msg_template_end = 'End:<br />';
 $_msg_template_page = '$1/copy';
 $_msg_template_refer = 'Page:';
+$_msg_template_force = 'Edit by already existing page name';
+$_err_template_already = '$1 is already exists.';
+$_err_template_invalid = '$1 is not an effective page name.';
 $_btn_template_create = 'Create';
 $_title_template = 'create new page, using $1 as template.';
 

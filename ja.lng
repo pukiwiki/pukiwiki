@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.22 2003/07/28 06:06:05 arino Exp $
+// $Id: ja.lng,v 1.23 2003/09/03 02:11:56 arino Exp $
 //
 // PukiWiki message file (japanese)
 
@@ -371,6 +371,9 @@ $_msg_template_start = '開始行:<br />';
 $_msg_template_end = '終了行:<br />';
 $_msg_template_page = '$1/複製';
 $_msg_template_refer = 'ページ名:';
+$_msg_template_force = '既存のページ名で編集する';
+$_err_template_already = '$1 はすでに存在します。';
+$_err_template_invalid = '$1 は有効なページ名ではありません。';
 $_btn_template_create = '作成';
 $_title_template = '$1 をテンプレートにして作成';
 
