@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.18 2004/09/26 12:49:50 henoheno Exp $
+// $Id: dump.inc.php,v 1.19 2004/09/26 13:12:20 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -36,10 +36,6 @@ define('PLUGIN_DUMP_RESTORE', 'restore'); // Upload & restore
 // Suffixes
 define('PLUGIN_DUMP_SFX_TAR' , '.tar');
 define('PLUGIN_DUMP_SFX_GZIP', '.tar.gz');
-
-define('ARCFILE_TAR_GZ', 0);
-define('ARCFILE_TAR',  1);
-
 
 /////////////////////////////////////////////////
 // プラグイン本体
@@ -86,7 +82,7 @@ function plugin_dump_download()
 	global $vars;
 
 	// アーカイブの種類
-	$arc_kind = ($vars['pcmd'] == 'tar') ? ARCFILE_TAR : ARCFILE_TAR_GZ;
+	$arc_kind = ($vars['pcmd'] == 'tar') ? 'tar' : 'tgz';
 
 	// ページ名に変換する
 	$namedecode = isset($vars['namedecode']) ? TRUE : FALSE;
@@ -140,9 +136,9 @@ function plugin_dump_upload()
 	} else { 
 		$matches[1] = strtolower($matches[1]);
 		switch ($matches[1]) {
-		case '.tar':    $arc_kind = ARCFILE_TAR;  break;
-		case '.tgz':    $arc_kind = ARCFILE_TAR_GZ; break;
-		case '.tar.gz': $arc_kind = ARCFILE_TAR_GZ; break;
+		case '.tar':    $arc_kind = 'tar';  break;
+		case '.tgz':    $arc_kind = 'tar'; break;
+		case '.tar.gz': $arc_kind = 'tgz'; break;
 		default: die_message("Invalid file suffix: " . $matches[1]);
 		}
 	}
@@ -204,7 +200,7 @@ function download_tarfile($name, $arc_kind)
 {
 	// ファイル名
 	$filename = strftime('tar%Y%m%d', time());
-	if ($arc_kind == ARCFILE_TAR_GZ) {
+	if ($arc_kind == 'tgz') {
 		$filename .= PLUGIN_DUMP_SFX_GZIP;
 	} else {
 		$filename .= PLUGIN_DUMP_SFX_TAR;
@@ -317,6 +313,9 @@ define('TARLIB_DATA_LONGLINK', '././@LongLink');
 define('TARLIB_HDR_FILE', '0');
 define('TARLIB_HDR_LINK', 'L');
 
+define('TARLIB_KIND_TGZ', 0);
+define('TARLIB_KIND_TAR',  1);
+
 class tarlib
 {
 	var $filename;
@@ -330,7 +329,7 @@ class tarlib
 		$this->filename = '';
 		$this->fp       = FALSE;
 		$this->status   = TARLIB_STATUS_INIT;
-		$this->arc_kind = ARCFILE_TAR_GZ;
+		$this->arc_kind = TARLIB_KIND_TGZ;
 	}
 	
 	////////////////////////////////////////////////////////////
@@ -338,16 +337,16 @@ class tarlib
 	// 引数  : tarファイルを作成するパス
 	// 返り値: TRUE .. 成功 , FALSE .. 失敗
 	////////////////////////////////////////////////////////////
-	function create($tempdir, $kind = ARCFILE_TAR_GZ)
+	function create($tempdir, $kind = 'tgz')
 	{
 		$tempnam = tempnam($tempdir, 'tarlib_');
 		if ($tempnam === FALSE) return FALSE;
 
-		if ($kind == ARCFILE_TAR_GZ) {
-			$this->arc_kind = ARCFILE_TAR_GZ;
+		if ($kind == 'tgz') {
+			$this->arc_kind = TARLIB_KIND_TGZ;
 			$this->fp = gzopen($tempnam, 'wb');
 		} else {
-			$this->arc_kind = ARCFILE_TAR;
+			$this->arc_kind = TARLIB_KIND_TAR;
 			$this->fp = @fopen($tempnam, 'wb');
 		}
 		if ($this->fp === FALSE) return FALSE;
@@ -548,15 +547,15 @@ class tarlib
 	// 引数  : tarファイル名
 	// 返り値: TRUE .. 成功 , FALSE .. 失敗
 	////////////////////////////////////////////////////////////
-	function open($name = '', $kind = ARCFILE_TAR_GZ)
+	function open($name = '', $kind = 'tgz')
 	{
 		if ($name != '') $this->filename = $name;
 
-		if ($kind == ARCFILE_TAR_GZ) {
-			$this->arc_kind = ARCFILE_TAR_GZ;
+		if ($kind == 'tgz') {
+			$this->arc_kind = TARLIB_KIND_TGZ;
 			$this->fp = gzopen($this->filename, 'rb');
 		} else {
-			$this->arc_kind = ARCFILE_TAR;
+			$this->arc_kind = TARLIB_KIND_TAR;
 			$this->fp =  fopen($this->filename, 'rb');
 		}
 
@@ -686,7 +685,7 @@ class tarlib
 			fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
 
 			// ファイルを閉じる
-			if ($this->arc_kind == ARCFILE_TAR_GZ) {
+			if ($this->arc_kind == TARLIB_KIND_TGZ) {
 				gzclose($this->fp);
 			} else {
 				 fclose($this->fp);
@@ -694,7 +693,7 @@ class tarlib
 		}
 		else if ($this->status == TARLIB_STATUS_OPEN)
 		{
-			if ($this->arc_kind == ARCFILE_TAR_GZ) {
+			if ($this->arc_kind == TARLIB_KIND_TGZ) {
 				gzclose($this->fp);
 			} else {
 				 fclose($this->fp);
