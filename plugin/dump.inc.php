@@ -1,22 +1,8 @@
 <?php
-/////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.33 2004/12/25 00:36:21 henoheno Exp $
+// $Id: dump.inc.php,v 1.34 2005/01/23 07:24:11 henoheno Exp $
+//
+// Remote dump / restore plugin
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
-
-// [更新履歴]
-// 2004-09-21 version 0.0 [暫定版]
-// ・とりあえず wiki ディレクトリがtar.gzで取り出せるようになりました。
-// 2004-09-22 version 0.1 [暫定版]
-// ・〜tar.gz/〜.tarの選択に対応
-// ・attach,backupディレクトリのバックアップに対応
-// ・ファイル名をページ名に変換する機能を追加(wiki/attach/backup)
-// ・ファイル一覧の取得方法を変更(glob→opendir)
-// 2004-09-22 version 0.2
-// ・ファイルのアップロード(リストア)に対応(tar/tar.gz)
-//   (対象は wiki,attachディレクトリのみ)
-// 2004-09-22 version 1.0
-// ・LongLink(100バイトを超えたファイル名)に対応
-// ・リストア時ファイルの更新時刻を元に戻すように修正
 
 /////////////////////////////////////////////////
 // User defines
@@ -57,6 +43,8 @@ $_STORAGE['BACKUP_DIR']['extract_filter'] =  '^' . preg_quote(BACKUP_DIR, '/') .
 function plugin_dump_action()
 {
 	global $vars;
+
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits this');
 
 	$pass = isset($_POST['pass']) ? $_POST['pass'] : NULL;
 	$act  = isset($vars['act'])   ? $vars['act']   : NULL;
