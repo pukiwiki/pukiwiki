@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.9 2003/08/02 02:03:32 arino Exp $
+// $Id: trackback.php,v 1.10 2003/08/06 05:51:50 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -230,8 +230,11 @@ class TrackBack_XML
 		$this->tb_url = FALSE;
 		
 		$xml_parser = xml_parser_create();
+		if ($xml_parser === FALSE)
+		{
+			return FALSE;
+		}
 		xml_set_element_handler($xml_parser,array(&$this,'start_element'),array(&$this,'end_element'));
-		xml_parse($xml_parser,$data,0);
 		
 		if (!xml_parse($xml_parser,$buf,TRUE))
 		{
