@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pcomment.inc.php,v 1.39 2005/03/06 16:39:14 teanan Exp $
+// $Id: pcomment.inc.php,v 1.40 2005/03/08 17:58:38 teanan Exp $
 //
 // pcomment plugin - Insetring comment into specified (another) page
 
@@ -245,12 +245,14 @@ function pcmt_insert()
 		$dir = isset($vars['dir']) ? $vars['dir'] : '';
 
 		//リプライ先のコメントを検索
+		$b_reply = FALSE;
 		if ($reply_hash != '') {
 			while ($pos < count($postdata)) {
 				$matches = array();
 				if (preg_match('/^(\-{1,2})(?!\-)(.*)$/', $postdata[$pos++], $matches)
 					&& md5($matches[2]) == $reply_hash)
 				{
+					$b_reply = TRUE;
 					$level = strlen($matches[1]) + 1; //挿入するレベル
 
 					// コメントの末尾を検索
@@ -263,18 +265,10 @@ function pcmt_insert()
 					break;
 				}
 			}
-		} else {
-			$pos = ($dir == 0) ? $start_pos : count($postdata);
 		}
 
-		if ($dir == '0') {
-			if ($pos == count($postdata)) {
-				$pos = $start_pos; //先頭
-			}
-		} else {
-			if ($pos == 0) {
-				$pos = count($postdata); //末尾
-			}
+		if($b_reply==FALSE) {
+			$pos = ($dir == '0') ? $start_pos : count($postdata);
 		}
 
 		//コメントを挿入
