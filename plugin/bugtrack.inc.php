@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.5 2003/01/31 10:53:26 panda Exp $
+ * $Id: bugtrack.inc.php,v 1.6 2003/02/17 08:08:51 panda Exp $
  */
 
 function plugin_bugtrack_init()
@@ -191,16 +191,16 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 	} while (is_page($page));
 	
 	if ($pagename == '') {
-		file_write(DATA_DIR,$page,$postdata);
+		page_write($page,$postdata);
 	}
 	else {
 		if (is_page($pagename)) {
 			$pagename = $page;
 		}
 		else {
-			file_write(DATA_DIR,$page,"move to $pagename");
+			page_write($page,"move to [[$pagename]]");
 		}
-		file_write(DATA_DIR,$pagename,$postdata);
+		page_write($pagename,$postdata);
 	}
 
 	// is_pageのキャッシュをクリアする。
