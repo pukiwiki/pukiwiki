@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.20.2.1 2003/01/22 05:44:58 panda Exp $
+// $Id: init.php,v 1.20.2.2 2003/02/23 04:19:32 panda Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -87,6 +87,13 @@ else {
 	$get = $HTTP_GET_VARS;
 }
 
+// 外部からくる変数をサニタイズ
+$get    = sanitize_null_character($get);
+$post   = sanitize_null_character($post);
+$cookie = sanitize_null_character($cookie);
+
+$arg = (count($get) == 1) ? array_shift(array_keys($get,NULL)) : '';
+ 
 if($post["msg"])
 {
 	$post["msg"] = preg_replace("/((\x0D\x0A)|(\x0D)|(\x0A))/","\n",$post["msg"]);
@@ -96,9 +103,11 @@ if($post["word"]) $post["word"] = rawurldecode($post["word"]);
 if($get["word"]) $get["word"] = rawurldecode($get["word"]);
 
 $vars = array_merge($post,$get);
+/*
 $arg = rawurldecode((getenv('QUERY_STRING') != '')?
 		    getenv('QUERY_STRING') :
 		    $HTTP_SERVER_VARS["argv"][0]);
+*/
 
 //** 初期処理 **
 $update_exec = "";
