@@ -25,7 +25,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.16.2.8 2004/06/19 14:26:43 henoheno Exp $
+// $Id: pukiwiki.php,v 1.16.2.9 2004/06/27 14:18:43 henoheno Exp $
 /////////////////////////////////////////////////
 
 /////////////////////////////////////////////////
@@ -128,7 +128,7 @@ else if(arg_check("edit"))
 	$body = edit_form($postdata,$get["page"]);
 }
 // プレビュー
-else if(arg_check("preview") || $post["preview"] || $post["template"])
+else if(arg_check("preview") || isset($post["preview"]) || isset($post["template"]))
 {
         if($post["template"] && page_exists($post["template_page"]))
 	{
@@ -199,7 +199,7 @@ else if(arg_check("preview") || $post["preview"] || $post["template"])
 		."</form>\n";
 }
 // 書き込みもしくは追加もしくはコメントの挿入
-else if($post["write"])
+else if(isset($post["write"]))
 {
 	$post["msg"] = preg_replace("/^#freeze\s*\n/","",$post["msg"]);
 	$postdata_input = $post["msg"];
@@ -601,7 +601,7 @@ else if(arg_check("help"))
 	$body = catrule();
 }
 // MD5パスワードへの変換
-else if($vars["md5"])
+else if(isset($vars["md5"]))
 {
 	$title = $page = 'Make password of MD5';
 	$body = htmlspecialchars($vars['md5']).' : '.md5($vars['md5']);
@@ -618,7 +618,8 @@ else if(arg_check("rss"))
 else if((arg_check("read") && $vars["page"] != "") || (!arg_check("read") && $arg != "" && $vars["page"] == ""))
 {
 	// アクションを明示的に指定していない場合ページ名として解釈
-	if($arg != "" && $vars["page"] == "" && $vars["cmd"] == "")
+	if($arg != "" && (! isset($vars["page"]) || $vars["page"] == "")  &&
+			 (! isset($vars["cmd"])  || $vars["cmd"]  == ""))
 	{
 		$post["page"] = $arg;
 		$get["page"] = $arg;
