@@ -26,7 +26,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.11 2002/07/10 06:07:17 kawara Exp $
+// $Id: pukiwiki.php,v 1.12 2002/07/12 11:53:15 masui Exp $
 /////////////////////////////////////////////////
 
 
@@ -94,7 +94,7 @@ else if(arg_check("filelist"))
 // 編集不可能なページを編集しようとしたとき
 else if(((arg_check("add") || arg_check("edit") || arg_check("preview")) && (is_freeze($vars["page"]) || !is_editable($vars["page"]) || $vars["page"] == "")))
 {
-	$body = $title = str_replace('$1',strip_bracket($vars["page"]),$_title_cannotedit);
+	$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($vars["page"])),$_title_cannotedit);
 	$page = str_replace('$1',make_search($vars["page"]),$_title_cannotedit);
 
 	if(is_freeze($vars["page"]))
@@ -387,7 +387,7 @@ else if(arg_check("diff"))
 	$pagename = strip_bracket($get["page"]);
 	if(!is_page($get["page"]))
 	{
-		$title = $pagename;
+		$title = htmlspecialchars($pagename);
 		$page = make_search($vars["page"]);
 		$body = "指定されたページは見つかりませんでした。";
 	}
@@ -462,6 +462,10 @@ else if(arg_check("search"))
 // バックアップ
 else if($do_backup && arg_check("backup"))
 {
+	if(!is_numeric($get["age"])) {
+		unset($get["age"]);
+	}
+
 	if($get["page"] && $get["age"] && (file_exists(BACKUP_DIR.encode($get["page"]).".txt") || file_exists(BACKUP_DIR.encode($get["page"]).".gz")))
 	{
 		$pagename = htmlspecialchars(strip_bracket($get["page"]));
@@ -471,22 +475,22 @@ else if($do_backup && arg_check("backup"))
 
 		if(!arg_check("backup_diff") && is_page($get["page"]))
 		{
- 			$link = str_replace('$1',"<a href=\"$script?cmd=backup_diff&amp;page=".rawurlencode($get["page"])."&amp;age=$get[age]\">$_msg_diff</a>",$_msg_view);
+ 			$link = str_replace('$1',"<a href=\"$script?cmd=backup_diff&amp;page=".rawurlencode($get["page"])."&amp;age=".htmlspecialchars($get["age"])."\">$_msg_diff</a>",$_msg_view);
 			$body .= "<li>$link</li>\n";
 		}
 		if(!arg_check("backup_nowdiff") && is_page($get["page"]))
 		{
- 			$link = str_replace('$1',"<a href=\"$script?cmd=backup_nowdiff&amp;page=".rawurlencode($get["page"])."&amp;age=$get[age]\">$_msg_nowdiff</a>",$_msg_view);
+ 			$link = str_replace('$1',"<a href=\"$script?cmd=backup_nowdiff&amp;page=".rawurlencode($get["page"])."&amp;age=".htmlspecialchars($get["age"])."\">$_msg_nowdiff</a>",$_msg_view);
 			$body .= "<li>$link</li>\n";
 		}
 		if(!arg_check("backup_source"))
 		{
- 			$link = str_replace('$1',"<a href=\"$script?cmd=backup_source&amp;page=".rawurlencode($get["page"])."&amp;age=$get[age]\">$_msg_source</a>",$_msg_view);
+ 			$link = str_replace('$1',"<a href=\"$script?cmd=backup_source&amp;page=".rawurlencode($get["page"])."&amp;age=".htmlspecialchars($get["age"])."\">$_msg_source</a>",$_msg_view);
 			$body .= "<li>$link</li>\n";
 		}
 		if(arg_check("backup_diff") || arg_check("backup_source") || arg_check("backup_nowdiff"))
 		{
- 			$link = str_replace('$1',"<a href=\"$script?cmd=backup&amp;page=".rawurlencode($get["page"])."&amp;age=$get[age]\">$_msg_backup</a>",$_msg_view);
+ 			$link = str_replace('$1',"<a href=\"$script?cmd=backup&amp;page=".rawurlencode($get["page"])."&amp;age=".htmlspecialchars($get["age"])."\">$_msg_backup</a>",$_msg_view);
 			$body .= "<li>$link</li>\n";
 		}
 		
@@ -497,7 +501,7 @@ else if($do_backup && arg_check("backup"))
 		}
 		else
 		{
-			$link = str_replace('$1',$pagename,$_msg_deleleted);
+			$link = str_replace('$1',htmlspecialchars($pagename),$_msg_deleleted);
 			$body .=  "<li>$link</li>\n";
 		}
 
@@ -519,18 +523,18 @@ else if($do_backup && arg_check("backup"))
 		
 		if(arg_check("backup_diff"))
 		{
-			$title = str_replace('$1',$pagename,$_title_backupdiff)."(No.$get[age])";
-			$page = str_replace('$1',make_search($get["page"]),$_title_backupdiff)."(No.$get[age])";
+			$title = str_replace('$1',htmlspecialchars($pagename),$_title_backupdiff)."(No.".htmlspecialchars($get["age"]).")";
+			$page = str_replace('$1',make_search($get["page"]),$_title_backupdiff)."(No.".htmlspecialchars($get["age"]).")";
 			
-			$backupdata = @join("",get_backup($get[age]-1,encode($get["page"]).".txt"));
-			$postdata = @join("",get_backup($get[age],encode($get["page"]).".txt"));
+			$backupdata = @join("",get_backup($get["age"]-1,encode($get["page"]).".txt"));
+			$postdata = @join("",get_backup($get["age"],encode($get["page"]).".txt"));
 			$diffdata = split("\n",do_diff($backupdata,$postdata));
 			$backupdata = htmlspecialchars($backupdata);
 		}
 		else if(arg_check("backup_nowdiff"))
 		{
-			$title = str_replace('$1',$pagename,$_title_backupnowdiff)."(No.$get[age])";
-			$page = str_replace('$1',make_search($get["page"]),$_title_backupnowdiff)."(No.$get[age])";
+			$title = str_replace('$1',$pagename,$_title_backupnowdiff)."(No.".htmlspecialchars($get["age"]).")";
+			$page = str_replace('$1',make_search($get["page"]),$_title_backupnowdiff)."(No.".htmlspecialchars($get["age"]).")";
 			
 			$backupdata = @join("",get_backup($get["age"],encode($get["page"]).".txt"));
 			$postdata = @join("",get_source($get["page"]));
@@ -540,18 +544,17 @@ else if($do_backup && arg_check("backup"))
 		}
 		else if(arg_check("backup_source"))
 		{
-			$title = str_replace('$1',$pagename,$_title_backupsource)."(No.$get[age])";
-			$page = str_replace('$1',make_search($get["page"]),$_title_backupsource)."(No.$get[age])";
+			$title = str_replace('$1',$pagename,$_title_backupsource)."(No.".htmlspecialchars($get["age"]).")";
+			$page = str_replace('$1',make_search($get["page"]),$_title_backupsource)."(No.".htmlspecialchars($get["age"]).")";
 			$backupdata = htmlspecialchars(join("",get_backup($get["age"],encode($get["page"]).".txt")));
 			
 			$body.="</ul>\n<pre>\n$backupdata</pre>\n";
 		}
 		else
 		{
-			$pagename = htmlspecialchars(strip_bracket($get["page"]));
-			$title = str_replace('$1',$pagename,$_title_backup)."(No.$get[age])";
-			$page = str_replace('$1',make_search($get["page"]),$_title_backup)."(No.$get[age])";
-			$backupdata = join("",get_backup($get[age],encode($get["page"]).".txt"));
+			$title = str_replace('$1',$pagename,$_title_backup)."(No.".htmlspecialchars($get["age"]).")";
+			$page = str_replace('$1',make_search($get["page"]),$_title_backup)."(No.".htmlspecialchars($get["age"]).")";
+			$backupdata = join("",get_backup($get["age"],encode($get["page"]).".txt"));
 			$backupdata = convert_html($backupdata);
 			$body .= "</ul>\n"
 				."$hr\n";
