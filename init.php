@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.20.2.5 2003/03/16 15:22:21 panda Exp $
+// $Id: init.php,v 1.20.2.6 2003/05/28 06:05:20 arino Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -9,7 +9,7 @@ define("INI_FILE","./pukiwiki.ini.php");
 //** 初期設定 **
 
 ini_set('error_reporting', 5);
-define("S_VERSION","1.3.4");
+define("S_VERSION","1.3.5");
 define("S_COPYRIGHT","<strong>\"PukiWiki\" ".S_VERSION."</strong> Copyright &copy; 2001,2002,2003 <a href=\"http://pukiwiki.org\">PukiWiki Developers Team</a>. License is <a href=\"http://www.gnu.org/\">GNU/GPL</a>.<BR>Based on \"PukiWiki\" 1.3 by <a href=\"http://factage.com/sng/\">sng</a>");
 define("UTIME",time());
 define("HTTP_USER_AGENT",$HTTP_SERVER_VARS["HTTP_USER_AGENT"]);
@@ -18,8 +18,12 @@ define("SERVER_NAME",$HTTP_SERVER_VARS["SERVER_NAME"]);
 
 define("MUTIME",getmicrotime());
 
-if($script == "") {
-	$script = (getenv('SERVER_PORT')==443?'https://':('http://')).getenv('SERVER_NAME').(getenv('SERVER_PORT')==80?'':(':'.getenv('SERVER_PORT'))).getenv('SCRIPT_NAME');
+if (!isset($script) or $script == '') {
+	$script  = ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://');
+	$script .=  $_SERVER['SERVER_NAME'];
+	$script .= ($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT']);
+	$parse_url = parse_url($_SERVER['REQUEST_URI']);
+	$script .= (isset($parse_url['path']) ? $parse_url['path'] : $_SERVER['SCRIPT_NAME']);
 }
 
 $WikiName = '[A-Z][a-z]+(?:[A-Z][a-z]+)+';
