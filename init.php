@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.40 2003/04/01 08:16:33 panda Exp $
+// $Id: init.php,v 1.41 2003/04/22 14:38:53 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -219,7 +219,10 @@ if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars))
 // 初期設定($WikiName,$BracketNameなど)
 // $WikiName = '[A-Z][a-z]+(?:[A-Z][a-z]+)+';
 // $WikiName = '\b[A-Z][a-z]+(?:[A-Z][a-z]+)+\b';
-$WikiName = '(?<![[:alnum:]])(?:[[:upper:]][[:lower:]]+){2,}(?![[:alnum:]])';
+// $WikiName = '(?<![[:alnum:]])(?:[[:upper:]][[:lower:]]+){2,}(?![[:alnum:]])';
+// $WikiName = '(?<!\w)(?:[A-Z][a-z]+){2,}(?!\w)';
+// BugTrack/304暫定対処
+$WikiName = '(?:[A-Z][a-z]+){2,}(?!\w)';
 // $BracketName = ':?[^\s\]#&<>":]+:?';
 $BracketName = '(?!\s):?[^\r\n\t\f\[\]<>#&":]+:?(?<!\s)';
 // InterWiki
