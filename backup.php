@@ -11,7 +11,7 @@
  * @access  public
  * @author  
  * @create  
- * @version $Id: backup.php,v 1.8 2003/01/29 09:48:24 panda Exp $
+ * @version $Id: backup.php,v 1.9 2003/04/26 11:17:47 arino Exp $
  **/
 
 /**
@@ -47,7 +47,7 @@ function make_backup($page,$delete = FALSE)
 	$lastmod = backup_get_filetime($page);
 	if (($lastmod == 0) or (UTIME - $lastmod) > (60 * 60 * $cycle)) {
 		//直後に1件追加するので、最大件数-1で切る
-		$backups = array_splice(get_backup($page),0,$maxage - 1);
+		$backups = array_splice(get_backup($page),1 - $maxage);
 		
 		$strout = '';
 		foreach($backups as $age=>$data) {
