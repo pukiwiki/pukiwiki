@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.10 2003/03/02 16:09:00 panda Exp $
+// $Id: en.lng,v 1.11 2003/05/17 11:15:32 arino Exp $
 //
 // PukiWiki message file (english)
 
@@ -73,6 +73,11 @@ $_msg_week = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 $_msg_content_back_to_top = '<div class="jumpmenu"><a href="#navigator">&uarr;</a></div>';
 $_msg_auth = 'Page Edit.';
 $_msg_word = 'These search terms have been highlighted:';
+
+///////////////////////////////////////
+// symbols
+$_symbol_anchor = '&dagger;';
+$_symbol_noexists = '?';
 
 ///////////////////////////////////////
 // form buttons
