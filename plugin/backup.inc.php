@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: backup.inc.php,v 1.2 2003/01/31 01:49:35 panda Exp $
+// $Id: backup.inc.php,v 1.3 2003/02/03 10:28:51 panda Exp $
 //
 // バックアップ
 function plugin_backup_action()
@@ -85,7 +85,7 @@ function plugin_backup_action()
 	$body .= "</ul>\n";
 	
 	if ($s_action == 'diff') {
-		$old = join('',$backups[$get['age']-1]['data']);
+		$old = ($get['age'] > 1) ? join('',$backups[$get['age']-1]['data']) : '';
 		$cur = join('',$backups[$get['age']]['data']);
 		$body .= backup_diff(do_diff($old,$cur));
 		
@@ -169,8 +169,7 @@ EOD;
 // 全ページのバックアップ一覧を取得
 function get_backup_list_all($withfilename = FALSE)
 {
-	global $script,$list_index,$top,$cantedit;
-	global $_msg_symbol,$_msg_other;
+	global $cantedit;
 	
 	$_pages = get_existpages(BACKUP_DIR);
 	if (count($_pages) == 0) {
@@ -184,6 +183,6 @@ function get_backup_list_all($withfilename = FALSE)
 		}
 	}
 	
-	return page_list($pages,'backup');
+	return page_list($pages,'backup',$withfilename);
 }
 ?>
