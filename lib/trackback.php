@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.4 2004/12/12 08:35:24 henoheno Exp $
+// $Id: trackback.php,v 1.5 2004/12/12 11:05:15 henoheno Exp $
 /*
  * PukiWiki/TrackBack
  * (C) 2003-2004 PukiWiki Developer Team
@@ -118,7 +118,7 @@ function tb_send($page, $plus, $minus = '')
 		if (empty($tb_id)) continue; // Trackback is not supported
 
 		$result = http_request($tb_id, 'POST', '', $putdata);
-		// FIXME: エラー処理を行っても、じゃ、どうする？だしなぁ...
+		// FIXME: Create warning notification space at pukiwiki.skin!
 	}
 }
 
@@ -189,6 +189,7 @@ function tb_get_url($url)
 	$data = http_request($url);
 	if ($data['rc'] !== 200) return '';
 
+	$matches = array();
 	if (! preg_match_all('#<rdf:RDF[^>]*>(.*?)</rdf:RDF>#si', $data['data'],
 	    $matches, PREG_PATTERN_ORDER))
 		return '';
@@ -257,14 +258,14 @@ function ref_save($page)
 {
 	global $referer;
 
-	if (! $referer || empty($_SERVER['HTTP_REFERER'])) return;
+	if (! $referer || empty($_SERVER['HTTP_REFERER'])) return TRUE;
 
 	$url = $_SERVER['HTTP_REFERER'];
 
 	// Validate URI (Ignore own)
 	$parse_url = parse_url($url);
 	if (empty($parse_url['host']) || $parse_url['host'] == $_SERVER['HTTP_HOST'])
-		return;
+		return TRUE;
 
 	if (! is_dir(TRACKBACK_DIR))      die('No such directory: TRACKBACK_DIR');
 	if (! is_writable(TRACKBACK_DIR)) die('Permission denied: TRACKBACK_DIR');
@@ -285,7 +286,7 @@ function ref_save($page)
 	$data[$d_url][2]++;
 
 	$fp = fopen($filename, 'w');
-	if ($fp === FALSE) return 1;	
+	if ($fp === FALSE) return FALSE;	
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
@@ -294,6 +295,6 @@ function ref_save($page)
 	flock($fp, LOCK_UN);
 	fclose($fp);
 
-	return 0;
+	return TRUE;
 }
 ?>
