@@ -1,5 +1,5 @@
 <?php
-// $Id: template.inc.php,v 1.9 2003/03/30 03:49:26 panda Exp $
+// $Id: template.inc.php,v 1.10 2003/04/13 04:38:51 arino Exp $
 
 define('MAX_LEN',60);
 
@@ -44,7 +44,8 @@ function plugin_template_action()
 			$lines[$i] = mb_strimwidth($lines[$i],0,MAX_LEN,'...');
 			
 			$tag = ($i==0) ? ' selected="selected"' : '';
-			$begin_select.= "<option value=\"$i\"$tag>$lines[$i]</option>\n";
+			$line = htmlspecialchars($lines[$i]);
+			$begin_select .= "<option value=\"$i\"$tag>$line</option>\n";
 		}
 		$begin_select.= "</select><br />\n<br />\n";
 		
@@ -52,7 +53,8 @@ function plugin_template_action()
 		for ($i = 0; $i < count($lines); $i++)
 		{
 			$tag = ($i == count($lines) - 1) ? ' selected="selected"' : '';
-			$end_select.= "<option value=\"$i\"$tag>$lines[$i]</option>\n";
+			$line = htmlspecialchars($lines[$i]);
+			$end_select .= "<option value=\"$i\"$tag>$line</option>\n";
 		}
 		$end_select.= "</select><br />\n<br />\n";
 		
