@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.2.2.4 2003/02/28 05:45:24 panda Exp $
+ * $Id: bugtrack.inc.php,v 1.2.2.5 2003/03/05 09:17:53 panda Exp $
  */
 
 function plugin_bugtrack_init()
@@ -212,6 +212,7 @@ function plugin_bugtrack_pageinfo($page) {
   global $WikiName, $InterWikiName, $BracketName;
 
   $source = get_source($page);
+  $source = preg_replace("/\x0D\x0A|\x0D|\x0A/","\n",$source);
   if(preg_match("/move\s*to\s*($WikiName|$InterWikiName|$BracketName)/",$source[0],$match)) {
     return(plugin_bugtrack_pageinfo($match[1]));
   }
@@ -287,7 +288,7 @@ function plugin_bugtrack_list_convert()
     list($page, $summary, $name, $priority, $state, $category) = $line;
     $page_link = make_link($page);
     $state_no = array_search($state,$_bugtrack_plugin_state_sort);
-    if($state_no===NULL) {
+    if($state_no===NULL or $state_no===FALSE) {
       $state_no = count($_bugtrack_plugin_state_list);
     }
     $bgcolor = $_bugtrack_plugin_state_bgcolor[$state_no];
