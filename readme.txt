@@ -171,7 +171,7 @@ PukiWiki/1.4.2との非互換点
         (http://pukiwiki.sourceforge.jp/dev/)の、開発日記/2004-03-18ページを参照して作業を行ってください。
 
 更新履歴
-    *   2004-03-21 1.4.3 by PukiWiki Developers Team
+    *   2004-04-04 1.4.3 by PukiWiki Developers Team
         BugTrack/493 リンク元の文字サイズを指定すると文字サイズを変えると＃relatedに反応しない 
             [[cvs:make_link.php]](v1.4:r1.64)
         BugTrack/494 LANG=enの時のtemplateプラグイン
