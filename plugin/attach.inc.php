@@ -2,7 +2,7 @@
 // プラグイン attach
 
 // changed by Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
-// $Id: attach.inc.php,v 1.8 2002/07/28 15:58:20 masui Exp $
+// $Id: attach.inc.php,v 1.9 2002/08/21 17:22:34 masui Exp $
 
 // set PHP value to enable file upload
 ini_set("file_uploads","1");
@@ -21,7 +21,7 @@ define("FILE_ICON","<img src=\"./image/file.gif\" width=\"20\" height=\"20\" alt
 
 function plugin_attach_convert()
 {
-	global $script,$vars,$max_size;
+	global $script,$vars,$max_size,$_attach_plugin_files;
 	global $_msg_attach_filelist,$_msg_maxsize,$_msg_delete,$_btn_upload,$_btn_delete,$_msg_attachfile;
 	
 	$ret = "";
@@ -52,7 +52,7 @@ function plugin_attach_convert()
 			if(file_exists(UPLOAD_DIR.$file.'.log')) {
 				$list = file(UPLOAD_DIR.$file.'.log');
 				
-				$counter = ' <span class="small">' . chop($list[0]) . '件</span>';
+				$counter = ' <span class="small">' . sprintf($_attach_plugin_files,chop($list[0])) . '</span>';
 			}
 			
 			$del = "[<a href=\"$script?plugin=attach&amp;mode=confirm&amp;delfile=${filename_url}&amp;refer=${refername_url}\" title=\"".str_replace('$1',$filename,$_msg_delete)."\">$_btn_delete</a>]";
