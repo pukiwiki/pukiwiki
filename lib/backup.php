@@ -11,7 +11,7 @@
  * @access  public
  * @author
  * @create
- * @version $Id: backup.php,v 1.5 2004/10/30 07:42:49 henoheno Exp $
+ * @version $Id: backup.php,v 1.6 2005/01/29 13:40:39 henoheno Exp $
  **/
 
 /**
@@ -24,12 +24,13 @@
  *
  * @return    Void
  */
+
 function make_backup($page, $delete = FALSE)
 {
 	global $cycle, $maxage;
 	global $do_backup, $del_backup;
 
-	if (! $do_backup) return;
+	if (PKWK_READONLY || ! $do_backup) return;
 
 	if ($del_backup && $delete) {
 		_backup_delete($page);
