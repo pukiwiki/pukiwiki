@@ -1,5 +1,5 @@
 <?
-// $Id: calendar.inc.php,v 1.6 2002/08/05 09:28:28 masui Exp $
+// $Id: calendar.inc.php,v 1.7 2002/09/04 06:49:13 masui Exp $
 
 function plugin_calendar_convert()
 {
@@ -25,7 +25,7 @@ function plugin_calendar_convert()
 		{
 			$date_str = date("Ym");
 			$pre = $args[0];
-			$prefix = $args[0];
+			$prefix = $args[0]."/";
 		}
 	}
 	else if(func_num_args() == 2)
@@ -34,13 +34,13 @@ function plugin_calendar_convert()
 		{
 			$date_str = $args[0];
 			$pre = $args[1];
-			$prefix = $args[1];
+			$prefix = $args[1]."/";
 		}
 		else if(is_numeric($args[1]) && strlen($args[1]) == 6)
 		{
 			$date_str = $args[1];
 			$pre = $args[0];
-			$prefix = $args[0];
+			$prefix = $args[0]."/";
 		}
 		else
 		{
