@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.39 2003/05/17 11:12:10 arino Exp $
+// $Id: make_link.php,v 1.40 2003/05/19 09:14:40 arino Exp $
 //
 
 // リンクを付加する
@@ -326,14 +326,13 @@ class Link_url extends Link
 	{
 		$s1 = $this->start + 1;
 		return <<<EOD
-(\[\[         # (1) open bracket
- ([^\]]+)     # (2) alias
- (?:&gt;|>|:) # '&gt;' or '>' or ':'
+(\[\[            # (1) open bracket
+ ([^\]]+)(?:>|:) # (2) alias
 )?
-(             # (3) url
+(                # (3) url
  (?:https?|ftp|news):\/\/[!~*'();\/?:\@&=+\$,%#\w.-]+
 )
-(?($s1)\]\])  # close bracket
+(?($s1)\]\])     # close bracket
 EOD;
 	}
 	function get_count()
@@ -404,9 +403,9 @@ class Link_mailto extends Link
 	{
 		$s1 = $this->start + 1;
 		return <<<EOD
-(?:\[\[([^\]]+)(?:&gt;|>|:))? # (1) alias
- ([\w.-]+@[\w-]+\.[\w.-]+)    # (2) mailto
-(?($s1)\]\])                  # close bracket if (1)
+(?:\[\[([^\]]+)(?:>|:))?   # (1) alias
+ ([\w.-]+@[\w-]+\.[\w.-]+) # (2) mailto
+(?($s1)\]\])               # close bracket if (1)
 EOD;
 	}
 	function get_count()
@@ -445,8 +444,7 @@ class Link_interwikiname extends Link
 \[\[                    # open bracket
 (?:
  (\[\[)?                # (1) open bracket
- ([^\[\]]+)             # (2) alias
- (?:&gt;|>)             # '&gt;' or '>'
+ ([^\[\]]+)>            # (2) alias
 )?
 (?:
  (\[\[)?                # (3) open bracket
@@ -456,8 +454,8 @@ class Link_interwikiname extends Link
   |(?($s3)\]\])         #   or (3)
   )
  )?
- (?<!&gt;)
- (\:(?:(?<!&gt;|>).)*?) # (6) param
+ (?<!>)
+ (\:(?:(?<!>).)*?)      # (6) param
  (?($s5) |              # if !(5)
   (?($s1)\]\]           #  close bracket if (1)
   |(?($s3)\]\])         #   or (3)
@@ -513,8 +511,7 @@ class Link_bracketname extends Link
 \[\[                     # open bracket
 (?:
  (\[\[)?                 # (1) open bracket
- ([^\[\]]+)              # (2) alias
- (?:&gt;|>)              # '&gt;' or '>'
+ ([^\[\]]+)>             # (2) alias
 )?
 (\[\[)?                  # (3) open bracket
 (                        # (4) PageName
