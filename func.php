@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.46 2003/07/03 04:47:49 arino Exp $
+// $Id: func.php,v 1.47 2003/07/14 03:56:32 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -82,33 +82,6 @@ function is_freeze($page)
 
 	list($lines) = get_source($page);
 	return (rtrim($lines) == '#freeze');
-}
-
-// 編集不可能なページを編集しようとしたとき
-// デフォルト値で互換性を保つ
-function check_editable($page, $auth_flag=true, $exit_flag=true)
-{
-	global $script,$_title_cannotedit,$_msg_unfreeze;
-	
-	if (edit_auth($page, $auth_flag, $exit_flag) and is_editable($page))
-	{
-		return true;
-	}
-
-	if ($exit_flag) {
-		$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($page)),$_title_cannotedit);
-		if(is_freeze($page))
-		{
-			$body .= "(<a href=\"$script?cmd=unfreeze&amp;page=".
-				rawurlencode($page)."\">$_msg_unfreeze</a>)";
-		}
-
-		$page = str_replace('$1',make_search($page),$_title_cannotedit);
-
-		catbody($title,$page,$body);
-		exit;
-	}
-	return false;
 }
 
 // 自動テンプレート
@@ -646,7 +619,6 @@ if (!function_exists('md5_file'))
 {
 	function md5_file($filename)
 	{
-		
 		if (!file_exists($filename))
 		{
 			return FALSE;
@@ -656,139 +628,5 @@ if (!function_exists('md5_file'))
 		fclose($fd);
 		return md5($data);
 	}
-}
-
-/////////////////////////////////////////////////////////////////
-// Basic認証による権限チェック
-// 編集認証
-// 閲覧との対称性を持たせた
-function edit_auth($page, $auth_flag=true, $exit_flag=true) {
-	global $_msg_auth,$edit_auth,$auth_users,$edit_auth_pages;
-	global $_title_cannotedit,$auth_method_type;
-
-	// 編集認証フラグをチェック (システム全体として編集認証するかどうか)
-	if (!$edit_auth) { return true; }
-
-	// 認証要否判断対象文字列を取得する
-	// ページ名でチェックする場合
-	if ($auth_method_type == "pagename") {
-		$target_str = $page;
-	}
-	// ページ内の文字列でチェックする場合
-	else if ($auth_method_type == "contents") {
-		$target_str = join('',get_source($page));
-	}
-	else {
-		$target_str = "";
-	}
-
-	// 合致したパターンで定義されたユーザリストをマージする
-	reset($edit_auth_pages);
-	$user_list = "";
-	while (list($key, $val) = each($edit_auth_pages)) {
-		if (preg_match($key, $target_str)) {
-			$user_list .= ",".$val;
-		}
-	}
-	if ($user_list == "") { return true; }
-
-	// ユーザリストに含まれるいずれかのユーザと認証されればOK
-	if (!isset($_SERVER['PHP_AUTH_USER'])
-		or !preg_match("/".$_SERVER['PHP_AUTH_USER']."/", $user_list)
-		or !array_key_exists($_SERVER['PHP_AUTH_USER'], $auth_users)
-		or $auth_users[$_SERVER['PHP_AUTH_USER']] != $_SERVER['PHP_AUTH_PW'])
-	{
-		if ($auth_flag) {
-			header('WWW-Authenticate: Basic realm="'.$_msg_auth.'"');
-			header('HTTP/1.0 401 Unauthorized');
-		}
-		if ($exit_flag) {
-			$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($page)), $_title_cannotedit);
-			$page = str_replace('$1',make_search($page),$_title_cannotedit);
-			catbody($title, $page, $body);
-			exit;
-		}
-		return false;
-	}
-	return true;
-}
-
-// 閲覧不可能なページを閲覧しようとしたとき (？)
-//  ※あまり必要性を感じないが、editの場合と対称性を持たせるために導入。
-function check_readable($page, $auth_flag=true, $exit_flag=true) {
-	if (read_auth($page, $auth_flag, $exit_flag)) {
-		return true;
-	}
-	return false;
-}
-
-// 閲覧認証
-function read_auth($page, $auth_flag=true, $exit_flag=true) {
-	global $_msg_auth,$read_auth,$auth_users,$read_auth_pages;
-	global $_title_cannotread, $auth_method_type;
-
-	// 閲覧認証フラグをチェック
-	if (!$read_auth) { return true; }
-
-	// 認証要否判断対象文字列を取得する
-	// ページ名でチェックする場合
-	if ($auth_method_type == "pagename") {
-		$target_str = $page;
-	}
-	// ページ内の文字列でチェックする場合
-	else if ($auth_method_type == "contents") {
-		$target_str = join('',get_source($page));
-	}
-	else {
-		$target_str = "";
-	}
-
-	// 合致したパターンで定義されたユーザリストをマージする
-	reset($read_auth_pages);
-	$user_list = "";
-	while (list($key, $val) = each($read_auth_pages)) {
-		if (preg_match($key, $target_str)) {
-			$user_list .= ",".$val;
-		}
-	}
-	if ($user_list == "") { return true; }
-
-	// ユーザリストに含まれるいずれかのユーザと認証されればOK
-	if (!isset($_SERVER['PHP_AUTH_USER'])
-		or !preg_match("/".$_SERVER['PHP_AUTH_USER']."/", $user_list)
-		or !array_key_exists($_SERVER['PHP_AUTH_USER'], $auth_users)
-		or $auth_users[$_SERVER['PHP_AUTH_USER']] != $_SERVER['PHP_AUTH_PW'])
-	{
-		if ($auth_flag) {
-			header('WWW-Authenticate: Basic realm="'.$_msg_auth.'"');
-			header('HTTP/1.0 401 Unauthorized');
-		}
-		if ($exit_flag) {
-			$body = $title = str_replace('$1',htmlspecialchars(strip_bracket($page)), $_title_cannotread);
-			$page = str_replace('$1',make_search($page),$_title_cannotread);
-			catbody($title, $page, $body);
-			exit;
-		}
-		return false;
-	}
-	return true;
-}
-
-// Referer 変数を戻す
-function get_referer($local=FALSE)
-{
-	$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
-	// 自サイトも有効の場合は、そのまま戻す
-	if ($local)
-	{
-		return $HTTP_REFERER;
-	}
-	$HTTP_HOST = 'http://'.$_SERVER['HTTP_HOST'];
-	// 自サイト内の場合は、消去
-	if (strpos($HTTP_REFERER,$HTTP_HOST) === 0)
-	{
-		$HTTP_REFERER = '';
-	}
-	return $HTTP_REFERER;
 }
 ?>
