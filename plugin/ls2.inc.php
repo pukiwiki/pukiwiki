@@ -1,5 +1,5 @@
 <?php
-// $Id: ls2.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+// $Id: ls2.inc.php,v 1.1.2.1 2003/02/27 01:03:36 panda Exp $
 /*
 Last-Update:2002-10-29 rev.8
 
@@ -116,7 +116,7 @@ function ls2_show_headings($page,&$params,$include = FALSE) {
 	$href = $script.'?cmd=read&amp;page='.rawurlencode($page);
 	$ret .= '<li>';
 	if ($include) { $ret .= 'include '; }
-	$ret .= '<a id="list_'.$params[$page].'" href="'.$href.'" title="'.$title.'">'.$name.'</a>';
+	$ret .= '<a id="list_'.$params[$page].'" href="'.$href.'" title="'.$title.'">'.htmlspecialchars($name).'</a>';
 	if ($params['title'] and $is_done) {
 		$ret .= '<a href="#list_'.$params[$page].'">+</a></li>'."\n";
 		return $ret;
@@ -125,7 +125,7 @@ function ls2_show_headings($page,&$params,$include = FALSE) {
 	$_ret = '';
 	foreach (get_source($page) as $line) {
 		if ($params['title'] and preg_match('/^(\*+)(.*)$/',$line,$matches)) {
-			list($special) = inline2(array(preg_replace($rules,'',htmlspecialchars($matches[2]))));
+			$special = strip_htmltag(make_user_rules(inline($matches[2],TRUE)));
 			$left = (strlen($matches[1]) - 1) * 16;
 			$_ret .= '<li style="margin-left:'.$left.'px">'.$special.
 				'<a href="'.$href.LS2_CONTENT_HEAD.$anchor.'">'.$_ls2_messages['msg_go'].'</a></li>'."\n";
