@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.29 2005/01/23 05:25:21 henoheno Exp $
+// $Id: func.php,v 1.30 2005/01/27 12:50:43 henoheno Exp $
 //
 // General functions
 
@@ -305,7 +305,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 		if($pagereading_enable) {
 			if(mb_ereg('^([A-Za-z])', mb_convert_kana($page, 'a'), $matches)) {
 				$head = $matches[1];
-			} elseif(mb_ereg('^([¥¡-¥ö])', $readings[$page], $matches)) { // here
+			} elseif (isset($readings[$page]) && mb_ereg('^([¥¡-¥ö])', $readings[$page], $matches)) { // here
 				$head = $matches[1];
 			} elseif (mb_ereg('^[ -~]|[^¤¡-¤ó°¡-ô¦]', $page)) { // and here
 				$head = $symbol;
