@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.47 2004/08/05 14:16:42 henoheno Exp $
+//  $Id: attach.inc.php,v 1.48 2004/08/06 12:35:51 henoheno Exp $
 //
 
 /*
@@ -694,7 +694,7 @@ class AttachPages
 
 			$_page = decode($matches[1]);
 			$_file = decode($matches[2]);
-			$_age  = $matches[3] ? $matches[3] : 0;
+			$_age  = isset($matches[3]) ? $matches[3] : 0;
 			if (! isset($this->pages[$_page])) {
 				$this->pages[$_page] = & new AttachFiles($_page);
 			}
