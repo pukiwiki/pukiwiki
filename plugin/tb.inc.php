@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.5 2003/09/28 14:29:07 arino Exp $
+// $Id: tb.inc.php,v 1.6 2003/12/03 12:31:08 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -220,6 +220,11 @@ function tb_mode_view($tb_id)
 	$tb_body = '';
 	foreach ($data as $x)
 	{
+		if (count($x) != 5)
+		{
+			// record broken
+			continue;
+		}
 		list ($time,$url,$title,$excerpt,$blog_name) = $x;
 		if ($title == '')
 		{
