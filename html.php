@@ -1,6 +1,6 @@
-<?
+<?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.40 2002/10/15 06:14:46 masui Exp $
+// $Id: html.php,v 1.41 2002/11/29 00:09:00 panda Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -163,13 +163,13 @@ function convert_html($string)
 				$headform[$_cnt] = $out[1];
 				$str = inline($out[2]);
 				
-  				$level = strlen($out[1]) + 1;
-  
-  				array_push($result, "<h$level><a name=\"content_{$content_id}_$content_count\"></a>$str $top_link</h$level>");
-+ 				$arycontents[] = str_repeat("-",$level-1)."<a href=\"#content_{$content_id}_$content_count\">".strip_htmltag(make_user_rules(inline($out[2],TRUE)))."</a>\n";
-  				$content_count++;
-  			}
-  			else if(preg_match("/^(-{1,4})(.*)/",$line,$out))
+				$level = strlen($out[1]) + 1;
+
+				array_push($result, "<h$level><a name=\"content_{$content_id_local}_$content_count\"></a>$str $top_link</h$level>");
+				$arycontents[] = str_repeat("-",$level-1)."<a href=\"#content_{$content_id_local}_$content_count\">".strip_htmltag(make_user_rules(inline($out[2],TRUE)))."</a>\n";
+				$content_count++;
+			}
+			else if(preg_match("/^(-{1,4})(.*)/",$line,$out))
 			{
 				$headform[$_cnt] = $out[1];
 				if(strlen($out[1]) == 4)
@@ -567,8 +567,9 @@ function edit_form($postdata,$page,$add=0)
 		foreach($files as $pg_org) {
 			if($pg_org == $whatsnew) continue;
 			if(preg_match("/$non_list/",$pg_org)) continue;
-			$name = strip_bracket($pg_org);
-			$vals[$name] = "    <option value=\"$pg_org\">$name</option>";
+			$s_name = htmlspecialchars(strip_bracket($pg_org));
+			$s_org = htmlspecialchars($pg_org);
+			$vals[$name] = "    <option value=\"$s_org\">$s_name</option>";
 		}
 		@ksort($vals);
 		

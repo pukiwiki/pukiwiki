@@ -1,6 +1,6 @@
-<?
+<?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.7 2002/08/28 18:10:15 masui Exp $
+// $Id: func.php,v 1.8 2002/11/29 00:09:00 panda Exp $
 /////////////////////////////////////////////////
 
 // ¸¡º÷

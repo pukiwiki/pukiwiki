@@ -1,6 +1,6 @@
-<?
+<?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.php,v 1.5 2002/08/07 08:51:45 masui Exp $
+// $Id: backup.php,v 1.6 2002/11/29 00:09:00 panda Exp $
 /////////////////////////////////////////////////
 
 // バックアップデータを作成する
@@ -146,12 +146,12 @@ function get_backup_list($_page="")
 			$page = decode(trim(preg_replace("/(\.txt)|(\.gz)$/"," ",$file)));
 			if(in_array($page,$cantedit)) continue;
 			$page_url = rawurlencode($page);
-			$name = $page;
-			$name = strip_bracket($name);
+			$name = strip_bracket($page);
+			$s_name = htmlspecialchars($name);
 			if(is_page($page))
-				$vals[$name]["link"] = "<li><a href=\"$script?$page_url\">$name</a>";
+				$vals[$name]["link"] = "<li><a href=\"$script?$page_url\">$s_name</a>";
 			else
-				$vals[$name]["link"] = "<li>$name";
+				$vals[$name]["link"] = "<li>$s_name";
 			$vals[$name]["name"] = $page;
 		}
 		closedir($dir);

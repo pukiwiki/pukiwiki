@@ -1,6 +1,6 @@
-<?
+<?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.17 2002/10/15 05:28:09 masui Exp $
+// $Id: init.php,v 1.18 2002/11/29 00:09:00 panda Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -21,17 +21,23 @@ define("MUTIME",getmicrotime());
 if($script == "") {
 	$script = (getenv('SERVER_PORT')==443?'https://':('http://')).getenv('SERVER_NAME').(getenv('SERVER_PORT')==80?'':(':'.getenv('SERVER_PORT'))).getenv('SCRIPT_NAME');
 }
+	$script =
+		 ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://')
+		. $_SERVER['SERVER_NAME']
+		.($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT'])
+		. $_SERVER['SCRIPT_NAME'];
 
 $WikiName = '[A-Z][a-z]+(?:[A-Z][a-z]+)+';
-$BracketName = '\[\[(:?[^\s\]#&<>":]+:?)\]\]';
+//$BracketName = '\[\[(:?[^\s\]#&<>":]+:?)\]\]';
+$BracketName = '\[\[(?!\/|\.\/|\.\.\/)(:?[^\s\]#&<>":]+:?)(?<!\/)\]\]';
 $InterWikiName = "\[\[(\[*[^\s\]]+?\]*):(\[*[^>\]]+?\]*)\]\]";
 
 $LinkPattern = "/( (?# <1>:all)
 	(?# url )
-	(?: \[\[([^\]&>]+) :)?       (?#<2>:alias)
+	(?:\[\[([^\]]+):)?           (?#<2>:alias)
 		(\[)?                      (?#<3>:open bracket)
 			((?:https?|ftp|news)(?::\/\/[!~*'();\/?:\@&=+\$,%#\w.-]+)) (?#<4>:url)
-		(?(3)\s([^\]&>]+)\])       (?#<5>:alias, close bracket if <3>)
+		(?(3)\s([^\]]+)\])         (?#<5>:alias, close bracket if <3>)
 	(?(2)\]\])                   (?# close bracket if <2>)
 	|
 	(?# mailto)
@@ -110,7 +116,6 @@ require(INI_FILE);
 
 if(!file_exists(LANG.".lng")||!is_readable(LANG.".lng"))
 	die_message(LANG.".lng(language file) is not found.");
-require(LANG.".lng");
 
 
 if($usefacemark) {

@@ -1,6 +1,6 @@
-<?
+<?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.2 2002/07/18 15:24:08 masui Exp $
+// $Id: file.php,v 1.3 2002/11/29 00:09:00 panda Exp $
 /////////////////////////////////////////////////
 
 // ソースを取得
@@ -30,6 +30,8 @@ function file_write($dir,$page,$str)
 	}
 	else
 	{
+		$str = preg_replace("/\x0D\x0A|\x0D|\x0A/","\n",$str);
+		
 		if($post["notimestamp"] && is_page($page))
 		{
 			$timestamp = @filemtime($dir.encode($page).".txt");
@@ -47,7 +49,7 @@ function file_write($dir,$page,$str)
 	if(!$timestamp)
 		put_lastmodified();
 
-	if($update_exec)
+	if($update_exec and $dir == DATA_DIR)
 	{
 		system($update_exec." > /dev/null &");
 	}
