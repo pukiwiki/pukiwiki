@@ -21,7 +21,7 @@
  <link rel="stylesheet" href="skin/default.ja.css" type="text/css" media="screen" charset="Shift_JIS" />
  <link rel="stylesheet" href="skin/print.ja.css" type="text/css" media="print" charset="Shift_JIS" />
 <?php
-  global $trackback;
+  global $trackback, $referer;
   if ($trackback) {
 ?>
  <meta http-equiv="Content-Script-Type" content="text/javascript" />
@@ -90,6 +90,13 @@
  &nbsp;
  [ <a href="<?php echo "$script?plugin=tb&amp;__mode=view&amp;tb_id=$tb_id" ?>" onclick="OpenTrackback(this.href); return false">TrackBack(<?php echo tb_count($r_page) ?>)</a> ]
 <?php } ?>
+
+<?php
+  if ($referer) {
+?>
+ [ <a href="<?php echo "$script?plugin=referer&amp;page=$r_page" ?>">リンク元</a> ]
+<?php } ?>
+
 </div>
 <?php echo $hr ?>
 
@@ -148,7 +155,7 @@
  <a href="<?php echo $link_whatsnew ?>"><img src="./image/recentchanges.png" width="20" height="20" alt="最終更新" title="最終更新" /></a>
 
 <?php if ($do_backup) { ?>
- <a href="<?php echo $link_backup ?>"><img src="./image/backup.png" width="20" height="20" alt="バックアップ" title="バックアップ"/></a>
+ <a href="<?php echo $link_backup ?>"><img src="./image/backup.png" width="20" height="20" alt="バックアップ" title="バックアップ" /></a>
 <?php } ?>
 
  &nbsp;
