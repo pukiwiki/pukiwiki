@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.2 2004/08/04 14:14:52 henoheno Exp $
+// $Id: init.php,v 1.3 2004/08/04 14:38:10 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -257,19 +257,19 @@ foreach (explode('&', $arg) as $key_and_value) {
 unset($matches);
 
 /////////////////////////////////////////////////
-// GET + POST = $vars
+// GET, POST, COOKIE
 
 $get    = & $_GET;
 $post   = & $_POST;
 $cookie = & $_COOKIE;
 
+// GET + POST = $vars
 if (empty($_POST)) {
-	$vars = & $_GET;
+	$vars = & $_GET;  // Major pattern: Read-only access via GET
 } else if (empty($_GET)) {
-	$vars = & $_POST;
+	$vars = & $_POST; // Minor pattern: Write access via POST
 } else {
-	// Seems more reliable than using $_REQUEST
-	$vars = array_merge($_GET, $_POST);
+	$vars = array_merge($_GET, $_POST); // Seems more reliable than $_REQUEST
 }
 
 // 入力チェック: cmd, plugin の文字列は英数字以外ありえない
