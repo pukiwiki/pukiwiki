@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.71 2003/03/22 15:22:22 panda Exp $
+// $Id: html.php,v 1.72 2003/04/30 08:16:30 arino Exp $
 //
 
 // 本文を出力
@@ -10,7 +10,7 @@ function catbody($title,$page,$body)
 {
 	global $script,$vars,$arg,$defaultpage,$whatsnew,$help_page,$hr;
 	global $related_link,$cantedit,$function_freeze,$search_word_color,$_msg_word;
-	global $foot_explain,$note_hr;
+	global $foot_explain,$note_hr,$head_tags;
 	
 	global $html_transitional; // FALSE:XHTML1.1 TRUE:XHTML1.0 Transitional
 	global $page_title;        // ホームページのタイトル
@@ -58,6 +58,9 @@ function catbody($title,$page,$body)
 	// 注釈のリスト
 	ksort($foot_explain,SORT_NUMERIC);
 	$notes = count($foot_explain) ? $note_hr.join("\n",$foot_explain) : '';
+	
+	// <head>内に追加するタグ
+	$head_tag = count($head_tags) ? join("\n",$head_tags)."\n" : '';
 	
 	// 1.3.x compat
 	// ページの最終更新時刻(UNIX timestamp)
@@ -279,6 +282,6 @@ function make_search($page)
 	//if(preg_match("/^$WikiName$/",$page))
 	//	$name = preg_replace("/([A-Z][a-z]+)/","$1 ",$name);
 	
- 	return "<a href=\"$script?cmd=search&amp;word=$r_page\">$s_page</a> ";
+	return "<a href=\"$script?cmd=search&amp;word=$r_page\">$s_page</a> ";
 }
 ?>

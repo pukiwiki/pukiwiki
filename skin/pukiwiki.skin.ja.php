@@ -19,6 +19,7 @@
 
  <title><?php echo "$title - $page_title" ?></title>
  <link rel="stylesheet" href="skin/default.ja.css" type="text/css" media="screen" charset="Shift_JIS" />
+<?php echo $head_tag ?>
 </head>
 <body>
 

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: navi.inc.php,v 1.10 2003/04/13 07:04:08 arino Exp $
+// $Id: navi.inc.php,v 1.11 2003/04/30 08:16:30 arino Exp $
 //
 
 /*
@@ -51,7 +51,7 @@ function plugin_navi_init()
 }
 function plugin_navi_convert()
 {
-	global $vars, $script;
+	global $vars, $script, $head_tags;
 	global $_navi_messages;
 	static $navi = array();
 	
@@ -98,6 +98,7 @@ function plugin_navi_convert()
 		$next = current($pages);
 		
 		$pos = strrpos($current, '/');
+		$up = '';
 		if ($pos > 0)
 		{
 			$up = substr($current, 0, $pos);
@@ -115,6 +116,18 @@ function plugin_navi_convert()
 		}
 		$navi[$home]['home'] = make_pagelink($home);
 		$navi[$home]['home1'] = make_pagelink($home,$_navi_messages['msg_home']);
+		
+		// <link>¥¿¥°ÍÑ
+		// start next prev(previous) contents(toc) search parent(up) first(begin) last(end)
+		foreach (array('start'=>$home,'next'=>$next,'prev'=>$prev,'up'=>$up) as $rel=>$_page)
+		{
+			if ($_page != '')
+			{
+				$s_page = htmlspecialchars($_page);
+				$r_page = rawurlencode($_page);
+				$head_tags[] = " <link rel=\"$rel\" href=\"$script?$r_page\" title=\"$s_page\">";
+			}
+		}
 	}
 
 	$ret = '';
