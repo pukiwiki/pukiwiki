@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.23 2003/03/04 07:03:43 panda Exp $
+// $Id: func.php,v 1.24 2003/03/04 07:05:00 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -161,7 +161,7 @@ function do_search($word,$type='AND')
 	foreach ($_pages as $page)
 	{
 		if ($page == $whatsnew
-			or (!$search_non_list and preg_match("/$non_list/",$page))
+			or (!$search_non_list and preg_match("/$non_list/",$page)))
 		{
 			continue;
 		}
