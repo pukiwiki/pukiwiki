@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.56 2003/07/05 04:46:34 arino Exp $
+// $Id: init.php,v 1.57 2003/07/05 05:12:40 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -190,7 +190,11 @@ else if (array_key_exists(0,$_SERVER['argv']))
 $arg = sanitize($arg);
 
 // URI 手打の場合、コード変換し、get[] に上書き
+// mb_convert_variablesのバグ(?)対策 配列で渡さないと落ちる
+$arg = array($arg);
 mb_convert_variables(SOURCE_ENCODING,'auto',$arg);
+$arg = $arg[0];
+
 foreach (explode('&',$arg) as $tmp_string)
 {
 	if (preg_match('/^([^=]+)=(.+)/',$tmp_string,$matches)
