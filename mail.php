@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mail.php,v 1.4 2004/07/17 13:10:10 henoheno Exp $
+// $Id: mail.php,v 1.5 2004/07/17 13:24:27 henoheno Exp $
 //
 
 // APOP/POP Before SMTP
@@ -63,8 +63,8 @@ function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 	$result = fgets($fp, 1024); // 512byte max, auth result
 
 	// Disconnect
-	// fputs($fp, "QUIT\r\n");
-	// $message = fgets($fp, 1024); // 512byte max, last "+OK"
+	fputs($fp, "QUIT\r\n");
+	$message = fgets($fp, 1024); // 512byte max, last "+OK"
 	fclose($fp);
 
 	if (! preg_match('/^\+OK /', $result)) {
