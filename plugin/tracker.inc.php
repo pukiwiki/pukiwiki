@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.6 2003/07/29 06:21:12 arino Exp $
+// $Id: tracker.inc.php,v 1.7 2003/08/02 02:02:27 arino Exp $
 //
 
 function plugin_tracker_convert()
@@ -296,7 +296,7 @@ class Tracker_field_format extends Tracker_field
 		
 		foreach ($this->config->get($this->name) as $option)
 		{
-			list($key,$style,$format) = array_map(create_function('$a','return trim($a);'),$option);
+			list($key,$style,$format) = array_pad(array_map(create_function('$a','return trim($a);'),$option),3,'');
 			if ($style != '')
 			{
 				$this->styles[$key] = $style;
