@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: yetlist.inc.php,v 1.16 2003/03/23 12:03:09 panda Exp $
+// $Id: yetlist.inc.php,v 1.17 2003/06/05 00:32:14 arino Exp $
 //
 
 function plugin_yetlist_init()
@@ -10,13 +10,15 @@ function plugin_yetlist_init()
 	if (LANG == 'ja')
 	{
 		$messages = array(
-			'_title_yetlist'    => '未作成のページ一覧'
+			'_title_yetlist' => '未作成のページ一覧',
+			'_err_notexist'  => '未作成のページはありません。' 
 		);
 	}
 	else
 	{
 		$messages = array(
-			'_title_yetlist'    => 'List of pages, are not made yet'
+			'_title_yetlist' => 'List of pages, are not made yet',
+			'_err_notexist'  => 'All pages are made.'
 		);
 	}
 	set_plugin_messages($messages);
@@ -24,10 +26,12 @@ function plugin_yetlist_init()
 function plugin_yetlist_action()
 {
 	global $script;
-	global $_title_yetlist;
+	global $_title_yetlist,$_err_notexist;
 	
-	$ret['msg'] = $_title_yetlist;
-	$ret['body'] = '';
+	$retval = array(
+		'msg' => $_title_yetlist,
+		'body' => ''
+	);
 	
 	$refer = array();
 	$exists = get_existpages();
@@ -43,7 +47,8 @@ function plugin_yetlist_action()
 	
 	if (count($refer) == 0)
 	{
-		return $ret;
+		$retval['body'] = $_err_notexist;
+		return $retval;
 	}
 	
 	ksort($refer,SORT_STRING);
@@ -63,14 +68,14 @@ function plugin_yetlist_action()
 		}
 		$link_ref = join(' ',$link_refs);
 		// 参照元ページが複数あった場合、referは最後のページを指す(いいのかな)
-		$ret['body'] .= "<li><a href=\"$script?cmd=edit&amp;page=$r_page&amp;refer=$r_refer\">$s_page</a> <em>($link_ref)</em></li>\n";
+		$retval['body'] .= "<li><a href=\"$script?cmd=edit&amp;page=$r_page&amp;refer=$r_refer\">$s_page</a> <em>($link_ref)</em></li>\n";
 	}
 	
-	if ($ret['body'] != '')
+	if ($retval['body'] != '')
 	{
-		$ret['body'] = "<ul>\n{$ret['body']}</ul>\n";
+		$retval['body'] = "<ul>\n".$retval['body']."</ul>\n";
 	}
 	
-	return $ret;
+	return $retval;
 }
 ?>
