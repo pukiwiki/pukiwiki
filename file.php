@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.7 2003/02/18 09:57:37 panda Exp $
+// $Id: file.php,v 1.8 2003/02/20 12:24:18 panda Exp $
 //
 
 // ソースを取得
@@ -168,7 +168,7 @@ function get_pg_passage($page,$sw=TRUE)
 		$pg_passage[$page] = (is_page($page) and $time = get_filetime($page)) ? get_passage($time) : '';
 	}
 	
-	return $sw ? "<small>{$pg_passage[$page]}</small>" : $pg_passage[$page];
+	return $sw ? "<small>{$pg_passage[$page]}</small>" : " {$pg_passage[$page]}";
 }
 
 // Last-Modified ヘッダ
@@ -190,7 +190,8 @@ function get_existpages($dir=DATA_DIR,$ext='.txt')
 	if ($ext != '') {
 		$pattern .= preg_quote($ext,'/').'$';
 	}
-	$dp = @opendir($dir) or die();
+	$dp = @opendir($dir)
+		or die_message($dir. ' is not found or not readable.');
 	while ($file = readdir($dp)) {
 		if (preg_match("/$pattern/",$file,$matches)) {
 			$aryret[] = decode($matches[1]);
@@ -205,7 +206,8 @@ function get_existfiles($dir,$ext)
 	$aryret = array();
 	
 	$pattern = '^[0-9A-F]+'.preg_quote($ext).'$';
-	$dp = @opendir($dir) or die();
+	$dp = @opendir($dir)
+		or die_message($dir. ' is not found or not readable.');
 	while ($file = readdir($dp)) {
 		if (preg_match("/$pattern/",$file)) {
 			$aryret[] = $dir.$file;
