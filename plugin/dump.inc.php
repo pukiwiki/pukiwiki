@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.27 2004/09/29 14:50:01 henoheno Exp $
+// $Id: dump.inc.php,v 1.28 2004/10/01 12:48:19 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [¹¹¿·ÍúÎò]
@@ -556,11 +556,9 @@ class tarlib
 			gzwrite($this->fp, $body, $size);               // Body
 			gzwrite($this->fp, $this->dummydata, $fixsize); // Padding
 		} else {
-			flock($this->fp, LOCK_EX);
 			 fwrite($this->fp, $header, TARLIB_HDR_LEN);    // Header
 			 fwrite($this->fp, $body, $size);               // Body
 			 fwrite($this->fp, $this->dummydata, $fixsize); // Padding
-			flock($this->fp, LOCK_UN);
 		}
 	}
 
