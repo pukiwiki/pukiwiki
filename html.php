@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.8 2002/06/25 12:08:05 uid20282 Exp $
+// $Id: html.php,v 1.9 2002/06/25 12:42:32 uid20282 Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -347,6 +347,7 @@ function get_list($withfilename)
 		$page_url = rawurlencode($page);
 		$page2 = strip_bracket($page);
 		$pg_passage = get_pg_passage($page);
+		$file = encode($page).".txt";
 		$retval[$page2] .= "<li><a href=\"$script?$page_url\">$page2</a>$pg_passage</li>\n";
 		if($withfilename)
 		{
