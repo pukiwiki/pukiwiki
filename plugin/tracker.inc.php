@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.5 2003/07/28 05:49:15 arino Exp $
+// $Id: tracker.inc.php,v 1.6 2003/07/29 06:21:12 arino Exp $
 //
 
 function plugin_tracker_convert()
@@ -324,12 +324,12 @@ class Tracker_field_format extends Tracker_field
 			return join(', ',array_map(array($this,'format_value'),$str));
 		}
 		$key = $this->get_key($str);
-		return array_key_exists($key,$this->formats) ? sprintf($this->formats[$key],$str) : $str;
+		return array_key_exists($key,$this->formats) ? str_replace('%s',$str,$this->formats[$key]) : $str;
 	}
 	function get_style($str)
 	{
 		$key = $this->get_key($str);
-		return array_key_exists($key,$this->styles) ? $this->styles[$key] : '';
+		return array_key_exists($key,$this->styles) ? $this->styles[$key] : '%s';
 	}
 }
 class Tracker_field_radio extends Tracker_field_format
