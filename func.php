@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.25 2003/03/05 06:58:49 panda Exp $
+// $Id: func.php,v 1.26 2003/03/06 05:42:21 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -410,8 +410,12 @@ function drop_submit($str)
 function get_autolink_pattern(&$pages)
 {
 	global $WikiName,$autolink,$nowikiname;
+	global $ignorelistpage,$forceignorelistpage;
 	
-	$auto_pages = array();
+	$auto_pages = array_merge(
+		get_autolink_ignorepages($ignorelistpage),
+		get_autolink_ignorepages($forceignorelistpage)
+	);
 	foreach ($pages as $page)
 	{
 		$match = preg_match("/^$WikiName$/",$page);
@@ -420,12 +424,12 @@ function get_autolink_pattern(&$pages)
 			$auto_pages[] = $page;
 		}
 	}
+	$auto_pages = array_values(array_unique($auto_pages));
+
 	if (count($auto_pages) == 0)
 	{
 		return $nowikiname ? '(?!)' : $WikiName;
 	}
-	
-	sort($auto_pages,SORT_STRING);
 	
 	$result = get_autolink_pattern_sub($auto_pages,0,count($auto_pages),0);
 
@@ -435,6 +439,26 @@ function get_autolink_pattern(&$pages)
 	}
 	
 	return $result;
+}
+function get_autolink_ignorepages($page)
+{
+	$pages = array();
+	
+	foreach (get_source($page) as $line)
+	{
+		if ($line == '' or $line{0} != '-')
+		{
+			continue;
+		}
+		$pagename = trim(ltrim($line,'-'));
+		
+		if (!is_pagename($pagename))
+		{
+			continue;
+		}
+		$pages[] = $pagename;
+	}
+	return $pages;
 }
 function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 {
