@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.26 2004/12/06 13:10:59 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.27 2004/12/07 13:43:38 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -82,7 +82,13 @@ if ($html_transitional) { ?>
  <h1 class="title"><?php echo $page ?></h1>
 
 <?php if ($is_page) { ?>
- <a href="<?php echo $link['reload'] ?>"><span class="small"><?php echo $link['reload'] ?></span></a>
+ <?php if(TRUE) { ?>
+   <a href="<?php echo $link['reload'] ?>"><span class="small"><?php echo $link['reload'] ?></span></a>
+ <?php } else { ?>
+   <span class="small">
+   <?php require_once(PLUGIN_DIR . 'topicpath.inc.php'); echo plugin_topicpath_inline(); ?>
+   </span>
+ <?php } ?>
 <?php } ?>
 
 </div>
