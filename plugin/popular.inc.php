@@ -1,6 +1,6 @@
 <?php
-// PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: popular.inc.php,v 1.12 2005/01/10 05:17:00 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: popular.inc.php,v 1.13 2005/01/16 13:12:45 henoheno Exp $
 //
 // Popular pages plugin: Show an access ranking of this wiki
 // -- like recent plugin, using counter plugin's count --
@@ -45,7 +45,7 @@ function plugin_popular_convert()
 	$counters = array();
 	foreach (get_existpages(COUNTER_DIR, '.count') as $file=>$page) {
 		if (($except != '' && ereg($except, $page)) ||
-		    $page == $whatsnew || preg_match($non_list, $page) ||
+		    $page == $whatsnew || preg_match($non_list_pattern, $page) ||
 		    ! is_page($page))
 			continue;
 
