@@ -2,13 +2,11 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: color.inc.php,v 1.5 2003/05/16 06:13:06 arino Exp $
+// $Id: color.inc.php,v 1.6 2003/09/03 01:31:14 arino Exp $
 //
 
 function plugin_color_inline()
 {
-	$bgcolor = '';
-
 	if (func_num_args() == 3)
 	{
 		list($color,$bgcolor,$body) = func_get_args();
@@ -17,13 +15,10 @@ function plugin_color_inline()
 			$body = $bgcolor;
 			$bgcolor = '';
 		}
-		else if ($bgcolor != '')
-		{
-			$bgcolor = ';background-color:'.htmlspecialchars($bgcolor);
-		}
 	}
 	else if (func_num_args() == 2)
 	{
+		$bgcolor = '';
 		list($color,$body) = func_get_args();
 	}
 	else
@@ -35,9 +30,19 @@ function plugin_color_inline()
 	{
 		return FALSE;
 	}
+	if (!plugin_color_is_valid($color) or !plugin_color_is_valid($bgcolor))
+	{
+		return $body;
+	}
 	
-	$s_color = htmlspecialchars($color);
-	$s_bgcolor = htmlspecialchars($bgcolor);
-	return "<span style=\"color:$s_color$s_bgcolor\">$body</span>";
+	if ($bgcolor != '')
+	{
+		$color .= ';background-color:'.$bgcolor;
+	}
+	return "<span style=\"color:$color\">$body</span>";
+}
+function plugin_color_is_valid($color)
+{
+	return preg_match('/^(#[0-9a-f]+|[\w-]+)/i',$color);
 }
 ?>
