@@ -1,9 +1,9 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: convert_html.php,v 1.6 2005/01/16 12:20:57 henoheno Exp $
 //
-// $Id: convert_html.php,v 1.5 2004/11/23 11:27:25 henoheno Exp $
-//
+// function 'convert_html()', wiki text parser
+// and related classes-and-functions
 
 function convert_html($lines)
 {
@@ -21,8 +21,9 @@ function convert_html($lines)
 	return $body->toString();
 }
 
+// ブロック要素
 class Element
-{ // ブロック要素
+{
 	var $parent;   // 親要素
 	var $last;     // 次に要素を挿入する先
 	var $elements; // 要素の配列
@@ -62,31 +63,27 @@ class Element
 
 	function wrap($string, $tag, $param = '', $canomit = TRUE)
 	{
-		return ($canomit && $string == '') ? '' : "<$tag$param>$string</$tag>";
+		return ($canomit && $string == '') ? '' :
+			'<' . $tag . $param . '>' . $string . '</' . $tag . '>';
 	}
 
 	function toString()
 	{
 		$ret = array();
-		foreach (array_keys($this->elements) as $key) {
+		foreach (array_keys($this->elements) as $key)
 			$ret[] = $this->elements[$key]->toString();
-		}
-
 		return join("\n", $ret);
 	}
 
 	function dump($indent = 0)
 	{
 		$ret = str_repeat(' ', $indent) . get_class($this) . "\n";
-
 		$indent += 2;
-
 		foreach (array_keys($this->elements) as $key) {
 			$ret .= is_object($this->elements[$key]) ?
 				$this->elements[$key]->dump($indent) : '';
-				//str_repeat(' ',$indent).$this->elements[$key];
+				//str_repeat(' ', $indent) . $this->elements[$key];
 		}
-
 		return $ret;
 	}
 }
@@ -114,7 +111,7 @@ function & Factory_DList(& $root, $text)
 // '|'-separated table
 function & Factory_Table(& $root, $text)
 {
-	if (! preg_match("/^\|(.+)\|([hHfFcC]?)$/", $text, $out)) {
+	if (! preg_match('/^\|(.+)\|([hHfFcC]?)$/', $text, $out)) {
 		return Factory_Inline($text);
 	} else {
 		return new Table($out);
@@ -133,7 +130,8 @@ function & Factory_YTable(& $root, $text)
 
 function & Factory_Div(& $root, $text)
 {
-	if (! preg_match("/^\#([^\(]+)(?:\((.*)\))?/", $text, $out) || ! exist_plugin_convert($out[1])) {
+	if (! preg_match('/^\#([^\(]+)(?:\((.*)\))?/', $text, $out) ||
+	    ! exist_plugin_convert($out[1])) {
 		return new Paragraph($text);
 	} else {
 		return new Div($out);
@@ -146,7 +144,8 @@ class Inline extends Element
 	function Inline($text)
 	{
 		parent::Element();
-		$this->elements[] = trim((substr($text, 0, 1) == "\n") ? $text : make_link($text));
+		$this->elements[] = trim((substr($text, 0, 1) == "\n") ?
+			$text : make_link($text));
 	}
 
 	function & insert(& $obj)
@@ -163,7 +162,7 @@ class Inline extends Element
 	function toString()
 	{
 		global $line_break;
-		return join($line_break ? "<br />\n" : "\n", $this->elements);
+		return join(($line_break ? '<br />' . "\n" : "\n"), $this->elements);
 	}
 
 	function & toPara($class = '')
@@ -182,9 +181,7 @@ class Paragraph extends Element
 	function Paragraph($text, $param = '')
 	{
 		parent::Element();
-
 		$this->param = $param;
-
 		if ($text == '') return;
 
 		if (substr($text, 0, 1) == '~')
@@ -236,7 +233,8 @@ class Heading extends Element
 
 	function toString()
 	{
-		return $this->msg_top . $this->wrap(parent::toString(), 'h' . $this->level, " id=\"{$this->id}\"");
+		return $this->msg_top .  $this->wrap(parent::toString(),
+			'h' . $this->level, ' id="' . $this->id . '"');
 	}
 }
 
@@ -275,8 +273,8 @@ class ListContainer extends Element
 		parent::Element();
 
 		//マージンを取得
-		$var_margin      = "_{$tag}_margin";
-		$var_left_margin = "_{$tag}_left_margin";
+		$var_margin      = '_' . $tag . '_margin';
+		$var_left_margin = '_' . $tag . '_left_margin';
 
 		global $$var_margin, $$var_left_margin;
 
@@ -307,13 +305,13 @@ class ListContainer extends Element
 		parent::setParent($parent);
 
 		$step = $this->level;
-		if (isset($parent->parent) && is_a($parent->parent, 'ListContainer')) {
+		if (isset($parent->parent) && is_a($parent->parent, 'ListContainer'))
 			$step -= $parent->parent->level;
-		}
+
 		$margin = $this->margin * $step;
-		if ($step == $this->level) {
+		if ($step == $this->level)
 			$margin += $this->left_margin;
-		}
+
 		$this->style = sprintf($_list_pad_str, $this->level, $margin, $margin);
 	}
 
@@ -327,7 +325,7 @@ class ListContainer extends Element
 		if (count($obj->elements) == 1 && empty($obj->elements[0]->elements))
 			return $this->last->parent; // up to ListElement.
 
-		// move elements.
+		// Move elements.
 		foreach(array_keys($obj->elements) as $key)
 			parent::insert($obj->elements[$key]);
 
@@ -390,11 +388,9 @@ class DList extends ListContainer
 	function DList($out)
 	{
 		parent::ListContainer('dl', 'dt', ':', $out[0]);
-
 		$this->last = & Element::insert(new ListElement($this->level, 'dd'));
-		if ($out[1] != '') {
+		if ($out[1] != '')
 			$this->last = & $this->last->insert(Factory_Inline($out[1]));
-		}
 	}
 }
 
@@ -486,9 +482,8 @@ class TableCell extends Element
 				$text = $matches[5];
 			}
 		}
-		if ($is_template && is_numeric($text)) {
-			$this->style['width'] = "width:{$text}px;";
-		}
+		if ($is_template && is_numeric($text))
+			$this->style['width'] = 'width:' . $text . 'px;';
 
 		if ($text == '>') {
 			$this->colspan = 0;
@@ -502,9 +497,8 @@ class TableCell extends Element
 		if ($text != '' && $text{0} == '#') {
 			// セル内容が'#'で始まるときはDivクラスを通してみる
 			$obj = & Factory_Div($this, $text);
-			if (is_a($obj, 'Paragraph')) {
+			if (is_a($obj, 'Paragraph'))
 				$obj = & $obj->elements[0];
-			}
 		} else {
 			$obj = & Factory_Inline($text);
 		}
@@ -514,27 +508,24 @@ class TableCell extends Element
 
 	function setStyle(& $style)
 	{
-		foreach ($style as $key=>$value) {
+		foreach ($style as $key=>$value)
 			if (! isset($this->style[$key]))
 				$this->style[$key] = $value;
-		}
 	}
 
 	function toString()
 	{
 		if ($this->rowspan == 0 || $this->colspan == 0) return '';
 
-		$param = " class=\"style_{$this->tag}\"";
-		if ($this->rowspan > 1) {
-			$param .= " rowspan=\"{$this->rowspan}\"";
-		}
+		$param = ' class="style_' . $this->tag . '"';
+		if ($this->rowspan > 1)
+			$param .= ' rowspan="' . $this->rowspan . '"';
 		if ($this->colspan > 1) {
-			$param .= " colspan=\"{$this->colspan}\"";
+			$param .= ' colspan="' . $this->colspan . '"';
 			unset($this->style['width']);
 		}
-		if (! empty($this->style)) {
+		if (! empty($this->style))
 			$param .= ' style="' . join(' ', $this->style) . '"';
-		}
 
 		return $this->wrap(parent::toString(), $this->tag, $param, FALSE);
 	}
@@ -559,9 +550,8 @@ class Table extends Element
 		$this->types = array($this->type);
 		$is_template = ($this->type == 'c');
 		$row = array();
-		foreach ($cells as $cell) {
+		foreach ($cells as $cell)
 			$row[] = & new TableCell($cell, $is_template);
-		}
 		$this->elements[] = $row;
 	}
 
@@ -591,9 +581,8 @@ class Table extends Element
 					continue;
 				}
 				$row[$ncol]->rowspan = $rowspan;
-				while (--$rowspan) { // 行種別を継承する
+				while (--$rowspan) // 行種別を継承する
 					$this->types[$nrow + $rowspan] = $this->types[$nrow];
-				}
 				$rowspan = 1;
 			}
 		}
@@ -602,9 +591,8 @@ class Table extends Element
 		$stylerow = NULL;
 		foreach (array_keys($this->elements) as $nrow) {
 			$row = & $this->elements[$nrow];
-			if ($this->types[$nrow] == 'c') {
+			if ($this->types[$nrow] == 'c')
 				$stylerow = & $row;
-			}
 			$colspan = 1;
 			foreach (array_keys($row) as $ncol) {
 				if ($row[$ncol]->colspan == 0) {
@@ -614,9 +602,8 @@ class Table extends Element
 				$row[$ncol]->colspan = $colspan;
 				if ($stylerow !== NULL) {
 					$row[$ncol]->setStyle($stylerow[$ncol]->style);
-					while (--$colspan) { // 列スタイルを継承する
+					while (--$colspan) // 列スタイルを継承する
 						$row[$ncol - $colspan]->setStyle($stylerow[$ncol]->style);
-					}
 				}
 				$colspan = 1;
 			}
@@ -632,9 +619,8 @@ class Table extends Element
 					continue;
 				$row        = & $this->elements[$nrow];
 				$row_string = '';
-				foreach (array_keys($row) as $ncol) {
+				foreach (array_keys($row) as $ncol)
 					$row_string .= $row[$ncol]->toString();
-				}
 				$part_string .= $this->wrap($row_string, 'tr');
 			}
 			$string .= $this->wrap($part_string, $part);
@@ -672,17 +658,16 @@ class YTable extends Element
 		}
 		$this->col = count($value);
 		$colspan = array();
-		foreach ($value as $val) {
+		foreach ($value as $val)
 			$colspan[] = ($val == '==') ? 0 : 1;
-		}
 		$str = '';
-		for ($i = 0; $i < count($value); $i++) {
+		$count = count($value);
+		for ($i = 0; $i < $count; $i++) {
 			if ($colspan[$i]) {
-				while ($i + $colspan[$i] < count($value) && $value[$i + $colspan[$i]] == '==') {
+				while ($i + $colspan[$i] < $count && $value[$i + $colspan[$i]] == '==')
 					$colspan[$i]++;
-				}
-				$colspan[$i] = ($colspan[$i] > 1) ? " colspan=\"{$colspan[$i]}\"" : '';
-				$str .= "<td class=\"style_td\"{$align[$i]}{$colspan[$i]}>".make_link($value[$i]).'</td>';
+				$colspan[$i] = ($colspan[$i] > 1) ? ' colspan="' . $colspan[$i] . '"' : '';
+				$str .= '<td class="style_td"' . $align[$i] . $colspan[$i] . '>' . make_link($value[$i]) . '</td>';
 			}
 		}
 		$this->elements[] = $str;
@@ -702,9 +687,8 @@ class YTable extends Element
 	function toString()
 	{
 		$rows = '';
-		foreach ($this->elements as $str) {
-			$rows .= "\n<tr class=\"style_tr\">$str</tr>\n";
-		}
+		foreach ($this->elements as $str)
+			$rows .= "\n" . '<tr class="style_tr">' . $str . '</tr>' . "\n";
 		$rows = $this->wrap($rows, 'table', ' class="style_table" cellspacing="1" border="0"');
 		return $this->wrap($rows, 'div', ' class="ie5"');
 	}
@@ -718,11 +702,9 @@ class Pre extends Element
 	function Pre(& $root, $text)
 	{
 		global $preformat_ltrim;
-
 		parent::Element();
 		$this->elements[] = htmlspecialchars(
-			(! $preformat_ltrim || $text == '' || $text{0} != ' ') ? $text : substr($text, 1)
-		);
+			(! $preformat_ltrim || $text == '' || $text{0} != ' ') ? $text : substr($text, 1));
 	}
 
 	function canContain(& $obj)
@@ -798,14 +780,12 @@ class Body extends Element
 		'-' => 'UList',
 		'+' => 'OList',
 		'>' => 'BQuote',
-		'<' => 'BQuote'
-	);
+		'<' => 'BQuote');
 	var $factories = array(
 		':' => 'DList',
 		'|' => 'Table',
 		',' => 'YTable',
-		'#' => 'Div'
-	);
+		'#' => 'Div');
 
 	function Body($id)
 	{
@@ -829,9 +809,7 @@ class Body extends Element
 			if (preg_match('/^(LEFT|CENTER|RIGHT):(.*)$/', $line, $matches)) {
 				// <div style="text-align:...">
 				$this->last = & $this->last->add(new Align(strtolower($matches[1])));
-
 				if ($matches[2] == '') continue;
-
 				$line = $matches[2];
 			}
 
@@ -865,9 +843,8 @@ class Body extends Element
 			}
 
 			// Line Break
-			if (substr($line, -1) == '~') {
-				$line = substr($line,0,-1)."\r";
-			}
+			if (substr($line, -1) == '~')
+				$line = substr($line, 0, -1) . "\r";
 			
 			// Other Character
 			if (isset($this->classes[$head])) {
@@ -893,14 +870,14 @@ class Body extends Element
 		global $top, $_symbol_anchor;
 
 		$id = make_heading($text, FALSE); // Cut fixed-anchor from $text
-		$anchor = ($id == '') ?  '' : " &aname($id,super,full)\{$_symbol_anchor};";
+		$anchor = ($id == '') ?  '' : ' &aname(' . $id . ',super,full){' . $_symbol_anchor . '};';
 
 		$text = ' ' . $text;
-		$id = "content_{$this->id}_{$this->count}";
+		$id = 'content_' . $this->id . '_' . $this->count;
 		$this->count++;
 		$this->contents_last = & $this->contents_last->add(new Contents_UList($text, $level, $id));
 
-		return array($text . $anchor, $this->count > 1 ? "\n$top" : '', $id);
+		return array($text . $anchor, $this->count > 1 ? "\n" . $top : '', $id);
 	}
 
 	function & insert(& $obj)
@@ -916,23 +893,24 @@ class Body extends Element
 		$text = parent::toString();
 
 		// #contents
-		$text = preg_replace_callback('/(<p[^>]*>)<del>#contents<\/del>(\s*)(<\/p>)/', array(& $this, 'replace_contents'), $text);
+		$text = preg_replace_callback('/(<p[^>]*>)<del>#contents<\/del>(\s*)(<\/p>)/',
+			array(& $this, 'replace_contents'), $text);
 
 		// 関連するページ
 		// <p>のときは行頭から、<del>のときは他の要素の子要素として存在
-		$text = preg_replace_callback('/(<p[^>]*>)<del>#related<\/del>(\s*)(<\/p>)/', array(& $this, 'replace_related'), $text);
+		$text = preg_replace_callback('/(<p[^>]*>)<del>#related<\/del>(\s*)(<\/p>)/',
+			array(& $this, 'replace_related'), $text);
 		$text = preg_replace('/<del>#related<\/del>/', make_related($vars['page'], 'del'), $text);
-		return "$text\n";
+		return $text . "\n";
 	}
 
 	function replace_contents($arr)
 	{
-		$contents  = "<div class=\"contents\">\n";
-		$contents .= "<a id=\"contents_{$this->id}\"></a>";
-		$contents .= $this->contents->toString();
-		$contents .= "</div>\n";
+		$contents  = '<div class="contents">' . "\n" .
+				'<a id="contents_' . $this->id . '"></a>' . "\n" .
+				$this->contents->toString() . "\n" .
+				'</div>' . "\n";
 		array_shift($arr);
-
 		return ($arr[1] != '') ? $contents . join('', $arr) : $contents;
 	}
 
@@ -941,11 +919,8 @@ class Body extends Element
 		global $vars;
 		static $related = NULL;
 
-		if (is_null($related))
-			$related = make_related($vars['page'],'p');
-
+		if (is_null($related)) $related = make_related($vars['page'], 'p');
 		array_shift($arr);
-
 		return ($arr[1] != '') ? $related . join('', $arr) : $related;
 	}
 }
@@ -957,7 +932,7 @@ class Contents_UList extends ListContainer
 		// テキストのリフォーム
 		// 行頭\nで整形済みを表す ... X(
 		make_heading($text);
-		$text = "\n<a href=\"#$id\">$text</a>\n";
+		$text = "\n" . '<a href="#' . $id . '">' . $text . '</a>' . "\n";
 		parent::ListContainer('ul', 'li', '-', str_repeat('-', $level));
 		$this->insert(Factory_Inline($text));
 	}
