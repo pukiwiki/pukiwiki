@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.14 2003/03/10 11:30:50 panda Exp $
+// $Id: file.php,v 1.15 2003/03/13 14:11:24 panda Exp $
 //
 
 // ソースを取得
@@ -244,19 +244,6 @@ function get_existfiles($dir,$ext)
 	}
 	closedir($dp);
 	return $aryret;
-}	
-function links_update($page)
-{
-	global $vars;
-
-	// linkデータベースを更新
-	if (exist_plugin_action('links')) {
-		// ちょっと姑息
-		$tmp = $vars['page'];
-		$vars['page'] = $page;
-		do_plugin_action('links');
-		$vars['page'] = $tmp;
-	}
 }
 //あるページの関連ページを得る
 function links_get_related($page)
@@ -281,56 +268,5 @@ function links_get_related($page)
 	$links[$page] += links_get_related_db($vars['page']);
 	
 	return $links[$page];
-}
-// データベースから関連ページを得る
-function links_get_related_db($page)
-{
-	$links = array();
-	
-	if (defined('LINK_DB'))
-	{
-		$a_page = addslashes($page);
-		
-		// $pageが参照しているページ
-		$sql = <<<EOD
-SELECT refpage.name,refpage.lastmod
- FROM page
-  LEFT JOIN link ON page.id = page_id
-   LEFT JOIN page AS refpage ON ref_id = refpage.id
-    WHERE page.name = '$a_page' and refpage.lastmod > 0;
-EOD;
-		$rows = db_query($sql);
-		// $pageを参照しているページ
-		$sql = <<<EOD
-SELECT DISTINCT refpage.name,refpage.lastmod
- FROM page
-  LEFT JOIN link ON page.id = ref_id
-   LEFT JOIN page AS refpage ON page_id = refpage.id
-    WHERE page.name = '$a_page';
-EOD;
-		$rows += db_query($sql);
-		
-		foreach ($rows as $row)
-		{
-			if (empty($row['name']) or substr($row['name'],0,1) == ':')
-			{
-				continue;
-			}
-			$links[$row['name']] = $row['lastmod'];
-		}
-	}
-	else
-	{
-		$ref_name = CACHE_DIR.encode($page).'.ref';
-		if (file_exists($ref_name))
-		{
-			foreach (file($ref_name) as $line)
-			{
-				list($_page,$time) = explode("\t",rtrim($line));
-				$links[$_page] = $time;
-			}
-		}
-	}
-	return $links;
 }
 ?>
