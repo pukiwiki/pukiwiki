@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.15 2004/02/29 08:20:38 arino Exp $
+// $Id: trackback.php,v 1.16 2004/03/18 09:24:35 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -57,7 +57,7 @@ function tb_id2page($tb_id)
 // TrackBack Ping データファイル名を取得
 function tb_get_filename($page,$ext='.txt')
 {
-	return TRACKBACK_DIR.tb_get_id($page).$ext;
+	return TRACKBACK_DIR.encode($page).$ext;
 }
 
 // TrackBack Ping データ個数取得
@@ -137,7 +137,9 @@ function tb_get($file,$key=1)
 	
 	$result = array();
 	$fp = @fopen($file,'r');
+	set_file_buffer($fp, 0);
 	flock($fp,LOCK_EX);
+	rewind($fp);
 	while ($data = @fgetcsv($fp,8192,','))
 	{
 		// $data[$key] = URL
@@ -173,7 +175,7 @@ function tb_get_rdf($page)
    rdf:about="$script?$r_page"
    dc:identifier="$script?$r_page"
    dc:title="$page"
-   trackback:ping="$script?plugin=tb&amp;tb_id=$tb_id" />
+   trackback:ping="$script?tb_id=$tb_id" />
 </rdf:RDF>
 -->
 EOD;
@@ -330,7 +332,9 @@ function ref_save($page)
 	{
 		return 1;
 	}
+	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
+	rewind($fp);
 	foreach ($data as $line)
 	{
 		fwrite($fp,join(',',$line)."\n");
