@@ -38,16 +38,16 @@ $_msg_unfreeze = 'Unfreeze';
 $_msg_add = 'Two and the contents of an input are added for a new-line to the contents of a page of present addition.';
 $_msg_preview = 'If the following previews are checked and avoided, please update with the button of the page lower part.';
 $_msg_preview_delete = '(The contents of a page are empty.Updating deletes this page.)';
-$_msg_collided = 'It seems that other user have updated the same page while you are editing this page.<br>
-Since there is a text which you edited into below, please copy & paste to<br>
-an editor so that your contents of edit are not lost.<br>
+$_msg_collided = 'It seems that other user have updated the same page while you are editing this page.<br />
+Since there is a text which you edited into below, please copy & paste to<br />
+an editor so that your contents of edit are not lost.<br />
 Please reedit again from the contents newest after that.';
 $_msg_freezing = 'Please input the password for freezing.';
 $_msg_unfreezing = 'Please input the password for unfreezing.';
 $_msg_invalidpass = 'Invalid password.';
 $_msg_notfound = 'The page is not found.';
-$_msg_addline = 'The added line is <font color="blue">BLUE</font>.';
-$_msg_delline = 'The deleted line is <font color="red">RED</font>.';
+$_msg_addline = 'The added line is <span style="color:blue">BLUE</span>.';
+$_msg_delline = 'The deleted line is <span style="color:red">RED</span>.';
 $_msg_goto = 'Goto $1.';
 $_msg_searching = 'Some words are searched from all pages.There is no distinction of a capital letter small letter.';
 $_msg_backuplist = 'List of Backup';
@@ -58,9 +58,9 @@ $_msg_backup = 'backup';
 $_msg_view = 'View the $1.';
 $_msg_deleleted = '$1 is deleted.';
 $_msg_invalidiwn = '$1 is not an effective $2.';
-$_msg_andresult = 'In <b>$2</b> page, <b>$3</b> pages of pages containing all the <b>$1</b> were found.';
-$_msg_orresult = 'In <b>$2</b> page, <b>$3</b> pages of pages containing either of the <b>$1</b> were found.';
-$_msg_notfoundresult = 'Not found word of </b>$1</b> in pages.';
+$_msg_andresult = 'In <strong>$2</strong> page, <strong>$3</strong> pages of pages containing all the <strong>$1</strong> were found.';
+$_msg_orresult = 'In <strong>$2</strong> page, <strong>$3</strong> pages of pages containing either of the <strong>$1</strong> were found.';
+$_msg_notfoundresult = 'Not found word of <strong>$1</strong> in pages.';
 $_msg_symbol = 'Symbols';
 $_msg_other = 'Others';
 $_msg_help = 'View rules of text formatting';
@@ -105,7 +105,7 @@ $_msg_maxsize = 'Maximum file size is $1.';
 $_msg_delete = 'Delete \'$1\'';
 $_msg_exceed = 'File size is too big to $1';
 $_msg_attachfile = 'Attach file';
-$_msg_confirm_delete = '<center>comfirm Delete '%s'<br>%s</center>';
+$_msg_confirm_delete = '<div style="text-align:center">comfirm Delete '%s'<br />%s</div>';
 $_btn_upload = 'Upload';
 $_btn_delete = 'Del';
 
@@ -115,6 +115,12 @@ $_msg_newpage = 'new page';
 
 ///////////////////////////////////////
 // recent
-$_recent_plugin_frame = '<span align="center"><h5 class="side_label">recent(%d)</h5></span><small>%s</small>';
+$_recent_plugin_frame = '<h5 class="side_label">recent(%d)</h5><span class="small">%s</span>';
 $_recent_plugin_li = '.';
+
+///////////////////////////////////////
+// help 'wiki format rule'.
+$rule_body = '
+sorry. Japanese only
+';
 ?>
