@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: comment.inc.php,v 1.27 2005/02/27 09:25:26 henoheno Exp $
+// $Id: comment.inc.php,v 1.28 2005/03/05 12:23:10 teanan Exp $
 //
 // Comment plugin
 
@@ -34,14 +34,19 @@ function plugin_comment_action()
 
 	$_msg  = str_replace('$msg', $vars['msg'], PLUGIN_COMMENT_FORMAT_MSG);
 
-	$_name = (! isset($vars['name']) || $vars['name'] == '') ? $_no_name : $vars['name'];
-	$_name = ($_name == '') ? '' : str_replace('$name', $_name, PLUGIN_COMMENT_FORMAT_NAME);
+	if(isset($vars['name']) || ($vars['nodate'] != '1')) {
+		$_name = (! isset($vars['name']) || $vars['name'] == '') ? $_no_name : $vars['name'];
+		$_name = ($_name == '') ? '' : str_replace('$name', $_name, PLUGIN_COMMENT_FORMAT_NAME);
 
-	$_now  = ($vars['nodate'] == '1') ? '' : str_replace('$now', $now, PLUGIN_COMMENT_FORMAT_NOW);
+		$_now  = ($vars['nodate'] == '1') ? '' : str_replace('$now', $now, PLUGIN_COMMENT_FORMAT_NOW);
 
-	$comment = str_replace("\x08MSG\x08",  $_msg,  PLUGIN_COMMENT_FORMAT_STRING);
-	$comment = str_replace("\x08NAME\x08", $_name, $comment);
-	$comment = str_replace("\x08NOW\x08",  $_now,  $comment);
+		$comment = str_replace("\x08MSG\x08",  $_msg,  PLUGIN_COMMENT_FORMAT_STRING);
+		$comment = str_replace("\x08NAME\x08", $_name, $comment);
+		$comment = str_replace("\x08NOW\x08",  $_now,  $comment);
+	}
+	else {
+		$comment = $_msg;
+	}
 	$comment = $head . $comment;
 
 	$postdata = '';
