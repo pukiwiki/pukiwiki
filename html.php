@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.63 2003/02/28 14:55:18 panda Exp $
+// $Id: html.php,v 1.64 2003/03/02 02:49:55 panda Exp $
 //
 
 // 本文を出力
@@ -64,16 +64,19 @@ function catbody($title,$page,$body)
 	$fmt = $is_read ? get_filetime($_page) + LOCALZONE : 0;
 
 	//単語検索
-	if ($search_word_color and array_key_exists('word',$vars)) {
+	if ($search_word_color and array_key_exists('word',$vars))
+	{
 		$search_word = '';
 		$words = array_flip(array_splice(preg_split('/\s+/',$vars['word'],-1,PREG_SPLIT_NO_EMPTY),0,10));
 		$keys = array();
-		foreach ($words as $word=>$id) {
+		foreach ($words as $word=>$id)
+		{
 			$keys[$word] = strlen($word);
 		}
 		arsort($keys,SORT_NUMERIC);
 		$keys = array_keys($keys);
-		foreach ($keys as $key) {
+		foreach ($keys as $key)
+		{
 			$s_key = htmlspecialchars($key);
 			$q_key = preg_quote($key,'/');
 			$search_word .= " <strong class=\"word{$words[$key]}\">$s_key</strong>";
@@ -86,7 +89,8 @@ function catbody($title,$page,$body)
 	$longtaketime = getmicrotime() - MUTIME;
 	$taketime = sprintf('%01.03f',$longtaketime);
 	
-	if (!file_exists(SKIN_FILE)||!is_readable(SKIN_FILE)) {
+	if (!file_exists(SKIN_FILE)||!is_readable(SKIN_FILE))
+	{
 		die_message(SKIN_FILE.'(skin file) is not found.');
 	}
 	require(SKIN_FILE);
