@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.59 2004/07/03 03:51:55 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.60 2004/07/03 14:26:29 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -301,11 +301,12 @@ $line_break = 0;
 $user_agent = array('name'=>'default');
 // ·ÈÂÓÃ¼Ëö
 $agents = array(
-	array('name'=>'jphone','pattern'=>'#^J-PHONE.+(Profile/)#'),
+	array('name'=>'jphone','pattern'=>'#^J-PHONE/([0-9\.]+)#'),	// Vodafone
 	array('name'=>'jphone','pattern'=>'#^J-PHONE#'),
 	array('name'=>'i_mode','pattern'=>'#DoCoMo/(1\.0)/(?:[^/]+/c([0-9]+))?#'),
 	array('name'=>'i_mode','pattern'=>'#DoCoMo/(2\.0) [^(]+\(c([0-9]+)#'),
 	array('name'=>'i_mode','pattern'=>'#DDIPOCKET;JRC/[^/]+/(1\.0)/0100/c([0-9]+)#'),
-	array('name'=>'i_mode','pattern'=>'#UP\.Browser#'),	// EZweb, WAP phone, etc
+//	array('name'=>'opwvmb','pattern'=>'#UP\.Browser/([0-9\.]+)#'),	// Openwave(R) Mobile Browser (EZweb, WAP phone, etc)
+	array('name'=>'i_mode','pattern'=>'#UP\.Browser#'),	// Treat as i_mode now
 );
 ?>
