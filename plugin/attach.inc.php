@@ -2,7 +2,7 @@
 // プラグイン attach
 
 // changed by Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
-// $Id: attach.inc.php,v 1.10.2.3 2004/07/31 03:15:07 henoheno Exp $
+// $Id: attach.inc.php,v 1.10.2.4 2004/08/08 02:01:09 henoheno Exp $
 
 // set PHP value to enable file upload
 ini_set("file_uploads","1");
@@ -30,12 +30,23 @@ function plugin_attach_convert()
 
 	$icon = FILE_ICON;
 
+	$ignore = FALSE;
 	if ($dir = @opendir(UPLOAD_DIR))
 	{
 		while($file = readdir($dir))
 		{
-			if($file == ".." || $file == ".") continue;
-			if(!preg_match("/^${decoded_pgname}_([^.]+)$/",$file,$match)) continue;
+			switch ($file){
+			case '.':
+			case '..':
+			case 'CVS':
+			case 'index.html':
+			case '.cvsignore':
+				$ignore = TRUE;;
+			}
+			if($ignore === TRUE || ! preg_match("/^${decoded_pgname}_([^.]+)$/", $file, $match)) {
+				$ignore = FALSE;
+				continue;
+			}
 
 			$lastmod = date("Y/m/d H:i:s",filemtime(UPLOAD_DIR.$file));
 
@@ -176,9 +187,21 @@ function plugin_attach_action()
 			$retbody = "";
 			$aryret = array();
 			$pagenames = array();
+			$ignore = FALSE;
 			while($file = readdir($dir))
 			{
-				if($file == ".." || $file == "." || strstr($file,".log")!=FALSE) continue;
+				switch ($file){
+				case '.':
+				case '..':
+				case 'CVS':
+				case 'index.html':
+				case '.cvsignore':
+					$ignore = TRUE;
+				}
+				if($ignore || strstr($file, '.log') != FALSE) {
+					$ignore = FALSE;
+					continue;
+				}
 
 				settype($dfile_size,"double");
 				$dfile_size = round(filesize(UPLOAD_DIR.$file)/1000,1);
