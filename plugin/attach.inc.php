@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.16 2003/02/26 12:04:39 panda Exp $
+//  $Id: attach.inc.php,v 1.17 2003/02/26 12:28:12 panda Exp $
 //
 
 /*
@@ -254,8 +254,8 @@ EOD;
 		$msg_freeze = '<input type="radio" name="pcmd" value="freeze" />'.$_attach_messages['msg_freeze'];
 	}
 	$info = $obj->to_string(TRUE,FALSE);
-	$type = attach_mime_content_type(UPLOAD_DIR.$obj->file);
-	$age = array_key_exists('age',$vars) and is_numeric($vars['age']) ? $vars['age'] : 0;
+	$type = attach_mime_content_type($obj->filename);
+	$age = (array_key_exists('age',$vars) and is_numeric($vars['age'])) ? $vars['age'] : 0;
 	$retval['body'] .= <<< EOD
 <dl>
  <dt>$info</dt>
@@ -550,6 +550,7 @@ class AttachFile
 		$this->filename = $this->basename . ($age ? '.'.$age : '');
 		$this->logname = $this->basename.'.log';
 		$this->exist = file_exists($this->filename);
+		$this->time = $this->exist ? filemtime($this->filename) - LOCALZONE : 0;
 	}
 	// ファイル情報取得
 	function getstatus()
@@ -564,7 +565,6 @@ class AttachFile
 			}
 			$this->status['count'] = explode(',',$this->status['count']);
 		}
-		$this->time = filemtime($this->filename) - LOCALZONE;
 		$this->time_str = get_date('Y/m/d H:i:s',$this->time);
 		$this->size = filesize($this->filename);
 		$this->size_str = sprintf('%01.1f',round($this->size)/1000,1).'KB';
@@ -575,15 +575,17 @@ class AttachFile
 		$this->status['count'] = join(',',$this->status['count']);
 		$fp = fopen($this->logname,'wb')
 			or die_message('cannot write '.$this->logname);
+		flock($fp,LOCK_EX);
 		foreach ($this->status as $key=>$value)
 		{
 			fwrite($fp,$value."\n");
 		}
+		flock($fp,LOCK_UN);
 		fclose($fp);
 	}
 	function datecomp($a,$b)
 	{
-		return ($a->filetime == $b->filetime) ? 0 : (($a->filetime > $b->filetime) ? -1 : 1);
+		return ($a->time == $b->time) ? 0 : (($a->time > $b->time) ? -1 : 1);
 	}
 	function to_string($showicon,$showinfo)
 	{
