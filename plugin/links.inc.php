@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: links.inc.php,v 1.12 2003/03/10 12:27:12 panda Exp $
+// $Id: links.inc.php,v 1.13 2003/03/10 12:35:19 panda Exp $
 //
 
 function plugin_links_action()
@@ -23,7 +23,17 @@ function plugin_links_action()
 	}
 	return plugin_links_initdata();
 }
-
+function &plugin_links_get_objects($page)
+{
+	static $obj;
+	
+	if (!isset($obj))
+	{
+		$obj = new InlineConverter(array('url','mailto','interwiki','page','auto'));
+	}
+	
+	return $obj->get_objects(join('',preg_grep('/^(?!\/\/|\s)./',get_source($page))),$page);
+}
 function plugin_links_initdata()
 {
 	global $whatsnew;
@@ -51,10 +61,9 @@ function plugin_links_initdata()
 			$pages[$row['name']] = $row['id'];
 		}
 		
-		$obj = new InlineConverter(array('page','auto')); 
 		foreach ($pages as $page=>$id)
 		{
-			$links = $obj->get_objects(join('',preg_grep('/^(?!\/\/|\s)./',get_source($page))),$page);
+			$links = plugin_links_get_objects($page);
 			foreach ($links as $_obj)
 			{
 				if ($_obj->type != 'pagename')
@@ -92,7 +101,6 @@ function plugin_links_initdata()
 		}
 		$pages = get_existpages();
 		$ref = array(); // 参照元
-		$obj = new InlineConverter(array('page','auto')); 
 		foreach ($pages as $page)
 		{
 			if ($page == $whatsnew)
@@ -101,7 +109,7 @@ function plugin_links_initdata()
 			}
 			$time = get_filetime($page);
 			$rel = array(); // 参照先
-			$links = $obj->get_objects(join('',preg_grep('/^(?!\/\/|\s)./',get_source($page))),$page);
+			$links = plugin_links_get_objects($page);
 			foreach ($links as $_obj)
 			{
 				if (!isset($_obj->type) or $_obj->type != 'pagename')
@@ -184,8 +192,7 @@ function plugin_links_updatedata($page)
 		// cache
 		$pages = array();
 		
-		$obj = new InlineConverter();
-		$links = $obj->get_objects(join('',preg_grep('/^(?!\/\/|\s)./',get_source($page))),$page);
+		$links = plugin_links_get_objects($page);
 		foreach ($links as $_obj)
 		{
 			if (!isset($_obj->type) or $_obj->type != 'pagename' or $_obj->name == $page)
@@ -223,7 +230,6 @@ function plugin_links_updatedata($page)
 	}
 	else // if (!defined('LINK_DB'))
 	{
-		$obj = new InlineConverter();
 		$time = is_page($page) ? get_filetime($page) : 0;
 		
 		$rel_old = array();
@@ -238,7 +244,7 @@ function plugin_links_updatedata($page)
 			unlink($rel_file);
 		}
 		$rel_new = array(); // 参照先
-		$links = $obj->get_objects(join('',preg_grep('/^(?!\/\/|\s)./',get_source($page))),$page);
+		$links = plugin_links_get_objects($page);
 		foreach ($links as $_obj)
 		{
 			if (!isset($_obj->type) or $_obj->type != 'pagename')
