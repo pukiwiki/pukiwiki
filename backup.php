@@ -11,7 +11,7 @@
  * @access  public
  * @author  
  * @create  
- * @version $Id: backup.php,v 1.13 2003/06/05 05:03:10 arino Exp $
+ * @version $Id: backup.php,v 1.14 2003/11/06 08:49:54 arino Exp $
  **/
 
 /**
@@ -117,7 +117,7 @@ function get_backup($page,$age = 0)
 			{
 				return $retvars[$age];
 			}
-			$retvars[$_age]['time'] = $match[1];
+			$retvars[$_age] = array('time'=>$match[1],'data'=>array());
 		}
 		else
 		{
