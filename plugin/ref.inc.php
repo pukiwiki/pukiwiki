@@ -100,7 +100,7 @@ function plugin_ref_body($args,$page)
 	$name = array_shift($args);
 	
 	// 次の引数がページ名かどうか
-	if (preg_match("/^($WikiName|\[\[$BracketName\]\])$/",$args[0]))
+	if (count($args) and preg_match("/^($WikiName|\[\[$BracketName\]\])$/",$args[0]))
 	{
 		$_page = get_fullname(strip_bracket($args[0]),$page);
 		if (is_pagename($_page))
