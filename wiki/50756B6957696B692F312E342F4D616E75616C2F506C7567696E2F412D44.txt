@@ -117,19 +117,19 @@
 :概要|
 ~指定した位置に簡易掲示板を設置します。
 :プラグイン内設定|~
---article_COLS　テキストエリアのカラム数
---article_ROWS　テキストエリアの行数
---NAME_COLS　名前テキストエリアのカラム数
---SUBJECT_COLS　題名テキストエリアのカラム数
---NAME_FORMAT　名前の挿入フォーマット
---SUBJECT_FORMAT　題名の挿入フォーマット
---ARTICLE_INS　入力内容を入力欄の前後どちらに挿入するか
---ARTICLE_COMMENT　書き込みの下に一行コメントを入れるか
---ARTICLE_AUTO_BR　改行を自動的変換するか
---MAIL_AUTO_SEND　投稿内容のメール自動配信をするか
---MAIL_FROM　投稿内容のメール送信時の送信者メールアドレス
---MAIL_SUBJECT_PREFIX　投稿内容のメール送信時の題名
---$_mailto　投稿内容のメール自動配信先アドレス
+--PLUGIN_ARTICLE_COLS　テキストエリアのカラム数
+--PLUGIN_ARTICLE_ROWS　テキストエリアの行数
+--PLUGIN_ARTICLE_NAME_COLS　名前テキストエリアのカラム数
+--PLUGIN_ARTICLE_SUBJECT_COLS　題名テキストエリアのカラム数
+--PLUGIN_ARTICLE_NAME_FORMAT　名前の挿入フォーマット
+--PLUGIN_ARTICLE_SUBJECT_FORMAT　題名の挿入フォーマット
+--PLUGIN_ARTICLE_INS　入力内容を入力欄の前後どちらに挿入するか
+--PLUGIN_ARTICLE_COMMENT　書き込みの下に一行コメントを入れるか
+--PLUGIN_ARTICLE_AUTO_BR　改行を自動的変換するか
+--PLUGIN_ARTICLE_MAIL_AUTO_SEND　投稿内容のメール自動配信をするか
+--PLUGIN_ARTICLE_MAIL_FROM　投稿内容のメール送信時の送信者メールアドレス
+--PLUGIN_ARTICLE_MAIL_SUBJECT_PREFIX　投稿内容のメール送信時の題名
+--$_plugin_article_mailto　投稿内容のメール自動配信先アドレス
 
 
 **attach [#qe43bebc]
@@ -155,7 +155,7 @@
 --PLUGIN_ATTACH_DELETE_ADMIN_ONLY　管理者だけが添付ファイルを削除できるようにするか
 --PLUGIN_ATTACH_DELETE_ADMIN_NOBACKUP　PLUGIN_ATTACH_DELETE_ADMIN_ONLYのとき、管理者が添付ファイルを削除するときは、バックアップを作らない
 --PLUGIN_ATTACH_PASSWORD_REQUIRE　アップロード/削除時にパスワードを要求するか(PLUGIN_ATTACH_〜_ADMIN_ONLYが優先)
---PLUGIN_ATTACH_FILE_MODE  アップロードされたファイルのアクセス権
+--PLUGIN_ATTACH_FILE_MODE　アップロードされたファイルのアクセス権
 --PLUGIN_ATTACH_FILE_ICON　アイコンイメージのファイル
 --PLUGIN_ATTACH_CONFIG_PAGE_MIME　ダウンロード時のmime-typeを記述したページ
 :備考|
@@ -293,7 +293,7 @@
 ~指定した位置にカレンダーを設置します。カレンダー上でyyyy/mm/ddという日付を選択すると、ページ名/yyyymmddというページを編集／表示できます。
 ~カレンダーの日付を選択した場合に該当するページを編集状態、表示状態のどちらで開くかが３つのプラグインの違いです。calendar_editとは編集状態で、calendar, calendar_readは表示状態で開きます。
 :引数|
-~ページ名はWikiNameまたはBracketNameで指定します。
+~ページ名は編集/参照するカレンダーのページの上位ページ名を指定します。
 ページ名を省略すると設置したページのページ名になります。
 ~年月は表示するカレンダーの西暦と月をyyyymmの形式で指定します。省略した場合は現在の年月になります。
 :備考|
@@ -320,7 +320,7 @@
 :概要|
 ~calendarプラグインまたはcalendar2プラグインで作成されたページを指定した位置に表示します。
 :引数|
-~ページ名はcalendarプラグインまたはcalendar2プラグインを設置しているページの名前を指定します。ページ名はWikiNameまたはBracketNameで指定します。
+~ページ名はcalendarプラグインまたはcalendar2プラグインを設置しているページの名前を指定します。
 ~yyyy-mmを指定時、指定した年月のページを表示します。
 ~数字を指定時、指定した件数分のページを表示します。
 ~x*yを指定時、先頭より数えて x ページ目(先頭は0)から、y件づつ一覧表示します。x と yはいずれも数値です。
@@ -330,6 +330,8 @@
 --future − 今日以降のページを表示します。
 --view − 過去から未来へ一覧表示します。
 :|~年月日の区切り文字は-や/などを指定します。省略した場合は-になります。
+:プラグイン内設定|~
+--PLUGIN_CALENDAR_VIEWER_USAGE　エラー時に表示される使用方法
 :備考|
 ~calendar2プラグインでは今日の日付の記事がない場合、記事を表示しないため、午前0時になったとたんに記事が表示されなくなるという弱点がありました。calendar_viewerはその弱点を補うために開発されたプラグインです。calendar_viewは、日付が変わっても最新の記事を表示することができます。カレンダーそのものの表示はcalendar2(off)で行ないます。
 
@@ -486,9 +488,17 @@ Yellow = "#FFFF00"
 :重要度|
 ~★★☆☆☆
 :書式|
-''?cmd=deleted''
+''?plugin=deleted''
+{[&color(blue){&dir=diff};|
+&color(blue){backup};]
+[&color(blue){&file=on};]}
 :概要|
 ~削除されたページの一覧を表示します。
+:引数|
+~file=onを指定時、バックアップ（あるいは差分）のファイル名を出力します。省略時は表示しません。
+~dirで削除の判定方法を指定します。省略時はbackupです。
+--backup − バックアップが存在し、ページが存在しない時に削除されたとみなします
+--diff − 差分が存在し、ページが存在しない時に削除されたとみなします
 :備考|
 ~公開Wikiの管理者にとっては誤操作や悪意をもった編集によるページ削除をチェックするのに重宝します。
 
