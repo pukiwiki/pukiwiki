@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: map.inc.php,v 1.9 2003/04/03 01:36:49 panda Exp $
+// $Id: map.inc.php,v 1.10 2003/04/17 02:09:01 arino Exp $
 //
 /*
 プラグイン map
@@ -22,7 +22,7 @@ Usage : http://.../pukiwiki.php?plugin=map
 */
 
 function plugin_map_action()
-{ error_reporting(E_ALL);
+{
 	global $vars,$whatsnew,$defaultpage;
 	
 	$reverse = array_key_exists('reverse',$vars);
@@ -88,7 +88,6 @@ function plugin_map_action()
 	}
 	else
 	{
-		$nodes[$refer]->parent_id = -1;
 		$nodes[$refer]->chain($nodes);
 		$retval['body'] .= "<ul>\n".$nodes[$refer]->toString($nodes)."</ul>\n";
 		$retval['body'] .= "<hr /><p>not related from ".htmlspecialchars($refer)."</p>\n";
@@ -168,6 +167,12 @@ class MapNode
 			return;
 		}
 		$this->done = TRUE;
+		
+		if ($this->parent_id == 0)
+		{
+			$this->parent_id = -1;
+		}
+		
 		foreach ($this->rels as $page)
 		{
 			if (!array_key_exists($page,$nodes))
