@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id:
+// $Id: diff.php,v 1.3 2003/01/29 09:48:24 panda Exp $
 //
 //衝突時に対応表を出す
 define('DIFF_SHOW_TABLE',TRUE);

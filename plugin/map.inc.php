@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id:
+// $Id: map.inc.php,v 1.6 2003/01/29 09:48:24 panda Exp $
 //
 /*
 プラグイン map
@@ -72,9 +72,9 @@ function plugin_map_action()
 	//ページ数
 	$retval['body'] .= "<p>\ntotal: $count page(s) on this site.\n</p>\n";
 	
-	//get_linkを通すことで、オブジェクトの配列とする
-	$obj = new link_wrapper($refer);
-	$pages = $obj->get_link('[['.join(']] [[',$pages).']]');
+	//オブジェクトの配列を作る
+	$obj = new InlineConverter(); 
+	$pages = $obj->get_objects('[['.join(']] [[',$pages).']]',$refer);
 	
 	//ページの属性を取得
 	$anchor = 0;
@@ -87,7 +87,7 @@ function plugin_map_action()
 		$_obj->_link = $_obj->toString($refer);
 		$_obj->_level = 0;
 		$_obj->_special = htmlspecialchars($_obj->name);
-		$_obj->_links = array('url'=>array(),'WikiName'=>array(),'InterWikiName'=>array());
+		$_obj->_links = array('url'=>array(),'pagename'=>array(),'InterWikiName'=>array());
 		
 		$_pages[$_obj->name] =& $pages[$key];
 	}
@@ -95,18 +95,17 @@ function plugin_map_action()
 	
 	//ページ内のリンクを列挙
 	foreach (array_keys($pages) as $page) {
-		$obj->page = $page; // link_wrapperの使いまわし
-		$data = $obj->get_link(join('',preg_grep('/^[^\s#]/',get_source($page))));
+		$data = $obj->get_objects(join('',preg_grep('/^[^\s#]/',get_source($page))),$page);
 		$pages[$page]->_count = count($data);
 		foreach ($data as $link) {
-			if ($link->type == 'WikiName') {
+			if ($link->type == 'pagename') {
 				if (array_key_exists($link->name,$pages)) {
-					$pages[$page]->_links['WikiName'][$link->name] =& $pages[$link->name];
+					$pages[$page]->_links['pagename'][$link->name] =& $pages[$link->name];
 				}
 				else {
 					$link->_exist = FALSE;
 					$link->_link = $link->toString();
-					$pages[$page]->_links['WikiName'][$link->name] = $link;
+					$pages[$page]->_links['pagename'][$link->name] = $link;
 				}
 			}
 			else {
@@ -122,7 +121,7 @@ function plugin_map_action()
 	if ($reverse) { //逆方向
 		//列挙
 		foreach (array_keys($pages) as $page) {
-			foreach ($pages[$page]->_links['WikiName'] as $from) {
+			foreach ($pages[$page]->_links['pagename'] as $from) {
 				if ($page != $from->name) {
 					$pages[$from->name]->_from[] = $page;
 				}
@@ -223,11 +222,11 @@ function showWikiNodes(&$pages,$page,$level)
 	$body = '';
 	$_level = $level + 1;
 	
-	foreach ($pages[$page]->_links['WikiName'] as $_obj)
+	foreach ($pages[$page]->_links['pagename'] as $_obj)
 		if (array_key_exists($_obj->name,$pages) and $pages[$_obj->name]->_level == 0)
 			$pages[$_obj->name]->_level = $_level; //表示を予約
 	
-	foreach ($pages[$page]->_links['WikiName'] as $_obj) {
+	foreach ($pages[$page]->_links['pagename'] as $_obj) {
 		if ($_obj->_exist)
 			$body .= showNode($pages,$_obj->name,$_level);
 		else

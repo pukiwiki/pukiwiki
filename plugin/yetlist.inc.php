@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id:
+// $Id: yetlist.inc.php,v 1.10 2003/01/29 09:48:24 panda Exp $
 //
 function plugin_yetlist_action()
 {

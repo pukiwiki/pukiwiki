@@ -11,7 +11,7 @@
  * @access  public
  * @author  
  * @create  
- * @version $Id: 
+ * @version $Id: backup.php,v 1.8 2003/01/29 09:48:24 panda Exp $
  **/
 
 /**
