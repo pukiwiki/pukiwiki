@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.37 2005/03/28 15:20:10 henoheno Exp $
+// $Id: func.php,v 1.38 2005/03/28 15:28:40 henoheno Exp $
 //
 // General functions
 
@@ -262,7 +262,7 @@ function decode($key)
 function hex2bin($hex_string)
 {
 	// preg_match : Avoid warning : pack(): Type H: illegal hex digit ...
-	// (string)   : Avoid pack() bug. See BugTrack2/31
+	// (string)   : Always treat as string (not int etc). See BugTrack2/31
 	return preg_match('/^[0-9a-f]+$/i', $hex_string) ?
 		pack('H*', (string)$hex_string) : $hex_string;
 }
