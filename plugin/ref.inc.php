@@ -2,27 +2,46 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.13 2003/03/16 13:53:29 panda Exp $
+// $Id: ref.inc.php,v 1.14 2003/03/30 03:56:03 panda Exp $
 //
 
 /*
 *プラグイン ref
 ページに添付されたファイルを展開する
+URLを展開する
 
 *Usage
- #ref(filename[[,{Left|Center|Right}]|[,{Wrap|Nowrap}]|[,Around]]{}[,comments])
+ #ref(filename[,page][,parameters][,title])
 
 *パラメータ
 -filename~
- 添付ファイル名、あるいはURL
- 'ページ名/添付ファイル名'を指定すると、そのページの添付ファイルを参照する
--Left|Center|Right~
- 横の位置合わせ
--Wrap|Nowrap~
- テーブルタグで囲む/囲まない
+添付ファイル名、あるいはURL~
+'ページ名/添付ファイル名'を指定すると、そのページの添付ファイルを参照する
+-page~
+ファイルを添付したページ名(省略可)~
+-パラメータ
+--Left|Center|Right~
+横の位置合わせ
+--Wrap|Nowrap~
+テーブルタグで囲む/囲まない
 -Around~
- テキストの回り込み
-
+テキストの回り込み
+-noicon~
+アイコンを表示しない
+-nolink~
+元ファイルへのリンクを張らない
+-noimg~
+画像を展開しない
+-zoom~
+縦横比を保持する
+-999x999~
+サイズを指定(幅x高さ)
+-999%~
+サイズを指定(拡大率)
+-その他~
+imgのalt/hrefのtitleとして使用~
+ページ名やパラメータに見える文字列を使用するときは、#ref(hoge.png,,zoom)のように
+タイトルの前にカンマを余分に入れる
 */
 
 // upload dir(must set end of /)
@@ -42,6 +61,9 @@ define('REF_DEFAULT_ALIGN','left'); // 'left','center','right'
 
 // force wrap on default
 define('REF_WRAP_TABLE',FALSE); // TRUE,FALSE
+
+// URL指定時に画像サイズを取得するか
+define('REF_URL_GETIMAGESIZE',FALSE);
 
 function plugin_ref_inline()
 {
@@ -122,6 +144,32 @@ function plugin_ref_body($args,$page)
 		}
 	}
 	
+	//パラメータ
+	$params = array(
+		'left'   => FALSE, // 左寄せ
+		'center' => FALSE, // 中央寄せ
+		'right'  => FALSE, // 右寄せ
+		'wrap'   => FALSE, // TABLEで囲む
+		'nowrap' => FALSE, // TABLEで囲まない
+		'around' => FALSE, // 回り込み
+		'noicon' => FALSE, // アイコンを表示しない
+		'nolink' => FALSE, // 元ファイルへのリンクを張らない
+		'noimg'  => FALSE, // 画像を展開しない
+		'zoom'   => FALSE, // 縦横比を保持する
+		'_size'  => FALSE, //(サイズ指定あり)
+		'_w'     => 0,      //(幅)
+		'_h'     => 0,      //(高さ)
+		'_%'     => 0,      //(拡大率)
+		'_args'  => array(),
+		'_done'  => FALSE,
+		'_error' => ''
+	);
+	
+	if (count($args) > 0)
+	{
+		array_walk($args,'ref_check_arg',&$params);
+	}
+	
 /*
  $nameをもとに以下の変数を設定
  $url,$url2 : URL
@@ -140,8 +188,8 @@ function plugin_ref_body($args,$page)
 		$url = htmlspecialchars($name);
 		$title = preg_match('/([^\/]+)$/', $name, $match) ? $match[1] : $url;
 		
-		$is_image = preg_match("/\.(gif|png|jpe?g)$/i",$name);
-		if ($is_image and (bool)ini_get('allow_url_fopen'))
+		$is_image = (!$params['noimg'] and preg_match("/\.(gif|png|jpe?g)$/i",$name));
+		if (REF_URL_GETIMAGESIZE and $is_image and (bool)ini_get('allow_url_fopen'))
 		{
 			$size = @getimagesize($name);
 			if (is_array($size))
@@ -156,7 +204,7 @@ function plugin_ref_body($args,$page)
 			$info = $url;
 		}
 	}
-	else	//添付ファイル
+	else //添付ファイル
 	{
 		if (!is_dir(UPLOAD_DIR))
 		{
@@ -183,7 +231,7 @@ function plugin_ref_body($args,$page)
 			return $params;
 		}
 		$size = @getimagesize($file);
-		$is_image = preg_match("/\.(gif|png|jpe?g)$/i",$name);
+		$is_image = (!$params['noimg'] and preg_match("/\.(gif|png|jpe?g)$/i",$name));
 		$width = $height = 0;
 		$url = $script.'?plugin=attach&amp;openfile='.rawurlencode($name).'&amp;refer='.rawurlencode($page);
 		if ($is_image)
@@ -202,19 +250,6 @@ function plugin_ref_body($args,$page)
 		}
 	}
 	
-	//パラメータ
-	$params = array('left'=>FALSE,'center'=>FALSE,'right'=>FALSE,
-		'wrap'=>FALSE,'nowrap'=>FALSE,'around'=>FALSE,
-		'noicon'=>FALSE,'nolink'=>FALSE,
-		'zoom'=>FALSE,'size'=>FALSE,'w'=>0,'h'=>0,'%'=>0,
-		'_args'=>array(),'_done'=>FALSE,'_error'=>''
-	);
-	
-	if (count($args) > 0)
-	{
-		array_walk($args, 'ref_check_arg', &$params);
-	}
-	
 	//拡張パラメータをチェック
 	if (count($params['_args']))
 	{
@@ -223,13 +258,13 @@ function plugin_ref_body($args,$page)
 		{
 			if (preg_match('/^([0-9]+)x([0-9]+)$/',$arg,$m))
 			{
-				$params['size'] = TRUE;
-				$params['w'] = $m[1];
-				$params['h'] = $m[2];
+				$params['_size'] = TRUE;
+				$params['_w'] = $m[1];
+				$params['_h'] = $m[2];
 			}
 			else if (preg_match('/^([0-9.]+)%$/',$arg,$m) and $m[1] > 0)
 			{
-				$params['%'] = $m[1];
+				$params['_%'] = $m[1];
 			}
 			else
 			{
@@ -242,21 +277,22 @@ function plugin_ref_body($args,$page)
 			$title = $is_image ? htmlspecialchars($title) : make_line_rules($title);
 		}
 	}
+	
 	//画像サイズ調整
 	if ($is_image)
 	{
 		// 指定されたサイズを使用する
-		if ($params['size'])
+		if ($params['_size'])
 		{
 			if ($width == 0 and $height == 0)
 			{
-				$width = $params['w'];
-				$height = $params['h'];
+				$width = $params['_w'];
+				$height = $params['_h'];
 			}
 			else if ($params['zoom'])
 			{
-				$_w = $params['w'] ? $width / $params['w'] : 0;
-				$_h = $params['h'] ? $height / $params['h'] : 0;
+				$_w = $params['_w'] ? $width / $params['_w'] : 0;
+				$_h = $params['_h'] ? $height / $params['_h'] : 0;
 				$zoom = max($_w,$_h);
 				if ($zoom)
 				{
@@ -266,14 +302,14 @@ function plugin_ref_body($args,$page)
 			}
 			else
 			{
-				$width = $params['w'] ? $params['w'] : $width;
-				$height = $params['h'] ? $params['h'] : $height;
+				$width = $params['_w'] ? $params['_w'] : $width;
+				$height = $params['_h'] ? $params['_h'] : $height;
 			}
 		}
-		if ($params['%'])
+		if ($params['_%'])
 		{
-			$width = (int)($width * $params['%'] / 100);
-			$height = (int)($height * $params['%'] / 100);
+			$width = (int)($width * $params['_%'] / 100);
+			$height = (int)($height * $params['_%'] / 100);
 		}
 		if ($width and $height)
 		{
