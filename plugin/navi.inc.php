@@ -1,12 +1,8 @@
 <?php
-// $Id: navi.inc.php,v 1.6 2002/12/05 07:28:31 panda Exp $
 /*
-Last-Update:2002-12-05 rev.3
+Last-Update:2002-10-30 rev.4
 
 *プラグイン navi
-
-http://home.arino.jp/index.php?%5B%5Bnavi.inc.php%5D%5D
-
 DobBook風のナビゲーションバーを表示する
 
 *Usage
@@ -33,113 +29,115 @@ DobBook風のナビゲーションバーを表示する
   title  up  title
 
 */
-function plugin_navi_convert() {
-	global $script,$vars,$WikiName,$BracketName;
+function plugin_navi_init()
+{
+	$messages = array('_navi_messages'=>array(
+		'msg_prev'=>'Prev',
+		'msg_next'=>'Next',
+		'msg_up'  =>'Up',
+		'msg_home'  =>'Home',
+	));
+  set_plugin_messages($messages);
+}
+function plugin_navi_convert()
+{
+	global $vars, $script;
+	global $_navi_messages;
 	static $_navi_pages;
-
+	
 	$home = $vars['page'];
 	if (func_num_args()) {
 		list($home) = func_get_args();
-		if (!preg_match("/^($WikiName|$BracketName)$/",$home))
-			$home = "[[$home]]";
-		if (!is_page($home))
-			return 'no page.';
 	}
 	$is_home = ($home == $vars['page']);
-	$current = strip_bracket($vars['page']);
-
-	$pattern = encode('[['.strip_bracket($home).'/');
-	$length = strlen($pattern);
-
-	$footer = isset($_navi_pages);
-	if (!$footer) {
-		if ($dir = @opendir(DATA_DIR)) {
-			while ($name = readdir($dir)) {
-				if ($name == '..' || $name == '.') { continue; }
-				if (strpos($name, $pattern) === 0) {
-					$pages[] = strip_bracket(decode(trim(preg_replace('/\.txt$/',' ',$name))));
-				}
-			}
-			closedir($dir);
+	$current = $vars['page'];
+	
+	if (!$footer = isset($_navi_pages)) {
+		$pages = array($current=>strip_bracket($current));
+		$_pages = preg_grep('/^(\[\[)?'.strip_bracket($home).'\//',get_existpages());
+		foreach ($_pages as $_page) {
+			$pages[$_page] = strip_bracket($_page);
 		}
-		// 未作成時のための番兵(プレビューとか)
-		if (in_array($current,$pages) === FALSE)
-			$pages[] = $current;
-		
 		natcasesort($pages);
+		$pages = array_keys($pages);
 		$prev = $home;
 		foreach ($pages as $page) {
-			if ($page == $current) { break; }
+			if ($page == $current) {
+				break;
+			}
 			$prev = $page;
 		}
 		$next = current($pages);
-
+		
 		$_navi_pages = array(
-			'up' => '&nbsp;',
-			'home' => '&nbsp;',
-			'home1' => '&nbsp;',
-			'prev' => '&nbsp;',
-			'prev1' => '&nbsp;',
-			'next' => '&nbsp;',
-			'next1' => '&nbsp;',
+			'up'=>'',
+			'prev'=>'',
+			'prev1'=>'',
+			'next'=>'',
+			'next1'=>'',
+			'home'=>'',
+			'home1'=>'',
 		);
 
 		$pos = strrpos($current, '/');
 		if ($pos > 0) {
-			$_navi_pages['up'] = make_link('[[Up&gt;'.substr($current, 0, $pos).']]');
+			$up = substr($current, 0, $pos).(substr($current,0,2)=='[[' ? ']]' : '');
+			$_navi_pages['up'] = navi_make_link($up,'none',$_navi_messages['msg_up']);
 		}
 		if (!$is_home) {
-			if ($prev != $home) {
-				$_navi_pages['prev'] = make_link("[[$prev]]");
-			} else {
-				$_navi_pages['prev'] = make_link("$prev");
-			}
-			$_navi_pages['prev1'] = make_link("[[Prev&gt;$prev]]");
+			$_navi_pages['prev'] = navi_make_link($prev,'left');
+			$_navi_pages['prev1'] = navi_make_link($prev,'left',$_navi_messages['msg_prev']);
 		}
-		if ($next != "") {
-			$_navi_pages['next'] = make_link("[[$next]]");
-			$_navi_pages['next1'] = make_link("[[Next&gt;$next]]");
+		if ($next != '') {
+			$_navi_pages['next'] = navi_make_link($next,'right');
+			$_navi_pages['next1'] = navi_make_link($next,'right',$_navi_messages['msg_next']);
 		}
-		if (!$is_home) {
-			$_navi_pages['home'] = make_link($home);
-			$_navi_pages['home1'] = make_link('[[Home&gt;'.strip_bracket($home).']]');
-		}
+		$_navi_pages['home'] = navi_make_link($home,'none');
+		$_navi_pages['home1'] = navi_make_link($home,'none',$_navi_messages['msg_home']);
 	}
 
 	$ret = '';
 	if ($footer) { //フッタ
 		$ret = <<<EOD
-<div class=".navi_footer">
-<hr width="100%">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-<tr><td width="33%" align="left" valign="top">{$_navi_pages['prev1']}</td>
-<td width="34%" align="center" valign="top">{$_navi_pages['home1']}</td>
-<td width="33%" align="right" valign="top">{$_navi_pages['next1']}</td></tr>
-<tr><td width="33%" align="left" valign="top">{$_navi_pages['prev']}</td>
-<td width="34%" align="center" valign="top">{$_navi_pages['up']}</td>
-<td width="33%" align="right" valign="top">{$_navi_pages['next']}</td></tr>
-</table>
-</div>
+<hr class="full_hr" />
+<ul class="navi">
+ <li class="navi_left">{$_navi_pages['prev1']}<br />{$_navi_pages['prev']}</li>
+ <li class="navi_right">{$_navi_pages['next1']}<br />{$_navi_pages['next']}</li>
+ <li class="navi_none">{$_navi_pages['home1']}<br />{$_navi_pages['up']}</li>
+</ul>
 EOD;
-	} else if ($is_home) { //目次
-		$ret .= "<ul>";
+	}
+	else if ($is_home) { //目次
+		$ret .= '<ul>';
 		foreach ($pages as $page) {
-			if (strip_bracket($page) == strip_bracket($home)) { continue; }
-			$ret .= "<li>".make_link("[[$page]]")."</li>";
+			if (strip_bracket($page) == strip_bracket($home)) {
+				continue;
+			}
+			$ret .= '<li>'.make_link("[[$page]]").'</li>';
 		}
-		$ret .= "</ul>";
-	} else {
+		$ret .= '</ul>';
+	}
+	else {
 		$ret = <<<EOD
-<div class=".navi_header">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-<tr><td width="33%" align="left" valign="top">{$_navi_pages['prev1']}</td>
-<td width="34%" align="center" valign="top">{$_navi_pages['home']}</td>
-<td width="33%" align="right" valign="top">{$_navi_pages['next1']}</td></tr>
-</table>
-<hr width="100%">
-</div>
+<ul class="navi">
+  <li class="navi_left">{$_navi_pages['prev1']}</li>
+  <li class="navi_right">{$_navi_pages['next1']}</li>
+  <li class="navi_none">{$_navi_pages['home']}</li>
+</ul>
+<hr class="full_hr" />
 EOD;
 	}
 	return $ret;
+}
+function navi_make_link($page,$align,$name='')
+{
+	global $script;
+	
+	$r_page = rawurlencode($page);
+	$s_name = htmlspecialchars(strip_bracket($page));
+	$name = ($name == '') ? $s_name : htmlspecialchars($name);
+	$title = $s_name . get_pg_passage($page,FALSE);
+	
+	return "<a href=\"$script?{$r_page}\" title=\"$title\">$name</a>";
 }
 ?>

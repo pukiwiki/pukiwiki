@@ -1,0 +1,45 @@
+*[[InterWikiテクニカル]]
+
+#contents
+
+----
+
+**サーバーリストへの追加
+[[編集:InterWikiName]] のページに以下のようにサーバの定義をする。
+
+ [URL サーバ名] タイプ
+ [http://pukiwiki.org/index.php pukiwiki] pw
+
+**InterWikiNameの追加
+サーバ名:WikiNameを[[BracketName]]で作ればInterWikiNameの完成
+
+ [[サーバ名:WikiName]]
+ [[pukiwiki:FrontPage]]
+
+**WikiNameの挿入位置
+要求しようとするURLへのWikiNameの挿入位置を $1 で指定することができます。省略するとお尻にくっつきます。
+
+ -[http://pukiwiki.org/index.php?cmd=backup&page=$1&age=1 pukiwiki] pw
+
+**文字コード変換タイプ
+
+PukiWikiページ以外にも飛ばせます。日本語をURLに含む可能性もあるのでその場合のエンコーディングの指定をタイプとして指定できます。
+
+ -[http://pukiwiki.org/index.php?cmd=read&page=$1 sng] pw
+
+:std 省略時|内部文字エンコーディング(標準はSJIS)のままURLエンコードします。
+:raw asis|URLエンコードしないでそのまま使用。
+:sjis|文字列をSJISに変換し、URLエンコードします。(mb_stringのSJISへのエイリアスです)
+:euc|文字列を日本語EUCに変換し、URLエンコードします。(mb_stringのEUC-JPへのエイリアスです)
+:utf8|文字列をUTF-8に変換し、URLエンコードします。(mb_stringのUTF-8へのエイリアスです)
+:yw|YukiWiki系へのエンコーディング。
+:moin|MoinMoin用に変換します。 
+
+その他、PHP4のmb_stringでサポートされている以下のエンコード文字が使用できます。
+
+''UCS-4, UCS-4BE, UCS-4LE, UCS-2, UCS-2BE, UCS-2LE, UTF-32, UTF-32BE, UTF-32LE, UCS-2LE, UTF-16, UTF-16BE, UTF-16LE, UTF-8, UTF-7, ASCII, EUC-JP, SJIS, eucJP-win, SJIS-win, ISO-2022-JP, JIS, ISO-8859-1, ISO-8859-2, ISO-8859-3, ISO-8859-4, ISO-8859-5, ISO-8859-6, ISO-8859-7, ISO-8859-8, ISO-8859-9, ISO-8859-10, ISO-8859-13, ISO-8859-14, ISO-8859-15, byte2be, byte2le, byte4be, byte4le, BASE64, 7bit, 8bit, UTF7-IMAP''
+
+**YukiWiki系へのエンコーディング
+
+-WikiNameのものへはそのままURLエンコード。
+-[[BracketName]]のものは[[ ]]を付加してURLエンコード。

@@ -1,5 +1,4 @@
 <?php
-// $Id: rename.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
 /*
 Last-Update:2002-10-29 rev.5
 
@@ -52,27 +51,36 @@ function plugin_rename_action() {
 	global $_rename_messages;
 
 	// XSS
-	foreach (array('refer','page','src','dst','method','related') as $var) {
-		$s_vars[$var] = htmlspecialchars($vars[$var]);
-	}
+	foreach (array('refer','page','src','dst','method','related') as $var)
+		$s_vars[$var] = array_key_exists($var,$vars) ? htmlspecialchars($vars[$var]) : '';
 
 	set_time_limit(60);
 
-	if ($vars['method'] == 'regex') {
-		if ($vars['src'] == '') { return rename_phase1($s_vars); }
+	$method = empty($vars['method']) ? '' : $vars['method'];
+	if ($method == 'regex') {
+		if ($vars['src'] == '')
+			return rename_phase1($s_vars);
 		$pages = get_existpages();
 		$arr0 = preg_grep('/'.str_replace(array('(',')'),'',$vars['src']).'/',$pages);
-		if (!is_array($arr0) or count($arr0) == 0) { return rename_phase1($s_vars,'nomatch'); }
+		if (!is_array($arr0) or count($arr0) == 0)
+			return rename_phase1($s_vars,'nomatch');
 		$arr1 = preg_replace("/{$vars['src']}/",$vars['dst'],$arr0);
-		$arr2 = preg_grep("/^(($WikiName)|($BracketName))$/",$arr1);
-		if (count($arr2) != count($arr1)) { return rename_phase1($s_vars,'notvalid'); }
+		$arr2 = preg_grep("/^($WikiName|$BracketName)$/",$arr1);
+		if (count($arr2) != count($arr1))
+			return rename_phase1($s_vars,'notvalid');
 		return rename_regex($s_vars,$arr0,$arr1);
-	} else { // $vars['method'] = 'page'
-		if ($vars['refer'] == '') { return rename_phase1($s_vars); }
-		if (!is_page($vars['refer'])) { return rename_phase1($s_vars,'notpage',$s_vars['refer']); }
-		if ($vars['refer'] == $whatsnew) { return rename_phase1($s_vars,'norename',$s_vars['refer']); }
-		if ($vars['page'] == '' or $vars['page'] == $vars['refer']) { return rename_phase2($s_vars); }
-		if (!preg_match("/^(($WikiName)|($BracketName))$/",$vars['page'])) { return rename_phase2($s_vars,'notvalid'); }
+	}
+	else { // $vars['method'] = 'page'
+		if ($vars['refer'] == '')
+			return rename_phase1($s_vars);
+		if (!is_page($vars['refer']))
+			return rename_phase1($s_vars,'notpage',$s_vars['refer']);
+		if ($vars['refer'] == $whatsnew)
+			return rename_phase1($s_vars,'norename',$s_vars['refer']);
+		if ($vars['page'] == '' or $vars['page'] == $vars['refer'])
+			return rename_phase2($s_vars);
+		if (!preg_match("/^$WikiName|$BracketName$/",$vars['page']))
+			return rename_phase2($s_vars,'notvalid');
 		return rename_refer($s_vars);
 	}
 }
@@ -100,8 +108,13 @@ function &rename_phase1(&$s_vars,$err='',$page='') {
 	global $script,$vars,$_rename_messages;
 	$msg = rename_err($err,$page);
 
-	if ($vars['method'] == 'regex') { $radio_regex =' checked'; }
-	else { $radio_page = ' checked'; }
+	$radio_regex = $radio_page = '';
+	if (array_key_exists('method',$vars) and $vars['method'] == 'regex') {
+		$radio_regex =' checked'; 
+	}
+	else {
+		$radio_page = ' checked'; 
+	}
 	$select_refer = rename_getselecttag($vars['refer']);
 
 	$ret['msg'] = $_rename_messages['msg_title'];
@@ -133,7 +146,7 @@ function &rename_phase2(&$s_vars,$err='') {
 	sort($related);
 	if (count($related) > 0) {
 		$rename_related = $_rename_messages['msg_do_related'].
-			'<input type=checkbox name="related" value="1" checked /><br />';
+			'<input type="checkbox" name="related" value="1" checked="checked" /><br />';
 	}
 	if ($s_vars['page'] == '') { $s_vars['page'] = $s_vars['refer']; }
 	$msg_rename = sprintf($_rename_messages['msg_rename'],make_link($vars['refer']));
@@ -215,7 +228,8 @@ function &rename_phase3(&$s_vars,&$pages) {
 		$input .= "<input type=\"hidden\" name=\"method\" value=\"regex\" />";
 		$input .= "<input type=\"hidden\" name=\"src\" value=\"{$s_vars['src']}\" />";
 		$input .= "<input type=\"hidden\" name=\"dst\" value=\"{$s_vars['dst']}\" />";
-	} else {
+	}
+	else {
 		$msg .= $_rename_messages['msg_page']."<br />";
 		$input .= "<input type=\"hidden\" name=\"method\" value=\"page\" />";
 		$input .= "<input type=\"hidden\" name=\"refer\" value=\"{$s_vars['refer']}\" />";
@@ -295,51 +309,34 @@ function rename_proceed(&$s_vars,&$pages,&$files,&$exists) {
 		}
 	}
 
-	$data = array();
-	if (is_page(RENAME_LOGPAGE)) {
-		//ページを読み出す
-		$data = get_source(RENAME_LOGPAGE);
-		$old = join("",$data);
-		if (substr($old,-1) != "\n") { $data[] = "\n"; }
-	}
-	//コメントを挿入
-	$data[] = '*'.$now."\n";
+	$postdata = get_source(RENAME_LOGPAGE);
+	$postdata[] = '*'.$now."\n";
 	if ($vars['method'] == 'regex') {
-		$data[] = '-'.$_rename_messages['msg_regex']."\n";
-		$data[] = '--From:'.$s_vars['src']."\n";
-		$data[] = '--To:'.$s_vars['dst']."\n";
-	} else {
-		$data[] = '-'.$_rename_messages['msg_page']."\n";
-		$data[] = '--From:'.$s_vars['refer']."\n";
-		$data[] = '--To:'.$s_vars['page']."\n";
+		$postdata[] = '-'.$_rename_messages['msg_regex']."\n";
+		$postdata[] = '--From:'.$s_vars['src']."\n";
+		$postdata[] = '--To:'.$s_vars['dst']."\n";
+	}
+	else {
+		$postdata[] = '-'.$_rename_messages['msg_page']."\n";
+		$postdata[] = '--From:'.$s_vars['refer']."\n";
+		$postdata[] = '--To:'.$s_vars['page']."\n";
 	}
 	if (count($exists) > 0) {
-		$data[] = "\n".$_rename_messages['msg_result']."\n";
+		$postdata[] = "\n".$_rename_messages['msg_result']."\n";
 		foreach ($exists as $page=>$arr) {
-			$data[] = '-'.rename_arrow(decode($page),decode($pages[$page]))."\n";
-			foreach ($arr as $ofile=>$nfile) { $data[] = '--'.rename_arrow($ofile,$nfile)."\n"; }
+			$postdata[] = '-'.rename_arrow(decode($page),decode($pages[$page]))."\n";
+			foreach ($arr as $ofile=>$nfile)
+				$postdata[] = '--'.rename_arrow($ofile,$nfile)."\n";
 		}
-		$data[] = "----\n";
+		$postdata[] = "----\n";
 	}
 	foreach ($pages as $old=>$new)
-		$data[] = '-'.rename_arrow(decode($old),decode($new))."\n";
-	$new = join('',$data);
+		$postdata[] = '-'.rename_arrow(decode($old),decode($new))."\n";
 
-	if (is_page(RENAME_LOGPAGE)) {
-		// 差分ファイルの作成
-		file_write(DIFF_DIR,RENAME_LOGPAGE,do_diff($old,$new));
-
-		// バックアップの作成
-		if ($do_backup) {
-			$oldtime = filemtime(get_filename(encode(RENAME_LOGPAGE)));
-			make_backup(encode(RENAME_LOGPAGE).'.txt', $old, $oldtime);
-		}
-	}
+	// 更新の衝突はチェックしない。
 
 	// ファイルの書き込み
-	file_write(DATA_DIR, RENAME_LOGPAGE, $new);
-
-	put_lastmodified(); //最終更新ページを作り直す
+	page_write(RENAME_LOGPAGE, join('',$postdata));
 
 	//リダイレクト
 	$page = rawurlencode(($vars['page'] == '') ? RENAME_LOGPAGE : $vars['page']);
@@ -350,7 +347,7 @@ function rename_proceed(&$s_vars,&$pages,&$files,&$exists) {
 function &rename_getrelated($page) {
 	$related = array();
 	$pages = get_existpages();
-	$pattern = '/[\[\/]'.str_replace('/','\/',strip_bracket($page)).'[\]\/]/';
+	$pattern = '/(?:^|\/)'.str_replace('/','\/',strip_bracket($page)).'(?:\/|$)/';
 	foreach ($pages as $name) {
 		if ($name == $page) { continue; }
 		if (preg_match($pattern,$name)) { $related[] = $name; }

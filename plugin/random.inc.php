@@ -1,5 +1,4 @@
 <?php
-// $Id: random.inc.php,v 1.2 2002/12/05 05:50:41 panda Exp $
 /*
 Last-Update:2002-10-29 rev.2
 
@@ -20,7 +19,7 @@ function plugin_random_convert()
 	
 	$title = 'press here.';
 	
-	if(func_num_args()) {
+	if (func_num_args()) {
 		$args = func_get_args();
 		$title = htmlspecialchars($args[0]);
 	}
@@ -31,14 +30,13 @@ function plugin_random_action()
 {
 	global $script,$vars,$post;
 	
-	$pattern = '[['.strip_bracket($vars['refer']).'/';
+	$pattern = strip_bracket($vars['refer']).'/';
 	
 	$pages = array();
 	foreach (get_existpages() as $_page)
 		if (strpos($_page,$pattern) === 0)
 			$pages[$_page] = strip_bracket($_page);
 //	natcasesort($pages);
-	
 	srand((double)microtime()*1000000);
 	$page = array_rand($pages);
 

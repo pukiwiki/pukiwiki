@@ -5,60 +5,47 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: ls.inc.php,v 1.4 2002/11/29 00:09:01 panda Exp $
+ * $Id: ls.inc.php,v 1.5 2003/01/27 05:38:46 panda Exp $
  */
 
 function plugin_ls_convert()
 {
-	global $vars, $script;
+	global $script,$vars;
 	
-	if(func_num_args())
-		$aryargs = func_get_args();
-	else
-		$aryargs = array();
-
-      	$with_title = FALSE;
-	if(array_search('title',$aryargs)!==FALSE) {
-	  $with_title = TRUE;
-	}
-	$ls = $comment = '';
-	$filepattern = encode('[['.strip_bracket($vars["page"]).'/');
-	$filepattern_len = strlen($filepattern);
-	if ($dir = @opendir(DATA_DIR))
-	{
-		while($file = readdir($dir))
-		{
-			if($file == ".." || $file == ".") continue;
-			if(substr($file,0,$filepattern_len)!=$filepattern) continue; 
-			$page = decode(trim(preg_replace("/\.txt$/"," ",$file)));
-			if($with_title) {
-			  $comment = '';
-			  $fd = fopen(DATA_DIR . $file,'r');
-			  if(!feof ($fd)) {
-			    $comment = ereg_replace("^[-*]+",'',fgets($fd,1024));
-			    $comment = ereg_replace("[~\r\n]+$",'',$comment);
-			    $comment = trim($comment);
-			  }
-			  if($comment != '' && substr($comment,0,1) != '#') {
-			    $comment = " - " . convert_html($comment);
-			  }
-			  else {
-			    $comment = '';
-			  }
-			  fclose($fd);
+	$aryargs = func_num_args() ? func_get_args() : array();
+	
+	$with_title = (array_search('title',$aryargs)!==FALSE);
+	
+	$ls = '';
+	
+	$prefix = strip_bracket($vars['page']).'/';
+	
+	$pages = array();
+	foreach (get_existpages() as $_page)
+		if (strpos($_page,$prefix) === 0)
+			$pages[] = $_page;
+	natcasesort($pages);
+	
+	$comment = '';
+	foreach ($pages as $page) {
+		if ($with_title) {
+			list($comment) = get_source($page);
+			$comment = ereg_replace("^[-*]+",'',$comment);
+			if ($comment != '' and substr($comment,0,1) != '#')
+				$comment = ' - ' . convert_html($comment);
+			else {
+				$comment = '';
 			}
-      			$url = rawurlencode($page);
-			$name = strip_bracket($page);
-			$title = $name ." " .get_pg_passage($page,false);
-			$ls .= "<li><a href=\"$script?cmd=read&amp;page=$url\" title=\"$title\">$name</a>$comment\n";
 		}
-		closedir($dir);
+		$r_page = rawurlencode($page);
+		$s_page = strip_bracket($page);
+		$passage = get_pg_passage($page,FALSE);
+		$ls .= " <li><a href=\"$script?cmd=read&amp;page=$r_page\" title=\"$s_page $passage\">$s_page</a>$comment</li>\n";
 	}
 	
-	if($ls=='') {
+	if ($ls == '')
 	  return '';
-	}
 	
-	return "<ul>$ls</ul>";
+	return "<ul>\n$ls</ul>\n";
 }
 ?>

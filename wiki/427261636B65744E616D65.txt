@@ -1,0 +1,1 @@
+[[BracketName]] のように[[]]で囲うと[[BracketName]]になります。もちろん[[日本語]]もOK。

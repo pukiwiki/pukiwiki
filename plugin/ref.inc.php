@@ -1,19 +1,17 @@
 <?php
-// $Id: ref.inc.php,v 1.2 2002/12/07 09:43:43 panda Exp $
 /*
-Last-Update:2002-10-29 rev.33
+Last-Update:2003-01-09 rev.35
 
 *プラグイン ref
 ページに添付されたファイルを展開する
 
 *Usage
- #ref(filename[,Page][[,{Left|Center|Right}]|[,{Wrap|Nowrap}]|[,Around]]{}[,comments])
+ #ref(filename[[,{Left|Center|Right}]|[,{Wrap|Nowrap}]|[,Around]]{}[,comments])
 
 *パラメータ
 -filename~
  添付ファイル名、あるいはURL
--Page~
- WikiNameまたはBracketNameを指定すると、そのページの添付ファイルを参照する
+ 'ページ名/添付ファイル名'を指定すると、そのページの添付ファイルを参照する
 -Left|Center|Right~
  横の位置合わせ
 -Wrap|Nowrap~
@@ -24,10 +22,14 @@ Last-Update:2002-10-29 rev.33
 */
 
 // upload dir(must set end of /)
-define('REF_UPLOAD_DIR','./attach/');
+if (!defined('UPLOAD_DIR')) {
+	define('UPLOAD_DIR','./attach/');
+}
 
 // file icon image
-define('REF_FILE_ICON','<img src="./image/file.gif" alt="file" width="20" height="20" />');
+if (!defined('FILE_ICON')) {
+	define('FILE_ICON','<img src="./image/file.png" width="20" height="20" alt="file" style="border-width:0px" />');
+}
 
 // default alignment
 define('REF_DEFAULT_ALIGN','left'); // 'left','center','right'
@@ -35,127 +37,256 @@ define('REF_DEFAULT_ALIGN','left'); // 'left','center','right'
 // force wrap on default
 define('REF_WRAP_TABLE',FALSE); // TRUE,FALSE
 
-function plugin_ref_convert() {
-
-	global $script,$vars;
-	global $WikiName, $BracketName;
-
-	//戻り値
-	$ret = '';
+function plugin_ref_inline()
+{
+	global $vars;
+	
+	//エラーチェック
+	if (!func_num_args()) {
+		return 'no argument(s).';
+	}
+	
+	$params = plugin_ref_body(func_get_args(),$vars['page']);
+	
+	return ($params['_error'] != '') ? $params['_error'] : $params['_body'];
+}
+function plugin_ref_convert()
+{
+	global $vars;
 
 	//エラーチェック
-	if (!func_num_args()) return 'no argument(s).';
+	if (!func_num_args()) {
+		return '<p>no argument(s).</p>';
+	}
+	
+	$params = plugin_ref_body(func_get_args(),$vars['page']);
+	
+	if ($params['_error'] != '') {
+		return "<p>{$params['_error']}</p>";
+	}
+	
+	if ((REF_WRAP_TABLE and !$params['nowrap']) or $params['wrap']) {
+		// 枠で包む
+		// margin:auto Moz1=x(wrap,aroundが効かない),op6=oNN6=x(wrap,aroundが効かない)IE6=x(wrap,aroundが効かない)
+		// margin:0px Moz1=x(wrapで寄せが効かない),op6=x(wrapで寄せが効かない),nn6=x(wrapで寄せが効かない),IE6=o
+		$margin = ($params['around'] ? '0px' : 'auto');
+		$margin_align = ($params['_align'] == 'center') ? '' : ";margin-{$params['_align']}:0px";
+		$ret = <<<EOD
+<table class="style_table" style="margin:$margin$margin_align">
+ <tr>
+  <td class="style_td">{$params['_body']}</td>
+ </tr>
+</table>
+EOD;
+	}
+	// divで包む
+	if ($params['around']) {
+		$style = ($params['_align'] == 'right') ? 'float:right' : 'float:left';
+	}
+	else {
+		$style = "text-align:{$params['_align']}";
+	}
+	return "<div class=\"img_margin\" style=\"$style\">{$params['_body']}</div>\n";
+}
 
-	//添付ファイル名を取得
-	$args = func_get_args();
+function plugin_ref_body($args,$page)
+{
+	global $script;
+	
+	// 戻り値
+	$params = array();
+	
+	// 添付ファイル名を取得
 	$name = array_shift($args);
-
-// $nameをもとに以下の変数を設定
-// $url : URL
-// $title :タイトル
-// $ext : 拡張子判別用文字列
-// $icon : アイコンのimgタグ
-// $size : 画像ファイルのときサイズ
-// $info : 画像ファイル以外のファイルの情報
-//  添付ファイルのとき : ファイルの最終更新日とサイズ
-//  URLのとき : URLそのもの
-
-	if (is_url($name)) { //URL
-		$url = $ext = $info = htmlspecialchars($name);
-		$icon = $size = '';
-		if (preg_match('/([^\/]+)$/', $name, $match)) { $ext = $match[1]; }
-	} else { //添付ファイル
-		$icon = REF_FILE_ICON;
-		if (!is_dir(REF_UPLOAD_DIR)) return 'no REF_UPLOAD_DIR.';
-		//ページ指定のチェック
-		$page = $vars['page'];
-		if (count($args) > 0) {
-			$_page = get_fullname($args[0],$vars['page']);
-			if (is_page($_page)) {
-				$page = $_page;
-				array_shift($args);
+	
+/*
+ $nameをもとに以下の変数を設定
+ $url,$url2 : URL
+ $title :タイトル
+ $is_image : 画像のときTRUE
+ $info : 画像ファイルのときgetimagesize()の'size'
+         画像ファイル以外のファイルの情報
+         添付ファイルのとき : ファイルの最終更新日とサイズ
+         URLのとき : URLそのもの
+*/
+	$file = $title = $url = $url2 = $info = $title = '';
+	$width = $height = 0;
+	
+	if (is_url($name)) {
+		//URL
+		
+		$url = htmlspecialchars($name);
+		$title = preg_match('/([^\/]+)$/', $name, $match) ? $match[1] : $url;
+		
+		$is_image = preg_match("/\.(gif|png|jpe?g)$/i",$name);
+		if ($is_image) {
+			$size = getimagesize($name);
+			if (is_array($size)) {
+				$width = $size[0];
+				$height = $size[1];
+				$info = $size[3];
 			}
 		}
-		if (!is_page($page)) { return 'page not found.'; }
-
-		$ext = $name;
-		$file = REF_UPLOAD_DIR.encode($page).'_'.encode($name);
-		if (!is_file($file)) { return 'not found.'; }
-
-		if (is_picture($ext)) {
-			$url = $file;
-			$size = getimagesize($file);
-			$size = $size[3];
-		} else {
-			$url = $script.'?plugin=attach&amp;openfile='.rawurlencode($name).'&amp;refer='.rawurlencode($page);
-			$lastmod = date('Y/m/d H:i:s',filemtime($file));
-			$size = sprintf('%01.1f',round(filesize($file)/1000,1)).'KB';
-			$info = "$lastmod $size";
+		else {
+			$info = $url;
 		}
 	}
-
-	//パラメータ変換
-	$params = array('left'=>FALSE,'center'=>FALSE,'right'=>FALSE,'wrap'=>FALSE,'nowrap'=>FALSE,'around'=>FALSE,'_args'=>array(),'_done'=>FALSE);
-	array_walk($args, 'ref_check_arg', &$params);
-	if (count($params['_args']) > 0) { $title = join(',', $params['_args']); }
-
-	//タイトルを決定
-	if (!isset($title) or $title == '') { $title = $ext; }
-	$title = htmlspecialchars($title);
-
+	else {
+		//添付ファイル
+		if (!is_dir(UPLOAD_DIR)) {
+			$params['_error'] = 'no UPLOAD_DIR.';
+			return $params;
+		}
+		
+		//ページ指定のチェック
+//		$page = $vars['page'];
+		if (preg_match('/^(.+)\/([^\/]+)$/',$name,$matches)) {
+			if ($matches[1] == '.' or $matches[1] == '..') {
+				$matches[1] .= '/';
+			}
+			if (function_exists('get_fullname')) {
+				$page = get_fullname($matches[1],$page);
+			}
+			else {
+				$page = $matches[1];
+			}
+			$name = $matches[2];
+		}
+		$title = $name;
+		$file = UPLOAD_DIR.encode($page).'_'.encode($name);
+		if (!is_file($file)) {
+			$params['_error'] = 'file not found.';
+			return $params;
+		}
+		$size = getimagesize($file);
+		$is_image = preg_match("/\.(gif|png|jpe?g)$/i",$name);
+		$width = $height = 0;
+		$url = $script.'?plugin=attach&amp;openfile='.rawurlencode($name).'&amp;refer='.rawurlencode($page);
+		if ($is_image) {
+			$url2 = $url;
+			$url = $file;
+			if (is_array($size)) {
+				$width = $size[0];
+				$height = $size[1];
+			}
+		}
+		else {
+			$info = get_date('Y/m/d H:i:s',filemtime($file) - LOCALZONE).' '.sprintf('%01.1f',round(filesize($file)/1000,1)).'KB';
+		}
+	}
+	
+	//パラメータ
+	$params = array('left'=>FALSE,'center'=>FALSE,'right'=>FALSE,'wrap'=>FALSE,'nowrap'=>FALSE,'around'=>FALSE,'noicon'=>FALSE,
+		'zoom'=>FALSE,'size'=>FALSE,'w'=>0,'h'=>0,'%'=>0,'_args'=>array(),'_done'=>FALSE,'_error'=>'');
+	
+	if (count($args) > 0) {
+		array_walk($args, 'ref_check_arg', &$params);
+	}
+	
+	//拡張パラメータをチェック
+	if (count($params['_args'])) {
+		$_title = array();
+		foreach ($params['_args'] as $arg) {
+			if (preg_match('/^([0-9]+)x([0-9]+)$/',$arg,$m)) {
+				$params['size'] = TRUE;
+				$params['w'] = $m[1];
+				$params['h'] = $m[2];
+			}
+			else if (preg_match('/^([0-9.]+)%$/',$arg,$m) and $m[1] > 0) {
+				$params['%'] = $m[1];
+			}
+			else {
+				$_title[] = $arg;
+			}
+		}
+		if (count($_title)) {
+			$title2 = $title;
+			$title = join(',', $_title);
+			if ($is_image) {
+				if (is_url($title)) {
+					$url2 = $title;
+					$title = $title2;
+				}
+				else {
+					$title = htmlspecialchars($title);
+				}
+			}
+			else {
+				$title = make_user_rules($title);
+			}
+		}
+	}
+	//画像サイズ調整
+	if ($is_image) {
+		// 指定されたサイズを使用する
+		if ($params['size']) {
+			if ($width == 0 and $height == 0) {
+				$width = $params['w'];
+				$height = $params['h'];
+			}
+			else if ($params['zoom']) {
+				$_w = $params['w'] ? $width / $params['w'] : 0;
+				$_h = $params['h'] ? $height / $params['h'] : 0;
+				$zoom = max($_w,$_h);
+				if ($zoom) {
+					$width = (int)($width / $zoom);
+					$height = (int)($height / $zoom);
+				}
+			}
+			else {
+				$width = $params['w'] ? $params['w'] : $width;
+				$height = $params['h'] ? $params['h'] : $height;
+			}
+		}
+		if ($params['%']) {
+			$width = (int)($width * $params['%'] / 100);
+			$height = (int)($height * $params['%'] / 100);
+		}
+		if ($width and $height) {
+			$info = "width=\"$width\" height=\"$height\"";
+		}
+	}
+	
 	//アラインメント判定
-	if ($params['right'])
-		$align = 'right';
-	else if ($params['left'])
-		$align = 'left';
-	else if ($params['center'])
-		$align = 'center';
-	else
-		$align = REF_DEFAULT_ALIGN;
+	if ($params['right']) {
+		$params['_align'] = 'right';
+	}
+	else if ($params['left']) {
+		$params['_align'] = 'left';
+	}
+	else if ($params['center']) {
+		$params['_align'] = 'center';
+	}
+	else {
+		$params['_align'] = REF_DEFAULT_ALIGN;
+	}
 
 	// ファイル種別判定
-	if (is_picture($ext)) { // 画像
-		$ret .= "<img src=\"$url\" alt=\"$title\" title=\"$title\" $size />";
-	} else { // 通常ファイル
-		$ret .= "<a href=\"$url\" title=\"$info\">$icon$title</a>\n";
+	if ($is_image) { // 画像
+		$_url = "<img src=\"$url\" alt=\"$title\" title=\"$title\" $info />";
+		if ($url2) {
+			$_url = "<a href=\"$url2\" title=\"$title\">$_url</a>";
+		}
+		$params['_body'] = $_url;
 	}
-
-	if ((REF_WRAP_TABLE and !$params['nowrap']) or $params['wrap']) {
-		$ret = wrap_table($ret, $align, $params['around']);
+	else { // 通常ファイル
+		$icon = $params['noicon'] ? '' : FILE_ICON;
+		$params['_body'] = "<a href=\"$url\" title=\"$info\">$icon$title</a>\n";
 	}
-	$ret = wrap_div($ret, $align, $params['around']);
-	return $ret;
+	return $params;
 }
 
 //-----------------------------------------------------------------------------
-// 画像かどうか
-function is_picture($text) {
-	return preg_match('/(\.gif|\.png|\.jpeg|\.jpg)$/i', $text);
-}
 // URLかどうか
 function is_url($text) {
 	return preg_match('/^(https?|ftp|news)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/', $text);
 }
-// divで包む
-function wrap_div($text, $align, $around) {
-	if ($around) {
-		$style = ($align == 'right') ? 'float:right' : 'float:left';
-	} else {
-		$style = "text-align:$align";
-	}
-	return "<div class=\"img_margin\" style=\"$style\">$text</div>\n";
-}
-// 枠で包む
-// margin:auto Moz1=x(wrap,aroundが効かない),op6=oNN6=x(wrap,aroundが効かない)IE6=x(wrap,aroundが効かない)
-// margin:0px Moz1=x(wrapで寄せが効かない),op6=x(wrapで寄せが効かない),nn6=x(wrapで寄せが効かない),IE6=o
-function wrap_table($text, $align, $around) {
-	$margin = ($around ? '0px' : 'auto');
-	$margin_align = ($align == 'center') ? '' : ";margin-$align:0px";
-	return "<table class=\"style_table\" style=\"margin:$margin$margin_align\">\n<tr><td class=\"style_td\">\n$text\n</td></tr>\n</table>\n";
-}
 //オプションを解析する
 function ref_check_arg($val, $_key, &$params) {
-	if ($val == '') { $params['_done'] = TRUE; return; }
+	if ($val == '') {
+		$params['_done'] = TRUE;
+		return;
+	}
 	if (!$params['_done']) {
 		foreach (array_keys($params) as $key) {
 			if (strpos($key, strtolower($val)) === 0) {

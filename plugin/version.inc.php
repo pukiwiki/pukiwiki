@@ -1,8 +1,12 @@
 <?php
-// $Id: version.inc.php,v 1.5 2002/11/29 00:09:01 panda Exp $
+// $Id: version.inc.php,v 1.6 2003/01/27 05:38:47 panda Exp $
 
 function plugin_version_convert()
 {
-	return "<strong>".S_VERSION."</strong>";
+	return '<p>'.plugin_version_inline().'</p>';
+}
+function plugin_version_inline()
+{
+	return S_VERSION;
 }
 ?>

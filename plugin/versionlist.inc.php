@@ -5,7 +5,7 @@
  * CopyRight 2002 S.YOSHIMURA GPL2
  * http://masui.net/pukiwiki/ yosimura@excellence.ac.jp
  *
- * $Id: versionlist.inc.php,v 1.2 2002/12/05 05:45:18 panda Exp $
+ * $Id: versionlist.inc.php,v 1.3 2003/01/27 05:38:47 panda Exp $
  */
 
 function plugin_versionlist_convert()
@@ -14,7 +14,7 @@ function plugin_versionlist_convert()
   $SCRIPT_DIR = array("./","./plugin/");
   /* 探索ディレクトリ設定。本当は、pukiwiki.ini.php かな */
 
-  if(func_num_args())
+  if (func_num_args())
     $aryargs = func_get_args();
   else
     $aryargs = array();
@@ -24,14 +24,14 @@ function plugin_versionlist_convert()
   foreach($SCRIPT_DIR as $sdir){
     if ($dir = @dir($sdir)){
       while($file = $dir->read()){
-        if($file == ".." || $file == ".") continue;
-        if(!preg_match('/\.php$/i',$file)) continue;
+        if ($file == ".." || $file == ".") continue;
+        if (!preg_match('/\.php$/i',$file)) continue;
         
         $comment = '';
         $filenp = $sdir . $file;
         $fd = fopen($filenp,'r');
         while(!feof ($fd)){
-          if(preg_match('/Id:(.+),v (\d+\.\d+)/',fgets($fd,1024),$match)){
+          if (preg_match('/Id:(.+),v (\d+\.\d+)/',fgets($fd,1024),$match)){
             $comment = trim($match[1] . " -&gt; " .  $match[2]) ;
             break;
           }else {
@@ -39,13 +39,13 @@ function plugin_versionlist_convert()
           }
         }
         fclose($fd);
-        if($comment != '')
+        if ($comment != '')
           $lst .= "<li>$filenp =&gt; $comment\n";
       }
     }
     $dir->close();
   }
-  if($lst=='') {
+  if ($lst=='') {
     return '';
   }
 

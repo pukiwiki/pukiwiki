@@ -1,47 +1,40 @@
 <?php
-// $Id: include.inc.php,v 1.2 2002/12/05 05:45:18 panda Exp $
+/*
+ include.inc.php
+ ページをインクルードする
+*/
+
 function plugin_include_convert()
 {
-	global $script,$get,$post,$vars,$WikiName,$BracketName,$hr;
-	static $include_list; //処理済ページ名の配列
+	global $script,$vars,$get,$post,$hr,$WikiName,$BracketName;
+	global $include_list; //処理済ページ名の配列
 	
-	if (!isset($include_list))
-		$include_list = array($vars['page']=>TRUE);
+	if (!isset($include_list)) { $include_list = array($vars['page']=>TRUE); }
 	
-	if(func_num_args() == 0)
-		return;
+	if (func_num_args() == 0) { return; }
 	
 	list($page) = func_get_args();
 	
-	if (!preg_match("/^($WikiName|$BracketName)$/",$page))
+	if (!preg_match("/^($WikiName|\[\[$BracketName\]\])$/",$page))
 		$page = "[[$page]]";
-	
-	if (!is_page($page))
-		return '';
-	
-	if (isset($include_list[$page]))
-		return '';
-	
+
+	if (!is_page($page) or isset($include_list[$page])) { return ''; }
 	$include_list[$page] = TRUE;
 	
 	$tmppage = $vars['page'];
-	
 	$get['page'] = $post['page'] = $vars['page'] = $page;
-
-	$body = @join('',@file(get_filename(encode($page))));
-	$body = convert_html($body);
-
-	// $link = "<a href=\"$script?".rawurlencode($page)."\">".strip_bracket($page)."</a>";
-	$link = "<a href=\"$script?cmd=edit&page=".rawurlencode($page)."\">".strip_bracket($page)."</a>";
-	if($page == 'MenuBar'){
-		$head = "<span align=\"center\"><h5 class=\"side_label\">$link</h5></span>";
-		$body = "$head\n<small>$body</small>\n";
-	} else {
-		$head = "<h1>$link</h1>\n";
-		$body = "$head\n$body\n";
-	}
-
+	
+	$body = convert_html(join('',get_source($page)));
+	
 	$get['page'] = $post['page'] = $vars['page'] = $tmppage;
+
+	$link = "<a href=\"$script?cmd=edit&page=".rawurlencode($page)."\">".strip_bracket($page)."</a>";
+	if ($page == 'MenuBar') {
+		$body = "<span align=\"center\"><h5 class=\"side_label\">$link</h5></span>\n<small>$body</small>\n";
+	}
+	else {
+		$body = "<h1>$link</h1>\n$body\n";
+	}
 	
 	return $body;
 }

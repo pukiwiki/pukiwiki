@@ -3,7 +3,7 @@
  * PukiWiki calendar_viewerプラグイン
  *
  *
- *$Id: calendar_viewer.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+ *$Id: calendar_viewer.inc.php,v 1.2 2003/01/27 05:38:44 panda Exp $
   calendarrecentプラグインを元に作成
  */
 /**
@@ -60,7 +60,7 @@ function plugin_calendar_viewer_convert()
 
 
   //*引数の確認
-  if(func_num_args()>=2){
+  if (func_num_args()>=2){
     $func_vars_array = func_get_args();
 
     $pagename = $func_vars_array[0];
@@ -107,12 +107,12 @@ function plugin_calendar_viewer_convert()
     //pagename無しのyyyy-mm-ddに対応するための処理
     $pagepattern = "";
     $pagepattern_len = 0;
-    $filepattern = encode('[['.$page_YM);
+    $filepattern = encode($page_YM);
     $filepattern_len = strlen($filepattern);
   }else{
     $pagepattern = strip_bracket($pagename) .'/';
     $pagepattern_len = strlen($pagepattern);
-    $filepattern = encode('[['.$pagepattern.$page_YM);
+    $filepattern = encode($pagepattern.$page_YM);
     $filepattern_len = strlen($filepattern);
   }
 
@@ -126,8 +126,8 @@ function plugin_calendar_viewer_convert()
     {
       while($file = readdir($dir))
         {
-          if($file == ".." || $file == ".") continue;
-          if(substr($file,0,$filepattern_len)!=$filepattern) continue;
+          if ($file == ".." || $file == ".") continue;
+          if (substr($file,0,$filepattern_len)!=$filepattern) continue;
           //echo "OK";
           $page = decode(trim(preg_replace("/\.txt$/"," ",$file)));
           //$pageがカレンダー形式なのかチェック デフォルトでは、 yyyy-mm-dd
@@ -162,13 +162,13 @@ function plugin_calendar_viewer_convert()
   $tmp = $limit_base;
   while ($tmp < $limit_page){
     if (empty($pagelist[$tmp])) break;
-    $page = "[[" . $pagelist[$tmp] .  "]]";
+    $page = $pagelist[$tmp];
 
     $get["page"] = $page;
     $post["page"] = $page;
     $vars["page"] = $page;
 
-    $body = @join("",@file(get_filename(encode($page))));
+    $body = @join("",@get_source($page));
     $body = convert_html($body);
     $link = "<a href=\"$script?cmd=edit&page=".rawurlencode($page)."\">".strip_bracket($page)."</a>";
     $head = "<h1>$link</h1>\n";
@@ -270,7 +270,7 @@ function plugin_calendar_viewer_action(){
 
   $page = strip_bracket($vars['page']);
   $vars['page'] = '*';
-  if(isset($vars['file'])) $vars['page'] = $vars['file'];
+  if (isset($vars['file'])) $vars['page'] = $vars['file'];
 
   $date_sep = $vars["date_sep"];
 
@@ -288,7 +288,7 @@ function plugin_calendar_viewer_action(){
   if ($vars["page"] != ""){
     $return_vars_array["msg"] .= "/";
   }
-  if(preg_match("/\*/",$page_YM)){
+  if (preg_match("/\*/",$page_YM)){
     //うーん、n件表示の時はなんてページ名にしたらいい？
   }else{
     $return_vars_array["msg"] .= $page_YM;
@@ -300,11 +300,11 @@ function plugin_calendar_viewer_action(){
 
 function plugin_calendar_viewer_isValidDate($aStr, $aSepList="-/ .") {
   //$aSepList=""なら、yyyymmddとしてチェック（手抜き(^^;）
-  if($aSepList == "") {
+  if ($aSepList == "") {
     //yyyymmddとしてチェック
     return checkdate(substr($aStr,4,2),substr($aStr,6,2),substr($aStr,0,4));
   }
-  if( ereg("^([0-9]{2,4})[$aSepList]([0-9]{1,2})[$aSepList]([0-9]{1,2})$", $aStr, $m) ) {
+  if ( ereg("^([0-9]{2,4})[$aSepList]([0-9]{1,2})[$aSepList]([0-9]{1,2})$", $aStr, $m) ) {
     return checkdate($m[2], $m[3], $m[1]);
   }
   return false;

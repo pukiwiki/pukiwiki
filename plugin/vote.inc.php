@@ -1,107 +1,93 @@
 <?php
-// $Id: vote.inc.php,v 1.10 2002/12/19 11:33:49 panda Exp $
+// $Id: vote.inc.php,v 1.11 2003/01/27 05:38:47 panda Exp $
 
 function plugin_vote_init()
 {
-  $_plugin_vote_messages = array(
-    '_vote_plugin_choice' => 'ÁªÂò»è',
-    '_vote_plugin_votes' => 'ÅêÉ¼',
-    );
-  set_plugin_messages($_plugin_vote_messages);
+	if (LANG == 'ja')
+		$messages = array(
+			'_vote_plugin_choice' => 'ÁªÂò»è',
+			'_vote_plugin_votes' => 'ÅêÉ¼',
+		);
+	else
+		$messages = array(
+			'_vote_plugin_choice' => 'Selection',
+			'_vote_plugin_votes' => 'Vote',
+		);
+	set_plugin_messages($messages);
 }
 
 function plugin_vote_action()
 {
-	global $post,$vars,$script,$cols,$rows,$del_backup,$do_backup;
+	global $post,$vars,$script,$cols,$rows;
 	global $_title_collided,$_msg_collided,$_title_updated;
 	global $_vote_plugin_choice, $_vote_plugin_votes;
 
-	$postdata_old  = file(get_filename(encode($post["refer"])));
+	$postdata_old  = get_source($post['refer']);
 	$vote_no = 0;
+	$title = $body = $postdata = '';
 
-	foreach($postdata_old as $line)
-	{
-		if(preg_match("/^#vote\((.*)\)$/",$line,$arg))
-		{
-			if($vote_no == $post["vote_no"])
-			{
-				$args = explode(",",$arg[1]);
-
-				foreach($args as $arg)
-				{
-					if(preg_match("/^(.+)\[(\d+)\]$/",$arg,$match))
-					{
-						$arg = $match[1];
-						$cnt = $match[2];
-					}
-					else
-					{
-						$cnt = 0;
-					}
-
-					$e_arg = encode($arg);
-					if($post["vote_$e_arg"]==$_vote_plugin_votes) $cnt++;
-
-					$votes[] = $arg.'['.$cnt.']';
-				}
-
-				$vote_str = "#vote(" . @join(",",$votes) . ")\n";
-
-				$postdata_input = $vote_str;
-				$postdata .= $vote_str;
-				$line = "";
-			}
-			$vote_no++;
+	foreach($postdata_old as $line) {
+		if (!preg_match("/^#vote\((.*)\)\s*$/",$line,$arg)) {
+			$postdata .= $line;
+			continue;
 		}
-		$postdata .= $line;
+		
+		if (++$vote_no != $post['vote_no']) {
+			$postdata .= $line;
+			continue;
+		}
+		$args = explode(',',$arg[1]);
+		
+		foreach($args as $arg) {
+			$cnt = 0;
+			if (preg_match("/^(.+)\[(\d+)\]$/",$arg,$match)) {
+				$arg = $match[1];
+				$cnt = $match[2];
+			}
+			$e_arg = encode($arg);
+			if (!empty($post["vote_$e_arg"]) and $post["vote_$e_arg"] == $_vote_plugin_votes) {
+				$cnt++;
+			}
+			
+			$votes[] = $arg.'['.$cnt.']';
+		}
+		
+		$vote_str = '#vote('.@join(',',$votes).")\n";
+		
+		$postdata_input = $vote_str;
+		$postdata .= $vote_str;
 	}
 
-	if(md5(@join("",@file(get_filename(encode($post["refer"]))))) != $post["digest"])
-	{
+	if (md5(@join('',get_source($post['refer']))) != $post['digest']) {
 		$title = $_title_collided;
+		
+		$s_refer = htmlspecialchars($post['refer']);
+		$s_digest = htmlspecialchars($post['digest']);
+		$s_postdata_input = htmlspecialchars($postdata_input);
+		$body = <<<EOD
+$_msg_collided
+<form action="$script?cmd=preview" method="post">
+ <div>
+  <input type="hidden" name="refer" value="$s_refer" />
+  <input type="hidden" name="digest" value="$s_digest" />
+  <textarea name="msg" rows="$rows" cols="$cols" id="textarea">$s_postdata_input</textarea><br />
+ </div>
+</form>
 
-		$body = "$_msg_collided\n";
-
-		$body .= "<form action=\"$script?cmd=preview\" method=\"post\">\n"
-			."<div>\n"
-			."<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($post["refer"])."\" />\n"
-			."<input type=\"hidden\" name=\"digest\" value=\"".htmlspecialchars($post["digest"])."\" />\n"
-			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">".htmlspecialchars($postdata_input)."</textarea><br />\n"
-			."</div>\n"
-			."</form>\n";
+EOD;
 	}
 	else
 	{
-		if(is_page($post["refer"]))
-			$oldpostdata = join("",file(get_filename(encode($post["refer"]))));
-		else
-			$oldpostdata = "\n";
-		if($postdata)
-			$diffdata = do_diff($oldpostdata,$postdata);
-		file_write(DIFF_DIR,$post["refer"],$diffdata);
-
-		if(is_page($post["refer"]))
-			$oldposttime = filemtime(get_filename(encode($post["refer"])));
-		else
-			$oldposttime = time();
-
-		if(!$postdata && $del_backup)
-			backup_delete(BACKUP_DIR.encode($post["refer"]).".txt");
-		else if($do_backup && is_page($post["refer"]))
-			make_backup(encode($post["refer"]).".txt",$oldpostdata,$oldposttime);
-
-		file_write(DATA_DIR,$post["refer"],$postdata);
-
-		is_page($post["refer"],true);
-
+		page_write($post['refer'],$postdata);
+		
 		$title = $_title_updated;
 	}
 
-	$retvars["msg"] = $title;
-	$retvars["body"] = $body;
+	$retvars['msg'] = $title;
+	$retvars['body'] = $body;
 
-	$post["page"] = $post["refer"];
-	$vars["page"] = $post["refer"];
+	$post['page'] = $post['refer'];
+	$vars['page'] = $post['refer'];
 
 	return $retvars;
 }
@@ -110,51 +96,63 @@ function plugin_vote_convert()
 	global $script,$vars,$digest;
 	global $_vote_plugin_choice, $_vote_plugin_votes;
 	static $vote_no = 0;
+	
+	$vote_no++;
+	
+	if (!func_num_args()) {
+		return '';
+	}
 
 	$args = func_get_args();
+	$s_page = htmlspecialchars($vars['page']);
+	$s_digest = htmlspecialchars($digest);
 
-	if(!func_num_args()) return FALSE;
+	$body = <<<EOD
+<form action="$script" method="post">
+ <table cellspacing="0" cellpadding="2" class="style_table" summary="vote">
+  <tr>
+   <td align="left" class="vote_label" style="padding-left:1em;padding-right:1em"><strong>$_vote_plugin_choice</strong>
+    <input type="hidden" name="plugin" value="vote" />
+    <input type="hidden" name="refer" value="$s_page" />
+    <input type="hidden" name="vote_no" value="$vote_no" />
+    <input type="hidden" name="digest" value="$s_digest" />
+   </td>
+   <td align="center" class="vote_label"><strong>$_vote_plugin_votes</strong></td>
+  </tr>
 
-	$string = ""
-		. "<form action=\"$script\" method=\"post\">\n"
- 		. "<table cellspacing=\"0\" cellpadding=\"2\" class=\"style_table\">\n"
- 		. "<tr>\n"
- 		. "<td align=\"left\" class=\"vote_label\" style=\"padding-left:1em;padding-right:1em\"><strong>$_vote_plugin_choice</strong>"
-		. "<input type=\"hidden\" name=\"plugin\" value=\"vote\" />\n"
-		. "<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($vars["page"])."\" />\n"
-		. "<input type=\"hidden\" name=\"vote_no\" value=\"".htmlspecialchars($vote_no)."\" />\n"
-		. "<input type=\"hidden\" name=\"digest\" value=\"".htmlspecialchars($digest)."\" />\n"
-		. "</td>\n"
-		. "<td align=\"center\" class=\"vote_label\"><strong>$_vote_plugin_votes</strong></td>\n"
-		. "</tr>\n";
-
+EOD;
+	
 	$tdcnt = 0;
-	foreach($args as $arg)
-	{
+	foreach($args as $arg) {
 		$cnt = 0;
-
-		if(preg_match("/^(.+)\[(\d+)\]$/",$arg,$match))
-		{
+		
+		if (preg_match("/^(.+)\[(\d+)\]$/",$arg,$match)) {
 			$arg = $match[1];
 			$cnt = $match[2];
 		}
-
-		$link = make_link($arg);
 		$e_arg = encode($arg);
+		
+		$link = make_link($arg);
+		
+		$cls = ($tdcnt++ % 2)  ? 'vote_td1' : 'vote_td2';
+		
+		$body .= <<<EOD
+  <tr>
+   <td align="left" class="$cls" style="padding-left:1em;padding-right:1em;">$link</td>
+   <td align="right" class="$cls">$cnt&nbsp;&nbsp;
+    <input type="submit" name="vote_$e_arg" value="$_vote_plugin_votes" class="submit" />
+   </td>
+  </tr>
 
-		if($tdcnt++ % 2) $cls = "vote_td1";
-		else           $cls = "vote_td2";
-
-		$string .= "<tr>"
-			.  "<td align=\"left\" class=\"$cls\" style=\"padding-left:1em;padding-right:1em;\" nowrap=\"nowrap\">$link</td>"
-			.  "<td align=\"right\" class=\"$cls\" nowrap=\"nowrap\">$cnt&nbsp;&nbsp;<input type=\"submit\" name=\"vote_".htmlspecialchars($e_arg)."\" value=\"$_vote_plugin_votes\" class=\"submit\" /></td>"
-			.  "</tr>\n";
+EOD;
 	}
+	
+	$body .= <<<EOD
+ </table>
+</form>
 
-	$string .= "</table></form>\n";
-
-	$vote_no++;
-
-	return $string;
+EOD;
+	
+	return $body;
 }
 ?>

@@ -1,227 +1,231 @@
 <?php
-// PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.3 2002/11/29 00:09:00 panda Exp $
 /////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: file.php,v 1.4 2003/01/27 05:38:41 panda Exp $
+//
 
 // ソースを取得
 function get_source($page)
-{	
-  if(page_exists($page)) {
-     return file(get_filename(encode($page)));
-  }
-
-  return array();
+{
+	return is_page($page) ?
+		crlf_rtrim(file(get_filename($page))) : array();
 }
 
-// ページが存在するか？
-function page_exists($page)
+// ページの更新時刻を得る
+function get_filetime($page)
 {
-	return file_exists(get_filename(encode($page)));
+	return filemtime(get_filename($page)) - LOCALZONE;
+}
+
+// ページのファイル名を得る
+function get_filename($page)
+{
+	return DATA_DIR.encode($page).'.txt';
+}
+
+// ページの出力
+function page_write($page,$postdata)
+{
+	$postdata = user_rules_str($postdata);
+	
+	// 差分ファイルの作成
+	$oldpostdata = is_page($page) ? join('',get_source($page)) : "\n";
+	$diffdata = do_diff($oldpostdata,$postdata);
+	file_write(DIFF_DIR,$page,$diffdata);
+	
+	// バックアップの作成
+	make_backup($page,$postdata == '');
+	
+	// ファイルの書き込み
+	file_write(DATA_DIR,$page,$postdata);
+	
+	// is_pageのキャッシュをクリアする。
+	is_page($page,true);
+	
+	// linkデータベースを更新
+	links_update($page);
 }
 
 // ファイルへの出力
 function file_write($dir,$page,$str)
 {
 	global $post,$update_exec;
-
-	if($str == "")
-	{
-		@unlink($dir.encode($page).".txt");
+	
+	$page = strip_bracket($page);
+	$timestamp = FALSE;
+	$file = $dir.encode($page).'.txt';
+	
+	if ($dir == DATA_DIR and $str == '' and file_exists($file)) {
+		unlink($file);
 	}
-	else
-	{
-		$str = preg_replace("/\x0D\x0A|\x0D|\x0A/","\n",$str);
+	else {
+		$str = preg_replace("/\r/",'',$str);
+		$str = rtrim($str)."\n";
 		
-		if($post["notimestamp"] && is_page($page))
-		{
-			$timestamp = @filemtime($dir.encode($page).".txt");
+		if (!empty($post['notimestamp']) and file_exists($file)) {
+			$timestamp = filemtime($file) - LOCALZONE;
 		}
-		$fp = fopen($dir.encode($page).".txt","w");
-		if($fp===FALSE) die_message("cannot write page file or diff file or other".htmlspecialchars($page)."<br>maybe permission is not writable or filename is too long");
-		while(!flock($fp,LOCK_EX));
+		
+		$fp = fopen($file,'w')
+			or die_message('cannot write page file or diff file or other'.htmlspecialchars($page).'<br>maybe permission is not writable or filename is too long');
+		flock($fp,LOCK_EX);
 		fputs($fp,$str);
 		flock($fp,LOCK_UN);
 		fclose($fp);
-		if($timestamp)
-			touch($dir.encode($page).".txt",$timestamp);
+		if ($timestamp) {
+			touch($file,$timestamp + LOCALZONE);
+		}
 	}
 	
-	if(!$timestamp)
+	if (!$timestamp) {
 		put_lastmodified();
-
-	if($update_exec and $dir == DATA_DIR)
-	{
-		system($update_exec." > /dev/null &");
+	}
+	
+	if ($update_exec and $dir == DATA_DIR) {
+		system($update_exec.' > /dev/null &');
 	}
 }
 
 // 最終更新ページの更新
 function put_lastmodified()
 {
-	global $script,$maxshow,$whatsnew,$date_format,$time_format,$weeklabels,$post,$non_list;
+	global $script,$post,$maxshow,$whatsnew,$non_list;
 
-	if($post["notimestamp"]) return;
-
-	$files = get_existpages();
-	foreach($files as $page) {
-		if($page == $whatsnew) continue;
-		if(preg_match("/$non_list/",$page)) continue;
-
-		if(file_exists(get_filename(encode($page))))
-			{
-			$page_url = rawurlencode($page);
-			$lastmodtime = filemtime(get_filename(encode($page)));
-			$lastmod = date($date_format,$lastmodtime)
-				 . " (" . $weeklabels[date("w",$lastmodtime)] . ") "
-				 . date($time_format,$lastmodtime);
-			$putval[$lastmodtime][] = "-$lastmod - $page";
+	$pages = array();
+	foreach(get_existpages() as $page) {
+		if ($page == $whatsnew or preg_match("/$non_list/",$page)) {
+			continue;
 		}
+		
+		$time = get_filetime($page);
+		$s_page = htmlspecialchars($page);
+		$pages[$s_page] = $time;
 	}
 	
-	$cnt = 1;
-	krsort($putval);
-	$fp = fopen(get_filename(encode($whatsnew)),"w");
-	if($fp===FALSE) die_message("cannot write page file ".htmlspecialchars($whatsnew)."<br>maybe permission is not writable or filename is too long");
+	arsort($pages); //時刻降順でソート
+	
+	$fp = fopen(get_filename($whatsnew),'w')
+		or die_message('cannot write page file '.htmlspecialchars($whatsnew).'<br>maybe permission is not writable or filename is too long');
+	
 	flock($fp,LOCK_EX);
-	foreach($putval as $pages)
-	{
-		foreach($pages as $page)
-		{
-			fputs($fp,$page."\n");
-			$cnt++;
-			if($cnt > $maxshow) break;
-		}
-		if($cnt > $maxshow) break;
+	
+	foreach($pages as $s_page => $time) {
+		fputs($fp, "//$time $s_page\n");
 	}
-	flock($fp,LOCK_EX);
+	
+	$pages = array_splice($pages,0,$maxshow);
+	
+	foreach($pages as $s_page => $time) {
+		$lastmod = format_date($time);
+		fputs($fp, "-$lastmod - [[$s_page]]\n");
+	}
+	
+	fputs($fp,"#norelated\n"); // :)
+	flock($fp,LOCK_UN);
 	fclose($fp);
 }
 
-// ファイル名を得る(エンコードされている必要有り)
-function get_filename($pagename)
-{
-	return DATA_DIR.$pagename.".txt";
-}
-
-// ページが存在するかしないか
-function is_page($page,$reload=false)
-{
-	global $InterWikiName,$_ispage;
-
-	if(($_ispage[$page] === true || $_ispage[$page] === false) && !$reload) return $_ispage[$page];
-
-	if(preg_match("/($InterWikiName)/",$page))
-		$_ispage[$page] = false;
-	else if(!page_exists($page))
-		$_ispage[$page] = false;
-	else
-		$_ispage[$page] = true;
-	
-	return $_ispage[$page];
-}
-
-// ページが編集可能か
-function is_editable($page)
-{
-	global $BracketName,$WikiName,$InterWikiName,$cantedit,$_editable;
-
-	if($_editable === true || $_editable === false) return $_editable;
-
-	if(preg_match("/^$InterWikiName$/",$page))
-		$_editable = false;
-	elseif(!preg_match("/^$BracketName$/",$page) && !preg_match("/^$WikiName$/",$page))
-		$_editable = false;
-	else if(in_array($page,$cantedit))
-		$_editable = false;
-	else
-		$_editable = true;
-	
-	return $_editable;
-}
-
-// ページが凍結されているか
-function is_freeze($page)
-{
-	global $_freeze;
-
-	if(!is_page($page)) return false;
-	if($_freeze === true || $_freeze === false) return $_freeze;
-
-	$lines = get_source($page);
-	
-	if($lines[0] == "#freeze\n")
-		$_freeze = true;
-	else
-		$_freeze = false;
-	
-	return $_freeze;
-}
-
 // 指定されたページの経過時刻
-function get_pg_passage($page,$sw=true)
+function get_pg_passage($page,$sw=TRUE)
 {
-	global $_pg_passage,$show_passage;
-
-	if(!$show_passage) return "";
-
-	if(isset($_pg_passage[$page]))
-	{
-		if($sw)
-			return $_pg_passage[$page]["str"];
-		else
-			return $_pg_passage[$page]["label"];
+	global $show_passage;
+	static $pg_passage;
+	
+	if (!$show_passage) {
+		return '';
 	}
-	if($pgdt = @filemtime(get_filename(encode($page))))
-	{
-		$pgdt = UTIME - $pgdt;
-		if(ceil($pgdt / 60) < 60)
-			$_pg_passage[$page]["label"] = "(".ceil($pgdt / 60)."m)";
-		else if(ceil($pgdt / 60 / 60) < 24)
-			$_pg_passage[$page]["label"] = "(".ceil($pgdt / 60 / 60)."h)";
-		else
-			$_pg_passage[$page]["label"] = "(".ceil($pgdt / 60 / 60 / 24)."d)";
-		
-		$_pg_passage[$page]["str"] = "<small>".$_pg_passage[$page]["label"]."</small>";
+	
+	if (!isset($pg_passage)) {
+		$pg_passage = array();
 	}
-	else
-	{
-		$_pg_passage[$page]["label"] = "";
-		$_pg_passage[$page]["str"] = "";
+	
+	if (!array_key_exists($page,$pg_passage)) {
+		$pg_passage[$page] = (is_page($page) and $time = get_filetime($page)) ? get_passage($time) : '';
 	}
-
-	if($sw)
-		return $_pg_passage[$page]["str"];
-	else
-		return $_pg_passage[$page]["label"];
+	
+	return $sw ? "<small>{$pg_passage[$page]}</small>" : $pg_passage[$page];
 }
 
 // Last-Modified ヘッダ
-function header_lastmod($page)
+function header_lastmod()
 {
 	global $lastmod;
 	
-	if($lastmod && is_page($page))
-	{
-		header("Last-Modified: ".gmdate("D, d M Y H:i:s", filemtime(get_filename(encode($page))))." GMT");
+	if ($lastmod and is_page($page)) {
+		header('Last-Modified: '.date('D, d M Y H:i:s',get_filetime($page)).' GMT');
 	}
 }
 
 // 全ページ名を配列に
-function get_existpages()
+function get_existpages($dir = DATA_DIR)
 {
 	$aryret = array();
-
-	if ($dir = @opendir(DATA_DIR))
-	{
-		while($file = readdir($dir))
-		{
-			if($file == ".." || $file == "." || strstr($file,".txt")===FALSE) continue;
-			$page = decode(trim(preg_replace("/\.txt$/"," ",$file)));
-			array_push($aryret,$page);
+	
+	$dir = @opendir($dir) or die();
+	
+	while ($file = readdir($dir)) {
+		if (preg_match('/^([0-9A-F]+)/',$file,$matches)) {
+			$aryret[] = decode($matches[1]);
 		}
-		closedir($dir);
 	}
 	
+	closedir($dir);
+	
 	return $aryret;
+}
+
+function links_update($page)
+{
+	global $vars;
+
+	// linkデータベースを更新
+	if (defined('LINK_DB') and exist_plugin_action('links')) {
+		// ちょっと姑息
+		$tmp = $vars['page'];
+		$vars['page'] = $page;
+		do_plugin_action('links');
+		$vars['page'] = $tmp;
+	}
+}
+//あるページの関連ページを得る
+function links_get_related($page)
+{
+	global $vars,$related;
+	static $links;
+	
+	if (!isset($links)) {
+		$links = array();
+	}
+	
+	if (array_key_exists($page,$links)) {
+		return $links[$page];
+	}
+	
+	// 可能ならmake_link()で生成した関連ページを取り込む
+	$links[$page] = ($page == $vars['page']) ? $related : array();
+	
+	$a_page = addslashes($page);
+	
+	if (defined('LINK_DB')) {
+		$sql = <<<EOD
+SELECT refpage.name,refpage.lastmod FROM page left join link on page.id = page_id left join page as refpage on ref_id = refpage.id where page.name = '$a_page'
+UNION
+SELECT DISTINCT refpage.name,refpage.lastmod FROM page left join link on page.id = ref_id left join page as refpage on page_id = refpage.id where page.name = '$a_page';
+EOD;
+		$rows = db_query($sql);
+		
+		foreach ($rows as $row) {
+			if (empty($row['name']) or substr($row['name'],0,1) == ':') {
+				continue;
+			}
+			$links[$page][$row['name']] = $row['lastmod'];
+		}
+	}
+	else {
+		$links[$page] = array_merge($links[$page],do_search($page,'OR',1));
+	}
+	
+	return $links[$page];
 }
 ?>

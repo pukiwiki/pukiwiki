@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.16 2002/12/02 03:33:36 panda Exp $
+// $Id: pukiwiki.ini.php,v 1.17 2003/01/27 05:38:44 panda Exp $
 //
 // PukiWiki setting file
 
@@ -10,43 +10,49 @@
 // ディレクトリ指定 最後に / が必要 属性は 777
 /////////////////////////////////////////////////
 // データの格納ディレクトリ
-define("DATA_DIR","./wiki/");
+define('DATA_DIR','./wiki/');
 /////////////////////////////////////////////////
 // 差分ファイルの格納ディレクトリ
-define("DIFF_DIR","./diff/");
+define('DIFF_DIR','./diff/');
 /////////////////////////////////////////////////
 // バックアップファイル格納先ディレクトリ
-define("BACKUP_DIR","./backup/");
+define('BACKUP_DIR','./backup/');
 /////////////////////////////////////////////////
 // プラグインファイル格納先ディレクトリ
-define("PLUGIN_DIR","./plugin/");
+define('PLUGIN_DIR','./plugin/');
 
 /////////////////////////////////////////////////
 // Language
-define("LANG","ja");
+//define('LANG','ja');
 
 /////////////////////////////////////////////////
-// スキンファイルの場所。
-define("SKIN_FILE","./skin/pukiwiki.skin.".LANG.".php");
+// スキンファイルの場所
+define('SKIN_FILE','./skin/pukiwiki.skin.'.LANG.'.php');
 
 /////////////////////////////////////////////////
-// 言語ファイルの読み込み(編集しないでください)
-require(LANG.".lng");
+// データベースの接続文字列
+//define('LINK_DB','mysql');
+//define('LINK_DB','pgsql');
+//define('PG_CONNECT_STRING','dbname=pukiwiki host=gateway user=apache');
 
+/////////////////////////////////////////////////
+// ローカル時間
+define('ZONE','JST');
+define('ZONETIME',9 * 3600); // JST = GMT+9
 /////////////////////////////////////////////////
 // index.php などに変更した場合のスクリプト名の設定
 // とくに設定しなくても問題なし
-//$script = "http://hogehoge/pukiwiki/";
+//$script = 'http://hogehoge/pukiwiki/';
 
 /////////////////////////////////////////////////
 // トップページの名前
-$defaultpage = "FrontPage";
+$defaultpage = 'FrontPage';
 /////////////////////////////////////////////////
 // 更新履歴ページの名前
-$whatsnew = "RecentChanges";
+$whatsnew = 'RecentChanges';
 /////////////////////////////////////////////////
 // InterWikiNameページの名前
-$interwiki = "InterWikiName";
+$interwiki = 'InterWikiName';
 /////////////////////////////////////////////////
 // 編集者の名前(自由に変えてください)
 $modifier = 'me';
@@ -57,10 +63,20 @@ $modifierlink = 'http://change me!/';
 /////////////////////////////////////////////////
 // ホームページのタイトル(自由に変えてください)
 // RSS に出力するチャンネル名
-$page_title = "PukiWiki";
+$page_title = 'PukiWiki';
 
 /////////////////////////////////////////////////
-// 凍結機能を有効にするか
+// WikiNameを*無効に*する
+$nowikiname = 0;
+
+/////////////////////////////////////////////////
+// AutoLinkを有効にする場合は、AutoLink対象となる
+// ページ名の最短バイト数を指定
+// AutoLinkを無効にする場合は0
+$autolink = 0;
+
+/////////////////////////////////////////////////
+// 凍結機能を有効にする
 $function_freeze = 1;
 /////////////////////////////////////////////////
 // 凍結解除用の管理者パスワード(MD5)
@@ -68,8 +84,18 @@ $function_freeze = 1;
 // MD5にしてからどうぞ。面倒なら以下のように。
 // $adminpass = md5("pass");
 // 以下は pass のMD5パスワードになってます。
-$adminpass = "21232f297a57a5a743894a0e4a801fc3";
+$adminpass = '1a1dc91c907325c69271ddf0c944bc72';
 
+/////////////////////////////////////////////////
+// 編集時に認証が必要
+$edit_auth = 0;
+
+/////////////////////////////////////////////////
+// 編集時認証のアカウントとパスワード
+// ユーザ名とパスワードを記入。
+$edit_auth_users = array(
+ '' => '',
+);
 /////////////////////////////////////////////////
 // 更新履歴を表示するときの最大件数
 $maxshow = 80;
@@ -78,20 +104,14 @@ $maxshow = 80;
 $cantedit = array( $whatsnew, );
 
 /////////////////////////////////////////////////
-// プレビューを表示するときのテーブルの背景色
-$preview_color = "#F5F8FF";
+// 検索文字列を色分けする
+$search_word_color = 1;
 /////////////////////////////////////////////////
-// [[ページ]] へのリンク時[[]]を外すか
+// [[ページ]] へのリンク時[[]]を外す
 $strip_link_wall = 1;
 /////////////////////////////////////////////////
-// 一覧ページに頭文字インデックスをつけるか
+// 一覧ページに頭文字インデックスをつける
 $list_index = 1;
-/////////////////////////////////////////////////
-// http:// リンクのウィンドウ名指定(_top,_blank,etc)
-$link_target = "_top";
-/////////////////////////////////////////////////
-// InterWikiNameのウィンドウ名指定(_top,_blank,etc)
-$interwiki_target = "_top";
 
 /////////////////////////////////////////////////
 // リスト構造の左マージン
@@ -111,16 +131,16 @@ $rows = 20;
 $top = $_msg_content_back_to_top;
 /////////////////////////////////////////////////
 // 関連ページ表示のページ名の区切り文字
-$related_str = " ";
+$related_str = "\n ";
 /////////////////////////////////////////////////
 // 整形ルールでの関連ページ表示のページ名の区切り文字
-$rule_related_str = "\n<li>";
+$rule_related_str = "</li>\n<li>";
 /////////////////////////////////////////////////
 // 水平線のタグ
-$hr = '<hr class="full_hr">';
+$hr = '<hr class="full_hr" />';
 /////////////////////////////////////////////////
 // 文末の注釈の直前に表示するタグ
-$note_hr = '<hr class="note_hr">';
+$note_hr = '<hr class="note_hr" />';
 /////////////////////////////////////////////////
 // 関連するリンクを常に表示する(負担がかかります)
 $related_link = 1;
@@ -134,10 +154,10 @@ $lastmod = 0;
 
 /////////////////////////////////////////////////
 // 日付フォーマット
-$date_format = "Y-m-d";
+$date_format = 'Y-m-d';
 /////////////////////////////////////////////////
 // 時刻フォーマット
-$time_format = "H:i:s";
+$time_format = 'H:i:s';
 /////////////////////////////////////////////////
 // 曜日配列
 $weeklabels = $_msg_week;
@@ -147,7 +167,7 @@ $weeklabels = $_msg_week;
 $rss_max = 15;
 
 /////////////////////////////////////////////////
-// バックアップを行うか指定します 0 or 1
+// バックアップを行う
 $do_backup = 1;
 /////////////////////////////////////////////////
 // ページを削除した際にバックアップもすべて削除する
@@ -156,30 +176,31 @@ $del_backup = 0;
 // 定期バックアップの間隔を時間(hour)で指定します(0で更新毎)
 $cycle = 6;
 /////////////////////////////////////////////////
-// バックアップの最大世代数を指定します
+// バックアップの最大世代数
 $maxage = 20;
 /////////////////////////////////////////////////
-// バックアップの世代を区切る文字列を指定します
+// バックアップの世代を区切る文字列
 // (通常はこのままで良いが、文章中で使われる可能性
 // があれば、使われそうにない文字を設定する)
 $splitter = ">>>>>>>>>>";
 /////////////////////////////////////////////////
 // ページの更新時にバックグランドで実行されるコマンド(mknmzなど)
-//$update_exec = '/usr/local/bin/mknmz -O /vhosts/www.factage.com/sng/pukiwiki/nmz -L ja -k -K /vhosts/www.factage.com/sng/pukiwiki/wiki';
+$update_exec = '';
+//$update_exec = '/usr/bin/mknmz --media-type=text/pukiwiki -O /var/lib/namazu/index/ -L ja -c -K /var/www/wiki/';
 
 /////////////////////////////////////////////////
 // 一覧・更新一覧に含めないページ名(正規表現で)
-$non_list = "^(\[\[\:)";
+$non_list = '^\:';
 
 /////////////////////////////////////////////////
-// 雛形とするページの読み込みを表示させるか
+// 雛形とするページの読み込みを表示させる
 $load_template_func = 1;
 
 /////////////////////////////////////////////////
 // ページ名に従って自動で、雛形とするページの読み込み
 $auto_template_func = 1;
 $auto_template_rules = array(
-'\[\[((.+)\/([^\/]+))\]\]' => '[[\2/template]]'
+'((.+)\/([^\/]+))' => '\2/template'
 );
 
 /////////////////////////////////////////////////
@@ -193,26 +214,24 @@ $auto_template_rules = array(
 /////////////////////////////////////////////////
 // ユーザ定義ルール(直接ソースを置換)
 $str_rules = array(
-"now\?" => date($date_format,UTIME)." (".$weeklabels[date("w",UTIME)].") ".date($time_format,UTIME),
-"date\?" => date($date_format,UTIME),
-"time\?" => date($time_format,UTIME),
+"now\?" => format_date(UTIME),
+"date\?" => get_date($date_format),
+"time\?" => get_date($time_format),
 );
 
 /////////////////////////////////////////////////
-// ユーザ定義ルール(コンバート時に置換、直接しない)
+// ユーザ定義ルール(コンバート時に置換)
 $line_rules = array(
-"COLOR\(([^\(\)]*)\){([^}]*)}" => "<span style=\"color:\\1\">\\2</span>",
-"SIZE\(([^\(\)]*)\){([^}]*)}" => "<span style=\"font-size:\\1px;display:inline-block;line-height:130%;text-indent:0px\">\\2</span>",
-"COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)" => "<span style=\"color:\\1\">\\2</span>",
-"SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)" => "<span class=\"size\\1\">\\2</span>",
-"LEFT:((?:(?!LEFT\:).)*)" => "<div style=\"text-align:left\">\\1</div>",
-"CENTER:((?:(?!CENTER\:).)*)" => "<div style=\"text-align:center\">\\1</div>",
-"RIGHT:((?:(?!RIGHT\:).)*)" => "<div style=\"text-align:right\">\\1</div>",
-"%%((?:(?!%%).)*)%%" => "<del>\\1</del>",
-"'''((?:(?!''').)*)'''" => "<em>\\1</em>",
-"''((?:(?!'').)*)''" => "<strong>\\1</strong>",
-"~((?:<\\/[a-zA-Z]+>)*)$" => "\\1<br />", /* 行末にチルダは改行 */
-"&amp;aname\(([A-Za-z][\w\-]*)\);" => "<a id=\"\\1\" name=\"\\1\"></a>",
+"COLOR\(([^\(\)]*)\){([^}]*)}" => '<span style="color:$1">$2</span>',
+"SIZE\(([^\(\)]*)\){([^}]*)}" => '<span style="font-size:$1px">$2</span>',
+"COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)" => '<span style="color:$1">$2</span>',
+"SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)" => '<span class="size$1">$2</span>',
+"%%%(?!%)((?:(?!%%%).)*)%%%" => '<ins>$1</ins>',
+"%%(?!%)((?:(?!%%).)*)%%" => '<del>$1</del>',
+"'''(?!')((?:(?!''').)*)'''" => '<em>$1</em>',
+"''(?!')((?:(?!'').)*)''" => '<strong>$1</strong>',
+'&amp;(#[0-9]+|#x[0-9a-f]+|[0-9a-zA-Z]+);' => '&$1;',
+"~\r" => '<br />', /* 行末にチルダは改行 */
 );
 
 /////////////////////////////////////////////////
@@ -222,16 +241,23 @@ $line_rules = array(
 // 必要のない方は $usefacemarkを0にしてください。
 $usefacemark = 1;
 $facemark_rules = array(
-"\s(\:\))" => " <img src=\"./face/smile.gif\" alt=\"\\1\" />",
-"\s(\:D)" => " <img src=\"./face/bigsmile.gif\" alt=\"\\1\" />",
-"\s(\:p)" => " <img src=\"./face/huh.gif\" alt=\"\\1\" />",
-"\s(\:d)" => " <img src=\"./face/huh.gif\" alt=\"\\1\" />",
-"\s(XD)" => " <img src=\"./face/oh.gif\" alt=\"\\1\" />",
-"\s(X\()" => " <img src=\"./face/oh.gif\" alt=\"\\1\" />",
-"\s(;\))" => " <img src=\"./face/wink.gif\" alt=\"\\1\" />",
-"\s(;\()" => " <img src=\"./face/sad.gif\" alt=\"\\1\" />",
-"\s(\:\()" => " <img src=\"./face/sad.gif\" alt=\"\\1\" />",
-"(\:heart\:)" => "<img src=\"./face/heart.gif\" alt=\"\\1\" />",
+'\s(\:\))' => ' <img src="./face/smile.png" alt="$1" />',
+'\s(\:D)' => ' <img src="./face/bigsmile.png" alt="$1" />',
+'\s(\:p)' => ' <img src="./face/huh.png" alt="$1" />',
+'\s(\:d)' => ' <img src="./face/huh.png" alt="$1" />',
+'\s(XD)' => ' <img src="./face/oh.png" alt="$1" />',
+'\s(X\()' => ' <img src="./face/oh.png" alt="$1" />',
+'\s(;\))' => ' <img src="./face/wink.png" alt="$1" />',
+'\s(;\()' => ' <img src="./face/sad.png" alt="$1" />',
+'\s(\:\()' => ' <img src="./face/sad.png" alt="$1" />',
+'(\:heart\:)' => '<img src="./face/heart.png" alt="$1" />',
+'&(smile);' => ' <img src="./face/smile.png" alt="$1" />',
+'&(bigsmile);' => ' <img src="./face/bigsmile.png" alt="$1" />',
+'&(huh);' => ' <img src="./face/huh.png" alt="$1" />',
+'&(oh);' => ' <img src="./face/oh.png" alt="$1" />',
+'&(wink);' => ' <img src="./face/wink.png" alt="$1" />',
+'&(sad);' => ' <img src="./face/sad.png" alt="$1" />',
+'&(heart);' => '<img src="./face/heart.png" alt="$1" />',
 );
 
 ?>

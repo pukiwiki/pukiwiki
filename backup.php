@@ -1,243 +1,306 @@
 <?php
-// PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.php,v 1.6 2002/11/29 00:09:00 panda Exp $
-/////////////////////////////////////////////////
+/**
+ *
+ * PukiWiki - Yet another WikiWikiWeb clone.
+ *
+ * backup.php
+ *
+ * バックアップを管理する
+ *
+ * @package org.pukiwiki
+ * @access  public
+ * @author  
+ * @create  
+ * @version $Id: 
+ **/
 
-// バックアップデータを作成する
-function make_backup($filename,$body,$oldtime)
+/**
+ * make_backup
+ * バックアップを作成する
+ *
+ * @access    public
+ * @param     String    $page        ページ名
+ * @param     Boolean   $delete      TRUE:バックアップを削除する
+ *
+ * @return    Void
+ */
+function make_backup($page,$delete = FALSE)
 {
 	global $splitter,$cycle,$maxage;
-	$aryages = array();
+	global $do_backup,$del_backup;
+	
+	if (!$do_backup) {
+		return;
+	}
+	
+	if ($del_backup and $delete) {
+		backup_delete($page);
+		return;
+	}
+	
+	if (!is_page($page)) {
+		return;
+	}
+	
 	$arystrout = array();
-
-	if(function_exists(gzfile))
-		$filename = str_replace(".txt",".gz",$filename);
-
-	$realfilename = BACKUP_DIR.$filename;
-
-	if(time() - @filemtime($realfilename) > (60 * 60 * $cycle))
-	{
-		$aryages = read_backup($filename);
-		if(count($aryages) >= $maxage)
-		{
-			array_shift($aryages);
+	
+	$lastmod = backup_get_filetime($page);
+	if (($lastmod == 0) or (UTIME - $lastmod) > (60 * 60 * $cycle)) {
+		//直後に1件追加するので、最大件数-1で切る
+		$backups = array_splice(get_backup($page),0,$maxage - 1);
+		
+		$strout = '';
+		foreach($backups as $age=>$data) {
+			$strout .= "$splitter {$data['time']}\n";
+			$strout .= join('',$data['data']);
+		}
+		$strout = trim($strout);
+		if ($strout != '') {
+			$strout .= "\n";
 		}
 		
-		foreach($aryages as $lines)
-		{
-			foreach($lines as $key => $line)
-			{
-				if($key && $key == "timestamp")
-				{
-					$arystrout[] = "$splitter " . rtrim($line);
-				}
-				else
-				{
-					$arystrout[] = rtrim($line);
-				}
-			}
-		}
+		$body = "$splitter ".get_filetime($page)."\n".join('',get_source($page));
+		$body = preg_replace("/\n*$/","\n",$body);
 
-		$strout = join("\n",$arystrout);
-		if(!preg_match("/\n$/",$strout) && trim($strout)) $strout .= "\n";
-
-		$body = "$splitter " . $oldtime . "\n" . $body;
-		if(!preg_match("/\n$/",$body)) $body .= "\n";
-
-		$fp = backup_fopen($realfilename,"w");
-		if($fp===FALSE) die_message("cannot write file ".htmlspecialchars($realfilename)."<br>maybe permission is not writable or filename is too long");
+		$fp = backup_fopen($page,'w')
+			or die_message('cannot write file '.htmlspecialchars($realfilename).'<br>maybe permission is not writable or filename is too long');
 		backup_fputs($fp,$strout);
 		backup_fputs($fp,$body);
 		backup_fclose($fp);
 	}
-	
-	return true;
 }
 
-// 特定の世代のバックアップデータを取得
-function get_backup($age,$filename)
-{
-	$aryages = read_backup($filename);
-	$retvars = array();
-	
-	foreach($aryages as $key => $lines)
-	{
-		if($key != $age) continue;
-		foreach($lines as $key => $line)
-		{
-			if($key && $key == "timestamp") continue;
-			$retvars[] = $line;
-		}
-	}
-
-	return $retvars;
-}
-
-// バックアップ情報を返す
-function get_backup_info($filename)
+/**
+ * get_backup
+ * バックアップを取得する
+ * $age=0または省略 : 全てのバックアップデータを配列で取得する
+ * $age>0          : 指定した世代のバックアップデータを取得する
+ *
+ * @access    public
+ * @param     String    $page        ページ名
+ * @param     Integer   $age         バックアップの世代番号 省略時は全て
+ *
+ * @return    String    バックアップ($age!=0)
+ *            Array     バックアップの配列($age==0)
+ */
+function get_backup($page,$age = 0)
 {
 	global $splitter;
-	$lines = array();
+	
+	$lines = backup_file($page);
+	
+	if (!is_array($lines)) {
+		return array();
+	}
+	
+	$_age = 0;
 	$retvars = array();
-	$lines = backup_file(BACKUP_DIR.$filename);
-
-	if(!is_array($lines)) return array();
-
-	$age = 0;
-	foreach($lines as $line)
-	{
-		preg_match("/^$splitter\s(\d+)$/",trim($line),$match);
-		if($match[1])
-		{
-			$age++;
-			$retvars[$age] = $match[1];
+	
+	foreach($lines as $line) {
+		if (preg_match("/^$splitter\s(\d+)$/",trim($line),$match)) {
+			$_age++;
+			if ($age > 0 and $_age > $age) {
+				return $retvars[$age];
+			}
+			$retvars[$_age]['time'] = $match[1];
+		}
+		else {
+			$retvars[$_age]['data'][] = $line;
 		}
 	}
 	
 	return $retvars;
 }
 
-// バックアップデータ全体を取得
-function read_backup($filename)
+/**
+ * backup_get_filename
+ * バックアップファイル名を取得する
+ *
+ * @access    private
+ * @param     String    $page        ページ名
+ *
+ * @return    String    バックアップのファイル名
+ */
+function backup_get_filename($page)
 {
-	global $splitter;
-	$lines = array();
-	$lines = backup_file(BACKUP_DIR.$filename);
-
-	if(!is_array($lines)) return array();
-
-	$age = 0;
-	foreach($lines as $line)
-	{
-		preg_match("/^$splitter\s(\d+)$/",trim($line),$match);
-		if($match[1])
-		{
-			$age++;
-			$retvars[$age]["timestamp"] = $match[1] . "\n";
-		}
-		else
-		{
-			$retvars[$age][] = $line;
-		}
-	}
-
-	return $retvars;
+	return BACKUP_DIR.encode($page).BACKUP_EXT;
 }
 
-// バックアップ一覧の取得
-function get_backup_list($_page="")
+/**
+ * backup_file_exists
+ * バックアップファイルが存在するか
+ *
+ * @access    private
+ * @param     String    $page        ページ名
+ *
+ * @return    Boolean   TRUE:ある FALSE:ない
+ */
+function backup_file_exists($page)
 {
-	global $script,$date_format,$time_format,$weeklabels,$cantedit;
-	global $_msg_backuplist,$_msg_diff,$_msg_nowdiff,$_msg_source;
-
-	$ins_date = date($date_format,$val);
-	$ins_time = date($time_format,$val);
-	$ins_week = "(".$weeklabels[date("w",$val)].")";
-	$ins = "$ins_date $ins_week $ins_time";
-
-	if (($dir = @opendir(BACKUP_DIR)) && !$_page)
-	{
-		while($file = readdir($dir))
-		{
-			if(function_exists(gzopen))
-				$file = str_replace(".txt",".gz",$file);
-
-			if($file == ".." || $file == ".") continue;
-			$page = decode(trim(preg_replace("/(\.txt)|(\.gz)$/"," ",$file)));
-			if(in_array($page,$cantedit)) continue;
-			$page_url = rawurlencode($page);
-			$name = strip_bracket($page);
-			$s_name = htmlspecialchars($name);
-			if(is_page($page))
-				$vals[$name]["link"] = "<li><a href=\"$script?$page_url\">$s_name</a>";
-			else
-				$vals[$name]["link"] = "<li>$s_name";
-			$vals[$name]["name"] = $page;
-		}
-		closedir($dir);
-		$vals = list_sort($vals);
-		$retvars[] = "<ul>";
-	}
-	else
-	{
-		$page_url = rawurlencode($_page);
-		$name = strip_bracket($_page);
-		$vals[$name]["link"] = "";
-		$vals[$name]["name"] = $_page;
-		$retvars[] = "<ul>";
-		$retvars[] .= "<li><a href=\"$script?cmd=backup\">$_msg_backuplist</a>\n";
-	}
-	
-	
-	foreach($vals as $page => $line)
-	{
-		$arybackups = get_backup_info(encode($line["name"]).".txt");
-		$page_url = rawurlencode($line["name"]);
-		if(count($arybackups))
-			$line["link"] .= "<ul>\n";
-		else
-			$line["link"] .= "</li>\n";
-		foreach($arybackups as $key => $val)
-		{
-			$ins_date = date($date_format,$val);
-			$ins_time = date($time_format,$val);
-			$ins_week = "(".$weeklabels[date("w",$val)].")";
-			$backupdate = "($ins_date $ins_week $ins_time)";
-			if(!$_page)
-			{
- 				$line["link"] .= "<li><a href=\"$script?cmd=backup&amp;page=$page_url&amp;age=$key\">$key $backupdate</a></li>\n";
-			}
-			else
-			{
- 				$line["link"] .= "<li><a href=\"$script?cmd=backup&amp;page=$page_url&amp;age=$key\">$key $backupdate</a> [ <a href=\"$script?cmd=backup_diff&amp;page=$page_url&amp;age=$key\">$_msg_diff</a> | <a href=\"$script?cmd=backup_nowdiff&amp;page=$page_url&amp;age=$key\">$_msg_nowdiff</a> | <a href=\"$script?cmd=backup_source&amp;page=$page_url&amp;age=$key\">$_msg_source</a> ]</li>\n";
-			}
-		}
-		if(count($arybackups)) $line["link"] .= "</ul></li>";
-		$retvars[] = $line["link"];
-	}
-	$retvars[] = "</ul>";
-	
-	return join("\n",$retvars);
+	return file_exists(backup_get_filename($page));
 }
 
-// zlib関数が使用できれば、圧縮して使用するためのファイルシステム関数
-function backup_fopen($filename,$mode)
+/**
+ * backup_get_filetime
+ * バックアップファイルの更新時刻を得る
+ *
+ * @access    private
+ * @param     String    $page        ページ名
+ *
+ * @return    Integer   ファイルの更新時刻(GMT)
+ */
+
+function backup_get_filetime($page)
 {
-	if(function_exists(gzopen))
-		return gzopen(str_replace(".txt",".gz",$filename),$mode);
-	else
-		return fopen($filename,$mode);
+	return backup_file_exists($page) ?
+		filemtime(backup_get_filename($page)) - LOCALZONE :
+		0;
 }
 
-function backup_fputs($zp,$str)
+/**
+ * backup_delete
+ * バックアップファイルを削除する
+ *
+ * @access    private
+ * @param     String    $page        ページ名
+ *
+ * @return    Boolean   FALSE:失敗
+ */
+function backup_delete($page)
 {
-	if(function_exists(gzputs))
+	return unlink(backup_get_filename($page));
+}
+
+/////////////////////////////////////////////////
+
+if (function_exists('gzfile')) {
+	// ファイルシステム関数
+	// zlib関数を使用
+	define('BACKUP_EXT','.gz');
+	
+/**
+ * backup_fopen
+ * バックアップファイルを開く
+ *
+ * @access    private
+ * @param     String    $page        ページ名
+ * @param     String    $mode        モード
+ *
+ * @return    Boolean   FALSE:失敗
+ */
+	function backup_fopen($page,$mode)
+	{
+		return gzopen(backup_get_filename($page),$mode);
+	}
+
+/**
+ * backup_fputs
+ * バックアップファイルに書き込む
+ *
+ * @access    private
+ * @param     Integer   $zp          ファイルポインタ
+ * @param     String    $str         文字列
+ *
+ * @return    Boolean   FALSE:失敗 その他:書き込んだバイト数
+ */
+	function backup_fputs($zp,$str)
+	{
 		return gzputs($zp,$str);
-	else
-		return fputs($zp,$str);
-}
+	}
 
-function backup_fclose($zp)
-{
-	if(function_exists(gzclose))
+/**
+ * backup_fclose
+ * バックアップファイルを閉じる
+ *
+ * @access    private
+ * @param     Integer   $zp          ファイルポインタ
+ *
+ * @return    Boolean   FALSE:失敗
+ */
+	function backup_fclose($zp)
+	{
 		return gzclose($zp);
-	else
+	}
+
+/**
+ * backup_file
+ * バックアップファイルの内容を取得する
+ *
+ * @access    private
+ * @param     String    $page        ページ名
+ *
+ * @return    Array     ファイルの内容
+ */
+	function backup_file($page)
+	{
+		return backup_file_exists($page) ?
+			gzfile(backup_get_filename($page)) :
+			array();
+	}
+}
+/////////////////////////////////////////////////
+else {
+	// ファイルシステム関数
+	define('BACKUP_EXT','.txt');
+	
+/**
+ * backup_fopen
+ * バックアップファイルを開く
+ *
+ * @access    private
+ * @param     String    $page        ページ名
+ * @param     String    $mode        モード
+ *
+ * @return    Boolean   FALSE:失敗
+ */
+	function backup_fopen($page,$mode)
+	{
+		return fopen(backup_get_filename($page),$mode);
+	}
+
+/**
+ * backup_fputs
+ * バックアップファイルに書き込む
+ *
+ * @access    private
+ * @param     Integer   $zp          ファイルポインタ
+ * @param     String    $str         文字列
+ *
+ * @return    Boolean   FALSE:失敗 その他:書き込んだバイト数
+ */
+	function backup_fputs($zp,$str)
+	{
+		return fputs($zp,$str);
+	}
+
+/**
+ * backup_fclose
+ * バックアップファイルを閉じる
+ *
+ * @access    private
+ * @param     Integer   $zp          ファイルポインタ
+ *
+ * @return    Boolean   FALSE:失敗
+ */
+	function backup_fclose($zp)
+	{
 		return fclose($zp);
-}
+	}
 
-function backup_file($filename)
-{
-	if(function_exists(gzfile))
-		return @gzfile(str_replace(".txt",".gz",$filename));
-	else
-		return @file($filename);
-}
-
-function backup_delete($filename)
-{
-	if(function_exists(gzopen))
-		return @unlink(str_replace(".txt",".gz",$filename));
-	else
-		return @unlink($filename);
+/**
+ * backup_file
+ * バックアップファイルの内容を取得する
+ *
+ * @access    private
+ * @param     String    $page        ページ名
+ *
+ * @return    Array     ファイルの内容
+ */
+	function backup_file($page)
+	{
+		return backup_file_exists($page) ?
+			file(backup_get_filename($page)) :
+			array();
+	}
 }
 ?>

@@ -1,96 +1,111 @@
 <?php
-// PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.2 2002/11/29 00:09:00 panda Exp $
 /////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: plugin.php,v 1.3 2003/01/27 05:38:44 panda Exp $
+//
 
 // プラグイン用に未定義の変数を設定
 function set_plugin_messages($messages)
 {
-  foreach ($messages as $name=>$val) {
-    global $$name;
-    if(!isset($$name)) {
-      $$name = $val;
-    }
-  }
+	foreach ($messages as $name=>$val) {
+		global $$name;
+		
+		if(!isset($$name)) {
+			$$name = $val;
+		}
+	}
 }
 
 //プラグイン(action)が存在するか
-function exist_plugin_action($name) {
-  if(!file_exists(PLUGIN_DIR.$name.".inc.php"))
-    {
-      return false;
-    }
-  else
-    {
-      require_once(PLUGIN_DIR.$name.".inc.php");
-      if(!function_exists("plugin_".$name."_action"))
-	{
-	  return false;
+function exist_plugin_action($name)
+{
+	if (!file_exists(PLUGIN_DIR.$name.'.inc.php')) {
+		return FALSE;
 	}
-    }
-  return true;
+	
+	require_once(PLUGIN_DIR.$name.'.inc.php');
+	return function_exists('plugin_'.$name.'_action');
 }
 
 //プラグイン(convert)が存在するか
 function exist_plugin_convert($name) {
-  if(!file_exists(PLUGIN_DIR.$name.".inc.php"))
-    {
-      return false;
-    }
-  else
-    {
-      require_once(PLUGIN_DIR.$name.".inc.php");
-      if(!function_exists("plugin_".$name."_convert"))
-	{
-	  return false;
+	if (!file_exists(PLUGIN_DIR.$name.'.inc.php')) {
+		return FALSE;
 	}
-    }
-  return true;
+	
+	require_once(PLUGIN_DIR.$name.'.inc.php');
+	return function_exists('plugin_'.$name.'_convert');
+}
+
+//プラグイン(inline)が存在するか
+function exist_plugin_inline($name)
+{
+	if (!file_exists(PLUGIN_DIR.$name.'.inc.php')) {
+		return FALSE;
+	}
+	
+	require_once(PLUGIN_DIR.$name.'.inc.php');
+	return function_exists('plugin_'.$name.'_inline');
 }
 
 //プラグインの初期化を実行
-function do_plugin_init($name) {
-  $funcname = "plugin_".$name."_init";
-  if(!function_exists($funcname))
-    {
-      return false;
-    }
-  
-  $func_check = "_funccheck_".$funcname;
-  global $$func_check;
-  if($$func_check)
-    {
-      return false;
-    }
-  $$func_check = true;
-  return @call_user_func($funcname);
+function do_plugin_init($name)
+{
+	$funcname = 'plugin_'.$name.'_init';
+	if (!function_exists($funcname)) {
+		return FALSE;
+	}
+	
+	$func_check = '_funccheck_'.$funcname;
+	global $$func_check;
+	
+	if ($$func_check) {
+		return TRUE;
+	}
+	$$func_check = TRUE;
+	return @call_user_func($funcname);
 }
 
 //プラグイン(action)を実行
-function do_plugin_action($name) {
-  if(!exist_plugin_action($name)) {
-    return array();
-  }
-  do_plugin_init($name);
-  return @call_user_func("plugin_".$name."_action");
+function do_plugin_action($name)
+{
+	if(!exist_plugin_action($name)) {
+		return array();
+	}
+	
+	do_plugin_init($name);
+	return @call_user_func('plugin_'.$name.'_action');
 }
 
 //プラグイン(convert)を実行
-function do_plugin_convert($plugin_name,$plugin_args)
+function do_plugin_convert($name,$args)
 {
-  $invalid_return = "#${plugin_name}(${plugin_args})";
-  
-  if($plugin_args !== "")
-    $aryargs = explode(",",$plugin_args);
-  else
-    $aryargs = array();
+	$aryargs = ($args !== '') ? explode(',',$args) : array();
 
-  do_plugin_init($plugin_name);
-  $retvar = call_user_func_array("plugin_${plugin_name}_convert",$aryargs);
-  
-  if($retvar === FALSE) return $invalid_return;
-  else                  return $retvar;
+	do_plugin_init($name);
+	$retvar = call_user_func_array('plugin_'.$name.'_convert',$aryargs);
+	
+	if($retvar === FALSE) {
+		return "#${name}(${args})";
+	}
+	
+	return $retvar;
 }
 
+//プラグイン(inline)を実行
+function do_plugin_inline($name,$args,$body)
+{
+	$aryargs = ($args !== '') ? explode(',',$args) : array();
+	$aryargs[] =& $body;
 
+	do_plugin_init($name);
+	$retvar = call_user_func_array('plugin_'.$name.'_inline',$aryargs);
+	
+	if($retvar === FALSE) {
+		return "#${name}(${args})";
+	}
+	
+	return $retvar;
+}
 ?>

@@ -1,299 +1,187 @@
 <?php
-// $Id: calendar2.inc.php,v 1.14 2002/12/05 05:49:41 panda Exp $
+// $Id: calendar2.inc.php,v 1.15 2003/01/27 05:38:44 panda Exp $
 // *引数にoffと書くことで今日の日記を表示しないようにした。
 function plugin_calendar2_convert()
 {
-	global $script,$weeklabels,$vars,$command,$WikiName,$BracketName,$post,$get;
+	global $script,$vars,$post,$get,$weeklabels,$WikiName,$BracketName;
 	global $_calendar2_plugin_edit, $_calendar2_plugin_empty;
-
-	$today_view = true;
-	$args = func_get_args();
 	
-	if(func_num_args() == 0)
-	{
-		$date_str = date("Ym");
-		$pre = strip_bracket($vars['page']);
-		$prefix = strip_bracket($vars['page'])."/";
-	}
-	else{
-		foreach ($args as $arg){
-			if(is_numeric($arg) && strlen($arg) == 6){
+	$today_view = TRUE;
+	
+	$date_str = date('Ym');
+	$base = strip_bracket($vars['page']);
+	
+	if (func_num_args() > 0) {
+		$args = func_get_args();
+		foreach ($args as $arg) {
+			if (is_numeric($arg) && strlen($arg) == 6) {
 				$date_str = $arg;
 			}
-			else if($arg == "off"){
-				$today_view = false;
+			else if ($arg == 'off') {
+				$today_view = FALSE;
 			}
 			else {
-				$pre = strip_bracket($arg);
-				$prefix = strip_bracket($arg)."/";
+				$base = strip_bracket($arg);
 			}
 		}
-		if(empty($date_str)) $date_str = date("Ym");
-		if(empty($pre)){
-			$pre = strip_bracket($vars['page']);
-			$prefix = strip_bracket($vars['page'])."/";
-		}
 	}
-	/*
-	else if(func_num_args() == 1)
-	{
-		if(is_numeric($args[0]) && strlen($args[0]) == 6)
-		{
-			//#calendar2(yyyymm)
-			$date_str = $args[0];
-			$pre = strip_bracket($vars['page']);
-			$prefix = strip_bracket($vars['page'])."/";
-		}
-		else
-		{
-			//calendar2(pagename)
-			$date_str = date("Ym");
-			$pre = strip_bracket($args[0]);
-			$prefix = strip_bracket($args[0])."/";
-		}
-	}
-	else if(func_num_args() == 2)
-	{
-		if(is_numeric($args[0]) && strlen($args[0]) == 6)
-		{
-                      //#calendar2(yyyymm,pagename)
-			$date_str = $args[0];
-			$pre = strip_bracket($args[1]);
-			$prefix = strip_bracket($args[1])."/";
-		}
-		else if(is_numeric($args[1]) && strlen($args[1]) == 6)
-		{
-                      //#calendar2(pagename,yyyymm)
-			$date_str = $args[1];
-			$pre = strip_bracket($args[0]);
-			$prefix = strip_bracket($args[0]).'/';
-		}
-		else
-		{
-                      //#calendar2(?,?)
-			$date_str = date("Ym");
-			$pre = strip_bracket($vars[page]);
-			$prefix = strip_bracket($vars[page])."/";
-		}
-	}
-	else if(func_num_args() == 3){
-		if(is_numeric($args[0]) && strlen($args[0]) == 6)
-		{
-                      //#calendar2(yyyymm,pagename)
-			$date_str = $args[0];
-			$pre = strip_bracket($args[1]);
-			$prefix = strip_bracket($args[1])."/";
-		}
-		else if(is_numeric($args[1]) && strlen($args[1]) == 6)
-		{
-                      //#calendar2(pagename,yyyymm)
-			$date_str = $args[1];
-			$pre = strip_bracket($args[0]);
-			$prefix = strip_bracket($args[0]).'/';
-		}
-		else
-		{
-                      //#calendar2(?,?)
-			$date_str = date("Ym");
-			$pre = strip_bracket($vars[page]);
-			$prefix = strip_bracket($vars[page])."/";
-		}
-		if($args[2] == "off"){
-			$today_view = false;
-		}
-	}
-	else
-	{
-		return FALSE;
-	}
-  */
-	if($pre == "*") {
+	if ($base == '*') {
+		$base = '';
 		$prefix = '';
-		$pre = '';
 	}
-	$prefix_ = rawurlencode($pre);
-	$prefix = strip_tags($prefix);
-	
-	if(!$command) $cmd = "read";
-	else          $cmd = $command;
-	
+	else {
+		$prefix = $base.'/';
+	}
+	$r_base = rawurlencode($base);
+	$s_base = htmlspecialchars($base);
+	$r_prefix = rawurlencode($prefix);
+	$s_prefix = htmlspecialchars($prefix);
 	
 	$yr = substr($date_str,0,4);
 	$mon = substr($date_str,4,2);
-	if($yr != date("Y") || $mon != date("m")) {
+	
+	if ($yr != date('Y') || $mon != date('m')) {
 		$now_day = 1;
 		$other_month = 1;
 	}
 	else {
-		$now_day = date("d");
+		$now_day = date('d');
 		$other_month = 0;
 	}
+	
 	$today = getdate(mktime(0,0,0,$mon,$now_day,$yr));
 	
-	$m_num = $today[mon];
-	$d_num = $today[mday];
-	$year = $today[year];
-	$f_today = getdate(mktime(0,0,0,$m_num,1,$year));
-	$wday = $f_today[wday];
-	$day = 1;
-	$fweek = true;
-
-	$m_name = "$year.$m_num ($cmd)";
-
-	if(!preg_match("/^(($WikiName)|($BracketName))$/",$pre))
-		$prefix_url = "[[".$pre."]]";
-	else
-		$prefix_url = $pre;
-
-	$prefix_url = rawurlencode($prefix_url);
-	$pre = strip_bracket($pre);
+	$m_num = $today['mon'];
+	$d_num = $today['mday'];
+	$year = $today['year'];
 	
-	$ret .= '<table border="0" width="100%"><tr><td valign="top">';
+	$f_today = getdate(mktime(0,0,0,$m_num,1,$year));
+	$wday = $f_today['wday'];
+	$day = 1;
+	$fweek = TRUE;
+	
+	$m_name = "$year.$m_num";
 	
 	$y = substr($date_str,0,4)+0;
 	$m = substr($date_str,4,2)+0;
 	
-	$prev_date_str = sprintf("%04d%02d",$y,$m-1);
-	if($m-1<1) {
-		$prev_date_str = sprintf("%04d%02d",$y-1,12);
+	$prev_date_str = ($m == 1) ?
+		sprintf('%04d%02d',$y - 1,12) : sprintf('%04d%02d',$y,$m - 1);
+	
+	$next_date_str = ($m == 12) ?
+		sprintf('%04d%02d',$y + 1,1) : sprintf('%04d%02d',$y,$m + 1);
+	
+	$ret = '';
+	if ($today_view) {
+		$ret = "<table border=\"0\" summary=\"calendar frame\">\n <tr>\n  <td valign=\"top\">\n";
 	}
-	$next_date_str = sprintf("%04d%02d",$y,$m+1);
-	if($m+1>12) {
-		$next_date_str = sprintf("%04d%02d",$y+1,1);
+	$ret .= <<<EOD
+   <table class="style_calendar" cellspacing="1" width="150" border="0" summary="calendar body">
+    <tr>
+     <td class="style_td_caltop" colspan="7">
+      <a href="$script?plugin=calendar2&amp;file=$r_base&amp;date=$prev_date_str">&lt;&lt;</a>
+      <strong>$m_name</strong>
+      <a href="$script?plugin=calendar2&amp;file=$r_base&amp;date=$next_date_str">&gt;&gt;</a>
+EOD;
+	
+	if ($prefix) {
+		$ret .= "\n      <br />[<a href=\"$script?$r_base\">$s_base</a>]";
 	}
 	
-	if($prefix == "") {
-		$ret .= '
-<table class="style_calendar" cellspacing="1" width="150" border="0">
-  <tr>
-    <td align="middle" class="style_td_caltop" colspan="7">
-      <div class="small" style="text-align:center"><a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$prev_date_str.'">&lt;&lt;</a> <strong>'.$m_name.'</strong> <a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$next_date_str.'">&gt;&gt;</a></div>
-    </td>
-  </tr>
-  <tr>
-';
-	}
-	else {
-		$ret .= '
-<table class="style_calendar" cellspacing="1" width="150" border="0">
-  <tbody>
-  <tr>
-    <td align="middle" class="style_td_caltop" colspan="7">
-      <div class="small" style="text-align:center"><a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$prev_date_str.'">&lt;&lt;</a> <strong>'.$m_name.'</strong> <a href="'.$script.'?plugin=calendar2&amp;file='.$prefix_.'&amp;date='.$next_date_str.'">&gt;&gt;</a><br />[<a href="'.$script.'?'.$prefix_url.'">'.$pre.'</a>]</div>
-    </td>
-  </tr>
-  <tr>
-';
+	$ret .= "\n     </td>\n    </tr>\n    <tr>\n";
+	
+	foreach($weeklabels as $label) {
+		$ret .= "     <td class=\"style_td_week\">$label</td>\n";
 	}
 	
-	foreach($weeklabels as $label)
-	{
-		$ret .= '
-    <td align="middle" class="style_td_week">
-      <div class="small" style="text-align:center"><strong>'.$label.'</strong></div>
-    </td>';
-	}
-
-	$ret .= "</tr>\n<tr>\n";
-
-	while(checkdate($m_num,$day,$year))
-	{
-		$dt = sprintf("%4d-%02d-%02d", $year, $m_num, $day);
-		$name = "$prefix$dt";
-		$page = "[[$prefix$dt]]";
-		$page_url = rawurlencode("[[$prefix$dt]]");
+	$ret .= "    </tr>\n    <tr>\n";
+	
+	while (checkdate($m_num,$day,$year)) {
+		$dt = sprintf('%4d-%02d-%02d', $year, $m_num, $day);
+		$page = $prefix.$dt;
+		$r_page = rawurlencode($page);
+		$s_page = htmlspecialchars($page);
 		
-		if($cmd == "edit") $refer = "&amp;refer=$page_url";
-		else               $refer = "";
+		if ($fweek) {
+			for ($i = 0; $i < $wday; $i++) { // Blank 
+				$ret .= "     <td class=\"style_td_blank\">&nbsp;</td>\n";
+			}
+			$fweek = FALSE;
+		}
 		
-		if($cmd == "read" && !is_page($page))
-			$link = "<a href=\"$script?cmd=$cmd&amp;page=$page_url$refer\" title=\"$name\" class=\"small\">$day</a>";
-		else
-			$link = "<a href=\"$script?cmd=$cmd&amp;page=$page_url$refer\" title=\"$name\"><strong>$day</strong></a>";
-
-		if($fweek)
-		{
-			for($i=0;$i<$wday;$i++)
-			{ // Blank 
-				$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n"; 
-			} 
-		$fweek=false;
+		if ($wday == 0) {
+			$ret .= "    </tr>\n    <tr>\n";
 		}
-
-		if($wday == 0) $ret .= "  </tr><tr>\n";
-		if(!$other_month && ($day == $today[mday]) && ($m_num == $today[mon]) && ($year == $today[year]))
-		{
-			//  Today 
-			$ret .= "    <td align=\"center\" class=\"style_td_today\">$link</td>\n"; 
+		
+		$style = 'style_td_day'; // Weekday
+		if (!$other_month && ($day == $today['mday']) && ($m_num == $today['mon']) && ($year == $today['year'])) { // Today
+			$style = 'style_td_today';
 		}
-		else if($wday == 0)
-		{
-			//  Sunday 
-			$ret .= "    <td align=\"center\" class=\"style_td_sun\">$link</td>\n";
+		else if ($wday == 0) { // Sunday 
+			$style = 'style_td_sun';
 		}
-		else if($wday == 6)
-		{
-			//  Saturday 
-			$ret .= "    <td align=\"center\" class=\"style_td_sat\">$link</td>\n";
+		else if ($wday == 6) { //  Saturday 
+			$style = 'style_td_sat';
 		}
-		else
-		{
-			// Weekday 
-			$ret .= "    <td align=\"center\" class=\"style_td_day\">$link</td>\n";
+		
+		if (is_page($page)) {
+			$link = "<a href=\"$script?$r_page\" title=\"$s_page\"><strong>$day</strong></a>";
 		}
+		else {
+			$link = "<a class=\"small\" href=\"$script?cmd=edit&amp;page=$r_page&amp;refer=$r_base\" title=\"$s_page\">$day</a>";
+		}
+		
+		$ret .= "     <td class=\"$style\">\n      $link\n     </td>\n";
 		$day++;
-		$wday++;
-		$wday = $wday % 7;
+		$wday = ++$wday % 7;
 	}
-	if($wday > 0)
-	{
-		while($wday < 7)
-		{ // Blank 
-			$ret .= "    <td align=\"center\" class=\"style_td_blank\">&nbsp;</td>\n";
-		$wday++;
-		} 
+	if ($wday > 0) {
+		while ($wday++ < 7) { // Blank 
+			$ret .= "     <td class=\"style_td_blank\">&nbsp;</td>\n";
+		}
 	}
-
-	$ret .= "  </tr>\n</table>\n";
-  if ($today_view == true){
-	$page = sprintf("[[%s%4d-%02d-%02d]]", $prefix, $today[year], $today[mon], $today[mday]);
-	$page_url = rawurlencode($page);
-	if(is_page($page)) {
-		$page_ = $vars['page'];
-		$get['page'] = $post['page'] = $vars['page'] = $page;
-		$str = convert_html(join("",file(get_filename(encode($page)))));
-		$str .= "<hr /><a class=\"small\" href=\"$script?cmd=edit&amp;page=".rawurlencode($page)."\">$_calendar2_plugin_edit</a>";
-		$get['page'] = $post['page'] = $vars['page'] = $page_;
+	
+	$ret .= "    </tr>\n   </table>\n";
+	
+	if ($today_view) {
+		$tpage = $prefix.sprintf("%4d-%02d-%02d", $today['year'], $today['mon'], $today['mday']);
+		$r_tpage = rawurlencode($tpage);
+		if (is_page($tpage)) {
+			$_page = $vars['page'];
+			$get['page'] = $post['page'] = $vars['page'] = $tpage;
+			$str = convert_html(join('',get_source($tpage)));
+			$str .= "<hr /><a class=\"small\" href=\"$script?cmd=edit&amp;page=$r_tpage\">$_calendar2_plugin_edit</a>";
+			$get['page'] = $post['page'] = $vars['page'] = $_page;
+		}
+		else {
+			$str = sprintf($_calendar2_plugin_empty,make_link(sprintf('[[%s%4d-%02d-%02d]]',$prefix, $today['year'], $today['mon'], $today['mday'])));
+		}
+		$ret .= "  </td>\n  <td valign=\"top\">$str</td>\n </tr>\n</table>\n";
 	}
-	else {
-		$str = sprintf($_calendar2_plugin_empty,make_link(sprintf('[[%s%4d-%02d-%02d]]',$prefix, $today[year], $today[mon], $today[mday])));
-	}
-  }else{
-    $str = "";
-  }
-	$ret .= "</td><td valign=\"top\">".$str."</td></tr></table>";
 	
 	return $ret;
 }
 
 function plugin_calendar2_action()
 {
-	global $command,$vars;
+	global $vars;
 	
-	$command = 'read';
 	$page = strip_bracket($vars['page']);
 	$vars['page'] = '*';
-	if($vars['file']) $vars['page'] = $vars['file'];
+	if ($vars['file']) {
+		$vars['page'] = $vars['file'];
+	}
 	
 	$date = $vars['date'];
-	if($date=='') {
+	
+	if ($date == '') {
 		$date = date("Ym");
 	}
 	$yy = sprintf("%04d.%02d",substr($date,0,4),substr($date,4,2));
 	
 	$aryargs = array($vars['page'],$date);
-	$ret["msg"] = "calendar ".$vars['page']."/".$yy;
-	$ret["body"] = call_user_func_array("plugin_calendar2_convert",$aryargs);
+	$ret['msg'] = "calendar {$vars['page']}/$yy";
+	$ret['body'] = call_user_func_array('plugin_calendar2_convert',$aryargs);
 	
 	$vars['page'] = $page;
 	

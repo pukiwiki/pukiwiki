@@ -1,6 +1,10 @@
 <?php
-///////////////////////////////////////
-// PukiWiki message file (japanese/EUC)
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: ja.lng,v 1.11 2003/01/27 05:38:44 panda Exp $
+//
+// PukiWiki message file (japanese)
 
 ///////////////////////////////////////
 // page titles
@@ -22,10 +26,10 @@ $_title_unfreezed = '$1 の凍結を解除しました';
 $_title_diff = '$1 の変更点';
 $_title_result = '$1 の検索結果';
 $_title_search = '単語検索';
-$_title_backupdiff = '$1 のバックアップ差分';
-$_title_backupnowdiff = '$1 のバックアップの現在との差分';
-$_title_backupsource = '$1 のバックアップソース';
-$_title_backup = '$1 のバックアップ';
+$_title_backupdiff = '$1 のバックアップ差分(No.$2)';
+$_title_backupnowdiff = '$1 のバックアップの現在との差分(No.$2)';
+$_title_backupsource = '$1 のバックアップソース(No.$2)';
+$_title_backup = '$1 のバックアップ(No.$2)';
 $_title_pagebackuplist = '$1 のバックアップ一覧';
 $_title_backuplist = 'バックアップ一覧';
 $_title_help = 'ヘルプ';
@@ -55,6 +59,7 @@ $_msg_delline = '削除された行は<span class="diff_removed">この色</span>です。';
 $_msg_goto = '$1 へ行く。';
 $_msg_searching = '全てのページから単語を検索します。大文字小文字の区別はありません。';
 $_msg_backuplist = 'バックアップ一覧';
+$_msg_nobackup = '$1 のバックアップはありません。';
 $_msg_diff = '差分';
 $_msg_nowdiff = '現在との差分';
 $_msg_source = 'ソース';
@@ -62,15 +67,16 @@ $_msg_backup = 'バックアップ';
 $_msg_view = '$1 を表示';
 $_msg_deleleted = '$1 は削除されています。';
 $_msg_invalidiwn = '$1 は有効な $2 ではありません。';
-$_msg_andresult = '<strong>$1</strong> のすべてを含むページは <strong>$3</strong> ページ中、 <strong>$2</strong> ページ見つかりました。';
-$_msg_orresult = '<strong>$1</strong> のいずれかを含むページは <strong>$3</strong> ページ中、 <strong>$2</strong> ページ見つかりました。';
-$_msg_notfoundresult = '<strong>$1</strong> を含むページは見つかりませんでした。';
+$_msg_andresult = '$1 のすべてを含むページは <strong>$3</strong> ページ中、 <strong>$2</strong> ページ見つかりました。';
+$_msg_orresult = '$1 のいずれかを含むページは <strong>$3</strong> ページ中、 <strong>$2</strong> ページ見つかりました。';
+$_msg_notfoundresult = '$1 を含むページは見つかりませんでした。';
 $_msg_symbol = '記号';
 $_msg_other = '日本語';
 $_msg_help = 'テキスト整形のルールを表示する';
-$_msg_week = array("日","月","火","水","木","金","土");
-$_msg_content_back_to_top = '<span class="super_index">↑</span>';
-
+$_msg_week = array('日','月','火','水','木','金','土');
+$_msg_content_back_to_top = '<span class="super_index">&uarr;</span>';
+$_msg_auth = 'Page Edit.';
+$_msg_word = 'これらのキーワードがハイライトされています：';
 
 ///////////////////////////////////////
 // form buttons
@@ -87,6 +93,7 @@ $_btn_addtop = 'ページの上に追加';
 $_btn_template = '雛形とするページ';
 $_btn_load = '読込';
 $_btn_edit = '編集';
+$_btn_viewtag = 'タグを見る';
 
 ///////////////////////////////////////
 // plug-in message
@@ -134,8 +141,8 @@ $_btn_memo_update = 'メモ更新';
 
 ///////////////////////////////////////
 // recent
-$_recent_plugin_frame = '<h5 class="side_label">最新の%d件</h5><span class="small">%s</span>';
-$_recent_plugin_li = '・';
+$_recent_plugin_frame = '<h5>最新の%d件</h5>
+<div>%s</div>';
 
 ///////////////////////////////////////
 // calendar2
@@ -148,69 +155,6 @@ $_attach_plugin_files = '%s件';
 
 ///////////////////////////////////////
 // help 'wiki format rule'.
-$rule_body = '
-<h3>テキスト整形のルール</h3>
-<p>通常は入力した文字がそのまま出力されますが、以下のルールに従ってテキスト整形を行うことができます。</p>
-<ul>
-<li>空行は段落の区切りとなります。</li>
-<li>HTMLのタグは書けません。</li>
-<li>文字列の装飾</li>
-<ul>
-<li>\'\'ボールド\'\' のようにシングルクォート二つではさむと、ボールドになります。</li>
-<li>\'\'\'イタリック\'\'\' のようにシングルクォート三つではさむと、イタリックになります。</li>
-<li>%%打ち消し%% のようにパーセント二つではさむと、打ち消し線がつきます。</li>
-<li>((注釈)) のように括弧二つではさむと、注釈が作成されます。</li>
-<li>COLOR(rrggbb): と書くと文字色が指定できます。(rrggbb へは6桁の16進数値か、色名を指定)</li>
-<li>SIZE(n): と書くと文字の大きさが指定できます。(n へは文字の大きさをピクセル数値で)</li>
-<li>CENTER: と書くと文字列を中寄せにできます。</li>
-<li>LEFT: と書くと文字列を左寄せにできます。</li>
-<li>RIGHT: と書くと文字列を右寄せにできます。</li>
-</ul>
-<li>見出し</li>
-<ul>
-<li>* を行頭に書くと見出しになります。* ** *** の3レベルまであります。 </li>
-<li>#contents を行頭に書くと、大見出しと小見出しの目次が作成されます。</li>
-</ul>
-<li>: を行頭に書くと用語と解説文が作れます。</li>
-<ul>
-<li>:用語1:いろいろ書いた解説文1</li>
-<li>:用語2:いろいろ書いた解説文2</li>
-<li>:用語3:いろいろ書いた解説文3</li>
-</ul>
-<li>行頭と行末に | を書くと表組みができます。この場合、それぞれのカラムの始まりが行頭として解釈されるので、各種整形ルールを記述する場合は注意が必要です。| と | の間で一行として考える必要があります。</li>
-<ul>
-<li>|\'\'Category:A\'\'|\'\'Category:B\'\'|\'\'Category:C\'\'|</li>
-<li>|Objective|for AI|Other|</li>
-<li>|Java|LISP|Assembla|</li>
-</ul>
-<li>リンク</li>
-<ul>
-<li>PukiWikiのように大文字小文字を混ぜた英文字列を書くと、PukiWikiのページ名になります。(WikiName)</li>
-<li>[[sng]]のように二重の大かっこ[[ ]]でくくった文字列を書くと、PukiWikiのページ名になります。大かっこの中にはスペースを含めてはいけません。日本語も使えます。([[BracketName]])</li>
-<li>[[sng:FrontPage]] のように書くとInterWikiNameになります。</li>
-<li>[[factage:http://factage.com/]] のように書くと「factage」の文字に対して http://factage.com/ へのリンクを貼ることができます。</li>
-<li>http://factage.com/ や foo@factage.com のようなURL・メールアドレスは自動的にリンクになります。</li>
-</ul>
-<li>日付・時刻の挿入</li>
-<ul>
-<li>date? を書くと、更新時の日付に置換されます。</li>
-<li>time? を書くと、更新時の時間に置換されます。</li>
-<li>now? を書くと、更新時の日付と時間に置換されます。</li>
-</ul>
-<li>---- のようにマイナス4つがあると、水平線になります。</li>
-<li>- を行頭に書くと箇条書きになります。- -- --- の3レベルまであります。</li>
-<li>行頭がスペースで始まっていると、その段落は整形済み扱われます。一切の他の整形ルールの影響を受けません。プログラムを書き込むときに使うと便利です。</li>
-<li>// を行頭に書くとその行をHTMLタグでコメントアウトします。</li>
-<li>&gt; を行頭に書くと、引用文が書けます。&gt;の数が多いとインデントが深くなります &gt; &gt;&gt; &gt;&gt;&gt; の3レベルまであります。</li>
-<li>行末にチルダ ~ があると改行します。</li>
-<li>#comment を行頭に書くとコメントを挿入できるフォームが埋め込まれます。</li>
-<li>#related を書くと、現在のページ名が参照している/参照されている別のページ(関連ページ)へのリンクを表示します。</li>
-<li>#norelated を行頭に書くと、そのページの一番下に表示されている関連ページを非表示にします。</li>
-<li>#calendar_read(200202) を行頭に書くと、その日付のページを表示するカレンダーが表示されます。括弧内は年月を表しますが、省略すると現在の年月が使用されます。(日記向け) </li>
-<li>#calendar_edit(200202) を行頭に書くと、その日付のページを編集するカレンダーが表示されます。括弧内は年月を表しますが、省略すると現在の年月が使用されます。(日記向け) </li>
-</ul>
-';
-
-
-
+$rule_page = '整形ルール';
+$help_page = 'ヘルプ';
 ?>

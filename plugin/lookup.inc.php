@@ -1,5 +1,5 @@
 <?php
-// $Id: lookup.inc.php,v 1.6 2002/11/29 00:09:01 panda Exp $
+// $Id: lookup.inc.php,v 1.7 2003/01/27 05:38:46 panda Exp $
 
 function plugin_lookup_convert()
 {
@@ -7,33 +7,38 @@ function plugin_lookup_convert()
 	
 	$args = func_get_args();
 	
-	if(func_num_args() < 2) return FALSE;
+	if (func_num_args() < 2) return FALSE;
 	
 	$iwn = trim(strip_tags($args[0]));
 	$btn = trim(strip_tags($args[1]));
-	$default = trim(strip_tags($args[2]));
 	
-	$ret = "<form action=\"$script\" method=\"post\">\n";
-	$ret.= "<div>\n";
-	$ret.= "<input type=\"hidden\" name=\"plugin\" value=\"lookup\" />\n";
-	$ret.= "<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($vars["page"])."\" />\n";
-	$ret.= "<input type=\"hidden\" name=\"inter\" value=\"$iwn\" />\n";
-	$ret.= "$iwn:\n";
-	$ret.= "<input type=\"text\" name=\"page\" size=\"30\" value=\"$default\" />\n";
-	$ret.= "<input type=\"submit\" value=\"$btn\" />\n";
-	$ret.= "</div>\n";
-	$ret.= "</form>\n";
-
+	$default = '';
+	if (func_num_args() > 2)
+		$default = trim(strip_tags($args[2]));
+	
+	$s_page = htmlspecialchars($vars['page']);
+	
+	$ret = <<<EOD
+<form action="$script" method="post">
+ <div>
+  <input type="hidden" name="plugin" value="lookup" />
+  <input type="hidden" name="refer" value="$s_page" />
+  <input type="hidden" name="inter" value="$iwn" />
+  $iwn:
+  <input type="text" name="page" size="30" value="$default" />
+  <input type="submit" value="$btn" />
+ </div>
+</form>
+EOD;
 	return $ret;
 }
 function plugin_lookup_action()
 {
-	global $vars,$script;
+	global $script,$vars;
 	
-	if(!$vars["inter"] || !$vars["page"]) return;
+	if (!$vars['inter'] or !$vars['page']) return;
 	
-	$interwikiname = "[[".$vars["inter"].":".$vars["page"]."]]";
-	$interwikiname = rawurlencode($interwikiname);
+	$interwikiname = rawurlencode("[[{$vars['inter']}:{$vars['page']}]]");
 	
 	header("Location: $script?$interwikiname");
 	die();
