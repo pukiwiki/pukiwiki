@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.11 2003/05/17 11:15:32 arino Exp $
+// $Id: en.lng,v 1.12 2003/06/05 06:20:48 arino Exp $
 //
 // PukiWiki message file (english)
 
@@ -159,4 +159,15 @@ $_attach_plugin_files = '%s downloads';
 // help 'wiki format rule'.
 $rule_page = 'FormatRule';
 $help_page = 'Help';
+
+///////////////////////////////////////
+// TrackBack
+$_tb_title = 'TrackBack: Discussion on TrackBack in %s';
+$_tb_header = 'Continuing the discussion...';
+$_tb_entry = 'TrackBack URL for this entry:';
+$_tb_refer = ' Listed below are links to weblogs that reference %s from %s.';
+$_tb_header_Excerpt = 'Excerpt:';
+$_tb_header_Weblog = 'Weblog:';
+$_tb_header_Tracked = 'Tracked:';
+$_tb_date = 'F j, Y, g:i A';
 ?>

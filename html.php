@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.79 2003/06/01 14:28:00 arino Exp $
+// $Id: html.php,v 1.80 2003/06/05 06:20:48 arino Exp $
 //
 
 // 本文を出力
@@ -31,7 +31,7 @@ function catbody($title,$page,$body)
 	$link_whatsnew = "$script?".rawurlencode($whatsnew);
 	$link_backup   = "$script?cmd=backup&amp;page=$r_page";
 	$link_help     = "$script?".rawurlencode($help_page);
-	$link_rss      = "$script?cmd=rss";
+	$link_rss      = "$script?cmd=rss10";
 	$link_freeze   = "$script?cmd=freeze&amp;page=$r_page";
 	$link_unfreeze = "$script?cmd=unfreeze&amp;page=$r_page";
 	$link_upload   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";

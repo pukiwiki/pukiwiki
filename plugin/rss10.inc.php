@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss10.inc.php,v 1.4 2003/05/16 05:58:19 arino Exp $
+// $Id: rss10.inc.php,v 1.5 2003/06/05 06:20:49 arino Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss10_action()
@@ -25,6 +25,7 @@ function plugin_rss10_action()
 	{
 		list($time,$page) = explode("\t",rtrim($line));
 		$r_page = rawurlencode($page);
+		$tb_id = md5($r_page);
 		$title = mb_convert_encoding($page,'UTF-8',SOURCE_ENCODING);
 		// 'O'が出力する時刻を'+09:00'の形に整形
 		$dcdate = substr_replace(get_date('Y-m-d\TH:i:sO',$time),':',-2,0);
@@ -37,6 +38,8 @@ function plugin_rss10_action()
  <title>$title</title>
  <link>$script?$r_page</link>
  <dc:date>$dcdate</dc:date>
+ <dc:identifer>$script?$r_page</dc:identifer>
+ <trackback:ping>$script?plugin=tb&amp;tb_id=$tb_id</trackback:ping>
 </item>
 
 EOD;
@@ -50,6 +53,7 @@ EOD;
 
 <rdf:RDF 
   xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
   xmlns="http://purl.org/rss/1.0/"
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
   xml:lang="ja">

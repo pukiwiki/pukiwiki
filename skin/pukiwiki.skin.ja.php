@@ -24,6 +24,12 @@
 <?php } else { ?>
  <link rel="stylesheet" href="skin/default.ja.css" type="text/css" media="screen" charset="Shift_JIS" />
 <?php } ?>
+<?php
+  global $trackback;
+  if ($trackback) {
+?>
+<script language="JavaScript" src="skin/trackback.js"></script>
+<?php } ?>
 <?php echo $head_tag ?>
 </head>
 <body>
@@ -83,6 +89,13 @@
 
  | <a href="<?php echo $link_help ?>">¥Ø¥ë¥×</a>
  ]
+<?php
+  if ($trackback) {
+    $tb_id = md5($r_page);
+?>
+ &nbsp;
+ [ <a href="<?php echo "$script?plugin=tb&amp;__mode=view&amp;tb_id=$tb_id" ?>" onclick="OpenTrackback(this.href); return false">TrackBack(<?php echo tb_count($r_page) ?>)</a> ]
+<?php } ?>
 </div>
 <?php echo $hr ?>
 

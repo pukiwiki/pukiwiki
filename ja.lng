@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.13 2003/05/17 11:15:32 arino Exp $
+// $Id: ja.lng,v 1.14 2003/06/05 06:20:48 arino Exp $
 //
 // PukiWiki message file (japanese)
 
@@ -161,4 +161,15 @@ $_attach_plugin_files = '%s件';
 // help 'wiki format rule'.
 $rule_page = '整形ルール';
 $help_page = 'ヘルプ';
+
+///////////////////////////////////////
+// TrackBack
+$_tb_title = 'TrackBack: %s への議論は継続される...';
+$_tb_header = 'ディスカッションの継続...';
+$_tb_entry = 'このエントリの TrackBack URL:';
+$_tb_refer = ' この一覧は、次のエントリを参照しています: %s, %s.';
+$_tb_header_Excerpt = '要約:';
+$_tb_header_Weblog = 'Weblog:';
+$_tb_header_Tracked = '日時:';
+$_tb_date = 'Y年n月j日 H:i:s';
 ?>

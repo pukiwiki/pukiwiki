@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.9 2003/06/05 05:00:45 arino Exp $
+// $Id: edit.inc.php,v 1.10 2003/06/05 06:20:49 arino Exp $
 //
 //  ‘Ω∏
 // cmd=edit
@@ -140,6 +140,7 @@ function plugin_edit_write()
 		
 		$retvars['msg'] = $_title_deleted;
 		$retvars['body'] = str_replace('$1',htmlspecialchars($post['page']),$_title_deleted);
+		tb_delete($post['page']);
 	}
 	
 	return $retvars;
