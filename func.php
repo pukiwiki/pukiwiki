@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.28 2003/03/07 12:47:16 panda Exp $
+// $Id: func.php,v 1.29 2003/03/13 14:11:59 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -144,7 +144,7 @@ function auto_template($page)
 }
 
 // 検索
-function do_search($word,$type='AND')
+function do_search($word,$type='AND',$non_format=FALSE)
 {
 	global $script,$vars,$whatsnew,$non_list,$search_non_list;
 	global $_msg_andresult,$_msg_orresult,$_msg_notfoundresult;
@@ -167,7 +167,10 @@ function do_search($word,$type='AND')
 		}
 		
 		$source = get_source($page);
-		array_unshift($source,$page); // ページ名も検索対象に
+		if (!$non_format)
+		{
+			array_unshift($source,$page); // ページ名も検索対象に
+		}
 		
 		$b_match = FALSE;
 		foreach ($keys as $key)
@@ -183,6 +186,10 @@ function do_search($word,$type='AND')
 		{
 			$pages[$page] = get_filetime($page);
 		}
+	}
+	if ($non_format)
+	{
+		return array_keys($pages);
 	}
 	$r_word = rawurlencode($word);
 	$s_word = htmlspecialchars($word);
@@ -224,7 +231,7 @@ function encode($key)
 // ページ名のデコード
 function decode($key)
 {
-	return $key == '' ? '' : pack('H*',$key);
+	return ($key == '') ? '' : pack('H*',$key);
 }
 
 // [[ ]] を取り除く
