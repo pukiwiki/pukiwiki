@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: default.ini.php,v 1.6 2004/07/15 12:44:36 henoheno Exp $
+// $Id: default.ini.php,v 1.7 2004/07/23 14:48:19 henoheno Exp $
 //
 // PukiWiki setting file (user agent:default)
 
@@ -123,7 +123,7 @@ $facemark_rules = array(
 	'&amp;(wink);'	=> ' <img alt="$1" src="./face/wink.png" />',
 	'&amp;(sad);'	=> ' <img alt="$1" src="./face/sad.png" />',
 	'&amp;(heart);'	=> ' <img alt="$1" src="./face/heart.png" />',
-	'&amp;(sweat);'	=> ' <img alt="$1" src="./face/sweat.png" />',
+	'&amp;(worried);'=>' <img alt="$1" src="./face/worried.png" />',
 
 	// Face marks, Japanese style
 	'(\(\^\^\))'	=> ' <img alt="$1" src="./face/smile.png" />',
@@ -131,8 +131,8 @@ $facemark_rules = array(
 	'(\(\.\.;)'	=> ' <img alt="$1" src="./face/oh.png" />',
 	'(\(\^_-\))'	=> ' <img alt="$1" src="./face/wink.png" />',
 	'(\(--;)'	=> ' <img alt="$1" src="./face/sad.png" />',
-	'(\(\^\^;)'	=> ' <img alt="$1" src="./face/sweat.png" />',
-	'(\(\^\^;\))'	=> ' <img alt="$1" src="./face/sweat.png" />',
+	'(\(\^\^;)'	=> ' <img alt="$1" src="./face/worried.png" />',
+	'(\(\^\^;\))'	=> ' <img alt="$1" src="./face/worried.png" />',
 
 	// Push buttons, 0-9 and sharp (Compatibility with cell phones)
 	'&amp;(pb1);'	=> '[1]',
