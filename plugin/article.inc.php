@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.6.2.1 2003/01/22 05:41:14 panda Exp $
+ $Id: article.inc.php,v 1.6.2.2 2003/04/08 09:50:05 arino Exp $
  
  */
 
@@ -107,17 +107,15 @@ function plugin_article_action()
 		}
 
 		$article  = $subject."\n>";
-		$article .= $name." (".$now.")\n>~\n";
+		$article .= $name." (".$now.")\n~\n";
 
-		if(ARTICLE_AUTO_BR){
+		$msg = rtrim($post['msg']);
+		if (ARTICLE_AUTO_BR){
 			//改行の取り扱いはけっこう厄介。特にURLが絡んだときは…
-			$article_body = $post[msg];
-			$article_body = str_replace("\n","\n>~\n",$article_body);
-			$article_body = preg_replace("/\n\n/","\n",$article_body);
-			$article .= $article_body;
-		} else {
-			$article .= ">".$post[msg];
+			//コメント行、整形済み行には~をつけないように arino
+			$msg = join("\n",preg_replace('/^(?!\/\/)(?!\s)(.*)$/','>$1~',explode("\n",$msg)));
 		}
+		$article .= $msg;
 
 		if(ARTICLE_COMMENT){
 			$article .= "\n\n#comment\n";
