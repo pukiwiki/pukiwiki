@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.29 2004/08/19 14:15:28 henoheno Exp $
+// $Id: ref.inc.php,v 1.30 2004/08/21 02:36:57 henoheno Exp $
 //
 
 // UPLOAD_DIR のデータ(画像ファイルのみ)に直接アクセスさせる
@@ -202,12 +202,6 @@ function plugin_ref_body($args)
 		if (! is_dir(UPLOAD_DIR)) {
 			$params['_error'] = 'No UPLOAD_DIR';
 			return $params;
-		} else {
-			$file = UPLOAD_DIR . encode($page) . '_' . encode($name);
-			if (! is_file($file)) {
-				$params['_error'] = 'File not found';
-				return $params;
-			}
 		}
 
 		// ページ指定のチェック
@@ -215,10 +209,16 @@ function plugin_ref_body($args)
 			if ($matches[1] == '.' || $matches[1] == '..') {
 				$matches[1] .= '/';
 			}
-			$page = get_fullname($matches[1], $page);
+			$page = get_fullname($matches[1],$page);
 			$name = $matches[2];
 		}
 		$title = htmlspecialchars($name);
+		$file = UPLOAD_DIR . encode($page) . '_' . encode($name);
+
+		if (! is_file($file)) {
+			$params['_error'] = 'File not found';
+			return $params;
+		}
 
 		$is_image = (! $params['noimg'] && preg_match(PLUGIN_REF_IMAGE, $name));
 
