@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.12 2003/02/03 10:25:11 panda Exp $
+// $Id: func.php,v 1.13 2003/02/11 04:51:58 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -383,25 +383,6 @@ function get_passage($time)
 	}
 	
 	return $str;
-}
-
-// 改行の調整
-function crlf_rtrim($arr)
-{
-	$arr = preg_replace("/\r/",'',$arr);
-
-	while (count($arr) > 0) {
-		$n = count($arr) - 1;
-		if ($arr[$n] == "\n") {
-			array_pop($arr);
-			continue;
-		}
-		if (substr($arr[$n],-1) != "\n") {
-			$arr[$n] .= "\n";
-		}
-		break;
-	}
-	return $arr;
 }
 
 //<input type="(submit|button|image)"...>を隠す

@@ -2,14 +2,16 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.4 2003/01/27 05:38:41 panda Exp $
+// $Id: file.php,v 1.5 2003/02/11 04:51:58 panda Exp $
 //
 
 // ソースを取得
 function get_source($page)
 {
-	return is_page($page) ?
-		crlf_rtrim(file(get_filename($page))) : array();
+	if (!is_page($page)) {
+		return array();
+	}
+	return str_replace("\r",'',file(get_filename($page)));
 }
 
 // ページの更新時刻を得る
