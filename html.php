@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.97 2004/02/29 07:48:10 arino Exp $
+// $Id: html.php,v 1.98 2004/03/18 10:01:14 arino Exp $
 //
 
 // 本文を出力
@@ -87,7 +87,7 @@ function catbody($title,$page,$body)
 			$pattern = "/<[^>]*>|($pattern)|&[^;]+;/";
 			$callback = create_function(
 				'$arr',
-				'return $arr[1] ? "<strong class=\"word'.$id++.'\">{$arr[1]}</strong>" : $arr[0];'
+				'return (count($arr) > 1) ? "<strong class=\"word'.$id++.'\">{$arr[1]}</strong>" : $arr[0];'
 			);
 			$body = preg_replace_callback($pattern,$callback,$body);
 			$notes = preg_replace_callback($pattern,$callback,$notes);
