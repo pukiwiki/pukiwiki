@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.67 2004/12/25 00:34:08 henoheno Exp $
+//  $Id: attach.inc.php,v 1.68 2004/12/30 07:52:17 henoheno Exp $
 //
 
 /*
@@ -16,34 +16,32 @@
 ini_set('upload_max_filesize', '2M');
 
 // Max file size for upload on script of PukiWikiX_FILESIZE
-define('MAX_FILESIZE', (1024 * 1024)); // default: 1MB
+define('PLUGIN_ATTACH_MAX_FILESIZE', (1024 * 1024)); // default: 1MB
 
 // 管理者だけが添付ファイルをアップロードできるようにする
-define('ATTACH_UPLOAD_ADMIN_ONLY', FALSE); // FALSE or TRUE
+define('PLUGIN_ATTACH_UPLOAD_ADMIN_ONLY', FALSE); // FALSE or TRUE
 
 // 管理者だけが添付ファイルを削除できるようにする
-define('ATTACH_DELETE_ADMIN_ONLY', FALSE); // FALSE or TRUE
+define('PLUGIN_ATTACH_DELETE_ADMIN_ONLY', FALSE); // FALSE or TRUE
 
 // 管理者が添付ファイルを削除するときは、バックアップを作らない
-// ATTACH_DELETE_ADMIN_ONLY=TRUEのとき有効
-define('ATTACH_DELETE_ADMIN_NOBACKUP', FALSE); // FALSE or TRUE
+// PLUGIN_ATTACH_DELETE_ADMIN_ONLY=TRUEのとき有効
+define('PLUGIN_ATTACH_DELETE_ADMIN_NOBACKUP', FALSE); // FALSE or TRUE
 
 // アップロード/削除時にパスワードを要求する(ADMIN_ONLYが優先)
-define('ATTACH_PASSWORD_REQUIRE', FALSE); // FALSE or TRUE
+define('PLUGIN_ATTACH_PASSWORD_REQUIRE', FALSE); // FALSE or TRUE
 
 // ファイルのアクセス権
-define('ATTACH_FILE_MODE', 0644);
-//define('ATTACH_FILE_MODE', 0604); // for XREA.COM
+define('PLUGIN_ATTACH_FILE_MODE', 0644);
+//define('PLUGIN_ATTACH_FILE_MODE', 0604); // for XREA.COM
 
-// file icon image
-if (! defined('FILE_ICON')) {
-	define('FILE_ICON', '<img src="' . IMAGE_DIR .  'file.png"' .
-		' width="20" height="20" alt="file"' .
-		' style="border-width:0px" />');
-}
+// File icon image
+define('PLUGIN_ATTACH_FILE_ICON', '<img src="' . IMAGE_DIR .  'file.png"' .
+	' width="20" height="20" alt="file"' .
+	' style="border-width:0px" />');
 
 // mime-typeを記述したページ
-define('ATTACH_CONFIG_PAGE_MIME', 'plugin/attach/mime-type');
+define('PLUGIN_ATTACH_CONFIG_PAGE_MIME', 'plugin/attach/mime-type');
 
 //-------- convert
 function plugin_attach_convert()
@@ -151,7 +149,7 @@ function attach_upload($file, $page, $pass = NULL)
 		die_message("No such page");
 	} else if ($file['tmp_name'] == '' || ! is_uploaded_file($file['tmp_name'])) {
 		return array('result'=>FALSE);
-	} else if ($file['size'] > MAX_FILESIZE) {
+	} else if ($file['size'] > PLUGIN_ATTACH_MAX_FILESIZE) {
 		return array(
 			'result'=>FALSE,
 			'msg'=>$_attach_messages['err_exceed']);
@@ -159,7 +157,7 @@ function attach_upload($file, $page, $pass = NULL)
 		return array(
 			'result'=>FALSE,'
 			msg'=>$_attach_messages['err_noparm']);
-	} else if (ATTACH_UPLOAD_ADMIN_ONLY && $pass !== TRUE &&
+	} else if (PLUGIN_ATTACH_UPLOAD_ADMIN_ONLY && $pass !== TRUE &&
 		  ($pass === NULL || ! pkwk_login($pass))) {
 		return array(
 			'result'=>FALSE,
@@ -173,7 +171,7 @@ function attach_upload($file, $page, $pass = NULL)
 	}
 
 	if (move_uploaded_file($file['tmp_name'], $obj->filename)) {
-		chmod($obj->filename, ATTACH_FILE_MODE);
+		chmod($obj->filename, PLUGIN_ATTACH_FILE_MODE);
 	}
 
 	if (is_page($page)) {
@@ -311,7 +309,7 @@ function attach_mime_content_type($filename)
 	$filename = decode($matches[1]);
 
 	// mime-type一覧表を取得
-	$config = new Config(ATTACH_CONFIG_PAGE_MIME);
+	$config = new Config(PLUGIN_ATTACH_CONFIG_PAGE_MIME);
 	$table = $config->read() ? $config->get('mime-type') : array();
 	unset($config); // メモリ節約
 
@@ -343,12 +341,12 @@ EOD;
 	if (! ini_get('file_uploads')) return '#attach(): file_uploads disabled<br />' . $navi;
 	if (! is_page($page))          return '#attach(): No such page<br />'          . $navi;
 
-	$maxsize = MAX_FILESIZE;
+	$maxsize = PLUGIN_ATTACH_MAX_FILESIZE;
 	$msg_maxsize = sprintf($_attach_messages['msg_maxsize'], number_format($maxsize/1024) . 'KB');
 
 	$pass = '';
-	if (ATTACH_PASSWORD_REQUIRE || ATTACH_UPLOAD_ADMIN_ONLY) {
-		$title = $_attach_messages[ATTACH_UPLOAD_ADMIN_ONLY ? 'msg_adminpass' : 'msg_password'];
+	if (PLUGIN_ATTACH_PASSWORD_REQUIRE || PLUGIN_ATTACH_UPLOAD_ADMIN_ONLY) {
+		$title = $_attach_messages[PLUGIN_ATTACH_UPLOAD_ADMIN_ONLY ? 'msg_adminpass' : 'msg_password'];
 		$pass = '<br />' . $title . ': <input type="password" name="pass" size="8" />';
 	}
 	return <<<EOD
@@ -445,7 +443,7 @@ class AttachFile
 		$param  = '&amp;file=' . rawurlencode($this->file) . '&amp;refer=' . rawurlencode($this->page) .
 			($this->age ? '&amp;age=' . $this->age : '');
 		$title = $this->time_str . ' ' . $this->size_str;
-		$label = ($showicon ? FILE_ICON : '') . htmlspecialchars($this->file);
+		$label = ($showicon ? PLUGIN_ATTACH_FILE_ICON : '') . htmlspecialchars($this->file);
 		if ($this->age) {
 			$label .= ' (backup No.' . $this->age . ')';
 		}
@@ -486,7 +484,7 @@ class AttachFile
 				$msg_freezed = '';
 				$msg_delete = '<input type="radio" name="pcmd" value="delete" />' .
 					$_attach_messages['msg_delete'];
-				if (ATTACH_DELETE_ADMIN_ONLY || $this->age) {
+				if (PLUGIN_ATTACH_DELETE_ADMIN_ONLY || $this->age) {
 					$msg_delete .= $_attach_messages['msg_require'];
 				}
 				$msg_delete .= '<br />';
@@ -539,9 +537,9 @@ EOD;
 		if ($this->status['freeze']) return attach_info('msg_isfreeze');
 
 		if (! pkwk_login($pass)) {
-			if (ATTACH_DELETE_ADMIN_ONLY || $this->age) {
+			if (PLUGIN_ATTACH_DELETE_ADMIN_ONLY || $this->age) {
 				return attach_info('err_adminpass');
-			} else if (ATTACH_PASSWORD_REQUIRE &&
+			} else if (PLUGIN_ATTACH_PASSWORD_REQUIRE &&
 				md5($pass) != $this->status['pass']) {
 				return attach_info('err_password');
 			}
@@ -549,7 +547,7 @@ EOD;
 
 		// バックアップ
 		if ($this->age ||
-			(ATTACH_DELETE_ADMIN_ONLY && ATTACH_DELETE_ADMIN_NOBACKUP)) {
+			(PLUGIN_ATTACH_DELETE_ADMIN_ONLY && PLUGIN_ATTACH_DELETE_ADMIN_NOBACKUP)) {
 			@unlink($this->filename);
 		} else {
 			do {
