@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.5 2004/12/12 11:05:15 henoheno Exp $
+// $Id: trackback.php,v 1.6 2004/12/18 06:01:04 henoheno Exp $
 /*
  * PukiWiki/TrackBack
  * (C) 2003-2004 PukiWiki Developer Team
@@ -82,21 +82,20 @@ function tb_send($page, $plus, $minus = '')
 	$links = array();
 	$plus  = convert_html($plus); // WARNING: heavy and may cause side-effect
 	preg_match_all('#href="(https?://[^"]+)"#', $plus, $links, PREG_PATTERN_ORDER);
-
-	// Reject own URL (= URL started from '$script')
-	$links = preg_grep('|^' . preg_quote($script) . '\?.|',
-		array_unique($links[1]),   PREG_GREP_INVERT);
+	$links = array_unique($links[1]);
 
 	// Reject from minus list
 	if ($minus != '') {
-		$minus = convert_html($minus); // WARNING: heavy and may cause side-effect
 		$links_m = array();
+		$minus = convert_html($minus); // WARNING: heavy and may cause side-effect
 		preg_match_all('#href="(https?://[^"]+)"#', $minus, $links_m, PREG_PATTERN_ORDER);
-		$links_m = preg_grep('|^' . preg_quote($script) . '\?.|',
-			array_unique($links_m[1]), PREG_GREP_INVERT);
-		foreach($links_m as $m_link)
-			$links = preg_grep('|^' . preg_quote($m_link) . '$|', $links, PREG_GREP_INVERT);
+		$links_m = array_unique($links_m[1]);
+
+		$links = array_diff($links, $links_m);
 	}
+
+	// Reject own URL (Pattern _NOT_ started with '$script' and '?')
+	$links = preg_grep('|^(?!' . preg_quote($script) . '\?).|', $links);
 
 	// No link, END
 	if (! is_array($links) || empty($links)) return;
