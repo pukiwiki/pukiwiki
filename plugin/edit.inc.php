@@ -1,12 +1,10 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: edit.inc.php,v 1.29 2004/12/14 14:14:02 henoheno Exp $
 //
-// $Id: edit.inc.php,v 1.28 2004/12/02 11:36:52 henoheno Exp $
-//
-
 // Edit plugin
 // cmd=edit
+
 function plugin_edit_action()
 {
 	global $vars, $_title_edit, $load_template_func;
@@ -160,7 +158,7 @@ function plugin_edit_inline()
 		return $atag . $icon . $s_label . $atags;
 	} else {
 		// Dangling edit link
-		return $atag . $icon . $atags . '<span class="noexists">' .
+		return '<span class="noexists">' . $atag . $icon . $atags .
 			$s_label . $atag . '?' . $atags . '</span>';
 	}
 }
