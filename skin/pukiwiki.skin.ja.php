@@ -1,5 +1,12 @@
-<?php if (!defined('DATA_DIR')) { exit; } ?>
-<?php global $page_title; header("Content-Type: text/html; charset=euc-jp") ?>
+<?php
+if (!defined('DATA_DIR')) { exit; }
+header('Cache-control: no-cache');
+header('Pragma: no-cache');
+header('Content-Type: text/html; charset=euc-jp');
+
+global $page_title;
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>

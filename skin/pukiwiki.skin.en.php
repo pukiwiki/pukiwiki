@@ -1,5 +1,12 @@
-<?php if (!defined('DATA_DIR')) { exit; } ?>
-<?php global $page_title; header("Content-Type: text/html; charset=iso-8859-1") ?>
+<?php
+if (!defined('DATA_DIR')) { exit; }
+header('Cache-control: no-cache');
+header('Pragma: no-cache');
+header('Content-Type: text/html; charset=iso-8859-1');
+
+global $page_title;
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -9,6 +16,7 @@
 <?php if (! ( ($vars['cmd']==''||$vars['cmd']=='read') && $is_page) ) { ?>
 	<meta name="robots" content="noindex,nofollow" />
 <?php } ?>
+
 	<title><?php echo $page_title ?> - <?php echo $title ?></title>
 	<link rel="stylesheet" href="skin/default.en.css" type="text/css" media="screen" charset="iso-8859-1">
 	<script language=javascript src="skin/default.js"></script>
