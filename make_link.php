@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.20 2003/03/02 16:08:04 panda Exp $
+// $Id: make_link.php,v 1.21 2003/03/04 06:21:44 panda Exp $
 //
 
 // リンクを付加する
@@ -69,8 +69,10 @@ class InlineConverter
 		foreach ($matches as $match)
 		{
 			$obj = $this->get_converter($match);
-			$obj->set($match,$page);
-			$arr[] = $obj; // copy
+			if ($obj->set($match,$page) !== FALSE)
+			{
+				$arr[] = $obj; // copy
+			}
 		}
 		return $arr;
 	}
