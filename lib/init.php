@@ -1,12 +1,12 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.27 2005/03/05 14:20:12 henoheno Exp $
+// $Id: init.php,v 1.28 2005/04/02 06:41:03 henoheno Exp $
 //
 // Init PukiWiki here
 
 // PukiWiki version / Copyright / Licence
 
-define('S_VERSION', '1.4.5_1');
+define('S_VERSION', '1.4.6_alpha');
 define('S_COPYRIGHT',
 	'<strong>PukiWiki ' . S_VERSION . '</strong>' .
 	' Copyright &copy; 2001-2005' .
