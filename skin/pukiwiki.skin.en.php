@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.en.php,v 1.32 2004/07/24 08:51:26 henoheno Exp $
+// $Id: pukiwiki.skin.en.php,v 1.33 2004/08/08 05:33:43 henoheno Exp $
 //
 if (!defined('DATA_DIR')) { exit; }
 header('Cache-control: no-cache');
@@ -41,7 +41,7 @@ echo '<?xml version="1.0" encoding="iso-8859-1"?>';
 <body>
 
 <div id="header">
- <a href="<?php echo $modifierlink ?>"><img id="logo" src="./image/pukiwiki.png" width="80" height="80" alt="[PukiWiki]" title="[PukiWiki]" /></a>
+ <a href="<?php echo $modifierlink ?>"><img id="logo" src="<?php echo IMAGE_DIR ?>pukiwiki.png" width="80" height="80" alt="[PukiWiki]" title="[PukiWiki]" /></a>
  <h1 class="title"><?php echo $page ?></h1>
 
 <?php if ($is_page) { ?>
@@ -147,39 +147,39 @@ echo '<?xml version="1.0" encoding="iso-8859-1"?>';
 <div id="toolbar">
 
 <?php if ($is_page) { ?>
- <a href="<?php echo "$script?$r_page" ?>"><img src="./image/reload.png" width="20" height="20" alt="Reload" title="Reload" /></a>
+ <a href="<?php echo "$script?$r_page" ?>"><img src="<?php echo IMAGE_DIR ?>reload.png" width="20" height="20" alt="Reload" title="Reload" /></a>
  &nbsp;
- <a href="<?php echo $script ?>?plugin=newpage"><img src="./image/new.png" width="20" height="20" alt="New" title="New" /></a>
- <a href="<?php echo $link_edit ?>"><img src="./image/edit.png" width="20" height="20" alt="Edit" title="Edit" /></a>
+ <a href="<?php echo $script ?>?plugin=newpage"><img src="<?php echo IMAGE_DIR ?>new.png" width="20" height="20" alt="New" title="New" /></a>
+ <a href="<?php echo $link_edit ?>"><img src="<?php echo IMAGE_DIR ?>edit.png" width="20" height="20" alt="Edit" title="Edit" /></a>
 <?php   if ($is_read and $function_freeze) { ?>
 <?php     if ($is_freeze) { ?>
- <a href="<?php echo $link_unfreeze ?>"><img src="./image/unfreeze.png" width="20" height="20" alt="Unfreeze" title="Unfreeze" /></a>
+ <a href="<?php echo $link_unfreeze ?>"><img src="<?php echo IMAGE_DIR ?>unfreeze.png" width="20" height="20" alt="Unfreeze" title="Unfreeze" /></a>
 <?php     } else { ?>
- <a href="<?php echo $link_freeze ?>"><img src="./image/freeze.png" width="20" height="20" alt="Freeze" title="Freeze" /></a>
+ <a href="<?php echo $link_freeze ?>"><img src="<?php echo IMAGE_DIR ?>freeze.png" width="20" height="20" alt="Freeze" title="Freeze" /></a>
 <?php     } ?>
 <?php   } ?>
- <a href="<?php echo $link_diff ?>"><img src="./image/diff.png" width="20" height="20" alt="Diff" title="Diff" /></a>
+ <a href="<?php echo $link_diff ?>"><img src="<?php echo IMAGE_DIR ?>diff.png" width="20" height="20" alt="Diff" title="Diff" /></a>
 <?php   if ((bool)ini_get('file_uploads')) { ?>
- <a href="<?php echo $link_upload ?>"><img src="./image/file.png" width="20" height="20" alt="Upload" title="Upload" /></a>
+ <a href="<?php echo $link_upload ?>"><img src="<?php echo IMAGE_DIR ?>file.png" width="20" height="20" alt="Upload" title="Upload" /></a>
 <?php   } ?>
- <a href="<?php echo $link_template ?>"><img src="./image/copy.png" width="20" height="20" alt="Copy" title="Copy" /></a>
- <a href="<?php echo $link_rename ?>"><img src="./image/rename.png" width="20" height="20" alt="Rename" title="Rename" /></a>
+ <a href="<?php echo $link_template ?>"><img src="<?php echo IMAGE_DIR ?>copy.png" width="20" height="20" alt="Copy" title="Copy" /></a>
+ <a href="<?php echo $link_rename ?>"><img src="<?php echo IMAGE_DIR ?>rename.png" width="20" height="20" alt="Rename" title="Rename" /></a>
  &nbsp;
 <?php } ?>
 
- <a href="<?php echo $link_top ?>"><img src="./image/top.png" width="20" height="20" alt="Front page" title="Front page" /></a>
- <a href="<?php echo $link_list ?>"><img src="./image/list.png" width="20" height="20" alt="List of pages" title="List of pages" /></a>
- <a href="<?php echo $link_search ?>"><img src="./image/search.png" width="20" height="20" alt="Search" title="Search" /></a>
- <a href="<?php echo $link_whatsnew ?>"><img src="./image/recentchanges.png" width="20" height="20" alt="Recent changes" title="Recent changes" /></a>
+ <a href="<?php echo $link_top ?>"><img src="<?php echo IMAGE_DIR ?>top.png" width="20" height="20" alt="Front page" title="Front page" /></a>
+ <a href="<?php echo $link_list ?>"><img src="<?php echo IMAGE_DIR ?>list.png" width="20" height="20" alt="List of pages" title="List of pages" /></a>
+ <a href="<?php echo $link_search ?>"><img src="<?php echo IMAGE_DIR ?>search.png" width="20" height="20" alt="Search" title="Search" /></a>
+ <a href="<?php echo $link_whatsnew ?>"><img src="<?php echo IMAGE_DIR ?>recentchanges.png" width="20" height="20" alt="Recent changes" title="Recent changes" /></a>
 
 <?php if ($do_backup) { ?>
- <a href="<?php echo $link_backup ?>"><img src="./image/backup.png" width="20" height="20" alt="Backup" title="Backup" /></a>
+ <a href="<?php echo $link_backup ?>"><img src="<?php echo IMAGE_DIR ?>backup.png" width="20" height="20" alt="Backup" title="Backup" /></a>
 <?php } ?>
 
  &nbsp;
- <a href="<?php echo $link_help ?>"><img src="./image/help.png" width="20" height="20" alt="Help" title="Help" /></a>
+ <a href="<?php echo $link_help ?>"><img src="<?php echo IMAGE_DIR ?>help.png" width="20" height="20" alt="Help" title="Help" /></a>
  &nbsp;
- <a href="<?php echo $link_rss ?>"><img src="./image/rss.png" width="36" height="14" alt="RSS of recent changes" title="RSS of recent changes" /></a>
+ <a href="<?php echo $link_rss ?>"><img src="<?php echo IMAGE_DIR ?>rss.png" width="36" height="14" alt="RSS of recent changes" title="RSS of recent changes" /></a>
 </div>
 
 

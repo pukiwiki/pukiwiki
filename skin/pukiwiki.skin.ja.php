@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.ja.php,v 1.33 2004/07/24 08:51:26 henoheno Exp $
+// $Id: pukiwiki.skin.ja.php,v 1.34 2004/08/08 05:33:43 henoheno Exp $
 //
 if (!defined('DATA_DIR')) { exit; }
 header('Cache-control: no-cache');
@@ -41,7 +41,7 @@ echo '<?xml version="1.0" encoding="EUC-JP"?>';
 <body>
 
 <div id="header">
- <a href="<?php echo $modifierlink ?>"><img id="logo" src="./image/pukiwiki.png" width="80" height="80" alt="[PukiWiki]" title="[PukiWiki]" /></a>
+ <a href="<?php echo $modifierlink ?>"><img id="logo" src="<?php echo IMAGE_DIR ?>pukiwiki.png" width="80" height="80" alt="[PukiWiki]" title="[PukiWiki]" /></a>
  <h1 class="title"><?php echo $page ?></h1>
 
 <?php if ($is_page) { ?>
@@ -147,39 +147,39 @@ echo '<?xml version="1.0" encoding="EUC-JP"?>';
 <div id="toolbar">
 
 <?php if ($is_page) { ?>
- <a href="<?php echo "$script?$r_page" ?>"><img src="./image/reload.png" width="20" height="20" alt="リロード" title="リロード" /></a>
+ <a href="<?php echo "$script?$r_page" ?>"><img src="<?php echo IMAGE_DIR ?>reload.png" width="20" height="20" alt="リロード" title="リロード" /></a>
  &nbsp;
- <a href="<?php echo $script ?>?plugin=newpage"><img src="./image/new.png" width="20" height="20" alt="新規" title="新規" /></a>
- <a href="<?php echo $link_edit ?>"><img src="./image/edit.png" width="20" height="20" alt="編集" title="編集" /></a>
+ <a href="<?php echo $script ?>?plugin=newpage"><img src="<?php echo IMAGE_DIR ?>new.png" width="20" height="20" alt="新規" title="新規" /></a>
+ <a href="<?php echo $link_edit ?>"><img src="<?php echo IMAGE_DIR ?>edit.png" width="20" height="20" alt="編集" title="編集" /></a>
 <?php   if ($is_read and $function_freeze) { ?>
 <?php     if ($is_freeze) { ?>
- <a href="<?php echo $link_unfreeze ?>"><img src="./image/unfreeze.png" width="20" height="20" alt="凍結解除" title="凍結解除" /></a>
+ <a href="<?php echo $link_unfreeze ?>"><img src="<?php echo IMAGE_DIR ?>unfreeze.png" width="20" height="20" alt="凍結解除" title="凍結解除" /></a>
 <?php     } else { ?>
- <a href="<?php echo $link_freeze ?>"><img src="./image/freeze.png" width="20" height="20" alt="凍結" title="凍結" /></a>
+ <a href="<?php echo $link_freeze ?>"><img src="<?php echo IMAGE_DIR ?>freeze.png" width="20" height="20" alt="凍結" title="凍結" /></a>
 <?php     } ?>
 <?php   } ?>
- <a href="<?php echo $link_diff ?>"><img src="./image/diff.png" width="20" height="20" alt="差分" title="差分" /></a>
+ <a href="<?php echo $link_diff ?>"><img src="<?php echo IMAGE_DIR ?>diff.png" width="20" height="20" alt="差分" title="差分" /></a>
 <?php   if ((bool)ini_get('file_uploads')) { ?>
- <a href="<?php echo $link_upload ?>"><img src="./image/file.png" width="20" height="20" alt="添付" title="添付" /></a>
+ <a href="<?php echo $link_upload ?>"><img src="<?php echo IMAGE_DIR ?>file.png" width="20" height="20" alt="添付" title="添付" /></a>
 <?php   } ?>
- <a href="<?php echo $link_template ?>"><img src="./image/copy.png" width="20" height="20" alt="複製" title="複製" /></a>
- <a href="<?php echo $link_rename ?>"><img src="./image/rename.png" width="20" height="20" alt="改名" title="改名" /></a>
+ <a href="<?php echo $link_template ?>"><img src="<?php echo IMAGE_DIR ?>copy.png" width="20" height="20" alt="複製" title="複製" /></a>
+ <a href="<?php echo $link_rename ?>"><img src="<?php echo IMAGE_DIR ?>rename.png" width="20" height="20" alt="改名" title="改名" /></a>
  &nbsp;
 <?php } ?>
 
- <a href="<?php echo $link_top ?>"><img src="./image/top.png" width="20" height="20" alt="トップ" title="トップ" /></a>
- <a href="<?php echo $link_list ?>"><img src="./image/list.png" width="20" height="20" alt="一覧" title="一覧" /></a>
- <a href="<?php echo $link_search ?>"><img src="./image/search.png" width="20" height="20" alt="検索" title="検索" /></a>
- <a href="<?php echo $link_whatsnew ?>"><img src="./image/recentchanges.png" width="20" height="20" alt="最終更新" title="最終更新" /></a>
+ <a href="<?php echo $link_top ?>"><img src="<?php echo IMAGE_DIR ?>top.png" width="20" height="20" alt="トップ" title="トップ" /></a>
+ <a href="<?php echo $link_list ?>"><img src="<?php echo IMAGE_DIR ?>list.png" width="20" height="20" alt="一覧" title="一覧" /></a>
+ <a href="<?php echo $link_search ?>"><img src="<?php echo IMAGE_DIR ?>search.png" width="20" height="20" alt="検索" title="検索" /></a>
+ <a href="<?php echo $link_whatsnew ?>"><img src="<?php echo IMAGE_DIR ?>recentchanges.png" width="20" height="20" alt="最終更新" title="最終更新" /></a>
 
 <?php if ($do_backup) { ?>
- <a href="<?php echo $link_backup ?>"><img src="./image/backup.png" width="20" height="20" alt="バックアップ" title="バックアップ" /></a>
+ <a href="<?php echo $link_backup ?>"><img src="<?php echo IMAGE_DIR ?>backup.png" width="20" height="20" alt="バックアップ" title="バックアップ" /></a>
 <?php } ?>
 
  &nbsp;
- <a href="<?php echo $link_help ?>"><img src="./image/help.png" width="20" height="20" alt="ヘルプ" title="ヘルプ" /></a>
+ <a href="<?php echo $link_help ?>"><img src="<?php echo IMAGE_DIR ?>help.png" width="20" height="20" alt="ヘルプ" title="ヘルプ" /></a>
  &nbsp;
- <a href="<?php echo $link_rss ?>"><img src="./image/rss.png" width="36" height="14" alt="最終更新のRSS" title="最終更新のRSS" /></a>
+ <a href="<?php echo $link_rss ?>"><img src="<?php echo IMAGE_DIR ?>rss.png" width="36" height="14" alt="最終更新のRSS" title="最終更新のRSS" /></a>
 </div>
 
 
