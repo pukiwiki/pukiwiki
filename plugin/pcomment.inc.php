@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.9 2003/03/03 07:12:39 panda Exp $
+// $Id: pcomment.inc.php,v 1.10 2003/04/13 14:34:41 arino Exp $
 //
 
 /*
@@ -169,16 +169,15 @@ function plugin_pcomment_convert()
 EOD;
 	if (!is_page($_page))
 	{
-		$link = "[[$_page]]";
+		$link = make_pagelink($_page);
 		$recent = $_pcmt_messages['msg_none'];
 	}
 	else
 	{
 		$msg = ($_pcmt_messages['msg_all'] != '') ? $_pcmt_messages['msg_all'] : $_page;
-		$link = "[[$msg>$_page]]";
+		$link = make_pagelink($_page,$msg);
 		$recent = ($count > 0) ? sprintf($_pcmt_messages['msg_recent'],$count) : '';
 	}
-	$link = make_link($link);
 
 	return $dir ?
 		"<div><p>$recent $link</p>\n<form action=\"$script\" method=\"post\">$comments$form</form></div>" :
@@ -303,11 +302,6 @@ function pcmt_insert()
 //オプションを解析する
 function pcmt_check_arg($val, $key, &$params)
 {
-	if ($val == '')
-	{
-		$params['_done'] = TRUE;
-		return;
-	}
 	foreach (array_keys($params) as $key)
 	{
 		if (strpos($key, strtolower($val)) === 0)
