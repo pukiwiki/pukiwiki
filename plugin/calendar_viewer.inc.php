@@ -1,40 +1,37 @@
 <?php
 /*
  * PukiWiki calendar_viewerプラグイン
- * $Id: calendar_viewer.inc.php,v 1.15 2004/08/10 12:43:29 henoheno Exp $
+ * $Id: calendar_viewer.inc.php,v 1.16 2004/08/10 12:50:20 henoheno Exp $
  * calendarrecentプラグインを元に作成
  */
 
 /**
- *概要
+ * 概要
   calendarプラグインやcalendar2プラグインで作成したページを一覧表示するためのプラグインです。
- *更新履歴
-  -2002-11-13
-  --前後へのリンクに年月や「次のn件」と表示するようにした。
- *使い方
-  /// #calendar_viewer(pagename,(yyyy-mm|n|this),[mode],[separater])
- **pagename
+ * 使い方
+    #calendar_viewer(pagename,(yyyy-mm|n|this),[mode],[separater])
+ ** pagename
   calendar or calendar2プラグインを記述してるページ名
- **(yyyy-mm|n|this)
-  -yyyy-mm
-  --yyyy-mmで指定した年月のページを一覧表示
-  -n
-  --n件の一覧表示
-  -this
-  --今月のページを一覧表示
- **[mode]
+ ** (yyyy-mm|n|this)
+  - yyyy-mm
+  -- yyyy-mmで指定した年月のページを一覧表示
+  - n
+  -- n件の一覧表示
+  - this
+  -- 今月のページを一覧表示
+ ** [mode]
   省略可能です。省略時のデフォルトはpast
-  -past
-  --今日以前のページの一覧表示モード。更新履歴や日記向き
-  -future
-  --今日以降のページの一覧表示モード。イベント予定やスケジュール向き
-  -view
-  --過去から未来への一覧表示モード。表示抑止するページはありません。
-  -[separater]
-  省略可能。デフォルトは-。（calendar2なら省略でOK）
-  --年月日を区切るセパレータを指定。
+  - past
+  -- 今日以前のページの一覧表示モード。更新履歴や日記向き
+  - future
+  -- 今日以降のページの一覧表示モード。イベント予定やスケジュール向き
+  - view
+  -- 過去から未来への一覧表示モード。表示抑止するページはありません。
+ ** [separater]
+  - 年月日を区切るセパレータを指定。
+  - 省略可能。デフォルトは-。（calendar2なら省略でOK）
 
- *todo
+ * TODO
   past or future で月単位表示するときに、それぞれ来月、先月の一覧へのリンクを表示しないようにする
 
  */
@@ -180,7 +177,7 @@ function plugin_calendar_viewer_convert()
 		$head = "<h1>$link</h1>\n";
 		$return_body .= $head . $body;
 
-		$tmp++;
+		++$tmp;
 	}
 
 	// ここで、前後のリンクを表示
@@ -196,7 +193,7 @@ function plugin_calendar_viewer_convert()
 		$next_year = $this_year;
 		$next_month = $this_month + 1;
 		if ($next_month >12){
-			$next_year ++;
+			++$next_year;
 			$next_month = 1;
 		}
 		$next_YM = sprintf('%04d%s%02d', $next_year, $date_sep, $next_month);
@@ -205,7 +202,7 @@ function plugin_calendar_viewer_convert()
 		$prev_year = $this_year;
 		$prev_month = $this_month - 1;
 		if ($prev_month < 1){
-			$prev_year --;
+			--$prev_year;
 			$prev_month = 12;
 		}
 		$prev_YM = sprintf('%04d%s%02d', $prev_year, $date_sep, $prev_month);
