@@ -1,5 +1,5 @@
 <?php
-// $Id: newpage.inc.php,v 1.5 2003/01/27 05:38:46 panda Exp $
+// $Id: newpage.inc.php,v 1.6 2003/02/18 09:20:02 panda Exp $
 
 function plugin_newpage_init()
 {
@@ -50,7 +50,7 @@ function plugin_newpage_action()
 	$r_page = rawurlencode(strip_bracket($vars['page']));
 	$r_refer = rawurlencode($vars['refer']);
 	
-	header("Location: $script?cmd=edit&page=$r_page&refer=$r_refer");
+	header("Location: $script?cmd=read&page=$r_page&refer=$r_refer");
 	die();
 }
 ?>
