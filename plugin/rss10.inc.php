@@ -2,15 +2,19 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss10.inc.php,v 1.8 2003/07/22 09:26:28 arino Exp $
+// $Id: rss10.inc.php,v 1.9 2003/09/12 00:38:06 arino Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss10_action()
 {
-	global $rss_max,$page_title,$whatsnew;
+	global $script,$rss_max,$page_title,$whatsnew;
 	global $trackback;
 	
-	$self = 'http://'.SERVER_NAME.PHP_SELF.'?';
+	$self = (preg_match('#^https?://#',$script) ? $script : get_script_uri());
+	if ($self === FALSE)
+	{
+		die_message("please set '\$script' in ".INI_FILE);
+	}
 	
 	$page_title_utf8 = mb_convert_encoding($page_title,'UTF-8',SOURCE_ENCODING);
 	
@@ -37,20 +41,20 @@ function plugin_rss10_action()
 		if ($trackback)
 		{
 			$tb_id = md5($r_page);
-			$dc_identifier = " <dc:identifer>$self$r_page</dc:identifer>";
-			$trackback_ping = " <trackback:ping>{$self}plugin=tb&amp;tb_id=$tb_id</trackback:ping>";
+			$dc_identifier = " <dc:identifer>$self?$r_page</dc:identifer>";
+			$trackback_ping = " <trackback:ping>$self?plugin=tb&amp;tb_id=$tb_id</trackback:ping>";
 		}
 		$items .= <<<EOD
-<item rdf:about="$self$r_page">
+<item rdf:about="$self?$r_page">
  <title>$title</title>
- <link>$self$r_page</link>
+ <link>$self?$r_page</link>
  <dc:date>$dc_date</dc:date>
 $dc_identifier
 $trackback_ping
 </item>
 
 EOD;
-		$rdf_li .= "    <rdf:li rdf:resource=\"$self$r_page\" />\n";
+		$rdf_li .= "    <rdf:li rdf:resource=\"$self?$r_page\" />\n";
 	}
 	
 	$xmlns_trackback = $trackback ?  
@@ -68,9 +72,9 @@ $xmlns_trackback
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
   xml:lang="ja">
 
- <channel rdf:about="$self$whatsnew">
+ <channel rdf:about="$self?$whatsnew">
   <title>$page_title_utf8</title>
-  <link>$self$whatsnew</link>
+  <link>$self?$whatsnew</link>
   <description>PukiWiki RecentChanges</description>
   <items>
    <rdf:Seq>

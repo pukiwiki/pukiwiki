@@ -2,14 +2,18 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss.inc.php,v 1.4 2003/06/09 07:56:58 arino Exp $
+// $Id: rss.inc.php,v 1.5 2003/09/12 00:38:06 arino Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss_action()
 {
-	global $rss_max,$page_title,$whatsnew;
+	global $script,$rss_max,$page_title,$whatsnew;
 
-	$self = 'http://'.SERVER_NAME.PHP_SELF.'?';
+	$self = (preg_match('#^https?://#',$script) ? $script : get_script_uri());
+	if ($self === FALSE)
+	{
+		die_message("please set '\$script' in ".INI_FILE);
+	}
 	
 	$page_title_utf8 = mb_convert_encoding($page_title,'UTF-8',SOURCE_ENCODING);
 	
@@ -30,7 +34,7 @@ function plugin_rss_action()
 		$items .= <<<EOD
 <item>
  <title>$title</title>
- <link>$self$r_page</link>
+ <link>$self?$r_page</link>
  <description>$desc</description>
 </item>
 
@@ -49,7 +53,7 @@ EOD;
 
 <channel>
 <title>$page_title_utf8</title>
-<link>$self$whatsnew</link>
+<link>$self?$whatsnew</link>
 <description>PukiWiki RecentChanges</description>
 <language>ja</language>
 

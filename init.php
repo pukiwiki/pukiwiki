@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.61 2003/08/09 01:32:40 arino Exp $
+// $Id: init.php,v 1.62 2003/09/12 00:36:24 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -71,13 +71,10 @@ require(INI_FILE);
 /////////////////////////////////////////////////
 // 初期設定($script)
 if (!isset($script) or $script == '') {
-	$script  = ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://');
-	$script .=  $_SERVER['SERVER_NAME'];
-	$script .= ($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT']);
-	$parse_url = parse_url($script.$_SERVER['REQUEST_URI']);
-	$script .= (isset($parse_url['path']) ? $parse_url['path'] : $_SERVER['SCRIPT_NAME']);
+	$script = get_script_uri();
 }
-if (php_sapi_name() == 'cgi' && !preg_match("/^http:\/\/[-a-zA-Z0-9\@:;_.]+\//",$script)) {
+if ($script === FALSE or
+	(php_sapi_name() == 'cgi' and !preg_match("/^http:\/\/[-a-zA-Z0-9\@:;_.]+\//",$script))) {
 	die_message("please set '\$script' in ".INI_FILE);
 }
 
@@ -284,6 +281,7 @@ if ($usefacemark)
 {
 	$line_rules += $facemark_rules;
 }
+unset($facemark_rules);
 // 実体参照パターンおよびシステムで使用するパターンを$line_rulesに加える
 //$entity_pattern = '[a-zA-Z0-9]{2,8}';
 $entity_pattern = trim(join('',file(CACHE_DIR.'entities.dat')));
