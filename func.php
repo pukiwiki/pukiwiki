@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.9.2.4 2004/06/26 13:29:47 henoheno Exp $
+// $Id: func.php,v 1.9.2.5 2004/06/27 13:49:59 henoheno Exp $
 /////////////////////////////////////////////////
 
 // 検索
@@ -102,9 +102,9 @@ function do_search($word,$type="AND",$non_format=0)
 // プログラムへの引数のチェック
 function arg_check($str)
 {
-	global $arg,$vars;
+	global $vars;
 
-	return preg_match("/^".$str."/",$vars["cmd"]);
+	return array_key_exists('cmd',$vars) and preg_match("/^".$str."/",$vars['cmd']);
 }
 
 // ページリストのソート
