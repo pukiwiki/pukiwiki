@@ -1,5 +1,5 @@
 <?php
-// $Id: rename.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+// $Id: rename.inc.php,v 1.1.2.1 2004/03/18 09:11:19 arino Exp $
 /*
 Last-Update:2002-10-29 rev.5
 
@@ -52,7 +52,7 @@ function plugin_rename_action() {
 	global $_rename_messages;
 
 	// XSS
-	foreach (array('refer','page','src','dst','method','related') as $var) {
+	foreach (array('refer','_page','src','dst','method','related') as $var) {
 		$s_vars[$var] = htmlspecialchars($vars[$var]);
 	}
 
@@ -71,8 +71,8 @@ function plugin_rename_action() {
 		if ($vars['refer'] == '') { return rename_phase1($s_vars); }
 		if (!is_page($vars['refer'])) { return rename_phase1($s_vars,'notpage',$s_vars['refer']); }
 		if ($vars['refer'] == $whatsnew) { return rename_phase1($s_vars,'norename',$s_vars['refer']); }
-		if ($vars['page'] == '' or $vars['page'] == $vars['refer']) { return rename_phase2($s_vars); }
-		if (!preg_match("/^(($WikiName)|($BracketName))$/",$vars['page'])) { return rename_phase2($s_vars,'notvalid'); }
+		if ($vars['_page'] == '' or $vars['_page'] == $vars['refer']) { return rename_phase2($s_vars); }
+		if (!preg_match("/^(($WikiName)|($BracketName))$/",$vars['_page'])) { return rename_phase2($s_vars,'notvalid'); }
 		return rename_refer($s_vars);
 	}
 }
@@ -135,7 +135,7 @@ function &rename_phase2(&$s_vars,$err='') {
 		$rename_related = $_rename_messages['msg_do_related'].
 			'<input type=checkbox name="related" value="1" checked /><br />';
 	}
-	if ($s_vars['page'] == '') { $s_vars['page'] = $s_vars['refer']; }
+	if ($s_vars['_page'] == '') { $s_vars['_page'] = $s_vars['refer']; }
 	$msg_rename = sprintf($_rename_messages['msg_rename'],make_link($vars['refer']));
 
 	$ret['msg'] = $_rename_messages['msg_title'];
@@ -146,7 +146,7 @@ $msg
   <input type="hidden" name="plugin" value="rename" />
   <input type="hidden" name="refer" value="{$s_vars['refer']}" />
   $msg_rename<br />
-  {$_rename_messages['msg_newname']}:<input type="text" name="page" size="80" value="{$s_vars['page']}" /><br />
+  {$_rename_messages['msg_newname']}:<input type="text" name="_page" size="80" value="{$s_vars['_page']}" /><br />
   $rename_related
   <input type="submit" value="{$_rename_messages['btn_next']}" /><br />
  </div>
@@ -164,10 +164,10 @@ EOD;
 function &rename_refer(&$s_vars) {
 	global $vars;
 
-	$pages[encode($vars['refer'])] = encode($vars['page']);
+	$pages[encode($vars['refer'])] = encode($vars['_page']);
 	if ($vars['related']) {
 		$from = strip_bracket($vars['refer']);
-		$to =   strip_bracket($vars['page']);
+		$to =   strip_bracket($vars['_page']);
 		$related = rename_getrelated($vars['refer']);
 		foreach ($related as $page) {
 			$pages[encode($page)] = encode(str_replace($from,$to,$page));
@@ -219,7 +219,7 @@ function &rename_phase3(&$s_vars,&$pages) {
 		$msg .= $_rename_messages['msg_page']."<br />";
 		$input .= "<input type=\"hidden\" name=\"method\" value=\"page\" />";
 		$input .= "<input type=\"hidden\" name=\"refer\" value=\"{$s_vars['refer']}\" />";
-		$input .= "<input type=\"hidden\" name=\"page\" value=\"{$s_vars['page']}\" />";
+		$input .= "<input type=\"hidden\" name=\"_page\" value=\"{$s_vars['_page']}\" />";
 		$input .= "<input type=\"hidden\" name=\"related\" value=\"{$s_vars['related']}\" />";
 	}
 
@@ -311,7 +311,7 @@ function rename_proceed(&$s_vars,&$pages,&$files,&$exists) {
 	} else {
 		$data[] = '-'.$_rename_messages['msg_page']."\n";
 		$data[] = '--From:'.$s_vars['refer']."\n";
-		$data[] = '--To:'.$s_vars['page']."\n";
+		$data[] = '--To:'.$s_vars['_page']."\n";
 	}
 	if (count($exists) > 0) {
 		$data[] = "\n".$_rename_messages['msg_result']."\n";
@@ -342,7 +342,7 @@ function rename_proceed(&$s_vars,&$pages,&$files,&$exists) {
 	put_lastmodified(); //最終更新ページを作り直す
 
 	//リダイレクト
-	$page = rawurlencode(($vars['page'] == '') ? RENAME_LOGPAGE : $vars['page']);
+	$page = rawurlencode(($vars['_page'] == '') ? RENAME_LOGPAGE : $vars['_page']);
 	header("Location: $script?$page");
 	die();
 }
