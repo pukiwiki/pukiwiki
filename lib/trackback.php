@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.6 2004/12/18 06:01:04 henoheno Exp $
+// $Id: trackback.php,v 1.7 2004/12/18 14:32:58 henoheno Exp $
 /*
  * PukiWiki/TrackBack
  * (C) 2003-2004 PukiWiki Developer Team
@@ -95,7 +95,7 @@ function tb_send($page, $plus, $minus = '')
 	}
 
 	// Reject own URL (Pattern _NOT_ started with '$script' and '?')
-	$links = preg_grep('|^(?!' . preg_quote($script) . '\?).|', $links);
+	$links = preg_grep('/^(?!' . preg_quote($script, '/') . '\?)./', $links);
 
 	// No link, END
 	if (! is_array($links) || empty($links)) return;
