@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: include.inc.php,v 1.20 2004/12/30 09:45:16 henoheno Exp $
+// $Id: include.inc.php,v 1.21 2004/12/30 13:26:43 henoheno Exp $
 //
 // Include-once plugin
 
@@ -67,7 +67,8 @@ function plugin_include_convert()
 
 	// Get arguments
 	$args = func_get_args();
-	$page = isset($args[0]) ? get_fullname(array_shift($args), $root) : '';
+	// strip_bracket() is not necessary but compatible
+	$page = isset($args[0]) ? get_fullname(strip_bracket(array_shift($args)), $root) : '';
 	$with_title = PLUGIN_INCLUDE_WITH_TITLE;
 	if (isset($args[0])) {
 		switch(strtolower(array_shift($args))) {
