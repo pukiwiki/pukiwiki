@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.css.php,v 1.3 2004/09/18 11:59:26 henoheno Exp $
+// $Id: pukiwiki.css.php,v 1.4 2004/09/18 12:01:42 henoheno Exp $
 //
 header('Content-Type: text/css');
 
@@ -685,6 +685,7 @@ span.counter
 }
 ul.popular_list
 {
+<?php
 /*
 	padding:0px;
 	border:0px;
@@ -692,11 +693,13 @@ ul.popular_list
 	word-wrap:break-word;
 	word-break:break-all;
 */
+?>
 }
 
 /* recent.inc.php,showrss.inc.php */
 ul.recent_list
 {
+<?php
 /*
 	padding:0px;
 	border:0px;
@@ -704,6 +707,7 @@ ul.recent_list
 	word-wrap:break-word;
 	word-break:break-all;
 */
+?>
 }
 
 /* ref.inc.php */
