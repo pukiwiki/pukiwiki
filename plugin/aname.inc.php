@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: aname.inc.php,v 1.8 2003/03/02 02:38:21 panda Exp $
+// $Id: aname.inc.php,v 1.9 2003/03/21 22:49:48 panda Exp $
 //
 
 function plugin_aname_inline()
@@ -12,7 +12,8 @@ function plugin_aname_inline()
 }
 function plugin_aname_convert()
 {
-	if (func_num_args() < 1) {
+	if (func_num_args() < 1)
+	{
 		return FALSE;
 	}
 	
@@ -20,7 +21,8 @@ function plugin_aname_convert()
 	$id = $args[0];
 	$body = (func_num_args() > 1) ? $args[1] : '';
 	
-	if (!preg_match('/[A-Za-z][\w\-]*/',$id)) {
+	if (!preg_match('/^[A-Za-z][\w\-]*$/',$id))
+	{
 		return FALSE;
 	}
 	
