@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.42 2003/06/02 10:03:20 arino Exp $
+// $Id: convert_html.php,v 1.43 2003/06/04 02:04:16 arino Exp $
 //
 function convert_html($lines)
 {
@@ -392,7 +392,7 @@ class TableCell extends Block
 		parent::Block();
 		$this->style = array();
 		
-		while (preg_match('/^(?:(LEFT|CENTER|RIGHT)|(BG)?COLOR\(([#\w]+)\)|SIZE\(([\d\w]+)\)):(.*)$/',$text,$matches))
+		while (preg_match('/^(?:(LEFT|CENTER|RIGHT)|(BG)?COLOR\(([#\w]+)\)|SIZE\((\d+)\)):(.*)$/',$text,$matches))
 		{
 			if ($matches[1])
 			{
@@ -407,7 +407,7 @@ class TableCell extends Block
 			}
 			else if ($matches[4])
 			{
-				$this->style['size'] = 'font-size:'.htmlspecialchars($matches[4]).';';
+				$this->style['size'] = 'font-size:'.htmlspecialchars($matches[4]).'px;';
 				$text = $matches[5];
 			}
 		}
