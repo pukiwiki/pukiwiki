@@ -26,7 +26,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.8 2002/07/02 05:04:44 masui Exp $
+// $Id: pukiwiki.php,v 1.9 2002/07/03 08:47:02 masui Exp $
 /////////////////////////////////////////////////
 
 
@@ -712,7 +712,7 @@ else if((arg_check("read") && $vars["page"] != "") || (!arg_check("read") && $ar
 
 		if(preg_match("/^(($BracketName)|($WikiName))$/",$get["page"])) {
 			$title = str_replace('$1',htmlspecialchars(strip_bracket($get["page"])),$_title_edit);
-			$page = str_replace('$1',htmlspecialchars(make_search($get["page"])),$_title_edit);
+			$page = str_replace('$1',make_search($get["page"]),$_title_edit);
 			$template = auto_template($get["page"]);
 			$body = edit_form($template,$get["page"]);
 	        }
