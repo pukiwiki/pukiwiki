@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.24 2004/11/23 12:12:08 henoheno Exp $
+// $Id: edit.inc.php,v 1.25 2004/11/23 12:16:20 henoheno Exp $
 //
 
 // Edit plugin
@@ -92,8 +92,8 @@ function plugin_edit_inline()
 	foreach($args as $arg){
 		switch($arg){
 		case '': break;
-		case 'nolabel':  $_nolabel  = TRUE; break;
-		case 'noicon':   $_noicon   = TRUE; break;
+		case 'nolabel': $_nolabel = TRUE; break;
+		case 'noicon':  $_noicon  = TRUE; break;
 		default: return $usage;
 		}
 	}
