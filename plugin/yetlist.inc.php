@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: yetlist.inc.php,v 1.13 2003/03/10 11:30:25 panda Exp $
+// $Id: yetlist.inc.php,v 1.14 2003/03/10 12:37:23 panda Exp $
 //
 
 function plugin_yetlist_init()
@@ -64,7 +64,7 @@ EOD;
 		return $ret;
 	}
 	
-	ksort($refer);
+	ksort($refer,SORT_STRING);
 	
 	foreach($refer as $page=>$refs)
 	{
