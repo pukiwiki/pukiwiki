@@ -1,3 +1,0 @@
-<IfModule mod_php4.c>
-    php_flag register_globals Off
-</IfModule>

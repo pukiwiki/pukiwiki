@@ -285,3 +285,27 @@ span.diff_removed {
 	text-indent:0px;
 	display:inline-block;
 }
+
+ul.list1{
+	list-style-type:disc;
+}
+
+ul.list2{
+	list-style-type:circle;
+}
+
+ul.list3{
+	list-style-type:square;
+}
+
+ol.list1{
+	list-style-type:decimal;
+}
+
+ol.list2{
+	list-style-type:lower-roman;
+}
+
+ol.list3{
+	list-style-type:lower-alpha;
+}

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.11 2002/07/16 14:48:36 masui Exp $
+// $Id: pukiwiki.ini.php,v 1.12 2002/08/21 17:32:04 masui Exp $
 //
 // PukiWiki setting file
 
@@ -88,6 +88,12 @@ $link_target = "_top";
 /////////////////////////////////////////////////
 // InterWikiNameのウィンドウ名指定(_top,_blank,etc)
 $interwiki_target = "_top";
+
+/////////////////////////////////////////////////
+// リスト構造の左マージン
+$_list_left_margin = 0; // リストと画面左端との間隔(px)
+$_list_margin = 16;      // リストの階層間の間隔(px)
+$_list_pad_str = ' class="list%d" style="padding-left:%dpx;margin-left:%dpx"';
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -202,6 +208,16 @@ $line_rules = array(
 "'''((?:(?!''').)*)'''" => "<em>\\1</em>",
 "''((?:(?!'').)*)''" => "<strong>\\1</strong>",
 "~((?:<\\/[a-zA-Z]+>)*)$" => "\\1<br />", /* 行末にチルダは改行 */
+"&amp;aname\(([A-Za-z][\w\-]*)\);" => "<a id=\"\\1\" name=\"\\1\"></a>",
+);
+
+/////////////////////////////////////////////////
+// フェイスマーク定義ルール
+// $usefacemark = 1ならフェイスマークが置換されます
+// 文章内にXDなどが入った場合にfacemarkに置換されてしまうので
+// 必要のない方は $usefacemarkを0にしてください。
+$usefacemark = 1;
+$facemark_rules = array(
 "\s(\:\))" => " <img src=\"./face/smile.gif\" alt=\"\\1\" />",
 "\s(\:D)" => " <img src=\"./face/bigsmile.gif\" alt=\"\\1\" />",
 "\s(\:p)" => " <img src=\"./face/huh.gif\" alt=\"\\1\" />",
@@ -210,7 +226,7 @@ $line_rules = array(
 "\s(X\()" => " <img src=\"./face/oh.gif\" alt=\"\\1\" />",
 "\s(;\))" => " <img src=\"./face/wink.gif\" alt=\"\\1\" />",
 "\s(;\()" => " <img src=\"./face/sad.gif\" alt=\"\\1\" />",
-"\s(:\()" => " <img src=\"./face/sad.gif\" alt=\"\\1\" />",
+"\s(\:\()" => " <img src=\"./face/sad.gif\" alt=\"\\1\" />",
 "(\:heart\:)" => "<img src=\"./face/heart.gif\" alt=\"\\1\" />",
 );
 

@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.35 2002/08/07 12:10:59 masui Exp $
+// $Id: html.php,v 1.36 2002/08/21 17:32:04 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -24,6 +24,7 @@ function catbody($title,$page,$body)
 	global $date_format,$weeklabels,$time_format,$related_link;
 	global $HTTP_SERVER_VARS,$cantedit;
 	global $longtaketime;
+	global $foot_explain, $note_hr;
 
 	if($vars["page"] && !arg_check("backup") && $vars["page"] != $whatsnew)
 	{
@@ -56,9 +57,11 @@ function catbody($title,$page,$body)
 		$is_read = TRUE;
 	}
 
-	//if(!$longtaketime)
-		$longtaketime = getmicrotime() - MUTIME;
+	$longtaketime = getmicrotime() - MUTIME;
 	$taketime = sprintf("%01.03f",$longtaketime);
+
+	if ($foot_explain)
+		$body .= "\n$note_hr\n".join("\n",inline2($foot_explain));
 
 	require(SKIN_FILE);
 }
@@ -71,7 +74,9 @@ function convert_html($string)
 	global $user_rules,$str_rules,$line_rules,$strip_link_wall;
 	global $InterWikiName, $BracketName;
 
-	global $longtaketime;
+	global $content_id;
+	$content_id++;
+	$content_count = 0;
 
 	$string = rtrim($string);
 	$string = preg_replace("/((\x0D\x0A)|(\x0D)|(\x0A))/","\n",$string);
@@ -87,8 +92,6 @@ function convert_html($string)
 	$string = preg_replace("/^#freeze\n/","",$string);
 
 	$lines = split("\n", $string);
-	$note_id = 1;
-	$foot_explain = array();
 	// 各行の行頭書式を格納
 	$headform = array();
 	// 現在の行数を入れておこう
@@ -100,7 +103,7 @@ function convert_html($string)
 	$table = 0;
 
 	if(preg_match("/#contents/",$string))
-		$top_link = "<a href=\"#contents\">$top</a>";
+		$top_link = "<a href=\"#contents_$content_id\">$top</a>";
 
 	foreach ($lines as $line)
 	{
@@ -160,9 +163,9 @@ function convert_html($string)
 				
 				$level = strlen($out[1]) + 1;
 
-				array_push($result, "<h$level><a name=\"content:$content_id\"></a>$str $top_link</h$level>");
-				$arycontents[] = str_repeat("-",$level-1)."<a href=\"#content:$content_id\">".strip_htmltag(make_user_rules($str))."</a>\n";
-				$content_id++;
+				array_push($result, "<h$level><a name=\"content_{$content_id}_$content_count\"></a>$str $top_link</h$level>");
+				$arycontents[] = str_repeat("-",$level-1)."<a href=\"#content_{$content_id}_$content_count\">".strip_htmltag(make_user_rules($str))."</a>\n";
+				$content_count++;
 			}
 			else if(preg_match("/^(-{1,4})(.*)/",$line,$out))
 			{
@@ -175,14 +178,14 @@ function convert_html($string)
 				else
 				{
 					list_push($result,$saved,'ul', strlen($out[1]));
-					array_push($result, inline($out[2]));
+					array_push($result, '<li>'.inline($out[2]));
 				}
 			}
 			else if(preg_match("/^(\+{1,3})(.*)/",$line,$out))
 			{
 				$headform[$_cnt] = $out[1];
 				list_push($result,$saved,'ol', strlen($out[1]));
-				array_push($result, inline($out[2]));
+				array_push($result, '<li>'.inline($out[2]));
 			}
 			else if (preg_match("/^:([^:]+):(.*)/",$line,$out))
 			{
@@ -307,7 +310,7 @@ function convert_html($string)
 	
 	$result_last = $result = array_merge($result,$saved); $saved = array();
 
-	if($content_id != 0)
+	if($content_count != 0)
 	{
 		$result = array();
 		$saved = array();
@@ -317,12 +320,12 @@ function convert_html($string)
 			if(preg_match("/^(-{1,3})(.*)/",$line,$out))
 			{
 				list_push($result,$saved,'ul', strlen($out[1]));
-				array_push($result, $out[2]);
+				array_push($result, '<li>'.$out[2]);
 			}
 		}
 		$result = array_merge($result,$saved); $saved = array();
 		
-		$contents = "<a name=\"contents\"></a>\n";
+		$contents = "<a name=\"contents_$content_id\"></a>\n";
 		$contents .= join("\n",$result);
 		if($strip_link_wall)
 		{
@@ -336,15 +339,6 @@ function convert_html($string)
 	$result_last = preg_replace("/^#contents/",$contents,$result_last);
 
 	$str = join("\n", $result_last);
-
-	if($foot_explain)
-	{
-		$str .= "\n";
-		$str .= "$note_hr\n";
-		$str .= join("\n",inline2($foot_explain));
-	}
-
-	$longtaketime = getmicrotime() - $start_mtime;
 
 #	$str = preg_replace("/&((amp)|(quot)|(nbsp)|(lt)|(gt));/","&$1;",$str);
 
@@ -367,8 +361,9 @@ function back_push(&$result,&$saved,$tag, $level)
 }
 
 function list_push(&$result,&$saved,$tag,$level) {
+	global $_list_left_margin, $_list_margin, $_list_pad_str;
 	$cont = true;
-	$open = "<$tag%s><li>";
+	$open = "<$tag%s>";
 	$close = "</li></$tag>";
 	
 	while (count($saved) > $level or
@@ -385,19 +380,22 @@ function list_push(&$result,&$saved,$tag,$level) {
 	if (count($saved) < $level) {
 		$cont = false;
 		array_unshift($saved, $close);
-		array_push($result, sprintf($open, " style=\"margin-left:".($margin * 3)."em\""));
-//		array_push($result, sprintf($open, " class=\"listmargin$margin\""));
+		
+		$left = $margin * $_list_margin;
+		if ($level == $margin) $left += $_list_left_margin;
+		$str = sprintf($_list_pad_str, $level, $left, $left);
+		array_push($result, sprintf($open, $str));
 	}
 	
 	if ($cont)
-		array_push($result, '</li><li>');
+		array_push($result, '</li>');
 }
 
 // インライン要素のパース (注釈)
 function inline($line)
 {
 	$line = htmlspecialchars($line);
-
+	
 	$line = preg_replace("/\(\(((?:(?!\)\)).)*)\)\)/ex","make_note(\"$1\")",$line);
 
 	return $line;
@@ -496,16 +494,16 @@ function get_list($withfilename)
 				if(preg_match("/([A-Z])|([a-z])/",$head,$match))
 				{
 					if($match[1])
-						$head_nm = "High:$head";
+						$head_nm = "High_$head";
 					else
-						$head_nm = "Low:$head";
+						$head_nm = "Low_$head";
 					
 					if($head_str) $retval2[$page] = "</ul></li>\n";
-					$retval2[$page] .= "<li><a href=\"#top:$head_nm\" name=\"$head_nm\"><strong>$head</strong></a>\n<ul>\n";
+					$retval2[$page] .= "<li><a href=\"#top_$head_nm\" name=\"$head_nm\"><strong>$head</strong></a>\n<ul>\n";
 					$head_str = $head;
 					if($link_counter) $top_link .= "|";
 					$link_counter = $link_counter + 1;
-					$top_link .= "<a href=\"#$head_nm\" name=\"top:$head_nm\"><strong>&nbsp;".$head."&nbsp;</strong></a>";
+					$top_link .= "<a href=\"#$head_nm\" name=\"top_$head_nm\"><strong>&nbsp;".$head."&nbsp;</strong></a>";
 					if($link_counter==16) {
 					        $top_link .= "<br />";
 						$link_counter = 0;
@@ -516,22 +514,22 @@ function get_list($withfilename)
 					if(!$symbol_sw)
 					{
 						if($head_str) $retval2[$page] = "</ul></li>\n";
-						$retval2[$page] .= "<li><a href=\"#top:symbol\" name=\"symbol\"><strong>$_msg_symbol</strong></a>\n<ul>\n";
+						$retval2[$page] .= "<li><a href=\"#top_symbol\" name=\"symbol\"><strong>$_msg_symbol</strong></a>\n<ul>\n";
 						$head_str = $head;
 						if($link_counter) $top_link .= "|";
 						$link_counter = $link_counter + 1;
-						$top_link .= "<a href=\"#symbol\" name=\"top:symbol\"><strong>$_msg_symbol</strong></a>";
+						$top_link .= "<a href=\"#symbol\" name=\"top_symbol\"><strong>$_msg_symbol</strong></a>";
 						$symbol_sw = 1;
 					}
 				}
 				else
 				{
 					if($head_str) $retval2[$page] = "</ul></li>\n";
-					$retval2[$page] .= "<li><a href=\"#top:etc\" name=\"etc\"><strong>$_msg_other</strong></a>\n<ul>\n";
+					$retval2[$page] .= "<li><a href=\"#top_etc\" name=\"etc\"><strong>$_msg_other</strong></a>\n<ul>\n";
 					$etc_sw = 1;
 					if($link_counter) $top_link .= "|";
 					$link_counter = $link_counter + 1;
-					$top_link .= "<a href=\"#etc\" name=\"top:etc\"><strong>$_msg_other</strong></a>";
+					$top_link .= "<a href=\"#etc\" name=\"top_etc\"><strong>$_msg_other</strong></a>";
 				}
 			}
 			$retval2[$page] .= $link;
@@ -700,14 +698,14 @@ function make_note($str)
 	global $note_id,$foot_explain;
 
 	$str = preg_replace("/^\(\(/","",$str);
-	$str = preg_replace("/\)\)$/","",$str);
+	$str = preg_replace("/\s*\)\)$/","",$str);
 
 	$str= str_replace("\\'","'",$str);
 
 	$str = make_user_rules($str);
 
-	$foot_explain[] = "<a name=\"notefoot:$note_id\" href=\"#notetext:$note_id\" class=\"note_super\">*$note_id</a> <span class=\"small\">$str</span><br />\n";
-	$note =  "<a name=\"notetext:$note_id\" href=\"#notefoot:$note_id\" class=\"note_super\">*$note_id</a>";
+	$foot_explain[] = "<a name=\"notefoot_$note_id\" href=\"#notetext_$note_id\" class=\"note_super\">*$note_id</a> <span class=\"small\">$str</span><br />\n";
+	$note =  "<a name=\"notetext_$note_id\" href=\"#notefoot_$note_id\" class=\"note_super\">*$note_id</a>";
 	$note_id++;
 
 	return $note;

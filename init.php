@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.12 2002/08/03 10:28:22 masui Exp $
+// $Id: init.php,v 1.13 2002/08/21 17:32:04 masui Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -68,7 +68,14 @@ $arg = rawurldecode((getenv('QUERY_STRING') != '')?
 //** 初期処理 **
 $update_exec = "";
 $content_id = 0;
+
+if($usefacemark) {
+  $line_rules = array_merge($line_rules,$facemark_rules);
+}
 $user_rules = array_merge($str_rules,$line_rules);
+
+$note_id = 1;
+$foot_explain = array();
 
 // 変数のチェック
 if(php_sapi_name()=='cgi' && !preg_match("/^http:\/\/[-a-zA-Z0-9\@:;_.]+\//",$script))
