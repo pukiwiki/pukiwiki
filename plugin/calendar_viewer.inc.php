@@ -1,8 +1,8 @@
 <?php
 /*
- * PukiWiki calendar_viewer plubin
- * $Id: calendar_viewer.inc.php,v 1.27 2004/12/30 09:31:11 henoheno Exp $
- * Based on calendarrecent plugin
+ * PukiWiki calendar_viewer plugin
+ * $Id: calendar_viewer.inc.php,v 1.28 2004/12/30 09:40:39 henoheno Exp $
+ * Based on calendar and recent plugin
  */
 
 /*
@@ -36,7 +36,7 @@
 
 function plugin_calendar_viewer_convert()
 {
-	global $vars, $get, $post, $hr, $script;
+	global $vars, $get, $post, $script;
 	global $_err_calendar_viewer_param, $_err_calendar_viewer_param2;
 	global $_msg_calendar_viewer_right, $_msg_calendar_viewer_left;
 	global $_msg_calendar_viewer_restrict;
@@ -58,6 +58,7 @@ function plugin_calendar_viewer_convert()
 	$date_sep    = '-';	// 日付のセパレータ calendar2なら '-', calendarなら ''
 
 	// Check $func_args[1]
+	$matches = array();
 	if (preg_match('/[0-9]{4}' . $date_sep . '[0-9]{2}/', $func_args[1])) {
 		// 指定年月の一覧表示
 		$page_YM     = $func_args[1];
@@ -249,7 +250,7 @@ function plugin_calendar_viewer_convert()
 
 function plugin_calendar_viewer_action()
 {
-	global $vars, $get, $post, $hr, $script;
+	global $vars, $get, $post, $script;
 
 	$date_sep = '-';
 
@@ -283,11 +284,12 @@ function plugin_calendar_viewer_action()
 
 function plugin_calendar_viewer_isValidDate($aStr, $aSepList = '-/ .')
 {
+	$matches = array();
 	if ($aSepList == '') {
 		// yyymmddとしてチェック（手抜き(^^;）
 		return checkdate(substr($aStr, 4, 2), substr($aStr, 6, 2), substr($aStr, 0, 4));
-	} else if (ereg("^([0-9]{2,4})[$aSepList]([0-9]{1,2})[$aSepList]([0-9]{1,2})$", $aStr, $m) ) {
-		return checkdate($m[2], $m[3], $m[1]);
+	} else if (ereg("^([0-9]{2,4})[$aSepList]([0-9]{1,2})[$aSepList]([0-9]{1,2})$", $aStr, $matches) ) {
+		return checkdate($matches[2], $matches[3], $matches[1]);
 	} else {
 		return FALSE;
 	}
