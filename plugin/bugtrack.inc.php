@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.7 2003/02/18 00:59:50 panda Exp $
+ * $Id: bugtrack.inc.php,v 1.8 2003/02/25 04:01:33 panda Exp $
  */
 
 function plugin_bugtrack_init()
@@ -176,7 +176,7 @@ EOD;
 
 function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $state, $category, $version, $body)
 {
-	global $post,$BracketName;
+	global $post;
 	
 	$base = strip_bracket($base);
 	$pagename = strip_bracket($pagename);
@@ -194,8 +194,9 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 		page_write($page,$postdata);
 	}
 	else {
-		// すでにページが存在するか、BracketNameでない(無効な)ページ名が指定された
-		if (is_page($pagename) or !preg_match('/^$BracketName$/',$pagename)) {
+		$pagename = get_fullname($pagename,$base);
+		// すでにページが存在するか、無効なページ名が指定された
+		if (is_page($pagename) or !is_pagename($pagename)) {
 			// ページ名をデフォルトに戻す
 			$pagename = $page;
 		}
