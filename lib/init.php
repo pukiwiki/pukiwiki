@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.18 2004/10/31 03:45:52 henoheno Exp $
+// $Id: init.php,v 1.19 2004/11/23 02:01:29 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -370,11 +370,6 @@ require(DATA_HOME . 'rules.ini.php');
 
 // 現在時刻
 $now = format_date(UTIME);
-
-// skin内でDTD宣言を切り替えるのに使用。paint.inc.php対策
-$html_transitional = FALSE;
-// FALSE:XHTML 1.1
-// TRUE :XHTML 1.0 Transitional
 
 // フェイスマークを$line_rulesに加える
 if ($usefacemark) $line_rules += $facemark_rules;

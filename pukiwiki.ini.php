@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.94 2004/11/07 10:12:26 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.95 2004/11/23 02:01:29 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -81,6 +81,12 @@ $interwiki    = 'InterWikiName';	// InterWikiName の一覧を書くページ
 $menubar      = 'MenuBar';	// メニューとして表示させる内容を書くページ
 
 /////////////////////////////////////////////////
+// XHTML version
+// skin内でDTD宣言を切り替えるのに使用。paint.inc.php対策
+$html_transitional = FALSE; // FALSE:XHTML 1.1, TRUE:XHTML 1.0 Transitional
+
+/////////////////////////////////////////////////
+
 // Allow using JavaScript
 //   JavaScriptを使用するプラグインなどの
 //   機能を抑制します
