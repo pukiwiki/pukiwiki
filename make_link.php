@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.23 2003/03/07 07:04:07 panda Exp $
+// $Id: make_link.php,v 1.24 2003/03/07 07:46:24 panda Exp $
 //
 
 // リンクを付加する
@@ -149,7 +149,7 @@ class Link
 // オートリンク,WikiName
 class Link_auto extends Link
 {
-	var $forceignorepages;
+	var $forceignorepages = array();
 	
 	function Link_auto($start)
 	{
@@ -178,10 +178,13 @@ class Link_auto extends Link
 	}
 	function set($arr,$page)
 	{
+		global $WikiName;
+		
 		$arr = $this->splice($arr);
 		$name = $alias = $arr[0];
 		// ミスマッチ、または無視リストに含まれるページを捨てる
-		if (!is_page($name) or in_array($name,$this->forceignorepages))
+		if (in_array($name,$this->forceignorepages)
+			or (!preg_match("/^$WikiName$/",$name) and !is_page($name)))
 		{
 			return FALSE;
 		}
