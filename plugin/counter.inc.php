@@ -5,7 +5,7 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: counter.inc.php,v 1.8 2003/04/13 04:51:46 arino Exp $
+ * $Id: counter.inc.php,v 1.9 2003/04/13 05:36:04 arino Exp $
  */
 
 // counter file
@@ -98,7 +98,7 @@ function plugin_counter_get_count($page)
 		flock($fp,LOCK_EX);
     	foreach ($default as $key=>$val)
     	{
-    		$counters[$page][$key] = rtrim(fgets($fp));
+    		$counters[$page][$key] = rtrim(fgets($fp,256));
     	}
 	}
 	// ファイル更新が必要か?
