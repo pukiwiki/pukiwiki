@@ -1,0 +1,3 @@
+#freeze
+|~[_page]|~[state]|~[priority]|~[category]|~[name]|~[summary]|h
+|[_page,state]|[state]|[priority,state]|[category,state]|[name,state]|[summary,state]|
