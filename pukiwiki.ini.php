@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.82 2004/09/20 02:04:24 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.83 2004/09/25 00:56:58 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -370,7 +370,15 @@ $agents = array(
 	// Sample: "Mozilla/4.0 (PS2; PlayStation BB Navigator 1.0) NetFront/3.0"
 	array('pattern'=>'#\bPlayStation\b.*\b(NetFront)/([0-9\.]+)#',	'profile'=>'default'),
 
+	// Windows CE (MSIE 5.5 or upper)
+	// Sample: "Mozilla/4.0 (compatible; MSIE 5.5; Windows CE; sigmarion3)" (sigmarion, Hand-held PC)
+	array('pattern'=>'#\b(?:MSIE [5-9]).*\b(Windows CE)\b#', 'profile'=>'default'),
+
     // 組み込みブラウザ (リッチクライアントではないもの)
+
+	// Windows CE (the others)
+	// Sample: "Mozilla/2.0 (compatible; MSIE 3.02; Windows CE; 240x320 )" (GFORT, NTT DoCoMo)
+	array('pattern'=>'#\b(Windows CE)\b#', 'profile'=>'keitai'),
 
 	// NTT-DoCoMo, i-mode (embeded Compact NetFront) and FOMA (embedded NetFront) phones
 	// Sample: "DoCoMo/1.0/F501i", "DoCoMo/1.0/N504i/c10/TB/serXXXX" // c以降は可変
@@ -420,10 +428,6 @@ $agents = array(
 	// Sharp PDA Browser (Sharp Zaurus)
 	// Sample: "sharp pda browser/6.1[ja](MI-E1/1.0) "
 	array('pattern'=>'#^(sharp [a-z]+ browser)/([0-9\.]+)#',	'profile'=>'keitai'),
-
-	// Windows CE
-	// Sample: "Mozilla/4.0 (compatible; MSIE 5.5; Windows CE; sigmarion3)" (sigmarion, Hand-held PC)
-	array('pattern'=>'#\b(Windows CE)\b#',	'profile'=>'keitai'),
 
 	// WebTV
 	array('pattern'=>'#^(WebTV)/([0-9\.]+)#',	'profile'=>'keitai'),
