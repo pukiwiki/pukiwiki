@@ -1,5 +1,5 @@
 <?php
-// $Id: memo.inc.php,v 1.10 2004/07/24 14:16:32 henoheno Exp $
+// $Id: memo.inc.php,v 1.11 2004/07/24 14:58:41 henoheno Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -18,6 +18,8 @@ function plugin_memo_action()
 
 	$memo_body = preg_replace("/\r/", '', $vars['msg']);
 	$memo_body = str_replace("\n", "\\n", $memo_body);
+	$memo_body = str_replace('"', '&#x22;', $memo_body); // Escape double quotes
+	$memo_body = str_replace(',', '&#x2c;', $memo_body); // Escape commas
 
 	$postdata_old  = get_source($vars['refer']);
 	$postdata = '';
@@ -84,11 +86,10 @@ function plugin_memo_convert()
 	}
 	$memo_no = $numbers[$vars['page']]++;
 
-	$data = '';
-	if (func_num_args()) {
-		list($data) = func_get_args();
-	}
-
+	$data = func_get_args();
+	$data = implode(',', $data);	// Care all arguments
+	$data = str_replace('&#x2c;', ',', $data); // Unescape commas
+	$data = str_replace('&#x22;', '"', $data); // Unescape double quotes
 	$data = htmlspecialchars(str_replace("\\n", "\n", $data));
 
 	$s_page   = htmlspecialchars($vars['page']);
