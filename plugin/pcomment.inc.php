@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pcomment.inc.php,v 1.37 2005/01/30 00:51:51 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.38 2005/01/30 01:13:11 henoheno Exp $
 //
 // pcomment plugin - Insetring comment into specified (another) page
 
@@ -181,7 +181,6 @@ EOD;
 			'<p>' . $recent . ' ' . $link . '</p>' . "\n" .
 			'</div>' . "\n";
 	}
-	// TODO: READONLY時のradioboxの削除を忘れずに。
 }
 
 function pcmt_insert()
@@ -348,6 +347,8 @@ function pcmt_get_comments($page, $count, $dir, $reply)
 	if (! check_readable($page, false, false))
 		return array(str_replace('$1', $page, $_msg_pcomment_restrict));
 
+	$reply = (! PKWK_READONLY && $reply); // Suprress radio-buttons
+
 	$data = get_source($page);
 	$data = preg_replace('/^#pcomment\(?.*/i', '', $data);	// Avoid eternal recurse
 
@@ -364,6 +365,8 @@ function pcmt_get_comments($page, $count, $dir, $reply)
 
 		if (preg_match('/^(\-{1,2})(?!\-)(.+)$/', $line, $matches)) {
 			if ($count > 0 && strlen($matches[1]) == 1 && ++$cnt > $count) break;
+
+			// Ready for radio-buttons
 			if ($reply) {
 				++$num;
 				$cmts[] = "$matches[1]\x01$num\x02" . md5($matches[2]) . "\x03$matches[2]\n";
@@ -384,7 +387,7 @@ function pcmt_get_comments($page, $count, $dir, $reply)
 	$comments = convert_html($data);
 	unset($data);
 
-	//コメントにラジオボタンの印をつける
+	// Add radio-buttons
 	if ($reply)
 		$comments = preg_replace("/<li>\x01(\d+)\x02(.*)\x03/",
 			'<li class="pcmt"><input class="pcmt" type="radio" name="reply" value="$2" tabindex="$1" />',
