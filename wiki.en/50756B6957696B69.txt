@@ -1,11 +1,33 @@
+#freeze
+#norelated
+* PukiWiki
+
+http://pukiwiki.org/
+
 PukiWiki is one of the WikiEngines ,which enables everyone to edit any pages.
 
 And ,without your learning special knowledge, fomatted sentenses are created just by following the text formatting rule which is easy to understand.
 
--Written in PHP.
--2 bytes character:Kanji is supported. 
--InterWiki function is supported.
--Periodic Backup is supported.
--All data are stored in text format.
--Distributed under GPL Licence.
-[[PukiWiki.org:http://pukiwiki.org/]] leads you to Developper Team's Wiki
+- Written in PHP.
+- 2 bytes character:Kanji is supported. 
+- InterWiki function is supported.
+- Periodic Backup is supported.
+- All data are stored in text format.
+- Distributed under GPL(( http://www.gnu.org/licenses/gpl.html )).
+
+** Links
+
+- [[PukiWiki.org:http://pukiwiki.org/]] - PukiWiki official site
+-- Questions and comments are welcomed :)
+
+- Pukiwiki-dev - http://pukiwiki.sourceforge.jp/dev/
+-- PukiWiki official site for development. We develop next versions, maintain or security fix of older releases here.
+-- Our daily works are logged at [[Developer Diaries>http://pukiwiki.sourceforge.jp/dev/?%B3%AB%C8%AF%C6%FC%B5%AD]] (Sorry for  mainly in Japanese)
+
+- http://sourceforge.jp/projects/pukiwiki/
+-- Project summary of Sourceforge.jp. You can download PukiWiki here.
+
+** Related pages [#zf685513]
+
+#ls2
+- [[InterWikiName]] -- Server list of [[InterWiki]]
