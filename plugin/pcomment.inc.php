@@ -1,6 +1,6 @@
 <?php
 /*
-Last-Update:2002-11-06 rev.18
+$Id: pcomment.inc.php,v 1.8 2003/03/02 16:02:05 panda Exp $
 
 *プラグイン pcomment
 指定したページにコメントを挿入
@@ -168,9 +168,6 @@ function pcmt_insert() {
 	
 	$ret['msg'] = $_title_updated;
 	$ret['collided'] = FALSE;
-
-	//文字列の整形
-	$msg = user_rules_str($post['msg']);
 
 	//コメントフォーマットを適用
 	$msg = sprintf(PCMT_FORMAT_MSG, rtrim($post['msg']));
