@@ -1,4 +1,6 @@
 <?
+// $Id: comment.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
+
 global $name_cols, $comment_cols, $msg_format, $name_format;
 global $msg_format, $now_format, $comment_format;
 global $comment_ins, $comment_mail, $comment_no;

@@ -1,4 +1,6 @@
 <?
+// $Id: template.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
+
 define("MAX_LEN",60);
 function plugin_template_action()
 {
@@ -40,8 +42,6 @@ function plugin_template_action()
 			$str_freeze = '<input type="submit" name="freeze" value="'.$_btn_freeze.'" accesskey="f">';
 $retvar["body"] =  '
 <form action="'.$script.'" method="post">
-<input type="hidden" name="page" value="'.$page.'">
-<input type="hidden" name="digest" value="'.$digest.'">
 <table cellspacing="3" cellpadding="0" border="0">
  <tr>
   <td colspan="2" align="right">
@@ -50,6 +50,8 @@ $retvar["body"] =  '
  </tr>
  <tr>
   <td colspan="2" align="right">
+   <input type="hidden" name="page" value="'.$page.'">
+   <input type="hidden" name="digest" value="'.$digest.'">
    <textarea name="msg" rows="'.$rows.'" cols="'.$cols.'" wrap="virtual">
 '.$postdata.'</textarea>
   </td>

@@ -1,4 +1,6 @@
 <?
+// $Id: calendar_read.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
+
 function plugin_calendar_read_convert()
 {
 	global $command;

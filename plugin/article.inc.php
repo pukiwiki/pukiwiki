@@ -18,8 +18,11 @@
  -投稿内容のメール自動配信
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
+
+ $Id: article.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
  
  */
+
 global $name_format, $subject_format, $no_subject, $_mailto;
 
 /////////////////////////////////////////////////

@@ -1,4 +1,5 @@
 <?
+// $Id: vote.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
 
 function plugin_vote_action()
 {
@@ -104,16 +105,17 @@ function plugin_vote_convert()
 
 	if(!func_num_args()) return FALSE;
 
-	$string = "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\">\n"
-
+	$string = ""
 		. "<form action=\"$script\" method=\"post\">\n"
+                . "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\">\n"
+
+		. "<tr>\n"
+		. "<td align=\"left\" class=\"vote_label\"><b>The choices</b>"
 		. "<input type=\"hidden\" name=\"plugin\" value=\"vote\">\n"
 		. "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\">\n"
 		. "<input type=\"hidden\" name=\"vote_no\" value=\"$vote_no\">\n"
 		. "<input type=\"hidden\" name=\"digest\" value=\"$digest\">\n"
-
-		. "<tr>\n"
-		. "<td align=\"left\" class=\"vote_label\"><b>The choices</b></td>\n"
+                . "</td>\n"
 		. "<td align=\"center\" class=\"vote_label\"><b>Votes</b></td>\n"
 		. "</tr>\n";
 
@@ -139,8 +141,7 @@ function plugin_vote_convert()
 			.  "</tr>\n";
 	}
 
-	$string .= "</form>\n"
-		.  "</table>\n";
+	$string .= "</table></form>\n"
 
 	$vote_no++;
 

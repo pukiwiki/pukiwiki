@@ -10,6 +10,8 @@
  *              化けるのを修正
  * 
  *  2002.06.17: plugin_recent_init()を設定
+ *
+ * $Id: recent.inc.php,v 1.2 2002/06/26 06:23:57 masui Exp $
  */
 
 function plugin_recent_init()

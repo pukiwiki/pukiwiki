@@ -1,4 +1,5 @@
 <?
+// $Id: online.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
 
 // user list file
 define(USR_LST, "counter/user.dat");

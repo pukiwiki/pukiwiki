@@ -1,4 +1,6 @@
 <?
+// $Id: update.inc.php,v 1.2 2002/06/26 06:23:57 masui Exp $
+
 ///////////////////////
 //
 define(PLUGIN_UPDATE_SECRET,'GReenOrRed');

@@ -1,4 +1,6 @@
 <?
+// $Id: aname.inc.php,v 1.3 2002/06/26 06:23:57 masui Exp $
+
 function plugin_aname_convert()
 {
 	if(func_num_args())

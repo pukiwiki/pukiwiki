@@ -2,6 +2,7 @@
 // プラグイン attach
 
 // changed by Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
+// $Id: attach.inc.php,v 1.4 2002/06/26 06:23:57 masui Exp $
 
 // set PHP value to enable file upload
 ini_set("file_uploads","1");

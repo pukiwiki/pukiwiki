@@ -1,4 +1,6 @@
 <?
+// $Id: newpage.inc.php,v 1.2 2002/06/26 06:23:57 masui Exp $
+
 function plugin_newpage_init()
 {
   $_plugin_recent_messages = array(

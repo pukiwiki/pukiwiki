@@ -1,4 +1,5 @@
 <?
+// $Id: calendar2.inc.php,v 1.4 2002/06/26 06:23:57 masui Exp $
 
 function plugin_calendar2_convert()
 {
