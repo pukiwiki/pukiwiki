@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: backup.inc.php,v 1.9 2003/06/23 13:25:14 arino Exp $
+// $Id: backup.inc.php,v 1.10 2004/02/29 07:03:18 arino Exp $
 //
 // バックアップ
 function plugin_backup_action()
@@ -78,7 +78,7 @@ function plugin_backup_action()
 	
 	if (is_page($page))
 	{
-		$body .= " <li>".str_replace('$1',"<a href=\"$script?$r_page\">$s_page</a>",$_msg_goto)."</li>\n";
+		$body .= " <li>".str_replace('$1',"<a href=\"$script?$r_page\">$s_page</a>",$_msg_goto)."\n";
 	}
 	else
 	{
