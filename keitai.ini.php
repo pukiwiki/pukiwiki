@@ -2,9 +2,14 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.ini.php,v 1.16 2004/10/10 09:00:56 henoheno Exp $
+// $Id: keitai.ini.php,v 1.17 2004/10/31 02:01:38 henoheno Exp $
 //
 // PukiWiki setting file (Cell phones, PDAs and other thin clients)
+
+/////////////////////////////////////////////////
+// 携帯・PDA専用のページを初期ページとして指定する
+
+// $defaultpage = 'm';
 
 /////////////////////////////////////////////////
 // スキンファイルの場所
