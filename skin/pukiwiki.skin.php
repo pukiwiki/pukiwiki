@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.41 2005/01/26 13:04:08 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.42 2005/03/21 05:25:23 henoheno Exp $
 //
 // PukiWiki default skin
 
@@ -141,7 +141,7 @@ function _navigator($key, $value = '', $javascript = ''){
 
 <?php if ($trackback) { ?> &nbsp;
  [ <?php _navigator('trackback', $lang['trackback'] . '(' . tb_count($_page) . ')',
- 	($trackback_javascript == 1) ? 'onClick="OpenTrackback(this.href); return false"' : '') ?> ]
+ 	($trackback_javascript == 1) ? 'onclick="OpenTrackback(this.href); return false"' : '') ?> ]
 <?php } ?>
 <?php if ($referer)   { ?> &nbsp;
  [ <?php _navigator('refer') ?> ]

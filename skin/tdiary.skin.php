@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.18 2005/02/05 07:19:05 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.19 2005/03/21 05:25:23 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -437,7 +437,7 @@ function _navigator($key, $value = '', $javascript = ''){
 
 <?php if ($trackback) { ?> &nbsp;
    <?php _navigator('trackback', $lang['trackback'] . '(' . tb_count($_page) . ')',
- 	($trackback_javascript == 1) ? 'onClick="OpenTrackback(this.href); return false"' : '') ?>
+ 	($trackback_javascript == 1) ? 'onclick="OpenTrackback(this.href); return false"' : '') ?>
 <?php } ?>
 <?php if ($referer)   { ?> &nbsp;
    <?php _navigator('refer') ?>
