@@ -1,45 +1,33 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: interwiki.inc.php,v 1.9 2004/12/04 14:45:36 henoheno Exp $
 //
-// $Id: interwiki.inc.php,v 1.8 2004/12/02 11:35:02 henoheno Exp $
-//
-// InterWikiNameの判別とページの表示
+// InterWiki redirection plugin (OBSOLETE)
 
 function plugin_interwiki_action()
 {
-	global $vars,$InterWikiName;
-	global $_title_invalidiwn,$_msg_invalidiwn;
+	global $vars, $InterWikiName;
 
-	$retvars = array();
+	$match = array();
+	if (! preg_match("/^$InterWikiName$/", $vars['page'], $match))
+		return plugin_interwiki_invalid();
 
-	if (!preg_match("/^$InterWikiName$/",$vars['page'],$match))
-	{
-		$retvars['msg'] = $_title_invalidiwn;
-		$retvars['body'] = str_replace(
-			array('$1','$2'),
-			array(htmlspecialchars($name),make_pagelink('InterWikiName')),
-			$_msg_invalidiwn
-		);
-		return $retvars;
-	}
-	$name = $match[2];
-	$param = $match[3];
-
-	$url = get_interwiki_url($name,$param);
-	if ($url === FALSE)
-	{
-		$retvars['msg'] = $_title_invalidiwn;
-		$retvars['body'] = str_replace(
-			array('$1','$2'),
-			array(htmlspecialchars($name),make_pagelink('InterWikiName')),
-			$_msg_invalidiwn
-		);
-		return $retvars;
-	}
+	$url = get_interwiki_url($match[2], $match[3]);
+	if ($url === FALSE) return plugin_interwiki_invalid();
 
 	pkwk_headers_sent();
-	header("Location: $url");
-	die();
+	header('Location: ' . $url);
+	exit;
+}
+
+function plugin_interwiki_invalid()
+{
+	global $_title_invalidiwn, $_msg_invalidiwn;
+	return array(
+		'msg'  => $_title_invalidiwn,
+		'body' => str_replace(array('$1', '$2'),
+			array(htmlspecialchars(''),
+			make_pagelink('InterWikiName')),
+			$_msg_invalidiwn));
 }
 ?>
