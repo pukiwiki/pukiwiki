@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.67 2003/03/07 02:20:59 panda Exp $
+// $Id: html.php,v 1.68 2003/03/14 06:33:49 panda Exp $
 //
 
 // 本文を出力
@@ -24,11 +24,11 @@ function catbody($title,$page,$body)
 	$link_add      = "$script?cmd=add&amp;page=$r_page";
 	$link_edit     = "$script?cmd=edit&amp;page=$r_page";
 	$link_diff     = "$script?cmd=diff&amp;page=$r_page";
-	$link_top      = "$script?$defaultpage";
+	$link_top      = "$script?".rawurlencode($defaultpage);
 	$link_list     = "$script?cmd=list";
 	$link_filelist = "$script?cmd=filelist";
 	$link_search   = "$script?cmd=search";
-	$link_whatsnew = "$script?$whatsnew";
+	$link_whatsnew = "$script?".rawurlencode($whatsnew);
 	$link_backup   = "$script?cmd=backup&amp;page=$r_page";
 	$link_help     = "$script?".rawurlencode($help_page);
 	$link_rss      = "$script?cmd=rss";
