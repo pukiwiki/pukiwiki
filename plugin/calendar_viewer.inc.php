@@ -1,7 +1,7 @@
 <?php
 /*
  * PukiWiki calendar_viewerプラグイン
- * $Id: calendar_viewer.inc.php,v 1.23 2004/08/11 12:12:57 henoheno Exp $
+ * $Id: calendar_viewer.inc.php,v 1.24 2004/08/11 13:36:38 henoheno Exp $
  * calendarrecentプラグインを元に作成
  */
 
@@ -10,18 +10,20 @@
   calendarプラグインやcalendar2プラグインで作成したページを一覧表示するためのプラグインです。
 
  * 使い方
-    #calendar_viewer(pagename,(yyyy-mm|n|this),[mode],[separater])
+    #calendar_viewer(pagename,(this|yyyy-mm|n|x*y),[mode],[separater])
 
  ** pagename
   calendar or calendar2プラグインを記述してるページ名
 
  ** (yyyy-mm|n|this)
+  - this
+  -- 今月のページを一覧表示
   - yyyy-mm
   -- yyyy-mmで指定した年月のページを一覧表示
   - n
-  -- n件の一覧表示
-  - this
-  -- 今月のページを一覧表示
+  -- 先頭からn件を一覧表示
+  - x*n
+  -- 先頭より数えて x ページ目(先頭は0)から、y件づつ一覧表示
 
  ** [mode]
   省略可能です。省略時のデフォルトはpast
@@ -30,7 +32,7 @@
   - future
   -- 今日以降のページの一覧表示モード。イベント予定やスケジュール向き
   - view
-  -- 過去から未来への一覧表示モード。表示抑止するページはありません。
+  -- 過去から未来への一覧表示モード。表示抑止するページはありません
 
  ** [separater]
   - 年月日を区切るセパレータを指定。
@@ -55,11 +57,13 @@ function plugin_calendar_viewer_convert()
 	$func_args = func_get_args();
 
 	// デフォルト値
-	$pagename = $func_args[0];	// 基準となるページ名
-	$limit_page = 7;	// 表示する件数制限
-	$date_YM    = '';	// 一覧表示する年月
-	$mode       = 'past';	// 動作モード
-	$date_sep   = '-';	// 日付のセパレータ calendar2なら '-', calendarなら ''
+	$pagename    = $func_args[0];	// 基準となるページ名
+	$page_YM     = '';	// 一覧表示する年月
+	$limit_base  = 0;	// 先頭から数えて何ページ目から表示するか (先頭)
+	$limit_pitch = 0;	// 何件づつ表示するか
+	$limit_page  = 0;	// サーチするページ数
+	$mode        = 'past';	// 動作モード
+	$date_sep    = '-';	// 日付のセパレータ calendar2なら '-', calendarなら ''
 
 	if (isset($func_args[3])) {
 		$date_sep = $func_args[3];
@@ -68,24 +72,20 @@ function plugin_calendar_viewer_convert()
 	if (preg_match('/[0-9]{4}' . $date_sep . '[0-9]{2}/', $func_args[1])) {
 		// 指定年月の一覧表示
 		$page_YM     = $func_args[1];
-		$limit_page  = 31;	// 手抜き。31日分をリミットとする。
-		$limit_base  = 0;
+		$limit_page  = 31;
 	} else if (preg_match('/this/si', $func_args[1])) {
 		// 今月の一覧表示
 		$page_YM     = get_date('Y' . $date_sep . 'm');
 		$limit_page  = 31;
-		$limit_base  = 0;
 	} else if (preg_match('/^[0-9]+$/', $func_args[1])) {
 		// n日分表示
-		$page_YM     = '';
-		$limit_page  = $func_args[1];
-		$limit_base  = 0;
 		$limit_pitch = $func_args[1];
-	} else if (preg_match('/([0-9]+)\*([0-9]+)/', $func_args[1], $reg_array)) {
-		$page_YM     = '';
-		$limit_page  = $reg_array[1] + $reg_array[2];
-		$limit_base  = $reg_array[1];
-		$limit_pitch = $reg_array[2];
+		$limit_page  = $func_args[1];
+	} else if (preg_match('/(-?[0-9]+)\*([0-9]+)/', $func_args[1], $matches)) {
+		// 先頭より数えて x ページ目から、y件づつ表示
+		$limit_base  = $matches[1];
+		$limit_pitch = $matches[2];
+		$limit_page  = $matches[1] + $matches[2]; // 読み飛ばす + 表示する
 	} else {
 		return '#calendar_viewer(): ' . $_err_calendar_viewer_param2 . '<br />';
 	}
@@ -95,7 +95,6 @@ function plugin_calendar_viewer_convert()
 		// モード指定
 		$mode = $func_args[2];
 	}
-
 
 	// 一覧表示するページ名とファイル名のパターン　ファイル名には年月を含む
 	if ($pagename == '') {
@@ -115,7 +114,6 @@ function plugin_calendar_viewer_convert()
 	// ページリストの取得
 	//echo $pagepattern;
 	//echo $filepattern;
-
 	$pagelist = array();
 	if ($dir = @opendir(DATA_DIR)) {
 		$_date = get_date('Y' . $date_sep . 'm' . $date_sep . 'd');
@@ -147,23 +145,23 @@ function plugin_calendar_viewer_convert()
 	closedir($dir);
 	//echo count($pagelist);
 
-	// ここからインクルード開始
-	$tmppage = $vars['page'];
-	$return_body = '';
-
-	// まずソート
+	// ソート
 	if ($mode == 'past') {
 		rsort($pagelist);	// past modeでは新→旧
 	} else {
 		sort($pagelist);	// view mode と future mode では、旧→新
 	}
 
-	// $limit_pageの件数までインクルード
-	$tmp = $limit_base;
-	while ($tmp < $limit_page) {
-		if (empty($pagelist[$tmp])) break;
-		$page = $pagelist[$tmp];
+	// ここからインクルード開始
+	$tmppage = $vars['page'];
+	$return_body = '';
 
+	// $limit_pageの件数までインクルード
+	$tmp = max($limit_base, 0); // Skip minus
+	while ($tmp < $limit_page) {
+		if (! isset($pagelist[$tmp])) break;
+
+		$page = $pagelist[$tmp];
 		$get['page'] = $post['page'] = $vars['page'] = $page;
 
 		// 現状で閲覧許可がある場合だけ表示する
@@ -222,22 +220,19 @@ function plugin_calendar_viewer_convert()
 		}
 	} else {
 		// n件表示時
-		if ($limit_base >= count($pagelist)) {
-			$right_YM = ''; // 表示しない
+		if ($limit_base < 0) {
+			$left_YM = ''; // 表示しない (それより前の項目はない)
 		} else {
-			$right_base = $limit_base + $limit_pitch;
-			$right_YM   = $right_base . '*' . $limit_pitch;
-			$right_text = sprintf($_msg_calendar_viewer_right, $limit_pitch);
-		}
-		$left_base  = $limit_base - $limit_pitch;
-		if ($left_base < 0) {
-			$left_YM = ''; // 表示しない
-		} else {
-			$left_YM   = $left_base . '*' . $limit_pitch;
+			$left_YM   = $limit_base - $limit_pitch . '*' . $limit_pitch;
 			$left_text = sprintf($_msg_calendar_viewer_left, $limit_pitch);
 
 		}
-
+		if ($limit_base + $limit_pitch >= count($pagelist)) {
+			$right_YM = ''; // 表示しない (それより後の項目はない)
+		} else {
+			$right_YM   = $limit_base + $limit_pitch . '*' . $limit_pitch;
+			$right_text = sprintf($_msg_calendar_viewer_right, $limit_pitch);
+		}
 	}
 
 	// ナビゲート用のリンクを末尾に追加
