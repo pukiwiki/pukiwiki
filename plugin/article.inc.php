@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.17 2004/07/24 04:55:16 henoheno Exp $
+ $Id: article.inc.php,v 1.18 2004/07/24 05:10:06 henoheno Exp $
  
  */
 
@@ -73,17 +73,17 @@ function plugin_article_action()
 	global $script, $post, $vars, $cols, $rows, $now;
 	global $_title_collided, $_msg_collided, $_title_updated;
 	global $_mailto, $_no_subject, $_no_name;
-	
+
 	if ($post['msg'] == '') {
 		return array('msg'=>'','body'=>'');
 	}
-	
+
 	$name = ($post['name'] == '') ? $_no_name : $post['name'];
 	$name = ($name == '') ? '' : str_replace('$name', $name, NAME_FORMAT);
 	$subject = ($post['subject'] == '') ? $_no_subject : $post['subject'];
 	$subject = ($subject == '') ? '' : str_replace('$subject', $subject, SUBJECT_FORMAT);
 	$article  = "$subject\n>$name ($now)~\n~\n";
-	
+
 	$msg = rtrim($post['msg']);
 	if (ARTICLE_AUTO_BR) {
 		//改行の取り扱いはけっこう厄介。特にURLが絡んだときは…
@@ -91,15 +91,15 @@ function plugin_article_action()
 		$msg = join("\n", preg_replace('/^(?!\/\/)(?!\s)(.*)$/', '$1~', explode("\n", $msg)));
 	}
 	$article .= "$msg\n\n//";
-	
+
 	if (ARTICLE_COMMENT) {
 		$article .= "\n\n#comment\n";
 	}
-	
+
 	$postdata = '';
 	$postdata_old  = get_source($post['refer']);
 	$article_no = 0;
-	
+
 	foreach($postdata_old as $line) {
 		if (! ARTICLE_INS) {
 			$postdata .= $line;
@@ -114,15 +114,15 @@ function plugin_article_action()
 			$postdata .= $line;
 		}
 	}
-	
+
 	$postdata_input = "$article\n";
 	$body = '';
-	
+
 	if (md5(@join('', get_source($post['refer']))) != $post['digest']) {
 		$title = $_title_collided;
-		
+
 		$body = "$_msg_collided\n";
-		
+
 		$s_refer = htmlspecialchars($post['refer']);
 		$s_digest = htmlspecialchars($post['digest']);
 		$s_postdata = htmlspecialchars($postdata_input);
@@ -138,7 +138,7 @@ EOD;
 	}
 	else {
 		page_write($post['refer'], trim($postdata));
-		
+
 		// 投稿内容のメール自動送信
 		if (MAIL_AUTO_SEND) {
 			$mailaddress = implode(',', $_mailto);
@@ -147,27 +147,27 @@ EOD;
 				$mailsubject .= '/' . $post['name'];
 			}
 			$mailsubject = mb_encode_mimeheader($mailsubject);
-			
+
 			$mailbody = $post['msg'];
 			$mailbody .= "\n\n---\n";
 			$mailbody .= $_msg_article_mail_sender . $post['name'] . " ($now)\n";
 			$mailbody .= $_msg_article_mail_page . $post['refer'] . "\n";
 			$mailbody .= '　 URL: ' . $script . '?' . rawurlencode($post['refer']) . "\n";
 			$mailbody = mb_convert_encoding( $mailbody, "JIS" );
-			
+
 			$mailaddheader = "From: " . MAIL_FROM;
-			
+
 			mail($mailaddress, $mailsubject, $mailbody, $mailaddheader);
 		}
-		
+
 		$title = $_title_updated;
 	}
 	$retvars['msg'] = $title;
 	$retvars['body'] = $body;
-	
+
 	$post['page'] = $post['refer'];
 	$vars['page'] = $post['refer'];
-	
+
 	return $retvars;
 }
 
@@ -176,13 +176,13 @@ function plugin_article_convert()
 	global $script, $vars, $digest;
 	global $_btn_article, $_btn_name, $_btn_subject;
 	static $numbers = array();
-	
+
 	if (! array_key_exists($vars['page'], $numbers))
 	{
 		$numbers[$vars['page']] = 0;
 	}
 	$article_no = $numbers[$vars['page']]++;
-	
+
 	$s_page = htmlspecialchars($vars['page']);
 	$s_digest = htmlspecialchars($digest);
 	$name_cols = NAME_COLS;
@@ -203,7 +203,7 @@ function plugin_article_convert()
  </div>
 </form>
 EOD;
-	
+
 	return $string;
 }
 ?>
