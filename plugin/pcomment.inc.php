@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.21 2003/07/03 06:12:53 arino Exp $
+// $Id: pcomment.inc.php,v 1.22 2003/07/04 09:20:20 arino Exp $
 //
 
 /*
@@ -52,6 +52,8 @@ define('PCMT_FORMAT',"\x08MSG\x08 -- \x08NAME\x08 \x08DATE\x08");
 //
 // 自動過去ログ化 1ページあたりの件数を指定 0で無効
 define('PCMT_AUTO_LOG',0);
+// コメントページのタイムスタンプを更新せず、設置ページのタイムスタンプを更新する
+define('PCMT_TIMESTAMP',0);
 
 function plugin_pcomment_action()
 {
@@ -295,9 +297,13 @@ function pcmt_insert()
 		
 		$postdata = join('',$postdata);
 	}
-	// ファイルの書き込み
-	page_write($page,$postdata);
-	
+	page_write($page,$postdata,PCMT_TIMESTAMP);
+	if (PCMT_TIMESTAMP)
+	{
+		// 親ページのタイムスタンプを更新する
+		touch(get_filename($post['refer']));
+		put_lastmodified();
+	}
 	return $ret;
 }
 // 過去ログ処理
