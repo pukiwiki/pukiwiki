@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.44 2003/06/10 13:57:49 arino Exp $
+// $Id: convert_html.php,v 1.45 2003/06/12 00:44:30 arino Exp $
 //
 function convert_html($lines)
 {
@@ -499,6 +499,8 @@ class Table extends Block
 	}
 	function toString()
 	{
+		static $parts = array('h'=>'thead','f'=>'tfoot',''=>'tbody');
+		
 		// rowspanを設定(下から上へ)
 		for ($ncol = 0; $ncol < $this->col; $ncol++) {
 			$rowspan = 1;
@@ -542,7 +544,6 @@ class Table extends Block
 		}
 		// テキスト化
 		$string = '';
-		$parts = array('h'=>'thead',''=>'tbody','f'=>'tfoot');
 		foreach ($parts as $type=>$part) {
 			$part_string = '';
 			foreach (array_keys($this->elements) as $nrow) {
