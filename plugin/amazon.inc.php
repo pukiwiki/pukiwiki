@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: amazon.inc.php,v 1.11 2004/12/28 15:12:25 henoheno Exp $
+// $Id: amazon.inc.php,v 1.12 2005/02/06 14:21:40 henoheno Exp $
 // Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 閑舎
 //
 // Amazon plugin: Book-review maker via amazon.com/amazon.jp
@@ -121,7 +121,7 @@ function plugin_amazon_convert()
 	} else if (func_num_args() == 0) {
 		// レビュー作成
 		$s_page = htmlspecialchars($vars['page']);
-		if ($s_page == '') $s_page = $vars['refer'];
+		if ($s_page == '') $s_page = isset($vars['refer']) ? $vars['refer'] : '';
 		$ret = <<<EOD
 <form action="$script" method="post">
  <div>
@@ -186,11 +186,12 @@ function plugin_amazon_action()
 	global $vars, $script, $edit_auth, $edit_auth_users;
 	global $amazon_body, $asin, $asin_all;
 
-	$asin_all = htmlspecialchars(rawurlencode(strip_bracket($vars['asin'])));
+	$asin_all = isset($vars['asin']) ?
+		htmlspecialchars(rawurlencode(strip_bracket($vars['asin']))) : '';
 
 	if (! is_asin()) {
 		$retvars['msg']   = 'ブックレビュー編集';
-		$retvars['refer'] = $vars['refer'];
+		$retvars['refer'] = isset($vars['refer']) ? $vars['refer'] : '';
 		$retvars['body']  = plugin_amazon_convert();
 		return $retvars;
 
@@ -198,11 +199,11 @@ function plugin_amazon_action()
 		$s_page     = $vars['refer'];
 		$r_page     = $s_page . '/' . $asin;
 		$r_page_url = rawurlencode($r_page);
+		$auth_user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
 
 		pkwk_headers_sent();
-		if ($edit_auth && (! isset($_SERVER['PHP_AUTH_USER']) ||
-		    ! array_key_exists($_SERVER['PHP_AUTH_USER'], $edit_auth_users) ||
-			$edit_auth_users[$_SERVER['PHP_AUTH_USER']] != $_SERVER['PHP_AUTH_PW'])) {
+		if ($edit_auth && ($auth_user == '' || ! isset($edit_auth_users[$auth_user]) ||
+			$edit_auth_users[$auth_user] != $_SERVER['PHP_AUTH_PW'])) {
 			header('Location: ' . get_script_uri() . '?cmd=read&page=' . $r_page_url);
 		} else {
 			$title = plugin_amazon_get_asin_title();
@@ -444,7 +445,7 @@ function is_asin()
 		return FALSE;
 	} else {
 		$asin     = $tmpary[1];
-		$asin_ext = $tmpary[2];
+		$asin_ext = isset($tmpary[2]) ? $tmpary[2] : '';
 		if ($asin_ext == '') $asin_ext = '09';
 		$asin_all = $asin . $asin_ext;
 		return TRUE;
