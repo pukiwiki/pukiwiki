@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.19 2003/02/22 10:27:30 panda Exp $
+// $Id: func.php,v 1.20 2003/02/23 03:26:22 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -468,6 +468,31 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 	if ($x)
 	{
 		$result .= '?';
+	}
+	return $result;
+}
+
+/*
+変数内のnull(\0)バイトを削除する
+PHPはfopen("hoge.php\0.txt")で"hoge.php"を開いてしまうなどの問題あり
+
+http://ns1.php.gr.jp/pipermail/php-users/2003-January/012742.html
+[PHP-users 12736] null byte attack
+*/ 
+function sanitize_null_character($param)
+{
+	if (is_array($param))
+	{
+		$result = array();
+		foreach ($param as $key => $value)
+		{
+			$key = sanitize_null_character($key);
+			$result[$key] = sanitize_null_character($value);
+		}
+	}
+	else
+	{
+		$result = str_replace("\0",'',$param);
 	}
 	return $result;
 }

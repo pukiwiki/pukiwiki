@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.32 2003/02/22 06:24:54 panda Exp $
+// $Id: init.php,v 1.33 2003/02/23 03:26:22 panda Exp $
 //
 
 /////////////////////////////////////////////////
@@ -149,6 +149,11 @@ else {
 	$cookie = is_array($HTTP_COOKIE_VARS) ? $HTTP_COOKIE_VARS : array();
 }
 
+// 外部からくる変数をサニタイズ
+$get    = sanitize_null_character($get);
+$post   = sanitize_null_character($post);
+$cookie = sanitize_null_character($cookie);
+
 // ポストされた文字のコードを変換
 // original by nitoyon (2003/02/20)
 $encode = mb_detect_encoding(join('',array_merge($post,$get)));
@@ -162,14 +167,17 @@ if ($encode != 'ASCII' and $encode != SOURCE_ENCODING) {
 }
 
 if (!empty($get['page'])) {
-	$get['page']  = preg_replace('/^(\[\[)?(.*)(?(1)\]\])$/','$2',$get['page']);
+	$get['page']  = strip_bracket($get['page']);
 }
 if (!empty($post['page'])) {
-	$post['page'] = preg_replace('/^(\[\[)?(.*)(?(1)\]\])$/','$2',$post['page']);
+	$post['page'] = strip_bracket($post['page']);
 }
 if (!empty($post['msg'])) {
-	$post['msg']  = preg_replace("/\r/",'',$post['msg']);
+	$post['msg']  = str_replace("\r",'',$post['msg']);
 }
+
+// 単独で指定されたURL変数(値なし)を取り出す(ページ名)
+$arg = (count($get) == 1) ? array_shift(array_keys($get,NULL)) : NULL;
 
 $vars = array_merge($post,$get);
 if (!array_key_exists('page',$vars)) {
@@ -181,22 +189,14 @@ if (array_key_exists('md5',$vars) and $vars['md5'] != '') {
 	$vars['cmd'] = 'md5';
 }
 
-$arg = rawurldecode((getenv('QUERY_STRING') != '') ?
-	getenv('QUERY_STRING') :
-	(array_key_exists(0,$HTTP_SERVER_VARS['argv']) ?
-		$HTTP_SERVER_VARS['argv'][0] :
-		''
-	)
-);
-
 // cmdもpluginも指定されていない場合は、$argをページ名かInterWikiNameであるとみなす
 if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars)) {
 	//$argも指定されていなかった場合は$defaultpageを表示
-	if ($arg == '') {
+	if ($arg === NULL) {
 		$arg = $defaultpage;
 	}
 	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'read';
-	$get['page'] = $post['page'] = $vars['page'] = preg_replace('/^(\[\[)?(.*)(?(1)\]\])$/','$2',$arg);
+	$get['page'] = $post['page'] = $vars['page'] = strip_bracket($arg);
 }
 
 /////////////////////////////////////////////////
