@@ -3,7 +3,7 @@
  * PukiWiki calendar_viewerプラグイン
  *
  *
- *$Id: calendar_viewer.inc.php,v 1.4 2003/02/11 01:31:57 panda Exp $
+ *$Id: calendar_viewer.inc.php,v 1.5 2003/03/02 06:37:40 panda Exp $
   calendarrecentプラグインを元に作成
  */
 /**
@@ -92,7 +92,7 @@ function plugin_calendar_viewer_convert()
     }else{
       return "第2引数が変だよ";
     }
-    if (isset($func_vars_array[2])&&preg_match("/past|view|future/si",$func_vars_array[2])){
+    if (isset($func_vars_array[2])&&preg_match("/^(past|view|future)$/si",$func_vars_array[2])){
       //モード指定
       $mode = $func_vars_array[2];
     }
