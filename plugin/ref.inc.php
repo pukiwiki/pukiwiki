@@ -91,13 +91,25 @@ EOD;
 
 function plugin_ref_body($args,$page)
 {
-	global $script;
+	global $script,$WikiName,$BracketName;
 	
 	// 戻り値
 	$params = array();
 	
 	// 添付ファイル名を取得
 	$name = array_shift($args);
+	
+	// 次の引数がページ名かどうか
+	if (preg_match("/^($WikiName|\[\[$BracketName\]\])$/",$args[0]))
+	{
+		$_page = get_fullname(strip_bracket($args[0]),$page);
+		if (is_pagename($_page))
+		{
+			$page = $_page;
+			array_shift($args);
+		}
+	}
+
 	
 /*
  $nameをもとに以下の変数を設定
