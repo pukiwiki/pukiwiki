@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.2 2004/08/01 13:16:25 henoheno Exp $
+// $Id: func.php,v 1.3 2004/08/01 13:37:13 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -271,7 +271,7 @@ function decode($key)
 // [[ ]] を取り除く
 function strip_bracket($str)
 {
-	$matches = array();
+	$match = array();
 	if (preg_match('/^\[\[(.*)\]\]$/', $str, $match)) {
 		return $match[1];
 	} else {
