@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.61 2003/02/27 00:29:09 panda Exp $
+// $Id: html.php,v 1.62 2003/02/28 03:30:17 panda Exp $
 //
 
 // 本文を出力
@@ -65,7 +65,7 @@ function catbody($title,$page,$body)
 
 	//単語検索
 	if ($search_word_color and array_key_exists('word',$vars)) {
-		$search_word = $_msg_word;
+		$search_word = '';
 		$words = array_flip(array_splice(preg_split('/\s+/',$vars['word'],-1,PREG_SPLIT_NO_EMPTY),0,10));
 		$keys = array();
 		foreach ($words as $word=>$id) {
@@ -75,11 +75,11 @@ function catbody($title,$page,$body)
 		$keys = array_keys($keys);
 		foreach ($keys as $key) {
 			$s_key = htmlspecialchars($key);
-			$to = "<strong class=\"word{$words[$key]}\">$s_key</strong>";
-			$body = preg_replace("/(?:^|(?<=>))([^<]*)/e",'str_replace($s_key,$to,\'$1\')',$body);
-			$search_word .= ' '.$to;
+			$search_word .= " <strong class=\"word{$words[$key]}\">$s_key</strong>";
+			$to = "<strong class=\"word{$words[$key]}\">\$1</strong>";
+			$body = preg_replace("/(?:^|(?<=>))([^<]*)/e",'preg_replace("/($s_key)/i",$to,\'$1\')',$body);
 		}
-		$body = "<div class=\"small\">$search_word</div>$hr\n$body";
+		$body = "<div class=\"small\">$_msg_word$search_word</div>$hr\n$body";
 	}
 	
 	$longtaketime = getmicrotime() - MUTIME;
