@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: lookup.inc.php,v 1.16 2005/01/30 10:55:53 henoheno Exp $
+// $Id: lookup.inc.php,v 1.17 2005/02/27 08:16:30 henoheno Exp $
 //
 // InterWiki lookup plugin
 
@@ -25,8 +25,8 @@ function plugin_lookup_convert()
   <input type="hidden" name="plugin" value="lookup" />
   <input type="hidden" name="refer"  value="$s_page" />
   <input type="hidden" name="inter"  value="$interwiki" />
-  $interwiki:
-  <input type="text" name="page" size="30" value="$default" />
+  <label for="_p_lookup_interwiki">$interwiki:</label>
+  <input type="text" name="page" id="_p_lookup_interwiki" size="30" value="$default" />
   <input type="submit" value="$button" />
  </div>
 </form>
