@@ -5,50 +5,99 @@
  * CopyRight 2002 S.YOSHIMURA GPL2
  * http://masui.net/pukiwiki/ yosimura@excellence.ac.jp
  *
- * $Id: versionlist.inc.php,v 1.3 2003/01/27 05:38:47 panda Exp $
+ * $Id: versionlist.inc.php,v 1.4 2003/03/02 06:56:56 panda Exp $
  */
+
+function plugin_versionlist_init()
+{
+	if (LANG == 'ja')
+	{
+		$messages = array(
+			'_title_versionlist'    => '構成ファイルのバージョン一覧'
+		);
+	}
+	else
+	{
+		$messages = array(
+			'_title_versionlist'    => 'version list'
+		);
+	}
+	set_plugin_messages($messages);
+}
+
+function plugin_versionlist_action()
+{
+	global $_title_versionlist;
+	
+	return array(
+		'msg' => $_title_versionlist,
+		'body' => plugin_versionlist_convert()
+	);
+}
 
 function plugin_versionlist_convert()
 {
-  global $vars, $script;
-  $SCRIPT_DIR = array("./","./plugin/");
-  /* 探索ディレクトリ設定。本当は、pukiwiki.ini.php かな */
+	$SCRIPT_DIR = array('./','./plugin/');
+	/* 探索ディレクトリ設定。本当は、pukiwiki.ini.php かな */
 
-  if (func_num_args())
-    $aryargs = func_get_args();
-  else
-    $aryargs = array();
+	$comments = array();
 
-  $lst = $comment = '';
+	foreach ($SCRIPT_DIR as $sdir)
+	{
+		if (!$dir = @dir($sdir))
+		{
+			// die_message('directory '.$sdir.' is not found or not readable.');
+			continue;
+		}
+		while($file = $dir->read())
+		{
+			if (!preg_match('/\.php$/i',$file))
+			{
+				continue;
+			}
+			$data = join('',file($sdir.$file));
+			$comment = array('file'=>htmlspecialchars($sdir.$file),'rev'=>'','date'=>'');
+			if (preg_match('/\$Id: versionlist.inc.php,v 1.4 2003/03/02 06:56:56 panda Exp $data,$matches))
+			{
+//				$comment['file'] = htmlspecialchars($sdir.$matches[1]);
+				$comment['rev'] = htmlspecialchars($matches[2]);
+				$comment['date'] = htmlspecialchars($matches[3]);
+			}
+			$comments[$sdir.$file] = $comment;
+		}
+		$dir->close();
+	}
+	if (count($comments) == 0)
+	{
+		return '';
+	}
+	ksort($comments);
+	$retval = '';
+	foreach ($comments as $comment)
+	{
+		$retval .= <<<EOD
 
-  foreach($SCRIPT_DIR as $sdir){
-    if ($dir = @dir($sdir)){
-      while($file = $dir->read()){
-        if ($file == ".." || $file == ".") continue;
-        if (!preg_match('/\.php$/i',$file)) continue;
-        
-        $comment = '';
-        $filenp = $sdir . $file;
-        $fd = fopen($filenp,'r');
-        while(!feof ($fd)){
-          if (preg_match('/Id:(.+),v (\d+\.\d+)/',fgets($fd,1024),$match)){
-            $comment = trim($match[1] . " -&gt; " .  $match[2]) ;
-            break;
-          }else {
-            continue;
-          }
-        }
-        fclose($fd);
-        if ($comment != '')
-          $lst .= "<li>$filenp =&gt; $comment\n";
-      }
-    }
-    $dir->close();
-  }
-  if ($lst=='') {
-    return '';
-  }
-
-  return "<ul>$lst</ul>";
+  <tr>
+   <td>{$comment['file']}</td>
+   <td align="right">{$comment['rev']}</td>
+   <td>{$comment['date']}</td>
+  </tr>
+EOD;
+	}
+	$retval = <<<EOD
+<table border="1">
+ <thead>
+  <tr>
+   <th>filename</th>
+   <th>revision</th>
+   <th>date</th>
+  </tr>
+ </thead>
+ <tbody>
+$retval
+ </tbody>
+</table>
+EOD;
+	return $retval;
 }
 ?>
