@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.4 2002/07/01 06:25:01 masui Exp $
+// $Id: func.php,v 1.5 2002/07/01 10:21:20 masui Exp $
 /////////////////////////////////////////////////
 
 // ¸¡º÷
@@ -57,7 +57,7 @@ function do_search($word,$type="AND",$non_format=0)
 				$word_url = rawurlencode($word);
 				$name2 = strip_bracket($name);
 				$str = get_pg_passage($name);
-				$retval[$name2] = "<li><a href=\"$script?$page_url\">$name2</a>$str</li>";
+				$retval[$name2] = "<li><a href=\"$script?$page_url\">".htmlspecialchars($name2, ENT_QUOTES)."</a>$str</li>";
 			}
 		}
 		else
@@ -67,7 +67,7 @@ function do_search($word,$type="AND",$non_format=0)
 				$page_url = rawurlencode($name);
 				$word_url = rawurlencode($word);
 				$name2 = strip_bracket($name);
-				$link_tag = "<a href=\"$script?$page_url\">$name2</a>";
+				$link_tag = "<a href=\"$script?$page_url\">".htmlspecialchars($name2, ENT_QUOTES)."</a>";
 				$link_tag .= get_pg_passage($name,false);
 				if($non_format)
 				{
