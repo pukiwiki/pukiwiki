@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.13 2004/09/26 11:47:35 henoheno Exp $
+// $Id: dump.inc.php,v 1.14 2004/09/26 11:57:55 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -308,8 +308,8 @@ define('TARLIB_STATUS_INIT',    0);		// 初期状態
 define('TARLIB_STATUS_OPEN',   10);		// 読み取り
 define('TARLIB_STATUS_CREATE', 20);		// 書き込み
 
-define('TARLIB_DATA_MODE',   '100666 ');	// ファイルパーミッション
-define('TARLIB_DATA_UGID',   '000000 ');	// uid / gid
+define('TARLIB_DATA_MODE',      '100666 ');	// ファイルパーミッション
+define('TARLIB_DATA_UGID',      '000000 ');	// uid / gid
 define('TARLIB_DATA_CHKBLANKS', '        ');
 
 // GNU拡張仕様(ロングファイル名対応)
@@ -334,39 +334,9 @@ class tarlib
 	}
 	
 	////////////////////////////////////////////////////////////
-	//
-	// 関数  : tarファイルを開く
-	// 引数  : tarファイル名
-	// 返り値: TRUE .. 成功 , FALSE .. 失敗
-	//
-	////////////////////////////////////////////////////////////
-	function open($name = '', $kind = ARCFILE_TAR_GZ)
-	{
-		if ($name != '') $this->filename = $name;
-
-		if ($kind == ARCFILE_TAR_GZ) {
-			$this->arc_kind = ARCFILE_TAR_GZ;
-			$this->fp = gzopen($this->filename, 'rb');
-		} else {
-			$this->arc_kind = ARCFILE_TAR;
-			$this->fp =  fopen($this->filename, 'rb');
-		}
-
-		if ($this->fp === FALSE) {
-			return FALSE;	// No such file
-		} else {
-			$this->status = TARLIB_STATUS_OPEN;
-			rewind($this->fp);
-			return TRUE;
-		}
-	}
-
-	////////////////////////////////////////////////////////////
-	//
 	// 関数  : tarファイルを作成する
 	// 引数  : tarファイルを作成するパス
 	// 返り値: TRUE .. 成功 , FALSE .. 失敗
-	//
 	////////////////////////////////////////////////////////////
 	function create($odir, $kind = ARCFILE_TAR_GZ)
 	{
@@ -393,48 +363,220 @@ class tarlib
 	}
 
 	////////////////////////////////////////////////////////////
-	//
-	// 関数  : tarファイルを閉じる
-	// 引数  : なし
-	// 返り値: なし
-	//
+	// 関数  : tarファイルに追加する
+	// 引数  : $dir    .. ディレクトリ名
+	//         $mask   .. 追加するファイル(正規表現)
+	//         $decode .. ページ名の変換をするか
+	// 返り値: 作成したファイル数
 	////////////////////////////////////////////////////////////
-	function close()
+	function add($dir, $mask, $decode = FALSE)
 	{
-		if ($this->status == TARLIB_STATUS_CREATE)
-		{
-			// バイナリーゼロを1024バイト出力
-			flock($this->fp, LOCK_EX);
-			fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
-			fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
-			flock($this->fp, LOCK_UN);
+		$retvalue = 0;
+		
+		if ($this->status != TARLIB_STATUS_CREATE)
+			return ''; // ファイルが作成されていない
 
-			// ファイルを閉じる
-			if ($this->arc_kind == ARCFILE_TAR_GZ) {
-				gzclose($this->fp);
+		unset($files);
+
+		//  指定されたパスのファイルのリストを取得する
+		$dp = @opendir($dir) or
+			die_message($dir . ' is not found or not readable.');
+		while ($filename = readdir($dp)) {
+			if (preg_match("/$mask/", $filename))
+				$files[] = $dir . $filename;
+		}
+		closedir($dp);
+		
+		sort($files);
+
+		$matches = array();
+		foreach($files as $name)
+		{
+			// Tarに格納するファイル名
+			if ($decode == TRUE)
+			{
+				// ファイル名をページ名に変換する処理
+				$dirname  = dirname(trim($name)) . '/';
+				$filename = basename(trim($name));
+				if (preg_match("/^((?:[0-9A-F]{2})+)_((?:[0-9A-F]{2})+)/", $filename, $matches))
+				{
+					// attachファイル名
+					$filename = decode($matches[1]).'/'.decode($matches[2]);
+				}
+				else
+				{
+					$pattern = '^((?:[0-9A-F]{2})+)((\.txt|\.gz)*)$';
+					if (preg_match("/$pattern/", $filename, $matches)) {
+						$filename = decode($matches[1]).$matches[2];
+
+						// 危ないコードは置換しておく
+						$filename = str_replace(':',  '_', $filename);
+						$filename = str_replace('\\', '_', $filename);
+					}
+				}
+				$filename = $dirname . $filename;
+				if (function_exists('mb_convert_encoding')) {
+					// ファイル名の文字コードを変換
+					$filename = mb_convert_encoding($filename, PLUGIN_DUMP_FILENAME_ENCORDING);
+				}
+			}
+			else
+			{
+				$filename = $name;
+			}
+
+			// 最終更新時刻
+			$mtime = filemtime($name);
+
+			// ファイル名長のチェック
+			if (strlen($filename) > TARLIB_HDR_NAME_LEN) {
+				// LongLink対応
+				$size = strlen($filename);
+				// LonkLinkヘッダ生成
+				$tar_data = $this->_make_header(TARLIB_DATA_LONGLINK, $size, $mtime, TARLIB_HDR_LINK);
+				// ファイル出力
+	 			$this->_write_data(join('', $tar_data), $filename, $size);
+			}
+
+			// ファイルサイズを取得
+			$size = filesize($name);
+			if ($size == FALSE) {
+				die_message($name . ' is not found or not readable.');
+				continue;	// ファイルがない
+			}
+
+			// ヘッダ生成
+			$tar_data = $this->_make_header($filename, $size, $mtime, TARLIB_HDR_FILE);
+
+			// ファイルデータの取得
+			$fpr = @fopen($name , 'rb');
+			$data = fread($fpr, $size);
+			fclose( $fpr );
+
+			// ファイル出力
+			$this->_write_data(join('', $tar_data), $data, $size);
+			++$retvalue;
+		}
+		return $retvalue;
+	}
+	
+	////////////////////////////////////////////////////////////
+	// 関数  : tarのヘッダ情報を生成する (add)
+	// 引数  : $filename .. ファイル名
+	//         $size     .. データサイズ
+	//         $mtime    .. 最終更新日
+	//         $typeflag .. TypeFlag (file/link)
+	// 戻り値: tarヘッダ情報
+	////////////////////////////////////////////////////////////
+	function _make_header($filename, $size, $mtime, $typeflag)
+	{
+		$tar_data = array_fill(0, TARLIB_HDR_LEN, "\0");
+		
+		// ファイル名を保存
+		for($i = 0; $i < strlen($filename); $i++ )
+		{
+			if ($i < TARLIB_HDR_NAME_LEN) {
+				$tar_data[$i + TARLIB_HDR_NAME_OFFSET] = $filename{$i};
 			} else {
-				 fclose($this->fp);
+				break;	// ファイル名が長すぎ
 			}
 		}
-		else if ($this->status == TARLIB_STATUS_OPEN)
-		{
-			if ($this->arc_kind == ARCFILE_TAR_GZ) {
-				gzclose($this->fp);
-			} else {
-				 fclose($this->fp);
-			}
+
+		// mode
+		$modeid = TARLIB_DATA_MODE;
+		for($i = 0; $i < strlen($modeid); $i++ ) {
+			$tar_data[$i + TARLIB_HDR_MODE_OFFSET] = $modeid{$i};
 		}
 
-		$this->status = TARLIB_STATUS_INIT;
+		// uid / gid
+		$ugid = TARLIB_DATA_UGID;
+		for($i = 0; $i < strlen($ugid); $i++ ) {
+			$tar_data[$i + TARLIB_HDR_UID_OFFSET] = $ugid{$i};
+			$tar_data[$i + TARLIB_HDR_GID_OFFSET] = $ugid{$i};
+		}
+
+		// サイズ
+		$strsize = sprintf('%11o', $size);
+		for($i = 0; $i < strlen($strsize); $i++ ) {
+			$tar_data[$i + TARLIB_HDR_SIZE_OFFSET] = $strsize{$i};
+		}
+
+		// 最終更新時刻
+		$strmtime = sprintf('%o', $mtime);
+		for($i = 0; $i < strlen($strmtime); $i++ ) {
+			$tar_data[$i + TARLIB_HDR_MTIME_OFFSET] = $strmtime{$i};
+		}
+
+		// チェックサム計算用のブランクを設定
+		$chkblanks = TARLIB_DATA_CHKBLANKS;
+		for($i = 0; $i < strlen($chkblanks); $i++ ) {
+			$tar_data[$i + TARLIB_HDR_CHKSUM_OFFSET] = $chkblanks{$i};
+		}
+
+		// タイプフラグ
+		$tar_data[TARLIB_HDR_TYPE_OFFSET] = $typeflag;
+
+		// チェックサムの計算
+		$sum = 0;
+		for($i = 0; $i < TARLIB_BLK_LEN; $i++ ) {
+			$sum += 0xff & ord($tar_data[$i]);
+		}
+		$strchksum = sprintf('%7o',$sum);
+		for($i = 0; $i < strlen($strchksum); $i++ ) {
+			$tar_data[$i + TARLIB_HDR_CHKSUM_OFFSET] = $strchksum{$i};
+		}
+		return $tar_data;
+	}
+	
+	////////////////////////////////////////////////////////////
+	// 関数  : tarデータのファイル出力 (add)
+	// 引数  : $header .. tarヘッダ情報
+	//         $body   .. tarデータ
+	//         $size   .. データサイズ
+	// 戻り値: なし
+	////////////////////////////////////////////////////////////
+	function _write_data($header, $body, $size)
+	{
+		$fixsize  = ceil($size / TARLIB_BLK_LEN) * TARLIB_BLK_LEN - $size;
+
+		flock($this->fp, LOCK_EX);
+		fwrite($this->fp, $header, TARLIB_HDR_LEN);    // Header
+		fwrite($this->fp, $body, $size);               // Body
+		fwrite($this->fp, $this->dummydata, $fixsize); // Padding
+		flock($this->fp, LOCK_UN);
 	}
 
 	////////////////////////////////////////////////////////////
-	//
+	// 関数  : tarファイルを開く
+	// 引数  : tarファイル名
+	// 返り値: TRUE .. 成功 , FALSE .. 失敗
+	////////////////////////////////////////////////////////////
+	function open($name = '', $kind = ARCFILE_TAR_GZ)
+	{
+		if ($name != '') $this->filename = $name;
+
+		if ($kind == ARCFILE_TAR_GZ) {
+			$this->arc_kind = ARCFILE_TAR_GZ;
+			$this->fp = gzopen($this->filename, 'rb');
+		} else {
+			$this->arc_kind = ARCFILE_TAR;
+			$this->fp =  fopen($this->filename, 'rb');
+		}
+
+		if ($this->fp === FALSE) {
+			return FALSE;	// No such file
+		} else {
+			$this->status = TARLIB_STATUS_OPEN;
+			rewind($this->fp);
+			return TRUE;
+		}
+	}
+
+	////////////////////////////////////////////////////////////
 	// 関数  : 指定したディレクトリにtarファイルを展開する
 	// 引数  : 展開するファイルパターン(正規表現)
 	// 返り値: 展開したファイル名の一覧
 	// 補足  : ARAIさんのattachプラグインパッチを参考にしました
-	//
 	////////////////////////////////////////////////////////////
 	function extract($pattern )
 	{
@@ -533,193 +675,38 @@ class tarlib
 	}
 
 	////////////////////////////////////////////////////////////
-	//
-	// 関数  : tarファイルに追加する
-	// 引数  : $dir    .. ディレクトリ名
-	//         $mask   .. 追加するファイル(正規表現)
-	//         $decode .. ページ名の変換をするか
-	// 返り値: 作成したファイル数
-	//
+	// 関数  : tarファイルを閉じる
+	// 引数  : なし
+	// 返り値: なし
 	////////////////////////////////////////////////////////////
-	function add($dir, $mask, $decode = FALSE)
+	function close()
 	{
-		$retvalue = 0;
-		
-		if ($this->status != TARLIB_STATUS_CREATE)
-			return ''; // ファイルが作成されていない
-
-		unset($files);
-
-		//  指定されたパスのファイルのリストを取得する
-		$dp = @opendir($dir) or
-			die_message($dir . ' is not found or not readable.');
-		while ($filename = readdir($dp)) {
-			if (preg_match("/$mask/", $filename))
-				$files[] = $dir . $filename;
-		}
-		closedir($dp);
-		
-		sort($files);
-
-		$matches = array();
-		foreach($files as $name)
+		if ($this->status == TARLIB_STATUS_CREATE)
 		{
-			// Tarに格納するファイル名
-			if ($decode == TRUE)
-			{
-				// ファイル名をページ名に変換する処理
-				$dirname  = dirname(trim($name)) . '/';
-				$filename = basename(trim($name));
-				if (preg_match("/^((?:[0-9A-F]{2})+)_((?:[0-9A-F]{2})+)/", $filename, $matches))
-				{
-					// attachファイル名
-					$filename = decode($matches[1]).'/'.decode($matches[2]);
-				}
-				else
-				{
-					$pattern = '^((?:[0-9A-F]{2})+)((\.txt|\.gz)*)$';
-					if (preg_match("/$pattern/", $filename, $matches)) {
-						$filename = decode($matches[1]).$matches[2];
+			// バイナリーゼロを1024バイト出力
+			flock($this->fp, LOCK_EX);
+			fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
+			fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
+			flock($this->fp, LOCK_UN);
 
-						// 危ないコードは置換しておく
-						$filename = str_replace(':',  '_', $filename);
-						$filename = str_replace('\\', '_', $filename);
-					}
-				}
-				$filename = $dirname . $filename;
-				if (function_exists('mb_convert_encoding')) {
-					// ファイル名の文字コードを変換
-					$filename = mb_convert_encoding($filename, PLUGIN_DUMP_FILENAME_ENCORDING);
-				}
-			}
-			else
-			{
-				$filename = $name;
-			}
-
-			// 最終更新時刻
-			$mtime = filemtime($name);
-
-			// ファイル名長のチェック
-			if (strlen($filename) > TARLIB_HDR_NAME_LEN) {
-				// LongLink対応
-				$size = strlen($filename);
-				// LonkLinkヘッダ生成
-				$tar_data = $this->_make_header(TARLIB_DATA_LONGLINK, $size, $mtime, TARLIB_HDR_LINK);
-				// ファイル出力
-	 			$this->_write_data(join('', $tar_data), $filename, $size);
-			}
-
-			// ファイルサイズを取得
-			$size = filesize($name);
-			if ($size == FALSE) {
-				die_message($name . ' is not found or not readable.');
-				continue;	// ファイルがない
-			}
-
-			// ヘッダ生成
-			$tar_data = $this->_make_header($filename, $size, $mtime, TARLIB_HDR_FILE);
-
-			// ファイルデータの取得
-			$fpr = @fopen($name , 'rb');
-			$data = fread($fpr, $size);
-			fclose( $fpr );
-
-			// ファイル出力
-			$this->_write_data(join('', $tar_data), $data, $size);
-			++$retvalue;
-		}
-		return $retvalue;
-	}
-	
-	////////////////////////////////////////////////////////////
-	//
-	// 関数  : tarのヘッダ情報を生成する
-	// 引数  : $filename .. ファイル名
-	//         $size     .. データサイズ
-	//         $mtime    .. 最終更新日
-	//         $typeflag .. TypeFlag (file/link)
-	// 戻り値: tarヘッダ情報
-	//
-	////////////////////////////////////////////////////////////
-	function _make_header($filename, $size, $mtime, $typeflag)
-	{
-		$tar_data = array_fill(0, TARLIB_HDR_LEN, "\0");
-		
-		// ファイル名を保存
-		for($i = 0; $i < strlen($filename); $i++ )
-		{
-			if ($i < TARLIB_HDR_NAME_LEN) {
-				$tar_data[$i + TARLIB_HDR_NAME_OFFSET] = $filename{$i};
+			// ファイルを閉じる
+			if ($this->arc_kind == ARCFILE_TAR_GZ) {
+				gzclose($this->fp);
 			} else {
-				break;	// ファイル名が長すぎ
+				 fclose($this->fp);
+			}
+		}
+		else if ($this->status == TARLIB_STATUS_OPEN)
+		{
+			if ($this->arc_kind == ARCFILE_TAR_GZ) {
+				gzclose($this->fp);
+			} else {
+				 fclose($this->fp);
 			}
 		}
 
-		// mode
-		$modeid = TARLIB_DATA_MODE;
-		for($i = 0; $i < strlen($modeid); $i++ ) {
-			$tar_data[$i + TARLIB_HDR_MODE_OFFSET] = $modeid{$i};
-		}
-
-		// uid / gid
-		$ugid = TARLIB_DATA_UGID;
-		for($i = 0; $i < strlen($ugid); $i++ ) {
-			$tar_data[$i + TARLIB_HDR_UID_OFFSET] = $ugid{$i};
-			$tar_data[$i + TARLIB_HDR_GID_OFFSET] = $ugid{$i};
-		}
-
-		// サイズ
-		$strsize = sprintf('%11o', $size);
-		for($i = 0; $i < strlen($strsize); $i++ ) {
-			$tar_data[$i + TARLIB_HDR_SIZE_OFFSET] = $strsize{$i};
-		}
-
-		// 最終更新時刻
-		$strmtime = sprintf('%o', $mtime);
-		for($i = 0; $i < strlen($strmtime); $i++ ) {
-			$tar_data[$i + TARLIB_HDR_MTIME_OFFSET] = $strmtime{$i};
-		}
-
-		// チェックサム計算用のブランクを設定
-		$chkblanks = TARLIB_DATA_CHKBLANKS;
-		for($i = 0; $i < strlen($chkblanks); $i++ ) {
-			$tar_data[$i + TARLIB_HDR_CHKSUM_OFFSET] = $chkblanks{$i};
-		}
-
-		// タイプフラグ
-		$tar_data[TARLIB_HDR_TYPE_OFFSET] = $typeflag;
-
-		// チェックサムの計算
-		$sum = 0;
-		for($i = 0; $i < TARLIB_BLK_LEN; $i++ ) {
-			$sum += 0xff & ord($tar_data[$i]);
-		}
-		$strchksum = sprintf('%7o',$sum);
-		for($i = 0; $i < strlen($strchksum); $i++ ) {
-			$tar_data[$i + TARLIB_HDR_CHKSUM_OFFSET] = $strchksum{$i};
-		}
-		return $tar_data;
+		$this->status = TARLIB_STATUS_INIT;
 	}
-	
-	////////////////////////////////////////////////////////////
-	//
-	// 関数  : tarデータのファイル出力
-	// 引数  : $header .. tarヘッダ情報
-	//         $body   .. tarデータ
-	//         $size   .. データサイズ
-	// 戻り値: なし
-	//
-	////////////////////////////////////////////////////////////
-	function _write_data($header, $body, $size)
-	{
-		$fixsize  = ceil($size / TARLIB_BLK_LEN) * TARLIB_BLK_LEN - $size;
 
-		flock($this->fp, LOCK_EX);
-		fwrite($this->fp, $header, TARLIB_HDR_LEN);    // Header
-		fwrite($this->fp, $body, $size);               // Body
-		fwrite($this->fp, $this->dummydata, $fixsize); // Padding
-		flock($this->fp, LOCK_UN);
-	}
 }
 ?>
