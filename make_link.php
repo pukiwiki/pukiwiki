@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.22 2003/03/06 05:42:21 panda Exp $
+// $Id: make_link.php,v 1.23 2003/03/07 07:04:07 panda Exp $
 //
 
 // リンクを付加する
@@ -149,25 +149,27 @@ class Link
 // オートリンク,WikiName
 class Link_auto extends Link
 {
-	var $ignorepages;
+	var $forceignorepages;
 	
 	function Link_auto($start)
 	{
-		global $forceignorelistpage;
-		
 		parent::Link($start);
-		$this->ignorepages = get_autolink_ignorepages($forceignorelistpage);
 	}
 	function get_pattern()
 	{
 		global $WikiName,$autolink,$nowikiname;
+		static $auto,$forceignorepages;
 		
 		if (!$autolink or !file_exists(CACHE_DIR.'autolink.dat'))
 		{
 			return $nowikiname ? '(?!)' : $WikiName;
 		}
-		
-		list($auto) = file(CACHE_DIR.'autolink.dat');
+		if (!isset($auto)) // and/or !isset($forceignorepages)
+		{
+			list($auto,$forceignorepages) = file(CACHE_DIR.'autolink.dat');
+			$forceignorepages = explode("\t",$forceignorepages);
+		}
+		$this->forceignorepages = $forceignorepages;
 		return "($auto)";
 	}
 	function get_count()
@@ -179,7 +181,7 @@ class Link_auto extends Link
 		$arr = $this->splice($arr);
 		$name = $alias = $arr[0];
 		// ミスマッチ、または無視リストに含まれるページを捨てる
-		if (!is_page($name) or in_array($name,$this->ignorepages))
+		if (!is_page($name) or in_array($name,$this->forceignorepages))
 		{
 			return FALSE;
 		}
