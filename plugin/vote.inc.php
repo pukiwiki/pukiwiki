@@ -1,5 +1,5 @@
 <?php
-// $Id: vote.inc.php,v 1.9 2002/12/19 09:53:18 panda Exp $
+// $Id: vote.inc.php,v 1.10 2002/12/19 11:33:49 panda Exp $
 
 function plugin_vote_init()
 {
@@ -107,8 +107,9 @@ function plugin_vote_action()
 }
 function plugin_vote_convert()
 {
-	global $script,$vars,$vote_no,$digest;
+	global $script,$vars,$digest;
 	global $_vote_plugin_choice, $_vote_plugin_votes;
+	static $vote_no = 0;
 
 	$args = func_get_args();
 

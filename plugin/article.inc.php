@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.6 2002/11/29 00:09:01 panda Exp $
+ $Id: article.inc.php,v 1.7 2002/12/19 11:33:49 panda Exp $
  
  */
 
@@ -220,8 +220,9 @@ function plugin_article_action()
 }
 function plugin_article_convert()
 {
-	global $script,$article_no,$vars,$digest;
+	global $script,$vars,$digest;
 	global $_btn_article,$_btn_name,$_btn_subject,$vars;
+	static $article_no = 0;
 
 	if((arg_check("read")||$vars["cmd"] == ""||arg_check("unfreeze")||arg_check("freeze")||$vars["write"]||$vars["article"]))
 		$button = "<input type=\"submit\" name=\"article\" value=\"$_btn_article\" />\n";
