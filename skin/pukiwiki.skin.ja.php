@@ -16,7 +16,7 @@
 </head>
 
 <body>
-
+<div>
 <table>
  <tr>
   <td rowspan="2">
@@ -139,6 +139,6 @@ Powered by PHP <?=PHP_VERSION?><br>
 <br>
 HTML convert time to <?=$taketime?> sec.
 </font>
-
+</div>
 </body>
 </html>
