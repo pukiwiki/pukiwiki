@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.20.2.4 2003/03/15 14:02:42 panda Exp $
+// $Id: init.php,v 1.20.2.5 2003/03/16 15:22:21 panda Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -10,7 +10,7 @@ define("INI_FILE","./pukiwiki.ini.php");
 
 ini_set('error_reporting', 5);
 define("S_VERSION","1.3.4");
-define("S_COPYRIGHT","<strong>\"PukiWiki\" ".S_VERSION."</strong> Copyright &copy; 2001,2002 <a href=\"http://pukiwiki.org\">PukiWiki Developers Team</a>. License is <a href=\"http://www.gnu.org/\">GNU/GPL</a>.<BR>Based on \"PukiWiki\" 1.3 by <a href=\"http://factage.com/sng/\">sng</a>");
+define("S_COPYRIGHT","<strong>\"PukiWiki\" ".S_VERSION."</strong> Copyright &copy; 2001,2002,2003 <a href=\"http://pukiwiki.org\">PukiWiki Developers Team</a>. License is <a href=\"http://www.gnu.org/\">GNU/GPL</a>.<BR>Based on \"PukiWiki\" 1.3 by <a href=\"http://factage.com/sng/\">sng</a>");
 define("UTIME",time());
 define("HTTP_USER_AGENT",$HTTP_SERVER_VARS["HTTP_USER_AGENT"]);
 define("PHP_SELF",$HTTP_SERVER_VARS["PHP_SELF"]);
