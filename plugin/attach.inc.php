@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.49 2004/08/06 15:58:05 henoheno Exp $
+//  $Id: attach.inc.php,v 1.50 2004/08/13 12:47:48 henoheno Exp $
 //
 
 /*
@@ -79,7 +79,7 @@ function plugin_attach_action()
 {
 	global $vars;
 
-	// backward compatible
+	// Backward compatible
 	if (isset($vars['openfile'])) {
 		$vars['file'] = $vars['openfile'];
 		$vars['pcmd'] = 'open';
@@ -94,18 +94,23 @@ function plugin_attach_action()
 	$pass  = isset($vars['pass'])  ? $vars['pass']  : NULL;
 	$page  = isset($vars['page'])  ? $vars['page']  : '';
 
-	// Authentication
-	if ($refer != '' and is_pagename($refer)) {
-		$read_cmds = array('info', 'open', 'list');
-		in_array($pcmd, $read_cmds) ?
-			check_readable($refer) :
-			check_editable($refer);
+	if ($refer == '' || ! is_pagename($refer)) {
+		return array(
+			'result'=>FALSE,
+			'msg'=>$_attach_messages['err_noparm']);;
 	}
 
-	// Upload
-	if (isset($_FILES['attach_file']))
-		return attach_upload($_FILES['attach_file'], $refer, $pass);
+	if (in_array($pcmd, array('info', 'open', 'list'))) {
+		check_readable($refer);
+	} else {
+		check_editable($refer);
+	}
 
+	// Dispatch
+	if (isset($_FILES['attach_file'])) {
+		// Upload
+		return attach_upload($_FILES['attach_file'], $refer, $pass);
+	}
 	switch ($pcmd) {
 		case 'info'     : return attach_info();
 		case 'delete'   : return attach_delete();
@@ -115,8 +120,7 @@ function plugin_attach_action()
 		case 'unfreeze' : return attach_freeze(FALSE);
 		case 'upload'   : return attach_showform();
 	}
-
-	if ($page == '' or ! is_page($page)) {
+	if ($page == '' || ! is_page($page)) {
 		return attach_list();
 	} else {
 		return attach_showform();
