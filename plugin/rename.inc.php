@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.21 2004/12/30 12:55:58 henoheno Exp $
+// $Id: rename.inc.php,v 1.22 2004/12/30 13:04:12 henoheno Exp $
 //
 // Rename plugin: Rename page-name and related data
 //
@@ -70,7 +70,7 @@ function plugin_rename_err($err, $page = '')
 
 	if ($err == '') return '';
 
-	$body = $_rename_messages[err_ . $err];
+	$body = $_rename_messages['err_' . $err];
 	if (is_array($page)) {
 		$tmp = '';
 		foreach ($page as $_page) $tmp .= '<br />' . $_page;
@@ -331,7 +331,8 @@ function plugin_rename_proceed($pages, $files, $exists)
 	set_time_limit(0);
 	foreach ($files as $page=>$arr) {
 		foreach ($arr as $old=>$new) {
-			if ($exists[$page][$old]) unlink($new);
+			if (isset($exists[$page][$old]) && $exists[$page][$old])
+				unlink($new);
 			rename($old, $new);
 
 			// linkデータベースを更新する BugTrack/327 arino
