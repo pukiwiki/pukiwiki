@@ -5,7 +5,7 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: counter.inc.php,v 1.12 2003/12/02 09:21:36 arino Exp $
+ * $Id: counter.inc.php,v 1.13 2004/03/18 10:02:13 arino Exp $
  */
 
 // counter file
@@ -84,17 +84,17 @@ function plugin_counter_get_count($page)
 	$counters[$page] = $default;
 	
 	// カウンタファイルが存在する場合は読み込む
-	$fp = NULL;
 	$file = COUNTER_DIR.encode($page).COUNTER_EXT;
-	if (file_exists($file))
+	$fp = fopen($file, file_exists($file) ? 'r+' : 'w+')
+		or die_message('counter.inc.php:cannot open '.$file);
+	set_file_buffer($fp, 0);
+	flock($fp,LOCK_EX);
+	rewind($fp);
+	
+	foreach ($default as $key=>$val)
 	{
-		$fp = fopen($file, 'r+')
-			or die_message('counter.inc.php:cannot read '.$file);
-		flock($fp,LOCK_EX);
-		foreach ($default as $key=>$val)
-		{
-			$counters[$page][$key] = rtrim(fgets($fp,256));
-		}
+		$counters[$page][$key] = rtrim(fgets($fp,256));
+		if (feof($fp)) { break; }
 	}
 	// ファイル更新が必要か?
 	$modify = FALSE;
@@ -120,41 +120,20 @@ function plugin_counter_get_count($page)
 	}
 	
 	//ページ読み出し時のみファイルを更新
-//	for PukiWiki/1.3.x
-//	$is_read = !(arg_check('add') || arg_check('edit') || arg_check('preview') ||
-//		$vars['preview'] != '' || $vars['write'] != '');
-//	for PukiWiki/1.4
-	$is_read = ($vars['cmd'] == 'read');
-	
-	if ($modify and $is_read)
+	if ($modify and $vars['cmd'] == 'read')
 	{
-		// ファイルが開いている
-		if ($fp)
-		{
-			// ファイルを丸める
-			ftruncate($fp,0);
-			rewind($fp);
-		}
-		else
-		{
-			// ファイルを開く
-			$fp = fopen($file, 'w')
-				or die_message('counter.inc.php:cannot write '.$file);
-			flock($fp,LOCK_EX);
-		}
+		// ファイルを丸める
+		rewind($fp);
+		ftruncate($fp,0);
 		// 書き出す
 		foreach (array_keys($default) as $key)
 		{
 			fputs($fp,$counters[$page][$key]."\n");
 		}
 	}
-	// ファイルが開いている
-	if ($fp)
-	{
-		// ファイルを閉じる
-		flock($fp,LOCK_UN);
-		fclose($fp);
-	}
+	// ファイルを閉じる
+	flock($fp,LOCK_UN);
+	fclose($fp);
 	
 	return $counters[$page];
 }

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.39 2004/02/29 08:01:45 arino Exp $
+// $Id: file.php,v 1.40 2004/03/18 10:02:13 arino Exp $
 //
 
 // ソースを取得
@@ -126,7 +126,9 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 		
 		$fp = fopen($file,'w')
 			or die_message('cannot write page file or diff file or other'.htmlspecialchars($page).'<br />maybe permission is not writable or filename is too long');
+		set_file_buffer($fp, 0);
 		flock($fp,LOCK_EX);
+		rewind($fp);
 		fputs($fp,$str);
 		flock($fp,LOCK_UN);
 		fclose($fp);
@@ -193,7 +195,9 @@ function put_recentdeleted($page)
 	$lines = array_splice($lines,0,$maxshow_deleted);
 	$fp = fopen(get_filename($whatsdeleted),'w')
 		or die_message('cannot write page file '.htmlspecialchars($whatsdeleted).'<br />maybe permission is not writable or filename is too long');
+	set_file_buffer($fp, 0);
 	flock($fp,LOCK_EX);
+	rewind($fp);
 	fputs($fp,join('',$lines));
 	fputs($fp,"#norelated\n"); // :)
 	flock($fp,LOCK_UN);
@@ -221,7 +225,9 @@ function put_lastmodified()
 	// create recent.dat (for recent.inc.php)
 	$fp = fopen(CACHE_DIR.'recent.dat','w')
 		or die_message('cannot write cache file '.CACHE_DIR.'recent.dat<br />maybe permission is not writable or filename is too long');
+	set_file_buffer($fp, 0);
 	flock($fp,LOCK_EX);
+	rewind($fp);
 	foreach ($recent_pages as $page=>$time)
 	{
 		fputs($fp,"$time\t$page\n");
@@ -232,7 +238,9 @@ function put_lastmodified()
 	// create RecentChanges
 	$fp = fopen(get_filename($whatsnew),'w')
 		or die_message('cannot write page file '.htmlspecialchars($whatsnew).'<br />maybe permission is not writable or filename is too long');
+	set_file_buffer($fp, 0);
 	flock($fp,LOCK_EX);
+	rewind($fp);
 	foreach (array_splice(array_keys($recent_pages),0,$maxshow) as $page)
 	{
 		$time = $recent_pages[$page];
@@ -251,7 +259,9 @@ function put_lastmodified()
 		
 		$fp = fopen(CACHE_DIR.'autolink.dat','w')
 			or die_message('cannot write autolink file '.CACHE_DIR.'/autolink.dat<br />maybe permission is not writable');
+		set_file_buffer($fp, 0);
 		flock($fp,LOCK_EX);
+		rewind($fp);
 		fputs($fp,$pattern."\n");
 		fputs($fp,$pattern_a."\n");
 		fputs($fp,join("\t",$forceignorelist)."\n");

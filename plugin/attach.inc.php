@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.38 2003/12/06 05:12:38 arino Exp $
+//  $Id: attach.inc.php,v 1.39 2004/03/18 10:02:13 arino Exp $
 //
 
 /*
@@ -434,7 +434,9 @@ class AttachFile
 		$this->status['count'] = join(',',$this->status['count']);
 		$fp = fopen($this->logname,'wb')
 			or die_message('cannot write '.$this->logname);
+		set_file_buffer($fp, 0);
 		flock($fp,LOCK_EX);
+		rewind($fp);
 		foreach ($this->status as $key=>$value)
 		{
 			fwrite($fp,$value."\n");

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: online.inc.php,v 1.7 2003/11/05 10:40:48 arino Exp $
+// $Id: online.inc.php,v 1.8 2004/03/18 10:02:13 arino Exp $
 //
 
 // user list file
@@ -29,7 +29,9 @@ function CheckUser($addr)
 {
 	$usr_arr = file(USR_LST);
 	$fp = fopen(USR_LST, 'w');
+	set_file_buffer($fp, 0);
 	flock($fp,LOCK_EX);
+	rewind($fp);
 	$now = UTIME;
 	for ($i = 0; $i < count($usr_arr); $i++)
 	{
