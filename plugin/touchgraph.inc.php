@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: touchgraph.inc.php,v 1.6 2005/01/03 12:37:45 henoheno Exp $
+// $Id: touchgraph.inc.php,v 1.7 2005/01/03 12:59:01 henoheno Exp $
 //
 // Output an index for 'TouchGraph WikiBrowser'
 // http://www.touchgraph.com/
@@ -14,44 +14,59 @@
 // Note: -Dfile.encoding=EUC-JP (or UTF-8) may not work with Windows OS
 //   http://www.simeji.com/wiki/pukiwiki.php?Java%A4%CE%CD%AB%DD%B5 (in Japanese)
 
-define('PLUGIN_TOUCHGRAPH_REVERSE', 0);
 
 function plugin_touchgraph_action()
 {
+	global $vars;
+
 	pkwk_headers_sent();
 	header('Content-type: text/plain');
-	if (PLUGIN_TOUCHGRAPH_REVERSE) {
-		plugin_touchgraph_ref(); // reverse
+	if (isset($vars['reverse'])) {
+		plugin_touchgraph_ref();
 	} else {
 		plugin_touchgraph_rel();
 	}
 	exit;
 }
 
+// Normal
 function plugin_touchgraph_rel()
 {
+	global $non_list;
+
+ 	$non_list_pattern = '#' . $non_list . '#';
 	foreach (get_existpages() as $page) {
+		if (preg_match($non_list_pattern, $page)) continue;
+
 		$file = CACHE_DIR . encode($page) . '.rel';
 		if (file_exists($file)) {
 			echo $page;
-			echo ' ';
 			$data = file($file);
-			echo str_replace("\t", ' ', trim($data[0]));
+			foreach(explode("\t", trim($data[0])) as $name) {
+				if (preg_match($non_list_pattern, $name)) continue;
+				echo ' ', $link;
+			}
 			echo "\n";
 		}
 	}
 }
 
+// Reverse
 function plugin_touchgraph_ref()
 {
+	global $non_list;
+ 
+ 	$non_list_pattern = '#' . $non_list . '#';
 	foreach (get_existpages() as $page) {
+		if (preg_match($non_list_pattern, $page)) continue;
+
 		$file = CACHE_DIR . encode($page) . '.ref';
 		if (file_exists($file)) {
 			echo $page;
 			foreach (file($file) as $line) {
 				list($name) = explode("\t", $line);
-				echo ' ';
-				echo $name;
+				if (preg_match($non_list_pattern, $name)) continue;
+				echo ' ', $name;
 			}
 			echo "\n";
 		}
