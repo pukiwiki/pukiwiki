@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.13 2003/02/07 15:09:10 panda Exp $
+// $Id: convert_html.php,v 1.14 2003/02/08 12:22:29 panda Exp $
 //
 function &convert_html(&$lines)
 {
@@ -783,7 +783,7 @@ class Body extends Block
 		$text = parent::toString();
 		
 		// #contents
-		$text = preg_replace('/<p[^>]+>#contents</p>',$this->getContents(),$text);
+		$text = preg_replace('/<p[^>]+>#contents<\/p>/',$this->getContents(),$text);
 		
 		// 関連するページ
 		// <p>のときは行頭から、<del>のときは他の要素の子要素として存在
