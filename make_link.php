@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.46 2003/06/30 05:08:36 arino Exp $
+// $Id: make_link.php,v 1.47 2003/06/30 05:57:19 arino Exp $
 //
 
 // リンクを付加する
@@ -206,13 +206,13 @@ class Link_plugin extends Link
  (\w+)      # (2) plugin name
  (?:
   \(
-   ((?:(?!\);).)*)  # (3) parameter
+   ([^)]*)  # (3) parameter
   \)
  )?
 )
 (?:
  \{
-  ((?:(?!};).)*) # (4) body
+  (.*) # (4) body
  \}
 )?
 ;
@@ -241,7 +241,7 @@ EOD;
 	{
 		//&hoge(){...}; &fuga(){...}; のbodyが'...}; &fuga(){...'となるので、前後に分ける
 		$after = '';
-		if (preg_match("/^ ((?!};).*?) }; (.*?)  &amp; ( (\w+) (?: \( ((?:(?!\);).)*) \) )? ) { (.+)$/x",$body,$matches))
+		if (preg_match("/^ ((?!};).*?) }; (.*?)  &amp; ( (\w+) (?: \( ([^()]*) \) )? ) { (.+)$/x",$body,$matches))
 		{
 			$body = $matches[1];
 			$after = $matches[2].$this->make_inline($matches[3],$matches[4],$matches[5],$matches[6]);
