@@ -3,7 +3,7 @@
  * PukiWiki calendar_viewerプラグイン
  *
  *
- *$Id: calendar_viewer.inc.php,v 1.6 2003/03/04 04:02:57 panda Exp $
+ *$Id: calendar_viewer.inc.php,v 1.7 2003/06/03 11:59:07 arino Exp $
   calendarrecentプラグインを元に作成
  */
 /**
@@ -86,7 +86,7 @@ function plugin_calendar_viewer_convert()
       $limit_page = 31;	//手抜き。31日分をリミットとする。
     }else if (preg_match("/this/si",$func_vars_array[1])){
       //今月の一覧表示
-      $page_YM = date("Y".$date_sep."m");
+      $page_YM = get_date("Y".$date_sep."m");
       $limit_base = 0;
       $limit_page = 31;
     }else if (preg_match("/^[0-9]+$/",$func_vars_array[1])){
@@ -135,6 +135,7 @@ function plugin_calendar_viewer_convert()
   $pagelist = array();
   if ($dir = @opendir(DATA_DIR))
     {
+      $_date = get_date("Y".$date_sep."m".$date_sep."d");
       while($file = readdir($dir))
         {
           if ($file == ".." || $file == ".") continue;
@@ -147,9 +148,9 @@ function plugin_calendar_viewer_convert()
 
           //*mode毎に別条件ではじく
           //past modeでは未来のページはNG
-          if (((substr($page,$pagepattern_len)) > date("Y".$date_sep."m".$date_sep."d"))&&($mode=="past") )continue;
+          if (((substr($page,$pagepattern_len)) > $_date)&&($mode=="past") )continue;
           //future modeでは過去のページはNG
-          if (((substr($page,$pagepattern_len)) < date("Y".$date_sep."m".$date_sep."d"))&&($mode=="future") )continue;
+          if (((substr($page,$pagepattern_len)) < $_date)&&($mode=="future") )continue;
           //view modeならall OK
           $pagelist[] = $page;
         }
@@ -289,7 +290,7 @@ function plugin_calendar_viewer_action(){
 
   $page_YM = $vars["date"];
   if ($page_YM == ""){
-    $page_YM = date("Y".$date_sep."m");
+    $page_YM = get_date("Y".$date_sep."m");
   }
   $mode = $vars["mode"];
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar2.inc.php,v 1.19 2003/06/03 05:17:15 arino Exp $
+// $Id: calendar2.inc.php,v 1.20 2003/06/03 11:59:07 arino Exp $
 // *引数にoffと書くことで今日の日記を表示しないようにした。
 function plugin_calendar2_convert()
 {
@@ -8,7 +8,7 @@ function plugin_calendar2_convert()
 	
 	$today_view = TRUE;
 	
-	$date_str = date('Ym');
+	$date_str = get_date('Ym');
 	$base = strip_bracket($vars['page']);
 	
 	if (func_num_args() > 0) {
@@ -40,22 +40,22 @@ function plugin_calendar2_convert()
 	$yr = substr($date_str,0,4);
 	$mon = substr($date_str,4,2);
 	
-	if ($yr != date('Y') || $mon != date('m')) {
+	if ($yr != get_date('Y') || $mon != get_date('m')) {
 		$now_day = 1;
 		$other_month = 1;
 	}
 	else {
-		$now_day = date('d');
+		$now_day = get_date('d');
 		$other_month = 0;
 	}
 	
-	$today = getdate(mktime(0,0,0,$mon,$now_day,$yr));
+	$today = getdate(mktime(0,0,0,$mon,$now_day,$yr) - LOCALZONE + ZONETIME);
 	
 	$m_num = $today['mon'];
 	$d_num = $today['mday'];
 	$year = $today['year'];
 	
-	$f_today = getdate(mktime(0,0,0,$m_num,1,$year));
+	$f_today = getdate(mktime(0,0,0,$m_num,1,$year) - LOCALZONE + ZONETIME);
 	$wday = $f_today['wday'];
 	$day = 1;
 	
@@ -173,7 +173,7 @@ function plugin_calendar2_action()
 	
 	if ($date == '')
 	{
-		$date = date("Ym");
+		$date = get_date("Ym");
 	}
 	$yy = sprintf("%04d.%02d",substr($date,0,4),substr($date,4,2));
 	

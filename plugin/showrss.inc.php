@@ -22,7 +22,7 @@
  * 
  * 避難所       ->   http://do3ob.s20.xrea.com/
  *
- * version: $Id: showrss.inc.php,v 1.7 2003/03/12 03:29:41 panda Exp $
+ * version: $Id: showrss.inc.php,v 1.8 2003/06/03 11:59:07 arino Exp $
  * 
  */
 
@@ -95,7 +95,7 @@ function plugin_showrss_convert() {
 	$tmplname     = trim($tmplname);
 	$usetimestamp = trim($usetimestamp);
 
-	if ($tmplname == '' or (is_array($local_tmpl[$tmplname]) === false)) {
+	if ($tmplname == '' or !array_key_exists($tmplname,$local_tmpl)) {
 		$tmplname = 'default';
 	}
 
@@ -217,7 +217,7 @@ function plugin_showrss_private_make_html_default($tmplname, $showrss_tmpl, $par
 				// XSS 対策で "  > とか変換？
 				break;
 			case "description":
-				if ($unixtime = strtotime(trim($parsed_rss_value))) {
+				if ($unixtime = strtotime(trim($parsed_rss_value)) - LOCALZONE) {
 					$parsed_rss_value = plugin_showrss_private_make_update_label($unixtime);
 				}
 				break;
@@ -242,13 +242,14 @@ function plugin_showrss_private_make_html_recent($tmplname, $showrss_tmpl, $pars
 	foreach ($parsed_rss_array as $index => $parsed_rss) {
 
 		if (strtotime($parsed_rss['description']) !== false ) {
-			if (date('Y-m-d', strtotime($parsed_rss['description'])) !== $last) {
+			$date = get_date('Y-m-d', strtotime($parsed_rss['description']) - LOCALZONE);
+			if ($date !== $last) {
 				if ($temp != '') {
 					$linklist .= "<p><strong>$last</strong></p>";
 					$linklist .= str_replace('{list}', $temp, $showrss_tmpl[$tmplname]['main']);
 					$temp = '';
 				}
-				$last = date('Y-m-d', strtotime($parsed_rss['description']));
+				$last = $date;
 			}
 		}
 
@@ -261,7 +262,7 @@ function plugin_showrss_private_make_html_recent($tmplname, $showrss_tmpl, $pars
 				// XSS 対策で "  > とか変換？
 				break;
 			case "description":
-				if ($unixtime = strtotime(trim($parsed_rss_value))) {
+				if ($unixtime = strtotime(trim($parsed_rss_value)) - LOCALZONE) {
 					$parsed_rss_value = plugin_showrss_private_make_update_label($unixtime);
 				}
 				break;
