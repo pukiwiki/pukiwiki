@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.inc.php,v 1.9.2.1 2003/04/01 07:17:51 panda Exp $
+// $Id: comment.inc.php,v 1.9.2.2 2003/05/17 01:42:46 arino Exp $
 
 global $name_cols, $comment_cols, $msg_format, $name_format;
 global $msg_format, $now_format, $comment_format;
@@ -37,10 +37,6 @@ function plugin_comment_action()
 	global $_title_collided,$_msg_collided,$_title_updated;
 	global $_msg_comment_collided,$_title_comment_collided;
 
-	$_comment_format = $comment_format;
-	if($post["nodate"]=="1") {
-		$_comment_format = str_replace('$now','',$_comment_format);
-	}
 	if($post["msg"]=="") {
 		$retvars["msg"] = $name;
 		$post["page"] = $post["refer"];
@@ -48,48 +44,45 @@ function plugin_comment_action()
 		$retvars["body"] = convert_html(join("",file(get_filename(encode($post["refer"])))));
 		return $retvars;
 	}
-	if($post["msg"])
+	
+	$post["msg"] = preg_replace("/\n/","",$post["msg"]);
+	
+	$postdata = "";
+	$postdata_old  = file(get_filename(encode($post["refer"])));
+	$comment_no = 0;
+	
+	if($post["name"])
 	{
-		$post["msg"] = preg_replace("/\n/","",$post["msg"]);
-
-		$postdata = "";
-		$postdata_old  = file(get_filename(encode($post["refer"])));
-		$comment_no = 0;
-
-		if($post["name"])
-		{
-			$name = str_replace('$name',$post["name"],$name_format);
-		}
-		if($post["msg"])
-		{
-			if(preg_match("/^(-{1,2})(.*)/",$post["msg"],$match))
-			{
-				$head = $match[1];
-				$post["msg"] = $match[2];
-			}
-			
-			$comment = str_replace("\x08MSG\x08",str_replace('$msg',$post["msg"],$msg_format),$_comment_format);
-			$comment = str_replace("\x08NAME\x08",$name,$comment);
-			$comment = str_replace("\x08NOW\x08",str_replace('$now',$now,$now_format),$comment);
-			$comment = $head.$comment;
-		}
-
-		foreach($postdata_old as $line)
-		{
-			if(!$comment_ins) $postdata .= $line;
-			if(preg_match("/^#comment/",$line))
-			{
-				if($comment_no == $post["comment_no"] && $post[msg]!="")
-				{
-					$postdata .= "-$comment\n";
-				}
-				$comment_no++;
-			}
-			if($comment_ins) $postdata .= $line;
-		}
-
-		$postdata_input = "-$comment\n";
+		$name = str_replace('$name',$post["name"],$name_format);
 	}
+	if(preg_match("/^(-{1,2})(.*)/",$post["msg"],$match))
+	{
+		$head = $match[1];
+		$post["msg"] = $match[2];
+	}
+	
+	$comment = str_replace("\x08MSG\x08",str_replace('$msg',$post["msg"],$msg_format),$comment_format);
+	$comment = str_replace("\x08NAME\x08",$name,$comment);
+
+	$now = ($post["nodate"] == "1") ? '' : str_replace('$now',$now,$now_format);
+	$comment = str_replace("\x08NOW\x08",$now,$comment);
+	$comment = $head.$comment;
+	
+	foreach($postdata_old as $line)
+	{
+		if(!$comment_ins) $postdata .= $line;
+		if(preg_match("/^#comment/",$line))
+		{
+			if($comment_no == $post["comment_no"])
+			{
+				$postdata .= "-$comment\n";
+			}
+			$comment_no++;
+		}
+		if($comment_ins) $postdata .= $line;
+	}
+
+	$postdata_input = "-$comment\n";
 
 	$title = $_title_updated;
 	if(md5(@join("",@file(get_filename(encode($post["refer"]))))) != $post["digest"])
