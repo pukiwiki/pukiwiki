@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.28 2003/03/22 15:22:48 panda Exp $
+// $Id: convert_html.php,v 1.29 2003/04/13 05:13:10 arino Exp $
 //
 function convert_html($lines)
 {
@@ -768,7 +768,7 @@ class Body extends Block
 	{
 		$contents  = "<a id=\"contents_{$this->id}\"></a>";
 		$contents .= $this->contents->toString();
-		return $contents;
+		return "<div class=\"contents\">\n$contents</div>\n";
 	}
 	function &insert(&$obj)
 	{
