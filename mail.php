@@ -2,16 +2,19 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mail.php,v 1.3 2004/07/17 10:37:33 henoheno Exp $
+// $Id: mail.php,v 1.4 2004/07/17 13:10:10 henoheno Exp $
 //
 
 // APOP/POP Before SMTP
 function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 	$pop_server = 'localhost', $pop_port = 110)
 {
-	// Always try APOP, by default
-	$pop_auth_use_apop =
-		(! isset($GLOBALS['pop_auth_use_apop']) || $GLOBALS['pop_auth_use_apop'] !== FALSE);
+	$pop_auth_use_apop = TRUE;	// Always try APOP, by default
+	$must_use_apop     = FALSE;	// Always try POP for APOP-disabled server
+	if (isset($GLOBALS['pop_auth_use_apop'])) {
+		// Force APOP only, or POP only
+		$pop_auth_use_apop = $must_use_apop = $GLOBALS['pop_auth_use_apop'];
+	}
 
 	// Compat: GLOBALS > function arguments
 	foreach(array('pop_userid', 'pop_passwd', 'pop_server', 'pop_port') as $global) {
@@ -36,10 +39,16 @@ function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 		fclose($fp);
 		return ("pop_before_smtp(): Greeting message seems invalid");
 	}
+
 	$challenge = array();
-	if ($pop_auth_use_apop && preg_match('/<.*>/', $message, $challenge)) {
+	if ($pop_auth_use_apop &&
+	   (preg_match('/<.*>/', $message, $challenge) || $must_use_apop)) {
 		$method = 'APOP'; // APOP auth
-		$response = md5($challenge[0] . $pop_passwd);
+		if (! isset($challenge[0])) {
+			$response = md5(time()); // Someting worthless but variable
+		} else {
+			$response = md5($challenge[0] . $pop_passwd);
+		}
 		fputs($fp, 'APOP ' . $pop_userid . ' ' . $response . "\r\n");
 	} else {
 		$method = 'POP'; // POP auth
