@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.20 2003/07/03 05:24:28 arino Exp $
+// $Id: pcomment.inc.php,v 1.21 2003/07/03 06:12:53 arino Exp $
 //
 
 /*
@@ -352,9 +352,11 @@ function pcmt_check_arg($val, $key, &$params)
 
 function pcmt_get_comments($page,$count,$dir,$reply)
 {
+	global $_msg_pcomment_restrict;
+	
 	if (!check_readable($page, false, false))
 	{
-		return array("閲覧制限がかかっているため、".$page."からはコメントを読みこむことができません。");
+		return array(str_replace('$1',$page,$_msg_pcomment_restrict));
 	}
 	
 	$data = get_source($page);

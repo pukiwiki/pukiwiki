@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.18 2003/07/03 04:53:58 arino Exp $
+// $Id: ja.lng,v 1.19 2003/07/03 06:14:20 arino Exp $
 //
 // PukiWiki message file (japanese)
 
@@ -97,6 +97,9 @@ $_msg_add = '¥Ú¡¼¥¸¤Ø¤ÎÄÉ²Ã¤Ï¡¢¸½ºß¤Î¥Ú¡¼¥¸ÆâÍÆ¤Ë²þ¹Ô¤¬Æó¤Ä¤ÈÆþÎÏÆâÍÆ¤¬ÄÉ²Ã¤µ¤ì¤
 $_btn_name = '¤ªÌ¾Á°';
 $_btn_article = 'µ­»ö¤ÎÅê¹Æ';
 $_btn_subject = 'ÂêÌ¾: ';
+$_msg_article_mail_sender = 'Åê¹Æ¼Ô: ';
+$_msg_article_mail_page = 'Åê¹ÆÀè: ';
+
 
 ///////////////////////////////////////
 // attach.inc.php
@@ -170,6 +173,7 @@ $_err_calendar_viewer_param  = '°ú¿ô»ØÄê¤·¤Æ¤Í';
 $_err_calendar_viewer_param2 = 'Âè2°ú¿ô¤¬ÊÑ¤À¤è';
 $_msg_calendar_viewer_right  = '¼¡¤Î%d·ï&gt;&gt;';
 $_msg_calendar_viewer_left   = '&lt;&lt;Á°¤Î%d·ï';
+$_msg_calendar_viewer_restrict = '$1 ¤Ï±ÜÍ÷À©¸Â¤¬¤«¤«¤Ã¤Æ¤¤¤ë¤¿¤ácalendar_viewer¤Ë¤è¤ë»²¾È¤Ï¤Ç¤­¤Þ¤»¤ó';
 
 ///////////////////////////////////////
 // calendar2.inc.php
@@ -222,6 +226,10 @@ $_btn_freeze = 'Åà·ë';
 ///////////////////////////////////////
 // insert.inc.php
 $_btn_insert = 'ÄÉ²Ã';
+
+///////////////////////////////////////
+// include.inc.php
+$_msg_include_restrict = '$1 ¤Ï±ÜÍ÷À©¸Â¤¬¤«¤«¤Ã¤Æ¤¤¤ë¤¿¤áinclude¤Ç¤­¤Þ¤»¤ó';
 
 ///////////////////////////////////////
 // interwiki.inc.php
@@ -279,6 +287,7 @@ $_pcmt_messages = array(
 ¥³¥á¥ó¥È¤òÄÉ²Ã¤·¤Þ¤·¤¿¤¬¡¢°ã¤¦°ÌÃÖ¤ËÁÞÆþ¤µ¤ì¤Æ¤¤¤ë¤«¤â¤·¤ì¤Þ¤»¤ó¡£<br />',
 	'err_pagename' => '¥Ú¡¼¥¸Ì¾ [[%s]] ¤Ï»ÈÍÑ¤Ç¤­¤Þ¤»¤ó¡£ Àµ¤·¤¤¥Ú¡¼¥¸Ì¾¤ò»ØÄê¤·¤Æ¤¯¤À¤µ¤¤¡£',
 );
+$_msg_pcomment_restrict = '±ÜÍ÷À©¸Â¤¬¤«¤«¤Ã¤Æ¤¤¤ë¤¿¤á¡¢$1¤«¤é¤Ï¥³¥á¥ó¥È¤òÆÉ¤ß¤³¤à¤³¤È¤¬¤Ç¤­¤Þ¤»¤ó¡£';
 
 ///////////////////////////////////////
 // popular.inc.php

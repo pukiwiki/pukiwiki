@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: include.inc.php,v 1.7 2003/06/22 06:37:18 arino Exp $
+// $Id: include.inc.php,v 1.8 2003/07/03 06:12:17 arino Exp $
 //
 
 /*
@@ -13,17 +13,15 @@
 function plugin_include_convert()
 {
 	global $script,$vars,$get,$post,$hr,$WikiName,$BracketName;
-	global $include_list; //処理済ページ名の配列
-	
-	if (!isset($include_list))
-	{
-		$include_list = array($vars['page']=>TRUE);
-	}
+	global $_msg_include_restrict;
+	static $include_list = array(); //処理済ページ名の配列
 	
 	if (func_num_args() == 0)
 	{
 		return;
 	}
+	
+	$include_list[$vars['page']] = TRUE;
 	
 	list($page) = func_get_args();
 	$page = strip_bracket($page);
@@ -41,7 +39,7 @@ function plugin_include_convert()
 	if (check_readable($page, false, false)) {
 		$body = convert_html(get_source($page));
 	} else {
-		$body = $page." は閲覧制限がかかっているためincludeできません";
+		$body = str_replace('$1',$page,$_msg_include_restrict);
 	}
 	
 	$get['page'] = $post['page'] = $vars['page'] = $_page;

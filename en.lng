@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.16 2003/07/03 04:53:58 arino Exp $
+// $Id: en.lng,v 1.17 2003/07/03 06:14:20 arino Exp $
 //
 // PukiWiki message file (english)
 
@@ -97,6 +97,8 @@ $_msg_add = 'Two and the contents of an input are added for a new-line to the co
 $_btn_name = 'Name: ';
 $_btn_article' = 'Submit';
 $_btn_subject' = 'Subject: ';
+$_msg_article_mail_sender = 'Sender: ';
+$_msg_article_mail_page = 'Page: ';
 
 ///////////////////////////////////////
 // attach.inc.php
@@ -170,6 +172,7 @@ $_err_calendar_viewer_param  = 'Parametere require.';
 $_err_calendar_viewer_param2 = 'Wrong 2nd parameter.';
 $_msg_calendar_viewer_right  = 'Next %d&gt;&gt;';
 $_msg_calendar_viewer_left   = '&lt;&lt; Prev %d';
+$_msg_calendar_viewer_restrict = 'Since $1 has required perusal restrictions, the reference by calendar_viewer cannot be performed.';
 
 ///////////////////////////////////////
 // calendar2.inc.php
@@ -218,6 +221,10 @@ $_title_freezed = '$1 was frozen.';
 $_title_freeze = 'Freezing $1';
 $_msg_freezing = 'Please input the password for freezing.';
 $_btn_freeze = 'Freeze';
+
+///////////////////////////////////////
+// include.inc.php
+$_msg_include_restrict = 'Since perusal restrictions have started, $1 cannot be include(d).';
 
 ///////////////////////////////////////
 // insert.inc.php
@@ -279,6 +286,7 @@ $_pcmt_messages = array(
 add comment to page, but there may be a problem.<br />',
 	'err_pagename' => '[[%s]] : invalid page name.',
 );
+$_msg_pcomment_restrict = 'Since perusal restrictions have started, a comment cannot be read from $1.';
 
 ///////////////////////////////////////
 // popular.inc.php
