@@ -3,7 +3,7 @@
  * PukiWiki calendar_viewerプラグイン
  *
  *
- *$Id: calendar_viewer.inc.php,v 1.1.2.2 2003/03/02 06:37:32 panda Exp $
+ *$Id: calendar_viewer.inc.php,v 1.1.2.3 2003/03/04 04:16:59 panda Exp $
   calendarrecentプラグインを元に作成
  */
 /**
@@ -40,12 +40,23 @@
 
  */
 
-
+function plugin_calendar_viewer_init()
+{
+	$messages = array(
+		'_err_calendar_viewer_param'  => '引数指定してね',
+		'_err_calendar_viewer_param2' => '第2引数が変だよ',
+		'_msg_calendar_viewer_right'  => '次の%d件&gt;&gt;',
+		'_msg_calendar_viewer_left'   => '&lt;&lt;前の%d件'
+	);
+	set_plugin_messages($messages);
+}
 
 
 function plugin_calendar_viewer_convert()
 {
   global $WikiName,$BracketName,$vars,$get,$post,$hr,$script;
+  global $_err_calendar_viewer_param,$_err_calendar_viewer_param2;
+  global $_msg_calendar_viewer_right,$_msg_calendar_viewer_left;
   //*デフォルト値をセット
   //基準となるページ名
   $pagename = "";
@@ -60,7 +71,7 @@ function plugin_calendar_viewer_convert()
 
 
   //*引数の確認
-  if(func_num_args()>=2){
+  if (func_num_args()>=2){
     $func_vars_array = func_get_args();
 
     $pagename = $func_vars_array[0];
@@ -90,7 +101,7 @@ function plugin_calendar_viewer_convert()
       $limit_base = $reg_array[1];
       $page_YM = "";
     }else{
-      return "第2引数が変だよ";
+      return $_err_calendar_viewer_param2;
     }
     if (isset($func_vars_array[2])&&preg_match("/^(past|view|future)$/si",$func_vars_array[2])){
       //モード指定
@@ -99,7 +110,7 @@ function plugin_calendar_viewer_convert()
 
 
   }else{
-    return "引数指定してね";
+    return $_err_calendar_viewer_param;
   }
 
   //*一覧表示するページ名とファイル名のパターン　ファイル名には年月を含む
@@ -126,8 +137,8 @@ function plugin_calendar_viewer_convert()
     {
       while($file = readdir($dir))
         {
-          if($file == ".." || $file == ".") continue;
-          if(substr($file,0,$filepattern_len)!=$filepattern) continue;
+          if ($file == ".." || $file == ".") continue;
+          if (substr($file,0,$filepattern_len)!=$filepattern) continue;
           //echo "OK";
           $page = decode(trim(preg_replace("/\.txt$/"," ",$file)));
           //$pageがカレンダー形式なのかチェック デフォルトでは、 yyyy-mm-dd
@@ -170,7 +181,7 @@ function plugin_calendar_viewer_convert()
 
     $body = @join("",@file(get_filename(encode($page))));
     $body = convert_html($body);
-    $link = "<a href=\"$script?cmd=edit&amp;page=".rawurlencode($page)."\">".strip_bracket($page)."</a>";
+    $link = "<a href=\"$script?cmd=edit&amp;page=".rawurlencode($page)."\">".htmlspecialchars(strip_bracket($page))."</a>";
     $head = "<h1>$link</h1>\n";
     $return_body .= $head . $body;
 
@@ -221,12 +232,12 @@ function plugin_calendar_viewer_convert()
     }else{
       $right_base = $limit_base + $limit_pitch;
       $right_YM = $right_base ."*".$limit_pitch;
-      $right_text = "次の".$limit_pitch."件&gt;&gt;";
+      $right_text = sprintf($_msg_calendar_viewer_right,$limit_pitch);
     }
     $left_base  = $limit_base - $limit_pitch;
     if ($left_base >= 0) {
       $left_YM = $left_base . "*" . $limit_pitch;
-      $left_text = "&lt;&lt;前の".$limit_pitch."件";
+      $left_text = sprintf($_msg_calendar_viewer_left,$limit_pitch);
       
     }else{
       $left_YM = "";
@@ -234,13 +245,14 @@ function plugin_calendar_viewer_convert()
 
   }
   //リンク作成
+  $s_date_sep = htmlspecialchars($date_sep);
   if ($left_YM != ""){
-    $left_link = "<a href=\"". $script."?plugin=calendar_viewer&amp;file=".$enc_pagename."&amp;date=".$left_YM ."&amp;date_sep=".$date_sep."&amp;mode=".$mode."\">".$left_text."</a>";
+    $left_link = "<a href=\"$script?plugin=calendar_viewer&amp;file=$enc_pagename&amp;date=$left_YM&amp;date_sep=$s_date_sep&amp;mode=$mode\">$left_text</a>";
   }else{
     $left_link = "";
   }
   if ($right_YM != ""){
-    $right_link = "<a href=\"". $script."?plugin=calendar_viewer&amp;file=".$enc_pagename."&amp;date=".$right_YM ."&amp;date_sep=".$date_sep."&amp;mode=".$mode."\">".$right_text."</a>";
+    $right_link = "<a href=\"$script?plugin=calendar_viewer&amp;file=$enc_pagename&amp;date=$right_YM&amp;date_sep=$s_date_sep&amp;mode=$mode\">$right_text</a>";
   }else {
     $right_link = "";
   }
@@ -270,7 +282,7 @@ function plugin_calendar_viewer_action(){
 
   $page = strip_bracket($vars['page']);
   $vars['page'] = '*';
-  if(isset($vars['file'])) $vars['page'] = $vars['file'];
+  if (isset($vars['file'])) $vars['page'] = $vars['file'];
 
   $date_sep = $vars["date_sep"];
 
@@ -284,14 +296,14 @@ function plugin_calendar_viewer_action(){
   $return_vars_array["body"] = call_user_func_array("plugin_calendar_viewer_convert",$args_array);
 
   //$return_vars_array["msg"] = "calendar_viewer ".$vars["page"]."/".$page_YM;
-  $return_vars_array["msg"] = "calendar_viewer ".$vars["page"];
+  $return_vars_array["msg"] = "calendar_viewer ".htmlspecialchars($vars["page"]);
   if ($vars["page"] != ""){
     $return_vars_array["msg"] .= "/";
   }
-  if(preg_match("/\*/",$page_YM)){
+  if (preg_match("/\*/",$page_YM)){
     //うーん、n件表示の時はなんてページ名にしたらいい？
   }else{
-    $return_vars_array["msg"] .= $page_YM;
+    $return_vars_array["msg"] .= htmlspecialchars($page_YM);
   }
 
   $vars['page'] = $page;
@@ -300,11 +312,11 @@ function plugin_calendar_viewer_action(){
 
 function plugin_calendar_viewer_isValidDate($aStr, $aSepList="-/ .") {
   //$aSepList=""なら、yyyymmddとしてチェック（手抜き(^^;）
-  if($aSepList == "") {
+  if ($aSepList == "") {
     //yyyymmddとしてチェック
     return checkdate(substr($aStr,4,2),substr($aStr,6,2),substr($aStr,0,4));
   }
-  if( ereg("^([0-9]{2,4})[$aSepList]([0-9]{1,2})[$aSepList]([0-9]{1,2})$", $aStr, $m) ) {
+  if ( ereg("^([0-9]{2,4})[$aSepList]([0-9]{1,2})[$aSepList]([0-9]{1,2})$", $aStr, $m) ) {
     return checkdate($m[2], $m[3], $m[1]);
   }
   return false;
