@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.10 2004/09/25 13:34:44 henoheno Exp $
+// $Id: dump.inc.php,v 1.11 2004/09/25 15:12:09 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -135,7 +135,7 @@ function plugin_dump_upload()
 	$filename = $_FILES['upload_file']['name'];
 	$matches = array();
 	$arc_kind = FALSE;
-	if(! preg_match('/((?:\.[a-zA-Z]+){1,2})$/', $filename, $matches)){
+	if(! preg_match('/(\.tar|\.tar.gz|\.tgz)$/', $filename, $matches)){
 		die_message("Invalid file suffix");
 	} else { 
 		$matches[1] = strtolower($matches[1]);
@@ -146,6 +146,9 @@ function plugin_dump_upload()
 		default: die_message("Invalid file suffix: " . $matches[1]);
 		}
 	}
+
+	if ($_FILES['upload_file']['size'] >  PLUGIN_DUMP_MAX_FILESIZE * 1024)
+		die_message("Max file size exceeded: " . PLUGIN_DUMP_MAX_FILESIZE . "KB");
 
 	// アップロードファイル
 	$uploadfile = tempnam(CACHE_DIR, 'upload' );
@@ -200,8 +203,7 @@ function plugin_dump_upload()
 function download_tarfile($name, $arc_kind)
 {
 	// ファイル名
-	$filename = strftime('tar%Y%m%d', time()) . $file_ext;
-
+	$filename = strftime('tar%Y%m%d', time());
 	if ($arc_kind == ARCFILE_TAR_GZ) {
 		$filename .= PLUGIN_DUMP_SFX_GZIP;
 	} else {
@@ -223,10 +225,9 @@ function plugin_dump_disp_form()
 {
 	global $script, $defaultpage;
 
-	$act_down  = PLUGIN_DUMP_DUMP;
-	$act_up    = PLUGIN_DUMP_RESTORE;
-	$maxsize   = PLUGIN_DUMP_MAX_FILESIZE * 1024;
-	$maxsizekb = PLUGIN_DUMP_MAX_FILESIZE;
+	$act_down = PLUGIN_DUMP_DUMP;
+	$act_up   = PLUGIN_DUMP_RESTORE;
+	$maxsize  = PLUGIN_DUMP_MAX_FILESIZE;
 
 	$data = <<<EOD
 <span class="small">
@@ -268,7 +269,7 @@ function plugin_dump_disp_form()
   <input type="hidden" name="act"  value="$act_up" />
 <p><strong>[重要] 同じ名前のデータファイルは上書きされますので、十分ご注意ください。</strong></p>
 <p><span class="small">
-アップロード可能な最大ファイルサイズは、$maxsizekb KByte までです。<br />
+アップロード可能な最大ファイルサイズは、$maxsize KByte までです。<br />
 </span>
   ファイル: <input type="file" name="upload_file" size="40" />
 </p>
@@ -328,7 +329,7 @@ class tarlib
 		$this->filename = $name;
 		$this->fp       = FALSE;
 		$this->status   = TARLIB_STATUS_INIT;
-		$arc_kind       = ARCFILE_TAR_GZ;
+		$this->arc_kind = ARCFILE_TAR_GZ;
 	}
 	
 	////////////////////////////////////////////////////////////
@@ -399,7 +400,7 @@ class tarlib
 	////////////////////////////////////////////////////////////
 	function close()
 	{
-		if ($this->status = TARLIB_STATUS_CREATE)
+		if ($this->status == TARLIB_STATUS_CREATE)
 		{
 			// バイナリーゼロを1024バイト出力
 			flock($this->fp, LOCK_EX);
@@ -414,7 +415,7 @@ class tarlib
 				 fclose($this->fp);
 			}
 		}
-		else if ($this->status = TARLIB_STATUS_OPEN)
+		else if ($this->status == TARLIB_STATUS_OPEN)
 		{
 			if ($this->arc_kind == ARCFILE_TAR_GZ) {
 				gzclose($this->fp);
@@ -497,8 +498,8 @@ class tarlib
 			}
 			list($mtime) = sscanf('0' . trim($strmtime), '%i');
 
-			// タイプフラグ
-			$type = $buff{TARLIB_HDR_TYPE_OFFSET};
+			// タイプフラグ (NOT USED)
+			// $type = $buff{TARLIB_HDR_TYPE_OFFSET};
 
 			if ($name == TARLIB_DATA_LONGLINK)
 			{
@@ -512,7 +513,8 @@ class tarlib
 				$buff = fread($this->fp, $pdsz);
 
 				// 既に同じファイルがある場合は上書きされる
-				if ($fpw = @fopen($name, 'wb')) {
+				$fpw = @fopen($name, 'wb');
+				if ($fpw !== FALSE) {
 					fwrite($fpw, $buff, $size);
 					fclose($fpw);
 					chmod($name, 0666); // 念のためパーミッションを設定しておく
@@ -558,6 +560,7 @@ class tarlib
 		
 		sort($files);
 
+		$matches = array();
 		foreach($files as $name)
 		{
 			// Tarに格納するファイル名
