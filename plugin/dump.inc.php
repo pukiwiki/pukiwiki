@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.21 2004/09/26 14:13:29 henoheno Exp $
+// $Id: dump.inc.php,v 1.22 2004/09/26 14:15:54 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -368,7 +368,7 @@ class tarlib
 		$retvalue = 0;
 		
 		if ($this->status != TARLIB_STATUS_CREATE)
-			return ''; // ファイルが作成されていない
+			return ''; // File is not created
 
 		unset($files);
 
@@ -533,9 +533,17 @@ class tarlib
 	{
 		$fixsize  = ceil($size / TARLIB_BLK_LEN) * TARLIB_BLK_LEN - $size;
 
-		fwrite($this->fp, $header, TARLIB_HDR_LEN);    // Header
-		fwrite($this->fp, $body, $size);               // Body
-		fwrite($this->fp, $this->dummydata, $fixsize); // Padding
+		if ($this->arc_kind == TARLIB_KIND_TGZ) {
+			gzwrite($this->fp, $header, TARLIB_HDR_LEN);    // Header
+			gzwrite($this->fp, $body, $size);               // Body
+			gzwrite($this->fp, $this->dummydata, $fixsize); // Padding
+		} else {
+			flock($this->fp, LOCK_EX);
+			 fwrite($this->fp, $header, TARLIB_HDR_LEN);    // Header
+			 fwrite($this->fp, $body, $size);               // Body
+			 fwrite($this->fp, $this->dummydata, $fixsize); // Padding
+			flock($this->fp, LOCK_UN);
+		}
 	}
 
 	////////////////////////////////////////////////////////////
@@ -676,15 +684,17 @@ class tarlib
 	{
 		if ($this->status == TARLIB_STATUS_CREATE)
 		{
-			// バイナリーゼロを1024バイト出力
-			fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
-			fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
-
 			// ファイルを閉じる
 			if ($this->arc_kind == TARLIB_KIND_TGZ) {
+				// バイナリーゼロを1024バイト出力
+				gzwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
+				gzwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
 				gzclose($this->fp);
 			} else {
-				 fclose($this->fp);
+				// バイナリーゼロを1024バイト出力
+				fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
+				fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
+				fclose($this->fp);
 			}
 		}
 		else if ($this->status == TARLIB_STATUS_OPEN)
