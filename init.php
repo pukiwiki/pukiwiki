@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.52 2003/06/22 06:42:03 arino Exp $
+// $Id: init.php,v 1.53 2003/07/02 14:55:08 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -78,7 +78,7 @@ if (!isset($script) or $script == '') {
 	$script  = ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://');
 	$script .=  $_SERVER['SERVER_NAME'];
 	$script .= ($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT']);
-	$parse_url = parse_url($_SERVER['REQUEST_URI']);
+	$parse_url = parse_url($script.$_SERVER['REQUEST_URI']);
 	$script .= (isset($parse_url['path']) ? $parse_url['path'] : $_SERVER['SCRIPT_NAME']);
 }
 if (php_sapi_name() == 'cgi' && !preg_match("/^http:\/\/[-a-zA-Z0-9\@:;_.]+\//",$script)) {
