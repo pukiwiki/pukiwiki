@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.26 2005/01/10 04:18:46 henoheno Exp $
+// $Id: func.php,v 1.27 2005/01/15 01:56:05 henoheno Exp $
 //
 // General functions
 
@@ -251,7 +251,8 @@ function encode($key)
 // ページ名のデコード
 function decode($key)
 {
-	return ($key == '') ? '' : substr(pack('H*', '20202020' . $key), 4);
+	// Warning: pack(): Type H: illegal hex digit ...
+	return preg_match('/^[0-9a-f]+$/i', $key) ? pack('H*', $key) : $key;
 }
 
 // [[ ]] を取り除く
