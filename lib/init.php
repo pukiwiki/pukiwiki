@@ -2,10 +2,9 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.4 2004/08/09 11:19:08 henoheno Exp $
+// $Id: init.php,v 1.5 2004/08/11 14:33:52 henoheno Exp $
 //
 
-/////////////////////////////////////////////////
 // 初期設定 (エラー出力レベル)
 error_reporting(E_ERROR | E_PARSE);	// (E_WARNING | E_NOTICE)を除外しています
 //error_reporting(E_ALL);
@@ -25,10 +24,10 @@ mb_detect_order('auto');
 /////////////////////////////////////////////////
 // 初期設定(設定ファイルの場所)
 define('LANG_FILE', DATA_HOME . LANG . '.lng');
-define('INI_FILE',  DATA_HOME . './pukiwiki.ini.php');
+define('INI_FILE',  DATA_HOME . 'pukiwiki.ini.php');
 
 /////////////////////////////////////////////////
-// 初期設定 (バージョン/著作権)
+// バージョン / 著作権
 define('S_VERSION', '1.4.4rc1');
 define('S_COPYRIGHT',
 	'<strong>PukiWiki ' . S_VERSION . '</strong>' .
