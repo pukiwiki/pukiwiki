@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.37 2003/05/14 10:13:29 arino Exp $
+// $Id: convert_html.php,v 1.38 2003/05/17 11:17:11 arino Exp $
 //
 function convert_html($lines)
 {
@@ -763,14 +763,10 @@ class Body extends Block
 	}
 	function getAnchor($text,$level)
 	{
-		global $top;
+		global $top,$_symbol_anchor;
 		
-		$anchor = '';
-		if (preg_match('/^(.*)\[#([A-Za-z][\w-]+)\](.*)$/',$text,$matches))
-		{
-			$text = $matches[1].$matches[3];
-			$anchor = ' &aname('.$matches[2].',super,full){&dagger;};';
-		}
+		$anchor = (($id = make_heading($text,FALSE)) == '') ?
+			'' : " &aname($id,super,full)\{$_symbol_anchor};";
 		$id = "content_{$this->id}_{$this->count}";
 		$this->count++;
 		$this->contents_last =& $this->contents_last->add(new Contents_UList($text,$this->id,$level,$id));
@@ -808,11 +804,9 @@ class Contents_UList extends ListContainer
 {
 	function Contents_UList($text,$id,$level,$id)
 	{
-		global $NotePattern;
-		
 		// テキストのリフォーム
 		// 行頭\nで整形済みを表す ... X(
-		$text = trim(make_heading($text));
+		make_heading($text);
 		$text = "\n<a href=\"#$id\">$text</a>\n";
 		parent::ListContainer('ul', 'li', --$level, $text);
 	}
