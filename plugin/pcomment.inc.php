@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.18 2003/06/22 06:37:18 arino Exp $
+// $Id: pcomment.inc.php,v 1.19 2003/06/24 01:17:32 arino Exp $
 //
 
 /*
@@ -397,7 +397,7 @@ function pcmt_get_comments($page,$count,$dir,$reply)
 		{
 			break;
 		}
-		if (preg_match('/^(\-{1,2})(?!\-)(.*)$/', $line, $matches))
+		if (preg_match('/^(\-{1,2})(?!\-)(.+)$/', $line, $matches))
 		{
 			if ($count > 0 and strlen($matches[1]) == 1 and ++$cnt > $count)
 			{
