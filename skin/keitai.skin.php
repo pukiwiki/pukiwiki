@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: keitai.skin.php,v 1.5 2005/01/08 04:07:11 henoheno Exp $
+// $Id: keitai.skin.php,v 1.6 2005/02/13 02:35:56 henoheno Exp $
 //
 // Skin for Embedded devices
 
@@ -9,6 +9,7 @@ if (! defined('UI_LANG')) die('UI_LANG is not set');
 
 global $max_size, $accesskey, $menubar;
 $link = $_LINK;
+$rw = ! PKWK_READONLY;
 
 // Force Shift JIS encode for Japanese embedded browsers and devices
 pkwk_headers_sent();
@@ -33,13 +34,15 @@ $lastpage = $pagecount - 1;
 // Top navigation (text) bar
 $navi = array();
 $navi[] = '<a href="' . $link['top']  . '" ' . $accesskey . '="0">0.Top</a>';
-$navi[] = '<a href="' . $link['new']  . '" ' . $accesskey . '="1">1.New</a>';
-$navi[] = '<a href="' . $link['edit'] . '" ' . $accesskey . '="2">2.Edit</a>';
-if ($is_read and $function_freeze) {
-	if (! $is_freeze) {
-		$navi[] = '<a href="' . $link['freeze']   . '" ' . $accesskey . '="3">3.Freeze</a>';
-	} else {
-		$navi[] = '<a href="' . $link['unfreeze'] . '" ' . $accesskey . '="3">3.Unfreeze</a>';
+if ($rw) {
+	$navi[] = '<a href="' . $link['new']  . '" ' . $accesskey . '="1">1.New</a>';
+	$navi[] = '<a href="' . $link['edit'] . '" ' . $accesskey . '="2">2.Edit</a>';
+	if ($is_read and $function_freeze) {
+		if (! $is_freeze) {
+			$navi[] = '<a href="' . $link['freeze']   . '" ' . $accesskey . '="3">3.Freeze</a>';
+		} else {
+			$navi[] = '<a href="' . $link['unfreeze'] . '" ' . $accesskey . '="3">3.Unfreeze</a>';
+		}
 	}
 }
 $navi[] = '<a href="' . $script . '?' . $menubar . '" ' . $accesskey . '="4">4.Menu</a>';
