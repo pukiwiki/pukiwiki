@@ -2,32 +2,30 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.inc.php,v 1.5 2004/06/30 13:03:39 henoheno Exp $
+// $Id: diff.inc.php,v 1.6 2004/07/18 02:39:06 henoheno Exp $
 //
+
 //ページの差分を表示する
 function plugin_diff_action()
 {
 	global $vars;
-	
-	check_readable($vars['page'],true,true);
-	
-	$action = array_key_exists('action',$vars) ? $vars['action'] : '';
-	
+
+	$page = isset($vars['page']) ? $vars['page'] : '';
+	check_readable($page, true, true);
+
+	$action = isset($vars['action']) ? $vars['action'] : '';
 	switch ($action) {
-	case 'delete':
-		$retval = plugin_diff_delete($vars['page']);
-		break;
-	default:
-		$retval = plugin_diff_view($vars['page']);
-		break;			
+		case 'delete': $retval = plugin_diff_delete($page);	break;
+		default:       $retval = plugin_diff_view($page);	break;			
 	}
 	return $retval;
 }
+
 // 差分を表示
 function plugin_diff_view($page)
 {
-	global $script,$hr;
-	global $_msg_notfound,$_msg_goto,$_msg_deleted,$_msg_addline,$_msg_delline,$_title_diff;
+	global $script, $hr;
+	global $_msg_notfound, $_msg_goto, $_msg_deleted, $_msg_addline, $_msg_delline, $_title_diff;
 	global $_title_diff_delete;
 	
 	$r_page = rawurlencode($page);
@@ -38,31 +36,31 @@ function plugin_diff_view($page)
 		"<li>$_msg_delline</li>"
 	);
 
-	if (is_page($page)) {
-		$menu[] = " <li>".str_replace('$1',"<a href=\"$script?$r_page\">$s_page</a>",$_msg_goto)."</li>";
+	$is_page = is_page($page);
+	if ($is_page) {
+		$menu[] = ' <li>' . str_replace('$1', "<a href=\"$script?$r_page\">$s_page</a>", $_msg_goto) . '</li>';
 	} else {
-		$menu[] = " <li>".str_replace('$1',$s_page,$_msg_deleted)."</li>";
+		$menu[] = ' <li>' . str_replace('$1', $s_page,$_msg_deleted) . '</li>';
 	}
 
-	$delete_msg = '';
-	$filename = DIFF_DIR.encode($page).'.txt';
+	$filename = DIFF_DIR . encode($page) . '.txt';
 	if (file_exists($filename)) {
-		$diffdata = htmlspecialchars(join('',file($filename)));
-		$diffdata = preg_replace('/^(\-)(.*)$/m','<span class="diff_removed"> $2</span>',$diffdata);
-		$diffdata = preg_replace('/^(\+)(.*)$/m','<span class="diff_added"> $2</span>',$diffdata);
-		$menu[] = "<li><a href=\"$script?cmd=diff&amp;action=delete&amp;page=$r_page\">" .
-			str_replace('$1',$s_page,$_title_diff_delete) . '</a></li>';
+		$diffdata = htmlspecialchars(join('', file($filename)));
+		$diffdata = preg_replace('/^(\-)(.*)$/m', '<span class="diff_removed"> $2</span>', $diffdata);
+		$diffdata = preg_replace('/^(\+)(.*)$/m', '<span class="diff_added"  > $2</span>', $diffdata);
+		$menu[] = "<li><a href=\"$script?cmd=diff&action=delete&page=$r_page\">" .
+			str_replace('$1', $s_page, $_title_diff_delete) . '</a></li>';
 		$msg = "<pre>$diffdata</pre>\n";
 	}
-	else if (is_page($page)) {
-		$diffdata = trim(htmlspecialchars(join('',get_source($page))));
+	else if ($is_page) {
+		$diffdata = trim(htmlspecialchars(join('', get_source($page))));
 		$msg = "<pre><span class=\"diff_added\">$diffdata</span></pre>\n";
 	}
 	else {
 		return array('msg'=>$_title_diff, 'body'=>$_msg_notfound);
 	}
 
-	$menu = join("\n",$menu);
+	$menu = join("\n", $menu);
 	$body = <<<EOD
 <ul>
 $menu
@@ -70,46 +68,51 @@ $menu
 $hr
 EOD;
 
-	return array('msg'=>$_title_diff,'body'=>$body.$msg);
+	return array('msg'=>$_title_diff, 'body'=>$body . $msg);
 }
+
 // バックアップを削除
 function plugin_diff_delete($page)
 {
 	error_reporting(E_ALL);
 
-	global $script,$post,$adminpass;
-	global $_title_diff_delete,$_msg_diff_deleted,$_msg_diff_delete;
-	global $_msg_diff_adminpass,$_btn_delete,$_msg_invalidpass;
+	global $script, $vars, $adminpass;
+	global $_title_diff_delete, $_msg_diff_deleted;
+	global $_msg_diff_adminpass, $_btn_delete, $_msg_invalidpass;
 	
-	if (!is_pagename($page)) { return; }
-	$filename = DIFF_DIR.encode($page).'.txt'; 
-	if (!file_exists($filename)) { return; }
-
+	$filename = DIFF_DIR . encode($page) . '.txt'; 
 	$s_page = htmlspecialchars($page);
-	$pass = array_key_exists('pass',$post) ? $post['pass'] : NULL;
-	
-	if (md5($pass) == $adminpass) {
-		unlink($filename);
-		return array(
-			'msg'  => $_title_diff_delete,
-			'body' => str_replace('$1',make_pagelink($page),$_msg_diff_deleted)
-		);
+	$body = '';
+	if (! is_pagename($page) || ! file_exists($filename)) {
+		$body = make_pagelink($page) . "'s diff seems not found";
+		return array('msg'=>$_title_diff_delete, 'body'=>$body); 
 	}
-	$body = ($pass === NULL) ? '' : "<p><strong>$_msg_invalidpass</strong></p>\n";
 
-	$msg_delete = str_replace('$1',make_pagelink($page),$_msg_diff_delete);
+	if (isset($vars['pass'])) {
+		if (md5($vars['pass']) == $adminpass) {
+			unlink($filename);
+			return array(
+				'msg'  => $_title_diff_delete,
+				'body' => str_replace('$1', make_pagelink($page), $_msg_diff_deleted)
+			);
+		} else {
+			$body .= "<p><strong>$_msg_invalidpass</strong></p>\n";
+		}
+	}
+
 	$body .= <<<EOD
 <p>$_msg_diff_adminpass</p>
 <form action="$script" method="post">
  <div>
-  <input type="hidden" name="cmd" value="diff" />
-  <input type="hidden" name="page" value="$s_page" />
-  <input type="hidden" name="action" value="delete" />
-  <input type="password" name="pass" size="12" />
-  <input type="submit" name="ok" value="$_btn_delete" />
+  <input type="hidden"   name="cmd"    value="diff" />
+  <input type="hidden"   name="page"   value="$s_page" />
+  <input type="hidden"   name="action" value="delete" />
+  <input type="password" name="pass"   size="12" />
+  <input type="submit"   name="ok"     value="$_btn_delete" />
  </div>
 </form>
 EOD;
-	return	array('msg'=>$_title_diff_delete,'body'=>$body);
+
+	return array('msg'=>$_title_diff_delete, 'body'=>$body);
 }	
 ?>
