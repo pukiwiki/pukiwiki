@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.52 2003/07/22 06:05:04 arino Exp $
+// $Id: make_link.php,v 1.53 2003/07/29 06:25:38 arino Exp $
 //
 
 // リンクを付加する
@@ -326,13 +326,14 @@ class Link_url extends Link
 	{
 		$s1 = $this->start + 1;
 		return <<<EOD
-(\[\[            # (1) open bracket
- ([^\]]+)(?:>|:) # (2) alias
+(\[\[             # (1) open bracket
+ ((?:(?!\]\]).)+) # (2) alias
+ (?:>|:)
 )?
-(                # (3) url
+(                 # (3) url
  (?:https?|ftp|news):\/\/[!~*'();\/?:\@&=+\$,%#\w.-]+
 )
-(?($s1)\]\])     # close bracket
+(?($s1)\]\])      # close bracket
 EOD;
 	}
 	function get_count()
@@ -403,9 +404,12 @@ class Link_mailto extends Link
 	{
 		$s1 = $this->start + 1;
 		return <<<EOD
-(?:\[\[([^\]]+)(?:>|:))?   # (1) alias
- ([\w.-]+@[\w-]+\.[\w.-]+) # (2) mailto
-(?($s1)\]\])               # close bracket if (1)
+(?:
+ \[\[
+ ((?:(?!\]\]).)+)(?:>|:)  # (1) alias
+)?
+([\w.-]+@[\w-]+\.[\w.-]+) # (2) mailto
+(?($s1)\]\])              # close bracket if (1)
 EOD;
 	}
 	function get_count()
@@ -446,7 +450,7 @@ class Link_interwikiname extends Link
 \[\[                  # open bracket
 (?:
  (\[\[)?              # (1) open bracket
- ((?:(?<!\]\]).)+)>   # (2) alias
+ ((?:(?!\]\]).)+)>    # (2) alias
 )?
 (\[\[)?               # (3) open bracket
 ((?:(?!\s|:|\]\]).)+) # (4) InterWiki
@@ -519,7 +523,7 @@ class Link_bracketname extends Link
 \[\[                     # open bracket
 (?:
  (\[\[)?                 # (1) open bracket
- ((?:(?<!\]\]).)+)>      # (2) alias
+ ((?:(?!\]\]).)+)>       # (2) alias
 )?
 (\[\[)?                  # (3) open bracket
 (                        # (4) PageName
