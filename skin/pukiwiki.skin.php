@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.20 2004/11/07 13:09:37 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.21 2004/11/09 13:43:19 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -62,14 +62,14 @@ if ($html_transitional) { ?>
  <meta http-equiv="content-type" content="application/xhtml+xml; charset=<?php echo CONTENT_CHARSET ?>" />
  <meta http-equiv="content-style-type" content="text/css" />
 <?php if (! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
-<?php if (PKWK_JAVASCRIPT && isset($javascript)) { ?> <meta http-equiv="Content-Script-Type" content="text/javascript" /><?php } ?>
+<?php if (PKWK_ALLOW_JAVASCRIPT && isset($javascript)) { ?> <meta http-equiv="Content-Script-Type" content="text/javascript" /><?php } ?>
 
  <title><?php echo "$title - $page_title" ?></title>
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>" type="text/css" media="screen" charset="<?php echo $css_charset ?>" />
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>&amp;media=print" type="text/css" media="print" charset="<?php echo $css_charset ?>" />
   <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
 
-<?php if (PKWK_JAVASCRIPT && $trackback_javascript) { ?> <script type="text/javascript" src="skin/trackback.js"></script><?php } ?>
+<?php if (PKWK_ALLOW_JAVASCRIPT && $trackback_javascript) { ?> <script type="text/javascript" src="skin/trackback.js"></script><?php } ?>
 
 <?php echo $head_tag ?>
 </head>
@@ -93,7 +93,7 @@ function _navigator($key, $value = '', $javascript = ''){
 	$link = $GLOBALS['_LINK'];
 	if (! isset($lang[$key])) { echo 'LANG NOT FOUND'; return FALSE; }
 	if (! isset($link[$key])) { echo 'LINK NOT FOUND'; return FALSE; }
-	if (! PKWK_JAVASCRIPT) $javascript = '';
+	if (! PKWK_ALLOW_JAVASCRIPT) $javascript = '';
 
 	echo '<a href="' . $link[$key] . '" ' . $javascript . '>' .
 		(($value === '') ? $lang[$key] : $value) .
