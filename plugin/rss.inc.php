@@ -1,30 +1,32 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: rss.inc.php,v 1.11 2004/12/02 11:34:25 henoheno Exp $
+// $Id: rss.inc.php,v 1.12 2004/12/04 05:20:02 henoheno Exp $
 //
 // Publishing RSS feed of RecentChanges
-// HOW TO USE: rss.inc.php?ver=[0.91(default)|1.0|2.0]
+// Usage: rss.inc.php?ver=[0.91(default)|1.0|2.0]
 
 function plugin_rss_action()
 {
-	global $vars, $script, $rss_max, $page_title, $whatsnew, $trackback;
+	global $vars, $rss_max, $page_title, $whatsnew, $trackback;
 
-	$self = (preg_match('#^https?://#', $script) ? $script : get_script_uri());
-	if ($self === FALSE) die('please set "$script" at INI_FILE');
+	$version = isset($vars['ver']) ? $vars['ver'] : '';
+	switch($version){
+	case '':  $version = '0.91'; break; // Default
+	case '1': $version = '1.0';  break;
+	case '2': $version = '2.0';  break;
+	case '0,91': /* FALLTHROUGH */
+	case '1.0' : /* FALLTHROUGH */
+	case '2.0' : break;
+	default: die('Invalid RSS version!!');
+	}
 
 	$recent = CACHE_DIR . 'recent.dat';
 	if (! file_exists($recent)) die('recent.dat is not found');
 
-	$version = isset($vars['ver']) ? $vars['ver'] : '';
-	switch($version){
-		case '':  $version = '0.91'; break; // Default
-		case '1': $version = '1.0';  break;
-		case '2': $version = '2.0';  break;
-	}
 	$page_title_utf8 = mb_convert_encoding($page_title, 'UTF-8', SOURCE_ENCODING);
+	$self  = get_script_uri();
 
+	// Creating <item>
 	$items = $rdf_li = '';
 	foreach (array_splice(file($recent), 0, $rss_max) as $line) {
 		list($time, $page) = explode("\t", rtrim($line));
@@ -49,27 +51,28 @@ EOD;
 			break;
 
 		case '1.0':
-			$dc_date = substr_replace(get_date('Y-m-d\TH:i:sO', $time), ':', -2, 0);
-			$dc_identifier = " <dc:identifier>$self?$r_page</dc:identifier>";
+			// Add <item> into <items>
+			$rdf_li .= '    <rdf:li rdf:resource="' . $self .
+				'?' . $r_page . '" />' . "\n";
+
+			$date = substr_replace(get_date('Y-m-d\TH:i:sO', $time), ':', -2, 0);
 			$trackback_ping = '';
-			$rdf_li .= "    <rdf:li rdf:resource=\"$self?$r_page\" />\n";
 			if ($trackback) {
 				$tb_id = md5($r_page);
-				$trackback_ping = " <trackback:ping>$self?tb_id=$tb_id</trackback:ping>";
+				$trackback_ping = ' <trackback:ping>' .
+					"$self?tb_id=$tb_id" . '</trackback:ping>';
 			}
 			$items .= <<<EOD
 <item rdf:about="$self?$r_page">
  <title>$title</title>
  <link>$self?$r_page</link>
- <dc:date>$dc_date</dc:date>
-$dc_identifier
+ <dc:date>$date</dc:date>
+ <dc:identifier>$self?$r_page</dc:identifier>
 $trackback_ping
 </item>
 
 EOD;
 			break;
-		default:
-			die('Invalid RSS version!!');
 		}
 	}
 
