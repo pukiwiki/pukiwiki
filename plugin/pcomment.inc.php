@@ -1,5 +1,5 @@
 <?php
-// $Id: pcomment.inc.php,v 1.4 2002/12/05 05:02:27 panda Exp $
+// $Id: pcomment.inc.php,v 1.5 2002/12/07 09:43:43 panda Exp $
 /*
 Last-Update:2002-09-12 rev.15
 
@@ -72,7 +72,7 @@ function plugin_pcomment_action() {
 }
 
 function plugin_pcomment_convert() {
-	global $script,$vars;
+	global $script,$vars,$BracketName;
 	global $_pcmt_btn_name, $_pcmt_btn_comment, $_pcmt_msg_comment, $_pcmt_msg_all, $_pcmt_msg_recent;
 
 	//Ìá¤êÃÍ
@@ -87,9 +87,9 @@ function plugin_pcomment_convert() {
 	list($page, $count) = $params['arg'];
 	if ($page == '') { $page = sprintf(PCMT_PAGE,strip_bracket($vars['page'])); }
 
-	$obj = expand_bracket($page,$vars['page']);
-	if ($obj->type == '' or $obj->name == '') { return 'invalid page name.'; }
-	$_page = $obj->name;
+	$_page = get_fullname($page,$vars['page']);
+	if (!preg_match("/^$BracketName$/",$_page))
+		return 'invalid page name.';
 
 	if ($count == 0 and $count !== '0') { $count = PCMT_NUM_COMMENTS; }
 
@@ -146,14 +146,12 @@ EOD;
 }
 
 function pcmt_insert($page) {
-	global $post,$vars,$script,$now,$do_backup;
+	global $post,$vars,$script,$now,$do_backup,$BracketName;
 	global $_title_updated;
 
-	$obj = expand_bracket($post['page'],$post['refer']);
-	if ($obj->type == '' or $obj->name == '')
-		return array('msg'=>'invalid page name.','body'=>'cannot add comment.');
-	
-	$page = $obj->name;
+	$page = $post['page'];
+	if (!preg_match("/^$BracketName$/",$page))
+		return array('msg'=>'invalid page name.','body'=>'cannot add comment.','collided'=>TRUE);
 
 	$ret['msg'] = $_title_updated;
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: ref.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+// $Id: ref.inc.php,v 1.2 2002/12/07 09:43:43 panda Exp $
 /*
 Last-Update:2002-10-29 rev.33
 
@@ -70,9 +70,9 @@ function plugin_ref_convert() {
 		//ページ指定のチェック
 		$page = $vars['page'];
 		if (count($args) > 0) {
-			$obj = expand_bracket($args[0],$page);
-			if ($obj->type != '' and $obj->name != '') {
-				$page = $obj->name;
+			$_page = get_fullname($args[0],$vars['page']);
+			if (is_page($_page)) {
+				$page = $_page;
 				array_shift($args);
 			}
 		}
