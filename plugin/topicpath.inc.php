@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: topicpath.inc.php,v 1.3 2004/08/12 12:50:01 henoheno Exp $
+// $Id: topicpath.inc.php,v 1.4 2004/08/12 13:02:26 henoheno Exp $
 // topicpath plugin for PukiWiki
 //   available under the GPL
 
@@ -18,7 +18,7 @@ define('PLUGIN_TOPICPATH_TOP_SEPARATOR', ' / ');
 // そのページ自身を表示するか
 define('PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY', TRUE);
 // 表示する場合、自分自身を指すリンクを表示するか
-define('PLUGIN_TOPICPATH_THIS_PAGE_LINK', TRUE);
+define('PLUGIN_TOPICPATH_THIS_PAGE_LINK', FALSE);
 
 function plugin_topicpath_convert()
 {
