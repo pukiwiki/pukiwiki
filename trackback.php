@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.5 2003/07/03 04:50:57 arino Exp $
+// $Id: trackback.php,v 1.6 2003/07/14 08:09:17 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -33,6 +33,7 @@
  * == Referer 対応分 ==
  * ref_save($page)		Referer データ保存(更新)
  * ref_put($url,$file,$data)	Referer データ出力
+ * get_referer($local=FALSE)	Referer 変数を戻す
  *
  */
 
@@ -626,5 +627,23 @@ function ref_put($url,$file,$data) {
   @fclose($fp);
 
   return 0;
+}
+
+// Referer 変数を戻す
+function get_referer($local=FALSE)
+{
+	$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
+	// 自サイトも有効の場合は、そのまま戻す
+	if ($local)
+	{
+		return $HTTP_REFERER;
+	}
+	$HTTP_HOST = 'http://'.$_SERVER['HTTP_HOST'];
+	// 自サイト内の場合は、消去
+	if (strpos($HTTP_REFERER,$HTTP_HOST) === 0)
+	{
+		$HTTP_REFERER = '';
+	}
+	return $HTTP_REFERER;
 }
 ?>
