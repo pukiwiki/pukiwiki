@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.32 2005/03/05 14:31:12 henoheno Exp $
+// $Id: func.php,v 1.33 2005/03/17 17:57:24 teanan Exp $
 //
 // General functions
 
@@ -474,18 +474,18 @@ function get_autolink_pattern(& $pages)
 			$auto_pages[] = $page;
 	}
 
-	if (empty($auto_pages))
-		return $nowikiname ? '(?!)' : $WikiName;
+	if (empty($auto_pages)) {
+		$result = $result_a = $nowikiname ? '(?!)' : $WikiName;
+	} else {
+		$auto_pages = array_unique($auto_pages);
+		sort($auto_pages, SORT_STRING);
 
-	$auto_pages = array_unique($auto_pages);
-	sort($auto_pages, SORT_STRING);
+		$auto_pages_a = array_values(preg_grep('/^[A-Z]+$/i', $auto_pages));
+		$auto_pages   = array_values(array_diff($auto_pages,  $auto_pages_a));
 
-	$auto_pages_a = array_values(preg_grep('/^[A-Z]+$/i', $auto_pages));
-	$auto_pages   = array_values(array_diff($auto_pages,  $auto_pages_a));
-
-	$result   = get_autolink_pattern_sub($auto_pages,   0, count($auto_pages),   0);
-	$result_a = get_autolink_pattern_sub($auto_pages_a, 0, count($auto_pages_a), 0);
-
+		$result   = get_autolink_pattern_sub($auto_pages,   0, count($auto_pages),   0);
+		$result_a = get_autolink_pattern_sub($auto_pages_a, 0, count($auto_pages_a), 0);
+	}
 	return array($result, $result_a, $forceignorepages);
 }
 
