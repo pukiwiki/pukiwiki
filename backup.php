@@ -11,7 +11,7 @@
  * @access  public
  * @author  
  * @create  
- * @version $Id: backup.php,v 1.10 2003/05/16 06:40:27 arino Exp $
+ * @version $Id: backup.php,v 1.11 2003/05/17 12:46:30 arino Exp $
  **/
 
 /**
@@ -54,8 +54,8 @@ function make_backup($page,$delete = FALSE)
 		$count = count($backups) + 1;
 		if ($count > $maxage)
 		{
-			//直後に1件追加するので、最大件数-1で切る
-			array_splice($backups,$maxage - $count);
+			//直後に1件追加するので、(最大件数-1)を超える要素を捨てる
+			array_splice($backups,0,$count - $maxage);
 		}
 		
 		$strout = '';
