@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: convert_html.php,v 1.6 2005/01/16 12:20:57 henoheno Exp $
+// $Id: convert_html.php,v 1.7 2005/01/21 13:17:16 henoheno Exp $
 //
 // function 'convert_html()', wiki text parser
 // and related classes-and-functions
@@ -724,7 +724,7 @@ class Pre extends Element
 	}
 }
 
-// #someting(started with '#')
+// #something (started with '#')
 class Div extends Element
 {
 	var $name;
