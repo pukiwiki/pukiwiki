@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.5 2005/01/08 04:13:18 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.6 2005/01/09 08:05:00 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -407,6 +407,8 @@ if ($disable_reverse_link === TRUE) {
 	// For read and preview: tDiary have no <h2> inside body
 	$body = preg_replace('#<h2 ([^>]*)>(.*?)<a class="anchor_super" ([^>]*)>.*?</a></h2>#',
 		'<h3 $1><a $3><span class="sanchor">_</span></a> $2</h3>', $body);
+	$body = preg_replace('#<h([34]) ([^>]*)>(.*?)<a class="anchor_super" ([^>]*)>.*?</a></h\1>#',
+		'<h$1 $2><a $4>_</a> $3</h$1>', $body);
 	$body = preg_replace('#<h2 ([^>]*)>(.*?)</h2>#',
 		'<h3 $1><span class="sanchor">_</span> $2</h3>', $body);
 	if ($is_read) {
