@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.85 2004/09/29 13:20:26 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.86 2004/10/01 12:10:37 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -367,15 +367,12 @@ $agents = array(
 
     // Embedded browsers (Rich-clients for PukiWiki)
 
-	// "PlayStation BB Navigator" (ACCESS NetFront, for SONY PlayStation 2)
-	// Sample: "Mozilla/4.0 (PS2; PlayStation BB Navigator 1.0) NetFront/3.0"
-	array('pattern'=>'#\bPlayStation\b.*\b(NetFront)/([0-9\.]+)#',	'profile'=>'default'),
-
 	// Windows CE (Microsoft(R) Internet Explorer 5.5 for Windows(R) CE)
 	// Sample: "Mozilla/4.0 (compatible; MSIE 5.5; Windows CE; sigmarion3)" (sigmarion, Hand-held PC)
 	array('pattern'=>'#\b(?:MSIE [5-9]).*\b(Windows CE)\b#', 'profile'=>'default'),
 
 	// ACCESS "NetFront" / "Compact NetFront" and thier OEM, expects to be "Mozilla/4.0"
+	// Sample: "Mozilla/4.0 (PS2; PlayStation BB Navigator 1.0) NetFront/3.0" (PlayStation BB Navigator, for SONY PlayStation 2)
 	// Sample: "Mozilla/4.0 (PDA; PalmOS/sony/model crdb/Revision:1.1.19) NetFront/3.0" (SONY Clie series)
 	// Sample: "Mozilla/4.0 (PDA; SL-A300/1.0,Embedix/Qtopia/1.1.0) NetFront/3.0" (SHARP Zaurus)
 	array('pattern'=>'#^(?:Mozilla/4).*\b(NetFront)/([0-9\.]+)#',	'profile'=>'default'),
