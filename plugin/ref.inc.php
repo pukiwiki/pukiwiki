@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.30 2004/08/21 02:36:57 henoheno Exp $
+// $Id: ref.inc.php,v 1.31 2004/08/23 14:59:11 henoheno Exp $
 //
 
 // UPLOAD_DIR のデータ(画像ファイルのみ)に直接アクセスさせる
@@ -204,17 +204,17 @@ function plugin_ref_body($args)
 			return $params;
 		}
 
-		// ページ指定のチェック
+		// ページ名とファイル名の分解 (pagename/separated/with/slash/FILENAME)
 		if (preg_match('/^(.+)\/([^\/]+)$/', $name, $matches)) {
 			if ($matches[1] == '.' || $matches[1] == '..') {
 				$matches[1] .= '/';
 			}
-			$page = get_fullname($matches[1],$page);
+			$page = get_fullname($matches[1], $page);
 			$name = $matches[2];
 		}
 		$title = htmlspecialchars($name);
-		$file = UPLOAD_DIR . encode($page) . '_' . encode($name);
 
+		$file = UPLOAD_DIR . encode($page) . '_' . encode($name);
 		if (! is_file($file)) {
 			$params['_error'] = 'File not found';
 			return $params;
