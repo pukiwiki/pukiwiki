@@ -1,4 +1,4 @@
-<FilesMatch \.(en\.php|ja\.php)$>
+<FilesMatch \.(en\.php|ja\.php|\.lng)$>
         Order allow,deny
         Deny from all
 </FilesMatch>

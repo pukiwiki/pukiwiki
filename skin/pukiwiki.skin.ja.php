@@ -2,9 +2,18 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.ja.php,v 1.36 2004/09/19 13:27:15 henoheno Exp $
+// $Id: pukiwiki.skin.ja.php,v 1.37 2004/09/30 12:24:47 henoheno Exp $
 //
 if (!defined('DATA_DIR')) { exit; }
+
+require_once(SKIN_DIR . 'skin.' . SKIN_LANG . '.lng');
+$lang = $_LANG['skin'];
+
+$css_charset = 'iso-8859-1';
+switch(SKIN_LANG){
+	case 'ja': $css_charset = 'Shift_JIS'; break;
+}
+
 header('Cache-control: no-cache');
 header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
@@ -27,8 +36,8 @@ echo '<?xml version="1.0" encoding="' . CONTENT_CHARSET . '"?>';
 <?php } ?>
 
  <title><?php echo "$title - $page_title" ?></title>
- <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=Shift_JIS" type="text/css" media="screen" charset="Shift_JIS" />
- <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=Shift_JIS&media=print" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>" type="text/css" media="screen" charset="<?php echo $css_charset ?>" />
+ <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>&media=print" type="text/css" media="print" charset="<?php echo $css_charset ?>" />
 <?php
   global $trackback, $referer;
   if ($trackback) {
@@ -54,56 +63,56 @@ echo '<?xml version="1.0" encoding="' . CONTENT_CHARSET . '"?>';
 <div id="navigator">
 
 <?php if ($is_page) { ?>
- [ <a href="<?php echo "$script?$r_page" ?>">リロード</a> ]
+ [ <a href="<?php echo "$script?$r_page" ?>"><?php echo $lang['reload'] ?></a> ]
  &nbsp;
- [ <a href="<?php echo "$script?plugin=newpage&amp;refer=$r_page" ?>">新規</a>
- | <a href="<?php echo $link_edit ?>">編集</a>
+ [ <a href="<?php echo "$script?plugin=newpage&amp;refer=$r_page" ?>"><?php echo $lang['new'] ?></a>
+ | <a href="<?php echo $link_edit ?>"><?php echo $lang['edit'] ?></a>
 <?php   if ($is_read and $function_freeze) { ?>
 <?php     if ($is_freeze) { ?>
- | <a href="<?php echo $link_unfreeze ?>">凍結解除</a>
+ | <a href="<?php echo $link_unfreeze ?>"><?php echo $lang['unfreeze'] ?></a>
 <?php     } else { ?>
- | <a href="<?php echo $link_freeze ?>">凍結</a>
+ | <a href="<?php echo $link_freeze ?>"><?php echo $lang['freeze'] ?></a>
 <?php     } ?>
 <?php   } ?>
 
- | <a href="<?php echo $link_diff ?>">差分</a>
+ | <a href="<?php echo $link_diff ?>"><?php echo $lang['diff'] ?></a>
 
 <?php   if ((bool)ini_get('file_uploads')) { ?>
- | <a href="<?php echo $link_upload ?>">添付</a>
+ | <a href="<?php echo $link_upload ?>"><?php echo $lang['upload'] ?></a>
 <?php   } ?>
 
  ]
  &nbsp;
 <?php } ?>
 
- [ <a href="<?php echo $link_top ?>">トップ</a>
- | <a href="<?php echo $link_list ?>">一覧</a>
+ [ <a href="<?php echo $link_top ?>"><?php echo $lang['top'] ?></a>
+ | <a href="<?php echo $link_list ?>"><?php echo $lang['list'] ?></a>
 
 <?php if (arg_check('list')) { ?>
- | <a href="<?php echo $link_filelist ?>">ファイル名一覧</a>
+ | <a href="<?php echo $link_filelist ?>"><?php echo $lang['filelist'] ?></a>
 <?php } ?>
 
- | <a href="<?php echo $link_search ?>">単語検索</a>
- | <a href="<?php echo $link_whatsnew ?>">最終更新</a>
+ | <a href="<?php echo $link_search ?>"><?php echo $lang['search'] ?></a>
+ | <a href="<?php echo $link_whatsnew ?>"><?php echo $lang['recent'] ?></a>
 
 <?php if ($do_backup) { ?>
- | <a href="<?php echo $link_backup ?>">バックアップ</a>
+ | <a href="<?php echo $link_backup ?>"><?php echo $lang['backup'] ?></a>
 <?php } ?>
 
- | <a href="<?php echo $link_help ?>">ヘルプ</a>
+ | <a href="<?php echo $link_help ?>"><?php echo $lang['help'] ?></a>
  ]
 <?php
   if ($trackback) {
     $tb_id = tb_get_id($_page);
 ?>
  &nbsp;
- [ <a href="<?php echo "$script?plugin=tb&amp;__mode=view&amp;tb_id=$tb_id" ?>">TrackBack(<?php echo tb_count($_page) ?>)</a> ]
+ [ <a href="<?php echo "$script?plugin=tb&amp;__mode=view&amp;tb_id=$tb_id" ?>"><?php echo $lang['trackback'] ?>(<?php echo tb_count($_page) ?>)</a> ]
 <?php } ?>
 
 <?php
   if ($referer) {
 ?>
- [ <a href="<?php echo "$script?plugin=referer&amp;page=$r_page" ?>">リンク元</a> ]
+ [ <a href="<?php echo "$script?plugin=referer&amp;page=$r_page" ?>"><?php echo $lang['refer'] ?></a> ]
 <?php } ?>
 
 </div>
@@ -147,39 +156,39 @@ echo '<?xml version="1.0" encoding="' . CONTENT_CHARSET . '"?>';
 <div id="toolbar">
 
 <?php if ($is_page) { ?>
- <a href="<?php echo "$script?$r_page" ?>"><img src="<?php echo IMAGE_DIR ?>reload.png" width="20" height="20" alt="リロード" title="リロード" /></a>
+ <a href="<?php echo "$script?$r_page" ?>"><img src="<?php echo IMAGE_DIR ?>reload.png" width="20" height="20" alt="<?php echo $lang['reload'] ?>" title="<?php echo $lang['reload'] ?>" /></a>
  &nbsp;
- <a href="<?php echo $script ?>?plugin=newpage"><img src="<?php echo IMAGE_DIR ?>new.png" width="20" height="20" alt="新規" title="新規" /></a>
- <a href="<?php echo $link_edit ?>"><img src="<?php echo IMAGE_DIR ?>edit.png" width="20" height="20" alt="編集" title="編集" /></a>
+ <a href="<?php echo $script ?>?plugin=newpage"><img src="<?php echo IMAGE_DIR ?>new.png" width="20" height="20" alt="<?php echo $lang['new'] ?>" title="<?php echo $lang['new'] ?>" /></a>
+ <a href="<?php echo $link_edit ?>"><img src="<?php echo IMAGE_DIR ?>edit.png" width="20" height="20" alt="<?php echo $lang['edit'] ?>" title="<?php echo $lang['edit'] ?>" /></a>
 <?php   if ($is_read and $function_freeze) { ?>
 <?php     if ($is_freeze) { ?>
- <a href="<?php echo $link_unfreeze ?>"><img src="<?php echo IMAGE_DIR ?>unfreeze.png" width="20" height="20" alt="凍結解除" title="凍結解除" /></a>
+ <a href="<?php echo $link_unfreeze ?>"><img src="<?php echo IMAGE_DIR ?>unfreeze.png" width="20" height="20" alt="<?php echo $lang['unfreeze'] ?>" title="<?php echo $lang['unfreeze'] ?>" /></a>
 <?php     } else { ?>
- <a href="<?php echo $link_freeze ?>"><img src="<?php echo IMAGE_DIR ?>freeze.png" width="20" height="20" alt="凍結" title="凍結" /></a>
+ <a href="<?php echo $link_freeze ?>"><img src="<?php echo IMAGE_DIR ?>freeze.png" width="20" height="20" alt="<?php echo $lang['freeze'] ?>" title="<?php echo $lang['freeze'] ?>" /></a>
 <?php     } ?>
 <?php   } ?>
- <a href="<?php echo $link_diff ?>"><img src="<?php echo IMAGE_DIR ?>diff.png" width="20" height="20" alt="差分" title="差分" /></a>
+ <a href="<?php echo $link_diff ?>"><img src="<?php echo IMAGE_DIR ?>diff.png" width="20" height="20" alt="<?php echo $lang['diff'] ?>" title="<?php echo $lang['diff'] ?>" /></a>
 <?php   if ((bool)ini_get('file_uploads')) { ?>
- <a href="<?php echo $link_upload ?>"><img src="<?php echo IMAGE_DIR ?>file.png" width="20" height="20" alt="添付" title="添付" /></a>
+ <a href="<?php echo $link_upload ?>"><img src="<?php echo IMAGE_DIR ?>file.png" width="20" height="20" alt="<?php echo $lang['upload'] ?>" title="<?php echo $lang['upload'] ?>" /></a>
 <?php   } ?>
- <a href="<?php echo $link_template ?>"><img src="<?php echo IMAGE_DIR ?>copy.png" width="20" height="20" alt="複製" title="複製" /></a>
- <a href="<?php echo $link_rename ?>"><img src="<?php echo IMAGE_DIR ?>rename.png" width="20" height="20" alt="改名" title="改名" /></a>
+ <a href="<?php echo $link_template ?>"><img src="<?php echo IMAGE_DIR ?>copy.png" width="20" height="20" alt="<?php echo $lang['copy'] ?>" title="<?php echo $lang['copy'] ?>" /></a>
+ <a href="<?php echo $link_rename ?>"><img src="<?php echo IMAGE_DIR ?>rename.png" width="20" height="20" alt="<?php echo $lang['rename'] ?>" title="<?php echo $lang['rename'] ?>" /></a>
  &nbsp;
 <?php } ?>
 
- <a href="<?php echo $link_top ?>"><img src="<?php echo IMAGE_DIR ?>top.png" width="20" height="20" alt="トップ" title="トップ" /></a>
- <a href="<?php echo $link_list ?>"><img src="<?php echo IMAGE_DIR ?>list.png" width="20" height="20" alt="一覧" title="一覧" /></a>
- <a href="<?php echo $link_search ?>"><img src="<?php echo IMAGE_DIR ?>search.png" width="20" height="20" alt="検索" title="検索" /></a>
- <a href="<?php echo $link_whatsnew ?>"><img src="<?php echo IMAGE_DIR ?>recentchanges.png" width="20" height="20" alt="最終更新" title="最終更新" /></a>
+ <a href="<?php echo $link_top ?>"><img src="<?php echo IMAGE_DIR ?>top.png" width="20" height="20" alt="<?php echo $lang['top'] ?>" title="<?php echo $lang['top'] ?>" /></a>
+ <a href="<?php echo $link_list ?>"><img src="<?php echo IMAGE_DIR ?>list.png" width="20" height="20" alt="<?php echo $lang['list'] ?>" title="<?php echo $lang['list'] ?>" /></a>
+ <a href="<?php echo $link_search ?>"><img src="<?php echo IMAGE_DIR ?>search.png" width="20" height="20" alt="<?php echo $lang['search'] ?>" title="<?php echo $lang['search'] ?>" /></a>
+ <a href="<?php echo $link_whatsnew ?>"><img src="<?php echo IMAGE_DIR ?>recentchanges.png" width="20" height="20" alt="<?php echo $lang['recent'] ?>" title="<?php echo $lang['recent'] ?>" /></a>
 
 <?php if ($do_backup) { ?>
- <a href="<?php echo $link_backup ?>"><img src="<?php echo IMAGE_DIR ?>backup.png" width="20" height="20" alt="バックアップ" title="バックアップ" /></a>
+ <a href="<?php echo $link_backup ?>"><img src="<?php echo IMAGE_DIR ?>backup.png" width="20" height="20" alt="<?php echo $lang['backup'] ?>" title="<?php echo $lang['backup'] ?>" /></a>
 <?php } ?>
 
  &nbsp;
- <a href="<?php echo $link_help ?>"><img src="<?php echo IMAGE_DIR ?>help.png" width="20" height="20" alt="ヘルプ" title="ヘルプ" /></a>
+ <a href="<?php echo $link_help ?>"><img src="<?php echo IMAGE_DIR ?>help.png" width="20" height="20" alt="<?php echo $lang['help'] ?>" title="<?php echo $lang['help'] ?>" /></a>
  &nbsp;
- <a href="<?php echo $link_rss ?>"><img src="<?php echo IMAGE_DIR ?>rss.png" width="36" height="14" alt="最終更新のRSS" title="最終更新のRSS" /></a>
+ <a href="<?php echo $link_rss ?>"><img src="<?php echo IMAGE_DIR ?>rss.png" width="36" height="14" alt="<?php echo $lang['rss'] ?>" title="<?php echo $lang['rss'] ?>" /></a>
 </div>
 
 
