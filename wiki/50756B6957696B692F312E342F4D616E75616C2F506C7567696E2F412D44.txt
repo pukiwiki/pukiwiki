@@ -428,14 +428,13 @@ Yellow = "#FFFF00"
 --nodate − 挿入するコメントに、挿入時刻を付加しない（省略時は付加します）
 --noname − コメント記入者名の入力欄を非表示とします（省略時は表示します） 
 :プラグイン内設定|~
---COMMENT_NAME_COLS　コメントの名前テキストエリアの表示幅
---COMMENT_COLS　コメントのテキストエリアの表示幅
---COMMENT_NAME_FORMAT　名前欄の挿入フォーマット
---COMMENT_MSG_FORMAT　コメント欄の挿入フォーマット
---COMMENT_NOW_FORMAT　時刻欄の挿入フォーマット
---COMMENT_FORMAT　コメント内容全体の挿入フォーマット
---COMMENT_INS　コメントを入力欄の前後どちらに挿入するか
---COMMENT_MAIL　コメントが投稿された場合、内容を送るメールアドレス
+--PLUGIN_COMMENT_DIRECTION_DEFAULT　コメントを入力欄の前後どちらに挿入するか
+--PLUGIN_COMMENT_SIZE_MSG　コメントのテキストエリアの表示幅
+--PLUGIN_COMMENT_SIZE_NAME　コメントの名前テキストエリアの表示幅
+--PLUGIN_COMMENT_FORMAT_MSG　コメント欄の挿入フォーマット
+--PLUGIN_COMMENT_FORMAT_NAME　名前欄の挿入フォーマット
+--PLUGIN_COMMENT_FORMAT_NOW　時刻欄の挿入フォーマット
+--PLUGIN_COMMENT_FORMAT_STRING　コメント内容全体の挿入フォーマット
 
 
 **contents [#vd4dabcd]
