@@ -3,7 +3,7 @@
  * PukiWiki calendar_viewerプラグイン
  *
  *
- *$Id: calendar_viewer.inc.php,v 1.12 2004/08/10 12:07:40 henoheno Exp $
+ *$Id: calendar_viewer.inc.php,v 1.13 2004/08/10 12:21:17 henoheno Exp $
 	calendarrecentプラグインを元に作成
  */
 /**
@@ -55,7 +55,7 @@ function plugin_calendar_viewer_convert()
 	//一覧表示する年月
 	$date_YM = '';
 	//動作モード
-	$mode = "past";
+	$mode = 'past';
 	//日付のセパレータ calendar2なら'-' calendarなら''
 	$date_sep = '-';
 
@@ -76,7 +76,7 @@ function plugin_calendar_viewer_convert()
 			$limit_page = 31;	//手抜き。31日分をリミットとする。
 		}else if (preg_match("/this/si",$func_vars_array[1])){
 			//今月の一覧表示
-			$page_YM = get_date("Y".$date_sep."m");
+			$page_YM = get_date('Y'.$date_sep.'m');
 			$limit_base = 0;
 			$limit_page = 31;
 		}else if (preg_match("/^[0-9]+$/",$func_vars_array[1])){
@@ -125,10 +125,10 @@ function plugin_calendar_viewer_convert()
 	$pagelist = array();
 	if ($dir = @opendir(DATA_DIR))
 		{
-			$_date = get_date("Y".$date_sep."m".$date_sep."d");
+			$_date = get_date('Y'.$date_sep.'m'.$date_sep.'d');
 			while($file = readdir($dir))
 			  {
-			    if ($file == ".." || $file == ".") continue;
+			    if ($file == '..' || $file == '.') continue;
 			    if (substr($file,0,$filepattern_len)!=$filepattern) continue;
 			    //echo "OK";
 			    $page = decode(trim(preg_replace("/\.txt$/"," ",$file)));
@@ -138,9 +138,9 @@ function plugin_calendar_viewer_convert()
 
 			    //*mode毎に別条件ではじく
 			    //past modeでは未来のページはNG
-			    if (((substr($page,$pagepattern_len)) > $_date)&&($mode=="past") )continue;
+			    if (((substr($page,$pagepattern_len)) > $_date)&&($mode=='past') )continue;
 			    //future modeでは過去のページはNG
-			    if (((substr($page,$pagepattern_len)) < $_date)&&($mode=="future") )continue;
+			    if (((substr($page,$pagepattern_len)) < $_date)&&($mode=='future') )continue;
 			    //view modeならall OK
 			    $pagelist[] = $page;
 			  }
@@ -149,10 +149,10 @@ function plugin_calendar_viewer_convert()
 	//echo count($pagelist);
 	//*ここからインクルード開始
 
-	$tmppage = $vars["page"];
+	$tmppage = $vars['page'];
 	$return_body = '';
 	//まずソート
-	if ($mode == "past"){
+	if ($mode == 'past'){
 		//past modeでは新→旧
 		rsort ($pagelist);
 	}else {
@@ -166,9 +166,9 @@ function plugin_calendar_viewer_convert()
 		if (empty($pagelist[$tmp])) break;
 		$page = $pagelist[$tmp];
 
-		$get["page"] = $page;
-		$post["page"] = $page;
-		$vars["page"] = $page;
+		$get['page'] = $page;
+		$post['page'] = $page;
+		$vars['page'] = $page;
 
 	// 現状で閲覧許可がある場合だけ表示する
 	if (check_readable($page,false,false)) {
@@ -212,7 +212,7 @@ function plugin_calendar_viewer_convert()
 			$prev_month = 12;
 		}
 		$prev_YM = sprintf("%04d%s%02d",$prev_year,$date_sep,$prev_month);
-		if ($mode == "past"){
+		if ($mode == 'past'){
 			$right_YM = $prev_YM;
 			$right_text = $prev_YM."&gt;&gt;";
 			$left_YM = $next_YM;
@@ -263,9 +263,9 @@ function plugin_calendar_viewer_convert()
 	$return_body .= "</td></tr></table>";
 
 
-	$get["page"] = $tmppage;
-	$post["page"] = $tmppage;
-	$vars["page"] = $tmppage;
+	$get['page'] = $tmppage;
+	$post['page'] = $tmppage;
+	$vars['page'] = $tmppage;
 
 
 	return $return_body;
@@ -283,26 +283,26 @@ function plugin_calendar_viewer_action()
 	$vars['page'] = '*';
 	if (isset($vars['file'])) $vars['page'] = $vars['file'];
 
-	$date_sep = $vars["date_sep"];
+	$date_sep = $vars['date_sep'];
 
-	$page_YM = $vars["date"];
+	$page_YM = $vars['date'];
 	if ($page_YM == ''){
-		$page_YM = get_date("Y".$date_sep."m");
+		$page_YM = get_date('Y'.$date_sep.'m');
 	}
-	$mode = $vars["mode"];
+	$mode = $vars['mode'];
 
-	$args_array = array($vars["page"], $page_YM,$mode, $date_sep);
+	$args_array = array($vars['page'], $page_YM,$mode, $date_sep);
 	$return_vars_array["body"] = call_user_func_array("plugin_calendar_viewer_convert",$args_array);
 
-	//$return_vars_array["msg"] = "calendar_viewer ".$vars["page"]."/".$page_YM;
-	$return_vars_array["msg"] = "calendar_viewer ".htmlspecialchars($vars["page"]);
-	if ($vars["page"] != ''){
-		$return_vars_array["msg"] .= "/";
+	//$return_vars_array['msg'] = "calendar_viewer ".$vars['page'].'/'.$page_YM;
+	$return_vars_array['msg'] = "calendar_viewer ".htmlspecialchars($vars['page']);
+	if ($vars['page'] != ''){
+		$return_vars_array['msg'] .= '/';
 	}
 	if (preg_match("/\*/",$page_YM)){
 		//うーん、n件表示の時はなんてページ名にしたらいい？
 	}else{
-		$return_vars_array["msg"] .= htmlspecialchars($page_YM);
+		$return_vars_array['msg'] .= htmlspecialchars($page_YM);
 	}
 
 	$vars['page'] = $page;
