@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: jphone.ini.php,v 1.6 2004/04/03 15:56:08 arino Exp $
+// $Id: jphone.ini.php,v 1.7 2004/07/03 14:59:47 henoheno Exp $
 //
 // PukiWiki setting file (user agent:J-PHONE)
 
@@ -102,11 +102,15 @@ $line_rules = array(
 );
 
 /////////////////////////////////////////////////
-// max_size (SKINで使用)
-$max_size = 6; //KByte
-if (array_key_exists(1,$user_agent['matches']))
-{
-	$max_size = 12;
+// Vodafone 技術資料: ユーザーエージェントについて
+// http://www.dp.j-phone.com/dp/tool_dl/web/useragent.php
+
+if (preg_match('#Profile/#', $ua)) {
+	// パケット対応機
+	$max_size = 12;	// SKINで使用, KByte
+} else {
+	// パケット非対応機
+	$max_size =  6;
 }
 
 /////////////////////////////////////////////////
