@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.1 2002/06/21 05:21:46 masui Exp $
+// $Id: html.php,v 1.2 2002/06/21 10:42:40 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -118,7 +118,7 @@ function convert_html($string)
 			$level = strlen($out[1]) + 1;
 			
 			array_push($result, "<h$level><a name=\"content:$content_id\">$str</a> $top_link</h$level>");
-			$arycontents[] = str_repeat("-",$level-1)."<a href=\"#content:$content_id\">".strip_htmltag($str)."</a>\n";
+			$arycontents[] = str_repeat("-",$level-1)."<a href=\"#content:$content_id\">".strip_htmltag(make_user_rules($str))."</a>\n";
 			$content_id++;
 		}
 		else if(preg_match("/^(-{1,4})(.*)/",$line,$out))
