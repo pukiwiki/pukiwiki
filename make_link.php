@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.16 2003/02/21 07:04:44 panda Exp $
+// $Id: make_link.php,v 1.17 2003/02/26 07:12:30 panda Exp $
 //
 
 // リンクを付加する
@@ -11,13 +11,14 @@ function make_link($string,$page = '')
 	global $vars;
 	static $converter;
 	
-	if (!isset($converter)) {
+	if (!isset($converter))
+	{
 		$converter = new InlineConverter();
 	}
 	
 	return $converter->convert($string, ($page != '') ? $page : $vars['page']);
 }
-
+//インライン要素を置換する
 class InlineConverter
 {
 	var $converters; // as array()
@@ -26,14 +27,16 @@ class InlineConverter
 	
 	function InlineConverter($converters = NULL)
 	{
-		if ($converters == NULL) {
+		if ($converters == NULL)
+		{
 			$converters = array('plugin','url','mailto','interwiki','page','auto');
 		}
 		$this->converters = array();
 		$pattern = array();
 		$start = 1;
 		
-		foreach ($converters as $name) { 
+		foreach ($converters as $name)
+		{
 			$classname = "Link_$name";
 			$converter = new $classname($start);
 			$pattern[] = '('.$converter->get_pattern().')';
@@ -52,19 +55,19 @@ class InlineConverter
 	{
 		$obj = $this->get_converter($arr);
 		
-		if ($obj === NULL) {
-			return $arr[0];
+		if ($obj !== NULL and $obj->set($arr,$this->page) !== FALSE)
+		{
+			return $obj->toString();
 		}
-		
-		$obj->set($arr,$this->page);
-		return $obj->toString();
+		return $arr[0];
 	}
 	function get_objects($string,$page)
 	{
 		preg_match_all("/{$this->pattern}/x",$string,$matches,PREG_SET_ORDER);
 		
 		$arr = array();
-		foreach ($matches as $match) {
+		foreach ($matches as $match)
+		{
 			$obj = $this->get_converter($match);
 			$obj->set($match,$page);
 			$arr[] = $obj; // copy
@@ -73,54 +76,63 @@ class InlineConverter
 	}
 	function &get_converter(&$arr)
 	{
-		foreach (array_keys($this->converters) as $start) {
-			if ($arr[$start] != '') {
+		foreach (array_keys($this->converters) as $start)
+		{
+			if ($arr[$start] != '')
+			{
 				return $this->converters[$start];
 			}
 		}
 		return NULL;
 	}
 }
-
+//インライン要素集合のベースクラス
 class Link
 {
 	var $start;   // 括弧の先頭番号(0オリジン)
 	var $text;    // マッチした文字列全体
-	var $valid;
 
 	var $type;
 	var $page;
 	var $name;
 	var $alias;
 
+	// constructor
 	function Link($start)
 	{
 		$this->start = $start;
 	}
+	// マッチに使用するパターンを返す
 	function get_pattern()
 	{
 	}
+	// 使用している括弧の数を返す ((?:...)を除く)
 	function get_count()
 	{
 	}
+	// マッチしたパターンを設定する
 	function set($arr,$page)
 	{
 	}
+	// 文字列に変換する
 	function toString()
 	{
 	}
+	
+	//private
+	// マッチした配列から、自分に必要な部分だけを取り出す
 	function splice($arr)
 	{
 		$count = $this->get_count() + 1;
 		$arr = array_splice($arr,$this->start,$count);
-		while (count($arr) < $count) {
+		while (count($arr) < $count)
+		{
 			$arr[] = '';
 		}
 		$this->text = $arr[0];
 		return $arr;
 	}
-	
-	//private
+	// 基本パラメータを設定する
 	function setParam($page,$name,$type = '',$alias = '')
 	{
 		$this->page = $page;
@@ -128,11 +140,11 @@ class Link
 		$this->type = $type;
 		$this->alias = $alias;
 		
-		$this->valid = TRUE;
 		return TRUE;
 	}
 }
 
+// オートリンク,WikiName
 class Link_auto extends Link
 {
 	function Link_auto($start)
@@ -143,7 +155,8 @@ class Link_auto extends Link
 	{
 		global $WikiName,$autolink,$nowikiname;
 		
-		if (!$autolink or !file_exists(CACHE_DIR.'autolink.dat')) {
+		if (!$autolink or !file_exists(CACHE_DIR.'autolink.dat'))
+		{
 			return $nowikiname ? '(?!)' : $WikiName;
 		}
 		
@@ -158,6 +171,11 @@ class Link_auto extends Link
 	{
 		$arr = $this->splice($arr);
 		$name = $alias = $arr[0];
+		// ミスマッチを捨てる
+		if (!is_page($name))
+		{
+			return FALSE;
+		}
 		return parent::setParam($page,$name,'pagename',$alias);
 	}
 	function toString($page = '')
@@ -170,6 +188,7 @@ class Link_auto extends Link
 		);
 	}
 }
+//InterWiki
 class Link_interwiki extends Link
 {
 	var $r_name;
@@ -230,6 +249,7 @@ EOD;
 		return "<a href=\"$script?$this->r_name\">{$this->alias}</a>";
 	}
 }
+//mailto:
 class Link_mailto extends Link
 {
 	var $is_image,$image;
@@ -258,11 +278,13 @@ EOD;
 		$name = $arr[2];
 		$alias = $arr[1];
 		
-		if (preg_match("/\.(gif|png|jpeg|jpg)$/i",$alias)) {
+		if (preg_match("/\.(gif|png|jpeg|jpg)$/i",$alias))
+		{
 			$this->is_image = TRUE;
 			$this->image = "<img src=\"$alias\" alt=\"$name\" />";
 		}
-		else {
+		else
+		{
 			$this->is_image = FALSE;
 			$this->image = '';
 		}
@@ -275,6 +297,7 @@ EOD;
 			.'</a>';
 	}
 }
+// ページ名
 class Link_page extends Link
 {
 	var $anchor,$refer;
@@ -326,7 +349,8 @@ EOD;
 		global $WikiName,$BracketName;
 		static $converter;
 		
-		if (!isset($converter)) {
+		if (!isset($converter))
+		{
 			$converter = new InlineConverter(array('plugin'));
 		}
 		
@@ -336,36 +360,35 @@ EOD;
 		$name = $arr[4];
 		$this->anchor = $arr[8];
 		
-		if ($name == '' and $this->anchor == '') {
-			$this->valid = FALSE;
+		if ($name == '' and $this->anchor == '')
+		{
 			return FALSE;
 		}
-		
-		if ($name != '' and preg_match("/^$WikiName$/",$name)) {
+		if ($name != '' and preg_match("/^$WikiName$/",$name))
+		{
 			return parent::setParam($page,$name,'pagename',$alias);
 		}
-		if ($alias == '') {
+		if ($alias == '')
+		{
 			$alias = $name.$this->anchor;
 		}
-		if ($name == '' and $this->anchor == '') {
-			$this->valid = FALSE;
+		if ($name == '' and $this->anchor == '')
+		{
 			return FALSE;
 		}
+		
 		$name = get_fullname($name,$page);
 		
-		if ($name != '' and !preg_match("/^($WikiName)|($BracketName)$/",$name)) {
-			$this->valid = FALSE;
+		if ($name != '' and !preg_match("/^($WikiName)|($BracketName)$/",$name))
+		{
 			return FALSE;
 		}
-		parent::setParam($page,$name,'pagename',$alias);
+		return parent::setParam($page,$name,'pagename',$alias);
 	}
 	function toString()
 	{
 		global $script; //,$interwiki_target;
 		
-		if (!$this->valid) {
-			return $this->text;
-		}
 		return make_pagelink(
 			$this->name,
 			$this->alias,
@@ -374,6 +397,7 @@ EOD;
 		);
 	}
 }
+// インラインプラグイン
 class Link_plugin extends Link
 {
 	var $param,$body;
@@ -411,8 +435,8 @@ EOD;
 		$this->param = $arr[2];
 		$this->body = ($arr[3] == '') ? '' : make_link($arr[3]);
 		
-		if (!exist_plugin_inline($name)) {
-			$this->valid = FALSE;
+		if (!exist_plugin_inline($name))
+		{
 			return FALSE;
 		}
 		
@@ -420,9 +444,6 @@ EOD;
 	}
 	function toString($refer = '')
 	{
-		if (!$this->valid) {
-			return $this->text;
-		}
 		return $this->make_inline($this->name,$this->param,$this->body);
 	}
 	function make_inline($func,$param,$body)
@@ -435,7 +456,8 @@ EOD;
 		}
 		
 		// プラグイン呼び出し
-		if (exist_plugin_inline($func)) {
+		if (exist_plugin_inline($func))
+		{
 			$str = do_plugin_inline($func,$param,$body);
 			if ($str !== FALSE) { //成功
 				return $str.$after;
@@ -446,6 +468,7 @@ EOD;
 		return $this->text;
 	}
 }
+// url
 class Link_url extends Link
 {
 	var $is_image,$image;
@@ -484,18 +507,22 @@ EOD;
 		$anchor = $arr[4];
 		$alias = $arr[1].$anchor;
 		
-		if ($alias == '' and preg_match("/\.(gif|png|jpeg|jpg)$/i",$name)) {
+		if ($alias == '' and preg_match("/\.(gif|png|jpeg|jpg)$/i",$name))
+		{
 			$this->is_image = TRUE;
-			if ($alias == '') {
+			if ($alias == '')
+			{
 				$alias = $name;
 			}
 			$this->image = "<img src=\"$name\" alt=\"$alias\" />";
 		}
-		else if (preg_match("/\.(gif|png|jpeg|jpg)$/i",$alias)) {
+		else if (preg_match("/\.(gif|png|jpeg|jpg)$/i",$alias))
+		{
 			$this->is_image = TRUE;
 			$this->image = "<img src=\"$alias\" alt=\"$name\" />";
 		}
-		else {
+		else
+		{
 			$this->is_image = FALSE;
 			$this->image = '';
 		}
@@ -520,23 +547,27 @@ function make_pagelink($page,$alias='',$anchor='',$refer='')
 	$s_page = htmlspecialchars(strip_bracket($page));
 	$s_alias = ($alias == '') ? $s_page : $alias;
 	
-	if ($page == '') {
+	if ($page == '')
+	{
 		return "<a href=\"$anchor\">$s_alias</a>";
 	}
 	
 	$r_page = rawurlencode($page);
 	$r_refer = ($refer == '') ? '' : '&amp;refer='.rawurlencode($refer);
 	
-	if (!array_key_exists($page,$related) and $page != $vars['page'] and is_page($page)) {
+	if (!array_key_exists($page,$related) and $page != $vars['page'] and is_page($page))
+	{
 		$related[$page] = get_filetime($page);
 	}
 	
-	if (is_page($page)) {
+	if (is_page($page))
+	{
 		$passage = get_pg_passage($page,FALSE);
 		$title = $link_compact ? '' : " title=\"$s_page$passage\"";
 		return "<a href=\"$script?$r_page$anchor\"$title>$s_alias</a>";
 	}
-	else {
+	else
+	{
 		return $link_compact ?
 			"$s_alias<a href=\"$script?cmd=edit&amp;page=$r_page$r_refer\">?</a>" :
 			"<span class=\"noexists\">$s_alias<a href=\"$script?cmd=edit&amp;page=$r_page$r_refer\">?</a></span>";
@@ -547,19 +578,23 @@ function get_fullname($name,$refer)
 {
 	global $defaultpage;
 	
-	if ($name == './') {
+	if ($name == './')
+	{
 		return $refer;
 	}
 	
-	if (substr($name,0,2) == './') {
+	if (substr($name,0,2) == './')
+	{
 		return $refer.substr($name,1);
 	}
 	
-	if (substr($name,0,3) == '../') {
+	if (substr($name,0,3) == '../')
+	{
 		$arrn = preg_split('/\//',$name,-1,PREG_SPLIT_NO_EMPTY);
 		$arrp = preg_split('/\//',$refer,-1,PREG_SPLIT_NO_EMPTY);
 		
-		while (count($arrn) > 0 and $arrn[0] == '..') {
+		while (count($arrn) > 0 and $arrn[0] == '..')
+		{
 			array_shift($arrn);
 			array_pop($arrp);
 		}
