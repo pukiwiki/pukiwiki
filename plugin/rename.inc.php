@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rename.inc.php,v 1.11 2004/03/20 13:37:43 arino Exp $
+// $Id: rename.inc.php,v 1.12 2004/07/06 12:07:03 henoheno Exp $
 //
 
 /*
@@ -316,7 +316,7 @@ function rename_phase3($pages)
 		}
 		$msg .= "</ul><hr />\n";
 	
-		$input .= '<input type="radio" name="exist" value="0" checked />'.$_rename_messages['msg_exist_none'].'<br />';
+		$input .= '<input type="radio" name="exist" value="0" checked="checked" />'.$_rename_messages['msg_exist_none'].'<br />';
 		$input .= '<input type="radio" name="exist" value="1" />'.$_rename_messages['msg_exist_overwrite'].'<br />';
 	}
 	$ret['msg'] = $_rename_messages['msg_title'];
