@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.64 2004/06/26 13:27:49 henoheno Exp $
+// $Id: func.php,v 1.65 2004/07/03 05:02:43 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -577,30 +577,25 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 // pukiwiki.phpスクリプトのabsolute-uriを生成
 function get_script_uri()
 {
-	// scheme
-	$script  = ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://');
-	// host
-	$script .= $_SERVER['SERVER_NAME'];
-	// port
-	$script .= ($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT']);
-	// path
-	$path = $_SERVER['SCRIPT_NAME'];
-	// pathが'/'で始まっていない場合(cgiなど) REQUEST_URIを使ってみる
+	$script  = (SERVER_PORT == 443 ? 'https://' : 'http://');	// scheme
+	$script .= SERVER_NAME;	// host
+	$script .= (SERVER_PORT == 80 ? '' : ':' . SERVER_PORT); // port
+
+	// SCRIPT_NAME が'/'で始まっていない場合(cgiなど) REQUEST_URIを使ってみる
+	$path    = SCRIPT_NAME;
 	if ($path{0} != '/')
 	{
-		if (!array_key_exists('REQUEST_URI',$_SERVER) or $_SERVER['REQUEST_URI']{0} != '/')
-		{
+		if (!isset($_SERVER['REQUEST_URI']) or $_SERVER['REQUEST_URI']{0} != '/')
 			return FALSE;
-		}
+
 		// REQUEST_URIをパースし、path部分だけを取り出す
 		$parse_url = parse_url($script.$_SERVER['REQUEST_URI']);
 		if (!isset($parse_url['path']) or $parse_url['path']{0} != '/')
-		{
 			return FALSE;
-		}
+
 		$path = $parse_url['path'];
 	}
-	$script .= $path;
+	$script .= $path;	// path
 	
 	return $script;
 }
