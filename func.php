@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.61 2004/03/21 11:23:44 arino Exp $
+// $Id: func.php,v 1.62 2004/03/21 15:03:18 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -635,7 +635,7 @@ function sanitize($param)
 function csv_explode($separator, $string)
 {
 	$_separator = preg_quote($separator,'/');
-	if (!preg_match_all('/("[^"]*(?:""[^"]*)*"|[^'.$_separator.']*)'.$q_sep.'/', $string.$separator, $matches))
+	if (!preg_match_all('/("[^"]*(?:""[^"]*)*"|[^'.$_separator.']*)'.$_separator.'/', $string.$separator, $matches))
 	{
 		return array();
 	}
