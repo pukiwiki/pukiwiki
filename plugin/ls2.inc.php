@@ -1,6 +1,6 @@
 <?php
 /*
-$Id: ls2.inc.php,v 1.3 2003/02/03 10:28:14 panda Exp $
+$Id: ls2.inc.php,v 1.4 2003/02/26 08:54:23 panda Exp $
 
 *プラグイン ls2
 配下のページの見出し(*,**,***)の一覧を表示する
@@ -167,7 +167,7 @@ function ls2_get_headings($page,&$params,$level,$include = FALSE)
 //リスト構造を構築する
 function ls2_list_push(&$params,$level)
 {
-	global $_list_left_margin, $_list_margin, $_list_pad_str;
+	global $_ul_left_margin, $_ul_margin, $_list_pad_str;
 	
 	$result =& $params['result'];
 	$saved  =& $params['saved'];
@@ -190,9 +190,9 @@ function ls2_list_push(&$params,$level)
 		$cont = FALSE;
 		array_unshift($saved, $close);
 		
-		$left = $margin * $_list_margin;
+		$left = $margin * $_ul_margin;
 		if ($level == $margin) {
-			$left += $_list_left_margin;
+			$left += $_ul_left_margin;
 		}
 		$str = sprintf($_list_pad_str, $level, $left, $left);
 		array_push($result, sprintf($open, $str));
