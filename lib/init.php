@@ -2,12 +2,8 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.8 2004/09/19 13:27:15 henoheno Exp $
+// $Id: init.php,v 1.9 2004/09/20 00:48:34 henoheno Exp $
 //
-
-// 初期設定 (エラー出力レベル)
-error_reporting(E_ERROR | E_PARSE);	// (E_WARNING | E_NOTICE)を除外しています
-//error_reporting(E_ALL);
 
 /////////////////////////////////////////////////
 // バージョン / 著作権
