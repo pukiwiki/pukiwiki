@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.33 2003/02/23 03:26:22 panda Exp $
+// $Id: init.php,v 1.34 2003/02/23 04:47:18 panda Exp $
 //
 
 /////////////////////////////////////////////////
@@ -176,9 +176,6 @@ if (!empty($post['msg'])) {
 	$post['msg']  = str_replace("\r",'',$post['msg']);
 }
 
-// 単独で指定されたURL変数(値なし)を取り出す(ページ名)
-$arg = (count($get) == 1) ? array_shift(array_keys($get,NULL)) : NULL;
-
 $vars = array_merge($post,$get);
 if (!array_key_exists('page',$vars)) {
 	$get['page'] = $post['page'] = $vars['page'] = '';
@@ -189,14 +186,28 @@ if (array_key_exists('md5',$vars) and $vars['md5'] != '') {
 	$vars['cmd'] = 'md5';
 }
 
-// cmdもpluginも指定されていない場合は、$argをページ名かInterWikiNameであるとみなす
-if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars)) {
-	//$argも指定されていなかった場合は$defaultpageを表示
-	if ($arg === NULL) {
-		$arg = $defaultpage;
+// cmdもpluginも指定されていない場合は、QUERY_STRINGをページ名かInterWikiNameであるとみなす
+if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars))
+{
+	if ($HTTP_SERVER_VARS['QUERY_STRING'] != '')
+	{
+		$arg = $HTTP_SERVER_VARS['QUERY_STRING'];
 	}
+	else if (array_key_exists(0,$HTTP_SERVER_VARS['argv']))
+	{
+		$arg = $HTTP_SERVER_VARS['argv'][0];
+	}
+	else
+	{
+		//なにも指定されていなかった場合は$defaultpageを表示
+		$arg = $defaultpage;
+	}		
+	$arg = rawurldecode($arg);
+	$arg = strip_bracket($arg);
+	$arg = sanitize_null_character($arg);
+
 	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'read';
-	$get['page'] = $post['page'] = $vars['page'] = strip_bracket($arg);
+	$get['page'] = $post['page'] = $vars['page'] = $arg;
 }
 
 /////////////////////////////////////////////////
