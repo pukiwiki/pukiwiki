@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.25 2005/02/27 07:06:39 henoheno Exp $
+// $Id: rename.inc.php,v 1.26 2005/02/27 07:10:57 henoheno Exp $
 //
 // Rename plugin: Rename page-name and related data
 //
@@ -111,10 +111,10 @@ $msg
 <form action="$script" method="post">
  <div>
   <input type="hidden" name="plugin" value="rename" />
-  <input type="radio"  name="method" id="method_page" value="page"$radio_page />
-  <label for="method_page">{$_rename_messages['msg_page']}:</label>$select_refer<br />
-  <input type="radio"  name="method" id="method_regex" value="regex"$radio_regex />
-  <label for="method_regex">{$_rename_messages['msg_regex']}:</label><br />
+  <input type="radio"  name="method" id="_p_rename_page" value="page"$radio_page />
+  <label for="_p_rename_page">{$_rename_messages['msg_page']}:</label>$select_refer<br />
+  <input type="radio"  name="method" id="_p_rename_regex" value="regex"$radio_regex />
+  <label for="_p_rename_regex">{$_rename_messages['msg_regex']}:</label><br />
   From:<br />
   <input type="text" name="src" size="80" value="$s_src" /><br />
   To:<br />
