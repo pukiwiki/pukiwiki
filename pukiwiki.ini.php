@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.117 2005/04/02 06:34:50 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.118 2005/04/05 13:29:25 henoheno Exp $
 //
 // PukiWiki main setting file
 
@@ -160,7 +160,15 @@ $notimeupdate = 1;
 // Admin password for this Wikisite
 
 // CHANGE THIS
-$adminpass = '1a1dc91c907325c69271ddf0c944bc72'; // md5('pass')
+//$adminpass = 'pass';	// Cleartext
+//$adminpass = '{x-php-crypt}$1$nxrVut5a$c9LdXN1rKQC1HQOwBY4O//';      // crypt('pass')
+$adminpass = '{x-php-md5}1a1dc91c907325c69271ddf0c944bc72';            // md5('pass')
+//$adminpass = '{x-php-sha1}9d4e1e23bd5b727046a9e3b4b7db57bd8d6ee684'; // sha1('pass')
+//$adminpass = '{CRYPT}$1$AR.Gk94x$uCe8fUUGMfxAPH83psCZG/'; // CRYPT 'pass'
+//$adminpass = '{MD5}Gh3JHJBzJcaScd3wyUS8cg==';          // MD5 'pass'
+//$adminpass = '{SMD5}o7lTdtHFJDqxFOVX09C8QnlmYmZnd2Qx'; // SMD5 'pass'
+//$adminpass = '{SHA}nU4eI71bcnBGqeO0t9tXvY1u5oQ=';      // SHA 'pass'
+//$adminpass = '{SSHA}B78f8i/RpNC+CyFdKLH2odaK8hlPNjlOOUUyMA=='; // SSHA 'pass'
 
 /////////////////////////////////////////////////
 // Page-reading feature settings
@@ -195,17 +203,16 @@ $pagereading_config_dict = ':config/PageReading/dict';
 /////////////////////////////////////////////////
 // User definition
 $auth_users = array(
-	'foo'	=> 'foo_passwd',
-	'bar'	=> 'bar_passwd',
-	'hoge'	=> 'hoge_passwd',
+	'foo'	=> 'foo_passwd', // Cleartext
+	'bar'	=> '{x-php-md5}f53ae779077e987718cc285b14dfbe86', // md5('bar_passwd')
+	'hoge'	=> '{SMD5}OzJo/boHwM4q5R+g7LCOx2xGMkFKRVEx', // SMD5 'hoge_passwd'
 );
 
 /////////////////////////////////////////////////
 // Authentication method
 
-// 'pagename' : by Page name
-// 'contents' : by Page contents
-$auth_method_type = 'contents';
+$auth_method_type = 'contents';	// By Page contents
+//$auth_method_type = 'pagename';	// By Page name
 
 /////////////////////////////////////////////////
 // Read auth (0:Disable, 1:Enable)

@@ -1,8 +1,98 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: auth.php,v 1.9 2005/03/27 10:49:26 henoheno Exp $
+// $Id: auth.php,v 1.10 2005/04/05 13:29:26 henoheno Exp $
 //
-// Basic authentication related functions
+// Authentication related functions
+
+define('PKWK_PASSPHRASE_LIMIT_LENGTH', 512);
+
+// Passwd-auth related ----
+
+function pkwk_login($pass = '')
+{
+	global $adminpass;
+
+	if (! PKWK_READONLY && isset($adminpass) &&
+		pkwk_hash_compute($adminpass, $pass) == $adminpass) {
+		return TRUE;
+	} else {
+		sleep(2);       // Blocking brute force attack
+		return FALSE;
+	}
+}
+
+// Compute RFC2307 'userPassword' value, like slappasswd (OpenLDAP)
+// $scheme : Specify 'scheme' or '{scheme}' or '{scheme}salt'
+// $phrase : Pass-phrase
+// $prefix : Output with a scheme-prefix or not
+function pkwk_hash_compute($scheme = 'php_md5', $phrase = '', $prefix = TRUE)
+{
+	if (strlen($phrase) > PKWK_PASSPHRASE_LIMIT_LENGTH)
+		die('pkwk_hash_compute(): malicious message length');
+
+	// With a salt or not
+	$matches = array();
+	if (preg_match('/^\{(.+)\}(.*)$/', $scheme, $matches)) {
+		$scheme = $matches[1];
+		$salt   = $matches[2];
+	} else if ($scheme != '') {
+		$scheme = ''; // Cleartext
+	}
+
+	// Compute and add a scheme-prefix
+	switch (strtolower($scheme)) {
+	case 'x-php-crypt' : /* FALLTHROUGH */
+	case 'php_crypt'   :
+		$hash = ($prefix ? '{x-php-crypt}' : '') .
+			($salt != '' ? crypt($phrase, $salt) : crypt($phrase)); break;
+	case 'x-php-md5'   : /* FALLTHROUGH */
+	case 'php_md5'     :
+		$hash = ($prefix ? '{x-php-md5}'   : '') . md5($phrase);  break;
+	case 'x-php-sha1'  : /* FALLTHROUGH */
+	case 'php_sha1'    :
+		$hash = ($prefix ? '{x-php-sha1}'  : '') . sha1($phrase); break;
+
+	case 'crypt'       : /* FALLTHROUGH */
+	case 'ldap_crypt'  :
+		$hash = ($prefix ? '{CRYPT}' : '') .
+			($salt != '' ? crypt($phrase, $salt) : crypt($phrase)); break;
+
+	case 'md5'         : /* FALLTHROUGH */
+	case 'ldap_md5'    :
+		$hash = ($prefix ? '{MD5}' : '') . base64_encode(hex2bin(md5($phrase)));  break;
+	case 'smd5'        : /* FALLTHROUGH */
+	case 'ldap_smd5'   :
+		// MD5 Key length = 128bits = 16bytes
+		$salt = ($salt != '' ? substr(base64_decode($salt), 16) : substr(crypt(''), -8));
+		$hash = ($prefix ? '{SMD5}' : '') .
+			base64_encode(hex2bin(md5($phrase . $salt)) . $salt);
+		break;
+
+	case 'sha'         : /* FALLTHROUGH */
+	case 'ldap_sha'    :
+		$hash = ($prefix ? '{SHA}' : '') . base64_encode(hex2bin(sha1($phrase))); break;
+	case 'ssha'        : /* FALLTHROUGH */
+	case 'ldap_ssha'   :
+		// SHA-1 Key length = 160bits = 20bytes
+		$salt = ($salt != '' ? substr(base64_decode($salt), 20) : substr(crypt(''), -8));
+		$hash = ($prefix ? '{SSHA}' : '') .
+			base64_encode(hex2bin(sha1($phrase . $salt)) . $salt);
+		break;
+
+	case 'cleartext'   : /* FALLTHROUGH */
+	case 'clear'       : /* FALLTHROUGH */
+	case ''            :
+		$hash = & $phrase; break; // Creartext, keep NO prefix
+
+	default:
+		$hash = FALSE; break; // Invalid scheme
+	}
+
+	return $hash;
+}
+
+
+// Basic-auth related ----
 
 // Check edit-permission
 function check_editable($page, $auth_flag = TRUE, $exit_flag = TRUE)
@@ -53,8 +143,7 @@ function read_auth($page, $auth_flag = TRUE, $exit_flag = TRUE)
 // Basic authentication
 function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 {
-	global $auth_users, $auth_method_type;
-	global $_msg_auth;
+	global $auth_method_type, $auth_users, $_msg_auth;
 
 	// Checked by:
 	$target_str = '';
@@ -87,8 +176,10 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 		! isset($_SERVER['PHP_AUTH_USER']) ||
 		! in_array($_SERVER['PHP_AUTH_USER'], $user_list) ||
 		! isset($auth_users[$_SERVER['PHP_AUTH_USER']]) ||
-		$auth_users[$_SERVER['PHP_AUTH_USER']] != $_SERVER['PHP_AUTH_PW'])
+		pkwk_hash_compute($auth_users[$_SERVER['PHP_AUTH_USER']],
+			$_SERVER['PHP_AUTH_PW']) != $auth_users[$_SERVER['PHP_AUTH_USER']])
 	{
+		// Auth failed
 		pkwk_common_headers();
 		if ($auth_flag) {
 			header('WWW-Authenticate: Basic realm="' . $_msg_auth . '"');
@@ -102,7 +193,8 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 			exit;
 		}
 		return FALSE;
+	} else {
+		return TRUE;
 	}
-	return TRUE;
 }
 ?>

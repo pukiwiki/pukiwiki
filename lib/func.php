@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.38 2005/03/28 15:28:40 henoheno Exp $
+// $Id: func.php,v 1.39 2005/04/05 13:29:26 henoheno Exp $
 //
 // General functions
 
@@ -645,19 +645,6 @@ function csv_implode($glue, $pieces)
 	return join($glue, $arr);
 }
 
-function pkwk_login($pass = '')
-{
-	global $adminpass;
-
-	if (! PKWK_READONLY && $pass != '' && md5($pass) == $adminpass) {
-		return TRUE;
-	} else {
-		sleep(2);	// Blocking brute force attack
-		return FALSE;
-	}
-}
-
-
 //// Compat ////
 
 // is_a --  Returns TRUE if the object is of this class or has this class as one of its parents
@@ -702,6 +689,22 @@ if (! function_exists('md5_file')) {
 		$data = fread($fd, filesize($filename));
 		fclose($fd);
 		return md5($data);
+	}
+}
+
+// sha1 -- Compute SHA-1 hash
+// (PHP 4 >= 4.3.0, PHP5)
+if (! function_exists('sha1')) {
+	if (extension_loaded('mhash')) {
+		function sha1($str, $raw_output = FALSE)
+		{
+			if ($raw_output) {
+				// PHP 5.0.0 or lator only :)
+				return mhash(MHASH_SHA1, $str);
+			} else {
+				return bin2hex(mhash(MHASH_SHA1, $str));
+			}
+		}
 	}
 }
 ?>
