@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rename.inc.php,v 1.9 2003/11/12 00:47:15 arino Exp $
+// $Id: rename.inc.php,v 1.10 2004/03/18 09:32:05 arino Exp $
 //
 
 /*
@@ -24,8 +24,6 @@ function plugin_rename_action()
 {
 	global $adminpass,$whatsnew,$WikiName,$BracketName;
 	global $_rename_messages;
-	
-	set_time_limit(60);
 	
 	$method = rename_getvar('method');
 	if ($method == 'regex')
