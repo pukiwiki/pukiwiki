@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.15 2004/10/31 09:20:00 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.16 2004/11/01 12:56:50 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -41,7 +41,7 @@ switch(UI_LANG){
 header('Cache-control: no-cache');
 header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
-if(ini_get('zlib.output_compression')) {
+if(ini_get('zlib.output_compression') && preg_match('/\bgzip\b/i', $_SERVER['HTTP_ACCEPT_ENCODING'])) {
 	header('Content-Encoding: gzip');
 	header('Vary: Accept-Encoding');
 }

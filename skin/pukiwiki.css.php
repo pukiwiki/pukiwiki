@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.css.php,v 1.7 2004/11/01 12:56:50 henoheno Exp $
+// $Id: pukiwiki.css.php,v 1.8 2004/11/01 13:01:26 henoheno Exp $
 //
 header('Content-Type: text/css');
 $matches = array();
@@ -23,7 +23,6 @@ if ($media != 'print') $media = 'screen';
 ?>
 @charset "<?php echo $charset ?>";
 
-<?php exit; ?>
 pre, dl, ol, p, blockquote
 {
 	line-height:130%;
