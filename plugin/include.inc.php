@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: include.inc.php,v 1.18 2004/10/02 00:45:14 henoheno Exp $
+// $Id: include.inc.php,v 1.19 2004/10/21 12:27:40 henoheno Exp $
 //
 
 define('PLUGIN_INCLUDE_MAX', 4); // 一度にインクルードできるページの最大数
@@ -25,7 +25,7 @@ function plugin_include_convert()
 	$page = isset($args[0]) ? strip_bracket(array_shift($args)) : '';
 	$with_title = PLUGIN_INCLUDE_WITH_TITLE;
 	if (isset($args[0])) {
-		switch(array_shift($args)) {
+		switch(strtolower(array_shift($args))) {
 		case 'title'  : $with_title = TRUE;  break;
 		case 'notitle': $with_title = FALSE; break;
 		}
