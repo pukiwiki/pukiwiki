@@ -305,6 +305,14 @@ RDF/RSS
     *   http://pukiwiki.org/index.php?rss10
 
 更新履歴
+    *   2003-11-10 1.3.6 by PukiWiki Developers Team
+        attach/backup/cache/counter/diffディレクトリにdir.txtを配置
+        XSS脆弱性をfix(anchor.inc.php, memo.inc.php)
+        スキンにキャッシュ対策(pukiwiki.skin.*.php)
+        URI自動生成ルーチン調整(func.php, init.php, rss.php)
+        #contentsの出力を調整(html.php)
+        その他修正(img.inc.php, backup.php)
+
     *   2003-05-28 1.3.5 by PukiWiki Developers Team
         XSS脆弱性をfix
         その他バグ修正
