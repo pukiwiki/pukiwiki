@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.2 2004/08/01 13:00:01 henoheno Exp $
+// $Id: file.php,v 1.3 2004/08/01 13:47:08 henoheno Exp $
 //
 
 // ソースを取得
@@ -356,6 +356,9 @@ function get_readings()
 		if($unknownPage) {
 			switch(strtolower($pagereading_kanji2kana_converter)) {
 			case 'chasen':
+				if(! file_exists($pagereading_chasen_path))
+					die_message("ChaSen not found: $pagereading_chasen_path");
+
 				$tmpfname = tempnam(CACHE_DIR, 'PageReading');
 				$fp = fopen($tmpfname, "w") or
 					die_message("Cannot write temporary file '$tmpfname'.\n");
@@ -365,11 +368,6 @@ function get_readings()
 					}
 				}
 				fclose($fp);
-
-				if(! file_exists($pagereading_chasen_path)) {
-					unlink($tmpfname);
-					die_message("ChaSen not found: $pagereading_chasen_path");
-				}
 
 				$chasen = "$pagereading_chasen_path -F %y $tmpfname";
 				$fp = popen($chasen, "r");
@@ -392,6 +390,9 @@ function get_readings()
 
 			case 'kakasi':
 			case 'kakashi':
+				if(! file_exists($pagereading_kakasi_path))
+					die_message("KAKASI not found: $pagereading_kakasi_path");
+
 				$tmpfname = tempnam(CACHE_DIR, 'PageReading');
 				$fp = fopen($tmpfname, "w") or
 					die_message("Cannot write temporary file '$tmpfname'.\n");
@@ -401,11 +402,6 @@ function get_readings()
 					}
 				}
 				fclose($fp);
-
-				if(! file_exists($pagereading_kakasi_path)) {
-					unlink($tmpfname);
-					die_message("KAKASI not found: $pagereading_kakasi_path");
-				}
 
 				$kakasi = "$pagereading_kakasi_path -kK -HK -JK < $tmpfname";
 				$fp = popen($kakasi, "r");
