@@ -1,18 +1,14 @@
-*PukiWiki
+* FrontPage [#qb249ac2]
 
-ここは、サイトアクセスの際に始めに表示されるFrontPageです。~
-あなたのサイトに合わせて自由に編集してください。
+このページは、ページを指定しない時に表示されます。
 
--PukiWiki
---PukiWikiのご紹介
--[[ヘルプ]]
---PukiWikiで編集するとき？
--SandBox
---自由に編集して試してみてください
--InterWikiName
---InterWikiのサーバリスト
--InterWikiSandBox
---InterWikiを試してみてください
--[[PukiWiki.org:http://pukiwiki.org]]
---PukiWiki公式サイトです。~
-質問や御意見はこちらへどうぞ
+あなたのサイトに合わせ、自由に編集してください :)
+
+- PukiWiki -- PukiWikiのご紹介
+-- [[ヘルプ]] -- PukiWikiで編集するには？
+-- SandBox -- 自由に編集して試してみてください
+-- InterWikiName -- InterWikiのサーバリスト
+-- InterWikiSandBox -- InterWikiを試してみてください
+
+- PukiWiki.org - http://pukiwiki.org/
+-- PukiWiki公式サイトです。質問や御意見はこちらへどうぞ
