@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.111.2.2 2005/03/21 10:16:13 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.111.2.3 2005/03/27 13:37:40 henoheno Exp $
 //
 // PukiWiki メイン設定ファイル
 
@@ -63,15 +63,16 @@ define('PLUGIN_DIR',    DATA_HOME . 'plugin/'   ); // プラグインを収める場所
 
 // スキン / スタイルシートを格納する場所
 define('SKIN_DIR', 'skin/');
-// スキンファイル (SKIN_DIR/*.skin.php) は index.php から見て
-// ./DATAHOME/SKIN_DIR にあたる位置に必要ですが、CSS(*.css)と
-// JavaScript(*.js) は index.php から見て ./SKIN_DIR にあたる
-// 位置に必要です
+//  このディレクトリ以下のスキンファイル (*.php) はPukiWiki本体側
+//  (DATA_HOME/SKIN_DIR) に必要ですが、CSSファイル(*.css) および
+//  JavaScriptファイル( *.js) はWebブラウザから見える場所
+//  (index.php から見て ./SKIN_DIR にあたる場所)に配置して下さい
 
 // 静的な画像ファイルを格納する場所
 define('IMAGE_DIR', 'image/');
-// このディレクトリはWebブラウザから見える場所(index.phpから
-// 見て./IMAGE_DIRにあたる位置)に置いて下さい
+//  このディレクトリ以下の全てのファイルはWebブラウザから見える
+//  場所(index.php から見て ./IMAGE_DIR にあたる場所)に配置して
+//  下さい
 
 /////////////////////////////////////////////////
 // ローカル時間の設定
@@ -92,7 +93,7 @@ default  :
 // この値はRSSフィードのチャンネル名などにも使われます
 $page_title = 'PukiWiki';
 
-// このPukiWikiのURLを指定する (デフォルト:自動判別)
+// このPukiWikiのURL (デフォルト:自動判別)
 //$script = 'http://example.com/pukiwiki/';
 
 // $scriptを短くする: ファイル名を取り除く (デフォルト:取り除かない)
@@ -108,7 +109,7 @@ $modifierlink = 'http://pukiwiki.example.com/';
 $defaultpage  = 'FrontPage';     // トップページ / 既定のページ
 $whatsnew     = 'RecentChanges'; // 変更されたページの一覧
 $whatsdeleted = 'RecentDeleted'; // 削除されたページの一覧
-$interwiki    = 'InterWikiName'; // このページにInterWikiの定義を行う
+$interwiki    = 'InterWikiName'; // InterWikiの定義を行うページ
 $menubar      = 'MenuBar';       // メニュー
 
 /////////////////////////////////////////////////
@@ -239,8 +240,7 @@ $search_auth = 0;
 // $whatsnew: RecentChangesの最大項目数
 $maxshow = 60;
 
-// $whatsdeleted: RecentDeletedの最大項目数
-// (0 = 無効)
+// $whatsdeleted: RecentDeletedの最大項目数 (0 = 無効)
 $maxshow_deleted = 60;
 
 /////////////////////////////////////////////////
@@ -376,7 +376,7 @@ $fixed_heading_anchor = 1;
 $preformat_ltrim = 1;
 
 /////////////////////////////////////////////////
-// 改行を <br/> タグに置換する
+// 改行を <br /> タグに置換する
 $line_break = 0;
 
 /////////////////////////////////////////////////
@@ -386,9 +386,9 @@ $line_break = 0;
 // サポートしたく無いのであれば、'keitai' に関する設定を全て削除
 // (ないしコメントアウト)して下さい。
 //
-// もし簡素なWikiサイトとしてデスクトップPC用のブラウザを特別扱い
-// したくないのであれば、 keitai.ini.php を default.ini.php にコピー
-// し、中身をカスタマイズして下さい。
+// もしkeitaiスキンを使用した、簡素なWikiサイトとして利用したいので
+// あれば、 keitai.ini.php を default.ini.php にコピーし、中身を
+// デスクトップPC向けにカスタマイズして下さい。
 
 $agents = array(
 // pattern: A regular-expression that matches device(browser)'s name and version
