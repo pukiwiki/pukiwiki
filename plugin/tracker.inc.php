@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.21 2004/07/31 03:09:20 henoheno Exp $
+// $Id: tracker.inc.php,v 1.22 2004/08/21 12:57:57 henoheno Exp $
 //
 
 // tracker_listで表示しないページ名(正規表現で)
@@ -143,6 +143,9 @@ function plugin_tracker_action()
 
 	$fields = plugin_tracker_get_fields($page,$refer,$config);
 
+	// Creating an empty page, before attaching files
+	touch(get_filename($page));
+
 	foreach (array_keys($fields) as $key)
 	{
 		$value = array_key_exists($key,$_post) ?
@@ -163,8 +166,8 @@ function plugin_tracker_action()
 		}
 	}
 
-	// 書き込み
-	page_write($page,join('',$postdata));
+	// Writing page data, without touch
+	page_write($page, join('', $postdata), TRUE);
 
 	$r_page = rawurlencode($page);
 
