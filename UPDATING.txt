@@ -1,5 +1,5 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.8 2004/08/30 12:33:05 henoheno Exp $
+$Id: UPDATING.txt,v 1.9 2004/08/30 12:53:13 henoheno Exp $
 
 
 互換性に関する記述
@@ -38,8 +38,8 @@ PukiWiki 1.4.3: PukiWiki 1.4.2との非互換点
 
     1.  trackbackディレクトリに保存されるファイル名の規則が変わりました
         trackback/referer機能をお使いで、1.4.2から1.4.3へ移行される場合は、
-	PukiWikir-devサイト (http://pukiwiki.sourceforge.jp/dev/)の、
-	"開発日記/2004-03-18" を参照して作業を行ってください。
+        PukiWikir-devサイト (http://pukiwiki.sourceforge.jp/dev/)の、
+        "開発日記/2004-03-18" を参照して作業を行ってください。
 
 PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
 
@@ -56,8 +56,10 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
     *   2004-09-04 1.4.4 by PukiWiki Developers Team
 
         スケーラビリティの向上
-	    BugTrack/588: is_page()内の冗長なキャッシュを廃止
+            BugTrack/588: is_page()内の冗長なキャッシュを廃止
             開発日記/2004-07-10 exist_plugin() の呼び出し回数を低減
+            開発日記/2004-08-01 ページを一覧表示する際の冗長なキャッシュを除去
+                ($list_index = 1 の際の表示速度を改善)
 
         初期化処理の見直し: セキュリティ向上および軽量化 (init.php):
             開発日記/2004-06-22
@@ -76,8 +78,8 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
 
         PukiWikiを容易に三分割できる様に修正
             1. Webサイトに露出しなければならないプレゼンテーション部分
-	       (index.php/pukiwiki.php, IMAGE_DIR, *.css および *.js)
-	    2. 複数のPukiWikiで共有可能な部分 (LIB_DIR以下)
+               (index.php/pukiwiki.php, IMAGE_DIR, *.css および *.js)
+            2. 複数のPukiWikiで共有可能な部分 (LIB_DIR以下)
             3. PukiWiki一本ごとに固有のデータ (DATA_HOME以下)
 
             開発日記/2004-07-24 index.php を追加
@@ -92,14 +94,15 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
              versionlistプラグイン:
                 - LIB_DIRやDATA_HOMEをフォローする
                 - versionlistの出力から冗長な '/' を削除 (開発日記/2004-07-24)
+             開発日記/2004-08-01 ライブラリとして使われうるファイルをLIB_DIRに移動
 
         携帯電話およびPDAなどからのアクセスに対応 / 設定の集約 (keitai.ini.php)
-	    各種組み込みWebブラウザ向けのユーザーエージェント文字列を追加
-	        PlayStation BB Navigator, i-mode and FOMA, Vodafone, EZweb,
-		WAP phone, ACCESS "NetFront" / "Compact NetFront" and thier
-		OEM, Opera(for embedded), Planetweb, DreamPassport, Palm
-		"Web Pro",  ilinx "Palmscape" / "Xiino", Sharp PDA Browser,
-		Windows CE, WebTV
+            各種組み込みWebブラウザ向けのユーザーエージェント文字列を追加
+                PlayStation BB Navigator, i-mode and FOMA, Vodafone, EZweb,
+                WAP phone, ACCESS "NetFront" / "Compact NetFront" and thier
+                OEM, Opera(for embedded), Planetweb, DreamPassport, Palm
+                "Web Pro",  ilinx "Palmscape" / "Xiino", Sharp PDA Browser,
+                Windows CE, WebTV
             BugTrack/581 (au/TU-KA) EZweb およびWAP端末などからのアクセス
             開発日記/2004-07-03 Vodafone の判定結果に端末IDが含まれない様に修正
             BugTrack/626 組み込みWebブラウザ「NetFront」「Compact NetFront」
@@ -107,16 +110,18 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
             BugTrack/628 DDIポケット AH-K3001V(Opera搭載)に対応を
             BugTrack/637 携帯(Shift-JIS固定ブラウザ)から書き込むと文字化けする /
                 $_REQUESTは妥当かどうか / GET固定ブラウザの扱い
+            BugTrack/646 MenuBarのページ名を変更すると携帯からの閲覧でメニューが
+                表示できない
 
         [CONTRIBUTION] 日本の携帯電話対応 by みこ (See BugTrack/627 for detail)
-	    - 日本で使われている顔文字をface画像に置換するための設定を追加
-	    - 携帯電話ベンダ固有のコードへ顔文字などを置換する設定を追加
-	    - 日本で使われる表現「汗」(当惑している様子) のフェイスマークを追加
+            - 日本で使われている顔文字をface画像に置換するための設定を追加
+            - 携帯電話ベンダ固有のコードへ顔文字などを置換する設定を追加
+            - 日本で使われる表現「汗」(当惑している様子) のフェイスマークを追加
 
         セキュリティの向上
             開発日記/2004-07-11 index.html の追加 (ディレクトリの覗き見を阻止)
             開発日記/2004-07-18 管理者パスワードのためのシステム関数を追加
-	        - 認証失敗の度に2秒のウェイトをかけることで、攻撃者を妨害する
+                - 認証失敗の度に2秒のウェイトをかけることで、攻撃者を妨害する
             BugTrack/528 pcommentをネストした場合の脆弱性
                 - 無限ループを抑えるハックを追加
 
@@ -125,12 +130,20 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
             BugTrack/364 ls2プラグインでlink指定時の挙動がおかしい
 
         デフォルト設定の調整 (*.ini.php)
-	    - POP/APOP before SMTP: 自動認識する(サーバーが対応可能であればAPOP)
-	    - 英単語で指定したエモーションについて、画像のALT属性を括弧で囲む
-	      (例: sad => [sad]) (開発日記/2004-07-28)
+            - RecentChangesの件数のデフォルトを若干短く($maxshow: 80 => 60)
+            - RecentDeletedをデフォルトで有効に ($maxshow_deleted: 0 => 60)
+            - バックアップ間隔を短く、世代を多く、データ喪失までに必要な日数を長く
+                $cycle:   6時間 => 3時間
+                $maxage: 20世代 => 120世代
+                   6 x 20 (5日) => 3 x 120 (15日)
+            - 見出し行に固有のアンカーを自動挿入する ($fixed_heading_anchor: 0 => 1)
+            - preformatted text の際、先頭のスペースを一つ取り除く
+              ($preformat_ltrim : 0 => 1)
+            - POP/APOP before SMTP: 自動認識する(サーバーが対応可能であればAPOP)
+            - 英単語で指定したエモーションについて、画像のALT属性を括弧で囲む
+              (例: sad => [sad]) (開発日記/2004-07-28)
 
         重要な問題の修正
-            BugTrack/577 renameプラグインでXTMLパースエラー
             BugTrack/639 memoプラグイン: カンマ以降の文字が消える /
                ダブルクォートで囲んだ場合、ダブルクォートが消える
 
@@ -138,12 +151,17 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
             BugTrack/635 proxy.php のバグ (過剰判定、かつ間違っている)
             BugTrack/638 TrackBack受信件数が多く表示される
             開発日記/2004-07-17 POP/APOP before SMTP
-	        - 動作しない状態であったAPOPが動作する様に修正
-		- STATおよびQUITコマンドを発行する様に修正
+                - 動作しない状態であったAPOPが動作する様に修正
+                - STATおよびQUITコマンドを発行する様に修正
 
         軽微な問題の修正
-	    BugTrack/619 いくつかのファイルで不揃いだった改行コードを統一
-	    BugTrack/622 E_ALL や safe_mode の際に表示されるWarning/Noticeの対応
+            BugTrack/577 renameプラグインでXTMLパースエラー
+            開発日記/2004-08-06 XHTMLが許容しない '&' を '&amp;' に修正
+            BugTrack/619 いくつかのファイルで不揃いだった改行コードを統一
+            BugTrack/622 E_ALL や safe_mode の際に表示されるWarning/Noticeの対応
+            refプラグイン/attachプラグイン: KBをより正確に表示する (1024バイト換算に)
+            menuプラグイン: サブメニューの名前を容易に変更できる様に、define
+                'MENU_SUBMENUBAR' を追加
 
         コードの可読性を高めるための修正
             開発日記/2004-07-18 内部関数名の変更: sanitize() => input_filter()
@@ -153,8 +171,9 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
             - グローバル変数 $get / $post の代わりに $vars を使用する様に修正
 
         基礎コンテンツの修正および拡充
-	    - pukiwiki.ini.php のコメントを整理／追加
+            - pukiwiki.ini.php のコメントを整理／追加
             - InterWikiName: YukiWiki、ウヰキエリアを現状にあわせ更新
+            - 冗長なコンテンツを削除・マージ
 
 
     *   2004-04-04 1.4.3 by PukiWiki Developers Team
