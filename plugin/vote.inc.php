@@ -147,4 +147,3 @@ function plugin_vote_convert()
 	return $string;
 }
 ?>
-
