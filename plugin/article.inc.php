@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.12 2003/04/13 06:28:52 arino Exp $
+ $Id: article.inc.php,v 1.13 2003/04/17 02:25:18 arino Exp $
  
  */
 
@@ -119,6 +119,7 @@ function plugin_article_action()
 		$msg = join("\n",preg_replace('/^(?!\/\/)(?!\s)(.*)$/','$1~',explode("\n",$msg)));
 	}
 	$article .= $msg;
+	$article .= "\n<";
 	
 	if (ARTICLE_COMMENT) {
 		$article .= "\n\n#comment\n";
