@@ -25,7 +25,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.16.2.4 2003/03/08 13:16:33 panda Exp $
+// $Id: pukiwiki.php,v 1.16.2.5 2003/03/08 13:33:44 panda Exp $
 /////////////////////////////////////////////////
 
 
@@ -129,7 +129,7 @@ else if(arg_check("preview") || $post["preview"] || $post["template"])
 		$post["msg"] = @join("",get_source($post["template_page"]));
 	}
 	
-	$post["msg"] = preg_replace("/^#freeze\s*\n/","",$post["msg"]);
+	$post["msg"] = preg_replace("/^#freeze\s*$/m","",$post["msg"]);
 	$postdata_input = $post["msg"];
 
 	if($post["add"])

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.45.2.2 2003/03/08 13:16:33 panda Exp $
+// $Id: html.php,v 1.45.2.3 2003/03/08 13:33:44 panda Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -91,7 +91,7 @@ function convert_html($string)
 	$saved = array();
 	$arycontents = array();
 
-	$string = preg_replace("/^#freeze\s*\n/","",$string);
+	$string = preg_replace("/^#freeze\s*$/m","",$string);
 
 	$lines = split("\n", $string);
 	// 各行の行頭書式を格納
