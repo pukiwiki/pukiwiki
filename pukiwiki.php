@@ -29,7 +29,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.18 2003/01/31 01:49:35 panda Exp $
+// $Id: pukiwiki.php,v 1.19 2003/02/15 13:25:15 panda Exp $
 /////////////////////////////////////////////////
 
 
@@ -63,7 +63,7 @@ $retvars = array();
 if (!empty($vars['plugin'])) {
 	if (!exist_plugin_action($vars['plugin'])) {
 		$msg = "plugin={$vars['plugin']} is not implemented.";
-		$retvars = array('msg'=>$msg,body=>$msg);
+		$retvars = array('msg'=>$msg,'body'=>$msg);
 	}
 	else {
 		$retvars = do_plugin_action($vars['plugin']);
@@ -74,7 +74,7 @@ if (!empty($vars['plugin'])) {
 else if (!empty($vars['cmd'])) {
 	if (!exist_plugin_action($vars['cmd'])) {
 		$msg = "cmd={$vars['cmd']} is not implemented.";
-		$retvars = array('msg'=>$msg,body=>$msg);
+		$retvars = array('msg'=>$msg,'body'=>$msg);
 	}
 	else {
 		$retvars = do_plugin_action($vars['cmd']);
