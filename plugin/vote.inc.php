@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: vote.inc.php,v 1.19 2005/01/04 14:37:07 henoheno Exp $
+// $Id: vote.inc.php,v 1.20 2005/01/04 14:50:51 henoheno Exp $
 //
 // Vote plugin
 
@@ -17,7 +17,7 @@ function plugin_vote_action()
 	$matches = array();
 	foreach($postdata_old as $line) {
 
-		if (! preg_match('/^#vote\((.*)\)(.*)$/i', $line, $matches) ||
+		if (! preg_match('/^#vote(?:\((.*)\)(.*))?$/i', $line, $matches) ||
 		    $vote_no++ != $vars['vote_no']) {
 			$postdata .= $line;
 			continue;
