@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.56 2003/11/03 14:59:39 arino Exp $
+// $Id: convert_html.php,v 1.57 2003/11/12 01:21:21 arino Exp $
 //
 function convert_html($lines)
 {
@@ -727,9 +727,6 @@ class Body extends Block
 		
 		while (count($lines))
 		{
-			// Experimental: 行頭<pre>から行頭</pre>までを整形済みとみなす
-//			$this->block($lines,'<pre>','</pre>','Pre');
-			
 			$line = array_shift($lines);
 			
 			if (substr($line,0,2) == '//') //コメントは処理しない
@@ -852,23 +849,6 @@ class Body extends Block
 		array_shift($arr);
 		return ($arr[1] != '') ? $related.join('',$arr) : $related;
 	}
-	function block(&$lines,$start,$end,$class)
-	{
-		if (rtrim($lines[0]) != $start)
-		{
-			return;
-		}
-		array_shift($lines);
-		while (count($lines))
-		{
-			$line = preg_replace('/[\r\n]*$/','',array_shift($lines));
-			if ($line == $end)
-			{
-				return;
-			}
-			$this->last = &$this->last->add(new $class($this,$line));
-		}
-	}		
 }
 class Contents_UList extends ListContainer
 {
