@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.76 2004/08/22 08:10:22 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.77 2004/08/22 09:08:24 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -47,13 +47,13 @@ define('SKIN_DIR', 'skin/');
 //  このディレクトリ以下のスキンファイル (*.php) は
 //  PukiWiki本体側(DATA_HOME/SKIN_DIR) に必要ですが、
 //  CSSファイル(*.css) およびJavaScriptファイル( *.js)
-//  はWebサーバーから見える場所(./SKIN_DIR)に配置
+//  はWebブラウザから見える場所(./SKIN_DIR)に配置
 //  して下さい
 
 // 画像ファイル格納ディレクトリ
 define('IMAGE_DIR', 'image/');
 //  このディレクトリ以下の全てのファイルは
-//  Webサーバーから見える場所(./IMAGE_DIR)に配置
+//  Webブラウザから見える場所(./IMAGE_DIR)に配置
 //  して下さい
 
 
