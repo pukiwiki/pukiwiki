@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.78 2004/08/30 14:29:47 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.79 2004/09/04 00:02:03 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -276,42 +276,40 @@ $no_proxy = array(
 );
 
 ////////////////////////////////////////////////
-// Mail notify
+// メール送信
 
-// ページの更新時にメールを送信する
-$notify = 0;
-$notify_diff_only = 0;	// 差分だけを送信するか
-
-$notify_to = 'xxx@yyy.zz';	// To:（宛先）
-$notify_from = 'xxx@yyy.zz';	// From:（送り主）
-
-// Subject:（件名） $pageにページ名が入る
-$notify_subject = '[pukiwiki] $page';
-
-// 追加メールヘッダ
-$notify_header = "From: $notify_from\r\nX-Mailer: PukiWiki/" .
-	S_VERSION . ' PHP/' . phpversion();
-
-/////////////////////////////////////////////////
-// POP / APOP Before SMTP
-
-// メール送信前にPOPまたはAPOPによる認証を行う
-$smtp_auth = 0;
+$notify = 0;	// (1:ページの更新時にメールを送信する)
+$notify_diff_only = 0;	// (1:差分だけを送信する)
 
 // SMTPサーバ (Windows のみ, 通常は php.ini で指定)
 $smtp_server = 'localhost';
 
+$notify_to   = 'to@example.com';	// To:（宛先）
+$notify_from = 'from@example.com';	// From:（送り主）
+
+// Subject:（件名） $pageにページ名が入ります
+$notify_subject = '[pukiwiki] $page';
+
+// メールヘッダ
+$notify_header = "From: $notify_from\r\n" .
+	'X-Mailer: PukiWiki/' .  S_VERSION . ' PHP/' . phpversion();
+
+/////////////////////////////////////////////////
+// メール送信: POP / APOP Before SMTP
+
+// メール送信前にPOPまたはAPOPによる認証を行う
+$smtp_auth = 0;
+
 $pop_server = 'localhost';	// POPサーバ
-$pop_port = 110;	// ポート番号
+$pop_port   = 110;	// ポート番号
+$pop_userid = '';	// POPユーザ名
+$pop_passwd = '';	// POPパスワード
 
 // 認証に APOP を利用するかどうか (※サーバ側の対応が必要)
 //   未設定 = 自動 (可能であればAPOPを使用する)
 //   1 = APOP固定  (必ずAPOPを使用する)
 //   0 = POP固定   (必ずPOPを使用する)
 // $pop_auth_use_apop = 1;
-
-$pop_userid = '';	// POPユーザ名
-$pop_passwd = '';	// POPパスワード
 
 /////////////////////////////////////////////////
 // 一覧・更新一覧に含めないページ名(正規表現で)
