@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.29 2003/03/07 04:09:43 panda Exp $
+// $Id: pukiwiki.ini.php,v 1.30 2003/03/07 07:03:28 panda Exp $
 //
 // PukiWiki setting file
 
@@ -72,12 +72,6 @@ $nowikiname = 0;
 // ページ名の最短バイト数を指定
 // AutoLinkを無効にする場合は0
 $autolink = 0;
-/////////////////////////////////////////////////
-// AutoLink除外リストのページ名
-// 実在すれば無視されずAutoLinkの対象になる
-$ignorelistpage = ':config/AutoLink/IgnoreList';
-// 実在してもAutoLinkの対象外となる
-$forceignorelistpage = ':config/AutoLink/ForceIgnoreList';
 
 /////////////////////////////////////////////////
 // 凍結機能を有効にする
