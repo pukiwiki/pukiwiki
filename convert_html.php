@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.25 2003/02/28 15:22:42 panda Exp $
+// $Id: convert_html.php,v 1.26 2003/03/02 16:09:00 panda Exp $
 //
 function convert_html($lines)
 {
@@ -154,7 +154,7 @@ class Paragraph extends Block
 
 class Heading extends Block
 { // *
-	var $level,$top,$id;
+	var $level,$id,$msg_top;
 	
 	function Heading(&$root,$text)
 	{
@@ -164,7 +164,7 @@ class Heading extends Block
 		}
 		$text = ltrim(substr($text,$level));
 		$this->level = ++$level;
-		list($this->top,$this->id) = $root->getAnchor($text,$level);
+		list($this->msg_top,$this->id) = $root->getAnchor($text,$level);
 		$this->last =& $this->insert(new Inline($text));
 	}
 	function canContain(&$obj)
@@ -173,7 +173,8 @@ class Heading extends Block
 	}
 	function toString()
 	{
-		return $this->wrap(parent::toString().$this->top,'h'.$this->level," id=\"{$this->id}\"");
+		return $this->msg_top.
+			$this->wrap(parent::toString(),'h'.$this->level," id=\"{$this->id}\"");
 	}
 }
 class HRule extends Block
@@ -667,16 +668,15 @@ class Align extends Block
 }
 class Body extends Block
 { // Body
-	var $id,$count,$top,$contents,$contents_last;
+	var $id;
+	var $count = 0;
+	var $contents;
+	var $contents_last;
 	var $classes = array('HRule','Heading','Pre','UList','OList','DList','Table','YTable','BQuote','BQuoteEnd','Div');
 
 	function Body($id)
 	{
-		global $top;
-		
 		$this->id = $id;
-		$this->count = 0;
-		$this->top = $top ? "<a href=\"#contents_$id\">$top</a>" : '';
 		$this->contents = new Block();
 		$this->contents_last =& $this->contents;
 		parent::Block();
@@ -685,15 +685,19 @@ class Body extends Block
 	{
 		$this->last =& $this;
 		
-		foreach ($lines as $line) {
-			if (substr($line,0,2) == '//') { //コメントは処理しない
+		foreach ($lines as $line)
+		{
+			if (substr($line,0,2) == '//') //コメントは処理しない
+			{
 				continue;
 			}
 			
 			$align = '';
-			if (preg_match('/^(LEFT|CENTER|RIGHT):(.*)$/',$line,$matches)) {
+			if (preg_match('/^(LEFT|CENTER|RIGHT):(.*)$/',$line,$matches))
+			{
 				$this->last =& $this->last->add(new Align(strtolower($matches[1]))); // <div style="text-align:...">
-				if ($matches[2] == '') {
+				if ($matches[2] == '')
+				{
 					continue;
 				}
 				$line = $matches[2];
@@ -749,10 +753,12 @@ class Body extends Block
 	}
 	function getAnchor($text,$level)
 	{
+		global $top;
+		
 		$id = "content_{$this->id}_{$this->count}";
 		$this->count++;
 		$this->contents_last =& $this->contents_last->add(new Contents_UList($text,$this->id,$level,$id));
-		return array(&$this->top,$id);
+		return array($this->count > 1 ? $top : '',$id);
 	}
 	function getContents()
 	{
@@ -790,6 +796,21 @@ class Contents_UList extends ListContainer
 		// 行頭\nで整形済みを表す ... X(
 		$text = "\n<a href=\"#$id\">".strip_htmltag(inline2(inline($text,TRUE)))."</a>\n";
 		parent::ListContainer('ul', 'li', --$level, $text);
+	}
+	function setParent(&$parent)
+	{
+		global $_list_pad_str;
+
+		parent::setParent($parent);
+		$step = $this->level;
+		$margin = $this->left_margin;
+		if (isset($parent->parent) and is_a($parent->parent,'ListContainer'))
+		{
+			$step -= $parent->parent->level;
+			$margin = 0;
+		}
+		$margin += $this->margin * ($step == $this->level ? 1 : $step);
+		$this->style = sprintf($_list_pad_str,$this->level,$margin,$margin);
 	}
 }
 ?>

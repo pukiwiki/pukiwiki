@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.11 2003/01/27 05:38:44 panda Exp $
+// $Id: ja.lng,v 1.12 2003/03/02 16:09:00 panda Exp $
 //
 // PukiWiki message file (japanese)
 
@@ -74,7 +74,7 @@ $_msg_symbol = '記号';
 $_msg_other = '日本語';
 $_msg_help = 'テキスト整形のルールを表示する';
 $_msg_week = array('日','月','火','水','木','金','土');
-$_msg_content_back_to_top = '<span class="super_index">&uarr;</span>';
+$_msg_content_back_to_top = '<div class="jumpmenu"><a href="#navigator">&uarr;</a></div>';
 $_msg_auth = 'Page Edit.';
 $_msg_word = 'これらのキーワードがハイライトされています：';
 
@@ -93,7 +93,6 @@ $_btn_addtop = 'ページの上に追加';
 $_btn_template = '雛形とするページ';
 $_btn_load = '読込';
 $_btn_edit = '編集';
-$_btn_viewtag = 'タグを見る';
 
 ///////////////////////////////////////
 // plug-in message
