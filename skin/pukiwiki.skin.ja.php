@@ -5,7 +5,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=euc-jp">
 	<meta http-equiv="content-style-type" content="text/css">
 <?if (! ( ($vars['cmd']==''||$vars['cmd']=='read') && $is_page) ) { ?>
-	<meta name="robots" content="noindex">
+	<meta name="robots" content="noindex,nofollow" />
 <? } ?>
 
 	<title><?=$page_title ?> - <?=$title?></title>
