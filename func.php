@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.8 2002/11/29 00:09:00 panda Exp $
+// $Id: func.php,v 1.9 2002/12/02 02:49:42 panda Exp $
 /////////////////////////////////////////////////
 
 // ¸¡º÷
@@ -13,19 +13,16 @@ function do_search($word,$type="AND",$non_format=0)
 	$retval = array();
 	$cnt = 0;
 
-	$files = get_existpages();
-	foreach($files as $page) {
-		$cnt++;
-		if($page == $whatsnew) continue;
-		if($page == $vars["page"] && $non_format) continue;
-		$data[$page] = get_source($page);
-	}
-	
-	$arywords = explode(" ",$word);
+	$arywords = preg_split("/\s+/",$word,-1,PREG_SPLIT_NO_EMPTY);
 	$result_word = $word;
 	
-	foreach($data as $name => $lines)
+	$files = get_existpages();
+	foreach($files as $name)
 	{
+		$cnt++;
+		if($name == $whatsnew) continue;
+		if($name == $vars["page"] && $non_format) continue;
+		$lines = get_source($name);
 		$line = join("\n",$lines);
 		
 		$hit = 0;
