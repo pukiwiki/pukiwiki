@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.24 2003/02/28 05:35:44 panda Exp $
+// $Id: convert_html.php,v 1.25 2003/02/28 15:22:42 panda Exp $
 //
 function convert_html($lines)
 {
@@ -636,7 +636,7 @@ class Div extends Block
 	function Div(&$root,$text)
 	{
 		if (!preg_match("/^\#([^\(]+)(?:\((.*)\))?/",$text,$out) or !exist_plugin_convert($out[1])) {
-			$this = new Inline($text);
+			$this = new Paragraph($text);
 			return;
 		}
 		parent::Block();
