@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.70 2003/12/03 12:10:19 arino Exp $
+// $Id: init.php,v 1.71 2004/03/13 13:43:46 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -14,8 +14,13 @@ error_reporting(E_ERROR | E_PARSE);
 // 初期設定 (文字エンコード、言語)
 define('SOURCE_ENCODING','EUC-JP');
 define('LANG','ja');
+
+mb_language('Japanese');
 mb_internal_encoding(SOURCE_ENCODING);
-mb_http_output(SOURCE_ENCODING);
+ini_set('mbstring.http_input', 'pass');
+mb_http_output('pass');
+mb_detect_order('auto');
+
 
 /////////////////////////////////////////////////
 // 初期設定(設定ファイルの場所)
