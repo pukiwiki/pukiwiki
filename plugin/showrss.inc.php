@@ -1,9 +1,9 @@
 <?php
-// PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: showrss.inc.php,v 1.15 2005/01/06 13:54:14 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: showrss.inc.php,v 1.16 2005/01/23 02:06:44 henoheno Exp $
 //  Id:showrss.inc.php,v 1.40 2003/03/18 11:52:58 hiro Exp
 //
-// Show RSS plugin
+// Show RSS of remote site plugin
 
 /*
  * Created by hiro_do3ob@yahoo.co.jp
@@ -45,7 +45,6 @@ function plugin_showrss_convert()
 	case 1: $rssurl       = trim($array[0]);
 	}
 
-	// RSS パスの値チェック
 	if (! is_url($rssurl))
 		return '<p>showrss: syntax error. ' . htmlspecialchars($rssurl) . '</p>' . "\n";
 
@@ -66,7 +65,7 @@ function plugin_showrss_convert()
 	return $obj->toString($timestamp);
 }
 
-// RSS配列からhtmlを作る
+// Create HTML from RSS array()
 class ShowRSS_html
 {
 	var $items = array();
@@ -79,8 +78,8 @@ class ShowRSS_html
 				$link  = $item['LINK'];
 				$title = $item['TITLE'];
 				$passage = get_passage($item['_TIMESTAMP']);
-				$link = '<a href="' . $link . '" title="' .
-					$title . ' ' . $passage . '">' . $title . '</a>';
+				$link = '<a href="' . $link . '" title="' .  $title . ' ' .
+					$passage . '" rel="nofollow">' . $title . '</a>';
 				$this->items[$date][] = $this->format_link($link);
 			}
 		}
@@ -142,16 +141,16 @@ class ShowRSS_html_recent extends ShowRSS_html
 	}
 }
 
-// rssを取得する
+// Get RSS
 function plugin_showrss_get_rss($target, $usecache)
 {
 	$buf = '';
 	$time = NULL;
 	if ($usecache) {
-		// 期限切れのキャッシュをクリア
+		// Remove expired cache
 		plugin_showrss_cache_expire($usecache);
 
-		// キャッシュがあれば取得する
+		// Get the cache not expired
 		$filename = CACHE_DIR . encode($target) . '.tmp';
 		if (is_readable($filename)) {
 			$buf  = join('', file($filename));
@@ -160,13 +159,15 @@ function plugin_showrss_get_rss($target, $usecache)
 	}
 
 	if ($time === NULL) {
-		$data = http_request($target); // rss本体を取得
+		// Newly get RSS
+		$data = http_request($target);
 		if ($data['rc'] !== 200)
 			return array(FALSE, 0);
 
 		$buf = $data['data'];
 		$time = UTIME;
-		// キャッシュを保存
+
+		// Save RSS into cache
 		if ($usecache) {
 			$fp = fopen($filename, 'w');
 			fwrite($fp, $buf);
@@ -174,30 +175,26 @@ function plugin_showrss_get_rss($target, $usecache)
 		}
 	}
 
-	// parse
+	// Parse
 	$obj = new ShowRSS_XML();
 	return array($obj->parse($buf),$time);
 }
 
-// 期限切れのキャッシュをクリア
+// Remove cache if expired limit exeed
 function plugin_showrss_cache_expire($usecache)
 {
 	$expire = $usecache * 60 * 60; // Hour
-
 	$dh = dir(CACHE_DIR);
 	while (($file = $dh->read()) !== FALSE) {
-		if (substr($file, -4) != '.tmp')
-			continue;
-
-		$file = CACHE_DIR.$file;
+		if (substr($file, -4) != '.tmp') continue;
+		$file = CACHE_DIR . $file;
 		$last = time() - filemtime($file);
-
 		if ($last > $expire) unlink($file);
 	}
 	$dh->close();
 }
 
-// rssを取得・配列化
+// Get RSS and array() them
 class ShowRSS_XML
 {
 	var $items;
@@ -208,13 +205,12 @@ class ShowRSS_XML
 
 	function parse($buf)
 	{
-		// 初期化
 		$this->items   = array();
 		$this->item    = array();
 		$this->is_item = FALSE;
 		$this->tag     = '';
 
-		// 文字コード検出
+		// Detect encoding
 		$this->encoding = mb_detect_encoding($buf);
 		if (! in_array(strtolower($this->encoding), array('us-ascii', 'iso-8859-1', 'utf-8'))) {
 			$buf = mb_convert_encoding($buf, 'utf-8', $this->encoding);
@@ -236,18 +232,16 @@ class ShowRSS_XML
 
 	function escape($str)
 	{
-		// RSS中の "&lt; &gt; &amp;" などを 一旦 "< > &" に戻し、 ＜ "&amp;" が "&amp;amp;" になっちゃうの対策
-		// その後もっかい"< > &"などを"&lt; &gt; &amp;"にする  ＜ XSS対策？
+		// Unescape already-escaped chars (&lt;, &gt;, &amp;, ...) in RSS body before htmlspecialchars()
 		$str = strtr($str, array_flip(get_html_translation_table(ENT_COMPAT)));
+		// Escape
 		$str = htmlspecialchars($str);
-
-		// 文字コード変換
+		// Encoding conversion
 		$str = mb_convert_encoding($str, SOURCE_ENCODING, $this->encoding);
-
 		return trim($str);
 	}
 
-	// タグ開始
+	// Tag start
 	function start_element($parser, $name, $attrs)
 	{
 		if ($this->is_item) {
@@ -257,7 +251,7 @@ class ShowRSS_XML
 		}
 	}
 
-	// タグ終了
+	// Tag end
 	function end_element($parser, $name)
 	{
 		if (! $this->is_item || $name != 'ITEM') return;
@@ -286,7 +280,6 @@ class ShowRSS_XML
 		$this->is_item        = FALSE;
 	}
 
-	// キャラクタ
 	function character_data($parser, $data)
 	{
 		if (! $this->is_item) return;
