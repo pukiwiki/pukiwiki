@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.6 2005/01/09 08:05:00 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.7 2005/01/10 01:07:57 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -508,12 +508,11 @@ if ($disable_reverse_link === TRUE) {
 
 <!-- Copyright etc -->
 <div class="footer">
- Modified by <a href="<?php echo $modifierlink ?>"><?php echo $modifier ?></a><br />
- <?php echo S_COPYRIGHT ?><br />
+ Site admin: <a href="<?php echo $modifierlink ?>"><?php echo $modifier ?></a><p />
+ <?php echo S_COPYRIGHT ?>.
  Powered by PHP <?php echo PHP_VERSION ?><br />
- HTML convert time to <?php echo $taketime ?> sec.
+ HTML convert time: <?php echo $taketime ?> sec.
 </div>
-
 
 <?php if ($menu && ($sidebar != 'top' && $sidebar != 'bottom')) { ?>
 </div><!-- class="main" -->

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.35 2005/01/08 04:13:18 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.36 2005/01/10 01:07:57 henoheno Exp $
 //
 // PukiWiki default skin
 
@@ -234,13 +234,9 @@ function _toolbar($key, $x = 20, $y = 20){
 <?php } ?>
 
 <div id="footer">
- Modified by <a href="<?php echo $modifierlink ?>"><?php echo $modifier ?></a>
- <br /><br />
- <?php echo S_COPYRIGHT ?>
- <br />
- Powered by PHP <?php echo PHP_VERSION ?>
- <br /><br />
- HTML convert time to <?php echo $taketime ?> sec.
+ Site admin: <a href="<?php echo $modifierlink ?>"><?php echo $modifier ?></a><p />
+ <?php echo S_COPYRIGHT ?>.
+ Powered by PHP <?php echo PHP_VERSION ?>. HTML convert time: <?php echo $taketime ?> sec.
 </div>
 
 </body>
