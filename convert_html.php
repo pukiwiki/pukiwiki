@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.43 2003/06/04 02:04:16 arino Exp $
+// $Id: convert_html.php,v 1.44 2003/06/10 13:57:49 arino Exp $
 //
 function convert_html($lines)
 {
@@ -724,8 +724,13 @@ class Body extends Block
 	{
 		$this->last =& $this;
 		
-		foreach ($lines as $line)
+		while (count($lines))
 		{
+			// Experimental: 行頭<pre>から行頭</pre>までを整形済みとみなす
+//			$this->block($lines,'<pre>','</pre>','Pre');
+			
+			$line = array_shift($lines);
+			
 			if (substr($line,0,2) == '//') //コメントは処理しない
 			{
 				continue;
@@ -798,7 +803,7 @@ class Body extends Block
 			'' : " &aname($id,super,full)\{$_symbol_anchor};";
 		$id = "content_{$this->id}_{$this->count}";
 		$this->count++;
-		$this->contents_last =& $this->contents_last->add(new Contents_UList($text,$this->id,$level,$id));
+		$this->contents_last =& $this->contents_last->add(new Contents_UList($text,$level,$id));
 		return array($text.$anchor,$this->count > 1 ? $top : '',$id);
 	}
 	function getContents()
@@ -828,10 +833,27 @@ class Body extends Block
 		$text = preg_replace('/<(p|del)>#related<\/\1>/e','make_related($vars[\'page\'],\'$1\')',$text);
 		return $text;
 	}
+	function block(&$lines,$start,$end,$class)
+	{
+		if (rtrim($lines[0]) != $start)
+		{
+			return;
+		}
+		array_shift($lines);
+		while (count($lines))
+		{
+			$line = array_shift($lines);
+			if (rtrim($line) == $end)
+			{
+				return;
+			}
+			$this->last = &$this->last->add(new $class($this,$line));
+		}
+	}		
 }
 class Contents_UList extends ListContainer
 {
-	function Contents_UList($text,$id,$level,$id)
+	function Contents_UList($text,$level,$id)
 	{
 		// テキストのリフォーム
 		// 行頭\nで整形済みを表す ... X(
