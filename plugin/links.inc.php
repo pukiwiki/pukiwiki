@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: links.inc.php,v 1.4 2003/02/17 07:34:29 panda Exp $
+// $Id: links.inc.php,v 1.5 2003/02/17 08:38:03 panda Exp $
 //
 
 function plugin_links_action()
@@ -28,7 +28,12 @@ function plugin_links_action()
 }
 function links_init_file()
 {
-	global $whatsnew,$non_list;
+	global $get,$adminpass,$whatsnew,$non_list;
+	
+	if (md5($get['adminpass']) != $adminpass) {
+		return array('msg'=>'update database',
+			'body'=>'<p>administrator password require.</p>');
+	}
 	
 	// データベースの初期化
 	foreach (get_existfiles(CACHE_DIR,'.ref') as $cache) {
@@ -48,7 +53,7 @@ function links_init_file()
 		$rel = array(); // 参照先
 		$links = $obj->get_objects(join('',get_source($page)),$page);
 		foreach ($links as $_obj) {
-			if (!isset($_obj->type) or $obj_type != 'pagename') {
+			if (!isset($_obj->type) or $_obj->type != 'pagename') {
 				continue;
 			}			
 			$_page = $_obj->name;
@@ -91,7 +96,7 @@ function links_update_file($page)
 	$rel_new = array(); // 参照先
 	$links = $obj->get_objects(join('',get_source($page)),$page);
 	foreach ($links as $_obj) {
-		if (!isset($_obj->type) or $obj_type != 'pagename') {
+		if (!isset($_obj->type) or $_obj->type != 'pagename') {
 			continue;
 		}			
 		$_page = $_obj->name;
@@ -141,8 +146,12 @@ function links_update_file($page)
 }
 function links_init_db()
 {
-	global $whatsnew;
+	global $get,$adminpass,$whatsnew;
 	
+	if (md5($get['adminpass']) != $adminpass) {
+		return array('msg'=>'update database',
+			'body'=>'<p>administrator password require.</p>');
+	}
 	// データベースの初期化
 	$pages = get_existpages();
 	db_exec('DELETE FROM page;');
