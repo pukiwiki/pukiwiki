@@ -2,13 +2,13 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: default.ini.php,v 1.8 2004/07/24 04:37:33 henoheno Exp $
+// $Id: default.ini.php,v 1.9 2004/07/24 08:04:23 henoheno Exp $
 //
 // PukiWiki setting file (user agent:default)
 
 /////////////////////////////////////////////////
 // スキンファイルの場所
-define('SKIN_FILE',SKIN_DIR.'pukiwiki.skin.'.LANG.'.php');
+define('SKIN_FILE', DATA_HOME . SKIN_DIR . 'pukiwiki.skin.' . LANG . '.php');
 
 /////////////////////////////////////////////////
 // 雛形とするページの読み込みを表示させる

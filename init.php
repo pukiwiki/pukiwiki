@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.92 2004/07/23 14:38:33 henoheno Exp $
+// $Id: init.php,v 1.93 2004/07/24 08:04:23 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -110,7 +110,7 @@ define('UA_PROFILE', isset($user_agent['profile']) ? $user_agent['profile'] : ''
 //	require(INI_PRO_FILE);	// A chance to set or rewrite $user_agent['name'] and ['vers'] automatically
 // }
 
-define('UA_INI_FILE', UA_PROFILE . '.ini.php');
+define('UA_INI_FILE', DATA_HOME . UA_PROFILE . '.ini.php');
 if (!file_exists(UA_INI_FILE) || !is_readable(UA_INI_FILE)) {
 	die_message('UA_INI_FILE for "' . UA_PROFILE . '" not found.');
 } else {
