@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: showrss.inc.php,v 1.9 2003/09/24 00:14:58 arino Exp $
+// $Id: showrss.inc.php,v 1.10 2003/10/02 01:04:34 arino Exp $
 //
 // modified by PANDA <panda@arino.jp>
 //
@@ -183,7 +183,7 @@ function plugin_showrss_get_rss($target,$usecache)
 	if ($usecache)
 	{
 		// 期限切れのキャッシュをクリア
-		plugin_showrss_cache_expire();
+		plugin_showrss_cache_expire($usecache);
 
 		// キャッシュがあれば取得する
 		$filename = CACHE_DIR . encode($target) . '.tmp';
@@ -217,7 +217,7 @@ function plugin_showrss_get_rss($target,$usecache)
 	return array($obj->parse($buf),$time);
 }
 // 期限切れのキャッシュをクリア
-function plugin_showrss_cache_expire()
+function plugin_showrss_cache_expire($usecache)
 {
 	$expire = $usecache * 60 * 60; // Hour
 
