@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.29 2003/03/21 22:48:44 panda Exp $
+// $Id: make_link.php,v 1.30 2003/03/23 04:16:24 panda Exp $
 //
 
 // リンクを付加する
@@ -409,6 +409,7 @@ class Link_interwikiname extends Link
   |(?($s3)\]\])         #   or (3)
   )
  )?
+ (?<!&gt;)
  (\:(?:(?<!&gt;|>).)*?) # (6) param
  (?($s5) |              # if !(5)
   (?($s1)\]\]           #  close bracket if (1)
