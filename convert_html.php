@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.31 2003/04/25 01:17:25 arino Exp $
+// $Id: convert_html.php,v 1.32 2003/04/26 05:13:25 arino Exp $
 //
 function convert_html($lines)
 {
@@ -164,7 +164,7 @@ class Heading extends Block
 		}
 		$text = ltrim(substr($text,$level));
 		$this->level = ++$level;
-		list($this->msg_top,$this->id) = $root->getAnchor($text,$level);
+		list($text,$this->msg_top,$this->id) = $root->getAnchor($text,$level);
 		$this->last =& $this->insert(new Inline($text));
 	}
 	function canContain(&$obj)
@@ -759,10 +759,16 @@ class Body extends Block
 	{
 		global $top;
 		
+		$anchor = '';
+		if (preg_match('/^(.*)\[#([A-Za-z][\w-]+)\](.*)$/',$text,$matches))
+		{
+			$text = $matches[1].$matches[3];
+			$anchor = ' &aname('.$matches[2].',super,full){&dagger;};';
+		}
 		$id = "content_{$this->id}_{$this->count}";
 		$this->count++;
 		$this->contents_last =& $this->contents_last->add(new Contents_UList($text,$this->id,$level,$id));
-		return array($this->count > 1 ? $top : '',$id);
+		return array($text.$anchor,$this->count > 1 ? $top : '',$id);
 	}
 	function getContents()
 	{
@@ -798,7 +804,7 @@ class Contents_UList extends ListContainer
 	{
 		// テキストのリフォーム
 		// 行頭\nで整形済みを表す ... X(
-		$text = "\n<a href=\"#$id\">".strip_htmltag(inline2(inline($text,TRUE)))."</a>\n";
+		$text = "\n<a href=\"#$id\">".trim(strip_htmltag(inline2(inline($text,TRUE))))."</a>\n";
 		parent::ListContainer('ul', 'li', --$level, $text);
 	}
 	function setParent(&$parent)
