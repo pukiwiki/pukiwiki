@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: plugin.php,v 1.10 2004/03/18 09:52:52 arino Exp $
+// $Id: plugin.php,v 1.11 2004/07/10 11:45:23 henoheno Exp $
 //
 
 // プラグイン用に未定義の変数を設定
@@ -23,43 +23,28 @@ function set_plugin_messages($messages)
 function exist_plugin($name)
 {
 	$name = strtolower($name);	//Ryuji_edit(2003-03-18) add 大文字と小文字を区別しないファイルシステム対策
-	if (preg_match('/^\w{1,64}$/',$name)
-		and file_exists(PLUGIN_DIR.$name.'.inc.php'))
+	if (preg_match('/^\w{1,64}$/', $name)
+		and file_exists(PLUGIN_DIR . $name . '.inc.php'))
 	{
-		require_once(PLUGIN_DIR.$name.'.inc.php');
+		require_once(PLUGIN_DIR . $name . '.inc.php');
 		return TRUE;
 	}
 	return FALSE;
 }
 
-//プラグイン(action)が存在するか
-function exist_plugin_action($name)
-{
-	if (!exist_plugin($name))
-	{
-		return FALSE;
-	}
-	return function_exists('plugin_'.$name.'_action');
+//プラグイン関数(action)が存在するか
+function exist_plugin_action($name) {
+	return function_exists('plugin_' . $name . '_action')	? TRUE : exist_plugin($name);
 }
 
-//プラグイン(convert)が存在するか
-function exist_plugin_convert($name)
-{
-	if (!exist_plugin($name))
-	{
-		return FALSE;
-	}
-	return function_exists('plugin_'.$name.'_convert');
+//プラグイン関数(convert)が存在するか
+function exist_plugin_convert($name) {
+	return function_exists('plugin_' . $name . '_convert')	? TRUE : exist_plugin($name);
 }
 
-//プラグイン(inline)が存在するか
-function exist_plugin_inline($name)
-{
-	if (!exist_plugin($name))
-	{
-		return FALSE;
-	}
-	return function_exists('plugin_'.$name.'_inline');
+//プラグイン関数(inline)が存在するか
+function exist_plugin_inline($name) {
+	return function_exists('plugin_' . $name . '_inline')	? TRUE : exist_plugin($name);
 }
 
 //プラグインの初期化を実行
