@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.17 2002/07/10 06:25:57 kawara Exp $
+// $Id: html.php,v 1.18 2002/07/10 08:18:20 kawara Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -47,7 +47,7 @@ function catbody($title,$page,$body)
 
 	if(is_page($vars["page"]) && $related_link && $is_page && !arg_check("edit") && !arg_check("freeze") && !arg_check("unfreeze"))
 	{
-		$related = make_related($vars["page"],false);
+		$related = make_related($vars["page"],FALSE);
 	}
 
 	if(is_page($vars["page"]) && !in_array($vars["page"],$cantedit) && !arg_check("backup") && !arg_check("edit") && !$vars["preview"])
@@ -68,6 +68,7 @@ function convert_html($string)
 	global $result,$saved,$hr,$script,$page,$vars,$top;
 	global $note_id,$foot_explain,$digest,$note_hr;
 	global $user_rules,$str_rules,$line_rules,$strip_link_wall;
+	global $InterWikiName, $BracketName;
 
 	global $longtaketime;
 
@@ -94,6 +95,9 @@ function convert_html($string)
 	$headform = array();
 	// 現在の行数を入れておこう
 	$_cnt = 0;
+	// ブロックの判定フラグ
+	$_p = FALSE;
+	$_bq = FALSE;
 
 	$table = 0;
 
@@ -125,11 +129,11 @@ function convert_html($string)
 		) {
 			if($headform[$_cnt-1] == '' && $_p){
 				array_push($result, "</p>");
-				$_p = false;
+				$_p = FALSE;
 			}
 			if($line_head != '>' && $_bq){
 				array_push($result, "</p>");
-				$_bq = false;
+				$_bq = FALSE;
 			}
 
 			if(preg_match("/^\#([^\(]+)(.*)$/",$line,$out)){
@@ -187,7 +191,7 @@ function convert_html($string)
 				if($headform[$_cnt-1] != $headform[$_cnt] ) {
 					if(!$_bq) {
 						array_push($result, "<p class=\"quotation\">");
-						$_bq = true;
+						$_bq = TRUE;
 					}
 					else if(substr($headform[$_cnt-1],0,1) == '>'){
 						$_level_diff = abs( strlen($out[1]) - strlen($headform[$_cnt-1]) );
@@ -196,7 +200,7 @@ function convert_html($string)
 							array_push($result, "</p>");
 							array_push($result,$i);
 							array_push($result, "<p class=\"quotation\">");
-							$_bq = true;
+							$_bq = TRUE;
 						} else {
 							$i = array();
 							$i[] = array_pop($result);
@@ -204,7 +208,7 @@ function convert_html($string)
 							array_push($result, "</p>");
 							$result = array_merge($result,$i);
 							array_push($result, "<p class=\"quotation\">");
-							$_bq = true;
+							$_bq = TRUE;
 						}
 					}
 				}
@@ -251,7 +255,7 @@ function convert_html($string)
 				if(array_values($saved)){
 					if( $_bq ){
 						array_unshift($saved, "</p>");
-						$_bq = false;
+						$_bq = FALSE;
 					}
 					$i = array_pop($saved);
 					array_push($saved,$i);
@@ -259,21 +263,21 @@ function convert_html($string)
 				}
 				if( substr($line,0,1) == '' && !$_p){
 					array_push($result, "<p>");
-					$_p = true;
+					$_p = TRUE;
 				}
 				else if( substr($line,0,1) != '' && $_p){
 					array_push($result, "</p>");
-					$_p = false;
+					$_p = FALSE;
 				}
 			}
 			
 			if( substr($line,0,1) == '' && $_p){
 				array_push($result, "</p>");
-				$_p = false;
+				$_p = FALSE;
 			}
 			else if( substr($line,0,1) != '' && !$_p) {
 				array_push($result, "<p>");
-				$_p = true;
+				$_p = TRUE;
 			}
 			if( substr($line,0,1) != '' ){
 				array_push($result, inline($line));
@@ -313,6 +317,7 @@ function convert_html($string)
 		$contents .= join("\n",$result);
 		if($strip_link_wall)
 		{
+			$contents = preg_replace("/\[\[([^\]:]+):(.+)\]\]/","$1",$contents);
 			$contents = preg_replace("/\[\[([^\]]+)\]\]/","$1",$contents);
 		}
 	}
@@ -406,7 +411,7 @@ function inline2($str)
 			($WikiName)
 		)/ex","make_link('$1')",$str);
 
-	$str = preg_replace("/#related/",make_related($vars["page"],true),$str);
+	$str = preg_replace("/#related/",make_related($vars["page"],TRUE),$str);
 
 	$str = make_user_rules($str);
 
@@ -768,7 +773,7 @@ function make_link($name)
 		$refer = rawurlencode($vars["page"]);
 		if(is_page($name))
 		{
-			$str = get_pg_passage($name,false);
+			$str = get_pg_passage($name,FALSE);
 			$tm = @filemtime(get_filename(encode($name)));
 			if($vars["page"] != $name)
 				$related[$tm] = "<a href=\"$script?$percent_name\">$pagename</a>$str";
