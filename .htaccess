@@ -1,5 +1,5 @@
 ## Access control needs 'AllowOverride Limit' at httpd.conf.
-<FilesMatch "\.(?i:ini\.php|lng\.php|txt|gz|tgz|zip)$">
+<FilesMatch "\.(ini\.php|lng\.php|txt|gz|tgz|zip)$">
 	Order allow,deny
 	Deny from all
 </FilesMatch>
