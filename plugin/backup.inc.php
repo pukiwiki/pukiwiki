@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: backup.inc.php,v 1.18 2004/11/01 12:12:27 henoheno Exp $
+// $Id: backup.inc.php,v 1.19 2004/11/01 12:20:34 henoheno Exp $
 //
 // バックアップ
 function plugin_backup_action()
@@ -13,40 +13,34 @@ function plugin_backup_action()
 	global $_title_backupdiff, $_title_backupnowdiff, $_title_backupsource;
 	global $_title_backup, $_title_pagebackuplist, $_title_backuplist;
 
-	if (!$do_backup)
-		return;
+	if (! $do_backup) return;
 
-	$page   = isset($vars['page'])   ? $vars['page']   : '';
-	$s_page = $r_page = '';
-	if ($page) {
-		check_readable($page, true, true);
-		$s_page = htmlspecialchars($page);
-		$r_page = rawurlencode($page);
-	} else {
-		return array('msg'=>$_title_backuplist, 'body'=>get_backup_list_all());
-	}
+	$page = isset($vars['page']) ? $vars['page']  : '';
+	if ($page == '') return array('msg'=>$_title_backuplist, 'body'=>get_backup_list_all());
+
+	check_readable($page, true, true);
+	$s_page = htmlspecialchars($page);
+	$r_page = rawurlencode($page);
 
 	$action = isset($vars['action']) ? $vars['action'] : '';
+	if ($action == 'delete') return plugin_backup_delete($page);
+
 	$s_action = $r_action = '';
-	if ($action) {
-		if ($action == 'delete') {
-			return plugin_backup_delete($page);
-		}
+	if ($action != '') {
 		$s_action = htmlspecialchars($action);
 		$r_action = rawurlencode($action);
 	}
 
 	$s_age  = (isset($vars['age']) && is_numeric($vars['age'])) ? $vars['age'] : 0;
-	if ($s_age == 0) {
-		return array( 'msg'=>$_title_pagebackuplist, 'body'=>get_backup_list($page));
-	}
+	if ($s_age == 0) return array( 'msg'=>$_title_pagebackuplist, 'body'=>get_backup_list($page));
+
 
 	$body  = "<ul>\n";
 	$body .= " <li><a href=\"$script?cmd=backup\">$_msg_backuplist</a></li>\n";
 
 	$href = "$script?cmd=backup&amp;page=$r_page&amp;age=$s_age";
-	$is_page = is_page($page);
 
+	$is_page = is_page($page);
 	if ($is_page) {
 		if ($action != 'diff')
 			$body .= ' <li>' . str_replace('$1', "<a href=\"$href&amp;action=diff\">$_msg_diff</a>", $_msg_view) . "</li>\n";
@@ -67,12 +61,10 @@ function plugin_backup_action()
 	}
 
 	$backups = get_backup($page);
-	if (count($backups) > 0)
-	{
+	if (! empty($backups)) {
 		$body .= "  <ul>\n";
-		foreach($backups as $age => $val)
-		{
-			$date = format_date($val['time'],TRUE);
+		foreach($backups as $age => $val) {
+			$date = format_date($val['time'], TRUE);
 			$body .= ($age == $s_age) ?
 				"   <li><em>$age $date</em></li>\n" :
 				"   <li><a href=\"$script?cmd=backup&amp;action=$r_action&amp;page=$r_page&amp;age=$age\">$age $date</a></li>\n";
@@ -82,32 +74,26 @@ function plugin_backup_action()
 	$body .= " </li>\n";
 	$body .= "</ul>\n";
 
-	if ($action == 'diff')
-	{
-		$old = ($s_age > 1) ? join('',$backups[$s_age - 1]['data']) : '';
-		$cur = join('',$backups[$s_age]['data']);
-		$body .= plugin_backup_diff(do_diff($old,$cur));
+	if ($action == 'diff') {
+		$old = ($s_age > 1) ? join('', $backups[$s_age - 1]['data']) : '';
+		$cur = join('', $backups[$s_age]['data']);
+		$body .= plugin_backup_diff(do_diff($old, $cur));
+		return array('msg'=>str_replace('$2', $s_age, $_title_backupdiff), 'body'=>$body);
 
-		return array('msg'=>str_replace('$2',$s_age,$_title_backupdiff),'body'=>$body);
+	} else if ($s_action == 'nowdiff') {
+		$old = join('', $backups[$s_age]['data']);
+		$cur = join('', get_source($page));
+		$body .= plugin_backup_diff(do_diff($old, $cur));
+		return array('msg'=>str_replace('$2', $s_age, $_title_backupnowdiff), 'body'=>$body);
+
+	} else if ($s_action == 'source') {
+		$body .= '<pre>' . htmlspecialchars(join('', $backups[$s_age]['data'])) . "</pre>\n";
+		return array('msg'=>str_replace('$2', $s_age, $_title_backupsource), 'body'=>$body);
+
+	} else {
+		$body .= "$hr\n" . drop_submit(convert_html($backups[$s_age]['data']));
+		return array('msg'=>str_replace('$2', $s_age, $_title_backup), 'body'=>$body);
 	}
-	else if ($s_action == 'nowdiff')
-	{
-		$old = join('',$backups[$s_age]['data']);
-		$cur = join('',get_source($page));
-		$body .= plugin_backup_diff(do_diff($old,$cur));
-
-		return array('msg'=>str_replace('$2',$s_age,$_title_backupnowdiff),'body'=>$body);
-	}
-	else if ($s_action == 'source')
-	{
-		$body .= "<pre>".htmlspecialchars(join('',$backups[$s_age]['data']))."</pre>\n";
-
-		return array('msg'=>str_replace('$2',$s_age,$_title_backupsource),'body'=>$body);
-	}
-	// else
-	$body .= "$hr\n".drop_submit(convert_html($backups[$s_age]['data']));
-
-	return array('msg'=>str_replace('$2',$s_age,$_title_backup),'body'=>$body);
 }
 
 // バックアップを削除
@@ -146,7 +132,7 @@ function plugin_backup_delete($page)
  </div>
 </form>
 EOD;
-	return	array('msg'=>$_title_backup_delete,'body'=>$body);
+	return	array('msg'=>$_title_backup_delete, 'body'=>$body);
 }
 
 function plugin_backup_diff($str)
@@ -192,17 +178,16 @@ EOD;
 EOD;
 
 	$backups = _backup_file_exists($page) ? get_backup($page) : array();
-	if (count($backups) == 0)
-	{
-		$msg = str_replace('$1',make_pagelink($page), $_msg_nobackup);
+	if (empty($backups)) {
+		$msg = str_replace('$1', make_pagelink($page), $_msg_nobackup);
 		$retval[1] .= "   <li>$msg</li>\n";
-		return join('',$retval);
+		return join('', $retval);
 	}
 	$retval[1] .= "   <li><a href=\"$script?cmd=backup&amp;action=delete&amp;page=$r_page\">";
-	$retval[1] .= str_replace('$1',$s_page,$_title_backup_delete);
+	$retval[1] .= str_replace('$1', $s_page, $_title_backup_delete);
 	$retval[1] .= "</a></li>\n";
 	foreach ($backups as $age=>$data) {
-		$date = format_date($data['time'],TRUE);
+		$date = format_date($data['time'], TRUE);
 		$href = "$script?cmd=backup&amp;page=$r_page&amp;age=$age";
 		$retval[1] .= <<<EOD
    <li><a href="$href">$age $date</a>
@@ -213,7 +198,7 @@ EOD;
    </li>
 EOD;
 	}
-	return join('',$retval);
+	return join('', $retval);
 }
 
 // 全ページのバックアップ一覧を取得
@@ -226,6 +211,6 @@ function get_backup_list_all($withfilename = FALSE)
 	if (count($pages) == 0)
 		return '';
 
-	return page_list($pages,'backup',$withfilename);
+	return page_list($pages, 'backup', $withfilename);
 }
 ?>
