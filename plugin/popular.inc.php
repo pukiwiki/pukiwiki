@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: popular.inc.php,v 1.5 2003/07/11 11:11:17 arino Exp $
+// $Id: popular.inc.php,v 1.6 2003/08/20 02:38:30 arino Exp $
 //
 
 /*
@@ -52,7 +52,7 @@ function plugin_popular_convert()
 
 	$counters = array();
 
-	foreach (get_existpages(COUNTER_DIR,'.count') as $page) {
+	foreach (get_existpages(COUNTER_DIR,'.count') as $file=>$page) {
 		if ($except != '' and ereg($except,$page)) {
 			continue;
 		}
@@ -60,7 +60,7 @@ function plugin_popular_convert()
 			continue;
 		}
 		
-		$array = file(COUNTER_DIR.encode($page).'.count');
+		$array = file($file);
 		$count = rtrim($array[0]);
 		$date = rtrim($array[1]);
 		$today_count = rtrim($array[2]);
