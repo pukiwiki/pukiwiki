@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: img.inc.php,v 1.7 2003/02/28 06:17:29 panda Exp $
+// $Id: img.inc.php,v 1.8 2003/05/29 08:25:35 arino Exp $
 //
 // 画像を表示
 function plugin_img_convert()
@@ -24,7 +24,7 @@ function plugin_img_convert()
 	}
 	else
 	{
-		return '<br style="clear:both" />';
+		return '<div style="clear:both"></div>';
 	}
 	if (!is_url($url) or !preg_match('/\.(jpe?g|gif|png)$/i', $url))
 	{
