@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.60 2003/12/06 02:40:10 arino Exp $
+// $Id: convert_html.php,v 1.61 2004/02/29 16:01:20 arino Exp $
 //
 function convert_html($lines)
 {
@@ -263,7 +263,9 @@ class ListContainer extends Element
 		{
 			return $this->last = &$this->last->insert($obj);
 		}
-		if (count($obj->elements[0]->elements) == 0)
+        // 行頭文字のみの指定時はUL/OLブロックを脱出
+        // BugTrack/524 
+		if (count($obj->elements) == 1 && count($obj->elements[0]->elements) == 0)
 		{
 			return $this->last->parent; // up to ListElement.
 		}
@@ -356,7 +358,7 @@ class BQuote extends Element
 		}
 		else
 		{
-			parent::insert(new Paragraph($text, ' class="quotation"'));
+			$this->insert(new Inline($text));
 		}
 	}
 	function canContain(&$obj)
@@ -365,6 +367,10 @@ class BQuote extends Element
 	}
 	function &insert(&$obj)
 	{
+        // BugTrack/521, BugTrack/545
+		if (is_a($obj, 'inline')) {
+        	return parent::insert($obj->toPara(' class="quotation"'));
+        }
 		if (is_a($obj, 'BQuote') and $obj->level == $this->level and count($obj->elements))
 		{
 			$obj = &$obj->elements[0];
