@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.14 2003/05/17 11:18:22 arino Exp $
+ * $Id: bugtrack.inc.php,v 1.15 2003/12/03 12:28:12 arino Exp $
  */
 
 function plugin_bugtrack_init()
@@ -46,12 +46,15 @@ function plugin_bugtrack_action()
 		header("Location: $script?".rawurlencode($page));
 		die;
 	}
+	return FALSE;
+/*
 	else {
 		$ret['msg'] = $_bugtrack_plugin_title;
 		$ret["body"] = plugin_bugtrack_print_form($vars['category']);
 	}
 	
 	return $ret;
+*/
 }
 
 function plugin_bugtrack_print_form($base,$category)
