@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.40 2004/03/18 10:02:13 arino Exp $
+// $Id: file.php,v 1.41 2004/03/20 13:43:58 arino Exp $
 //
 
 // ソースを取得
@@ -329,6 +329,7 @@ function get_readings()
 	global $pagereading_enable, $pagereading_kanji2kana_converter;
 	global $pagereading_kanji2kana_encoding, $pagereading_chasen_path;
 	global $pagereading_kakasi_path, $pagereading_config_page;
+	global $pagereading_config_dict;
 	
 	$pages = get_existpages();
 	
@@ -336,11 +337,17 @@ function get_readings()
 	foreach ($pages as $page) {
 		$readings[$page] = '';
 	}
+	$deletedPage = FALSE;
 	foreach (get_source($pagereading_config_page) as $line) {
-		$line = preg_replace('/[\s\r\n]+$/', '', $line);
-		if(preg_match('/^-\[\[([^]]+)\]\]\s(.+)$/', $line, $matches)
-		   and isset($readings[$matches[1]])) {
-			$readings[$matches[1]] = $matches[2];
+		$line = chop($line);
+		if(preg_match('/^-\[\[([^]]+)\]\]\s+(.+)$/', $line, $matches)) {
+			if(isset($readings[$matches[1]])) {
+				// 読みが不明のページ
+				$readings[$matches[1]] = $matches[2];
+			} else {
+				// 削除されたページ
+				$deletedPage = TRUE;
+			}
 		}
 	}
 	if($pagereading_enable) {
@@ -354,20 +361,18 @@ function get_readings()
 			}
 		}
 		if($unknownPage) {
-			// 読みが不明のページがある場合
-			//			$tmpfname = tempnam(CACHE_DIR, 'PageReading');
-			$tmpfname = tempnam(CACHE_DIR, 'PageReading');
-			$fp = fopen($tmpfname, "w")
-				or die_message("cannot write temporary file '$tmpfname'.\n");
-			foreach ($readings as $page => $reading) {
-				if($reading=='') {
-					fputs($fp, mb_convert_encoding("$page\n", $pagereading_kanji2kana_encoding, SOURCE_ENCODING));
-				}
-			}
-			fclose($fp);
-			// ChaSen/KAKASI を実行
+			// 読みが不明のページがある場合、ChaSen/KAKASI を実行
 			switch(strtolower($pagereading_kanji2kana_converter)) {
 			case 'chasen':
+				$tmpfname = tempnam(CACHE_DIR, 'PageReading');
+				$fp = fopen($tmpfname, "w")
+					or die_message("cannot write temporary file '$tmpfname'.\n");
+				foreach ($readings as $page => $reading) {
+					if($reading=='') {
+						fputs($fp, mb_convert_encoding("$page\n", $pagereading_kanji2kana_encoding, SOURCE_ENCODING));
+					}
+				}
+				fclose($fp);
 				if(!file_exists($pagereading_chasen_path)) {
 					unlink($tmpfname);
 					die_message("CHASEN not found: $pagereading_chasen_path");
@@ -377,9 +382,28 @@ function get_readings()
 					unlink($tmpfname);
 					die_message("ChaSen execution failed: $pagereading_chasen_path -F %y $tmpfname");
 				}
+				foreach ($readings as $page => $reading) {
+					if($reading=='') {
+						$line = fgets($fp);
+						$line = mb_convert_encoding($line, SOURCE_ENCODING, $pagereading_kanji2kana_encoding);
+						$line = chop($line);
+						$readings[$page] = $line;
+					}
+				}
+				pclose($fp);
+				unlink($tmpfname) or die_message("temporary file can not be removed: $tmpfname");
 				break;
 			case 'kakasi':
 			case 'kakashi':
+				$tmpfname = tempnam(CACHE_DIR, 'PageReading');
+				$fp = fopen($tmpfname, "w")
+					or die_message("cannot write temporary file '$tmpfname'.\n");
+				foreach ($readings as $page => $reading) {
+					if($reading=='') {
+						fputs($fp, mb_convert_encoding("$page\n", $pagereading_kanji2kana_encoding, SOURCE_ENCODING));
+					}
+				}
+				fclose($fp);
 				if(!file_exists($pagereading_kakasi_path)) {
 					unlink($tmpfname);
 					die_message("KAKASI not found: $pagereading_kakasi_path");
@@ -389,21 +413,42 @@ function get_readings()
 					unlink($tmpfname);
 					die_message("KAKASI execution failed: $pagereading_kakasi_path -kK -HK -JK <$tmpfname");
 				}
+				foreach ($readings as $page => $reading) {
+					if($reading=='') {
+						$line = fgets($fp);
+						$line = mb_convert_encoding($line, SOURCE_ENCODING, $pagereading_kanji2kana_encoding);
+						$line = chop($line);
+						$readings[$page] = $line;
+					}
+				}
+				pclose($fp);
+				unlink($tmpfname) or die_message("temporary file can not be removed: $tmpfname");
+				break;
+			case 'none':
+				$patterns = array();
+				$replacements = array();
+				foreach (get_source($pagereading_config_dict) as $line) {
+					$line = chop($line);
+					if(preg_match('|^ /([^/]+)/,\s*(.+)$|', $line, $matches)) {
+						$patterns[] = $matches[1];
+						$replacements[] = $matches[2];
+					}
+				}
+				foreach ($readings as $page => $reading) {
+					if($reading=='') {
+						$readings[$page] = $page;
+						foreach ($patterns as $no => $pattern) {
+							$readings[$page] = mb_convert_kana(mb_ereg_replace($pattern, $replacements[$no], $readings[$page]), "aKCV");
+						}
+					}
+				}
 				break;
 			default:
 				die_message("unknown kanji-kana converter: $pagereading_kanji2kana_converter.");
 				break;
 			}
-			foreach ($readings as $page => $reading) {
-				if($reading=='') {
-					$line = fgets($fp);
-					$line = mb_convert_encoding($line, SOURCE_ENCODING, $pagereading_kanji2kana_encoding);
-					$line = preg_replace('/[\s\r\n]+$/', '', $line);
-					$readings[$page] = $line;
-				}
-			}
-			pclose($fp);
-			unlink($tmpfname) or die_message("temporary file can not be removed: $tmpfname");
+		}
+		if($unknownPage or $deletedPage) {
 			// 読みでソート
 			asort($readings);
 			
