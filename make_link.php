@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.44 2003/06/02 09:58:27 arino Exp $
+// $Id: make_link.php,v 1.45 2003/06/27 15:50:07 arino Exp $
 //
 
 // リンクを付加する
@@ -192,7 +192,7 @@ class Link
 // インラインプラグイン
 class Link_plugin extends Link
 {
-	var $param,$body;
+	var $param,$body,$plain;
 	
 	function Link_plugin($start)
 	{
@@ -201,15 +201,18 @@ class Link_plugin extends Link
 	function get_pattern()
 	{
 		return <<<EOD
-&(\w+) # (1) plugin name
-(?:
- \(
-  ([^)]*)  # (2) parameter
- \)
-)?
+&
+(           # (1) plain
+ (\w+)      # (2) plugin name
+ (?:
+  \(
+   ([^)]*)  # (3) parameter
+  \)
+ )?
+)
 (?:
  \{
-  (.*)     # (3) body
+  (.*)      # (4) body
  \}
 )?
 ;
@@ -217,35 +220,31 @@ EOD;
 	}
 	function get_count()
 	{
-		return 3;
+		return 4;
 	}
 	function set($arr,$page)
 	{
 		$arr = $this->splice($arr);
 		
-		$name = $arr[1];
-		$this->param = $arr[2];
-		$this->body = ($arr[3] == '') ? '' : make_link($arr[3]);
-		
-		if (!exist_plugin_inline($name))
-		{
-			return FALSE;
-		}
+		$this->plain = $arr[1];
+		$name = $arr[2];
+		$this->param = $arr[3];
+		$this->body = ($arr[4] == '') ? '' : make_link($arr[4]);
 		
 		return parent::setParam($page,$name,'plugin');
 	}
 	function toString()
 	{
-		return $this->make_inline($this->name,$this->param,$this->body);
+		return $this->make_inline($this->plain,$this->name,$this->param,$this->body);
 	}
-	function make_inline($func,$param,$body)
+	function make_inline($plain,$func,$param,$body)
 	{
 		//&hoge(){...}; &fuga(){...}; のbodyが'...}; &fuga(){...'となるので、前後に分ける
 		$after = '';
-		if (preg_match("/^ ((?!};).*?) }; (.*?) &amp; (\w+) (?: \( ([^()]*) \) )? { (.+)$/x",$body,$matches))
+		if (preg_match("/^ ((?!};).*?) }; (.*?)  &amp; ( (\w+) (?: \( ([^()]*) \) )? ) { (.+)$/x",$body,$matches))
 		{
 			$body = $matches[1];
-			$after = $matches[2].$this->make_inline($matches[3],$matches[4],$matches[5]);
+			$after = $matches[2].$this->make_inline($matches[3],$matches[4],$matches[5],$matches[6]);
 		}
 		
 		// プラグイン呼び出し
@@ -259,7 +258,7 @@ EOD;
 		}
 		
 		// プラグインが存在しないか、変換に失敗
-		return htmlspecialchars($this->text);
+		return make_line_rules(htmlspecialchars('&'.$plain).($body == '' ? ';' : "\{$body};")).$after;
 	}
 }
 // 注釈
