@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.28 2002/07/24 13:31:43 masui Exp $
+// $Id: html.php,v 1.29 2002/07/26 02:30:08 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -698,7 +698,10 @@ function make_link($name)
 
 	if(preg_match("/^\[\[([^\]]+)\:((https?|ftp|news)([^\]]+))\]\]$/",$name,$match))
 	{
-		return "<a href=\"$match[2]\" target=\"$link_target\">$match[1]</a>";
+		if(preg_match("/(\.gif|\.png|\.jpeg|\.jpg)$/",$match[1]) )
+			return "<a href=\"$match[2]\" target=\"$link_target\"><img src=\"$match[1]\" border=\"0\" alt=\"$match[1]\"></a>";
+		else
+			return "<a href=\"$match[2]\" target=\"$link_target\">$match[1]</a>";
 	}
 	else if(preg_match("/^\[((https?|ftp|news)([^\]\s]+))\s([^\]]+)\]$/",$name,$match))
 	{
