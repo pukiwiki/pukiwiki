@@ -2,11 +2,12 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: color.inc.php,v 1.14 2004/11/21 13:32:30 henoheno Exp $
+// $Id: color.inc.php,v 1.15 2004/11/21 13:37:53 henoheno Exp $
 //
 // Text color plugin
 
-// Allow CSS instead of font tag (XHTML 1.0 Transitional only)
+// Allow CSS instead of <font> tag
+// NOTE: <font> tag become invalid from XHTML 1.1
 define('PLUGIN_COLOR_ALLOW_CSS', TRUE); // TRUE, FALSE
 
 // ----
@@ -38,7 +39,6 @@ function plugin_color_inline()
 		if ($bgcolor != '') $bgcolor = ';background-color:' . $bgcolor;
 		return '<span style="color:' . $color . $bgcolor . '">' . $text . '</span>';
 	} else {
-		// NOTE: <font> tag become invalid from XHTML 1.1
 		if ($bgcolor != '') return '&color(): bgcolor (with CSS) not allowd;';
 		return '<font color="' . $color . '">' . $text . '</font>';
 	}
