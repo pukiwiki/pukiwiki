@@ -1,7 +1,7 @@
 <?php
 /*
  * PukiWiki calendar_viewer plubin
- * $Id: calendar_viewer.inc.php,v 1.26 2004/12/30 09:21:05 henoheno Exp $
+ * $Id: calendar_viewer.inc.php,v 1.27 2004/12/30 09:31:11 henoheno Exp $
  * Based on calendarrecent plugin
  */
 
@@ -207,7 +207,7 @@ function plugin_calendar_viewer_convert()
 		}
 	} else {
 		// n件表示時
-		if ($limit_base < 0) {
+		if ($limit_base <= 0) {
 			$left_YM = ''; // 表示しない (それより前の項目はない)
 		} else {
 			$left_YM   = $limit_base - $limit_pitch . '*' . $limit_pitch;
