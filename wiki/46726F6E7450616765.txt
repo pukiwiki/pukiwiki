@@ -9,6 +9,3 @@
 -- SandBox -- 自由に編集して試してみてください
 -- InterWikiName -- InterWikiのサーバリスト
 -- InterWikiSandBox -- InterWikiを試してみてください
-
-- PukiWiki.org - http://pukiwiki.org/
--- PukiWiki公式サイトです。質問や御意見はこちらへどうぞ
