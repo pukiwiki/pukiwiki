@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: links.inc.php,v 1.22 2005/01/23 07:48:55 henoheno Exp $
+// $Id: links.inc.php,v 1.23 2005/02/27 09:43:12 henoheno Exp $
 //
 // Update link cache plugin
 
@@ -46,8 +46,8 @@ function plugin_links_action()
  <div>
   <input type="hidden" name="plugin" value="links" />
   <input type="hidden" name="action" value="update" />
-  {$_links_messages['msg_adminpass']}
-  <input type="password" name="adminpass" size="20" value="" />
+  <label for="_p_links_adminpass">{$_links_messages['msg_adminpass']}</label>
+  <input type="password" name="adminpass" id="_p_links_adminpass" size="20" value="" />
   <input type="submit" value="{$_links_messages['btn_submit']}" />
  </div>
 </form>

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: update_entities.inc.php,v 1.7 2005/01/23 09:33:10 henoheno Exp $
+// $Id: update_entities.inc.php,v 1.8 2005/02/27 09:38:24 henoheno Exp $
 //
 // Update entities plugin - Update XHTML entities from DTD
 // (for admin)
@@ -51,8 +51,8 @@ function plugin_update_entities_action()
  <div>
   <input type="hidden" name="plugin" value="update_entities" />
   <input type="hidden" name="action" value="update" />
-  {$_entities_messages['msg_adminpass']}
-  <input type="password" name="adminpass" size="20" value="" />
+  <label for="_p_update_entities_adminpass">{$_entities_messages['msg_adminpass']}</label>
+  <input type="password" name="adminpass" id="_p_update_entities_adminpass" size="20" value="" />
   <input type="submit" value="{$_entities_messages['btn_submit']}" />
  </div>
 </form>
