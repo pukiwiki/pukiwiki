@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.44 2003/09/11 03:55:08 arino Exp $
+// $Id: pukiwiki.ini.php,v 1.45 2003/09/11 03:55:49 arino Exp $
 //
 // PukiWiki setting file
 
@@ -184,7 +184,7 @@ $proxy_port = 8080;
 // プロキシサーバを使用しないホストのリスト
 $no_proxy = array(
 'localhost',        // localhost 
-'127.0.0.0/8',      // localhost
+'127.0.0.0/8',      // loopback
 // '10.0.0.0/8'     // private class A 
 // '172.16.0.0/12'  // private class B 
 // '192.168.0.0/16' // private class C
