@@ -2,9 +2,8 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.php,v 1.1 2003/01/27 05:44:11 panda Exp $
+// $Id:
 //
-
 //衝突時に対応表を出す
 define('DIFF_SHOW_TABLE',TRUE);
 
@@ -12,16 +11,13 @@ define('DIFF_SHOW_TABLE',TRUE);
 function do_diff($strlines1,$strlines2)
 {
 	$obj = new line_diff();
-	return $obj->str_compare($strlines1,$strlines2);
+	$str = $obj->str_compare($strlines1,$strlines2);
+	return $str;
 }
 
 // 差分の作成(更新の衝突)
 function do_update_diff($pagestr,$poststr,$original)
 {
-//	$obj = new line_diff('+','!','');
-//	$body = $obj->str_compare($oldstr,$newstr);
-//	$auto = ($obj->delete_count == 0 and $obj->add_count == 0);
-
 	$obj = new line_diff();
 	
 	$obj->set_str('left',$original,$pagestr);
@@ -82,28 +78,23 @@ class line_diff
 	function arr_compare($key,$arr1,$arr2)
 	{
 		$this->key = $key;
-//		array_unshift($arr1,'');
-//		array_unshift($arr2,'');
 		$this->arr1 = $arr1;
 		$this->arr2 = $arr2;
 		$this->compare();
 		$arr = $this->toArray();
-//		array_shift($arr);
 		return $arr;
 	}
 	function set_str($key,$str1,$str2)
 	{
 		$this->key = $key;
-		preg_match_all("/[^\n]*\n*/",preg_replace("/\r/",'',$str1),$arr1);
-		preg_match_all("/[^\n]*\n*/",preg_replace("/\r/",'',$str2),$arr2);
-		
-		$this->arr1 = array();
-		foreach ($arr1[0] as $line) {
+		$this->arr1 = array(new DiffLine(''));
+		$this->arr2 = array(new DiffLine(''));
+		$str1 = preg_replace("/\r/",'',$str1);
+		$str2 = preg_replace("/\r/",'',$str2);
+		foreach (explode("\n",$str1) as $line) {
 			$this->arr1[] = new DiffLine($line);
 		}
-		
-		$this->arr2 = array();
-		foreach ($arr2[0] as $line) {
+		foreach (explode("\n",$str2) as $line) {
 			$this->arr2[] = new DiffLine($line);
 		}
 	}
@@ -116,79 +107,79 @@ class line_diff
 		foreach ($this->toArray() as $obj) {
 			$str .= $obj->get('diff').$obj->text();
 		}
-		
 		return $str;
 	}
 	function compare()
 	{
-		array_unshift($this->arr1,new DiffLine('')); //sentinel
-		array_unshift($this->arr2,new DiffLine('')); //sentinel
-		$this->reverse = (count($this->arr1) > count($this->arr2));
-		if ($this->reverse) {
-			$tmp = $this->arr1;
-			$this->arr1 = $this->arr2;
-			$this->arr2 = $tmp;
-			unset($tmp);
-		}
 		$this->m = count($this->arr1) - 1;
 		$this->n = count($this->arr2) - 1;
-		$this->pos = array(0=>array('x'=>-1,'y'=>-1)); //sentinel
-		if ($this->m <= 0) {
-			$this->pos[] = array('x'=>$this->m + 1, 'y' => $this->n + 1);
+		$this->reverse = ($this->n < $this->m);
+		if ($this->reverse) { // swap
+			$tmp = $this->m; $this->m = $this->n; $this->n = $tmp;
+			$tmp = $this->arr1; $this->arr1 = $this->arr2; $this->arr2 = $tmp;
+			unset($tmp);
+		}
+		
+		$sentinel = array('x'=>0,'y'=>0);
+		
+		if ($this->m <= 0) { // no need compare.
+			$this->result = array($sentinel);
 			return;
 		}
+		
 		$delta = $this->n - $this->m; // must be >=0;
+		
 		$fp = array();
-		for ($p = -($this->m)-1; $p <= $this->n + 1; $p++) {
+		$this->path = array();
+		
+		for ($p = -($this->m + 1); $p <= $this->n + 1; $p++) {
 			$fp[$p] = -1;
+			$this->path[$p] = array();
 		}
 		
 		for ($p = 0;; $p++) {
-			for ($k = -$p; $k < $delta; $k++) {
-				$fp[$k] = $this->snake($k, max($fp[$k - 1] + 1, $fp[$k + 1]));
+			for ($k = -$p; $k <= $delta - 1; $k++) {
+				$fp[$k] = $this->snake($k, $fp[$k - 1], $fp[$k + 1]);
 			}
-			
-			for ($k = $delta + $p; $k > $delta; $k--) {
-				$fp[$k] = $this->snake($k, max($fp[$k - 1] + 1, $fp[$k + 1]));
+			for ($k = $delta + $p; $k >= $delta + 1; $k--) {
+				$fp[$k] = $this->snake($k, $fp[$k - 1], $fp[$k + 1]);
 			}
-			
-			$fp[$delta] = $this->snake($delta, max($fp[$delta - 1] + 1, $fp[$delta + 1]));
-			
-			if ($fp[$delta] == $this->n) {
-				$this->pos = array_reverse($this->pos);
-				$this->pos[] = array('x'=>$this->m + 1, 'y' => $this->n + 1); // sentinel
-				
+			$fp[$delta] = $this->snake($delta, $fp[$delta - 1], $fp[$delta + 1]);
+			if ($fp[$delta] >= $this->n) {
+				$this->pos = $this->path[$delta]; // 経路を決定
 				return;
 			}
 		}
 	}
-	function snake($k, $y)
+	function snake($k, $y1, $y2)
 	{
+		if ($y1 >= $y2) {
+			$_k = $k - 1;
+			$y = $y1 + 1;
+		}
+		else {
+			$_k = $k + 1;
+			$y = $y2;
+		}
+		$this->path[$k] = $this->path[$_k];// ここまでの経路をコピー
 		$x = $y - $k;
 		while (($x < $this->m) and ($y < $this->n) and $this->arr1[$x + 1]->compare($this->arr2[$y + 1])) {
-			
 			$x++; $y++;
-			if ($x > $this->pos[0]['x'] and $y > $this->pos[0]['y']) {
-				array_unshift($this->pos,array('x'=>$x,'y'=>$y));
-			}
+			$this->path[$k][] = array('x'=>$x,'y'=>$y); // 経路を追加
 		}
 		return $y;
-	}
-	function strcmp($str1, $str2) //ぐぅ。
-	{
-		return rtrim($str1) == rtrim($str2);
 	}
 	function toArray()
 	{
 		$arr = array();
 		if ($this->reverse) { //姑息な…
-			$_x = 'y'; $_y = 'x'; $m = $this->n; $arr1 =& $this->arr2; $arr2 =& $this->arr1;
+			$_x = 'y'; $_y = 'x'; $_m = $this->n; $arr1 =& $this->arr2; $arr2 =& $this->arr1;
 		}
 		else {
-			$_x = 'x'; $_y = 'y'; $m = $this->m; $arr1 =& $this->arr1; $arr2 =& $this->arr2;
+			$_x = 'x'; $_y = 'y'; $_m = $this->m; $arr1 =& $this->arr1; $arr2 =& $this->arr2;
 		}
 		
-		$x = $y = 0;
+		$x = $y = 1;
 		$this->add_count = $this->delete_count = 0;
 		foreach ($this->pos as $pos) {
 			$this->delete_count += ($pos[$_x] - $x);
@@ -204,31 +195,25 @@ class line_diff
 				$arr[] =  $arr2[$y++];
 			}
 			
-			if ($x <= $this->m) {
+			if ($x < $_m) {
 				$arr1[$x]->merge($arr2[$y]);
 				$arr1[$x]->set($this->key,$this->equal);
 				$arr[] = $arr1[$x];
 			}
 			$x++; $y++;
 		}
-		array_shift($arr); // drop sentinel
 		return $arr;
 	}
 }
 
 class DiffLine
 {
-	var $text,$lfcount;
+	var $text;
 	var $status;
 	
 	function DiffLine($text)
 	{
-		if (preg_match("/^([^\n]*)(\n*)$/",$text,$matches)) {
-			$this->text = $matches[1]; $this->lfcount = strlen($matches[2]);
-		}
-		else {
-			$this->text = $text; $this->lfcount = 1;
-		}
+		$this->text = "$text\n";
 		$this->status = array();
 	}
 	function compare($obj)
@@ -246,11 +231,10 @@ class DiffLine
 	function merge($obj)
 	{
 		$this->status = array_merge($this->status,$obj->status);
-		$this->lfcount = max($this->lfcount,$obj->lfcount);
 	}
 	function text()
 	{
-		return $this->text.str_repeat("\n",($this->lfcount == 0) ? 1 : $this->lfcount);
+		return $this->text;
 	}
 }
 ?>

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.inc.php,v 1.1 2003/01/27 05:38:44 panda Exp $
+// $Id: diff.inc.php,v 1.2 2003/01/28 14:30:39 panda Exp $
 //
 //ページの差分を表示する
 function plugin_diff_action()
@@ -33,7 +33,6 @@ EOD;
 		$diffdata = htmlspecialchars(join('',file(DIFF_DIR.encode($get['page']).'.txt')));
 		$diffdata = preg_replace('/^(\-)(.*)$/m','<span class="diff_removed"> $2</span>',$diffdata);
 		$diffdata = preg_replace('/^(\+)(.*)$/m','<span class="diff_added"> $2</span>',$diffdata);
-		$diffdata = trim($diffdata);
 		$body .= "<pre>$diffdata</pre>\n";
 	}
 	else if (is_page($get['page'])) {
