@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.88 2004/07/05 12:13:56 henoheno Exp $
+// $Id: init.php,v 1.89 2004/07/11 11:11:13 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -47,8 +47,7 @@ foreach (array('SCRIPT_NAME', 'SERVER_ADMIN', 'SERVER_NAME',
 
 /////////////////////////////////////////////////
 // 初期設定 (グローバル変数)
-// サーバから来る変数
-$vars = array();
+
 // 脚注
 $foot_explain = array();
 // 関連するページ
@@ -165,57 +164,59 @@ foreach(array($defaultpage, $whatsnew, $interwiki) as $page){
 /////////////////////////////////////////////////
 // 外部からくる変数をチェック
 
-// Prohibit $_GET['msg'] attack
-if (isset($_GET['msg'])) die_message('Sorry, already reserved: msg=');
+// Prohibit $_GET attack
+foreach (array('msg', 'pass') as $key) {
+	if (isset($_GET[$key])) die_message("Sorry, already reserved: $key=");
+}
 
-$get    = sanitize($_GET);
-$post   = sanitize($_POST);
-$cookie = sanitize($_COOKIE);
+$_GET    = sanitize($_GET);    $get    = & $_GET;
+$_POST   = sanitize($_POST);   $post   = & $_POST;
+$_COOKIE = sanitize($_COOKIE); $cookie = & $_COOKIE;
 
 // Expire risk
-unset($_GET, $_POST, $HTTP_GET_VARS, $HTTP_POST_VARS, $_REQUEST, $_COOKIE);	//, 'SERVER', 'ENV', 'SESSION', ...
+unset($HTTP_GET_VARS, $HTTP_POST_VARS);	//, 'SERVER', 'ENV', 'SESSION', ...
 
 /////////////////////////////////////////////////
 // 文字コードを変換
 
 // <form> で送信された文字 (ブラウザがエンコードしたデータ) のコードを変換
 // post は常に <form> なので、必ず変換
-if (array_key_exists('encode_hint',$post))
+if (isset($post['encode_hint']) && $post['encode_hint'] != '')
 {
-	// html.php の中で、<form> に encode_hint を仕込んでいるので、必ず encode_hint があるはず。
-	// encode_hint のみを用いてコード検出する。
-	// 全体を見てコード検出すると、機種依存文字や、妙なバイナリコードが混入した場合に、
-	// コード検出に失敗する恐れがあるため。
+	// html.php の中で、<form> に encode_hint を仕込んでいるので、
+	// encode_hint を用いてコード検出する。
+	// 全体を見てコード検出すると、機種依存文字や、妙なバイナリ
+	// コードが混入した場合に、コード検出に失敗する恐れがある。
 	$encode = mb_detect_encoding($post['encode_hint']);
-	mb_convert_variables(SOURCE_ENCODING,$encode,$post);
+	mb_convert_variables(SOURCE_ENCODING, $encode, $post);
 }
-else if (array_key_exists('charset',$post))
+else if (isset($post['charset']) && $post['charset'] != '')
 {
 	// TrackBack Pingに含まれていることがある
 	// 指定された場合は、その内容で変換を試みる
-	if (mb_convert_variables(SOURCE_ENCODING,$post['charset'],$post) !== $post['charset'])
+	if (mb_convert_variables(SOURCE_ENCODING, $post['charset'], $post) !== $post['charset'])
 	{
 		// うまくいかなかった場合はコード検出の設定で変換しなおし
-		mb_convert_variables(SOURCE_ENCODING,'auto',$post);
+		mb_convert_variables(SOURCE_ENCODING, 'auto', $post);
 	}
 }
 else if (count($post) > 0)
 {
-	// encode_hint が無いということは、無いはず。
 	// デバッグ用に、取りあえず、警告メッセージを出しておきます。
-// 	echo "<p>Warning: 'encode_hint' field is not found in the posted data.</p>\n";
+	// echo "<p>Warning: 'encode_hint' field is not found in the posted data.</p>\n";
+
 	// 全部まとめて、コード検出、変換
-	mb_convert_variables(SOURCE_ENCODING,'auto',$post);
+	mb_convert_variables(SOURCE_ENCODING, 'auto', $post);
 }
 
 // get は <form> からの場合と、<a href="http;//script/?query> の場合がある
-if (array_key_exists('encode_hint',$get))
+if (isset($get['encode_hint']) && $get['encode_hint'] != '')
 {
 	// <form> の場合は、ブラウザがエンコードしているので、コード検出・変換が必要。
 	// encode_hint が含まれているはずなので、それを見て、コード検出した後、変換する。
 	// 理由は、post と同様
 	$encode = mb_detect_encoding($get['encode_hint']);
-	mb_convert_variables(SOURCE_ENCODING,$encode,$get);
+	mb_convert_variables(SOURCE_ENCODING, $encode, $get);
 }	
 // <a href...> の場合は、サーバーが rawurlencode しているので、コード変換は不要
 
@@ -228,6 +229,8 @@ if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING']) {
 } else if (isset($_SERVER['argv']) && count($_SERVER['argv'])) {
 	$arg = $_SERVER['argv'][0];
 }
+// \0 除去
+$arg = sanitize($arg);
 
 // unset QUERY_STRINGs
 foreach (array('QUERY_STRING', 'argv', 'argc') as $key) {
@@ -236,28 +239,28 @@ foreach (array('QUERY_STRING', 'argv', 'argc') as $key) {
 // $_SERVER['REQUEST_URI'] is used by func.php NOW
 unset($REQUEST_URI, $HTTP_SERVER_VARS['REQUEST_URI']);
 
-// サニタイズ (\0 除去)
-$arg = sanitize($arg);
-
 // URI 手打の場合、コード変換し、get[] に上書き
 // mb_convert_variablesのバグ(?)対策 配列で渡さないと落ちる
 $arg = array($arg);
-mb_convert_variables(SOURCE_ENCODING,'auto',$arg);
+mb_convert_variables(SOURCE_ENCODING, 'auto', $arg);
 $arg = $arg[0];
 
-foreach (explode('&',$arg) as $tmp_string)
+$matches = array();
+foreach (explode('&', $arg) as $tmp_string)
 {
-	if (preg_match('/^([^=]+)=(.+)/',$tmp_string,$matches)
+	if (preg_match('/^([^=]+)=(.+)/', $tmp_string, $matches)
 		and mb_detect_encoding($matches[2]) != 'ASCII')
 	{
 		$get[$matches[1]] = $matches[2];
 	}
 }
+unset($matches);
 
 /////////////////////////////////////////////////
 // GET + POST = $vars
 
-$vars = array_merge($get, $post);
+$_REQUEST = sanitize($_REQUEST);
+$vars = & $_REQUEST;
 
 // 入力チェック: cmd, plugin の文字列は英数字以外ありえない
 foreach(array('cmd', 'plugin') as $var){
