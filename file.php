@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.28 2003/07/22 05:28:16 arino Exp $
+// $Id: file.php,v 1.29 2003/07/29 09:01:38 arino Exp $
 //
 
 // ソースを取得
@@ -49,9 +49,6 @@ function page_write($page,$postdata,$notimestamp=FALSE)
 	
 	// TrackBack Ping の送信
 	tb_send($page,$postdata);
-	
-	// is_pageのキャッシュをクリアする。
-	is_page($page,TRUE);
 	
 	// linkデータベースを更新
 	links_update($page);
@@ -135,7 +132,10 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 		}
 	}
 	
-	if (!$timestamp)
+	// is_pageのキャッシュをクリアする。
+	is_page($page,TRUE);
+	
+	if (!$timestamp and $dir == DATA_DIR)
 	{
 		put_lastmodified();
 	}
