@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: rss.php,v 1.2 2002/07/01 06:29:59 masui Exp $
+// $Id: rss.php,v 1.3 2002/07/19 01:52:01 masui Exp $
 /////////////////////////////////////////////////
 
 // RecentChanges の RSS を出力
@@ -10,6 +10,10 @@ function catrss($rss)
 
 	$lines = get_source($whatsnew);
 	header("Content-type: application/xml");
+
+
+	if(function_exists("mb_convert_encoding"))
+		$page_title_utf8 = mb_convert_encoding($page_title,"UTF-8","auto");
 
 	$item = "";
 	$rdf_li = "";
@@ -63,7 +67,7 @@ function catrss($rss)
 <rss version="0.91">
 
 <channel>
-<title><?=$page_title?></title>
+<title><?=$page_title_utf8?></title>
 <link><?="http://".SERVER_NAME.PHP_SELF."?$whatsnew"?></link>
 <description>PukiWiki RecentChanges</description>
 <language>ja</language>
@@ -85,7 +89,7 @@ function catrss($rss)
   xml:lang="ja">
 
  <channel rdf:about="<?="http://".SERVER_NAME.PHP_SELF."?rss"?>">
-  <title><?=$page_title?></title>
+  <title><?=$page_title_utf8?></title>
   <link><?="http://".SERVER_NAME.PHP_SELF."?$whatsnew"?></link>
   <description>PukiWiki RecentChanges</description>
   <items>
