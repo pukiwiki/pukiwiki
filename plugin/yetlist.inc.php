@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: yetlist.inc.php,v 1.10 2003/01/29 09:48:24 panda Exp $
+// $Id: yetlist.inc.php,v 1.11 2003/02/28 03:22:31 panda Exp $
 //
 function plugin_yetlist_action()
 {
@@ -13,7 +13,7 @@ function plugin_yetlist_action()
 	
 	$refer = array();
 	foreach (get_existpages() as $page) {
-		$obj = new InlineConverter();
+		$obj = new InlineConverter(array('page','auto'));
 		$source = join("\n",preg_replace('/^(\s|\/\/|#).*$/','',get_source($page)));
 		foreach ($obj->get_objects($source,$page) as $_obj) {
 			if (($_obj->name != '') and ($_obj->type == 'pagename') and !is_page($_obj->name)) {
