@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.26 2004/09/29 14:46:07 henoheno Exp $
+// $Id: dump.inc.php,v 1.27 2004/09/29 14:50:01 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -105,12 +105,14 @@ function plugin_dump_download()
 	if ($tar->create(CACHE_DIR, $arc_kind))
 	{
 		$filecount = 0;		// ファイル数
-		if ($bk_wiki)   $filecount .= $tar->add_dir(DATA_DIR,   '^[0-9A-F]+\.txt', $namedecode);
-		if ($bk_attach) $filecount .= $tar->add_dir(UPLOAD_DIR, '^[0-9A-F_]+',     $namedecode);
-		if ($bk_backup) $filecount .= $tar->add_dir(BACKUP_DIR, '^[0-9A-F]+\.gz',  $namedecode);
+
+		if ($bk_wiki)   $filecount += $tar->add_dir(DATA_DIR,   '^[0-9A-F]+\.txt', $namedecode);
+		if ($bk_attach) $filecount += $tar->add_dir(UPLOAD_DIR, '^[0-9A-F_]+',     $namedecode);
+		if ($bk_backup) $filecount += $tar->add_dir(BACKUP_DIR, '^[0-9A-F]+\.gz',  $namedecode);
+
 		$tar->close();
 
-		if ($filecount > 0) {
+		if ($filecount !== 0) {
 			// ダウンロード
 			download_tarfile($tar->filename, $arc_kind);
 			@unlink($tar->filename);
