@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.52 2003/02/04 09:46:16 panda Exp $
+// $Id: html.php,v 1.53 2003/02/07 15:09:38 panda Exp $
 //
 
 // 本文を出力
@@ -157,7 +157,7 @@ EOD;
  <div>
 $template
   $addtag
-  <input type="hidden" name="cmd" value="edit">
+  <input type="hidden" name="cmd" value="edit" />
   <input type="hidden" name="page" value="$s_page" />
   <input type="hidden" name="digest" value="$s_digest" />
   <textarea name="msg" rows="$rows" cols="$cols">$s_postdata</textarea>
