@@ -88,7 +88,7 @@
     $tb_id = md5($_page);
 ?>
  &nbsp;
- [ <a href="<?php echo "$script?plugin=tb&amp;__mode=view&amp;tb_id=$tb_id" ?>" onclick="OpenTrackback(this.href); return false">TrackBack(<?php echo tb_count($_page) ?>)</a> ]
+ [ <a href="<?php echo "$script?plugin=tb&amp;__mode=view&amp;tb_id=$tb_id" ?>">TrackBack(<?php echo tb_count($_page) ?>)</a> ]
 <?php } ?>
 
 <?php
