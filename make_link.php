@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.53 2003/07/29 06:25:38 arino Exp $
+// $Id: make_link.php,v 1.54 2003/08/05 05:04:39 arino Exp $
 //
 
 // リンクを付加する
@@ -193,7 +193,8 @@ class Link
 // インラインプラグイン
 class Link_plugin extends Link
 {
-	var $param,$body,$plain;
+	var $pattern;
+	var $plain,$param,$body;
 	
 	function Link_plugin($start)
 	{
@@ -201,7 +202,7 @@ class Link_plugin extends Link
 	}
 	function get_pattern()
 	{
-		return <<<EOD
+		$this->pattern = <<<EOD
 &
 (      # (1) plain
  (\w+) # (2) plugin name
@@ -211,9 +212,12 @@ class Link_plugin extends Link
   \)
  )?
 )
+EOD;
+		return <<<EOD
+{$this->pattern}
 (?:
  \{
-  (.*) # (4) body
+  ((?:(?R)|(?!};).)*) # (4) body
  \}
 )?
 ;
@@ -227,39 +231,35 @@ EOD;
 	{
 		$arr = $this->splice($arr);
 		
+		// 本来のプラグイン名およびパラメータを取得しなおす PHP4.1.2 (?R)対策
+		if (preg_match("/^{$this->pattern}/x",$arr[0],$matches)
+			and $matches[1] != $arr[1])
+		{
+			array_shift($matches);
+			array_splice($arr,1,3,$matches);
+		}
 		$this->plain = $arr[1];
 		$name = $arr[2];
 		$this->param = $arr[3];
-		$this->body = ($arr[4] == '') ? '' : make_link($arr[4]);
-		
+		$this->body = $arr[4];
 		return parent::setParam($page,$name,'plugin');
 	}
 	function toString()
 	{
-		return $this->make_inline($this->plain,$this->name,$this->param,$this->body);
-	}
-	function make_inline($plain,$func,$param,$body)
-	{
-		//&hoge(){...}; &fuga(){...}; のbodyが'...}; &fuga(){...'となるので、前後に分ける
-		$after = '';
-		if (preg_match("/^ ((?!};).*?) }; (.*?)  &amp; ( (\w+) (?: \( ((?:(?!\)[;{]).)*) \) )? ) { (.+)$/x",$body,$matches))
-		{
-			$body = $matches[1];
-			$after = $matches[2].$this->make_inline($matches[3],$matches[4],$matches[5],$matches[6]);
-		}
+		$body = ($this->body == '') ? '' : make_link($this->body);
 		
 		// プラグイン呼び出し
-		if (exist_plugin_inline($func))
+		if (exist_plugin_inline($this->name))
 		{
-			$str = do_plugin_inline($func,$param,$body);
+			$str = do_plugin_inline($this->name,$this->param,$body);
 			if ($str !== FALSE) //成功
 			{
-				return $str.$after;
+				return $str;
 			}
 		}
 		
 		// プラグインが存在しないか、変換に失敗
-		return make_line_rules(htmlspecialchars('&'.$plain).($body == '' ? ';' : "\{$body};")).$after;
+		return make_line_rules(htmlspecialchars('&'.$this->plain).($body == '' ? ';' : "\{$body};"));
 	}
 }
 // 注釈
