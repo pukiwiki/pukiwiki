@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.22 2003/01/27 05:38:44 panda Exp $
+// $Id: init.php,v 1.23 2003/01/29 10:02:17 panda Exp $
 //
 
 /////////////////////////////////////////////////
@@ -183,57 +183,6 @@ $BracketName = '(?!\s):?[^\r\n\t\f\[\]<>#&":]+:?(?<!\s)';
 $InterWikiName = "(\[\[)?(\[*[^\s\]]+?\]*):(\[*[^>\]]+?\]*)(?(1)\]\])";
 // 注釈
 $NotePattern = '/\(\(((?:(?>(?:(?!\(\()(?!\)\)(?:[^\)]|$)).)+)|(?R))*)\)\)/ex';
-// AutoLink
-$AutoLink = get_autolink_pattern();
-
-// make_link()関数と密接に関係するので、編集時は注意
-$LinkPattern = "/
-(                              (?#<1>:all)
-	(?# url )
-	(?:\[\[([^\]]+)              (?#<2>:alias)
-	(?:&gt;|>|:))?               (?# '&gt;' or '>' or ':')
-		(\[)?                      (?#<3>:open bracket)
-			(                        (?#<4>:url)
-				(?:https?|ftp|news)
-				(?::\/\/[!~*'();\/?:\@&=+\$,%#\w.-]+)
-			)
-		(?(3)\s([^\]]+)\])         (?#<5>:alias, close bracket if <3>)
-	(?(2)\]\])                   (?# close bracket if <2>)
-	|
-	(?# mailto)
-	(?:\[\[([^\]]+)(?:&gt;|>|:))?(?#<6>:alias)
-		([\w.-]+@[\w-]+\.[\w.-]+)  (?#<7>:mailto>)
-	(?(6)\]\])                   (?# close bracket if <6>)
-	|
-	(?# BracketName or InterWikiName)
-	(\[\[                        (?#<8>:all)
-		(?:
-			(\[\[)?                  (?#<9>:open bracket)
-			([^\[\]]+)               (?#<10>:alias)
-			(?:&gt;|>)               (?# '&gt;' or '>')
-		)?
-		(?:
-			(\[\[)?                  (?#<11>:open bracket)
-			(                        (?#<12>PageName)
-				($WikiName)            (?#<13>WikiName)
-				|
-				($BracketName)         (?#<14>BracketName)
-			)?
-			((?(9)\]\]|(?(11)\]\])))?(?#<15>:close bracket if <9> or <11>) 
-			(\#(?:[a-zA-Z][\w-]*)?)? (?#<16>anchor)
-			(?(15)|(?(9)\]\]|(?(11)\]\]))) (?#close bracket if <9> or <11> but !<15>)
-			|
-			(\[\[)?                  (?#<17>:open bracket)
-			(\[*?[^\s\]]+?\]*?)      (?#<18>InterWiki)
-			((?(9)\]\]|(?(17)\]\])))?(?#<19>:close bracket if <9> or <17>)
-			(\:.*?)                  (?#<20>param)
-			(?(19)|(?(9)\]\]|(?(17)\]\]))) (?#close bracket if <9> or <17> but !<19>)
-		)?
-	\]\])
-	|
-	(?# WikiNmae, AutoLink)
-	($AutoLink)                  (?#<21>:all)
-)/x";
 
 /////////////////////////////////////////////////
 // 初期設定(その他のグローバル変数)
