@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.3 2004/08/01 13:47:08 henoheno Exp $
+// $Id: file.php,v 1.4 2004/08/01 14:23:20 henoheno Exp $
 //
 
 // ソースを取得
@@ -266,16 +266,12 @@ function put_lastmodified()
 function get_pg_passage($page, $sw = TRUE)
 {
 	global $show_passage;
-	static $pg_passage = array();
-
 	if (! $show_passage) return '';
 
-	if (! array_key_exists($page, $pg_passage)) {
-		$pg_passage[$page] = (is_page($page) and $time = get_filetime($page)) ?
-			get_passage($time) : '';
-	}
+	$time = get_filetime($page);
+	$pg_passage = ($time != 0) ? get_passage($time) : '';
 
-	return $sw ? "<small>{$pg_passage[$page]}</small>" : " {$pg_passage[$page]}";
+	return $sw ? "<small>$pg_passage</small>" : " $pg_passage";
 }
 
 // Last-Modified ヘッダ
