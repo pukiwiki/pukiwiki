@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: plugin.php,v 1.2 2004/08/09 13:57:41 henoheno Exp $
+// $Id: plugin.php,v 1.3 2004/08/09 14:09:42 henoheno Exp $
 //
 
 // プラグイン用に未定義のグローバル変数を設定
@@ -84,7 +84,7 @@ function do_plugin_convert($name, $args = '')
 	global $digest;
 
 	if(do_plugin_init($name) === FALSE)
-		die_message("Plugin init failed: $name");
+		return "[Plugin init failed: $name]";
 
 	if ($args !== '') {
 		$aryargs = csv_explode(',', $args);
@@ -112,7 +112,7 @@ function do_plugin_inline($name, $args, & $body)
 	global $digest;
 
 	if(do_plugin_init($name) === FALSE)
-		die_message("Plugin init failed: $name");
+		return "[Plugin init failed: $name]";
 
 	if ($args !== '') {
 		$aryargs = csv_explode(',', $args);
