@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.15 2003/04/21 08:43:46 arino Exp $
+// $Id: ref.inc.php,v 1.16 2003/04/26 05:12:29 arino Exp $
 //
 
 /*
@@ -199,10 +199,6 @@ function plugin_ref_body($args,$page)
 				$info = $size[3];
 			}
 		}
-		else
-		{
-			$info = $url;
-		}
 	}
 	else //添付ファイル
 	{
@@ -313,7 +309,7 @@ function plugin_ref_body($args,$page)
 		}
 		if ($width and $height)
 		{
-			$info = "width=\"$width\" height=\"$height\"";
+			$info = "width=\"$width\" height=\"$height\" ";
 		}
 	}
 	
@@ -338,7 +334,7 @@ function plugin_ref_body($args,$page)
 	// ファイル種別判定
 	if ($is_image)	// 画像
 	{
-		$_url = "<img src=\"$url\" alt=\"$title\" title=\"$title\" $info />";
+		$_url = "<img src=\"$url\" alt=\"$title\" title=\"$title\" $info/>";
 		if (!$params['nolink'] and $url2)
 		{
 			$_url = "<a href=\"$url2\" title=\"$title\">$_url</a>";
