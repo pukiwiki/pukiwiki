@@ -203,3 +203,12 @@ address {
 .counter {
 	font-size:8px;
 }
+.vote_label{
+	background-color: #FFCCCC;
+}
+.vote_td1{
+	background-color: #DDE5FF;
+}
+.vote_td2{
+	background-color: #EEF5FF;
+}
