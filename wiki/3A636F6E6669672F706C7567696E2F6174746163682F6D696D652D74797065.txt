@@ -1,5 +1,5 @@
 #freeze
-*MimeType
+*mime-type
 
 この表は、attach.inc.phpがファイルのContent-typeを決定するときに使用します。
 
