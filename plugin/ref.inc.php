@@ -2,8 +2,18 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.28 2004/08/19 12:01:53 henoheno Exp $
+// $Id: ref.inc.php,v 1.29 2004/08/19 14:15:28 henoheno Exp $
 //
+
+// UPLOAD_DIR のデータ(画像ファイルのみ)に直接アクセスさせる
+define('PLUGIN_REF_DIRECT_ACCESS', FALSE); // FALSE or TRUE
+// - これは従来のインラインイメージ処理を互換のために残すもので
+//   あり、高速化のためのオプションではありません
+// - UPLOAD_DIR をWebサーバー上に露出させており、かつ直接アクセス
+//   できる(アクセス制限がない)状態である必要があります
+// - Apache などでは UPLOAD_DIR/.htaccess を削除する必要があります
+// - ブラウザによってはインラインイメージの表示や、「インライン
+//   イメージだけを表示」させた時などに不具合が出る場合があります
 
 /*
 * プラグイン ref
@@ -32,7 +42,10 @@
 */
 
 // Usage
-define('PLUGIN_REF_USAGE', "(attached-file-name[,page][,parameters][,title])");
+define('PLUGIN_REF_USAGE', "(attached-file-name[,page-name][,parameters][,title])");
+
+// Image suffixes
+define('PLUGIN_REF_IMAGE', '/\.(gif|png|jpe?g)$/i');
 
 // File icon image
 if (! defined('FILE_ICON')) {
@@ -174,7 +187,7 @@ function plugin_ref_body($args)
 		$url = $url2 = htmlspecialchars($name);
 		$title = htmlspecialchars(preg_match('/([^\/]+)$/', $name, $matches) ? $matches[1] : $url);
 
-		$is_image = (! $params['noimg'] && preg_match("/\.(gif|png|jpe?g)$/i",$name));
+		$is_image = (! $params['noimg'] && preg_match(PLUGIN_REF_IMAGE, $name));
 
 		if (REF_URL_GETIMAGESIZE && $is_image && (bool)ini_get('allow_url_fopen')) {
 			$size = @getimagesize($name);
@@ -207,15 +220,25 @@ function plugin_ref_body($args)
 		}
 		$title = htmlspecialchars($name);
 
-		$is_image = (! $params['noimg'] && preg_match('/\.(gif|png|jpe?g)$/i', $name));
+		$is_image = (! $params['noimg'] && preg_match(PLUGIN_REF_IMAGE, $name));
 
+		// Count downloads with attach plugin
 		$url = $script . '?plugin=attach' . '&amp;refer=' . rawurlencode($page) .
 			'&amp;openfile=' . rawurlencode($name); // Show its filename at the last
 
 		if ($is_image) {
 			// Swap $url
 			$url2 = $url;
-			$url  = $file;
+
+			// URI for in-line image output
+			if (! PLUGIN_REF_DIRECT_ACCESS) {
+				// With ref plugin (faster than attach)
+				$url = $script . '?plugin=ref' . '&amp;page=' . rawurlencode($page) .
+					'&amp;src=' . rawurlencode($name); // Show its filename at the last
+			} else {
+				// Try direct-access, if possible
+				$url = $file;
+			}
 
 			$width = $height = 0;
 			$size = @getimagesize($file);
@@ -300,7 +323,6 @@ function plugin_ref_body($args)
 	return $params;
 }
 
-//-----------------------------------------------------------------------------
 // オプションを解析する
 function ref_check_arg($val, & $params)
 {
@@ -320,5 +342,44 @@ function ref_check_arg($val, & $params)
 	}
 
 	$params['_args'][] = $val;
+}
+
+// Output an image (fast, non-logging <==> attach plugin)
+function plugin_ref_action()
+{
+	global $vars;
+
+	$usage = 'Usage: plugin=ref&amp;page=page_name&amp;src=attached_image_name';
+
+	if (! isset($vars['page']) || ! isset($vars['src']))
+		return array('msg'=>'Invalid argument', 'body'=>$usage);
+
+	$page = $vars['page'];
+	$file = $vars['src'];
+
+	$ref = UPLOAD_DIR . encode($page) . '_' . encode(basename($file));
+	if(! file_exists($ref))
+		return array('msg'=>'Attach file not found', 'body'=>$usage);
+
+	$got = @getimagesize($ref);
+	if (! isset($got[2])) $got[2] = FALSE;
+	switch ($got[2]) {
+	case 1: $type = 'image/gif' ; break;
+	case 2: $type = 'image/jpeg'; break;
+	case 3: $type = 'image/png' ; break;
+	case 4: $type = 'application/x-shockwave-flash'; break;
+	default:
+		return array('msg'=>'Seems not an image', 'body'=>$usage);
+	}
+
+	// Output
+	$file = htmlspecialchars($file);
+	$size = filesize($ref);
+	header('Content-Disposition: inline; filename="' . $file . '"');
+	header('Content-Length: ' . $size);
+	header('Content-Type: '   . $type);
+	@readfile($ref);
+
+	exit;
 }
 ?>
