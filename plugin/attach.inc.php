@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.53 2004/08/13 13:29:10 henoheno Exp $
+//  $Id: attach.inc.php,v 1.54 2004/08/13 13:54:27 henoheno Exp $
 //
 
 /*
@@ -94,13 +94,12 @@ function plugin_attach_action()
 	$pass  = isset($vars['pass'])  ? $vars['pass']  : NULL;
 	$page  = isset($vars['page'])  ? $vars['page']  : '';
 
-	if ($refer == '' || ! is_pagename($refer)) {
-		return array(
-			'result'=>FALSE,
-			'msg'=>$_attach_messages['err_noparm']);;
+	if (! is_page($page)) {
+		die_message("No such page");
 	}
 
-	if (in_array($pcmd, array('info', 'open', 'list'))) {
+	if ($refer != '' && is_pagename($refer) &&
+	    in_array($pcmd, array('info', 'open', 'list'))) {
 		check_readable($refer);
 	} else {
 		check_editable($refer);
