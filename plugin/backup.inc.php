@@ -2,87 +2,68 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: backup.inc.php,v 1.11 2004/03/13 13:48:27 arino Exp $
+// $Id: backup.inc.php,v 1.12 2004/07/05 14:28:34 henoheno Exp $
 //
 // バックアップ
 function plugin_backup_action()
 {
-	global $script,$vars,$do_backup,$hr;
-	global $_msg_backuplist,$_msg_diff,$_msg_nowdiff,$_msg_source,$_msg_backup;
-	global $_msg_view,$_msg_goto,$_msg_deleted,$_msg_addline,$_msg_delline;
-	global $_title_backupdiff,$_title_backupnowdiff,$_title_backupsource;
-	global $_title_backup,$_title_pagebackuplist,$_title_backuplist;
+	global $script, $vars, $do_backup, $hr;
+	global $_msg_backuplist, $_msg_diff, $_msg_nowdiff, $_msg_source, $_msg_backup;
+	global $_msg_view, $_msg_goto, $_msg_deleted, $_msg_addline, $_msg_delline;
+	global $_title_backupdiff, $_title_backupnowdiff, $_title_backupsource;
+	global $_title_backup, $_title_pagebackuplist, $_title_backuplist;
 	
 	if (!$do_backup)
-	{
 		return;
-	}
-	
-	check_readable($vars['page'], true, true);
-	
-	$page = $s_page = $r_page = '';
-	if (array_key_exists('page',$vars))
-	{
-		$page   = $vars['page'];
+
+	$page   = isset($vars['page'])   ? $vars['page']   : '';
+	$s_page = $r_page = '';
+	if ($page) {
+		check_readable($page, true, true);
 		$s_page = htmlspecialchars($page);
 		$r_page = rawurlencode($page);
+	} else {
+		return array('msg'=>$_title_backuplist, 'body'=>get_backup_list_all());
 	}
-	$s_age = (array_key_exists('age',$vars) and is_numeric($vars['age'])) ? $vars['age'] : 0;
-	$action = $s_action = $r_action = '';
-	if (array_key_exists('action',$vars))
-	{
-		$action = $vars['action'];
+
+	$action = isset($vars['action']) ? $vars['action'] : '';
+	$s_action = $r_action = '';
+	if ($action) {
+		if ($action == 'delete') {
+			return plugin_backup_delete($page);
+		}
 		$s_action = htmlspecialchars($action);
 		$r_action = rawurlencode($action);
 	}
-	
-	$body = '';
-	
-	if ($page == '')
-	{
-		return array('msg'=>$_title_backuplist,'body'=>get_backup_list_all());
+
+	$s_age  = (isset($vars['age']) && is_numeric($vars['age'])) ? $vars['age'] : 0;
+	if ($s_age == 0) {
+		return array( 'msg'=>$_title_pagebackuplist, 'body'=>get_backup_list($page));
 	}
-	if ($action == 'delete')
-	{
-		return plugin_backup_delete($page);
-	}
-	if ($s_age == 0)
-	{
-		return array(
-			'msg'  => $_title_pagebackuplist,
-			'body' => get_backup_list($page)
-		);
-	}
-	
+
 	$body  = "<ul>\n";
 	$body .= " <li><a href=\"$script?cmd=backup\">$_msg_backuplist</a></li>\n";
 
-	$href = "$script?cmd=backup&amp;page=$r_page&amp;age=$s_age";
-	
-	if ($action != 'diff' and is_page($page))
-	{
-		$body .= " <li>".str_replace('$1',"<a href=\"$href&amp;action=diff\">$_msg_diff</a>",$_msg_view)."</li>\n";
+	$href = "$script?cmd=backup&page=$r_page&age=$s_age";
+	$is_page = is_page($page);
+
+	if ($is_page) {
+		if ($action != 'diff')
+			$body .= ' <li>' . str_replace('$1', "<a href=\"$href&action=diff\">$_msg_diff</a>", $_msg_view) . "</li>\n";
+		if ($action != 'nowdiff')
+			$body .= ' <li>' . str_replace('$1', "<a href=\"$href&action=nowdiff\">$_msg_nowdiff</a>", $_msg_view) . "</li>\n";
 	}
-	if ($action != 'nowdiff' and is_page($page))
-	{
-		$body .= " <li>".str_replace('$1',"<a href=\"$href&amp;action=nowdiff\">$_msg_nowdiff</a>",$_msg_view)."</li>\n";
-	}
+
 	if ($action != 'source')
-	{
-		$body .= " <li>".str_replace('$1',"<a href=\"$href&amp;action=source\">$_msg_source</a>",$_msg_view)."</li>\n";
-	}
-	if ($action != '')
-	{
-		$body .= " <li>".str_replace('$1',"<a href=\"$href\">$_msg_backup</a>",$_msg_view)."</li>\n";
-	}
+		$body .= ' <li>' . str_replace('$1', "<a href=\"$href&action=source\">$_msg_source</a>", $_msg_view) . "</li>\n";
+
+	if ($action)
+		$body .= ' <li>' . str_replace('$1', "<a href=\"$href\">$_msg_backup</a>", $_msg_view) . "</li>\n";
 	
-	if (is_page($page))
-	{
-		$body .= " <li>".str_replace('$1',"<a href=\"$script?$r_page\">$s_page</a>",$_msg_goto)."\n";
-	}
-	else
-	{
-		$body .= " <li>".str_replace('$1',$s_page,$_msg_deleted)."\n";
+	if ($is_page) {
+		$body .= ' <li>' . str_replace('$1', "<a href=\"$script?$r_page\">$s_page</a>", $_msg_goto) . "\n";
+	} else {
+		$body .= ' <li>' . str_replace('$1', $s_page, $_msg_deleted) . "\n";
 	}
 
 	$backups = get_backup($page);
@@ -94,7 +75,7 @@ function plugin_backup_action()
 			$date = format_date($val['time'],TRUE);
 			$body .= ($age == $s_age) ?
 				"   <li><em>$age $date</em></li>\n" :
-				"   <li><a href=\"$script?cmd=backup&amp;action=$r_action&amp;page=$r_page&amp;age=$age\">$age $date</a></li>\n";
+				"   <li><a href=\"$script?cmd=backup&action=$r_action&page=$r_page&age=$age\">$age $date</a></li>\n";
 		}
 		$body .= "  </ul>\n";
 	}
@@ -128,19 +109,19 @@ function plugin_backup_action()
 	
 	return array('msg'=>str_replace('$2',$s_age,$_title_backup),'body'=>$body);
 }
+
 // バックアップを削除
 function plugin_backup_delete($page)
 {
-	global $script,$post,$adminpass;
-	global $_title_backup_delete,$_msg_backup_deleted,$_msg_backup_delete;
-	global $_msg_backup_adminpass,$_btn_delete,$_msg_invalidpass;
+	global $script, $vars, $adminpass;
+	global $_title_backup_delete, $_msg_backup_deleted, $_msg_backup_delete;
+	global $_msg_backup_adminpass, $_btn_delete, $_msg_invalidpass;
 	
 	if (!backup_file_exists($page))
-	{
-		return;
-	}
+		return array('msg'=>$_title_pagebackuplist, 'body'=>get_backup_list($page)); // Say "is not found"
+
 	$s_page = htmlspecialchars($page);
-	$pass = array_key_exists('pass',$post) ? $post['pass'] : NULL;
+	$pass = isset($vars['pass']) ? $vars['pass'] : NULL;
 	
 	if (md5($pass) == $adminpass)
 	{
@@ -150,30 +131,30 @@ function plugin_backup_delete($page)
 			'body' => str_replace('$1',make_pagelink($page),$_msg_backup_deleted)
 		);
 	}
-	$body = ($pass === NULL) ? '' : "<p><strong>$_msg_invalidpass</strong></p>\n";
 
-	$msg_delete = str_replace('$1',make_pagelink($page),$_msg_backup_delete);
+	$body = ($pass === NULL) ? '' : "<p><strong>$_msg_invalidpass</strong></p>\n";
 	$body .= <<<EOD
 <p>$_msg_backup_adminpass</p>
 <form action="$script" method="post">
  <div>
-  <input type="hidden" name="cmd" value="backup" />
-  <input type="hidden" name="page" value="$s_page" />
-  <input type="hidden" name="action" value="delete" />
-  <input type="password" name="pass" size="12" />
-  <input type="submit" name="ok" value="$_btn_delete" />
+  <input type="hidden"   name="cmd"    value="backup" />
+  <input type="hidden"   name="page"   value="$s_page" />
+  <input type="hidden"   name="action" value="delete" />
+  <input type="password" name="pass"   size="12" />
+  <input type="submit"   name="ok"     value="$_btn_delete" />
  </div>
 </form>
 EOD;
 	return	array('msg'=>$_title_backup_delete,'body'=>$body);
 }	
+
 function plugin_backup_diff($str) 
 {
-	global $_msg_addline,$_msg_delline,$hr;
+	global $_msg_addline, $_msg_delline,$hr;
 	
 	$str = htmlspecialchars($str);
-	$str = preg_replace('/^(\-)(.*)$/m','<span class="diff_removed"> $2</span>',$str);
-	$str = preg_replace('/^(\+)(.*)$/m','<span class="diff_added"> $2</span>',$str);
+	$str = preg_replace('/^(\-)(.*)$/m', '<span class="diff_removed"> $2</span>', $str);
+	$str = preg_replace('/^(\+)(.*)$/m', '<span class="diff_added"> $2</span>', $str);
 	$str = trim($str);
 	$str = <<<EOD
 $hr
@@ -191,7 +172,7 @@ EOD;
 function get_backup_list($page)
 {
 	global $script;
-	global $_msg_backuplist,$_msg_diff,$_msg_nowdiff,$_msg_source,$_msg_nobackup;
+	global $_msg_backuplist, $_msg_diff, $_msg_nowdiff, $_msg_source, $_msg_nobackup;
 	global $_title_backup_delete;
 	
 	$r_page = rawurlencode($page);
@@ -212,39 +193,38 @@ EOD;
 	$backups = backup_file_exists($page) ? get_backup($page) : array();
 	if (count($backups) == 0)
 	{
-		$msg = str_replace('$1',make_pagelink($page),$_msg_nobackup);
+		$msg = str_replace('$1',make_pagelink($page), $_msg_nobackup);
 		$retval[1] .= "   <li>$msg</li>\n";
 		return join('',$retval);
 	}
-	$retval[1] .= "   <li><a href=\"$script?cmd=backup&amp;action=delete&amp;page=$r_page\">";
+	$retval[1] .= "   <li><a href=\"$script?cmd=backup&action=delete&page=$r_page\">";
 	$retval[1] .= str_replace('$1',$s_page,$_title_backup_delete);
 	$retval[1] .= "</a></li>\n";
 	foreach ($backups as $age=>$data) {
 		$date = format_date($data['time'],TRUE);
-		$href = "$script?cmd=backup&amp;page=$r_page&amp;age=$age";
+		$href = "$script?cmd=backup&page=$r_page&age=$age";
 		$retval[1] .= <<<EOD
    <li><a href="$href">$age $date</a>
-     [ <a href="$href&amp;action=diff">$_msg_diff</a>
-     | <a href="$href&amp;action=nowdiff">$_msg_nowdiff</a>
-     | <a href="$href&amp;action=source">$_msg_source</a>
+     [ <a href="$href&action=diff">$_msg_diff</a>
+     | <a href="$href&action=nowdiff">$_msg_nowdiff</a>
+     | <a href="$href&action=source">$_msg_source</a>
      ]
    </li>
 EOD;
 	}
 	return join('',$retval);
 }
+
 // 全ページのバックアップ一覧を取得
 function get_backup_list_all($withfilename = FALSE)
 {
 	global $cantedit;
-	
-	$pages = array_diff(get_existpages(BACKUP_DIR,BACKUP_EXT),$cantedit);
-	
+
+	$pages = array_diff(get_existpages(BACKUP_DIR, BACKUP_EXT), $cantedit);
+
 	if (count($pages) == 0)
-	{
 		return '';
-	}
-	
+
 	return page_list($pages,'backup',$withfilename);
 }
 ?>
