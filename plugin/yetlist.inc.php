@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: yetlist.inc.php,v 1.15 2003/03/15 11:39:04 panda Exp $
+// $Id: yetlist.inc.php,v 1.16 2003/03/23 12:03:09 panda Exp $
 //
 
 function plugin_yetlist_init()
@@ -31,31 +31,13 @@ function plugin_yetlist_action()
 	
 	$refer = array();
 	$exists = get_existpages();
-	if (defined('LINK_DB'))
+	$pages = array_diff(get_existpages(CACHE_DIR,'.ref'),get_existpages());
+	foreach ($pages as $page)
 	{
-		$sql = <<<EOD
-SELECT DISTINCT page.name,refpage.name AS refer
- FROM page
-  LEFT JOIN link ON page.id = ref_id
-   LEFT JOIN page AS refpage ON page_id = refpage.id
-    WHERE page.lastmod=0;
-EOD;
-		$rows = db_query($sql);
-		foreach ($rows as $row)
+		foreach (file(CACHE_DIR.encode($page).'.ref') as $line)
 		{
-			$refer[$row['name']][] = $row['refer'];
-		}
-	}
-	else
-	{
-		$pages = array_diff(get_existpages(CACHE_DIR,'.ref'),get_existpages());
-		foreach ($pages as $page)
-		{
-			foreach (file(CACHE_DIR.encode($page).'.ref') as $line)
-			{
-				list($_page) = explode("\t",$line);
-				$refer[$page][] = $_page;
-			}
+			list($_page) = explode("\t",$line);
+			$refer[$page][] = $_page;
 		}
 	}
 	

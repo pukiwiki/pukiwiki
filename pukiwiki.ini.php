@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.32 2003/03/10 11:30:50 panda Exp $
+// $Id: pukiwiki.ini.php,v 1.33 2003/03/23 12:03:08 panda Exp $
 //
 // PukiWiki setting file
 
@@ -23,19 +23,6 @@ define('PLUGIN_DIR','./plugin/');
 /////////////////////////////////////////////////
 // キャッシュファイル格納ディレクトリ
 define('CACHE_DIR','./cache/');
-
-/////////////////////////////////////////////////
-// 関連するページのキャッシュ
-// ファイルベースのときはdefine('LINK_DB',...)をコメントアウト
-// MySQL
-//define('LINK_DB','mysql');
-//define('MYSQL_HOST','localhost');
-//define('MYSQL_USER','apache');
-//define('MYSQL_PASS','');
-//define('MYSQL_DB','pukiwiki');
-// PostgreSQL
-//define('LINK_DB','pgsql');
-//define('PG_CONNECT_STRING','dbname=pukiwiki host=localhost user=apache');
 
 /////////////////////////////////////////////////
 // ローカル時間
