@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.23 2002/07/16 14:07:13 masui Exp $
+// $Id: html.php,v 1.24 2002/07/18 16:05:09 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -122,6 +122,7 @@ function convert_html($string)
 			$line_head == ':' || 
 			$line_head == '>' || 
 			$line_head == '-' || 
+			$line_head == '+' || 
 			$line_head == '|' || 
 			$line_head == '*' || 
 			$line_head == '#' || 
@@ -176,6 +177,12 @@ function convert_html($string)
 					back_push('ul', strlen($out[1]));
 					array_push($result, '<li>' . inline($out[2]) . '</li>');
 				}
+			}
+			else if(preg_match("/^(\+{1,4})(.*)/",$line,$out))
+			{
+				$headform[$_cnt] = $out[1];
+				back_push('ol', strlen($out[1]));
+				array_push($result, '<li>' . inline($out[2]) . '</li>');
 			}
 			else if (preg_match("/^:([^:]+):(.*)/",$line,$out))
 			{
