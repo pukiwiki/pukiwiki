@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: comment.inc.php,v 1.18 2003/05/17 01:49:55 arino Exp $
+// $Id: comment.inc.php,v 1.19 2003/05/28 04:45:10 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -21,7 +21,7 @@ define('COMMENT_NOW_FORMAT','SIZE(10){$now}');
 define('COMMENT_FORMAT',"\x08MSG\x08 -- \x08NAME\x08 \x08NOW\x08");
 /////////////////////////////////////////////////
 // コメントを挿入する位置 1:欄の前 0:欄の後
-define('COMMENT_INS',1);
+define('COMMENT_INS','1');
 /////////////////////////////////////////////////
 // コメントが投稿された場合、内容をメールで送る先
 //define('COMMENT_MAIL',FALSE);
@@ -58,22 +58,23 @@ function plugin_comment_action()
 	$postdata = '';
 	$postdata_old  = get_source($post['refer']);
 	$comment_no = 0;
+	$comment_ins = ($post['above'] == '1');
 	
 	foreach ($postdata_old as $line)
 	{
-		if (!COMMENT_INS)
+		if (!$comment_ins)
 		{
 			$postdata .= $line;
 		}
 		if (preg_match('/^#comment/',$line) and $comment_no++ == $post['comment_no'])
 		{
 			$postdata = rtrim($postdata)."\n-$comment\n";
-			if (COMMENT_INS)
+			if ($comment_ins)
 			{
 				$postdata .= "\n";
 			}
 		}
-		if (COMMENT_INS)
+		if ($comment_ins)
 		{
 			$postdata .= $line;
 		}
@@ -120,6 +121,7 @@ function plugin_comment_convert()
 	}
 	
 	$nodate = in_array('nodate',$options) ? '1' : '0';
+	$above = in_array('above',$options) ? '1' : (in_array('below',$options) ? '0' : COMMENT_INS);
 	
 	$s_page = htmlspecialchars($vars['page']);
 	$comment_cols = COMMENT_COLS;
@@ -131,6 +133,7 @@ function plugin_comment_convert()
   <input type="hidden" name="refer" value="$s_page" />
   <input type="hidden" name="plugin" value="comment" />
   <input type="hidden" name="nodate" value="$nodate" />
+  <input type="hidden" name="above" value="$above" />
   <input type="hidden" name="digest" value="$digest" />
   $nametags
   <input type="text" name="msg" size="$comment_cols" />
