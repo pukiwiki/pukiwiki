@@ -2,16 +2,24 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: touchgraph.inc.php,v 1.2 2003/05/16 05:59:32 arino Exp $
+// $Id: touchgraph.inc.php,v 1.3 2004/03/18 09:33:23 arino Exp $
+//
+// TouchGraph WikiBrowser用のインデックスを作ります。
+//
+// Usage:
+//   java -Dfile.encoding=EUC-JP \
+//    -cp TGWikiBrowser.jar;BrowserLauncher.jar com.touchgraph.wikibrowser.TGWikiBrowser \
+//    http://<pukiwiki site>/pukiwiki.php?plugin=touchgraph \
+//    http://<pukiwiki site>/pukiwiki.php? \
+//    FrontPage 2 true
 //
 // TouchGraph http://www.touchgraph.com/index.html
-
 
 function plugin_touchgraph_action()
 {
 	header('Content-type: text/plain');
-	plugin_touchgraph_ref();
-//	plugin_touchgraph_rel();
+	plugin_touchgraph_rel();
+//	plugin_touchgraph_ref(); // reverse
 	
 	die;	
 }
@@ -22,7 +30,7 @@ function plugin_touchgraph_rel()
 		if (file_exists(CACHE_DIR.encode($page).'.rel'))
 		{
 			$data = file(CACHE_DIR.encode($page).'.rel');
-			echo mb_convert_encoding($page.' '.str_replace("\t",' ',trim($data[0]))."\n",'SJIS',SOURCE_ENCODING);
+			echo $page.' '.str_replace("\t",' ',trim($data[0]))."\n";
 		}
 	}
 }
@@ -39,7 +47,7 @@ function plugin_touchgraph_ref()
 				list($name) = explode("\t",$line);
 				$node .= " $name";
 			}
-			echo mb_convert_encoding("$node\n",'SJIS',SOURCE_ENCODING);
+			echo "$node\n";
 		}
 	}
 }
