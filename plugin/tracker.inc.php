@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.12 2003/10/05 14:47:16 arino Exp $
+// $Id: tracker.inc.php,v 1.13 2003/10/09 14:05:23 arino Exp $
 //
 
 function plugin_tracker_convert()
@@ -57,8 +57,10 @@ function plugin_tracker_convert()
 	}
 	return <<<EOD
 <form enctype="multipart/form-data" action="$script" method="post">
+<div>
 $retval
 $hiddens
+</div>
 </form>
 EOD;
 }
@@ -639,7 +641,7 @@ class Tracker_list
 	}
 	function add($page,$name)
 	{
-		global $WikiName,$BracketName;
+		static $moved = array();
 		
 		// 無限ループ防止
 		if (array_key_exists($name,$this->rows))
@@ -648,9 +650,15 @@ class Tracker_list
 		}
 		
 		$source = plugin_tracker_get_source($page);
-		if (preg_match("/move\s*to\s*($WikiName|\[\[$BracketName\]\])/",$source[0],$matches))
+		if (preg_match('/move\sto\s(.+)/',$source[0],$matches))
 		{
-			return $this->add(strip_bracket($matches[1]),$name);
+			$page = strip_bracket(trim($matches[1]));
+			if (array_key_exists($page,$moved) or !is_page($page))
+			{
+				return;
+			}
+			$moved[$page] = TRUE;
+			return $this->add($page,$name);
 		}
 		$source = join('',preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/','$1$2',$source));
 		
@@ -707,7 +715,10 @@ class Tracker_list
 		$eval_arg = 'return array_multisort(';
 		foreach ($this->order as $field=>$order)
 		{
-			if (!array_key_exists($field,$names)) { continue; }
+			if (!array_key_exists($field,$names))
+			{
+				continue;
+			}
 			$eval_arg .= '$keys['."'$field'],".
 				$this->fields[$field]->sort_type.','.
 				$order.',';
