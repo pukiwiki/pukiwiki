@@ -2,13 +2,20 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.28 2003/02/18 04:31:19 panda Exp $
+// $Id: init.php,v 1.29 2003/02/18 12:02:32 panda Exp $
 //
 
 /////////////////////////////////////////////////
-// 初期設定
+// 初期設定 (文字エンコード、言語)
 define('SOURCE_ENCODING','EUC-JP');
 define('LANG','ja');
+if (function_exists('mb_http_output')) {
+	mb_http_output(SOURCE_ENCODING);
+}
+
+/////////////////////////////////////////////////
+// 初期設定(設定ファイルの場所)
+define('INI_FILE','./pukiwiki.ini.php');
 
 /////////////////////////////////////////////////
 // 初期設定 (バージョン/著作権)
@@ -28,8 +35,12 @@ foreach (array('HTTP_USER_AGENT','PHP_SELF','SERVER_NAME','SERVER_SOFTWARE','SER
 
 /////////////////////////////////////////////////
 // 初期設定 (グローバル変数)
+// サーバから来る変数
 $vars = array();
+// 脚注
 $foot_explain = array();
+// 関連するページ
+$related = array();
 
 /////////////////////////////////////////////////
 // 初期設定(時間)
@@ -43,10 +54,6 @@ if (!file_exists(LANG.'.lng')||!is_readable(LANG.'.lng')) {
 	die_message(LANG.'.lng(language file) is not found.');
 }
 require(LANG.'.lng');
-
-/////////////////////////////////////////////////
-// 初期設定(設定ファイルの場所)
-define('INI_FILE','./pukiwiki.ini.php');
 
 /////////////////////////////////////////////////
 // 設定ファイル読み込み
@@ -107,7 +114,6 @@ if (php_sapi_name() == 'cgi' && !preg_match("/^http:\/\/[-a-zA-Z0-9\@:;_.]+\//",
 
 /////////////////////////////////////////////////
 // 入力値の整形
-$cookie = $HTTP_COOKIE_VARS;
 if (get_magic_quotes_gpc()) {
 	$get = $post = $cookie = array();
 	foreach($HTTP_GET_VARS as $key => $value) {
@@ -125,6 +131,7 @@ if (get_magic_quotes_gpc()) {
 else {
 	$post = is_array($HTTP_POST_VARS) ? $HTTP_POST_VARS : array();
 	$get = is_array($HTTP_GET_VARS) ? $HTTP_GET_VARS : array();
+	$cookie = is_array($HTTP_COOKIE_VARS) ? $HTTP_COOKIE_VARS : array();
 }
 if (!empty($get['page'])) {
 	$get['page']  = preg_replace('/^(\[\[)?(.*)(?(1)\]\])$/','$2',$get['page']);
@@ -135,22 +142,34 @@ if (!empty($post['page'])) {
 if (!empty($post['msg'])) {
 	$post['msg']  = preg_replace("/\r/",'',$post['msg']);
 }
-/*
-if (!empty($post['word'])) {
-	$post['word'] = $post['word'];
-}
-if (!empty($get['word'])) {
-	$get['word']  = $get['word'];
-}
-*/
 
-@$vars = array_merge($post,$get);
+$vars = array_merge($post,$get);
 if (!array_key_exists('page',$vars)) {
 	$get['page'] = $post['page'] = $vars['page'] = '';
 }
 
-$arg = rawurldecode((getenv('QUERY_STRING') != '') ? getenv('QUERY_STRING') :
-	(array_key_exists(0,$HTTP_SERVER_VARS['argv']) ? $HTTP_SERVER_VARS['argv'][0] : ''));
+// 後方互換性 (?md5=...)
+if (array_key_exists('md5',$vars) and $vars['md5'] != '') {
+	$vars['cmd'] = 'md5';
+}
+
+$arg = rawurldecode((getenv('QUERY_STRING') != '') ?
+	getenv('QUERY_STRING') :
+	(array_key_exists(0,$HTTP_SERVER_VARS['argv']) ?
+		$HTTP_SERVER_VARS['argv'][0] :
+		''
+	)
+);
+
+// cmdもpluginも指定されていない場合は、$argをページ名かInterWikiNameであるとみなす
+if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars)) {
+	//$argも指定されていなかった場合は$defaultpageを表示
+	if ($arg == '') {
+		$arg = $defaultpage;
+	}
+	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'read';
+	$get['page'] = $post['page'] = $vars['page'] = preg_replace('/^(\[\[)?(.*)(?(1)\]\])$/','$2',$arg);
+}
 
 /////////////////////////////////////////////////
 // 初期設定($WikiName,$BracketNameなど)
@@ -168,8 +187,6 @@ $NotePattern = '/\(\(((?:(?>(?:(?!\(\()(?!\)\)(?:[^\)]|$)).)+)|(?R))*)\)\)/ex';
 // 初期設定(その他のグローバル変数)
 // 現在時刻
 $now = format_date(UTIME);
-// 関連するページ
-$related = array();
 // skin内でDTD宣言を切り替えるのに使用。paint.inc.php対策
 // FALSE:XHTML 1.1
 // TRUE :XHTML 1.0 Transitional
@@ -180,21 +197,4 @@ if ($usefacemark) {
 }
 // ユーザ定義ルール
 $user_rules = array_merge($str_rules,$line_rules);
-
-/////////////////////////////////////////////////
-// 初期設定(URL変数の処理)
-// 後方互換性 (?md5=...)
-if (array_key_exists('md5',$vars) and $vars['md5'] != '') {
-	$vars['cmd'] = 'md5';
-}
-
-// cmdもpluginも指定されていない場合は、$argをページ名かInterWikiNameであるとみなす
-if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars)) {
-	//$argも指定されていなかった場合は$defaultpageを表示
-	if ($arg == '') {
-		$arg = $defaultpage;
-	}
-	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'read';
-	$get['page'] = $post['page'] = $vars['page'] = preg_replace('/^(\[\[)?(.*)(?(1)\]\])$/','$2',$arg);
-}
 ?>
