@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.2 2003/07/11 10:29:57 arino Exp $
+// $Id: tracker.inc.php,v 1.3 2003/07/12 12:22:01 arino Exp $
 //
 
 function plugin_tracker_convert()
@@ -555,13 +555,6 @@ class Tracker_list
 			}
 		}
 	}
-	function filter($field,$pred,$value)
-	{
-		switch (strtolower($pred))
-		{
-			case 'eq':
-				,ne,gt,ge,lt,le,in
-			
 	function sort($field=NULL,$order=1)
 	{
 		$this->sort_order = $order;
