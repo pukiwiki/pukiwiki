@@ -2,14 +2,14 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss10.inc.php,v 1.2 2003/02/20 12:21:13 panda Exp $
+// $Id: rss10.inc.php,v 1.3 2003/02/24 10:09:43 panda Exp $
 //
 // RecentChanges の RSS を出力
 function plugin_rss10_action()
 {
 	global $script,$rss_max,$page_title,$whatsnew;
 	
-	$self = 'http://'.SERVER_NAME.PHP_SELF.'?';
+	$self = $script.'?';
 
 	$page_title_utf8 = $page_title;
 	if (function_exists('mb_convert_encoding')) {
@@ -30,19 +30,21 @@ function plugin_rss10_action()
 		if (function_exists('mb_convert_encoding')) {
 			$title = mb_convert_encoding($title,'UTF-8',SOURCE_ENCODING);
 		}
+		// 'O'が出力する時刻を'+09:00'の形に整形
+		$dcdate = substr_replace(get_date('Y-m-d\TH:i:sO',$time),':',-2,0);
 		
-		$dcdate = get_date('Y-m-d\TH:i:sO');
-		$desc = get_date('D, d M Y H:i:s T',$time);
+//		$desc = get_date('D, d M Y H:i:s T',$time);
+// <description>$desc</description>
+		
 		$items .= <<<EOD
-<item rdf:about="$self$r_page">
+<item rdf:about="$script?$r_page">
  <title>$title</title>
- <link>$self$r_page</link>
+ <link>$script?$r_page</link>
  <dc:date>$dcdate</dc:date>
- <description>$desc</description>
 </item>
 
 EOD;
-		$rdf_li .= "    <rdf:li rdf:resource=\"$self$r_page\" />\n";
+		$rdf_li .= "    <rdf:li rdf:resource=\"$script?$r_page\" />\n";
 	}
 	
 	header('Content-type: application/xml');
@@ -56,9 +58,9 @@ EOD;
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
   xml:lang="ja">
 
- <channel rdf:about="{$self}rss">
+ <channel rdf:about="$script?rss">
   <title>$page_title_utf8</title>
-  <link>$self$whatsnew</link>
+  <link>$script?$whatsnew</link>
   <description>PukiWiki RecentChanges</description>
   <items>
    <rdf:Seq>
