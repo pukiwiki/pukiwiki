@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.45.2.7 2003/09/03 01:02:03 arino Exp $
+// $Id: html.php,v 1.45.2.8 2004/06/27 14:29:19 henoheno Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -77,6 +77,7 @@ function convert_html($string)
 	global $InterWikiName, $BracketName;
 
 	global $content_id;
+	$contents = '';
 	$content_id_local = ++$content_id;
 	$content_count = 0;
 
@@ -119,7 +120,7 @@ function convert_html($string)
 			}
 		}
 
-		$comment_out = $comment_out[1];
+		$comment_out = isset($comment_out[1]) ? $comment_out[1] : '';
 
 		// 行頭書式かどうかの判定
 		$line_head = substr($line,0,1);
@@ -133,7 +134,7 @@ function convert_html($string)
 			$line_head == '#' || 
 			$comment_out != ''
 		) {
-			if($headform[$_cnt-1] == '' && $_p){
+			if((! isset($headform[$_cnt -1]) || $headform[$_cnt -1] == '' ) && $_p){
 				array_push($result, "</p>");
 				$_p = FALSE;
 			}
@@ -270,7 +271,7 @@ function convert_html($string)
 		} else {
 
 			$headform[$_cnt] = '';
-			if($headform[$_cnt-1] != $headform[$_cnt]){
+			if(! isset($headform[$_cnt -1]) || $headform[$_cnt-1] != $headform[$_cnt]){
 				if(array_values($saved)){
 					if( $_bq ){
 						array_unshift($saved, "</p>");
@@ -560,6 +561,7 @@ function edit_form($postdata,$page,$add=0)
 	global $whatsnew,$_btn_template,$_btn_load,$non_list,$load_template_func;
 
 	$digest = md5(@join("",get_source($page)));
+	$addtag = $add_top = $refer = '';
 
 	if($add)
 	{
@@ -567,7 +569,7 @@ function edit_form($postdata,$page,$add=0)
 		$add_top = '<input type="checkbox" name="add_top" value="true" /><span class="small">'.$_btn_addtop.'</span>';
 	}
 
-	if($vars["help"] == "true")
+	if(isset($vars["help"]) && $vars["help"] == "true")
 		$help = $hr.catrule();
 	else
  		$help = "<br />\n<ul><li><a href=\"$script?cmd=edit&amp;help=true&amp;page=".rawurlencode($page)."\">$_msg_help</a></ul></li>\n";
@@ -596,7 +598,7 @@ function edit_form($postdata,$page,$add=0)
 			   ."   </select>\n"
 			   ."   <input type=\"submit\" name=\"template\" value=\"$_btn_load\" accesskey=\"r\" /><br />\n";
 
-		if($vars["refer"]) $refer = $vars["refer"]."\n\n";
+		if(isset($vars["refer"])) $refer = $vars["refer"]."\n\n";
 	}
 
 return '
