@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.5 2003/03/08 13:35:06 panda Exp $
+// $Id: edit.inc.php,v 1.6 2003/04/29 00:39:31 arino Exp $
 //
 // 編集
 // cmd=edit
@@ -34,7 +34,9 @@ function plugin_edit_preview()
 
 	if (array_key_exists('template_page',$post) and is_page($post['template_page']))
 	{
-		$post['msg'] = join('',get_source($post['template_page']));
+		$source = get_source($post['template_page']);
+		// 見出しの固有ID部を削除
+		$source = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/','$1$2',$source);
 	}
 	
 	// 手書きの#freezeを削除

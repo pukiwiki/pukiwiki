@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: config.php,v 1.3 2003/03/14 04:05:48 panda Exp $
+// $Id: config.php,v 1.4 2003/04/29 00:38:14 arino Exp $
 //
 /*
  * プラグインの設定をPukiWikiのページに記述する
@@ -66,6 +66,9 @@ class Config
 			
 			if ($head == '*')
 			{
+				// 見出しの固有ID部を削除
+				$line = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/','$1$2',$line);
+				
 				if ($level == 1)
 				{
 					$this->objs[$obj->title] = $obj;

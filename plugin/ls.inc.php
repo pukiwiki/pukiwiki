@@ -5,12 +5,12 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: ls.inc.php,v 1.6 2003/01/31 01:49:35 panda Exp $
+ * $Id: ls.inc.php,v 1.7 2003/04/29 00:39:53 arino Exp $
  */
 
 function plugin_ls_convert()
 {
-	global $script,$vars;
+	global $vars;
 	
 	$aryargs = func_num_args() ? func_get_args() : array();
 	
@@ -32,6 +32,9 @@ function plugin_ls_convert()
 		$comment = '';
 		if ($with_title) {
 			list($comment) = get_source($page);
+			// 見出しの固有ID部を削除
+			$comment = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/','$1$2',$comment);
+			
 			$comment = '- ' . ereg_replace('^[-*]+','',$comment);
 		}
 		$ls[] = "-[[$page]] $comment";
