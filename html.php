@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.21 2002/07/15 07:43:57 masui Exp $
+// $Id: html.php,v 1.22 2002/07/16 07:48:41 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -368,13 +368,7 @@ function inline($line)
 {
 	$line = htmlspecialchars($line);
 
-	$line = preg_replace("/(
-
-					(\(\(([^\(\)]+)\)\))
-					|
-					(\(\((.+)\)\))
-
-				)/ex","make_note(\"$1\")",$line);
+	$line = preg_replace("/\(\(((?:(?!\)\)).)*)\)\)/ex","make_note(\"$1\")",$line);
 
 	return $line;
 }
