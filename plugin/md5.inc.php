@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.12 2005/04/05 13:29:26 henoheno Exp $
+// $Id: md5.inc.php,v 1.13 2005/04/05 13:44:05 henoheno Exp $
 //
 //  MD5 plugin
 
@@ -54,17 +54,17 @@ function plugin_md5_action()
   <label for="_p_md5_crpt">PHP crypt() *</label><br />
 
   <input type="radio" name="scheme" id="_p_md5_lssha" value="ldap_ssha" />
-  <label for="_p_md5_lssha">OpenLDAP SSHA (sha-1 with a seed)</label><br />
+  <label for="_p_md5_lssha">LDAP SSHA (sha-1 with a seed)</label><br />
   <input type="radio" name="scheme" id="_p_md5_lsha" value="ldap_sha" />
-  <label for="_p_md5_lsha">OpenLDAP SHA (sha-1)</label><br />
+  <label for="_p_md5_lsha">LDAP SHA (sha-1)</label><br />
 
   <input type="radio" name="scheme" id="_p_md5_lsmd5" value="ldap_smd5" />
-  <label for="_p_md5_lsmd5">OpenLDAP SMD5 (md5 with a seed)</label><br />
+  <label for="_p_md5_lsmd5">LDAP SMD5 (md5 with a seed)</label><br />
   <input type="radio" name="scheme" id="_p_md5_lmd5" value="ldap_md5" />
-  <label for="_p_md5_lmd5">OpenLDAP MD5</label><br />
+  <label for="_p_md5_lmd5">LDAP MD5</label><br />
 
   <input type="radio" name="scheme" id="_p_md5_lcrpt" value="ldap_crypt" />
-  <label for="_p_md5_lcrpt">OpenLDAP CRYPT *</label><br />
+  <label for="_p_md5_lcrpt">LDAP CRYPT *</label><br />
 
   <input type="checkbox" name="prefix" id="_p_md5_prefix" checked="checked" />
   <label for="_p_md5_prefix">Add scheme prefix (RFC2307, Using LDAP as NIS)</label><br />
