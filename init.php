@@ -2,16 +2,15 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.31 2003/02/22 04:57:38 panda Exp $
+// $Id: init.php,v 1.32 2003/02/22 06:24:54 panda Exp $
 //
 
 /////////////////////////////////////////////////
 // 初期設定 (文字エンコード、言語)
 define('SOURCE_ENCODING','EUC-JP');
 define('LANG','ja');
-if (function_exists('mb_http_output')) {
-	mb_http_output(SOURCE_ENCODING);
-}
+mb_internal_encoding(SOURCE_ENCODING);
+mb_http_output(SOURCE_ENCODING);
 
 /////////////////////////////////////////////////
 // 初期設定(設定ファイルの場所)
