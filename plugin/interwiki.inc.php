@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: interwiki.inc.php,v 1.1 2003/01/27 05:38:46 panda Exp $
+// $Id: interwiki.inc.php,v 1.2 2003/02/18 04:30:03 panda Exp $
 //
 // InterWikiNameの判別とページの表示
 function plugin_interwiki_action()
@@ -44,7 +44,7 @@ function plugin_interwiki_action()
 	{
 		// YukiWiki系
 		if (!preg_match("/$WikiName/",$param))
-			$param = $b_mb ? '[['.mb_convert_encoding($param,'SJIS',ENCODING).']]' : FALSE;
+			$param = $b_mb ? '[['.mb_convert_encoding($param,'SJIS',SOURCE_ENCODING).']]' : FALSE;
 	}
 	else if ($opt == 'moin')
 	{

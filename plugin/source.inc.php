@@ -1,11 +1,11 @@
 <?php
-// $Id: source.inc.php,v 1.5 2003/01/27 05:38:47 panda Exp $
+// $Id: source.inc.php,v 1.6 2003/02/18 04:30:32 panda Exp $
 
 function plugin_source_action()
 {
 	global $vars;
 	
-	header('Content-type: text/plain; charset="'.ENCODING.'"');
+	header('Content-type: text/plain; charset="'.SOURCE_ENCODING.'"');
 	echo join('',get_source($vars['page']));
 	
 	die();

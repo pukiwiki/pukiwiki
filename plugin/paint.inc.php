@@ -72,7 +72,7 @@ function plugin_paint_action()
 		
 		$filename = $vars['filename'];
 		if (function_exists('mb_convert_encoding'))
-			$filename = mb_convert_encoding($filename,ENCODING,'auto');
+			$filename = mb_convert_encoding($filename,SOURCE_ENCODING,'auto');
 		
 		//ファイル名置換
 		$attachname = preg_replace('/^[^\.]+/', $filename, $HTTP_POST_FILES['attach_file']['name']);
@@ -207,8 +207,8 @@ function insert_ref($filename)
 	$date = sprintf(PAINT_FORMAT_DATE, $now);
 	
 	if (function_exists('mb_convert_encoding')) {
-		$msg = mb_convert_encoding($msg, ENCODING, 'auto');
-		$name = mb_convert_encoding($name, ENCODING, 'auto');
+		$msg = mb_convert_encoding($msg,SOURCE_ENCODING,'auto');
+		$name = mb_convert_encoding($name,SOURCE_ENCODING,'auto');
 	}
 	
 	$msg = trim($msg);

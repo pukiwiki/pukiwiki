@@ -22,7 +22,7 @@
  * 
  * 避難所       ->   http://do3ob.s20.xrea.com/
  *
- * version: $Id: showrss.inc.php,v 1.3 2003/02/17 07:34:50 panda Exp $
+ * version: $Id: showrss.inc.php,v 1.4 2003/02/18 04:30:23 panda Exp $
  * 
  */
 
@@ -148,10 +148,10 @@ function plugin_showrss_convert() {
 	}
 
 	if (function_exists('mb_convert_encoding')) {
-		// エンコードできる場合はENCODINGに。
+		// エンコードできる場合はSOURCE_ENCODINGに。
 		foreach ($parsed_rss_array as $index => $parsed_rss) {
 			foreach ($parsed_rss as $parsed_rss_key => $parsed_rss_value) {
-				$parsed_rss_array[$index][$parsed_rss_key] = mb_convert_encoding($parsed_rss_value, ENCODING, 'auto');
+				$parsed_rss_array[$index][$parsed_rss_key] = mb_convert_encoding($parsed_rss_value,SOURCE_ENCODING,'auto');
 			}
 		}
 	}
