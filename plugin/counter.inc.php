@@ -5,7 +5,7 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: counter.inc.php,v 1.7 2003/04/02 04:16:01 panda Exp $
+ * $Id: counter.inc.php,v 1.8 2003/04/13 04:51:46 arino Exp $
  */
 
 // counter file
@@ -19,98 +19,140 @@ if (!defined('COUNTER_EXT'))
 	define('COUNTER_EXT','.count');
 }
 
-function plugin_counter_convert()
-{
-	list($count,$today_count,$yesterday_count) = plugin_counter_count();
-	return "<div class=\"counter\">Counter: $count, today: $today_count, yesterday: $yesterday_count</div>";
-}
-
 function plugin_counter_inline()
 {
+	global $vars;
+	
 	$arg = '';
 	if (func_num_args() > 0)
 	{
-		list($arg) = func_get_args();
+		$args = func_get_args();
+		$arg = strtolower($args[0]);
 	}
 	
-	list($count,$today_count,$yesterday_count) = plugin_counter_count();
+	$counter = plugin_counter_get_count($vars['page']);
 	
-	if ($arg == 'today')
+	switch ($arg)
 	{
-		return $today_count;
-	}
-	else if ($arg == 'yesterday')
-	{
-		return $yesterday_count;
+		case 'today':
+		case 'yesterday':
+			$count = $counter[$arg];
+			break;
+		default:
+			$count = $counter['total'];
 	}
 	return $count;
 }
-function plugin_counter_count()
+
+function plugin_counter_convert()
 {
-	global $vars,$HTTP_SERVER_VARS;
-	static $counters;
+	global $vars;
 	
-	$page = $vars['page'];
+	$counter = plugin_counter_get_count($vars['page']);
 	
+	return <<<EOD
+<div class="counter">
+Counter: {$counter['total']},
+today: {$counter['today']},
+yesterday: {$counter['yesterday']}
+</div>
+EOD;
+}
+
+function plugin_counter_get_count($page)
+{
+	global $vars;
+	static $counters = array();
+	static $default;
+	
+	// カウンタのデフォルト値
+	if (!isset($default))
+	{
+    	$default = array(
+    		'total'     => 0,
+    		'date'      => get_date('Y/m/d'),
+    		'today'     => 0,
+    		'yesterday' => 0,
+    		'ip'        => ''
+    	);
+	}
 	if (!is_page($page))
 	{
-		return array(0,0,0);
-	}
-	if (!isset($counters))
-	{
-		$counters = array();
+		return $default;
 	}
 	if (array_key_exists($page,$counters))
 	{
 		return $counters[$page];
 	}
 	
+	// カウンタのデフォルト値をセット
+	$counters[$page] = $default;
+	
+	// カウンタファイルが存在する場合は読み込む
+	$fp = NULL;
 	$file = COUNTER_DIR.encode($page).COUNTER_EXT;
-	if (!file_exists($file))
+	if (file_exists($file))
 	{
-		$nf = fopen($file, 'w');
-		flock($nf,LOCK_EX);
-		fputs($nf,"0\n0\n0\n0\n\n");
-		flock($nf,LOCK_UN);
-		fclose($nf);
+		$fp = fopen($file, 'r+')
+			or die_message('counter.inc.php:cannot read '.$file);
+		flock($fp,LOCK_EX);
+    	foreach ($default as $key=>$val)
+    	{
+    		$counters[$page][$key] = rtrim(fgets($fp));
+    	}
+	}
+	// ファイル更新が必要か?
+	$modify = FALSE;
+	
+	// 日付が変わった
+	if ($counters[$page]['date'] != $default['date'])
+	{
+		$modify = TRUE;
+		$counters[$page]['ip']        = $_SERVER['REMOTE_ADDR'];
+		$counters[$page]['date']      = $default['date'];
+		$counters[$page]['yesterday'] = $counters[$page]['today'];
+		$counters[$page]['today']     = 1;
+		$counters[$page]['total']++;
+	}
+	// IPアドレスが異なる
+	else if ($counters[$page]['ip'] != $_SERVER['REMOTE_ADDR'])
+	{
+		$modify = TRUE;
+		$counters[$page]['ip']        = $_SERVER['REMOTE_ADDR'];
+		$counters[$page]['today']++;
+		$counters[$page]['total']++;
 	}
 	
-	$array = file($file);
-	$count = rtrim($array[0]);
-	$today = rtrim($array[1]);
-	$today_count = rtrim($array[2]);
-	$yesterday_count = rtrim($array[3]);
-	$ip = rtrim($array[4]);
-	
-	//前回とIPアドレスが異なった場合にカウンタを回す
-	if ($ip != $HTTP_SERVER_VARS['REMOTE_ADDR'])
-	{
-		$t = get_date('Y/m/d');
-		if ($t != $today)
-		{
-			$yesterday_count = $today_count;
-			$today_count = 0;
-			$today = $t;
-		}
-		++$count;
-		++$today_count;
-	}
 	//ページ読み出し時のみファイルを更新
-	if ($vars['cmd'] == 'read')
+	if ($modify and $vars['cmd'] == 'read')
 	{
-		$ip = $HTTP_SERVER_VARS['REMOTE_ADDR'];
-		$nf = fopen($file, 'w');
-		flock($nf,LOCK_EX);
-		fputs($nf,"$count\n");
-		fputs($nf,"$today\n");
-		fputs($nf,"$today_count\n");
-		fputs($nf,"$yesterday_count\n");
-		fputs($nf,"$ip\n");
-		flock($nf,LOCK_UN);
-		fclose($nf);
+		// ファイルが開いている
+		if ($fp)
+		{
+			// ファイルを丸める
+			ftruncate($fp,0);
+			rewind($fp);
+		}
+		else
+		{
+			// ファイルを開く
+    		$fp = fopen($file, 'w')
+    			or die_message('counter.inc.php:cannot write '.$file);
+    		flock($fp,LOCK_EX);
+		}
+		// 書き出す
+		foreach (array_keys($default) as $key)
+		{
+			fputs($fp,$counters[$page][$key]."\n");
+		}
 	}
-	
-	$counters[$page] = array($count,$today_count,$yesterday_count);
+	// ファイルが開いている
+	if ($fp)
+	{
+		// ファイルを閉じる
+		flock($fp,LOCK_UN);
+		fclose($fp);
+	}
 	
 	return $counters[$page];
 }
