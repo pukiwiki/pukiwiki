@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.99 2004/04/03 15:33:26 arino Exp $
+// $Id: html.php,v 1.100 2004/06/27 11:37:00 henoheno Exp $
 //
 
 // 本文を出力
@@ -198,15 +198,11 @@ $template
 </form>
 EOD;
 	
-	if (array_key_exists('help',$vars)) {
-		$body .= $hr.catrule();
-	}
-	else {
-		$body .= <<<EOD
-<ul>
- <li><a href="$script?cmd={$vars['cmd']}&amp;help=true&amp;page=$r_page">$_msg_help</a></li>
-</ul>
-EOD;
+	if (array_key_exists('help', $vars)) {
+		$body .= $hr . catrule();
+	} else {
+		$body .= 
+		"<ul><li><a href=\"$script?cmd=edit&help=true&page=$r_page\">$_msg_help</a></li></ul>";
 	}
 	return $body;
 }
