@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.9 2003/08/20 10:56:35 arino Exp $
+// $Id: tracker.inc.php,v 1.10 2003/09/24 00:16:33 arino Exp $
 //
 
 function plugin_tracker_convert()
@@ -43,14 +43,22 @@ function plugin_tracker_convert()
 	$fields = plugin_tracker_get_fields($page,$config);
 	
 	$retval = convert_html(plugin_tracker_get_source($config->page.'/form'));
+	$hiddens = '';
 	
 	foreach (array_keys($fields) as $name)
 	{
-		$retval = str_replace("[$name]",$fields[$name]->get_tag(),$retval);
+		$replace = $fields[$name]->get_tag();
+		if (is_a($fields[$name],'Tracker_field_hidden'))
+		{
+			$hiddens .= $replace;
+			$replace = '';
+		}
+		$retval = str_replace("[$name]",$replace,$retval);
 	}
 	return <<<EOD
 <form enctype="multipart/form-data" action="$script" method="post">
 $retval
+$hiddens
 </form>
 EOD;
 }
@@ -150,6 +158,31 @@ function plugin_tracker_action()
 	header("Location: $script?$r_page");
 	exit;
 }
+function plugin_tracker_inline()
+{
+	global $vars;
+	
+	$args = func_get_args();
+	if (count($args) < 3)
+	{
+		return FALSE;
+	}
+	$body = array_pop($args);
+	list($config_name,$field) = $args;
+	
+	$config = new Config('plugin/tracker/'.$config_name);
+	
+	if (!$config->read())
+	{
+		return "config file '".htmlspecialchars($config_name)."' not found.";
+	}
+	
+	$config->config_name = $config_name;
+	
+	$fields = plugin_tracker_get_fields($vars['page'],$config);
+	$fields[$field]->default_value = $body;
+	return $fields[$field]->get_tag();
+}	
 // フィールドオブジェクトを構築する
 function plugin_tracker_get_fields($page,&$config)
 {
@@ -163,7 +196,7 @@ function plugin_tracker_get_fields($page,&$config)
 		'_past'=>'past',    // 経過(passage)
 		'_page'=>'page',    // ページ名
 		'_name'=>'text',    // 指定されたページ名
-		'_real'=>'text',    // 実際のページ名
+		'_real'=>'real',    // 実際のページ名
 		'_refer'=>'page',   // 参照元(フォームのあるページ)
 		'_submit'=>'submit' // 追加ボタン
 		) as $field=>$class)
@@ -196,6 +229,7 @@ class Tracker_field
 	var $page;
 	var $config;
 	var $data;
+	var $sort_type = SORT_REGULAR;
 	
 	function Tracker_field($field,$page,&$config)
 	{
@@ -224,13 +258,15 @@ class Tracker_field
 	{
 		return $str;
 	}
-	function compare($str1,$str2)
+	function get_value($value)
 	{
-		return strnatcasecmp($str1,$str2);
+		return $value;
 	}
 }
 class Tracker_field_text extends Tracker_field
 {
+	var $sort_type = SORT_STRING;
+	
 	function get_tag()
 	{
 		$s_name = htmlspecialchars($this->name);
@@ -241,6 +277,8 @@ class Tracker_field_text extends Tracker_field
 }
 class Tracker_field_page extends Tracker_field_text
 {
+	var $sort_type = SORT_STRING;
+	
 	function format_value($value)
 	{
 		global $WikiName;
@@ -253,8 +291,14 @@ class Tracker_field_page extends Tracker_field_text
 		return parent::format_value($value);
 	}
 }
+class Tracker_field_real extends Tracker_field_text
+{
+	var $sort_type = SORT_REGULAR;
+}
 class Tracker_field_title extends Tracker_field_text
 {
+	var $sort_type = SORT_STRING;
+	
 	function format_cell($str)
 	{
 		make_heading($str);
@@ -263,6 +307,8 @@ class Tracker_field_title extends Tracker_field_text
 }
 class Tracker_field_textarea extends Tracker_field
 {
+	var $sort_type = SORT_STRING;
+	
 	function get_tag()
 	{
 		$s_name = htmlspecialchars($this->name);
@@ -283,6 +329,8 @@ class Tracker_field_textarea extends Tracker_field
 }
 class Tracker_field_format extends Tracker_field
 {
+	var $sort_type = SORT_STRING;
+	
 	var $styles = array();
 	var $formats = array();
 	
@@ -330,6 +378,8 @@ class Tracker_field_format extends Tracker_field
 }
 class Tracker_field_file extends Tracker_field_format
 {
+	var $sort_type = SORT_STRING;
+	
 	function get_tag()
 	{
 		$s_name = htmlspecialchars($this->name);
@@ -353,6 +403,8 @@ class Tracker_field_file extends Tracker_field_format
 }
 class Tracker_field_radio extends Tracker_field_format
 {
+	var $sort_type = SORT_NUMERIC;
+	
 	function get_tag()
 	{
 		$s_name = htmlspecialchars($this->name);
@@ -370,21 +422,20 @@ class Tracker_field_radio extends Tracker_field_format
 	{
 		return $str;
 	}
-	function compare($str1,$str2)
+	function get_value($value)
 	{
-		static $options;
-		
-		if (!isset($options))
+		static $options = array();
+		if (!array_key_exists($this->name,$options))
 		{
-			$options = array_flip(array_map(create_function('$arr','return $arr[0];'),$this->config->get($this->name)));
+			$options[$this->name] = array_flip(array_map(create_function('$arr','return $arr[0];'),$this->config->get($this->name)));
 		}
-		$n1 = array_key_exists($str1,$options) ? $options[$str1] : $str1;
-		$n2 = array_key_exists($str2,$options) ? $options[$str2] : $str2;
-		return ($n1 == $n2) ? 0 : ($n1 > $n2 ? -1 : 1);
+		return array_key_exists($value,$options[$this->name]) ? $options[$this->name][$value] : $value;
 	}
 }
 class Tracker_field_select extends Tracker_field_radio
 {
+	var $sort_type = SORT_NUMERIC;
+	
 	function get_tag($empty=FALSE)
 	{
 		$s_name = htmlspecialchars($this->name);
@@ -411,6 +462,8 @@ class Tracker_field_select extends Tracker_field_radio
 }
 class Tracker_field_checkbox extends Tracker_field_radio
 {
+	var $sort_type = SORT_NUMERIC;
+	
 	function get_tag($empty=FALSE)
 	{
 		$s_name = htmlspecialchars($this->name);
@@ -429,6 +482,8 @@ class Tracker_field_checkbox extends Tracker_field_radio
 }
 class Tracker_field_hidden extends Tracker_field_radio
 {
+	var $sort_type = SORT_NUMERIC;
+	
 	function get_tag($empty=FALSE)
 	{
 		$s_name = htmlspecialchars($this->name);
@@ -456,24 +511,24 @@ EOD;
 }
 class Tracker_field_date extends Tracker_field
 {
+	var $sort_type = SORT_NUMERIC;
+	
 	function format_cell($timestamp)
 	{
 		return format_date($timestamp);
 	}
-	function compare($time1,$time2)
-	{
-		return $time1 - $time2;
-	}
 }
 class Tracker_field_past extends Tracker_field
 {
+	var $sort_type = SORT_NUMERIC;
+	
 	function format_cell($timestamp)
 	{
 		return get_passage($timestamp,FALSE);
 	}
-	function compare($time1,$time2)
+	function get_value($value)
 	{
-		return $time1 - $time2;
+		return UTIME - $value;
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -485,19 +540,17 @@ function plugin_tracker_list_convert()
 	$config = 'default';
 	$page = $vars['page'];
 	$field = '_page';
-	$order = -1;
+	$order = '';
 	$limit = NULL;
 	if (func_num_args())
 	{
 		$args = func_get_args();
 		switch (count($args))
 		{
-			case 5:
-				$limit = is_numeric($args[4]) ? $args[4] : $limit;
 			case 4:
-				$order = (strpos('ascending',strtolower($args[3])) === 0) ? 1 : -1;
+				$limit = is_numeric($args[3]) ? $args[3] : $limit;
 			case 3:
-				$field = ($args[2] != '') ? $args[2] : $field;
+				$order = $args[2];
 			case 2:
 				$page = is_pagename($args[1]) ? $args[1] : $page;
 			case 1:
@@ -513,9 +566,7 @@ function plugin_tracker_list_action()
 	$page = $vars['refer'];
 	$s_page = make_pagelink($page);
 	$config = $vars['config'];
-	$field = array_key_exists('field',$vars) ? $vars['field'] : '_page';
-	$order = (array_key_exists('order',$vars) and is_numeric($vars['order'])) ?
-		$vars['order'] : -1;
+	$order = array_key_exists('order',$vars) ? $vars['order'] : '_real:SORT_DESC';
 		
 	return array(
 		'msg' => $_tracker_messages['msg_list'],
@@ -523,7 +574,7 @@ function plugin_tracker_list_action()
 			plugin_tracker_getlist($page,$config,$field,$order)
 	);
 }
-function plugin_tracker_getlist($page,$config_name,$field=NULL,$order=1,$limit=NULL)
+function plugin_tracker_getlist($page,$config_name,$field=NULL,$order='',$limit=NULL)
 {
 	$config = new Config('plugin/tracker/'.$config_name);
 	
@@ -533,7 +584,7 @@ function plugin_tracker_getlist($page,$config_name,$field=NULL,$order=1,$limit=N
 	}
 	$config->config_name = $config_name;
 	$list = &new Tracker_list($page,$config);
-	$list->sort($field,$order);
+	$list->sort($order);
 	return $list->toString($limit);
 }
 
@@ -546,9 +597,7 @@ class Tracker_list
 	var $pattern;
 	var $pattern_fields;
 	var $rows;
-	var $sort_field = '_page';
-	var $sort_order = -1;
-	var $sort_obj = NULL;
+	var $order;
 	
 	function Tracker_list($page,&$config)
 	{
@@ -623,29 +672,53 @@ class Tracker_list
 			}
 		}
 	}
-	function sort($field=NULL,$order=1)
+	function sort($order)
 	{
-		$this->sort_order = $order;
-		if ($field == '_page')
-		{
-			($order == -1) ? krsort($this->rows) : ksort($this->rows);
-			return;
-		}
-		$fields = array_flip(array_keys($this->fields));
-		
-		if (!array_key_exists($field,$fields))
+		if ($order == '')
 		{
 			return;
 		}
-		$this->sort_field = $field;
-		$this->sort_obj = &$this->fields[$field];
-		usort($this->rows,array(&$this,'compare'));
-	}
-	function compare($arr1,$arr2)
-	{
-		return $this->sort_order * $this->sort_obj->compare(
-			$arr1[$this->sort_field],$arr2[$this->sort_field]
-		);
+		$names = array_flip(array_keys($this->fields));
+		$this->order = array();
+		foreach (explode(';',$order) as $item)
+		{
+			list($key,$dir) = explode(':',$item);
+			if (!array_key_exists($key,$names))
+			{
+				continue;
+			}
+			switch (strtoupper($dir))
+			{
+				case 'SORT_ASC':
+				case 'ASC':
+				case SORT_ASC:
+					$dir = SORT_ASC;
+					break;
+				case 'SORT_DESC':
+				case 'DESC':
+				case SORT_DESC:
+					$dir = SORT_DESC;
+					break;
+				default:
+					continue;
+			}
+			$this->order[$key] = $dir;
+		}
+		$keys = array();
+		$eval_arg = 'return array_multisort(';
+		foreach ($this->order as $field=>$order)
+		{
+			if (!array_key_exists($field,$names)) { continue; }
+			$eval_arg .= '$keys['."'$field'],".
+				$this->fields[$field]->sort_type.','.
+				$order.',';
+			foreach ($this->rows as $row)
+			{
+				$keys[$field][] = $this->fields[$field]->get_value($row[$field]);
+			}
+		}
+		$eval_arg .= '$this->rows);';
+		eval($eval_arg);
 	}
 	function replace_item($arr)
 	{
@@ -679,25 +752,38 @@ class Tracker_list
 	{
 		global $script;
 		
-		if (!array_key_exists($arr[1],$this->fields))
+		$field = $sort = $arr[1];
+		if ($sort == '_name' or $sort == '_page')
+		{
+			$sort = '_real';
+		}
+		if (!array_key_exists($field,$this->fields))
 		{
 			return $arr[0];
 		}
-		
-		$order = 1;
+		$dir = SORT_ASC;
 		$arrow = '';
-		if ($arr[1] == $this->sort_field)
-		{
-			$order = -$this->sort_order;
-			$arrow = ($order == -1) ? '&darr;':'&uarr;';
-		}
+		$order = $this->order;
 		
-		$title = $this->fields[$arr[1]]->title;
+		if (array_key_exists($sort,$order))
+		{
+			$b_end = ($sort == array_shift(array_keys($order)));
+			$b_order = ($order[$sort] == SORT_ASC);
+			$dir = ($b_end xor $b_order) ? SORT_ASC : SORT_DESC;
+			$arrow = $b_end ? ($b_order ? '&uarr;' : '&darr;') : '';
+			unset($order[$sort]);
+		}
+		$title = $this->fields[$field]->title;
 		$r_page = rawurlencode($this->page);
 		$r_config = rawurlencode($this->config->config_name);
-		$r_field = rawurlencode($arr[1]);
+		$_order = array("$sort:$dir");
+		foreach ($order as $key=>$value)
+		{
+			$_order[] = "$key:$value";
+		}
+		$r_order = rawurlencode(join(';',$_order));
 		
-		return "[[$title$arrow>$script?plugin=tracker_list&refer=$r_page&config=$r_config&field=$r_field&order=$order]]";
+		return "[[$title$arrow>$script?plugin=tracker_list&refer=$r_page&config=$r_config&order=$r_order]]";
 	}
 	function toString($limit=NULL)
 	{
