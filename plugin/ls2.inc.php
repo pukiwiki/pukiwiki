@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ls2.inc.php,v 1.19 2004/08/11 22:56:04 henoheno Exp $
+// $Id: ls2.inc.php,v 1.20 2004/08/12 14:26:58 henoheno Exp $
 //
 
 /*
@@ -10,7 +10,7 @@
 配下のページの見出し(*,**,***)の一覧を表示する
 
 * Usage
- #ls2(パターン[,パラメータ])
+ #ls2(パターン[,title|include|link|reverse|compact, ...],タイトル)
 
 * パラメータ
 
@@ -32,6 +32,10 @@ actionプラグインを呼び出すリンクを表示
 - compact
 見出しレベルを調整する
 LS2_LIST_COMPACTがTRUEの時は無効(変化しない)
+
+- タイトル
+見出しのタイトルを指定する
+
 */
 
 //見出しアンカーの書式
@@ -91,9 +95,10 @@ function plugin_ls2_convert()
 		'_args'   => array(),
 		'_done'   => FALSE
 	);
-	array_walk($args, 'ls2_check_arg', &$params);
+	array_walk($args, 'ls2_check_arg', & $params);
+
 	$title = (count($params['_args']) > 0) ?
-		join(',', $params['_args']) :
+		htmlspecialchars(join(',', $params['_args'])) :
 		str_replace('$1', htmlspecialchars($prefix), $_ls2_msg_title);
 
 	if ($params['link'])
