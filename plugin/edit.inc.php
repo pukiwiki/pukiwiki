@@ -2,30 +2,33 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.11 2003/06/22 06:37:18 arino Exp $
+// $Id: edit.inc.php,v 1.12 2004/07/02 12:47:48 henoheno Exp $
 //
+
 // 編集
 // cmd=edit
 function plugin_edit_action()
 {
-	global $vars,$_title_edit;
-	
-	check_editable($vars['page'], true, true);
-	
-	if (array_key_exists('preview',$vars) or array_key_exists('template',$vars)) {
+	global $vars, $_title_edit;
+
+	$page = isset($vars['page']) ? $vars['page'] : '';
+
+	check_editable($page, true, true);
+
+	if (isset($vars['preview']) or isset($vars['template'])) {
 		return plugin_edit_preview();
-	}
-	else if (array_key_exists('write',$vars)) {
+	} else if (isset($vars['write'])) {
 		return plugin_edit_write();
 	}
-	
-	$postdata = @join('',get_source($vars['page']));
+
+	$postdata = @join('', get_source($page));
 	if ($postdata == '') {
-		$postdata = auto_template($vars['page']);
+		$postdata = auto_template($page);
 	}
-	
-	return array('msg'=>$_title_edit,'body'=>edit_form($vars['page'],$postdata));
+
+	return array('msg'=>$_title_edit, 'body'=>edit_form($page, $postdata));
 }
+
 // プレビュー
 function plugin_edit_preview()
 {
