@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mail.php,v 1.2 2004/07/17 10:16:47 henoheno Exp $
+// $Id: mail.php,v 1.3 2004/07/17 10:37:33 henoheno Exp $
 //
 
 // APOP/POP Before SMTP
@@ -38,11 +38,11 @@ function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 	}
 	$challenge = array();
 	if ($pop_auth_use_apop && preg_match('/<.*>/', $message, $challenge)) {
-		// APOP auth
+		$method = 'APOP'; // APOP auth
 		$response = md5($challenge[0] . $pop_passwd);
 		fputs($fp, 'APOP ' . $pop_userid . ' ' . $response . "\r\n");
 	} else {
-		// POP auth
+		$method = 'POP'; // POP auth
 		fputs($fp, 'USER ' . $pop_userid . "\r\n");
 		$message = fgets($fp, 1024); // 512byte max
 		if (! preg_match('/^\+OK /', $message)) {
@@ -59,7 +59,7 @@ function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 	fclose($fp);
 
 	if (! preg_match('/^\+OK /', $result)) {
-		return ("pop_before_smtp(): Authentication failed");
+		return ("pop_before_smtp(): $method authentication failed");
 	} else {
 		return TRUE;	// Success
 	}
