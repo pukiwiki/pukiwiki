@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.45 2004/08/05 13:39:27 henoheno Exp $
+//  $Id: attach.inc.php,v 1.46 2004/08/05 13:46:59 henoheno Exp $
 //
 
 /*
@@ -705,6 +705,8 @@ class AttachPages
 
 	function toString($page = '', $flat = FALSE)
 	{
+		global $non_list;
+
 		if ($page != '') {
 			if (! isset($this->pages[$page])) {
 				return '';
@@ -718,6 +720,7 @@ class AttachPages
 		sort($pages);
 
 		foreach ($pages as $page) {
+			if (preg_match("/$non_list/", $page)) continue;
 			$ret .= '<li>' . $this->pages[$page]->toString($flat) . "</li>\n";
 		}
 		return "\n<ul>\n" . $ret . "</ul>\n";
