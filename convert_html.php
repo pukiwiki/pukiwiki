@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.41 2003/05/29 09:25:43 arino Exp $
+// $Id: convert_html.php,v 1.42 2003/06/02 10:03:20 arino Exp $
 //
 function convert_html($lines)
 {
@@ -392,18 +392,23 @@ class TableCell extends Block
 		parent::Block();
 		$this->style = array();
 		
-		while (preg_match('/^(?:(LEFT|CENTER|RIGHT)|(BG)?COLOR\(([#\w]+)\)):(.*)$/',$text,$matches))
+		while (preg_match('/^(?:(LEFT|CENTER|RIGHT)|(BG)?COLOR\(([#\w]+)\)|SIZE\(([\d\w]+)\)):(.*)$/',$text,$matches))
 		{
 			if ($matches[1])
 			{
 				$this->style['align'] = 'text-align:'.strtolower($matches[1]).';';
-				$text = $matches[4];
+				$text = $matches[5];
 			}
 			else if ($matches[3])
 			{
 				$name = $matches[2] ? 'background-color' : 'color';
 				$this->style[$name] = $name.':'.htmlspecialchars($matches[3]).';';
-				$text = $matches[4];
+				$text = $matches[5];
+			}
+			else if ($matches[4])
+			{
+				$this->style['size'] = 'font-size:'.htmlspecialchars($matches[4]).';';
+				$text = $matches[5];
 			}
 		}
 		if ($is_template) {
@@ -639,8 +644,12 @@ class Pre extends Block
 	
 	function Pre(&$root,$text)
 	{
+		global $preformat_ltrim;
+		
 		parent::Block();
-		$this->elements[] = htmlspecialchars($text);
+		$this->elements[] = htmlspecialchars(
+			(!$preformat_ltrim or $text == '' or $text{0} != ' ') ? $text : substr($text,1)
+		);
 	}
 	function canContain(&$obj)
 	{
