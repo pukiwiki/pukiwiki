@@ -1,5 +1,5 @@
 <?
-// $Id: lookup.inc.php,v 1.4 2002/07/01 07:08:57 masui Exp $
+// $Id: lookup.inc.php,v 1.5 2002/07/12 11:53:56 masui Exp $
 
 function plugin_lookup_convert()
 {
@@ -16,7 +16,7 @@ function plugin_lookup_convert()
 	$ret = "<form action=\"$script\" method=\"post\">\n";
 	$ret.= "<div>\n";
 	$ret.= "<input type=\"hidden\" name=\"plugin\" value=\"lookup\" />\n";
-	$ret.= "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n";
+	$ret.= "<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($vars["page"])."\" />\n";
 	$ret.= "<input type=\"hidden\" name=\"inter\" value=\"$iwn\" />\n";
 	$ret.= "$iwn:\n";
 	$ret.= "<input type=\"text\" name=\"page\" size=\"30\" value=\"$default\" />\n";
