@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mbstring.php,v 1.11 2004/06/19 03:58:43 henoheno Exp $
+// $Id: mbstring.php,v 1.12 2004/06/19 04:03:24 henoheno Exp $
 //
 
 /*
@@ -10,7 +10,8 @@
  *
  * 注意事項
  *
- * 1. 実際に漢字コード変換を行わせるためには、別途jcodeをインストールする必要があります。
+ * 1. 実際に漢字コード変換を行わせるためには、別途 jcode.php
+ *    (TOMO作)をインストールする必要があります。
  *
  *   http://www.spencernetwork.org/jcode/ よりjcodeを入手し、
  *   以下の様に展開してください。
