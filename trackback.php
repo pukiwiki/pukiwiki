@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.7 2003/07/27 13:54:58 arino Exp $
+// $Id: trackback.php,v 1.8 2003/08/01 06:32:57 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -111,12 +111,12 @@ function tb_send($page,$data)
 	foreach ($links as $link)
 	{
 		// URL から TrackBack ID を取得する
-		$tb_id = tb_GetID($link);
+		$tb_id = tb_get_url($link);
 		if (empty($tb_id)) // TrackBack に対応していない
 		{
 			continue;
 		}
-		$result = http_request($link,'POST','',$putdata);
+		$result = http_request($tb_id,'POST','',$putdata);
 		// FIXME: エラー処理を行っても、じゃ、どうする？だしなぁ...
 	}
 }
