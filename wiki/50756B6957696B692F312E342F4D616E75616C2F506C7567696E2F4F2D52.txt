@@ -344,9 +344,9 @@
 ~★☆☆☆☆
 :書式|
 ~''?plugin=rss''
-[&color(blue){&ver=};&color(blue){0.91};|
-|&color(blue){1.0};|
-|&color(blue){2.0};]
+[&color(blue){&ver=};[&color(blue){0.91};|
+&color(blue){1.0};|
+&color(blue){2.0};]]
 :概要|
 ~RecentChangesをRSS(RDF Site Summary)に変換して出力します。
 :引数|
