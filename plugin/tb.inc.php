@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.3 2003/08/06 05:49:50 arino Exp $
+// $Id: tb.inc.php,v 1.4 2003/08/20 10:55:36 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -34,7 +34,17 @@ function plugin_tb_action()
 				break;
 		}
 	}
-	return array('msg'=>'','body'=>'');
+	$pages = get_existpages(TRACKBACK_DIR,'.txt');
+	
+	if (count($pages) == 0)
+	{
+		return array('msg'=>'','body'=>'');
+	}
+	
+	return array(
+		'msg' => 'trackback list',
+		'body' => page_list($pages,'read',FALSE)
+	);
 }
 
 // TrackBack Ping データ保存(更新)
@@ -87,7 +97,7 @@ function tb_save()
 	}
 	
 	// TrackBack Ping のデータを更新
-	$filename = TRACKBACK_DIR.$tb_id.'.txt';
+	$filename = tb_get_filename($page);
 	$data = tb_get($filename);
 	
 	$items = array(UTIME);
@@ -141,7 +151,7 @@ function tb_mode_rss($tb_id)
 	}
 	
 	$items = '';
-	foreach (tb_get(TRACKBACK_DIR.$tb_id.'.txt') as $arr)
+	foreach (tb_get(tb_get_filename($page)) as $arr)
 	{
 		$utime = array_shift($arr);
 		list ($url,$title,$excerpt,$blog_name) = array_map(
@@ -202,7 +212,7 @@ function tb_mode_view($tb_id)
 	$tb_refer = sprintf($_tb_refer,"<a href=\"$script?$r_page\">'$page'</a>","<a href=\"$script\">$page_title</a>");
 
 	
-	$data = tb_get(TRACKBACK_DIR.$tb_id.'.txt');
+	$data = tb_get(tb_get_filename($page));
 	
 	// 最新版から整列
 	usort($data,create_function('$a,$b','return $b[0] - $a[0];'));
