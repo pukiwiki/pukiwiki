@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.62 2003/11/07 03:12:05 arino Exp $
+// $Id: make_link.php,v 1.63 2003/11/07 03:14:32 arino Exp $
 //
 
 // リンクを付加する
@@ -111,7 +111,7 @@ class InlineConverter
 	{
 		foreach (array_keys($this->converters) as $start)
 		{
-			if ($arr[$start] != '')
+			if ($arr[$start] == $arr[0])
 			{
 				return $this->converters[$start];
 			}
