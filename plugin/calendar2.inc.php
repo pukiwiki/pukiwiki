@@ -1,9 +1,10 @@
 <?
-// $Id: calendar2.inc.php,v 1.8 2002/08/05 09:28:27 masui Exp $
+// $Id: calendar2.inc.php,v 1.9 2002/08/21 17:21:27 masui Exp $
 
 function plugin_calendar2_convert()
 {
 	global $script,$weeklabels,$vars,$command,$WikiName,$BracketName,$post,$get;
+	global $_calendar2_plugin_edit, $_calendar2_plugin_empty;
 	
 	$args = func_get_args();
 	
@@ -208,11 +209,11 @@ function plugin_calendar2_convert()
 		$page_ = $vars['page'];
 		$get['page'] = $post['page'] = $vars['page'] = $page;
 		$str = convert_html(join("",file(get_filename(encode($page)))));
-		$str .= "<hr /><a class=\"small\" href=\"$script?cmd=edit&amp;page=".rawurlencode($page)."\">[この日記を編集]</a>";
+		$str .= "<hr /><a class=\"small\" href=\"$script?cmd=edit&amp;page=".rawurlencode($page)."\">$_calendar2_plugin_edit</a>";
 		$get['page'] = $post['page'] = $vars['page'] = $page_;
 	}
 	else {
-		$str = make_link(sprintf('[[%s%4d-%02d-%02d]]',$prefix, $today[year], $today[mon], $today[mday])).'は空です。';
+		$str = make_link(sprintf($_calendar2_plugin_empty,sprintf('[[%s%4d-%02d-%02d]]',$prefix, $today[year], $today[mon], $today[mday])));
 	}
 	
 	$ret .= "</td><td valign=\"top\">".$str."</td></tr></table>";
