@@ -634,3 +634,18 @@ div.jumpmenu{
 {
      clear:both;
 }
+
+/* hr.inc.php */
+hr.short_line
+{
+	text-align:center;
+	width:80%;
+	border-style:soild;
+	border-color:#333333;
+	border-width:1px 0px;
+}
+
+/* br.inc.php */
+br.spacer
+{
+}
