@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.23 2005/01/08 11:20:08 henoheno Exp $
+// $Id: html.php,v 1.24 2005/01/08 11:45:44 henoheno Exp $
 //
 // HTML-publishing related functions
 
@@ -164,7 +164,7 @@ function edit_form($page, $postdata, $digest = 0, $b_template = TRUE)
 
 	if($load_template_func && $b_template) {
 		$pages  = array();
-		$non_list_pattern = '#' . $non_list . '#';
+		$non_list_pattern = '/' . $non_list . '/';
 		foreach(get_existpages() as $_page) {
 			if ($_page == $whatsnew || preg_match($non_list_pattern, $_page))
 				continue;
@@ -242,7 +242,7 @@ function make_related($page, $tag = '')
 	}
 
 	$_links = array();
-	$non_list_pattern = '#' . $non_list . '#';
+	$non_list_pattern = '/' . $non_list . '/';
 	foreach ($links as $page=>$lastmod) {
 		if (preg_match($non_list_pattern, $page)) continue;
 

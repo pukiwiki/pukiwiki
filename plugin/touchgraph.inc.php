@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: touchgraph.inc.php,v 1.7 2005/01/03 12:59:01 henoheno Exp $
+// $Id: touchgraph.inc.php,v 1.8 2005/01/08 11:45:44 henoheno Exp $
 //
 // Output an index for 'TouchGraph WikiBrowser'
 // http://www.touchgraph.com/
@@ -34,7 +34,7 @@ function plugin_touchgraph_rel()
 {
 	global $non_list;
 
- 	$non_list_pattern = '#' . $non_list . '#';
+ 	$non_list_pattern = '/' . $non_list . '/';
 	foreach (get_existpages() as $page) {
 		if (preg_match($non_list_pattern, $page)) continue;
 
@@ -56,7 +56,7 @@ function plugin_touchgraph_ref()
 {
 	global $non_list;
  
- 	$non_list_pattern = '#' . $non_list . '#';
+ 	$non_list_pattern = '/' . $non_list . '/';
 	foreach (get_existpages() as $page) {
 		if (preg_match($non_list_pattern, $page)) continue;
 
