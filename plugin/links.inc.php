@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: links.inc.php,v 1.9 2003/02/26 08:53:51 panda Exp $
+// $Id: links.inc.php,v 1.10 2003/02/28 14:41:16 panda Exp $
 //
 
 function plugin_links_action()
@@ -82,7 +82,7 @@ function links_update_file($page)
 {
 	global $whatsnew;
 	
-	$obj = new InlineConverter();
+	$obj = new InlineConverter(array('page','auto'));
 	$time = is_page($page) ? get_filetime($page) : 0;
 	
 	$rel_old = array();
@@ -172,7 +172,7 @@ function links_init_db()
 		$pages[$row['name']] = $row['id'];
 	}
 	
-	$obj = new InlineConverter(); 
+	$obj = new InlineConverter(array('page','auto')); 
 	foreach ($pages as $page=>$id) {
 		$links = $obj->get_objects(join('',get_source($page)),$page);
 		foreach ($links as $_obj) {
