@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.4 2005/01/08 02:36:11 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.5 2005/01/08 04:13:18 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -233,6 +233,16 @@ case 'yukon':
 	break;
 }
 
+// Adjust DTD (between theme(=CSS) and MSIE bug)
+// NOTE:
+//    PukiWiki default: PKWK_DTD_XHTML_1_1
+//    tDiary's default: PKWK_DTD_HTML_4_01_STRICT
+switch($theme){
+case 'christmas':
+	$pkwk_dtd = PKWK_DTD_HTML_4_01_STRICT; // or centering will be ignored via MSIE
+	break;
+}
+
 $lang  = $_LANG['skin'];
 $link  = $_LINK;
 
@@ -249,7 +259,11 @@ header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
 // Output HTML DTD, <html>, and receive content-type
-$meta_content_type = pkwk_output_dtd(PKWK_DTD_HTML_4_01);
+if (isset($pkwk_dtd)) {
+	$meta_content_type = pkwk_output_dtd($pkwk_dtd);
+} else {
+	$meta_content_type = pkwk_output_dtd();
+}
 
 ?>
 <head>

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: color.inc.php,v 1.19 2004/12/22 14:34:24 henoheno Exp $
+// $Id: color.inc.php,v 1.20 2005/01/08 04:13:19 henoheno Exp $
 //
 // Text color plugin
 
@@ -13,7 +13,7 @@ define('PLUGIN_COLOR_USAGE', '&color(foreground[,background]){text};');
 define('PLUGIN_COLOR_REGEX', '/^(#[0-9a-f]{3}|#[0-9a-f]{6}|[a-z-]+)$/i');
 function plugin_color_inline()
 {
-	global $html_transitional;
+	global $pkwk_dtd;
 
 	$args = func_get_args();
 	$text = array_pop($args); // htmlspecialchars(text)
@@ -33,7 +33,7 @@ function plugin_color_inline()
 			return '&color():Invalid color: ' . htmlspecialchars($col) . ';';
 	}
 
-	if (PLUGIN_COLOR_ALLOW_CSS === TRUE || $html_transitional === FALSE) {
+	if (PLUGIN_COLOR_ALLOW_CSS === TRUE || ! isset($pkwk_dtd) || $pkwk_dtd == PKWK_DTD_XHTML_1_1) {
 		$delimiter = '';
 		if ($color != '' && $bgcolor != '') $delimiter = '; ';
 		if ($color   != '') $color   = 'color:' . $color;

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: paint.inc.php,v 1.16 2004/10/09 08:01:58 henoheno Exp $
+// $Id: paint.inc.php,v 1.17 2005/01/08 04:13:19 henoheno Exp $
 //
 
 /*
@@ -44,9 +44,7 @@ define('PAINT_FORMAT_NOMSG',"\x08NAME\x08 \x08NOW\x08");
 
 function plugin_paint_action()
 {
-	global $script,$vars;
-	global $_paint_messages;
-	global $html_transitional;
+	global $script, $vars, $pkwk_dtd, $_paint_messages;
 
 	//戻り値を初期化
 	$retval['msg'] = $_paint_messages['msg_title'];
@@ -150,7 +148,8 @@ function plugin_paint_action()
  </div>
 EOD;
 		// XHTML 1.0 Transitional
-		$html_transitional = TRUE;
+		if (! isset($pkwk_dtd) || $pkwk_dtd == PKWK_DTD_XHTML_1_1)
+			$pkwk_dtd = PKWK_DTD_XHTML_1_0_TRANSITIONAL;
 	}
 	return $retval;
 }
