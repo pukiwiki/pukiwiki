@@ -1,5 +1,7 @@
 <?php
-// $Id: template.inc.php,v 1.19 2004/10/09 09:05:33 henoheno Exp $
+// $Id: template.inc.php,v 1.20 2005/01/23 08:25:16 henoheno Exp $
+//
+// Load template plugin
 
 define('MAX_LEN', 60);
 
@@ -11,12 +13,13 @@ function plugin_template_action()
 	global $_btn_template_create, $_title_template;
 	global $_err_template_already, $_err_template_invalid, $_msg_template_force;
 
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 	if (! isset($vars['refer']) || ! is_page($vars['refer']))
 		return FALSE;
 
 	$lines = get_source($vars['refer']);
 
-	// #freeze¤òºï½ü
+	// Remove '#freeze'
 	if (! empty($lines) && strtolower(rtrim($lines[0])) == '#freeze')
 		array_shift($lines);
 
