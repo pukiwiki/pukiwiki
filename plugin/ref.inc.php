@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.11 2003/03/05 07:01:26 panda Exp $
+// $Id: ref.inc.php,v 1.12 2003/03/07 00:24:59 panda Exp $
 //
 
 /*
@@ -143,7 +143,7 @@ function plugin_ref_body($args,$page)
 		$is_image = preg_match("/\.(gif|png|jpe?g)$/i",$name);
 		if ($is_image and (bool)ini_get('allow_url_fopen'))
 		{
-			$size = getimagesize($name);
+			$size = @getimagesize($name);
 			if (is_array($size))
 			{
 				$width = $size[0];
@@ -182,7 +182,7 @@ function plugin_ref_body($args,$page)
 			$params['_error'] = 'file not found.';
 			return $params;
 		}
-		$size = getimagesize($file);
+		$size = @getimagesize($file);
 		$is_image = preg_match("/\.(gif|png|jpe?g)$/i",$name);
 		$width = $height = 0;
 		$url = $script.'?plugin=attach&amp;openfile='.rawurlencode($name).'&amp;refer='.rawurlencode($page);
