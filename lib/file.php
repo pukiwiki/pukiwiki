@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.11 2005/01/10 04:24:31 henoheno Exp $
+// $Id: file.php,v 1.12 2005/01/18 12:54:53 henoheno Exp $
 //
 // File related functions
 
@@ -85,10 +85,10 @@ function make_str_rules($str)
 // Output to a file
 function file_write($dir, $page, $str, $notimestamp = FALSE)
 {
-	global $update_exec;
-	global $_msg_invalidiwn;
+	global $update_exec, $_msg_invalidiwn;
 	global $notify, $notify_diff_only, $notify_to, $notify_subject, $notify_header;
 	global $smtp_server, $smtp_auth;
+	global $whatsdeleted, $maxshow_deleted;
 
 	if (! is_pagename($page))
 		die_message(str_replace('$1', htmlspecialchars($page),
@@ -100,7 +100,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 
 	if ($dir == DATA_DIR && $str == '' && file_exists($file)) {
 		unlink($file);
-		put_recentdeleted($page);
+		add_recent($page, $whatsdeleted, '', $maxshow_deleted); // RecentDeleted
 	}
 
 	if ($str != '') {
@@ -152,33 +152,39 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 }
 
 // Update RecentDeleted
-function put_recentdeleted($page)
+function add_recent($page, $recentpage, $subject = '', $limit = 0)
 {
-	global $whatsdeleted, $maxshow_deleted;
+	if ($limit == 0 || $page == '' || $recentpage == '') return;
 
-	if ($maxshow_deleted == 0) return;
-
+	// Load
 	$lines = $matches = array();
-	foreach (get_source($whatsdeleted) as $line)
+	foreach (get_source($recentpage) as $line)
 		if (preg_match('/^-(.+) - (\[\[.+\]\])$/', $line, $matches))
 			$lines[$matches[2]] = $line;
 
 	$_page = '[[' . $page . ']]';
+
+	// Remove a report about the same page
 	if (isset($lines[$_page])) unset($lines[$_page]);
 
-	array_unshift($lines, '-' . format_date(UTIME) . ' - ' . $_page . "\n");
-	$lines = array_splice($lines, 0, $maxshow_deleted);
+	// Add
+	array_unshift($lines, '-' . format_date(UTIME) . ' - ' . $_page .
+		htmlspecialchars($subject) . "\n");
 
-	$fp = fopen(get_filename($whatsdeleted), 'w') or
+	// Get latest $limit reports
+	$lines = array_splice($lines, 0, $limit);
+
+	// Update
+	$fp = fopen(get_filename($recentpage), 'w') or
 		die_message('Cannot write page file ' .
-		htmlspecialchars($whatsdeleted) .
+		htmlspecialchars($recentpage) .
 		'<br />Maybe permission is not writable or filename is too long');
-
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
-	fputs($fp, join('', $lines));
+	fputs($fp, '#freeze'    . "\n");
 	fputs($fp, '#norelated' . "\n"); // :)
+	fputs($fp, join('', $lines));
 	flock($fp, LOCK_UN);
 	fclose($fp);
 }
