@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.16 2002/07/09 13:19:05 kawara Exp $
+// $Id: html.php,v 1.17 2002/07/10 06:25:57 kawara Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -132,8 +132,20 @@ function convert_html($string)
 				$_bq = false;
 			}
 
-			if($line_head == '#' ){
-				array_push($result, htmlspecialchars($line));
+			if(preg_match("/^\#([^\(]+)(.*)$/",$line,$out)){
+				if(exist_plugin_convert($out[1])) {
+					$result = array_merge($result,$saved); $saved = array();
+					
+					if($out[2]) {
+						$_plugin = preg_replace("/^\#([^\(]+)\((.*)\)$/ex","do_plugin_convert('$1','$2')",$line);
+					} else {
+						$_plugin = preg_replace("/^\#([^\(]+)$/ex","do_plugin_convert('$1','$2')",$line);
+					}
+					// 先頭に空白を入れることによりとりあえずpreの扱いと同様にinline2の働きを抑える、う〜ん、無茶。
+					array_push($result,"\t$_plugin");
+				} else {
+					array_push($result, htmlspecialchars($line));
+				}
 			}
 			else if(preg_match("/^(\*{1,3})(.*)/",$line,$out))
 			{
@@ -342,7 +354,7 @@ function back_push($tag, $level)
 	}
 }
 
-// リンクの付加その他
+// インライン要素のパース (注釈)
 function inline($line)
 {
 	$line = htmlspecialchars($line);
@@ -358,12 +370,11 @@ function inline($line)
 	return $line;
 }
 
-// リンクの付加その他2
+// インライン要素のパース (リンク、関連一覧、見出し一覧)
 function inline2($str)
 {
 	global $WikiName,$BracketName,$InterWikiName,$vars,$related,$related_link,$script;
 	$cnts_plain = array();
-	$cnts_plugin = array();
 	$arykeep = array();
 
 	for($cnt=0;$cnt<count($str);$cnt++)
@@ -373,14 +384,6 @@ function inline2($str)
 			$arykeep[$cnt] = $str[$cnt];
 			$str[$cnt] = "";
 			$cnts_plain[] = $cnt;
-		}
-		else if(preg_match("/^\#([^\(]+)\(?(.*)\)?$/",$str[$cnt],$match))
-		{
-		  if(exist_plugin_convert($match[1])) {
-			$aryplugins[$cnt] = $str[$cnt];
-			$str[$cnt] = "";
-			$cnts_plugin[] = $cnt;
-		  }
 		}
 	}
 
@@ -407,9 +410,6 @@ function inline2($str)
 
 	$str = make_user_rules($str);
 
-	$aryplugins = preg_replace("/^\#([^\(]+)$/ex","do_plugin_convert('$1','$2')",$aryplugins);
-	$aryplugins = preg_replace("/^\#([^\(]+)\((.*)\)$/ex","do_plugin_convert('$1','$2')",$aryplugins);
-
 	$tmp = $str;
 	$str = preg_replace("/^#norelated$/","",$str);
 	if($tmp != $str)
@@ -417,9 +417,6 @@ function inline2($str)
 
 	foreach($cnts_plain as $cnt)
 		$str[$cnt] = $arykeep[$cnt];
-
-	foreach($cnts_plugin as $cnt)
-		$str[$cnt] = $aryplugins[$cnt];
 
 	return $str;
 }
