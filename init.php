@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.73 2004/04/03 17:08:41 arino Exp $
+// $Id: init.php,v 1.74 2004/06/22 13:39:23 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -101,39 +101,32 @@ require(UA_INI_FILE);
 
 /////////////////////////////////////////////////
 // 設定ファイルの変数チェック
-if(!is_writable(DATA_DIR)) {
-	die_message('DATA_DIR is not found or not writable.');
+$die = FALSE; $message = $temp = '';
+
+foreach(array('DATA_DIR', 'DIFF_DIR', 'BACKUP_DIR', 'CACHE_DIR') as $dir){
+	if(!is_writable(constant($dir))) { $die = TRUE; $temp = "${temp}Directory is not found or not writable ($dir)\n"; }
 }
-if(!is_writable(DIFF_DIR)) {
-	die_message('DIFF_DIR is not found or not writable.');
+if ($temp) { $message = "$temp\n"; }
+
+$temp = '';
+foreach(array('rss_max', 'page_title', 'note_hr', 'related_link', 'show_passage', 'rule_related_str', 'load_template_func') as $var){
+	if (!isset(${$var})){ $temp .= "\$$var\n"; }
 }
-if($do_backup && !is_writable(BACKUP_DIR)) {
-	die_message('BACKUP_DIR is not found or not writable.');
+if ($temp) { $die = TRUE; $message = "${message}Variable(s) not found: (Maybe the old *.ini.php?)\n" . $temp . "\n"; }
+
+$temp = '';
+foreach(array('LANG', 'PLUGIN_DIR') as $def){
+	if (!defined($def)) $temp .= "$def\n";
 }
-if(!is_writable(CACHE_DIR)) {
-	die_message('CACHE_DIR is not found or not writable.');
-}
-$wrong_ini_file = '';
-if (!isset($rss_max)) $wrong_ini_file .= '$rss_max ';
-if (!isset($page_title)) $wrong_ini_file .= '$page_title ';
-if (!isset($note_hr)) $wrong_ini_file .= '$note_hr ';
-if (!isset($related_link)) $wrong_ini_file .= '$related_link ';
-if (!isset($show_passage)) $wrong_ini_file .= '$show_passage ';
-if (!isset($rule_related_str)) $wrong_ini_file .= '$rule_related_str ';
-if (!isset($load_template_func)) $wrong_ini_file .= '$load_template_func ';
-if (!defined('LANG')) $wrong_ini_file .= 'LANG ';
-if (!defined('PLUGIN_DIR')) $wrong_ini_file .= 'PLUGIN_DIR ';
-if ($wrong_ini_file) {
-	die_message('The setting file runs short of information.<br />The version of a setting file may be old.<br /><br />These option are not found : '.$wrong_ini_file);
-}
-if (!is_page($defaultpage)) {
-	touch(get_filename($defaultpage));
-}
-if (!is_page($whatsnew)) {
-	touch(get_filename($whatsnew));
-}
-if (!is_page($interwiki)) {
-	touch(get_filename($interwiki));
+if ($temp) { $die = TRUE; $message = "${message}Define(s) not found: (Maybe the old *.ini.php?)\n" . $temp . "\n"; }
+
+if($die){ die_message(nl2br("\n\n" . $message)); }
+
+/////////////////////////////////////////////////
+// 必須のページが存在しなければ、空のファイルを作成する
+$pages = array($defaultpage, $whatsnew, $interwiki);
+foreach($pages as $page){
+	if (!is_page($page)) { touch(get_filename($page)); }
 }
 
 /////////////////////////////////////////////////
