@@ -2,11 +2,11 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: color.inc.php,v 1.11 2004/11/21 10:09:39 henoheno Exp $
+// $Id: color.inc.php,v 1.12 2004/11/21 11:38:57 henoheno Exp $
 //
 // Text color plugin
 
-define('PLUGIN_COLOR_ALLOW_CSS', FALSE); // TRUE, FALSE
+define('PLUGIN_COLOR_ALLOW_CSS', TRUE); // TRUE, FALSE
 
 // ----
 define('PLUGIN_COLOR_USAGE', '&color(foreground[,background]){text};');
