@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pcomment.inc.php,v 1.38 2005/01/30 01:13:11 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.39 2005/03/06 16:39:14 teanan Exp $
 //
 // pcomment plugin - Insetring comment into specified (another) page
 
@@ -188,7 +188,10 @@ function pcmt_insert()
 	global $script, $vars, $now;
 	global $_title_updated, $_no_name, $_pcmt_messages;
 
+	$refer = isset($vars['refer']) ? $vars['refer'] : '';
 	$page = isset($vars['page']) ? $vars['page'] : '';
+	$page = get_fullname($page, $refer);
+
 	if (! is_pagename($page))
 		return array('msg'=>'invalid page name.', 'body'=>'cannot add comment.' , 'collided'=>TRUE);
 
@@ -215,7 +218,6 @@ function pcmt_insert()
 	}
 	$msg = rtrim($msg);
 
-	$refer = isset($vars['refer']) ? $vars['refer'] : '';
 	if (! is_page($page)) {
 		$postdata = '[[' . htmlspecialchars(strip_bracket($refer)) . "]]\n\n-$msg\n";
 	} else {
