@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.9.2.3 2003/09/12 01:18:42 arino Exp $
+// $Id: func.php,v 1.9.2.4 2004/06/26 13:29:47 henoheno Exp $
 /////////////////////////////////////////////////
 
 // 検索
@@ -373,10 +373,12 @@ function sanitize_null_character($param)
 	}
 	return $result;
 }
+
 // URLかどうか
 function is_url($text) {
 	return preg_match('/^(https?|ftp|news)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/', $text);
 }
+
 // pukiwiki.phpスクリプトのabsolute-uriを生成
 function get_script_uri()
 {
