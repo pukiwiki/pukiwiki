@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: paint.inc.php,v 1.12 2003/10/01 07:00:37 arino Exp $
+// $Id: paint.inc.php,v 1.13 2003/11/05 10:40:48 arino Exp $
 //
 
 /*
@@ -18,9 +18,6 @@
 
 */
 
-// upload dir(must set end of /) attach.inc.phpと合わせる
-define('PAINT_UPLOAD_DIR','./attach/');
-//
 // 挿入する位置 1:欄の前 0:欄の後
 define('PAINT_INSERT_INS',0);
 //
@@ -69,7 +66,7 @@ function plugin_paint_action()
 		$attachname = preg_replace('/^[^\.]+/',$filename,$file['name']);
 		//すでに存在した場合、 ファイル名に'_0','_1',...を付けて回避(姑息)
 		$count = '_0';
-		while (file_exists(PAINT_UPLOAD_DIR.encode($vars['refer']).'_'.encode($attachname)))
+		while (file_exists(UPLOAD_DIR.encode($vars['refer']).'_'.encode($attachname)))
 		{
 			$attachname = preg_replace('/^[^\.]+/',$filename.$count++,$file['name']);
 		}

@@ -5,15 +5,10 @@
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
  *
- * $Id: counter.inc.php,v 1.10 2003/04/23 08:26:19 arino Exp $
+ * $Id: counter.inc.php,v 1.11 2003/11/05 10:40:48 arino Exp $
  */
 
 // counter file
-if (!defined('COUNTER_DIR'))
-{
-	define('COUNTER_DIR', './counter/');
-}
-
 if (!defined('COUNTER_EXT'))
 {
 	define('COUNTER_EXT','.count');

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: popular.inc.php,v 1.7 2003/08/20 11:11:04 arino Exp $
+// $Id: popular.inc.php,v 1.8 2003/11/05 10:40:48 arino Exp $
 //
 
 /*
@@ -24,10 +24,6 @@
  * 2 - 表示させないページの正規表現             default なし
  * 3 - 通算(true)か今日(false)の一覧かのフラグ  default false
  */
-
-// counter file : counter プラグインで設定しているものと同じにして下さい。
-if (!defined('COUNTER_DIR'))
-	define('COUNTER_DIR', './counter/');
 
 function plugin_popular_convert()
 {

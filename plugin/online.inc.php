@@ -2,11 +2,11 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: online.inc.php,v 1.6 2003/05/16 05:55:20 arino Exp $
+// $Id: online.inc.php,v 1.7 2003/11/05 10:40:48 arino Exp $
 //
 
 // user list file
-define('USR_LST', 'counter/user.dat');
+define('USR_LST', COUNTER_DIR.'user.dat');
 // time out sec
 define('TIMEOUT', 300);
 

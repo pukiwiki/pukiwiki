@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.35 2003/10/20 03:12:43 arino Exp $
+//  $Id: attach.inc.php,v 1.36 2003/11/05 10:40:48 arino Exp $
 //
 
 /*
@@ -11,12 +11,6 @@
  changed by Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
  modified by PANDA <panda@arino.jp> http://home.arino.jp/
 */
-
-// upload dir(must set end of /)
-if (!defined('UPLOAD_DIR'))
-{
-	define('UPLOAD_DIR','./attach/');
-}
 
 // max file size for upload on PHP(PHP default 2MB)
 ini_set('upload_max_filesize','2M');

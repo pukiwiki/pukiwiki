@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.13 2003/09/03 05:53:45 arino Exp $
+// $Id: trackback.php,v 1.14 2003/11/05 10:42:00 arino Exp $
 /*
  * PukiWiki TrackBack プログラム
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -21,11 +21,6 @@
  * == Referer 対応分 ==
  * ref_save($page)        Referer データ保存(更新) // pukiwiki.php
  */
-
-if (!defined('TRACKBACK_DIR'))
-{
-	define('TRACKBACK_DIR','./trackback/');
-}
 
 // TrackBack Ping IDを取得
 function tb_get_id($page)

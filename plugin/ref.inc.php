@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.19 2003/06/30 05:06:48 arino Exp $
+// $Id: ref.inc.php,v 1.20 2003/11/05 10:40:48 arino Exp $
 //
 
 /*
@@ -43,12 +43,6 @@ imgのalt/hrefのtitleとして使用~
 ページ名やパラメータに見える文字列を使用するときは、#ref(hoge.png,,zoom)のように
 タイトルの前にカンマを余分に入れる
 */
-
-// upload dir(must set end of /)
-if (!defined('UPLOAD_DIR'))
-{
-	define('UPLOAD_DIR','./attach/');
-}
 
 // file icon image
 if (!defined('FILE_ICON'))
