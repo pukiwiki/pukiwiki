@@ -2,3 +2,53 @@
 	Order allow,deny
 	Deny from all
 </FilesMatch>
+
+<Files backup.php>
+	Order allow,deny
+	Deny from all
+</Files>
+
+<Files file.php>
+	Order allow,deny
+	Deny from all
+</Files>
+
+<Files func.php>
+	Order allow,deny
+	Deny from all
+</Files>
+
+<Files html.php>
+	Order allow,deny
+	Deny from all
+</Files>
+
+<Files init.php>
+	Order allow,deny
+	Deny from all
+</Files>
+
+<Files make_link.php>
+	Order allow,deny
+	Deny from all
+</Files>
+
+<Files mbstring.php>
+	Order allow,deny
+	Deny from all
+</Files>
+
+<Files plugin.php>
+	Order allow,deny
+	Deny from all
+</Files>
+
+<Files rss.php>
+	Order allow,deny
+	Deny from all
+</Files>
+
+<Files template.php>
+	Order allow,deny
+	Deny from all
+</Files>
