@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.62 2004/03/18 09:52:52 arino Exp $
+// $Id: convert_html.php,v 1.63 2004/04/04 14:17:18 arino Exp $
 //
 function convert_html($lines)
 {
@@ -728,7 +728,7 @@ class Div extends Element
 		
 		if (!preg_match("/^\#([^\(]+)(?:\((.*)\))?/", $text, $out) or !exist_plugin_convert($out[1]))
 		{
-			$this = new Inline($text);
+			$this = new Paragraph($text);
 			$this->last = &$this;
 			
 			return;
