@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.11 2004/09/25 15:12:09 henoheno Exp $
+// $Id: dump.inc.php,v 1.12 2004/09/26 11:30:48 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -308,8 +308,9 @@ define('TARLIB_STATUS_INIT',    0);		// 初期状態
 define('TARLIB_STATUS_OPEN',   10);		// 読み取り
 define('TARLIB_STATUS_CREATE', 20);		// 書き込み
 
-define('TARLIB_DATA_MODE',      '100666 ');	// ファイルパーミッション
-define('TARLIB_DATA_UGID',      '000000 ');	// uid / gid
+define('TARLIB_DATA_MODE',   '100666 ');	// ファイルパーミッション
+define('TARLIB_DATA_UGID',   '000000 ');	// uid / gid
+define('TARLIB_DATA_CHKBLANKS', '        ');
 
 // GNU拡張仕様(ロングファイル名対応)
 define('TARLIB_DATA_LONGLINK', '././@LongLink');
@@ -466,7 +467,7 @@ class tarlib
 
 			// チェックサムを取得しつつ、ブランクに置換していく
 			$checksum = '';
-			$chkblanks = TAR_DATA_CHKBLANKS;
+			$chkblanks = TARLIB_DATA_CHKBLANKS;
 			for ($i = 0; $i < TARLIB_HDR_CHKSUM_LEN; $i++ ) {
 				$checksum .= $buff{$i + TARLIB_HDR_CHKSUM_OFFSET};
 				$buff{$i + TARLIB_HDR_CHKSUM_OFFSET} = $chkblanks{$i};
@@ -681,7 +682,7 @@ class tarlib
 		}
 
 		// チェックサム計算用のブランクを設定
-		$chkblanks = TAR_DATA_CHKBLANKS;
+		$chkblanks = TARLIB_DATA_CHKBLANKS;
 		for($i = 0; $i < strlen($chkblanks); $i++ ) {
 			$tar_data[$i + TARLIB_HDR_CHKSUM_OFFSET] = $chkblanks{$i};
 		}
