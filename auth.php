@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: auth.php,v 1.2 2003/07/14 10:00:59 arino Exp $
+// $Id: auth.php,v 1.3 2003/12/02 09:31:18 arino Exp $
 //
 
 // 編集不可能なページを編集しようとしたとき
@@ -89,7 +89,15 @@ function basic_auth($page,$auth_flag,$exit_flag,$auth_pages,$title_cannot)
 		// 制限なし
 		return TRUE;
 	}
-	
+	// PHP_AUTH* 変数が未定義の場合
+	if (!isset($_SERVER['PHP_AUTH_USER'])
+		and !isset($_SERVER ['PHP_AUTH_PW'])
+		and isset($_SERVER['HTTP_AUTHORIZATION'])
+		and preg_match('/^Basic (.*)$/', $_SERVER['HTTP_AUTHORIZATION'],$matches))
+	{
+		// HTTP_AUTHORIZATION 変数を使用した Basic 認証
+		list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = explode(':', base64_decode($matches[1]));
+	}
 	// ユーザリストに含まれるいずれかのユーザと認証されればOK
 	if (!isset($_SERVER['PHP_AUTH_USER'])
 		or !in_array($_SERVER['PHP_AUTH_USER'],$user_list)
