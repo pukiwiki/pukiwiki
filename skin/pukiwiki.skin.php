@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.33 2005/01/08 02:36:11 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.34 2005/01/08 03:22:41 henoheno Exp $
 //
 // PukiWiki default skin
 
@@ -55,7 +55,7 @@ header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
 // Output HTML DTD, <html>, and receive content-type
-if (TRUE || $html_transitional) {
+if ($html_transitional) {
 	$meta_content_type = pkwk_output_dtd(PKWK_DTD_XHTML_1_0_TRANSITIONAL);
 } else {
 	$meta_content_type = pkwk_output_dtd();
