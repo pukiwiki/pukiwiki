@@ -1,50 +1,49 @@
 <?php
-/*
- * PukiWiki calendar_viewer plugin
- * $Id: calendar_viewer.inc.php,v 1.28 2004/12/30 09:40:39 henoheno Exp $
- * Based on calendar and recent plugin
- */
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: calendar_viewer.inc.php,v 1.29 2005/01/15 02:51:44 henoheno Exp $
+//
+// Calendar viewer plugin - List pages that calendar/calnedar2 plugin created
+// (Based on calendar and recent plugin)
 
+define('PLUGIN_CALENDAR_VIEWER_USAGE',
+	'#calendar_viewer(pagename,this|yyyy-mm|n|x*y[,mode[,separater]])');
 /*
- * 概要
- * calendarプラグインやcalendar2プラグインで作成したページを一覧表示するためのプラグインです。
- * 使い方
- *  #calendar_viewer(pagename,(this|yyyy-mm|n|x*y),[mode],[separater])
- *
  ** pagename
- * - calendar or calendar2プラグインを記述してるページ名
+ * - A working root of calendar or calendar2 plugin
+ *   pagename/2004-12-30
+ *   pagename/2004-12-31
+ *   ...
  *
  ** (yyyy-mm|n|this)
- * this    - 今月のページを一覧表示
- * yyyy-mm - yyyy-mmで指定した年月のページを一覧表示
- * n       - 先頭からn件を一覧表示
- * x*n     - 先頭より数えて x ページ目(先頭は0)から、y件づつ一覧表示
+ * this    - Show 'this month'
+ * yyyy-mm - Show pages at year:yyyy and month:mm
+ * n       - Show first n pages
+ * x*n     - Show first n pages from x-th page (0 = first)
  *
  ** [mode]
- * Default:past
- * past   - 今日以前のページの一覧表示モード。更新履歴や日記向き
- * future - 今日以降のページの一覧表示モード。イベント予定やスケジュール向き
- * view   - 過去から未来への一覧表示モード。表示抑止するページはありません
+ * past   - Show today, and the past below. Recommended for ChangeLogs and diaries (default)
+ * future - Show today, and the future below. Recommended for event planning and scheduling
+ * view   - Show all, from the past to the future
  *
  ** [separater]
- * - 年月日を区切るセパレータを指定。
- * - 省略可能。デフォルトは-。（calendar2なら省略でOK）
+ * - Specify separator of yyyy/mm/dd
+ * - Default: '-' (yyyy-mm-dd)
  *
  * TODO
- *  past or future で月単位表示するときに、それぞれ来月、先月の一覧へのリンクを表示しないようにする
+ *  Stop showing links 'next month' and 'previous month' with past/future mode for 'this month'
+ *    #calendar_viewer(pagename,this,past)
  */
 
 function plugin_calendar_viewer_convert()
 {
 	global $vars, $get, $post, $script;
-	global $_err_calendar_viewer_param, $_err_calendar_viewer_param2;
 	global $_msg_calendar_viewer_right, $_msg_calendar_viewer_left;
-	global $_msg_calendar_viewer_restrict;
+	global $_msg_calendar_viewer_restrict, $_err_calendar_viewer_param2;
 
 	static $viewed = array();
 
 	if (func_num_args() < 2)
-		return '#calendar_viewer(): ' . $_err_calendar_viewer_param . '<br />' . "\n";
+		return PLUGIN_CALENDAR_VIEWER_USAGE . '<br />' . "\n";
 
 	$func_args = func_get_args();
 
