@@ -29,18 +29,18 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.32 2004/07/05 11:23:40 henoheno Exp $
+// $Id: pukiwiki.php,v 1.33 2004/07/24 10:08:47 henoheno Exp $
 /////////////////////////////////////////////////
 
 /////////////////////////////////////////////////
 // データを格納するディレクトリや設定ファイルを置くディレクトリ
 
-if (! defined('DATA_HOME')) define('DATA_HOME', './');
+if (! defined('DATA_HOME')) define('DATA_HOME', '');
 
 /////////////////////////////////////////////////
 // サブルーチンの格納先ディレクトリ (他の *.phpファイル)
 
-if (! defined('SUB_DIR')) define('SUB_DIR', './');
+if (! defined('SUB_DIR')) define('SUB_DIR', '');
 
 /////////////////////////////////////////////////
 // サブルーチンの読み込み
