@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: md5.inc.php,v 1.1 2003/01/27 05:38:46 panda Exp $
+// $Id: md5.inc.php,v 1.2 2003/03/02 04:18:31 panda Exp $
 //
 //  MD5パスワードへの変換
 function plugin_md5_action()
@@ -11,7 +11,7 @@ function plugin_md5_action()
 	
 	return array(
 		'msg'=>'Make password of MD5',
-		'body'=> $vars['md5'].' : '.md5($vars['md5'])
+		'body'=> htmlspecialchars($vars['md5']).' : '.md5($vars['md5'])
 	);
 }
 ?>
