@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.55 2003/08/05 05:33:32 arino Exp $
+// $Id: make_link.php,v 1.56 2003/08/06 05:53:43 arino Exp $
 //
 
 // リンクを付加する
@@ -156,11 +156,7 @@ class Link
 	function splice($arr)
 	{
 		$count = $this->get_count() + 1;
-		$arr = array_splice($arr,$this->start,$count);
-		while (count($arr) < $count)
-		{
-			$arr[] = '';
-		}
+		$arr = array_pad(array_splice($arr,$this->start,$count),$count,'');
 		$this->text = $arr[0];
 		return $arr;
 	}
@@ -229,19 +225,14 @@ EOD;
 	}
 	function set($arr,$page)
 	{
-		$arr = $this->splice($arr);
+		list($all,$this->plain,$name,$this->param,$this->body) = $this->splice($arr);
 		
 		// 本来のプラグイン名およびパラメータを取得しなおす PHP4.1.2 (?R)対策
-		if (preg_match("/^{$this->pattern}/x",$arr[0],$matches)
-			and $matches[1] != $arr[1])
+		if (preg_match("/^{$this->pattern}/x",$all,$matches)
+			and $matches[1] != $this->plain)
 		{
-			array_shift($matches);
-			array_splice($arr,1,3,$matches);
+			list(,$this->plain,$name,$this->param) = $matches;
 		}
-		$this->plain = $arr[1];
-		$name = $arr[2];
-		$this->param = $arr[3];
-		$this->body = $arr[4];
 		return parent::setParam($page,$name,'plugin');
 	}
 	function toString()
@@ -286,10 +277,10 @@ EOD;
 		global $foot_explain;
 		static $note_id = 0;
 		
-		$arr = $this->splice($arr);
+		list(,$body) = $this->splice($arr);
 		
 		$id = ++$note_id;
-		$note = make_link($arr[1]);
+		$note = make_link($body);
 		
 		$foot_explain[$id] = <<<EOD
 <a id="notefoot_$id" href="#notetext_$id" class="note_super">*$id</a>
@@ -332,12 +323,8 @@ EOD;
 	}
 	function set($arr,$page)
 	{
-		$arr = $this->splice($arr);
-		
-		$name = htmlspecialchars($arr[3]);
-		$alias = ($arr[2] == '') ? $name : $arr[2];
-		return parent::setParam($page,$name,'url',$alias);
-		
+		list(,,$alias,$name) = $this->splice($arr);
+		return parent::setParam($page,htmlspecialchars($name),'url',$alias == '' ? $name : $alias);
 	}
 	function toString()
 	{
@@ -369,12 +356,8 @@ EOD;
 	}
 	function set($arr,$page)
 	{
-		$arr = $this->splice($arr);
-		
-		$name = htmlspecialchars($arr[1]);
-		$alias = $arr[2];
-		
-		return parent::setParam($page,$name,'url',$alias);
+		list(,$name,$alias) = $this->splice($arr);
+		return parent::setParam($page,htmlspecialchars($name),'url',$alias);
 	}
 	function toString()
 	{
@@ -408,12 +391,8 @@ EOD;
 	}
 	function set($arr,$page)
 	{
-		$arr = $this->splice($arr);
-		
-		$name = $arr[2];
-		$alias = ($arr[1] == '') ? $arr[2] : $arr[1];
-		
-		return parent::setParam($page,$name,'mailto',$alias);
+		list(,$alias,$name) = $this->splice($arr);
+		return parent::setParam($page,$name,'mailto',$alias == '' ? $name : $alias);
 	}
 	function toString()
 	{
@@ -433,60 +412,47 @@ class Link_interwikiname extends Link
 	}
 	function get_pattern()
 	{
-		$s1 = $this->start + 1;
-		$s3 = $this->start + 3;
-		$s5 = $this->start + 5;
+		$s2 = $this->start + 2;
 		return <<<EOD
 \[\[                  # open bracket
 (?:
- (\[\[)?              # (1) open bracket
- ((?:(?!\]\]).)+)>    # (2) alias
+ ((?:(?!\]\]).)+)>    # (1) alias
 )?
-(\[\[)?               # (3) open bracket
-((?:(?!\s|:|\]\]).)+) # (4) InterWiki
+(\[\[)?               # (2) open bracket
+((?:(?!\s|:|\]\]).)+) # (3) InterWiki
 (?<! > | >\[\[ )      # not '>' or '>[['
-(                     # (5)
- (?($s1)\]\]          #  close bracket if (1)
- |(?($s3)\]\])        #   or (3)
- )
-)?
 :                     # separator
-(?:
- ((?:(?<!>|\]\]).)+)  # (6) param
- (?($s5) |            # if !(5)
-  (?($s1)\]\]         #  close bracket if (1)
-  |(?($s3)\]\])       #   or (3)
-  )
- )
-)?
+((?:(?!>|\]\]).)+)    # (4) param
+(?($s2)\]\])          # close bracket if (2)
 \]\]                  # close bracket
 EOD;
 	}
 	function get_count()
 	{
-		return 6;
+		return 4;
 	}
 	function set($arr,$page)
 	{
 		global $script;
 		
-		$arr = $this->splice($arr);
+		list(,$alias,,$name,$this->param) = $this->splice($arr);
 		
-		$this->param = $arr[6];
-		if (preg_match('/^([^#]+)(#[A-Za-z][\w-]*)$/',$arr[6],$matches))
+		if (preg_match('/^([^#]+)(#[A-Za-z][\w-]*)$/',$this->param,$matches))
 		{
-			$this->anchor = $matches[2];
-			$this->param = $matches[1];
+			list(,$this->param,$this->anchor) = $matches;
 		}
-		$name = htmlspecialchars($arr[4].':'.$this->param);
-		$alias = ($arr[2] != '') ? $arr[2] : $arr[4].':'.$arr[6];
-		$this->url = get_interwiki_url($arr[4],$this->param);
+		$this->url = get_interwiki_url($name,$this->param);
 		if ($this->url === FALSE)
 		{
-			$this->url = $script.'?'.rawurlencode('[['.$arr[4].':'.$this->param.']]');
+			$this->url = $script.'?'.rawurlencode('[['.$name.':'.$this->param.']]');
 		}
 		
-		return parent::setParam($page,$name,'InterWikiName',$alias);
+		return parent::setParam(
+			$page,
+			htmlspecialchars($name.':'.$this->param),
+			'InterWikiName',
+			$alias == '' ? $name.':'.$this->param : $alias
+		);
 	}
 	function toString()
 	{
@@ -506,48 +472,30 @@ class Link_bracketname extends Link
 	{
 		global $WikiName,$BracketName;
 		
-		$s1 = $this->start + 1;
-		$s3 = $this->start + 3;
-		$s7 = $this->start + 7;
+		$s2 = $this->start + 2;
 		return <<<EOD
 \[\[                     # open bracket
-(?:
- (\[\[)?                 # (1) open bracket
- ((?:(?!\]\]).)+)>       # (2) alias
-)?
-(\[\[)?                  # (3) open bracket
-(                        # (4) PageName
- ($WikiName)             # (5) WikiName
+(?:((?:(?!\]\]).)+)>)?   # (1) alias
+(\[\[)?                  # (2) open bracket
+(                        # (3) PageName
+ (?:$WikiName)
  |
- ($BracketName)          # (6) BracketName
+ (?:$BracketName)
 )?
-(                        # (7)
- (?($s1)\]\]             #  close bracket if (1)
-  |(?($s3)\]\])          #   or (3)
- )
-)
-(\#(?:[a-zA-Z][\w-]*)?)? # (8) anchor
-(?($s7)|                 # if !(7)
- (?($s1)\]\]             #  close bracket if (1)
-  |(?($s3)\]\])          #   or (3)
- )
-)
+(\#(?:[a-zA-Z][\w-]*)?)? # (4) anchor
+(?($s2)\]\])             # close bracket if (2)
 \]\]                     # close bracket
 EOD;
 	}
 	function get_count()
 	{
-		return 8;
+		return 4;
 	}
 	function set($arr,$page)
 	{
 		global $WikiName;
 		
-		$arr = $this->splice($arr);
-		
-		$alias = $arr[2];
-		$name = $arr[4];
-		$this->anchor = $arr[8];
+		list(,$alias,,$name,$this->anchor) = $this->splice($arr);
 		
 		if ($name == '' and $this->anchor == '')
 		{
@@ -607,9 +555,8 @@ class Link_wikiname extends Link
 	}
 	function set($arr,$page)
 	{
-		$arr = $this->splice($arr);
-		$name = $alias = $arr[0];
-		return parent::setParam($page,$name,'pagename',$alias);
+		list($name) = $this->splice($arr);
+		return parent::setParam($page,$name,'pagename',$name);
 	}
 	function toString()
 	{
@@ -655,14 +602,13 @@ class Link_autolink extends Link
 	{
 		global $WikiName;
 		
-		$arr = $this->splice($arr);
-		$name = $alias = $arr[0];
+		list($name) = $this->splice($arr);
 		// 無視リストに含まれている、あるいは存在しないページを捨てる
 		if (in_array($name,$this->forceignorepages) or !is_page($name))
 		{
 			return FALSE;
 		}
-		return parent::setParam($page,$name,'pagename',$alias);
+		return parent::setParam($page,$name,'pagename',$name);
 	}
 	function toString()
 	{
@@ -711,9 +657,8 @@ class Link_rules extends Link
 	}
 	function set($arr,$page)
 	{
-		$arr = $this->splice($arr);
+		list($name) = $this->splice($arr);
 		
-		$name = $arr[0];
 		reset($this->replaces);
 		while (list($start,$replace) = each($this->replaces))
 		{
@@ -859,6 +804,7 @@ function get_interwiki_url($name,$param)
 			{
 				$param = '[['.mb_convert_encoding($param,'SJIS',SOURCE_ENCODING).']]';
 			}
+			$param = htmlspecialchars($param);
 			break;
 		
 		// moin系
@@ -875,6 +821,7 @@ function get_interwiki_url($name,$param)
 		// URLエンコードしない
 		case 'asis':
 		case 'raw':
+			$param = htmlspecialchars($param);
 			break;
 		
 		default:
