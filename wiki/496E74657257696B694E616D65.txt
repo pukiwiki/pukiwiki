@@ -22,9 +22,9 @@ InterWiki用のサーバリストです。
 -[http://pukiwiki.sourceforge.jp/dev/? pukiwiki.dev] euc
 
 ** Search Engine [#jaaa4e4c]
--[http://www.google.co.jp/search?ie=utf8&oe=utf8&q=$1&lr=lang_ja&hl=ja Google.jp] utf8 
+-[http://www.google.co.jp/search?ie=utf8&oe=utf8&q=$1&lr=lang_ja&hl=ja Google] utf8 
 //IEのGoogleツールバー対策でUTF-8になってます。
--[http://search.yahoo.co.jp/bin/search?p= Yahoo.jp] euc
+-[http://search.yahoo.co.jp/bin/search?p= Yahoo] euc
 -[http://www.wikipedia.org/wiki/? WikiPedia] euc
 
 ** 拡張InterWikiName [#q192ea38]
