@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: default.ini.php,v 1.11 2004/08/08 03:34:33 henoheno Exp $
+// $Id: default.ini.php,v 1.12 2004/08/08 05:18:20 henoheno Exp $
 //
 // PukiWiki setting file (user agent:default)
 
@@ -107,32 +107,32 @@ $line_rules = array(
 
 $facemark_rules = array(
 	// Face marks
-	'\s(\:\))'	=> ' <img alt="$1" src="image/face/smile.png" />',
-	'\s(\:D)'	=> ' <img alt="$1" src="image/face/bigsmile.png" />',
-	'\s(\:p)'	=> ' <img alt="$1" src="image/face/huh.png" />',
-	'\s(\:d)'	=> ' <img alt="$1" src="image/face/huh.png" />',
-	'\s(XD)'	=> ' <img alt="$1" src="image/face/oh.png" />',
-	'\s(X\()'	=> ' <img alt="$1" src="image/face/oh.png" />',
-	'\s(;\))'	=> ' <img alt="$1" src="image/face/wink.png" />',
-	'\s(;\()'	=> ' <img alt="$1" src="image/face/sad.png" />',
-	'\s(\:\()'	=> ' <img alt="$1" src="image/face/sad.png" />',
-	'&amp;(smile);'	=> ' <img alt="[$1]" src="image/face/smile.png" />',
-	'&amp;(bigsmile);'=>' <img alt="[$1]" src="image/face/bigsmile.png" />',
-	'&amp;(huh);'	=> ' <img alt="[$1]" src="image/face/huh.png" />',
-	'&amp;(oh);'	=> ' <img alt="[$1]" src="image/face/oh.png" />',
-	'&amp;(wink);'	=> ' <img alt="[$1]" src="image/face/wink.png" />',
-	'&amp;(sad);'	=> ' <img alt="[$1]" src="image/face/sad.png" />',
-	'&amp;(heart);'	=> ' <img alt="[$1]" src="image/face/heart.png" />',
-	'&amp;(worried);'=>' <img alt="[$1]" src="image/face/worried.png" />',
+	'\s(\:\))'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/smile.png" />',
+	'\s(\:D)'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/bigsmile.png" />',
+	'\s(\:p)'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/huh.png" />',
+	'\s(\:d)'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/huh.png" />',
+	'\s(XD)'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/oh.png" />',
+	'\s(X\()'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/oh.png" />',
+	'\s(;\))'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/wink.png" />',
+	'\s(;\()'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/sad.png" />',
+	'\s(\:\()'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/sad.png" />',
+	'&amp;(smile);'	=> ' <img alt="[$1]" src="' . IMAGE_DIR . 'face/smile.png" />',
+	'&amp;(bigsmile);'=>' <img alt="[$1]" src="' . IMAGE_DIR . 'face/bigsmile.png" />',
+	'&amp;(huh);'	=> ' <img alt="[$1]" src="' . IMAGE_DIR . 'face/huh.png" />',
+	'&amp;(oh);'	=> ' <img alt="[$1]" src="' . IMAGE_DIR . 'face/oh.png" />',
+	'&amp;(wink);'	=> ' <img alt="[$1]" src="' . IMAGE_DIR . 'face/wink.png" />',
+	'&amp;(sad);'	=> ' <img alt="[$1]" src="' . IMAGE_DIR . 'face/sad.png" />',
+	'&amp;(heart);'	=> ' <img alt="[$1]" src="' . IMAGE_DIR . 'face/heart.png" />',
+	'&amp;(worried);'=>' <img alt="[$1]" src="' . IMAGE_DIR . 'face/worried.png" />',
 
 	// Face marks, Japanese style
-	'\s(\(\^\^\))'	=> ' <img alt="$1" src="image/face/smile.png" />',
-	'\s(\(\^-\^)'	=> ' <img alt="$1" src="image/face/bigsmile.png" />',
-	'\s(\(\.\.;)'	=> ' <img alt="$1" src="image/face/oh.png" />',
-	'\s(\(\^_-\))'	=> ' <img alt="$1" src="image/face/wink.png" />',
-	'\s(\(--;)'	=> ' <img alt="$1" src="image/face/sad.png" />',
-	'\s(\(\^\^;)'	=> ' <img alt="$1" src="image/face/worried.png" />',
-	'\s(\(\^\^;\))'	=> ' <img alt="$1" src="image/face/worried.png" />',
+	'\s(\(\^\^\))'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/smile.png" />',
+	'\s(\(\^-\^)'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/bigsmile.png" />',
+	'\s(\(\.\.;)'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/oh.png" />',
+	'\s(\(\^_-\))'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/wink.png" />',
+	'\s(\(--;)'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/sad.png" />',
+	'\s(\(\^\^;)'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/worried.png" />',
+	'\s(\(\^\^;\))'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/worried.png" />',
 
 	// Push buttons, 0-9 and sharp (Compatibility with cell phones)
 	'&amp;(pb1);'	=> '[1]',
