@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.42 2003/04/30 08:16:30 arino Exp $
+// $Id: init.php,v 1.43 2003/05/16 05:50:03 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -34,7 +34,7 @@ Based on "PukiWiki" 1.3 by <a href="http://factage.com/sng/">sng</a>
 /////////////////////////////////////////////////
 // 初期設定 (サーバ変数)
 foreach (array('HTTP_USER_AGENT','PHP_SELF','SERVER_NAME','SERVER_SOFTWARE','SERVER_ADMIN') as $key) {
-	define($key,array_key_exists($key,$HTTP_SERVER_VARS) ? $HTTP_SERVER_VARS[$key] : '');
+	define($key,array_key_exists($key,$_SERVER) ? $_SERVER[$key] : '');
 }
 
 /////////////////////////////////////////////////
@@ -135,31 +135,10 @@ if (!is_page($interwiki)) {
 }
 
 /////////////////////////////////////////////////
-// 入力値の整形
-if (get_magic_quotes_gpc()) {
-	$get = $post = $cookie = array();
-	foreach($HTTP_GET_VARS as $key => $value) {
-		if (!is_array($value)) {
-			$get[$key] = stripslashes($value);
-		}
-	}
-	foreach($HTTP_POST_VARS as $key => $value) {
-		$post[$key] = stripslashes($value);
-	}
-	foreach($HTTP_COOKIE_VARS as $key => $value) {
-		$cookie[$key] = stripslashes($value);
-	}
-}
-else {
-	$post = is_array($HTTP_POST_VARS) ? $HTTP_POST_VARS : array();
-	$get = is_array($HTTP_GET_VARS) ? $HTTP_GET_VARS : array();
-	$cookie = is_array($HTTP_COOKIE_VARS) ? $HTTP_COOKIE_VARS : array();
-}
-
 // 外部からくる変数をサニタイズ
-$get    = sanitize_null_character($get);
-$post   = sanitize_null_character($post);
-$cookie = sanitize_null_character($cookie);
+$get    = sanitize($_GET);
+$post   = sanitize($_POST);
+$cookie = sanitize($_COOKIE);
 
 // ポストされた文字のコードを変換
 // original by nitoyon (2003/02/20)
@@ -196,13 +175,13 @@ if (array_key_exists('md5',$vars) and $vars['md5'] != '') {
 // cmdもpluginも指定されていない場合は、QUERY_STRINGをページ名かInterWikiNameであるとみなす
 if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars))
 {
-	if ($HTTP_SERVER_VARS['QUERY_STRING'] != '')
+	if ($_SERVER['QUERY_STRING'] != '')
 	{
-		$arg = $HTTP_SERVER_VARS['QUERY_STRING'];
+		$arg = $_SERVER['QUERY_STRING'];
 	}
-	else if (array_key_exists(0,$HTTP_SERVER_VARS['argv']))
+	else if (array_key_exists(0,$_SERVER['argv']))
 	{
-		$arg = $HTTP_SERVER_VARS['argv'][0];
+		$arg = $_SERVER['argv'][0];
 	}
 	else
 	{
@@ -211,7 +190,7 @@ if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars))
 	}		
 	$arg = rawurldecode($arg);
 	$arg = strip_bracket($arg);
-	$arg = sanitize_null_character($arg);
+	$arg = sanitize($arg);
 
 	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'read';
 	$get['page'] = $post['page'] = $vars['page'] = $arg;
