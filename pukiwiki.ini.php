@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.93 2004/11/07 09:55:49 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.94 2004/11/07 10:12:26 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -447,7 +447,7 @@ $agents = array(
 	// Sample: "Mozilla/4.0 (compatible; MSIE 5.0; OS) Opera 6.0" (disguise)
 	array('pattern'=>'#\b(Opera)[/ ]([0-9\.]+)\b#',	'profile'=>'default'),
 
-	// Microsoft Internet Explorer (or something another browser disguised as MSIE)
+	// MSIE: Microsoft Internet Explorer (or something disguised as MSIE)
 	// Sample: "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)"
 	array('pattern'=>'#\b(MSIE) ([0-9\.]+)\b#',	'profile'=>'default'),
 
@@ -456,11 +456,9 @@ $agents = array(
 	// Sample: "Mozilla/5.0 (Windows; U; Windows NT 5.0; ja-JP; rv:1.7) Gecko/20040803 Firefox/0.9.3"
 	array('pattern'=>'#\b(Firefox)/([0-9\.]+)\b#',	'profile'=>'default'),
 
-	// Mozilla browser (or something another browser disguised as Mozilla)
-	array('pattern'=>'#^(Mozilla)/([0-9\.]+)\b#',	'profile'=>'default'),
+    	// Loose default: Including something Mozilla
+	array('pattern'=>'#^([a-zA-z0-9 ]+)/([0-9\.]+)\b#',	'profile'=>'default'),
 
-    	// デフォルト設定
-	array('pattern'=>'#^#',	'profile'=>'default'),	// default
-
+	array('pattern'=>'#^#',	'profile'=>'default'),	// Sentinel
 );
 ?>
