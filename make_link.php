@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.57 2003/09/03 02:04:04 arino Exp $
+// $Id: make_link.php,v 1.58 2003/10/20 03:15:39 arino Exp $
 //
 
 // リンクを付加する
@@ -37,9 +37,9 @@ class InlineConverter
 				'url_interwiki', // URL (interwiki definition)
 				'mailto',        // mailto:
 				'interwikiname', // InterWikiName
-				'autolink',      // AutoLink
 				'bracketname',   // BracketName
 				'wikiname',      // WikiName
+				'autolink',      // AutoLink
 //				'rules',         // ユーザ定義ルール
 			);
 		}
