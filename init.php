@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.20.2.23 2004/07/31 10:19:57 henoheno Exp $
+// $Id: init.php,v 1.20.2.24 2004/08/11 14:34:41 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -12,18 +12,23 @@ error_reporting(E_ERROR | E_PARSE);	// (E_WARNING | E_NOTICE)を除外しています。
 
 /////////////////////////////////////////////////
 // 初期設定 (文字エンコード、言語)
-define('LANG','ja');	// Select 'ja' or 'en'
+define('LANG', 'ja');	// Select 'ja' or 'en'
 
 /////////////////////////////////////////////////
 // 初期設定(設定ファイルの場所)
 define('LANG_FILE', LANG.'.lng');
-define("INI_FILE","./pukiwiki.ini.php");
+define('INI_FILE', 'pukiwiki.ini.php');
 
 /////////////////////////////////////////////////
-// 初期設定 (バージョン/著作権)
-define("S_VERSION","1.3.8rc1");
-define("S_COPYRIGHT","<strong>\"PukiWiki\" ".S_VERSION."</strong> Copyright &copy; 2001-2004 <a href=\"http://pukiwiki.org\">PukiWiki Developers Team</a>. License is <a href=\"http://www.gnu.org/\">GNU/GPL</a>.<BR>Based on \"PukiWiki\" 1.3 by <a href=\"http://factage.com/yu-ji/\">yu-ji</a>");
-define("UTIME",time());
+// バージョン / 著作権
+define('S_VERSION', '1.3.8rc1');
+define('S_COPYRIGHT',
+	'<strong>PukiWiki ' . S_VERSION . '</strong>' .
+	' Copyright &copy; 2001-2004' .
+	' <a href="http://pukiwiki.org">PukiWiki Developers Team</a>.' .
+	' License is <a href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br />' .
+        ' Based on "PukiWiki" 1.3 by <a href="http://factage.com/yu-ji/">yu-ji</a>'
+);
 
 /////////////////////////////////////////////////
 // 初期設定 (サーバ変数)
@@ -31,7 +36,8 @@ foreach (array('HTTP_USER_AGENT','PHP_SELF','SERVER_NAME','SERVER_SOFTWARE','SER
 	define($key, array_key_exists($key,$HTTP_SERVER_VARS) ? $HTTP_SERVER_VARS[$key] : '');
 }
 
-define("MUTIME",getmicrotime());
+define('UTIME', time());
+define('MUTIME', getmicrotime());
 
 $WikiName = '[A-Z][a-z]+(?:[A-Z][a-z]+)+';
 
