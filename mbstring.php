@@ -2,11 +2,15 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mbstring.php,v 1.3 2003/07/05 05:18:06 arino Exp $
+// $Id: mbstring.php,v 1.4 2003/07/08 07:03:03 arino Exp $
 //
 
 /*
  * PHPのmbstring extensionが使用できないときの代替関数
+ *
+ * 注意事項
+ *
+ * EUC-JP専用です。
  *
  * 使用方法
  *
@@ -139,10 +143,43 @@ function mb_language($language=NULL)
 // mb_strimwidth -- 指定した幅で文字列を丸める
 function mb_strimwidth($str,$start,$width,$trimmarker='',$encoding='')
 {
-	$substr = mb_substr($str,$start,$width);
-	if (strlen($str) > strlen($substr))
+	if ($start == 0 and $width <= strlen($str))
 	{
-		// 注: 本来はstrlen($substr.$trimmarker) == $widthとなるべき
+		return $str;
+	}
+	
+	// 注: EUC-JP専用, $encodingを使用しない
+	$chars = unpack('C*', $str);
+	$substr = '';
+
+	while (count($chars) and $start > 0)
+	{
+		$start--;
+		if (array_shift($chars) >= 0x80)
+		{
+			array_shift($chars);
+		}
+	}
+	if ($b_trimmarker = (count($chars) > $width))
+	{
+		$width -= strlen($trimmarker);
+	}
+	while (count($chars) and $width-- > 0)
+	{
+		$char = array_shift($chars);
+		if ($char >= 0x80)
+		{
+			if ($width-- == 0)
+			{
+				break;
+			}
+			$substr .= chr($char);
+			$char = array_shift($chars);
+		}
+		$substr .= chr($char);
+	}
+	if ($b_trimmarker)
+	{
 		$substr .= $trimmarker;
 	}
 	return $substr;
@@ -151,14 +188,14 @@ function mb_strimwidth($str,$start,$width,$trimmarker='',$encoding='')
 // mb_strlen -- 文字列の長さを得る
 function mb_strlen($str,$encoding='')
 {
-	// 注: $encodingを使用しない
+	// 注: EUC-JP専用, $encodingを使用しない
 	return jstrlen($str);
 }
 
 // mb_substr -- 文字列の一部を得る
 function mb_substr($str,$start,$length=0,$encoding='')
 {
-	// 注: $encodingを使用しない
+	// 注: EUC-JP専用, $encodingを使用しない
 	return jsubstr($str,$start,$length);
 }
 ?>
