@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.14 2004/10/16 05:56:24 henoheno Exp $
+// $Id: init.php,v 1.15 2004/10/17 13:19:23 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -51,6 +51,35 @@ if (! file_exists(INI_FILE) || ! is_readable(INI_FILE)) {
 if ($die) die_message(nl2br("\n\n" . $die));
 
 /////////////////////////////////////////////////
+// INI_FILE: LANG に基づくエンコーディング設定
+
+switch (LANG){
+case 'en':
+	// Internal content encoding = Output content charset (for skin)
+	define('CONTENT_CHARSET', 'iso-8859-1'); // 'UTF-8', 'iso-8859-1', 'EUC-JP' or ...
+	// mb_language (for mbstring extension)
+	define('MB_LANGUAGE',   'English');	// 'uni'(means UTF-8), 'English', or 'Japanese'
+	// Internal content encoding (for mbstring extension)
+	define('SOURCE_ENCODING', 'ASCII');	// 'UTF-8', 'ASCII', or 'EUC-JP'
+	break;
+	
+case 'ja': // EUC-JP
+	define('CONTENT_CHARSET', 'EUC-JP');
+	define('MB_LANGUAGE',   'Japanese');
+	define('SOURCE_ENCODING', 'EUC-JP');
+	break;
+
+default:
+	die_message('No such language "' . LANG . '"');
+}
+
+mb_language(MB_LANGUAGE);
+mb_internal_encoding(SOURCE_ENCODING);
+ini_set('mbstring.http_input', 'pass');
+mb_http_output('pass');
+mb_detect_order('auto');
+
+/////////////////////////////////////////////////
 // INI_FILE: LANG 初期設定(言語ファイルの場所)
 define('LANG_FILE', DATA_HOME . LANG . '.lng');
 
@@ -62,15 +91,6 @@ if (! file_exists(LANG_FILE) || ! is_readable(LANG_FILE)) {
 	require(LANG_FILE);
 }
 if ($die) die_message(nl2br("\n\n" . $die));
-
-/////////////////////////////////////////////////
-// LANG_FILE: mbstring extension 関連
-
-mb_language(MB_LANGUAGE);
-mb_internal_encoding(SOURCE_ENCODING);
-ini_set('mbstring.http_input', 'pass');
-mb_http_output('pass');
-mb_detect_order('auto');
 
 /////////////////////////////////////////////////
 // LANG_FILE: 曜日配列

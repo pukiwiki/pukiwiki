@@ -2,27 +2,12 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ja.lng,v 1.29 2004/10/16 06:24:17 henoheno Exp $
+// $Id: ja.lng,v 1.30 2004/10/17 13:19:23 henoheno Exp $
 //
 // PukiWiki message file (japanese)
 
-/////////////////////////////////////////////////
-// 初期設定 (文字エンコード)
-// ※このファイルの文字コードは、以下の設定と一致
+// ※このファイルの文字コードは、エンコーディングの設定と一致
 //   している必要があります
-
-$encode = 'EUC-JP';
-
-// Internal content encoding = Output content charset (for skin)
-define('CONTENT_CHARSET', $encode); // 'UTF-8' or 'iso-8859-1' or 'EUC-JP' or ...
-
-// mb_language (for mbstring extension)
-define('MB_LANGUAGE', 'Japanese');   // 'uni'(means UTF-8), 'English', or 'Japanese'
-
-// Internal content encoding (for mbstring extension)
-define('SOURCE_ENCODING', $encode); // 'UTF-8' or 'ASCII' or 'EUC-JP'
-
-unset($encode);
 
 ///////////////////////////////////////
 // Page titles

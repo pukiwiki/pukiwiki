@@ -2,22 +2,11 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.30 2004/10/16 06:24:17 henoheno Exp $
+// $Id: en.lng,v 1.31 2004/10/17 13:19:23 henoheno Exp $
 //
 // PukiWiki message file (english)
 
-/////////////////////////////////////////////////
-// Encode setting
-// NOTE: Encoding of this file, must equal to this setting
-
-// Internal content encoding = Output content charset (for skin)
-define('CONTENT_CHARSET', 'iso-8859-1'); // 'UTF-8', 'iso-8859-1', 'EUC-JP' or ...
-
-// mb_language (for mbstring extension)
-define('MB_LANGUAGE', 'English');   // 'uni'(means UTF-8), 'English', or 'Japanese'
-
-// Internal content encoding (for mbstring extension)
-define('SOURCE_ENCODING', 'ASCII'); // 'UTF-8', 'ASCII', or 'EUC-JP'
+// NOTE: Encoding of this file, must equal to encoding setting
 
 ///////////////////////////////////////
 // Page titles
@@ -316,7 +305,7 @@ $_msg_pcomment_restrict = 'Due to the blocking, no comments could be read from  
 
 ///////////////////////////////////////
 // popular.inc.php
-$_popular_plugin_frame = '<h5>popular(%d)</h5><div>%s</div>';
+$_popular_plugin_frame       = '<h5>popular(%d)</h5><div>%s</div>';
 $_popular_plugin_today_frame = '<h5>today\'s(%d)</h5><div>%s</div>';
 
 ///////////////////////////////////////
