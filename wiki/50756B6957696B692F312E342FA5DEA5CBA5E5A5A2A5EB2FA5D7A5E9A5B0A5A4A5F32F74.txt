@@ -1,0 +1,131 @@
+#navi(PukiWiki/1.4/マニュアル/プラグイン)
+
+**tb [#s5056787]
+:種別|
+~コマンド
+:重要度|
+~★☆☆☆☆
+:書式|
+''?plugin=tb''
+&color(blue){&tb_id=TrackBackID};
+&color(blue){&__mode=};
+&color(blue){view};|
+&color(blue){rss};
+:概要|
+~TrackBackの一覧を表示します。
+~POSTされた場合は他サイトからのTrackBackに反応します。
+:引数|
+~&tb_idには表示対象ページのTrackBackIDを指定します。
+~&__modeには一覧表示方法を指定します。
+--view − 人間が見やすい形式で表示します。
+--rss − RSS形式で表示します。
+:備考|
+~pukiwiki.ini.php で、TrackBackを使用する設定($trackback = 1を指定)が行われている必要があります。
+
+
+**template [#j2adfc3d]
+:種別|
+~コマンド
+:重要度|
+~★★★★☆
+:書式|
+''?plugin=template''
+&color(blue){&refer=テンプレートページ};
+:概要|
+~既存のページをテンプレートとしてページを新規作成します。
+~ページの新規作成時の雛形とするページの読込み機能との差異は、テンプレートプラグインが雛形とする範囲(行単位)に選択できるのに対して、ページの新規作成で読み込むテンプレートは全文をテキストエリアにコピーする点にあります。
+:引数|
+~テンプレートページには雛形とするページを指定します。ページ名はエンコードされている必要があります。
+:プラグイン内設定|~
+--MAX_LEN　雛形の開始／終了位置を指定する欄で表示される最大文字数
+
+
+**topicpath [#vd55c067]
+:種別|
+~インライン型プラグイン
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
+~''&topicpath''
+'';''
+~''#topicpath''
+:概要|
+~パンくずリスト(topicpath)と呼ばれる、ページの階層表現のユーザーインターフェースを提供するプラグイン。
+~パンくずリスト（Topic path）は現在参照しているウェブページの階層を表現するユーザーインターフェースです。例えば[[PukiWiki/ツアー]]というページに#topicpathと書くと、以下の様な表記に置き換わります。
+ [[Top>FrontPage]]/[[PukiWiki>PukiWiki]]/[[ツアー>PukiWiki/ツアー]]
+~基本的には以下の２通りの使い方を想定しています。
+++「ほげ/ふが/げほ」など、２〜３階層以上の深いページでページの行き来をしやすくするために表示する
+++skin/pukiwiki.skin.ja.php に組み込み、ページタイトル下のURLの代わりに表示する
+~スキンに組み込む例（pukiwiki.skin.ja.php の30行目あたり）
+ <?php if ($is_page) { ?>
+ <span class="small"><?php require_once(PLUGIN_DIR.'topicpath.inc.php'); echo plugin_topicpath_convert(); ?></span>
+ <?php } ?>
+:プラグイン内設定|~
+--PLUGIN_TOPICPATH_TOP_DISPLAY　defaultpageを一番最初に表示するかどうか。
+--PLUGIN_TOPICPATH_TOP_LABEL　$defaultpageに対するラベル
+--PLUGIN_TOPICPATH_TOP_SEPARATOR　階層を区切るセパレータ
+--PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY　現在表示中のページに対するリンクを表示するかどうか
+--PLUGIN_TOPICPATH_THIS_PAGE_LINK　現在表示中のページに対してリンクするかどうか
+
+
+**touchgraph [#p93402bd]
+:種別|
+~コマンド
+:重要度|
+~★☆☆☆☆
+:書式|
+''?plugin=touchgraph''
+:概要|
+~TouchGraphWikiBrowser用のインデックスを作ります。
+
+
+**tracker [#rf5296e2]
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★★★★☆
+:書式|
+~''#tracker(''
+[&color(blue){定義名};]
+[,&color(blue){ベースページ名};]
+'')''
+:概要|
+~[[bugtrack>../b#a83293e8]]プラグインのように、定型的な項目をもったページを作るための入力フォームを表示します。
+~入力項目が固定されている[[bugtrack>../b#a83293e8]]プラグインと機能は似ていますが、入力項目を簡単に変更できる点が違います。ＦＡＱ，ＢＢＳ，書評，TODOリストなど使い道はアイディア次第です。
+~入力項目の定義は:config/plugin/tracker/ 以下に所定の書式でページを作成することで設定できます。[[bugtrack>../b#a83293e8]]プラグイン互換の入力項目定義が:config/plugin/tracker/default に用意されているので参考にして下さい。
+:引数|
+~定義名はtrackerのプラグイン定義名を指定します。省略時は定義名defaultが指定されたとみなします。
+~ベースページ名はフォームから作成されるページの親階層となるページ名を指定します。省略時は設置したページとなります。
+:プラグイン内設定|~
+--TRACKER_LIST_EXCLUDE_PATTERN　tracker_listで表示しないページ名を正規表現で指定する
+--TRACKER_LIST_SHOW_ERROR_PAGE　項目の取り出しに失敗したページを一覧に表示するか
+
+
+**tracker_list [#t78d6d0a]
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★★★★☆
+:書式|
+''#tracker_list(''
+[&color(blue){定義名};]
+[,[&color(blue){ベースページ名};]
+[,[&color(blue){ソート項目};]
+[,[&color(blue){ascending};]
+[,&color(blue){表示上限};]
+]]]
+'')''
+:概要|
+~[[tracker>./#rf5296e2]]プラグインで作成したページを一覧表示します。
+:引数|
+~定義名は[[tracker>./#rf5296e2]]プラグインで指定した定義名と同じものを指定します。省略時は定義名defaultが指定されたとみなします。
+~ベースページ名は[[tracker>./#rf5296e2]]プラグインで指定したベースページ名と同じものを指定します。[[tracker>./#rf5296e2]]プラグインでベースページ名を指定していない場合は[[tracker>./#rf5296e2]]プラグインを設置したページを指定します。省略時は設置したページとなります。
+~ソート項目は一覧表示のソートに使う項目を指定します。:config/plugin/tracker/定義名のページのfield項目内の項目から選択して下さい。省略時はページ名となります。
+~第４項目にはソート順を指定します。ascendingを指定すると昇順、それ以外は降順です。省略時は降順となります。
+~表示上限は一覧表示するページ数の上限を指定します。省略時は全て表示されます。
+
+
+#navi(PukiWiki/1.4/マニュアル/プラグイン)
