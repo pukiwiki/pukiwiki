@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: freeze.inc.php,v 1.7 2004/07/31 03:09:20 henoheno Exp $
+// $Id: freeze.inc.php,v 1.8 2004/12/16 13:09:48 henoheno Exp $
 //
 // Åà·ë
 function plugin_freeze_convert()
@@ -34,6 +34,7 @@ function plugin_freeze_action()
 
 		file_write(DATA_DIR,$page, $postdata, TRUE);
 
+		is_freeze($page, TRUE);
 		$vars['cmd'] = 'read';
 		return array('msg' => $_title_freezed, 'body' => '');
 	}
