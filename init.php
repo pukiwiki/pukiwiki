@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.23 2003/01/29 10:02:17 panda Exp $
+// $Id: init.php,v 1.24 2003/01/29 10:09:46 panda Exp $
 //
 
 /////////////////////////////////////////////////
@@ -40,7 +40,7 @@ mb_internal_encoding(ENCODING);
 */
 /////////////////////////////////////////////////
 // 初期設定 (バージョン/著作権)
-define('S_VERSION','1.4pre2');
+define('S_VERSION','1.4pre3');
 define('S_COPYRIGHT','
 <strong>"PukiWiki" '.S_VERSION.'</strong> Copyright &copy; 2001,2002
 <a href="http://pukiwiki.org">PukiWiki Developers Team</a>.
