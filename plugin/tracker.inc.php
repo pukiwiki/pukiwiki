@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.4 2003/07/17 01:25:51 arino Exp $
+// $Id: tracker.inc.php,v 1.5 2003/07/28 05:49:15 arino Exp $
 //
 
 function plugin_tracker_convert()
@@ -49,7 +49,7 @@ function plugin_tracker_convert()
 		$retval = str_replace("[$name]",$fields[$name]->get_tag(),$retval);
 	}
 	return <<<EOD
-<form action="$script" method="post">
+<form enctype="multipart/form-data" action="$script" method="post">
 $retval
 </form>
 EOD;
@@ -111,7 +111,7 @@ function plugin_tracker_action()
 	$postdata = join('',plugin_tracker_get_source($source));
 	
 	// 規定のデータ
-	$_post = $post;
+	$_post = array_merge($post,$_FILES);
 	$_post['_date'] = $now;
 	$_post['_page'] = $page;
 	$_post['_name'] = $name;
@@ -242,31 +242,27 @@ class Tracker_field_title extends Tracker_field_text
 		return $str;
 	}
 }
-class Tracker_field_format extends Tracker_field
+class Tracker_field_file extends Tracker_field_format
 {
 	function get_tag()
 	{
 		$s_name = htmlspecialchars($this->name);
 		$s_size = htmlspecialchars($this->values[0]);
-		return "<input type=\"text\" name=\"$s_name\" size=\"$s_size\" />";
+		return "<input type=\"file\" name=\"$s_name\" size=\"$s_size\" />";
 	}
 	function format_value($str)
 	{
-		$values = $this->config->get($this->name);
-		if (count($values) < 2)
+		if (array_key_exists($this->name,$_FILES))
 		{
-			return $str;
+			require_once(PLUGIN_DIR.'attach.inc.php');
+			$result = attach_upload($_FILES[$this->name],$this->page);
+			if ($result['result']) // アップロード成功
+			{
+				return parent::format_value($this->page.'/'.$_FILES[$this->name]['name']);
+			}
 		}
-		return ($str == '') ? $values[1][2] : sprintf($values[0][2],$str);
-	}
-	function get_style($str)
-	{
-		$values = $this->config->get($this->name);
-		if (count($values) < 2)
-		{
-			return $str;
-		}
-		return ($str == '') ? $values[1][1] : $values[0][1];
+		// ファイルが指定されていないか、アップロードに失敗
+		return parent::format_value('');
 	}
 }
 class Tracker_field_textarea extends Tracker_field
@@ -289,20 +285,55 @@ class Tracker_field_textarea extends Tracker_field
 		return $str;
 	}
 }
-class Tracker_field_radio extends Tracker_field
+class Tracker_field_format extends Tracker_field
 {
-	var $styles;
+	var $styles = array();
+	var $formats = array();
 	
-	function Tracker_field_radio($field,$page,&$config)
+	function Tracker_field_format($field,$page,&$config)
 	{
 		parent::Tracker_field($field,$page,$config);
 		
-		$this->styles = array();
 		foreach ($this->config->get($this->name) as $option)
 		{
-			$this->styles[trim($option[0])] = ($option[1] == '') ? '' : trim($option[1]);
+			list($key,$style,$format) = array_map(create_function('$a','return trim($a);'),$option);
+			if ($style != '')
+			{
+				$this->styles[$key] = $style;
+			}
+			if ($format != '')
+			{
+				$this->formats[$key] = $format;
+			} 
 		}
 	}
+	function get_tag()
+	{
+		$s_name = htmlspecialchars($this->name);
+		$s_size = htmlspecialchars($this->values[0]);
+		return "<input type=\"text\" name=\"$s_name\" size=\"$s_size\" />";
+	}
+	function get_key($str)
+	{
+		return ($str == '') ? 'IS NULL' : 'IS NOT NULL';
+	}
+	function format_value($str)
+	{
+		if (is_array($str))
+		{
+			return join(', ',array_map(array($this,'format_value'),$str));
+		}
+		$key = $this->get_key($str);
+		return array_key_exists($key,$this->formats) ? sprintf($this->formats[$key],$str) : $str;
+	}
+	function get_style($str)
+	{
+		$key = $this->get_key($str);
+		return array_key_exists($key,$this->styles) ? $this->styles[$key] : '';
+	}
+}
+class Tracker_field_radio extends Tracker_field_format
+{
 	function get_tag()
 	{
 		$s_name = htmlspecialchars($this->name);
@@ -316,21 +347,9 @@ class Tracker_field_radio extends Tracker_field
 		
 		return $retval;
 	}
-	function format_cell($str)
+	function get_key($str)
 	{
 		return $str;
-	}
-	function get_style($str)
-	{
-		return array_key_exists($str,$this->styles) ? $this->styles[$str] : '%s';
-	}
-	function format_value($value)
-	{
-		if (is_array($value))
-		{
-			$value = join(', ',$value);
-		}
-		return parent::format_value($value);
 	}
 	function compare($str1,$str2)
 	{
@@ -338,13 +357,10 @@ class Tracker_field_radio extends Tracker_field
 		
 		if (!isset($options))
 		{
-			$options = array_flip(array_map(
-				create_function('$arr','return $arr[0];'),
-				$this->config->get($this->name)
-			));
+			$options = array_flip(array_map(create_function('$arr','return $arr[0];'),$this->config->get($this->name)));
 		}
-		$n1 = array_key_exists($str1,$options) ? $options[$str1] : count($options);
-		$n2 = array_key_exists($str2,$options) ? $options[$str2] : count($options);
+		$n1 = array_key_exists($str1,$options) ? $options[$str1] : $str1;
+		$n2 = array_key_exists($str2,$options) ? $options[$str2] : $str2;
 		return ($n1 == $n2) ? 0 : ($n1 > $n2 ? -1 : 1);
 	}
 }
@@ -438,7 +454,7 @@ function plugin_tracker_list_convert()
 			case 5:
 				$limit = is_numeric($args[4]) ? $args[4] : $limit;
 			case 4:
-				$order = is_numeric($args[3]) ? $args[3] : $order;
+				$order = (strpos('ascending',strtolower($args[3])) === 0) ? 1 : -1;
 			case 3:
 				$field = ($args[2] != '') ? $args[2] : $field;
 			case 2:
