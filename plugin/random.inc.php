@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: random.inc.php,v 1.4 2003/03/03 07:07:28 panda Exp $
+// $Id: random.inc.php,v 1.5 2004/07/19 04:10:52 henoheno Exp $
 //
 
 /*
@@ -19,7 +19,7 @@
  */
 function plugin_random_convert()
 {
-	global $script,$vars;
+	global $script, $vars;
 	
 	$title = 'press here.';
 	
@@ -28,14 +28,14 @@ function plugin_random_convert()
 		$args = func_get_args();
 		$title = htmlspecialchars($args[0]);
 	}
-	return "<p><a href=\"$script?plugin=random&amp;refer={$vars['page']}\">$title</a></p>";
+	return "<p><a href=\"$script?plugin=random&refer={$vars['page']}\">$title</a></p>";
 }
 
 function plugin_random_action()
 {
-	global $script,$vars,$post;
+	global $script, $vars;
 	
-	$pattern = strip_bracket($vars['refer']).'/';
+	$pattern = strip_bracket($vars['refer']) . '/';
 	
 	$pages = array();
 	foreach (get_existpages() as $_page)
