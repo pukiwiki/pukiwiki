@@ -1,26 +1,24 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: pukiwiki.ini.php,v 1.103 2005/01/08 04:13:18 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: pukiwiki.ini.php,v 1.104 2005/01/15 13:08:49 henoheno Exp $
 //
 // PukiWiki setting file
 
-// If you end testing this PukiWiki, set PKWK_OPTIMISE 'TRUE'.
-// If you feel in trouble about this PukiWiki, set this 'FALSE'.
+// If you end testing this PukiWiki, set PKWK_OPTIMISE '1'.
+// If you feel in trouble about this PukiWiki, set this '0'.
 if (! defined('PKWK_OPTIMISE'))
-	define('PKWK_OPTIMISE', FALSE);	// FALSE or TRUE
+	define('PKWK_OPTIMISE', 0); // 0 or 1
 
 /////////////////////////////////////////////////
 // Security settings
 
 // Safe mode prohibits some unsafe functions 
 if (! defined('PKWK_SAFE_MODE'))
-	define('PKWK_SAFE_MODE', FALSE); // FALSE or TRUE
+	define('PKWK_SAFE_MODE', 0); // 0 or 1
 
 // Max length of GET method (prohibits some worm attack ASAP)
 // Beware: (page-name-length + attach-file-length) <= PKWK_QUERY_STRING_MAX
-define('PKWK_QUERY_STRING_MAX', 512);
+define('PKWK_QUERY_STRING_MAX', 640);
 
 /////////////////////////////////////////////////
 // 初期設定 (文字エンコード、言語)
@@ -29,8 +27,7 @@ define('PKWK_QUERY_STRING_MAX', 512);
 define('LANG', 'ja');	// For internal message encoding
 
 // UI Language (Language for buttons, menus,  etc)
-if (! defined('UI_LANG'))
-	define('UI_LANG', 'ja');	// 'en' or 'ja'
+define('UI_LANG', LANG); // 'en' for Internationalized wikisite
 
 /////////////////////////////////////////////////
 // ディレクトリ指定 最後に / が必要 属性は 777
