@@ -43,7 +43,7 @@ DESCRIPTION
         1.11  から設定ファイルが別ファイルのpukiwiki.ini.phpになりました。
         1.4   から設定ファイルが分割されました。
         1.4.4 から携帯電話およびPDA向けの設定ファイルが一つに集約されました。
-	      (旧 i_mode.ini.php, jphone.ini.php の設定を keitai.ini.php に集約)
+	      (i_mode.ini.php, jphone.ini.php の設定+αを keitai.ini.php に集約)
 
         * 共通設定
 	  全体               : pukiwiki.ini.php
@@ -159,10 +159,33 @@ PukiWiki/1.4.2との非互換点
 
 PukiWiki/1.4.3との非互換点
 
-    1. 主要なライブラリなどが全て lib/ ディレクトリ以下に移動しました。pukiwiki.php も
-       lib/pukiwiki.php をインクルードする小さなファイルになっています。
+    1. 初期化処理(init.php)が大幅に見直され、PukiWikiにとって不要なグローバル
+       変数(特に、危険なデータを含んでいるもの)が積極的に削除(unset)される様に
+       なりました。
+       具体的には $_REQUEST, $HTTP_GET_VARS, $HTTP_POST_VARS, HTTP_USER_AGENT関係,
+       REQUEST_URI関係, QUERY_STRING関係のデータにアクセスしようとするサード
+       パーティ製プラグインなどは適切に動作しないでしょう。
+
+    2. POSTメソッドを使うべき処理にGETメソッドを使うことが明確に禁止されました。
+       具体的には 'msg'(編集するテキストデータ) や 'pass'(パスワード) のキーを
+       GETメソッドで送信すると、必ずRuntime Errorを表示します。
+
+    2. Apache環境向けに .htaccess が同梱される様になりました。該当のWebサーバーで
+       .htaccess が有効であるとき、例えばattach ディレクトリに保存した添付ファイル
+       に直接アクセスすることができなくなります。(attach/.htaccessを削除すると解除
+       されます)
+
+    3. includeプラグインにリミッターが設けられました(デフォルトで４ページまで)
+
+    4. calendar_viewerプラグインにリミッターが設けられました(一テーマ一回まで)
+       ※今後のリリースで、数回までに拡張される可能性があります
+
+    5. pop_before_smtp のコードが見直され、APOPが動作する様になった事により、
+       デフォルトでは可能であればAPOPを使用する様になりました(自動認識)
+       pukiwiki.ini.php の設定により、APOPあるいはPOPを強制することも可能です
 
 更新履歴
+
     *   2004-04-04 1.4.3 by PukiWiki Developers Team
         BugTrack/493 リンク元の文字サイズを指定すると文字サイズを変えると＃relatedに反応しない 
             [[cvs:make_link.php]](v1.4:r1.64)
@@ -361,7 +384,7 @@ TODO
 
     質問、意見、バグ報告は http://pukiwiki.org/ までお願いします。
 
-    http://pukiwiki.org/?BugTrack
+    http://pukiwiki.sourceforge.jp/dev/index?BugTrack
 
 謝辞
 
@@ -373,9 +396,9 @@ TODO
 参照リンク
 
     * PukiWikiホームページ	http://pukiwiki.org/
-    * yu-jiのホームページ	http://factage.com/yu-ji/
+    * yu-jiさんのホームページ	http://factage.com/yu-ji/
     * 結城浩さんのホームページ	http://www.hyuki.com/
     * YukiWikiホームページ	http://www.hyuki.com/yukiwiki/
     * Tiki	http://todo.org/cgi-bin/jp/tiki.cgi
-    * 本家のWikiWiki	http://c2.com/cgi/wiki?WikiWikiWeb
-    * 本家のWikiWikiの作者(Cunningham & Cunningham, Inc.)	http://c2.com/
+    * 本家WikiWikiWeb	http://c2.com/cgi/wiki?WikiWikiWeb
+    * WikiWikiWebの作者(Cunningham & Cunningham, Inc.)	http://c2.com/
