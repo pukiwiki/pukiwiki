@@ -12,7 +12,7 @@
  *  2002.06.17: plugin_recent_init()を設定
  *  2002.07.02: <ul>による出力に変更し構造化
  *
- * $Id: recent.inc.php,v 1.9 2003/02/18 11:59:09 panda Exp $
+ * $Id: recent.inc.php,v 1.10 2003/02/22 13:16:21 panda Exp $
  */
 
 function plugin_recent_convert()
@@ -23,7 +23,7 @@ function plugin_recent_convert()
 	$recent_lines = 10;
 	if (func_num_args()) {
 		$args = func_get_args();
-		if (is_numeric($args)) {
+		if (is_numeric($args[0])) {
 			$recent_lines = $args[0];
 		}
 	}
