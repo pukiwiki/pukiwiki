@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.69 2003/11/22 04:51:28 arino Exp $
+// $Id: init.php,v 1.70 2003/12/03 12:10:19 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -185,11 +185,11 @@ if (array_key_exists('encode_hint',$get))
 // cmdもpluginも指定されていない場合は、QUERY_STRINGをページ名かInterWikiNameであるとみなす為
 // また、URI を urlencode せずに手打ちで入力した場合に対処する為
 $arg = '';
-if ($_SERVER['QUERY_STRING'] != '')
+if (array_key_exists('QUERY_STRING',$_SERVER) and $_SERVER['QUERY_STRING'] != '')
 {
 	$arg = $_SERVER['QUERY_STRING'];
 }
-else if (array_key_exists(0,$_SERVER['argv']))
+else if (array_key_exists('argv',$_SERVER) and count($_SERVER['argv']))
 {
 	$arg = $_SERVER['argv'][0];
 }
