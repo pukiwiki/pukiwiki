@@ -26,7 +26,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.4 2002/06/22 09:31:43 masui Exp $
+// $Id: pukiwiki.php,v 1.5 2002/06/28 12:47:46 masui Exp $
 /////////////////////////////////////////////////
 
 
@@ -707,10 +707,18 @@ else if((arg_check("read") && $vars["page"] != "") || (!arg_check("read") && $ar
 		//$page = make_search($get["page"]);
 		//$body = "指定されたページは見つかりませんでした。";
 
-		$title = str_replace('$1',strip_bracket($get["page"]),$_title_edit);
-		$page = str_replace('$1',make_search($get["page"]),$_title_edit);
-		$template = auto_template($get["page"]);
-		$body = edit_form($template,$get["page"]);
+		if(preg_match("/^(($BracketName)|($WikiName))$/",$get["page"])) {
+			$title = str_replace('$1',strip_bracket($get["page"]),$_title_edit);
+			$page = str_replace('$1',make_search($get["page"]),$_title_edit);
+			$template = auto_template($get["page"]);
+			$body = edit_form($template,$get["page"]);
+	        }
+		else {
+			$title = str_replace('$1',strip_bracket($get["page"]),$_title_invalidwn);
+			$body = $page = str_replace('$1',make_search($get["page"]), str_replace('$2','WikiName',$_msg_invalidiwn));
+			$template = '';
+		}
+	  
 	}
 }
 // 何も指定されない場合、トップページを表示

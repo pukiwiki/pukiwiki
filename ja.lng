@@ -30,6 +30,7 @@ $_title_pagebackuplist = '$1 のバックアップ一覧';
 $_title_backuplist = 'バックアップ一覧';
 $_title_help = 'ヘルプ';
 $_title_invalidiwn = '有効なInterWikiNameではありません';
+$_title_invalidwn = '有効なWikiNameではありません';
 $_title_backuplist = 'バックアップ一覧';
 
 ///////////////////////////////////////
