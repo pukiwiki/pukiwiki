@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.4 2002/06/22 09:31:43 masui Exp $
+// $Id: html.php,v 1.5 2002/06/24 07:03:09 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -475,12 +475,12 @@ return '
 '.$addtag.'
 <table cellspacing="3" cellpadding="0" border="0">
  <tr>
-  <td colspan="2" align="right">
+  <td align="right">
 '.$template.'
   </td>
  </tr>
  <tr>
-  <td colspan="2" align="right">
+  <td align="right">
    <textarea name="msg" rows="'.$rows.'" cols="'.$cols.'" wrap="virtual">
 '.htmlspecialchars($refer.$postdata).'</textarea>
   </td>
@@ -492,15 +492,15 @@ return '
    '.$add_top.'
    <input type="checkbox" name="notimestamp" value="true"><small>'.$_btn_notchangetimestamp.'</small>
   </td>
-  </form>
-  <form action="'.$script.'?cmd=freeze" method="post">
-   <input type="hidden" name="page" value="'.$vars["page"].'">
-  <td align="right">
-   '.$str_freeze.'
-  </td>
-  </form>
  </tr>
 </table>
+</form>
+
+<form action="'.$script.'?cmd=freeze" method="post">
+<input type="hidden" name="page" value="'.$vars["page"].'">
+'.$str_freeze.'
+</form>
+
 ' . $help;
 }
 
