@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.22 2004/11/23 13:33:29 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.23 2004/11/23 13:43:43 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -102,10 +102,10 @@ function _navigator($key, $value = '', $javascript = ''){
 	return TRUE;
 }
 ?>
-<?php if ($is_page) { ?>
- [ <?php _navigator('reload') ?> ] &nbsp;
+ [ <?php _navigator('top') ?> ] &nbsp;
 
- [ <?php _navigator('new')    ?>
+<?php if ($is_page) { ?>
+ [ <?php _navigator('reload')    ?>
  | <?php _navigator('edit')   ?>
  <?php if ($is_read and $function_freeze) { ?>
  |  <?php (! $is_freeze) ? _navigator('freeze') : _navigator('unfreeze') ?>
@@ -120,7 +120,7 @@ function _navigator($key, $value = '', $javascript = ''){
  ] &nbsp;
 <?php } ?>
 
- [ <?php _navigator('top')  ?>
+ [ <?php _navigator('new')  ?>
  | <?php _navigator('list') ?>
  <?php if (arg_check('list')) { ?>
  | <?php _navigator('filelist') ?>
@@ -191,10 +191,10 @@ function _toolbar($key, $x = 20, $y = 20){
 	return TRUE;
 }
 ?>
+ <?php _toolbar('top') ?>
+ &nbsp;
 <?php if ($is_page) { ?>
  <?php _toolbar('reload') ?>
- &nbsp;
- <?php _toolbar('new') ?>
  <?php _toolbar('edit') ?>
  <?php if ($is_read and $function_freeze) { ?>
   <?php if (! $is_freeze) { _toolbar('freeze'); } else { _toolbar('unfreeze'); } ?>
@@ -210,7 +210,7 @@ function _toolbar($key, $x = 20, $y = 20){
  <?php _toolbar('rename') ?>
  &nbsp;
 <?php } ?>
- <?php _toolbar('top')    ?>
+ <?php _toolbar('new')    ?>
  <?php _toolbar('list')   ?>
  <?php _toolbar('search') ?>
  <?php _toolbar('recent') ?>
