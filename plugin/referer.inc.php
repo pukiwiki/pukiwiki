@@ -1,5 +1,5 @@
 <?php
-// $Id: referer.inc.php,v 1.4 2003/08/06 08:24:02 arino Exp $
+// $Id: referer.inc.php,v 1.5 2003/08/20 10:54:27 arino Exp $
 /*
  * PukiWiki Referer プラグイン(リンク元表示プラグイン)
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -14,18 +14,32 @@ function plugin_referer_action()
 	global $vars,$referer;
 	global $_referer_msg;
 	
-	// 許可していないか、ページの指定がない
-	if (!$referer or empty($vars['page']))
+	// Referer機能を使用していない
+	if (!$referer)
 	{
 		return array('msg'=>'','body'=>'');
 	}
 	
-	// 整列順
-	$sort = (empty($vars['sort'])) ? '0d' : $vars['sort'];
+	if (array_key_exists('page',$vars) and is_page($vars['page']))
+	{
+		// 整列順
+		$sort = (empty($vars['sort'])) ? '0d' : $vars['sort'];
+		
+		return array(
+			'msg'  => $_referer_msg['msg_H0_Refer'],
+			'body' => referer_body($vars['page'],$sort)
+		);
+	}
+	$pages = get_existpages(TRACKBACK_DIR,'.ref');
+	
+	if (count($pages) == 0)
+	{
+		return array('msg'=>'','body'=>'');
+	}
 	
 	return array(
-		'msg'  => $_referer_msg['msg_H0_Refer'],
-		'body' => referer_body($vars['page'],$sort)
+		'msg' => 'referer list',
+		'body' => page_list($pages,'referer',FALSE)
 	);
 }
 
