@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: config.php,v 1.4 2003/04/29 00:38:14 arino Exp $
+// $Id: config.php,v 1.5 2003/05/16 05:43:55 arino Exp $
 //
 /*
  * プラグインの設定をPukiWikiのページに記述する
@@ -35,17 +35,22 @@ define('CONFIG_BASE',':config/');
 class Config
 {
 	// ページ名
-	var $page;
+	var $name,$page;
 	// 要素
 	var $objs;
 	
 	function Config($name)
 	{
+		$this->name = $name;
 		$this->page = CONFIG_BASE.$name;
 	}
 	// ページを読み込む
 	function read()
 	{
+		if (!is_page($this->page))
+		{
+			return FALSE;
+		}
 		$this->objs = array();
 		$obj = &new ConfigTable('');
 		foreach (get_source($this->page) as $line)
@@ -105,6 +110,8 @@ class Config
 			}
 		}
 		$this->objs[$obj->title] = $obj;
+		
+		return TRUE;
 	}
 	// 配列を取得する
 	function &get($title)
