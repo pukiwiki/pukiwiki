@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.31 2004/12/17 14:01:36 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.32 2004/12/24 15:22:10 henoheno Exp $
 //
 // PukiWiki default skin
 
@@ -14,6 +14,7 @@ if (! defined('SKIN_DEFAULT_DISABLE_TOPICPATH'))
 
 // Prohibit direct access
 if (! defined('UI_LANG')) die('UI_LANG is not set');
+if (! isset($_LANG)) die('$_LANG is not set');
 
 // Set skin-specific images
 $_IMAGE['skin']['logo']     = 'pukiwiki.png';
@@ -48,17 +49,13 @@ switch(UI_LANG){
 }
 
 // Output header
-pkwk_headers_sent();
+pkwk_common_headers();
 header('Cache-control: no-cache');
 header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
-if(ini_get('zlib.output_compression') && preg_match('/\bgzip\b/i', $_SERVER['HTTP_ACCEPT_ENCODING'])) {
-	header('Content-Encoding: gzip');
-	header('Vary: Accept-Encoding');
-}
-echo '<?xml version="1.0" encoding="' . CONTENT_CHARSET . '"?>';
 
 // Output body
+echo '<?xml version="1.0" encoding="' . CONTENT_CHARSET . '"?>';
 if ($html_transitional) { ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo LANG ?>" lang="<?php echo LANG ?>">
