@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.11 2003/02/04 09:46:16 panda Exp $
+// $Id: make_link.php,v 1.12 2003/02/04 11:26:05 panda Exp $
 //
 
 // リンクを付加する
@@ -24,9 +24,11 @@ class InlineConverter
 	var $pattern;
 	var $pos;
 	
-	function InlineConverter()
+	function InlineConverter($converters = NULL)
 	{
-		$converters = array('plugin','url','mailto','interwiki','page','auto');
+		if ($converters == NULL) {
+			$converters = array('plugin','url','mailto','interwiki','page','auto');
+		}
 		$this->converters = array();
 		$pattern = array();
 		$start = 1;
@@ -334,10 +336,15 @@ EOD;
 	function set($arr,$page)
 	{
 		global $WikiName,$BracketName;
+		static $converter;
+		
+		if (!isset($converter)) {
+			$converter = new InlineConverter(array('plugin'));
+		}
 		
 		$arr = $this->splice($arr);
 		
-		$alias = make_user_rules($arr[2]);
+		$alias = make_user_rules($converer->convert($arr[2],$page));
 		$name = $arr[4];
 		$this->anchor = $arr[8];
 		
