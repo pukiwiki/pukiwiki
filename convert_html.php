@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.26 2003/03/02 16:09:00 panda Exp $
+// $Id: convert_html.php,v 1.27 2003/03/04 06:38:31 panda Exp $
 //
 function convert_html($lines)
 {
@@ -660,6 +660,10 @@ class Align extends Block
 	function Align($align)
 	{
 		$this->align = $align;
+	}
+	function canContain(&$obj)
+	{
+		return is_a($obj,'Inline');
 	}
 	function toString()
 	{
