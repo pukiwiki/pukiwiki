@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.10 2004/10/12 11:11:56 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.11 2004/10/16 04:14:00 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -63,19 +63,14 @@ if ($html_transitional) { ?>
 <head>
  <meta http-equiv="content-type" content="application/xhtml+xml; charset=<?php echo CONTENT_CHARSET ?>" />
  <meta http-equiv="content-style-type" content="text/css" />
-
-<?php if (! $is_read) { ?>
- <meta name="robots" content="NOINDEX,NOFOLLOW" />
-<?php } ?>
+<?php if (! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
+<?php if ($javascript) { ?> <meta http-equiv="Content-Script-Type" content="text/javascript" /><?php } ?>
 
  <title><?php echo "$title - $page_title" ?></title>
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>" type="text/css" media="screen" charset="<?php echo $css_charset ?>" />
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>&amp;media=print" type="text/css" media="print" charset="<?php echo $css_charset ?>" />
 
-<?php if ($trackback) { ?>
- <meta http-equiv="Content-Script-Type" content="text/javascript" />
- <script type="text/javascript" src="skin/trackback.js"></script>
-<?php } ?>
+<?php if ($trackback) { ?> <script type="text/javascript" src="skin/trackback.js"></script><?php } ?>
 
 <?php echo $head_tag ?>
 </head>

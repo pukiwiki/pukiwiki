@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.7 2004/10/16 01:18:58 henoheno Exp $
+// $Id: html.php,v 1.8 2004/10/16 04:14:00 henoheno Exp $
 //
 
 // 本文を出力
@@ -10,7 +10,7 @@ function catbody($title,$page,$body)
 {
 	global $script, $vars, $arg, $defaultpage, $whatsnew, $help_page, $hr;
 	global $related_link, $cantedit, $function_freeze, $search_word_color, $_msg_word;
-	global $foot_explain, $note_hr, $head_tags, $trackback, $referer;
+	global $foot_explain, $note_hr, $head_tags, $trackback, $referer, $javascript;
 	global $_LANG, $_LINK, $_IMAGE;
 
 	global $html_transitional; // FALSE:XHTML1.1 TRUE:XHTML1.0 Transitional
@@ -23,6 +23,11 @@ function catbody($title,$page,$body)
 		die_message('SKIN_FILE is not found');
 
 	$_LANG = $_LINK = $_IMAGE = array();
+
+	// Add script header when ...
+	if ($trackback) {
+		$javascript = 1;
+	}
 
 	$_page  = isset($vars['page']) ? $vars['page'] : '';
 	$r_page = rawurlencode($_page);
