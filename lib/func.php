@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.7 2004/10/10 02:22:19 henoheno Exp $
+// $Id: func.php,v 1.8 2004/10/10 10:20:59 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -518,6 +518,10 @@ function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 // pukiwiki.phpスクリプトのabsolute-uriを生成
 function get_script_uri()
 {
+	static $script;
+
+	if (isset($script)) return $script;
+
 	$script  = (SERVER_PORT == 443 ? 'https://' : 'http://');	// scheme
 	$script .= SERVER_NAME;	// host
 	$script .= (SERVER_PORT == 80 ? '' : ':' . SERVER_PORT); // port

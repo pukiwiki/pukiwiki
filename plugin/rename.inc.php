@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rename.inc.php,v 1.15 2004/07/31 03:09:20 henoheno Exp $
+// $Id: rename.inc.php,v 1.16 2004/10/10 10:20:59 henoheno Exp $
 //
 
 /*
@@ -399,7 +399,7 @@ function rename_get_files($pages)
 
 function rename_proceed($pages, $files, $exists)
 {
-	global $script, $now, $_rename_messages;
+	global $now, $_rename_messages;
 
 	if (rename_getvar('exist') == '')
 	{
@@ -472,7 +472,7 @@ function rename_proceed($pages, $files, $exists)
 	{
 		$page = RENAME_LOGPAGE;
 	}
-	header("Location: $script?" . rawurlencode($page));
+	header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
 	die();
 }
 

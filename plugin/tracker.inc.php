@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: tracker.inc.php,v 1.23 2004/10/09 08:25:29 henoheno Exp $
+// $Id: tracker.inc.php,v 1.24 2004/10/10 10:20:59 henoheno Exp $
 //
 
 // tracker_listで表示しないページ名(正規表現で)
@@ -79,7 +79,7 @@ EOD;
 }
 function plugin_tracker_action()
 {
-	global $script,$post,$vars,$now;
+	global $post, $vars, $now;
 
 	$config_name = array_key_exists('_config',$post) ? $post['_config'] : '';
 
@@ -171,7 +171,7 @@ function plugin_tracker_action()
 
 	$r_page = rawurlencode($page);
 
-	header("Location: $script?$r_page");
+	header('Location: ' . get_script_uri() . '?' . $r_page);
 	exit;
 }
 /*

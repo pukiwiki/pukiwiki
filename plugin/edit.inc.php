@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.17 2004/10/09 08:25:29 henoheno Exp $
+// $Id: edit.inc.php,v 1.18 2004/10/10 10:20:59 henoheno Exp $
 //
 
 // 編集
@@ -77,7 +77,7 @@ function plugin_edit_preview()
 // 書き込みもしくは追加もしくはコメントの挿入
 function plugin_edit_write()
 {
-	global $script, $vars;
+	global $vars;
 	global $_title_collided, $_msg_collided_auto, $_msg_collided, $_title_deleted;
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
@@ -118,7 +118,7 @@ function plugin_edit_write()
 		page_write($page, $postdata, $notimestamp);
 
 		if ($postdata) {
-			header("Location: $script?" . rawurlencode($page));
+			header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
 			exit;
 		}
 

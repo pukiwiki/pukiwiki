@@ -44,7 +44,7 @@
 //
 
 /////////////////////////////////////////////////
-// $Id: amazon.inc.php,v 1.2 2004/07/31 03:09:19 henoheno Exp $
+// $Id: amazon.inc.php,v 1.3 2004/10/10 10:20:59 henoheno Exp $
 // - modified by arino <arino@users.sourceforge.jp>
 // -- replace plugin_amazon_get_page().
 // -- AMAZON_XML 'xml.amazon.com' -> 'xml.amazon.co.jp'
@@ -182,15 +182,15 @@ function plugin_amazon_action() {
 
   if ($edit_auth and (!isset($_SERVER['PHP_AUTH_USER']) or !array_key_exists($_SERVER['PHP_AUTH_USER'],$edit_auth_users) or
       $edit_auth_users[$_SERVER['PHP_AUTH_USER']] != $_SERVER['PHP_AUTH_PW'])) {
-    header("Location: $script?cmd=read&page=$r_page_url");
+    header('Location: ' . get_script_uri() . '?cmd=read&page=' . $r_page_url);
   } else {
     $title = plugin_amazon_get_asin_title();
     if ($title == '' or preg_match('/^\//', $s_page)) {
-      header("Location: $script?cmd=read&page=" . encode($s_page));
+      header('Location: ' . get_script_uri() . '?cmd=read&page=' . encode($s_page));
     }
     $body = "#amazon($asin_all,,image)\n*$title\n" . $amazon_body;
     plugin_amazon_review_save($r_page, $body);
-    header("Location: $script?cmd=edit&page=$r_page_url");
+    header('Location: ' . get_script_uri() . '?cmd=edit&page=' . $r_page_url);
   }
   die();
 }

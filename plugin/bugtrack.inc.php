@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.16 2004/07/31 03:09:20 henoheno Exp $
+ * $Id: bugtrack.inc.php,v 1.17 2004/10/10 10:20:59 henoheno Exp $
  */
 
 function plugin_bugtrack_init()
@@ -39,11 +39,11 @@ function plugin_bugtrack_init()
 
 function plugin_bugtrack_action()
 {
-	global $script,$post,$vars,$_bugtrack_plugin_title;
+	global $post, $vars, $_bugtrack_plugin_title;
 
 	if ($post['mode'] == 'submit') {
 		$page = plugin_bugtrack_write($post['base'], $post['pagename'], $post['summary'], $post['name'], $post['priority'], $post['state'], $post['category'], $post['version'], $post['body']);
-		header("Location: $script?".rawurlencode($page));
+		header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
 		die;
 	}
 	return FALSE;

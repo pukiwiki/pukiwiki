@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.33 2004/10/09 08:01:58 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.34 2004/10/10 10:20:59 henoheno Exp $
 //
 
 /*
@@ -60,7 +60,7 @@ define('PCMT_TIMESTAMP', 0);
 
 function plugin_pcomment_action()
 {
-	global $script, $vars;
+	global $vars;
 
 	if (! isset($vars['msg']) || $vars['msg'] == '') return array();
 	$refer = isset($vars['refer']) ? $vars['refer'] : '';
@@ -71,7 +71,7 @@ function plugin_pcomment_action()
 		return $retval;
 	}
 
-	header("Location: $script?" . rawurlencode($refer));
+	header('Location: ' . get_script_uri() . '?' . rawurlencode($refer));
 	exit;
 }
 
