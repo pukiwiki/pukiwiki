@@ -2,7 +2,7 @@
 // プラグイン attach
 
 // changed by Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
-// $Id: attach.inc.php,v 1.5 2002/07/01 07:08:57 masui Exp $
+// $Id: attach.inc.php,v 1.6 2002/07/02 04:20:20 masui Exp $
 
 // set PHP value to enable file upload
 ini_set("file_uploads","1");
@@ -83,7 +83,7 @@ function plugin_attach_convert()
 		$ret.= "<form enctype=\"multipart/form-data\" action=\"$script\" method=\"post\">\n";
 		$ret.= "<div>\n";
 		$ret.= "<input type=\"hidden\" name=\"plugin\" value=\"attach\" />\n";
-		$ret.= "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\">\n";
+		$ret.= "<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($vars["page"])."\">\n";
 		$ret.= "<input type=\"hidden\" name=\"max_file_size\" value=\"".MAX_FILESIZE."\" />\n";
 		$ret.= "<span class=\"small\">[<a href=\"$script?plugin=attach&amp;pcmd=list\">$_msg_attach_filelist</a>]</span><br />\n";
 		$ret.= "<span class=\"small\">".str_replace('$1',$max_size,$_msg_maxsize)."</span><br />\n";
@@ -131,8 +131,8 @@ function plugin_attach_action()
 		  $form = "<form action=\"$script\" method=\"post\">\n";
 		  $form .= "<div>\n";
 		  $form .= "<input type=\"hidden\" name=\"plugin\" value=\"attach\" />\n";
-		  $form .= "<input type=\"hidden\" name=\"refer\" value=\"$vars[refer]\" />\n";
-		  $form .= "<input type=\"hidden\" name=\"delfile\" value=\"$vars[delfile]\" />\n";
+		  $form .= "<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($vars["refer"])."\" />\n";
+		  $form .= "<input type=\"hidden\" name=\"delfile\" value=\"".htmlspecialchars($vars["delfile"])."\" />\n";
 		  $form .= "<input type=\"submit\" value=\"$_btn_delete\" />\n";
 		  $form .= "</div>\n";
 		  $form .= "</form>";
@@ -227,7 +227,7 @@ function plugin_attach_action()
 		$ret.= "<form enctype=\"multipart/form-data\" action=\"$script\" method=\"post\">\n";
 		$ret.= "<blockquote>\n";
 		$ret.= "<input type=\"hidden\" name=\"plugin\" value=\"attach\" />\n";
-		$ret.= "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n";
+		$ret.= "<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($vars["page"])."\" />\n";
 		$ret.= "<input type=\"hidden\" name=\"max_file_size\" value=\"".MAX_FILESIZE."\" />\n";
 		$ret.= "<span class=\"small\">[<a href=\"$script?plugin=attach&amp;pcmd=list\">$_msg_attach_filelist</a>]</span><br />\n";
 		$ret.= "<span class=\"small\">".str_replace('$1',$max_size,$_msg_maxsize)."</span><br />\n";

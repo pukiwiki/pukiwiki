@@ -1,5 +1,5 @@
 <?
-// $Id: comment.inc.php,v 1.6 2002/07/02 01:31:25 masui Exp $
+// $Id: comment.inc.php,v 1.7 2002/07/02 04:20:20 masui Exp $
 
 global $name_cols, $comment_cols, $msg_format, $name_format;
 global $msg_format, $now_format, $comment_format;
@@ -152,17 +152,17 @@ function plugin_comment_convert()
 	}
 
 	if((arg_check("read")||$vars["cmd"] == ""||arg_check("unfreeze")||arg_check("freeze")||$vars["write"]||$vars["comment"]))
-		$button = "<input type=\"submit\" name=\"comment\" value=\"$_btn_comment\" />\n";
+		$button = "<input type=\"submit\" name=\"comment\" value=\"".htmlspecialchars($_btn_comment)."\" />\n";
 
 	$string = "<br /><form action=\"$script\" method=\"post\">\n"
 		 ."<div>\n"
-		 ."<input type=\"hidden\" name=\"comment_no\" value=\"$comment_no\" />\n"
-		 ."<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n"
+		 ."<input type=\"hidden\" name=\"comment_no\" value=\"".htmlspecialchars($comment_no)."\" />\n"
+		 ."<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($vars["page"])."\" />\n"
 		 ."<input type=\"hidden\" name=\"plugin\" value=\"comment\" />\n"
-		 ."<input type=\"hidden\" name=\"nodate\" value=\"$nodate\" />\n"
-		 ."<input type=\"hidden\" name=\"digest\" value=\"$digest\" />\n"
+		 ."<input type=\"hidden\" name=\"nodate\" value=\"".htmlspecialchars($nodate)."\" />\n"
+		 ."<input type=\"hidden\" name=\"digest\" value=\"".htmlspecialchars($digest)."\" />\n"
 		 ."$nametags"
-		 ."<input type=\"text\" name=\"msg\" size=\"$comment_cols\" />\n"
+		 ."<input type=\"text\" name=\"msg\" size=\"".htmlspecialchars($comment_cols)."\" />\n"
 		 .$button
 		 ."</div>\n"
 		 ."</form>";

@@ -1,5 +1,5 @@
 <?
-// $Id: vote.inc.php,v 1.5 2002/07/01 07:08:57 masui Exp $
+// $Id: vote.inc.php,v 1.6 2002/07/02 04:20:20 masui Exp $
 
 function plugin_vote_action()
 {
@@ -53,9 +53,9 @@ function plugin_vote_action()
 
 		$body .= "<form action=\"$script?cmd=preview\" method=\"post\">\n"
 			."<div>\n"
-			."<input type=\"hidden\" name=\"refer\" value=\"".$post["refer"]."\" />\n"
-			."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\" />\n"
-			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">$postdata_input</textarea><br />\n"
+			."<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($post["refer"])."\" />\n"
+			."<input type=\"hidden\" name=\"digest\" value=\"".htmlspecialchars($post["digest"])."\" />\n"
+			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">".htmlspecialchars($postdata_input)."</textarea><br />\n"
 			."</div>\n"
 			."</form>\n";
 	}
@@ -113,9 +113,9 @@ function plugin_vote_convert()
 		. "<tr>\n"
 		. "<td align=\"left\" class=\"vote_label\"><strong>The choices</strong>"
 		. "<input type=\"hidden\" name=\"plugin\" value=\"vote\" />\n"
-		. "<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n"
-		. "<input type=\"hidden\" name=\"vote_no\" value=\"$vote_no\" />\n"
-		. "<input type=\"hidden\" name=\"digest\" value=\"$digest\" />\n"
+		. "<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($vars["page"])."\" />\n"
+		. "<input type=\"hidden\" name=\"vote_no\" value=\"".htmlspecialchars($vote_no)."\" />\n"
+		. "<input type=\"hidden\" name=\"digest\" value=\"".htmlspecialchars($digest)."\" />\n"
 		. "</td>\n"
 		. "<td align=\"center\" class=\"vote_label\"><strong>Votes</strong></td>\n"
 		. "</tr>\n";
@@ -138,7 +138,7 @@ function plugin_vote_convert()
 
 		$string .= "<tr>"
 			.  "<td width=\"80%\" class=\"$cls\" nowrap>$link</td>"
-			.  "<td class=\"$cls\" nowrap=\"nowrap\">$cnt&nbsp;&nbsp;<input type=\"submit\" name=\"vote[$arg]\" value=\"Vote\" /></td>"
+			.  "<td class=\"$cls\" nowrap=\"nowrap\">$cnt&nbsp;&nbsp;<input type=\"submit\" name=\"vote[".htmlspecialchars($arg)."]\" value=\"Vote\" /></td>"
 			.  "</tr>\n";
 	}
 

@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.4 2002/07/01 07:08:57 masui Exp $
+ $Id: article.inc.php,v 1.5 2002/07/02 04:20:20 masui Exp $
  
  */
 
@@ -150,9 +150,9 @@ function plugin_article_action()
 
 		$body .= "<form action=\"$script?cmd=preview\" method=\"post\">\n"
 			."<div>\n"
-			."<input type=\"hidden\" name=\"refer\" value=\"".$post["refer"]."\" />\n"
-			."<input type=\"hidden\" name=\"digest\" value=\"".$post["digest"]."\" />\n"
-			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">$postdata_input</textarea><br />\n"
+			."<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($post["refer"])."\" />\n"
+			."<input type=\"hidden\" name=\"digest\" value=\"".htmlspecialchars($post["digest"])."\" />\n"
+			."<textarea name=\"msg\" rows=\"$rows\" cols=\"$cols\" wrap=\"virtual\" id=\"textarea\">".htmlspecialchars($postdata_input)."</textarea><br />\n"
 			."</div>\n"
 			."</form>\n";
 	}
@@ -229,9 +229,9 @@ function plugin_article_convert()
 	$string = "<form action=\"$script\" method=\"post\">\n"
 		 ."<div>\n"
 		 ."<input type=\"hidden\" name=\"article_no\" value=\"$article_no\" />\n"
-		 ."<input type=\"hidden\" name=\"refer\" value=\"$vars[page]\" />\n"
+		 ."<input type=\"hidden\" name=\"refer\" value=\"".htmlspecialchars($vars["page"])."\" />\n"
 		 ."<input type=\"hidden\" name=\"plugin\" value=\"article\" />\n"
-		 ."<input type=\"hidden\" name=\"digest\" value=\"$digest\" />\n"
+		 ."<input type=\"hidden\" name=\"digest\" value=\"".htmlspecialchars($digest)."\" />\n"
 		 ."$_btn_name<input type=\"text\" name=\"name\" size=\"".NAME_COLS."\" /><br />\n"
 		 ."$_btn_subject<input type=\"text\" name=\"subject\" size=\"".SUBJECT_COLS."\" /><br />\n"
 		 ."<textarea name=\"msg\" rows=\"".article_ROWS."\" cols=\"".article_COLS."\">\n</textarea><br />\n"
