@@ -2,12 +2,12 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: include.inc.php,v 1.14 2004/08/09 15:01:42 henoheno Exp $
+// $Id: include.inc.php,v 1.15 2004/08/10 11:38:21 henoheno Exp $
 //
 
-define('INCLUDE_MAX', 4); // 一度に(連鎖的に)インクルードできる最大数
+define('INCLUDE_MAX', 4); // 一度にインクルードできるページの最大数
 
-// ページを(再帰)インクルードする
+// ページを(可能ならば再帰的に)インクルードする
 function plugin_include_convert()
 {
 	global $script, $vars, $get, $post, $menubar, $_msg_include_restrict;
@@ -15,36 +15,42 @@ function plugin_include_convert()
 	static $count = 1;
 
 	if (func_num_args() == 0) return '#include(): No argument<br />';
-	if ($count > INCLUDE_MAX) return '#include(): Include-max reached(' . INCLUDE_MAX . ")<br />";
 
 	// Get an argument
 	list($page) = func_get_args();
 	$page = strip_bracket($page);
 	$s_page = htmlspecialchars($page);
+	$r_page = rawurlencode($page);
+	$link = "<a href=\"$script?$r_page\">$s_page</a>"; // Read link
 
 	// Loop yourself
-	$self = isset($vars['page']) ? $vars['page'] : '';
-	$included[$self] = TRUE;
+	$root = isset($vars['page']) ? $vars['page'] : '';
+	$included[$root] = TRUE;
 
 	// I'm stuffed
-	if (isset($included[$page])) return "#include(): Already included: $s_page<br />";
-	if (! is_page($page))        return "#include(): No such page: $s_page<br />";
-	++$count;
+	if (isset($included[$page])) {
+		return "#include(): Included already: $link<br />";
+	} if (! is_page($page)) {
+		return "#include(): No such page: $s_page<br />";
+	} if ($count > INCLUDE_MAX) {
+		return "#include(): Limit exceeded: $link<br />";
+	} else {
+		++$count;
+	}
 
 	// One page, only one time, at a time
 	$included[$page] = TRUE;
 
-	// Include a $page, that probably includes more pages
+	// Include A page, that probably includes another pages
 	$get['page'] = $post['page'] = $vars['page'] = $page;
 	if (check_readable($page, false, false)) {
 		$body = convert_html(get_source($page));
 	} else {
 		$body = str_replace('$1', $page, $_msg_include_restrict);
 	}
-	$get['page'] = $post['page'] = $vars['page'] = $self;
+	$get['page'] = $post['page'] = $vars['page'] = $root;
 
 	// Add a title with edit link, before included document
-	$r_page = rawurlencode($page);
 	$link = "<a href=\"$script?cmd=edit&amp;page=$r_page\">$s_page</a>";
 
 	if ($page == $menubar) {
