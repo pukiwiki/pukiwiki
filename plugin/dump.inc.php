@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.17 2004/09/26 12:29:36 henoheno Exp $
+// $Id: dump.inc.php,v 1.18 2004/09/26 12:49:50 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -285,7 +285,7 @@ EOD;
 }
 
 /////////////////////////////////////////////////
-// tarlib: library for tar file creation and expansion
+// tarlib: a class library for tar file creation and expansion
 
 // Tar related definition
 define('TARLIB_HDR_LEN',           512);	// ヘッダの大きさ
@@ -326,8 +326,8 @@ class tarlib
 	var $dummydata;
 
 	// コンストラクタ
-	function tarlib( $name = '' ) {
-		$this->filename = $name;
+	function tarlib() {
+		$this->filename = '';
 		$this->fp       = FALSE;
 		$this->status   = TARLIB_STATUS_INIT;
 		$this->arc_kind = ARCFILE_TAR_GZ;
@@ -338,25 +338,24 @@ class tarlib
 	// 引数  : tarファイルを作成するパス
 	// 返り値: TRUE .. 成功 , FALSE .. 失敗
 	////////////////////////////////////////////////////////////
-	function create($odir, $kind = ARCFILE_TAR_GZ)
+	function create($tempdir, $kind = ARCFILE_TAR_GZ)
 	{
-		$tname = tempnam($odir, 'tar');
+		$tempnam = tempnam($tempdir, 'tarlib_');
+		if ($tempnam === FALSE) return FALSE;
 
 		if ($kind == ARCFILE_TAR_GZ) {
 			$this->arc_kind = ARCFILE_TAR_GZ;
-			$this->fp = gzopen($tname, 'wb');
+			$this->fp = gzopen($tempnam, 'wb');
 		} else {
 			$this->arc_kind = ARCFILE_TAR;
-			$this->fp = @fopen($tname, 'wb');
+			$this->fp = @fopen($tempnam, 'wb');
 		}
-		if ($this->fp === FALSE) return FALSE;	// 作成失敗
+		if ($this->fp === FALSE) return FALSE;
 
-		// 作成に成功したらファイル名を記憶しておく
-		$this->filename = $tname;
-		$this->status   = TARLIB_STATUS_CREATE;
-		
-		// ダミーデータ
+		$this->filename  = $tempnam;
 		$this->dummydata = join('', array_fill(0, TARLIB_BLK_LEN, "\0"));
+		$this->status    = TARLIB_STATUS_CREATE;
+
 		rewind($this->fp);
 
 		return TRUE;
