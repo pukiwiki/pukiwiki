@@ -38,13 +38,16 @@ DESCRIPTION
 
     3.  *.phpとpukiwiki.gifを同じところに設置します。
 
-    4.  さらに*.phpと同じところにpukiwiki.ini.phpとpukiwiki.skin.ja.php、
-        もしくはpukiwiki.skin.en.phpを同じところに設置します。
+    4.  *.phpと同じところにpukiwiki.ini.phpを設置します。
+
+    5.  pukiwiki.ini.php内で指定したスキンファイルを設置します。
+        skinディレクトリ内に、pukiwiki.skin.ja.php(日本語)および
+        pukiwiki.skin.en.php(英語)が用意されています。
 
     5.  pukiwiki.ini.php内で指定したデータファイルディレクトリを
         属性 777 で作成する。(ディフォルトは wiki )
         このディレクトリ以下にファイルがある場合には、そのファイルも
-　　　　属性 666に変更してください。
+        属性 666に変更してください。
 
     6.  pukiwiki.ini.php内で指定した差分ファイルディレクトリを
         属性 777 で作成する。(ディフォルトは diff )
@@ -70,14 +73,14 @@ DESCRIPTION
             pukiwiki.skin.ja.php 644                 ASCII
             en.lng               644                 ASCII
             ja.lng               644                 ASCII
-	    func.php             644                 ASCII
-	    file.php             644                 ASCII
-	    html.php             644                 ASCII
-	    init.php             644                 ASCII
-	    plugin.php           644                 ASCII
-	    template.php         644                 ASCII
-	    rss.php              644                 ASCII
-	    backup.php           644                 ASCII
+            func.php             644                 ASCII
+            file.php             644                 ASCII
+            html.php             644                 ASCII
+            init.php             644                 ASCII
+            plugin.php           644                 ASCII
+            template.php         644                 ASCII
+            rss.php              644                 ASCII
+            backup.php           644                 ASCII
             pukiwiki.gif         644                 BINARY
 
             ディレクトリ         パーミッション
@@ -91,7 +94,7 @@ DESCRIPTION
 
    データのバックアップ方法
 
-            データファイルディレクトリ以下をバックアップすればよい。
+            データファイルディレクトリ以下をバックアップします。
             (ディフォルトディレクトリ名は wiki )
 
 新しいページの作り方
@@ -147,6 +150,19 @@ DESCRIPTION
             ---項目3-1-2
             --項目3-2
 
+    *   行をプラス+ではじめると、 箇条書き`<ol>'になります。
+        プラスの数が増えるとレベルが下がります（3レベルまで）
+
+            +項目1
+            ++項目1-1
+            ++項目1-2
+            +項目2
+            +項目3
+            ++項目3-1
+            +++項目3-1-1
+            +++項目3-1-2
+            ++項目3-2
+
     *   コロンを使うと、 用語と解説文のリスト`<dl>'が書けます。
 
             :用語1:いろいろ書いた解説文1
@@ -172,7 +188,7 @@ DESCRIPTION
             日本語も使えます。
 
         *   また、[[pukiwiki:http://pukiwiki.org/]] のようにすると factage の文字に
-            http://masui.net/pukiwiki/ へのリンクが貼れます。
+            http://pukiwiki.org/ へのリンクが貼れます。
 
         *   [[サーバ名:WikiName]] のようにすると InterWikiName になります。
 

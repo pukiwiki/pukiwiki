@@ -38,7 +38,7 @@
 		[ <a href="<?php echo $script ?>?plugin=newpage">ø∑µ¨</a>
 		| <a href="<?php echo $link_edit ?>"> ‘Ω∏</a>
 		| <a href="<?php echo $link_diff ?>">∫π ¨</a>
-		| <a href="<?php echo $script ?>?plugin=attach&pcmd=upload&page=<?php echo rawurlencode($vars[page]) ?>">≈∫…’</a>
+		| <a href="<?php echo $script ?>?plugin=attach&amp;pcmd=upload&amp;page=<?php echo rawurlencode($vars[page]) ?>">≈∫…’</a>
 		]
 		&nbsp;
 	<?php } ?>

@@ -37,7 +37,7 @@
 		[ <a href="<?php echo $script ?>?plugin=newpage">New</a>
 		| <a href="<?php echo $link_edit ?>">Edit</a>
 		| <a href="<?php echo $link_diff ?>">Diff</a>
-		| <a href="<?php echo $script ?>?plugin=attach&pcmd=upload&page=<?php echo rawurlencode($vars[page]) ?>">Upload</a>
+		| <a href="<?php echo $script ?>?plugin=attach&amp;pcmd=upload&amp;page=<?php echo rawurlencode($vars[page]) ?>">Upload</a>
 		]
 		&nbsp;
 	<?php } ?>
