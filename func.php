@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.16 2003/02/22 05:11:45 panda Exp $
+// $Id: func.php,v 1.17 2003/02/22 06:25:36 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -437,10 +437,10 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 	}
 	for ($i = $start; $i < $end; $i = $j)
 	{
-		$char = $pages[$i]{$pos};
+		$char = mb_substr($pages[$i],$pos,1);
 		for ($j = $i; $j < $end; $j++)
 		{
-			if ($pages[$j]{$pos} != $char)
+			if (mb_substr($pages[$j],$pos,1) != $char)
 			{
 				break;
 			}
@@ -451,7 +451,7 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 		}
 		if ($i >= ($j - 1))
 		{
-			$result .= preg_quote(substr($pages[$i],$pos),'/'); 
+			$result .= preg_quote(mb_substr($pages[$i],$pos),'/'); 
 		}
 		else
 		{
@@ -461,7 +461,7 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 		}
 		$count++;
 	}
-	if ($count > 1)
+	if ($x or $count > 1)
 	{
 		$result = '(?:'.$result.')';
 	}
