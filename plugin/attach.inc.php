@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-//  $Id: attach.inc.php,v 1.70 2005/01/23 07:01:56 henoheno Exp $
+//  $Id: attach.inc.php,v 1.71 2005/01/30 12:02:37 henoheno Exp $
 //
 // File attach plugin
 
@@ -99,7 +99,6 @@ function plugin_attach_action()
 	// Dispatch
 	if (isset($_FILES['attach_file'])) {
 		// Upload
-		if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 		return attach_upload($_FILES['attach_file'], $refer, $pass);
 	}
 	switch ($pcmd) {
@@ -149,8 +148,18 @@ function attach_upload($file, $page, $pass = NULL)
 {
 	global $_attach_messages;
 
-	if (! is_page($page)) {
-		die_message("No such page");
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
+
+	// Check query-string
+	$query = 'plugin=attach&amp;pcmd=info&amp;refer=' . rawurlencode($page) .
+		'&amp;file=' . rawurlencode($file['name']);
+
+	if (PKWK_QUERY_STRING_MAX && strlen($query) > PKWK_QUERY_STRING_MAX) {
+		pkwk_common_headers();
+		echo('Query string (page name and/or file name) too long');
+		exit;
+	} else if (! is_page($page)) {
+		die_message('No such page');
 	} else if ($file['tmp_name'] == '' || ! is_uploaded_file($file['tmp_name'])) {
 		return array('result'=>FALSE);
 	} else if ($file['size'] > PLUGIN_ATTACH_MAX_FILESIZE) {
@@ -169,18 +178,15 @@ function attach_upload($file, $page, $pass = NULL)
 	}
 
 	$obj = & new AttachFile($page, $file['name']);
-	if ($obj->exist) {
+	if ($obj->exist)
 		return array('result'=>FALSE,
 			'msg'=>$_attach_messages['err_exists']);
-	}
 
-	if (move_uploaded_file($file['tmp_name'], $obj->filename)) {
+	if (move_uploaded_file($file['tmp_name'], $obj->filename))
 		chmod($obj->filename, PLUGIN_ATTACH_FILE_MODE);
-	}
 
-	if (is_page($page)) {
+	if (is_page($page))
 		touch(get_filename($page));
-	}
 
 	$obj->getstatus();
 	$obj->status['pass'] = ($pass !== TRUE && $pass !== NULL) ? md5($pass) : '';
