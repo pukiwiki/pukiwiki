@@ -1,6 +1,5 @@
-
-<?
-// $Id: calendar2.inc.php,v 1.13 2002/12/05 05:02:27 panda Exp $
+<?php
+// $Id: calendar2.inc.php,v 1.14 2002/12/05 05:49:41 panda Exp $
 // *引数にoffと書くことで今日の日記を表示しないようにした。
 function plugin_calendar2_convert()
 {

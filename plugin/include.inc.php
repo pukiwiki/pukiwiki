@@ -1,5 +1,5 @@
-<?
-// $Id: include.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+<?php
+// $Id: include.inc.php,v 1.2 2002/12/05 05:45:18 panda Exp $
 function plugin_include_convert()
 {
 	global $script,$get,$post,$vars,$WikiName,$BracketName,$hr;

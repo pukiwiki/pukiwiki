@@ -1,4 +1,4 @@
-<?
+<?php
  /*
  
  PukiWiki サーバー情報表示プラグイン
@@ -14,7 +14,7 @@
 
  ※SERVER_NAMEはinit.phpで既に設定されているはずですので、残り2行を追加してください
  
- $Id: server.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+ $Id: server.inc.php,v 1.2 2002/12/05 05:49:41 panda Exp $
  
  */
 

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * PukiWiki BugTrackプラグイン
  *
@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack_list.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+ * $Id: bugtrack_list.inc.php,v 1.2 2002/12/05 05:45:18 panda Exp $
  */
 
 require_once("plugin/bugtrack.inc.php");

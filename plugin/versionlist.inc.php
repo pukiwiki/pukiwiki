@@ -1,11 +1,11 @@
-<?
+<?php
 /*
  * PukiWiki versionlistプラグイン
  *
  * CopyRight 2002 S.YOSHIMURA GPL2
  * http://masui.net/pukiwiki/ yosimura@excellence.ac.jp
  *
- * $Id: versionlist.inc.php,v 1.1 2002/12/05 05:02:27 panda Exp $
+ * $Id: versionlist.inc.php,v 1.2 2002/12/05 05:45:18 panda Exp $
  */
 
 function plugin_versionlist_convert()
