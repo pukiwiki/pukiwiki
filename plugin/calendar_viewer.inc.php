@@ -1,7 +1,7 @@
 <?php
 /*
  * PukiWiki calendar_viewerプラグイン
- * $Id: calendar_viewer.inc.php,v 1.16 2004/08/10 12:50:20 henoheno Exp $
+ * $Id: calendar_viewer.inc.php,v 1.17 2004/08/10 12:56:30 henoheno Exp $
  * calendarrecentプラグインを元に作成
  */
 
@@ -43,20 +43,15 @@ function plugin_calendar_viewer_convert()
 	global $_msg_calendar_viewer_right, $_msg_calendar_viewer_left;
 	global $_msg_calendar_viewer_restrict;
 
-	// *デフォルト値をセット
-	// 基準となるページ名
-	$pagename = '';
-	// 表示する件数制限
-	$limit_page = 7;
-	// 一覧表示する年月
-	$date_YM = '';
-	// 動作モード
-	$mode = 'past';
-	// 日付のセパレータ calendar2なら'-' calendarなら''
-	$date_sep = '-';
+	// デフォルト値
+	$pagename   = '';	// 基準となるページ名
+	$limit_page = 7;	// 表示する件数制限
+	$date_YM    = '';	// 一覧表示する年月
+	$mode       = 'past';	// 動作モード
+	$date_sep   = '-';	// 日付のセパレータ calendar2なら'-' calendarなら''
 
 
-	// *引数の確認
+	// 引数の確認
 	if (func_num_args() >= 2){
 		$func_vars_array = func_get_args();
 
@@ -77,15 +72,15 @@ function plugin_calendar_viewer_convert()
 			$limit_page = 31;
 		} else if (preg_match('/^[0-9]+$/', $func_vars_array[1])){
 			// n日分表示
-			$limit_pitch = $func_vars_array[1];
+			$page_YM = '';
 			$limit_page = $limit_pitch;
 			$limit_base = 0;
-			$page_YM = '';
+			$limit_pitch = $func_vars_array[1];
 		} else if (preg_match('/([0-9]+)\*([0-9]+)/', $func_vars_array[1], $reg_array)){
-			$limit_pitch = $reg_array[2];
-			$limit_page = $reg_array[1] + $limit_pitch;
-			$limit_base = $reg_array[1];
 			$page_YM = '';
+			$limit_base = $reg_array[1];
+			$limit_page = $reg_array[1] + $limit_pitch;
+			$limit_pitch = $reg_array[2];
 		} else {
 			return $_err_calendar_viewer_param2;
 		}
