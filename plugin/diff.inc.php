@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.inc.php,v 1.9 2004/07/18 10:38:54 henoheno Exp $
+// $Id: diff.inc.php,v 1.10 2004/07/18 10:41:02 henoheno Exp $
 //
 
 //ページの差分を表示する
@@ -76,7 +76,7 @@ function plugin_diff_delete($page)
 {
 	error_reporting(E_ALL);
 
-	global $script, $vars, $adminpass;
+	global $script, $vars;
 	global $_title_diff_delete, $_msg_diff_deleted;
 	global $_msg_diff_adminpass, $_btn_delete, $_msg_invalidpass;
 	
