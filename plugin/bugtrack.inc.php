@@ -8,7 +8,7 @@
  * 変更履歴:
  *  2002.06.17: 作り始め
  *
- * $Id: bugtrack.inc.php,v 1.2.2.6 2003/03/12 04:17:26 panda Exp $
+ * $Id: bugtrack.inc.php,v 1.2.2.7 2003/03/28 15:41:56 panda Exp $
  */
 
 function plugin_bugtrack_init()
@@ -95,6 +95,8 @@ function plugin_bugtrack_print_form($base,$category)
     $encoded_category .= "</select>";
   }
   
+  $s_base = htmlspecialchars($base);
+	
   $body = "<table border=\"0\"><form action=\"$script\" method=\"post\">
 <tr><th nowrap>$_bugtrack_plugin_name</th><td><input name=\"name\" size=\"20\" type=\"text\"></td></tr>
 <tr><th nowrap>$_bugtrack_plugin_category</th><td>$encoded_category</td></tr>
@@ -107,7 +109,7 @@ function plugin_bugtrack_print_form($base,$category)
 <tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" value=\"$_bugtrack_plugin_submit\">
 <input type=\"hidden\" name=\"plugin\" value=\"bugtrack\">
 <input type=\"hidden\" name=\"mode\" value=\"submit\">
-<input type=\"hidden\" name=\"base\" value=\"$base\">
+<input type=\"hidden\" name=\"base\" value=\"$s_base\">
 </td></tr>
 </form></table>";
   
