@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.75 2004/06/24 13:05:35 henoheno Exp $
+// $Id: init.php,v 1.76 2004/06/24 13:45:52 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -66,13 +66,13 @@ define('MUTIME',getmicrotime());
 $die = FALSE; $message = '';
 foreach(array('LANG_FILE', 'INI_FILE') as $file){
 	if (!file_exists(constant($file)) || !is_readable(constant($file))) {
-		$die = TRUE; $message = "${message}File is not found. ($file)\n";
+		$die = TRUE;
+		$message = "${message}File is not found. ($file)\n";
+	} else {
+		require(constant($file));
 	}
 }
 if ($die) { die_message(nl2br("\n\n" . $message . "\n")); }
-
-require(LANG_FILE);	// 言語ファイル
-require(INI_FILE);	// 設定ファイル
 
 /////////////////////////////////////////////////
 // INI_FILE: $script: 初期設定
