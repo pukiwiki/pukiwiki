@@ -2,60 +2,53 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: vote.inc.php,v 1.16 2004/07/31 03:09:20 henoheno Exp $
+// $Id: vote.inc.php,v 1.17 2004/08/15 01:29:19 henoheno Exp $
 //
 
 function plugin_vote_action()
 {
 	global $vars, $script, $cols,$rows;
 	global $_title_collided, $_msg_collided, $_title_updated;
-	global $_vote_plugin_choice, $_vote_plugin_votes;
+	global $_vote_plugin_votes;
 
 	$postdata_old  = get_source($vars['refer']);
+
 	$vote_no = 0;
-	$title = $body = $postdata = '';
+	$title = $body = $postdata = $postdata_input = $vote_str = '';
+	$matches = array();
+	foreach($postdata_old as $line) {
 
-	foreach($postdata_old as $line)
-	{
-		if (! preg_match("/^#vote\((.*)\)\s*$/", $line, $arg))
-		{
+		if (preg_match("/^#vote\((.*)\)\s*$/", $line, $matches)) {
+			$args = explode(',', $matches[1]);
+		} else {
 			$postdata .= $line;
 			continue;
 		}
 
-		if ($vote_no++ != $vars['vote_no'])
-		{
+		if ($vote_no++ != $vars['vote_no']) {
 			$postdata .= $line;
 			continue;
 		}
-		$args = explode(',', $arg[1]);
 
-		$match = array();
-		foreach($args as $arg)
-		{
+		foreach($args as $arg) {
 			$cnt = 0;
-			if (preg_match("/^(.+)\[(\d+)\]$/", $arg, $match))
-			{
-				$arg = $match[1];
-				$cnt = $match[2];
+			if (preg_match("/^(.+)\[(\d+)\]$/", $arg, $matches)) {
+				$arg = $matches[1];
+				$cnt = $matches[2];
 			}
 			$e_arg = encode($arg);
 			if (! empty($vars["vote_$e_arg"]) and $vars["vote_$e_arg"] == $_vote_plugin_votes)
-			{
 				++$cnt;
-			}
 
 			$votes[] = $arg . '[' . $cnt . ']';
 		}
 
 		$vote_str = '#vote(' . @join(',', $votes) . ")\n";
-
 		$postdata_input = $vote_str;
 		$postdata      .= $vote_str;
 	}
 
-	if (md5(@join('', get_source($vars['refer']))) != $vars['digest'])
-	{
+	if (md5(@join('', get_source($vars['refer']))) != $vars['digest']) {
 		$title = $_title_collided;
 
 		$s_refer  = htmlspecialchars($vars['refer']);
@@ -72,41 +65,32 @@ $_msg_collided
 </form>
 
 EOD;
-	}
-	else
-	{
+	} else {
 		page_write($vars['refer'], $postdata);
-
 		$title = $_title_updated;
 	}
 
-	$retvars['msg'] = $title;
-	$retvars['body'] = $body;
-
 	$vars['page'] = $vars['refer'];
 
-	return $retvars;
+	return array('msg'=>$title, 'body'=>$body);
 }
 
 function plugin_vote_convert()
 {
 	global $script, $vars,  $digest;
 	global $_vote_plugin_choice, $_vote_plugin_votes;
-	static $numbers = array();
+	static $number = array();
 
-	if (! isset($numbers[$vars['page']]))
-	{
-		$numbers[$vars['page']] = 0;
-	}
-	$vote_no = $numbers[$vars['page']]++;
+	$page = isset($vars['page']) ? $vars['page'] : '';
+	
+	// Vote-box-id in the page
+	if (! isset($number[$page])) $number[$page] = 0; // Init
+	$vote_no = $number[$page]++;
 
-	if (!func_num_args())
-	{
-		return '';
-	}
+	if (! func_num_args()) return '#vote(): No arguments';
 
-	$args = func_get_args();
-	$s_page   = htmlspecialchars($vars['page']);
+	$args     = func_get_args();
+	$s_page   = htmlspecialchars($page);
 	$s_digest = htmlspecialchars($digest);
 
 	$body = <<<EOD
@@ -125,15 +109,13 @@ function plugin_vote_convert()
 EOD;
 
 	$tdcnt = 0;
-	$match = array();
-	foreach($args as $arg)
-	{
+	$matches = array();
+	foreach($args as $arg) {
 		$cnt = 0;
 
-		if (preg_match("/^(.+)\[(\d+)\]$/", $arg, $match))
-		{
-			$arg = $match[1];
-			$cnt = $match[2];
+		if (preg_match("/^(.+)\[(\d+)\]$/", $arg, $matches)) {
+			$arg = $matches[1];
+			$cnt = $matches[2];
 		}
 		$e_arg = encode($arg);
 
@@ -143,7 +125,7 @@ EOD;
 
 		$body .= <<<EOD
   <tr>
-   <td align="left" class="$cls" style="padding-left:1em;padding-right:1em;">$link</td>
+   <td align="left"  class="$cls" style="padding-left:1em;padding-right:1em;">$link</td>
    <td align="right" class="$cls">$cnt&nbsp;&nbsp;
     <input type="submit" name="vote_$e_arg" value="$_vote_plugin_votes" class="submit" />
    </td>
