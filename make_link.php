@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.56 2003/08/06 05:53:43 arino Exp $
+// $Id: make_link.php,v 1.57 2003/09/03 02:04:04 arino Exp $
 //
 
 // リンクを付加する
@@ -413,6 +413,7 @@ class Link_interwikiname extends Link
 	function get_pattern()
 	{
 		$s2 = $this->start + 2;
+		$s5 = $this->start + 5;
 		return <<<EOD
 \[\[                  # open bracket
 (?:
@@ -422,14 +423,18 @@ class Link_interwikiname extends Link
 ((?:(?!\s|:|\]\]).)+) # (3) InterWiki
 (?<! > | >\[\[ )      # not '>' or '>[['
 :                     # separator
-((?:(?!>|\]\]).)+)    # (4) param
+(                     # (4) param
+ (\[\[)?              # (5) open bracket
+ (?:(?!>|\]\]).)+
+ (?($s5)\]\])         # close bracket if (5)
+)
 (?($s2)\]\])          # close bracket if (2)
 \]\]                  # close bracket
 EOD;
 	}
 	function get_count()
 	{
-		return 4;
+		return 5;
 	}
 	function set($arr,$page)
 	{
