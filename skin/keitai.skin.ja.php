@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: keitai.skin.ja.php,v 1.6 2004/08/06 12:29:31 henoheno Exp $
+// $Id: keitai.skin.ja.php,v 1.7 2004/08/06 12:47:19 henoheno Exp $
 //
 
 global $script, $vars, $page_title, $max_size, $accesskey;
@@ -18,13 +18,13 @@ $body  = mb_convert_encoding($body,  'SJIS', SOURCE_ENCODING);
 $max_size = (--$max_size * 1024);
 
 // ALT option を持つ IMG タグ(画像)を文字列に置換
-$body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]*alt="([^"]+)"[^>]*>(?(2)</a>)(?(1)</div>)#i', '$3', $body);
+$body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]*alt="([^"]+)"[^>]*>(?(2)</a>)(?(1)</div>)#i', '[$3]', $body);
 
 // ALT option の無い IMG タグ(画像)を文字列に置換
 $body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]+>(?(2)</a>)(?(1)</div>)#i', '[img]', $body);
 
 // ページ番号
-$r_page = isset($vars['page'] ? $vars['page'] : '';
+$r_page = isset($vars['page']) ? $vars['page'] : '';
 $r_page = rawurlencode($r_page);
 $pageno = (isset($vars['p']) and is_numeric($vars['p'])) ? $vars['p'] : 0;
 $pagecount = ceil(strlen($body) / $max_size);
