@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.51 2003/07/29 09:57:13 arino Exp $
+// $Id: convert_html.php,v 1.52 2003/07/31 08:22:47 arino Exp $
 //
 function convert_html($lines)
 {
@@ -847,6 +847,7 @@ class Body extends Block
 	}
 	function replace_related($arr)
 	{
+		global $vars;
 		static $related = NULL;
 		
 		if (is_null($related))
