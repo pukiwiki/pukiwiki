@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.46 2003/09/12 06:43:04 arino Exp $
+// $Id: pukiwiki.ini.php,v 1.47 2003/09/24 00:38:43 arino Exp $
 //
 // PukiWiki setting file
 
@@ -219,6 +219,20 @@ $notify_from = 'xxx@yyy.zz';
 $notify_subject = '[pukiwiki] $page';
 // 追加ヘッダ
 $notify_header = "From: $notify_from\r\nX-Mailer: PukiWiki/".S_VERSION." PHP/".phpversion();
+// POP Before SMTP を実施
+$smtp_auth = 0;
+// SMTPサーバ名を指定する (Windows のみ, 通常は php.ini で指定)
+$smtp_server = 'localhost';
+// POPサーバ名を指定する
+$pop_server = 'localhost';
+// POP のポート番号 (通常 110)
+$pop_port = 110;
+// 認証に APOP を利用するかどうか (APOP 利用時は 1、以外は POP3)
+$pop_auth_use_apop = 0;
+// POP ユーザ名
+$pop_userid = '';
+// POP パスワード
+$pop_passwd = '';
 
 /////////////////////////////////////////////////
 // 一覧・更新一覧に含めないページ名(正規表現で)

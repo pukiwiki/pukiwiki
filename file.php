@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.32 2003/09/12 09:10:16 arino Exp $
+// $Id: file.php,v 1.33 2003/09/24 00:38:43 arino Exp $
 //
 
 // ソースを取得
@@ -95,6 +95,7 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 	global $post,$update_exec;
 	global $_msg_invalidiwn;
 	global $notify,$notify_to,$notify_from,$notify_subject,$notify_header;
+	global $smtp_server,$smtp_auth;
 	
 	if (!is_pagename($page))
 	{
@@ -149,7 +150,12 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 	
 	if ($notify and $dir == DIFF_DIR)
 	{
+		if ($smtp_auth)
+		{
+			pop_before_smtp();
+		}
  		$subject = str_replace('$page',$page,$notify_subject);
+		ini_set('SMTP',$smtp_server);
  		mb_language(LANG);
  		mb_send_mail($notify_to,$subject,$str,$notify_header);
 	}
