@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ls2.inc.php,v 1.12 2003/05/12 10:32:12 arino Exp $
+// $Id: ls2.inc.php,v 1.13 2003/05/16 05:54:35 arino Exp $
 //
 
 /*
@@ -187,18 +187,12 @@ function ls2_get_headings($page,&$params,$level,$include = FALSE)
 	$anchor = LS2_ANCHOR_ORIGIN;
 	foreach (get_source($page) as $line)
 	{
-		if ($params['title'] and preg_match('/^(\*+)\s*(.*)$/',$line,$matches))
+		if ($params['title'] and preg_match('/^(\*{1,3})/',$line,$matches))
 		{
 			$level = strlen($matches[1]);
-			$title = $matches[2];
-			if (preg_match('/^(.*)\[(#[A-Za-z][\w-]+)\](.*)$/',$title,$matches))
-			{
-				$title = $matches[1].$matches[3];
-			}
 			$id = LS2_CONTENT_HEAD.$anchor++;
-			
 			ls2_list_push($params,$level + strlen($level));
-			array_push($params['result'], '<li>'.make_heading($title).
+			array_push($params['result'], '<li>'.make_heading($line).
 				'<a href="'.$href.$id.'">'.$_ls2_messages['msg_go'].'</a>'
 			);
 		}
