@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.41 2004/03/20 13:43:58 arino Exp $
+// $Id: file.php,v 1.42 2004/07/01 14:52:30 henoheno Exp $
 //
 
 // ソースを取得
@@ -92,7 +92,7 @@ function make_str_rules($str)
 // ファイルへの出力
 function file_write($dir,$page,$str,$notimestamp=FALSE)
 {
-	global $post,$update_exec;
+	global $update_exec;
 	global $_msg_invalidiwn;
 	global $notify,$notify_diff_only,$notify_to,$notify_from,$notify_subject,$notify_header;
 	global $smtp_server,$smtp_auth;
@@ -168,6 +168,7 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
  		mb_send_mail($notify_to,$subject,$str,$notify_header);
 	}
 }
+
 // 削除履歴ページの更新
 function put_recentdeleted($page)
 {
