@@ -11,7 +11,7 @@
  * @access  public
  * @author  
  * @create  
- * @version $Id: backup.php,v 1.14 2003/11/06 08:49:54 arino Exp $
+ * @version $Id: backup.php,v 1.15 2004/02/29 13:27:28 arino Exp $
  **/
 
 /**
@@ -64,13 +64,11 @@ function make_backup($page,$delete = FALSE)
 			$strout .= "$splitter {$data['time']}\n";
 			$strout .= join('',$data['data']);
 		}
-		$strout = trim($strout);
-		if ($strout != '')
-		{
-			$strout .= "\n";
-		}
+		$strout = preg_replace("/([^\n])\n*$/","$1\n",$strout);
 		
-		$body = "$splitter ".get_filetime($page)."\n".join('',get_source($page));
+		// 本文に含まれる$splitterをエスケープする(半角スペースを一個付加)
+		$body = preg_replace('/^('.preg_quote($splitter)."\s\d+)$/",'$1 ',get_source($page));
+		$body = "$splitter ".get_filetime($page)."\n".join('',$body);
 		$body = preg_replace("/\n*$/","\n",$body);
 
 		$fp = backup_fopen($page,'wb')
@@ -110,7 +108,7 @@ function get_backup($page,$age = 0)
 	
 	foreach($lines as $line)
 	{
-		if (preg_match("/^$splitter\s(\d+)$/",trim($line),$match))
+		if (preg_match("/^$splitter\s(\d+)$/",$line,$match))
 		{
 			$_age++;
 			if ($age > 0 and $_age > $age)
