@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.6 2004/09/25 12:36:28 henoheno Exp $
+// $Id: dump.inc.php,v 1.7 2004/09/25 12:40:54 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -47,10 +47,10 @@ define('ARCFILE_TAR',  1);
 // プラグイン本体
 function plugin_dump_action()
 {
-	global $vars, $post;
+	global $vars;
 
-	$pass = isset($post['pass']) ? $post['pass'] : NULL;
-	$act  = isset($post['act'])  ? $post['act']  : NULL;
+	$pass = isset($vars['pass']) ? $vars['pass'] : NULL;
+	$act  = isset($vars['act'])  ? $vars['act']  : NULL;
 
 	$body = '';
 
@@ -62,10 +62,10 @@ function plugin_dump_action()
 				break;
 			case PLUGIN_DUMP_RESTORE:
 				$retcode = plugin_dump_upload();
-				$body .= $retcode['msg'];
 				if ($retcode['code'] == TRUE) {
 					// 正常終了
 					$msg = 'アップロードが完了しました';
+					$body .= $retcode['msg'];
 					return array('msg' => $msg, 'body' => $body);
 				}
 				break;
@@ -85,18 +85,18 @@ function plugin_dump_action()
 // ファイルのダウンロード
 function plugin_dump_download()
 {
-	global $post;
+	global $vars;
 
 	// アーカイブの種類
-	$arc_kind = ($post['pcmd'] == 'tar') ? ARCFILE_TAR : ARCFILE_GZIP;
+	$arc_kind = ($vars['pcmd'] == 'tar') ? ARCFILE_TAR : ARCFILE_GZIP;
 
 	// ページ名に変換する
-	$namedecode = isset($post['namedecode']) ? TRUE : FALSE;
+	$namedecode = isset($vars['namedecode']) ? TRUE : FALSE;
 
 	// バックアップディレクトリ
-	$bk_wiki   = isset($post['bk_wiki'])   ? TRUE : FALSE;
-	$bk_attach = isset($post['bk_attach']) ? TRUE : FALSE;
-	$bk_backup = isset($post['bk_backup']) ? TRUE : FALSE;
+	$bk_wiki   = isset($vars['bk_wiki'])   ? TRUE : FALSE;
+	$bk_attach = isset($vars['bk_attach']) ? TRUE : FALSE;
+	$bk_backup = isset($vars['bk_backup']) ? TRUE : FALSE;
 
 	$tar = new tarlib();
 
@@ -129,13 +129,13 @@ function plugin_dump_download()
 // ファイルのアップロード
 function plugin_dump_upload()
 {
-	global $post;
+	global $vars;
 
 	$code = FALSE;
 	$msg  = '';
 
 	// アーカイブの種類
-	$arc_kind = ($post['pcmd'] == 'tar') ? ARCFILE_TAR : ARCFILE_GZIP;
+	$arc_kind = ($vars['pcmd'] == 'tar') ? ARCFILE_TAR : ARCFILE_GZIP;
 
 	$filename = $_FILES['upload_file']['name'];
 
