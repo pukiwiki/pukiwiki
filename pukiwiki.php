@@ -29,7 +29,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.27 2003/07/14 03:56:32 arino Exp $
+// $Id: pukiwiki.php,v 1.28 2003/07/27 13:52:18 arino Exp $
 /////////////////////////////////////////////////
 
 
@@ -48,7 +48,10 @@ require('config.php');
 require('link.php');
 require('trackback.php');
 require('auth.php');
-//require('mbstring.php');
+if (!extension_loaded('mbstring'))
+{
+	require('mbstring.php');
+}
 
 /////////////////////////////////////////////////
 // プログラムファイル読み込み
@@ -109,7 +112,7 @@ if ($retvars !== FALSE) {
 		$vars['cmd'] = 'read';
 		$vars['page'] = $base;
 		$body = convert_html(get_source($base));
-		$body .= tb_PutID($vars['page']);
+		$body .= tb_get_rdf($vars['page']);
 		ref_save($vars['page']);
 	}
 	
