@@ -2,11 +2,14 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: menu.inc.php,v 1.4 2004/08/06 13:10:39 henoheno Exp $
+// $Id: menu.inc.php,v 1.5 2004/08/06 13:11:27 henoheno Exp $
 //
 
 // サブメニューを使用する
 define('MENU_ENABLE_SUBMENU', FALSE);
+
+// サブメニューの名称
+define('MENU_SUBMENUBAR', 'MenuBar');
 
 function plugin_menu_convert()
 {
@@ -24,7 +27,7 @@ function plugin_menu_convert()
 	if (MENU_ENABLE_SUBMENU) {
 		$path = explode('/', strip_bracket($vars['page']));
 		while(count($path)) {
-			$_page = join('/', $path) . '/MenuBar';
+			$_page = join('/', $path) . '/' . MENU_SUBMENUBAR;
 			if (is_page($_page)) {
 				$page = $_page;
 				break;
