@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.css.php,v 1.2 2005/01/13 13:32:09 henoheno Exp $
+// $Id: tdiary.css.php,v 1.3 2005/01/19 13:47:02 henoheno Exp $
 //
 // tDiary-css-wrapper
 
@@ -31,10 +31,16 @@ if ($media != 'print') $media = 'screen';
 /* PukiWiki abstruction CSS for tDiary themes */
 
 /* <--> Expand textarea height (for editing only) */
-form.update textarea { height: 25em }
+/* <<-- textarea with not-so-long margin          */
+form.update textarea {
+	height: 25em;
+	margin-left:   1em;
+	margin-bottom: 0;
+}
 
 /* >--< Shrink textarea width (for #memo, etc) */
 form textarea { width: 30em }
+
 
 /* Image border = 0 */
 img { border: 0 }
