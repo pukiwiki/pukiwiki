@@ -2,20 +2,20 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.15 2004/07/31 03:09:20 henoheno Exp $
+// $Id: edit.inc.php,v 1.16 2004/09/20 04:02:27 henoheno Exp $
 //
 
 // 編集
 // cmd=edit
 function plugin_edit_action()
 {
-	global $vars, $_title_edit;
+	global $vars, $_title_edit, $load_template_func;
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
 	check_editable($page, true, true);
 
-	if (isset($vars['preview']) or isset($vars['template'])) {
+	if (isset($vars['preview']) || ($load_template_func && isset($vars['template']))) {
 		return plugin_edit_preview();
 	} else if (isset($vars['write'])) {
 		return plugin_edit_write();
@@ -32,11 +32,12 @@ function plugin_edit_action()
 // プレビュー
 function plugin_edit_preview()
 {
-	global $script, $vars;
+	global $vars;
 	global $_title_preview, $_msg_preview, $_msg_preview_delete;
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
+	// Loading template
 	if (isset($vars['template_page']) && is_page($vars['template_page'])) {
 
 		$vars['msg'] = join('', get_source($vars['template_page']));
