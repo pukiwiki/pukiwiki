@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: navi.inc.php,v 1.17 2004/12/25 14:31:30 henoheno Exp $
+// $Id: navi.inc.php,v 1.18 2004/12/26 12:47:02 henoheno Exp $
 //
 // Navi plugin: Show DocBook-like navigation bar and contents
 
@@ -49,14 +49,24 @@ function plugin_navi_convert()
 	global $_navi_prev, $_navi_next, $_navi_up, $_navi_home;
 	static $navi = array();
 
+	$current = $vars['page'];
 	if (func_num_args()) {
 		list($home) = func_get_args();
-		$home = strip_bracket($home);
+		$home    = strip_bracket($home);
+		$is_home = ($home == $current);
+		if (! is_page($home)) {
+			return '#navi(contents-page-name): No such page: ' .
+				htmlspecialchars($home);
+		} else if (! $is_home &&
+		    ! preg_match('|^' . preg_quote($home, '|') . '|', $current)) {
+			return '#navi(' . htmlspecialchars($home) .
+				'): Not a child page like: ' .
+				htmlspecialchars($home . '/' . basename($current));
+		}
 	} else {
-		$home = $vars['page'];
+		$home    = $vars['page'];
+		$is_home = TRUE; // $home == $current
 	}
-	$current = $vars['page'];
-	$is_home = ($home == $current);
 
 	$footer = isset($navi[$home]); // The first time: FALSE, the second: TRUE
 	if (! $footer) {
