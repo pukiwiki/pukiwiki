@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.21 2004/11/09 13:43:19 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.22 2004/11/23 13:33:29 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -111,6 +111,9 @@ function _navigator($key, $value = '', $javascript = ''){
  |  <?php (! $is_freeze) ? _navigator('freeze') : _navigator('unfreeze') ?>
  <?php } ?>
  | <?php _navigator('diff') ?>
+ <?php if ($do_backup) { ?>
+ | <?php _navigator('backup') ?>
+ <?php } ?>
  <?php if ((bool)ini_get('file_uploads')) { ?>
  | <?php _navigator('upload') ?>
  <?php } ?>
@@ -124,9 +127,6 @@ function _navigator($key, $value = '', $javascript = ''){
  <?php } ?>
  | <?php _navigator('search') ?>
  | <?php _navigator('recent') ?>
- <?php if ($do_backup) { ?>
- | <?php _navigator('backup') ?>
- <?php } ?>
  | <?php _navigator('help')   ?>
  ]
 
@@ -200,6 +200,9 @@ function _toolbar($key, $x = 20, $y = 20){
   <?php if (! $is_freeze) { _toolbar('freeze'); } else { _toolbar('unfreeze'); } ?>
  <?php } ?>
  <?php _toolbar('diff') ?>
+<?php if ($do_backup) { ?>
+  <?php _toolbar('backup') ?>
+<?php } ?>
  <?php if ((bool)ini_get('file_uploads')) { ?>
   <?php _toolbar('upload') ?>
  <?php } ?>
@@ -211,9 +214,6 @@ function _toolbar($key, $x = 20, $y = 20){
  <?php _toolbar('list')   ?>
  <?php _toolbar('search') ?>
  <?php _toolbar('recent') ?>
-<?php if ($do_backup) { ?>
-  <?php _toolbar('backup') ?>
-<?php } ?>
  &nbsp; <?php _toolbar('help') ?>
  &nbsp; <?php _toolbar('rss10', 36, 14) ?>
 </div>
