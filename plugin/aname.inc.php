@@ -1,17 +1,31 @@
 <?php
-// $Id: aname.inc.php,v 1.7 2003/01/27 05:38:44 panda Exp $
+/////////////////////////////////////////////////
+// PukiWiki - Yet another WikiWikiWeb clone.
+//
+// $Id: aname.inc.php,v 1.8 2003/03/02 02:38:21 panda Exp $
+//
 
 function plugin_aname_inline()
+{
+	$args = func_get_args();
+	return call_user_func_array('plugin_aname_convert',$args);
+}
+function plugin_aname_convert()
 {
 	if (func_num_args() < 1) {
 		return FALSE;
 	}
-	list($id,$body) = func_get_args();
+	
+	$args = func_get_args();
+	$id = $args[0];
+	$body = (func_num_args() > 1) ? $args[1] : '';
 	
 	if (!preg_match('/[A-Za-z][\w\-]*/',$id)) {
 		return FALSE;
 	}
 	
-	return "<a id=\"$id\">$body</a>";
+	$s_body = htmlspecialchars($body);
+	
+	return "<a id=\"$id\">$s_body</a>";
 }
 ?>
