@@ -344,11 +344,13 @@
 ~★☆☆☆☆
 :書式|
 ~''?plugin=rss''
-[&color(blue){&ver=};&color(blue){0.91};|&color(blue){1.0};|&color(blue){2.0};]
+[&color(blue){&ver=};&color(blue){0.91};|
+|&color(blue){1.0};|
+|&color(blue){2.0};]
 :概要|
 ~RecentChangesをRSS(RDF Site Summary)に変換して出力します。
 :引数|
-~verで出力するRSSのバージョンを指定します。省略時は0.91で出力します。
+~verで出力するRSSのバージョンを指定します。省略時は0.91を出力します。
 :備考|
 ~RSSはサイトの要約を提供するのに使われるXMLフォーマットです。
 
@@ -362,6 +364,13 @@
 ~''?cmd=rss10''
 :概要|
 ~RecentChangesをRSS(RDF Site Summary)1.0に変換して出力します。
+:備考|
+~rss10プラグインの機能はrssプラグインにマージされたため、
+このプラグインは過去との互換性のためにのみ存在しています。
+(将来的に削除される可能性があります) 
+~このプラグインにアクセスすると、HTTPステータス・コード 301
+(Moved Permanently)とともに、ver=1.0オプションを指定したrssプラグイン
+のURIへリダイレクトされます。
 
 
 **ruby [#u3fad1fe]
