@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.17 2004/12/08 13:31:15 henoheno Exp $
+// $Id: func.php,v 1.18 2004/12/11 12:03:06 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -348,19 +348,20 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 	return $retval;
 }
 
-// テキスト整形ルールを表示する
+// Show text formatting rules
 function catrule()
 {
 	global $rule_page;
 
 	if (! is_page($rule_page)) {
-		return "<p>Sorry, $rule_page unavailable.</p>";
+		return '<p>Sorry, page \'' . htmlspecialchars($rule_page) .
+			'\' unavailable.</p>';
 	} else {
 		return convert_html(get_source($rule_page));
 	}
 }
 
-// エラーメッセージを表示する
+// Show (critical) error message
 function die_message($msg)
 {
 	$title = $page = 'Runtime error';
@@ -401,10 +402,10 @@ function getmicrotime()
 // 日時を得る
 function get_date($format, $timestamp = NULL)
 {
-	$time = ($timestamp === NULL) ? UTIME : $timestamp;
-	$time += ZONETIME;
+	$format = preg_replace('/(?<!\\\)T/',
+		preg_replace('/(.)/', '\\\$1', ZONE), $format);
 
-	$format = preg_replace('/(?<!\\\)T/', preg_replace('/(.)/', '\\\$1', ZONE), $format);
+	$time = ZONETIME + (($timestamp !== NULL) ? $timestamp : UTIME);
 
 	return date($format, $time);
 }
@@ -416,12 +417,10 @@ function format_date($val, $paren = FALSE)
 
 	$val += ZONETIME;
 
-	$ins_date = date($date_format, $val);
-	$ins_time = date($time_format, $val);
-	$ins_week = '(' . $weeklabels[date('w', $val)] . ')';
+	$date = date($date_format . ' ' . $time_format, $val) .
+		' ' . '(' . $weeklabels[date('w', $val)] . ')';
 
-	$ins = "$ins_date $ins_week $ins_time";
-	return $paren ? "($ins)" : $ins;
+	return $paren ? '(' . $date . ')' : $date;
 }
 
 // 経過時刻文字列を作る
@@ -437,17 +436,14 @@ function get_passage($time, $paren = TRUE)
 	}
 	$time = floor($time) . $unit;
 
-	return $paren ? "($time)" : $time;
+	return $paren ? '(' . $time . ')' : $time;
 }
 
-// <input type="(submit|button|image)"...>を隠す
+// Hide <input type="(submit|button|image)"...>
 function drop_submit($str)
 {
-	return preg_replace(
-		'/<input([^>]+)type="(submit|button|image)"/i',
-		'<input$1type="hidden"',
-		$str
-	);
+	return preg_replace('/<input([^>]+)type="(submit|button|image)"/i',
+		'<input$1type="hidden"', $str);
 }
 
 // AutoLinkのパターンを生成する
@@ -639,7 +635,7 @@ function pkwk_login($pass = '')
 	if ($pass != '' && md5($pass) == $adminpass) {
 		return TRUE;
 	} else {
-		sleep (2);	// Blocking brute force attack
+		sleep(2);	// Blocking brute force attack
 		return FALSE;
 	}
 }
@@ -653,11 +649,11 @@ if (! function_exists('is_a'))
 {
 	function is_a($class, $match)
 	{
-		if (empty($class)) return false;
+		if (empty($class)) return FALSE; 
 
 		$class = is_object($class) ? get_class($class) : $class;
 		if (strtolower($class) == strtolower($match)) {
-			return true;
+			return TRUE;
 		} else {
 			return is_a(get_parent_class($class), $match);	// Recurse
 		}
