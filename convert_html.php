@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.17 2003/02/11 05:43:27 panda Exp $
+// $Id: convert_html.php,v 1.18 2003/02/15 14:00:09 panda Exp $
 //
 function &convert_html(&$lines)
 {
@@ -410,19 +410,18 @@ class TableCell extends Block
 		if ($this->rowspan == 0 or $this->colspan == 0) {
 			return '';
 		}
-		$param = array();
+		$param = " class=\"style_{$this->tag}\"";
 		if ($this->rowspan > 1) {
-			$param[] = 'rowspan="'.$this->rowspan.'"';
+			$param .= " rowspan=\"{$this->rowspan}\"";
 		}
 		if ($this->colspan > 1) {
-			$param[] = 'colspan="'.$this->colspan.'"';
+			$param .= " colspan=\"{$this->colspan}\"";
 			unset($this->style['width']);
 		}
 		if (count($this->style)) {
-			$param[] = 'style="'.join(' ',$this->style).'"';
+			$param .= ' style="'.join(' ',$this->style).'"';
 		}
-		return $this->wrap(parent::toString(),$this->tag,
-			" class=\"style_{$this->tag}\" ".join(' ',$param));
+		return "\n<{$this->tag}$param>".parent::toString()."</{$this->tag>\n";
 	}
 }
 class Table extends Block
