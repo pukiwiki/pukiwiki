@@ -25,12 +25,13 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.16.2.12 2004/08/01 01:28:05 henoheno Exp $
+// $Id: pukiwiki.php,v 1.16.2.13 2004/08/08 02:39:05 henoheno Exp $
 /////////////////////////////////////////////////
 
 /////////////////////////////////////////////////
 // サブルーチンの格納先ディレクトリ (他の *.phpファイル等)
-define('LIB_DIR', './');
+
+if (! defined('LIB_DIR')) define('LIB_DIR', '');
 
 // プログラムファイル読み込み
 require(LIB_DIR . 'func.php');
@@ -42,14 +43,13 @@ require(LIB_DIR . 'backup.php');
 require(LIB_DIR . 'template.php');
 require(LIB_DIR . 'rss.php');
 require(LIB_DIR . 'make_link.php');
-if (!extension_loaded('mbstring'))
-{
+if (! extension_loaded('mbstring')) {
 	require(LIB_DIR . 'mbstring.php');
 }
 
 /////////////////////////////////////////////////
 // プログラムファイル読み込み
-require("init.php");
+require(LIB_DIR . 'init.php');
 
 
 /////////////////////////////////////////////////
