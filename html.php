@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.94 2003/08/20 10:58:47 arino Exp $
+// $Id: html.php,v 1.95 2003/09/03 02:01:02 arino Exp $
 //
 
 // 本文を出力
@@ -77,14 +77,12 @@ function catbody($title,$page,$body)
 			$keys[$word] = strlen($word);
 		}
 		arsort($keys,SORT_NUMERIC);
-		$keys = get_search_words(array_keys($keys));
+		$keys = get_search_words(array_keys($keys),TRUE);
 		$id = 0;
 		foreach ($keys as $key=>$pattern)
 		{
 			$s_key = htmlspecialchars($key);
-			$pattern = ($s_key{0} == '&') ?
-				"/(<[^>]*>)|($pattern)/" :
-				"/(<[^>]*>|&(?:#[0-9]+|#x[0-9a-f]+|[0-9a-zA-Z]+);)|($pattern)/";
+			$pattern = "/(<[^>]*>)|($pattern)/";
 			$callback = create_function(
 				'$arr',
 				'return $arr[1] ? $arr[1] : "<strong class=\"word'.$id++.'\">{$arr[2]}</strong>";'

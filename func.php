@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.48 2003/07/14 06:49:31 arino Exp $
+// $Id: func.php,v 1.49 2003/09/03 02:01:02 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -131,11 +131,7 @@ function get_search_words($words,$special=FALSE)
 		// # JIS X 0208 が 0文字以上続いて # ASCII, SS2, SS3 または終端
 		$eucpost = '(?=(?:[\xA1-\xFE][\xA1-\xFE])*(?:[\x00-\x7F\x8E\x8F]|\z))';
 	}
-	// $special : htmlspecialchars()を通すか
-	$quote_func = create_function('$str',$special ?
-		'return preg_quote($str,"/");' :
-		'return preg_quote(htmlspecialchars($str),"/");'
-	);
+	$quote_func = create_function('$str','return preg_quote($str,"/");');
 	// LANG=='ja'で、mb_convert_kanaが使える場合はmb_convert_kanaを使用
 	$convert_kana = create_function('$str,$option',
 		(LANG == 'ja' and function_exists('mb_convert_kana')) ?
@@ -150,15 +146,20 @@ function get_search_words($words,$special=FALSE)
 		for ($pos = 0; $pos < mb_strlen($word_zk);$pos++)
 		{
 			$char = mb_substr($word_zk,$pos,1);
-			$arr = array($quote_func($char));
+			// $special : htmlspecialchars()を通すか
+			$arr = array($quote_func($special ? htmlspecialchars($char) : $char));
 			if (strlen($char) == 1) // 英数字
 			{
-				$_char = strtoupper($char); // 大文字
-				$arr[] = $quote_func($_char);
-				$arr[] = $quote_func($convert_kana($_char,"A")); // 全角
-				$_char = strtolower($char); // 小文字
-				$arr[] = $quote_func($_char);
-				$arr[] = $quote_func($convert_kana($_char,"A")); // 全角
+				foreach (array(strtoupper($char),strtolower($char)) as $_char)
+				{
+					if ($char != '&')
+					{
+						$arr[] = $quote_func($_char);
+					}
+					$ord = ord($_char);
+					$arr[] = sprintf('&#(?:%d|x%x);',$ord,$ord); // 実体参照
+					$arr[] = $quote_func($convert_kana($_char,"A")); // 全角
+				}
 			}
 			else // マルチバイト文字
 			{
