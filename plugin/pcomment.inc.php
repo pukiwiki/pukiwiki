@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.27 2004/07/10 03:38:06 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.28 2004/07/28 12:33:58 henoheno Exp $
 //
 
 /*
@@ -28,32 +28,35 @@
  2レベルまでのコメントにリプライをつけるradioボタンを表示
 
 */
+
 // ページ名のデフォルト(%sに$vars['page']が入る)
-define('PCMT_PAGE','[[コメント/%s]]');
-//
+define('PCMT_PAGE', '[[コメント/%s]]');
+
 // 表示するコメント数のデフォルト
-define('PCMT_NUM_COMMENTS',10);
-//
+define('PCMT_NUM_COMMENTS', 10);
+
 // コメントの名前テキストエリアのカラム数
-define('PCMT_COLS_NAME',15);
-//
+define('PCMT_COLS_NAME', 15);
+
 // コメントのテキストエリアのカラム数
-define('PCMT_COLS_COMMENT',70);
-//
+define('PCMT_COLS_COMMENT', 70);
+
 // 挿入する位置 1:末尾 0:先頭
-define('PCMT_INSERT_INS',1);
-//
-//コメントの挿入フォーマット
-define('PCMT_NAME_FORMAT','[[$name]]');
-define('PCMT_MSG_FORMAT','$msg');
-define('PCMT_NOW_FORMAT','&new{$now};');
+define('PCMT_INSERT_INS', 1);
+
+// コメントの挿入フォーマット
 // \x08は、投稿された文字列中に現れない文字であればなんでもいい。
-define('PCMT_FORMAT',"\x08MSG\x08 -- \x08NAME\x08 \x08DATE\x08");
-//
+define('PCMT_NAME_FORMAT',	'[[$name]]');
+define('PCMT_MSG_FORMAT',	'$msg');
+define('PCMT_NOW_FORMAT',	'&new{$now};');
+define('PCMT_FORMAT',	"\x08MSG\x08 -- \x08NAME\x08 \x08DATE\x08");
+
 // 自動過去ログ化 1ページあたりの件数を指定 0で無効
-define('PCMT_AUTO_LOG',0);
-// コメントページのタイムスタンプを更新せず、設置ページのタイムスタンプを更新する
-define('PCMT_TIMESTAMP',0);
+define('PCMT_AUTO_LOG', 0);
+
+// コメントページのタイムスタンプを更新せず、設置ページの
+// タイムスタンプを更新する
+define('PCMT_TIMESTAMP', 0);
 
 function plugin_pcomment_action()
 {
@@ -287,7 +290,7 @@ function pcmt_insert()
 		
 		$postdata = join('', $postdata);
 	}
-	page_write($page,$postdata,PCMT_TIMESTAMP);
+	page_write($page, $postdata, PCMT_TIMESTAMP);
 
 	if (PCMT_TIMESTAMP)
 	{
