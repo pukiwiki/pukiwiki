@@ -1,5 +1,5 @@
 <?php
-// $Id: article.inc.php,v 1.22 2005/01/23 07:01:56 henoheno Exp $
+// $Id: article.inc.php,v 1.23 2005/03/02 13:05:07 henoheno Exp $
  /*
 
  PukiWiki BBS風プラグイン
@@ -79,7 +79,7 @@ function plugin_article_action()
 		if (preg_match('/^#article/i', $line)) {
 			if ($article_no == $post['article_no'] && $post['msg'] != '')
 				$postdata .= $article . "\n";
-			$article_no++;
+			++$article_no;
 		}
 		if (PLUGIN_ARTICLE_INS) $postdata .= $line;
 	}
@@ -164,8 +164,10 @@ function plugin_article_convert()
   <input type="hidden" name="plugin" value="article" />
   <input type="hidden" name="digest" value="$s_digest" />
   <input type="hidden" name="refer" value="$s_page" />
-  $_btn_name <input type="text" name="name" size="$name_cols" /><br />
-  $_btn_subject <input type="text" name="subject" size="$subject_cols" /><br />
+  <label for="_p_article_name_$article_no">$_btn_name</label>
+  <input type="text" name="name" id="_p_article_name_$article_no" size="$name_cols" /><br />
+  <label for="_p_article_subject_$article_no">$_btn_subject</label>
+  <input type="text" name="subject" id="_p_article_subject_$article_no" size="$subject_cols" /><br />
   <textarea name="msg" rows="$article_rows" cols="$article_cols">\n</textarea><br />
   <input type="submit" name="article" value="$_btn_article" />
  </div>

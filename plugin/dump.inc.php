@@ -1,5 +1,5 @@
 <?php
-// $Id: dump.inc.php,v 1.34 2005/01/23 07:24:11 henoheno Exp $
+// $Id: dump.inc.php,v 1.35 2005/03/02 13:09:21 henoheno Exp $
 //
 // Remote dump / restore plugin
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
@@ -224,21 +224,28 @@ function plugin_dump_disp_form()
 
 <p><strong>アーカイブの形式</strong>
 <br />
-  <input type="radio" name="pcmd" value="tgz" checked="checked" /> 〜.tar.gz 形式<br />
-  <input type="radio" name="pcmd" value="tar" /> 〜.tar 形式
+  <input type="radio" name="pcmd" id="_p_dump_tgz" value="tgz" checked="checked" />
+  <label for="_p_dump_tgz"> 〜.tar.gz 形式</label><br />
+  <input type="radio" name="pcmd" id="_p_dump_tar" value="tar" />
+  <label for="_p_dump_tar">〜.tar 形式</label>
 </p>
 <p><strong>バックアップディレクトリ</strong>
 <br />
-  <input type="checkbox" name="bk_wiki" checked="checked" /> wiki<br />
-  <input type="checkbox" name="bk_attach" /> attach<br />
-  <input type="checkbox" name="bk_backup" /> backup
+  <input type="checkbox" name="bk_wiki" id="_p_dump_d_wiki" checked="checked" />
+  <label for="_p_dump_d_wiki">wiki</label><br />
+  <input type="checkbox" name="bk_attach" id="_p_dump_d_attach" />
+  <label for="_p_dump_d_attach">attach</label><br />
+  <input type="checkbox" name="bk_backup" id="_p_dump_d_backup" />
+  <label for="_p_dump_d_backup">backup</label><br />
 </p>
 <p><strong>オプション</strong>
 <br />
-  <input type="checkbox" name="namedecode" /> エンコードされているページ名をディレクトリ階層つきのファイルにデコード (※リストアに使うことはできなくなります。また、一部の文字は '_' に置換されます)<br />
+  <input type="checkbox" name="namedecode" id="_p_dump_namedecode" />
+  <label for="_p_dump_namedecode">エンコードされているページ名をディレクトリ階層つきのファイルにデコード
+  (※リストアに使うことはできなくなります。また、一部の文字は '_' に置換されます)</label><br />
 </p>
-<p><strong>管理者パスワード</strong>
-  <input type="password" name="pass" size="12" />
+<p><label for="_p_dump_adminpass_dump"><strong>管理者パスワード</strong></label>
+  <input type="password" name="pass" id="_p_dump_adminpass_dump" size="12" />
   <input type="submit"   name="ok"   value="OK" />
 </p>
  </div>
@@ -257,10 +264,11 @@ EOD;
 <p><span class="small">
 アップロード可能な最大ファイルサイズは、$maxsize KByte までです。<br />
 </span>
-  ファイル: <input type="file" name="upload_file" size="40" />
+  <label for="_p_dump_upload_file">ファイル:</label>
+  <input type="file" name="upload_file" id="_p_dump_upload_file" size="40" />
 </p>
-<p><strong>管理者パスワード</strong>
-  <input type="password" name="pass" size="12" />
+<p><label for="_p_dump_adminpass_restore"><strong>管理者パスワード</strong></label>
+  <input type="password" name="pass" id="_p_dump_adminpass_restore" size="12" />
   <input type="submit"   name="ok"   value="OK" />
 </p>
  </div>
