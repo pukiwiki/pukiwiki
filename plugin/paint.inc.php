@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: paint.inc.php,v 1.8 2003/05/12 10:36:00 arino Exp $
+// $Id: paint.inc.php,v 1.9 2003/05/16 05:55:52 arino Exp $
 //
 
 /*
@@ -64,7 +64,7 @@ function plugin_paint_init()
 }
 function plugin_paint_action()
 {
-	global $script,$vars,$HTTP_POST_FILES;
+	global $script,$vars;
 	global $_paint_messages;
 	global $html_transitional;
 	
@@ -72,27 +72,24 @@ function plugin_paint_action()
 	$retval['msg'] = $_paint_messages['msg_title'];
 	$retval['body'] = '';
 	
-	if (array_key_exists('attach_file',$HTTP_POST_FILES) and is_uploaded_file($HTTP_POST_FILES['attach_file']['tmp_name']))
+	if (array_key_exists('attach_file',$_FILES) and is_uploaded_file($_FILES['attach_file']['tmp_name']))
 	{
 		//BBSPaiter.jarは、shift-jisで内容を送ってくる。面倒なのでページ名はエンコードしてから送信させるようにした。
 		$vars['page'] = $vars['refer'] = decode($vars['refer']);
 		
 		$filename = $vars['filename'];
-		if (function_exists('mb_convert_encoding'))
-		{
-			$filename = mb_convert_encoding($filename,SOURCE_ENCODING,'auto');
-		}
+		$filename = mb_convert_encoding($filename,SOURCE_ENCODING,'auto');
 		
 		//ファイル名置換
-		$attachname = preg_replace('/^[^\.]+/', $filename, $HTTP_POST_FILES['attach_file']['name']);
+		$attachname = preg_replace('/^[^\.]+/', $filename, $_FILES['attach_file']['name']);
 		//すでに存在した場合、 ファイル名に'_0','_1',...を付けて回避(姑息)
 		$count = '_0';
 		while (file_exists(PAINT_UPLOAD_DIR.encode($vars['refer']).'_'.encode($attachname)))
 		{
-			$attachname = preg_replace('/^[^\.]+/', $filename.$count++, $HTTP_POST_FILES['attach_file']['name']);
+			$attachname = preg_replace('/^[^\.]+/', $filename.$count++, $_FILES['attach_file']['name']);
 		}
 		
-		$HTTP_POST_FILES['attach_file']['name'] = $attachname;
+		$_FILES['attach_file']['name'] = $attachname;
 		
 		if (!exist_plugin('attach') or !function_exists('attach_upload'))
 		{
@@ -100,16 +97,11 @@ function plugin_paint_action()
 		}
 		
 		$retval = attach_upload(TRUE);
-		$retval = paint_insert_ref($HTTP_POST_FILES['attach_file']['name']);
+		$retval = paint_insert_ref($_FILES['attach_file']['name']);
 	}
 	else
 	{
 		$message = '';
-		if (!function_exists('mb_convert_encoding'))
-		{
-			$message = 'cannot use KANJI in filename.';
-		}
-		
 		$r_refer = $s_refer = '';
 		if (array_key_exists('refer',$vars))
 		{
@@ -246,11 +238,8 @@ function paint_insert_ref($filename)
 	}
 	$date = sprintf(PAINT_FORMAT_DATE, $now);
 	
-	if (function_exists('mb_convert_encoding'))
-	{
-		$msg = mb_convert_encoding($msg,SOURCE_ENCODING,'auto');
-		$name = mb_convert_encoding($name,SOURCE_ENCODING,'auto');
-	}
+	$msg = mb_convert_encoding($msg,SOURCE_ENCODING,'auto');
+	$name = mb_convert_encoding($name,SOURCE_ENCODING,'auto');
 	
 	$msg = trim($msg);
 	$msg = ($msg == '') ?
