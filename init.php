@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.55 2003/07/05 01:31:55 arino Exp $
+// $Id: init.php,v 1.56 2003/07/05 04:46:34 arino Exp $
 //
 
 /////////////////////////////////////////////////
@@ -16,8 +16,6 @@ define('SOURCE_ENCODING','EUC-JP');
 define('LANG','ja');
 mb_internal_encoding(SOURCE_ENCODING);
 mb_http_output(SOURCE_ENCODING);
-mb_detect_order('ASCII,JIS,EUC,UTF-8,SJIS');
-// mb_detect_order('ASCII,JIS,UTF-8,EUC,SJIS'); // UTF-8を優先する場合
 
 /////////////////////////////////////////////////
 // 初期設定(設定ファイルの場所)
@@ -142,41 +140,95 @@ $get    = sanitize($_GET);
 $post   = sanitize($_POST);
 $cookie = sanitize($_COOKIE);
 
-// ポストされた文字のコードを変換
-mb_convert_variables(SOURCE_ENCODING,'auto',$get,$post);
+/////////////////////////////////////////////////
+// 文字コードを変換
 
-if (!empty($get['page'])) {
+// <form> で送信された文字 (ブラウザがエンコードしたデータ) のコードを変換
+// post は常に <form> なので、必ず変換
+if (array_key_exists('encode_hint',$post))
+{
+	// html.php の中で、<form> に encode_hint を仕込んでいるので、必ず encode_hint があるはず。
+	// encode_hint のみを用いてコード検出する。
+	// 全体を見てコード検出すると、機種依存文字や、妙なバイナリコードが混入した場合に、
+	// コード検出に失敗する恐れがあるため。
+	$encode = mb_detect_encoding($post['encode_hint']);
+	mb_convert_variables(SOURCE_ENCODING,$encode,$post);
+}
+else if (count($post) > 0)
+{
+	// encode_hint が無いということは、無いはず。
+	// デバッグ用に、取りあえず、警告メッセージを出しておきます。
+	echo "<p>Warning: 'encode_hint' field is not found in the posted data.</p>\n";
+	// 全部まとめて、コード検出、変換
+	mb_convert_variables(SOURCE_ENCODING,'auto',$post);
+}
+
+// get は <form> からの場合と、<a href="http;//script/?query> の場合がある
+if (array_key_exists('encode_hint',$get))
+{
+	// <form> の場合は、ブラウザがエンコードしているので、コード検出・変換が必要。
+	// encode_hint が含まれているはずなので、それを見て、コード検出した後、変換する。
+	// 理由は、post と同様
+	$encode = mb_detect_encoding($get['encode_hint']);
+	mb_convert_variables(SOURCE_ENCODING,$encode,$get);
+}	
+// <a href...> の場合は、サーバーが rawurlencode しているので、コード変換は不要
+
+// QUERY_STRINGを取得
+// cmdもpluginも指定されていない場合は、QUERY_STRINGをページ名かInterWikiNameであるとみなす為
+// また、URI を urlencode せずに手打ちで入力した場合に対処する為
+if ($_SERVER['QUERY_STRING'] != '')
+{
+	$arg = $_SERVER['QUERY_STRING'];
+}
+else if (array_key_exists(0,$_SERVER['argv']))
+{
+	$arg = $_SERVER['argv'][0];
+}
+
+// サニタイズ (\0 除去)
+$arg = sanitize($arg);
+
+// URI 手打の場合、コード変換し、get[] に上書き
+mb_convert_variables(SOURCE_ENCODING,'auto',$arg);
+foreach (explode('&',$arg) as $tmp_string)
+{
+	if (preg_match('/^([^=]+)=(.+)/',$tmp_string,$matches)
+		and mb_detect_encoding($matches[2]) != 'ASCII')
+	{
+		$get[$matches[1]] = $matches[2];
+	}
+}
+
+if (!empty($get['page']))
+{
 	$get['page']  = strip_bracket($get['page']);
 }
-if (!empty($post['page'])) {
+if (!empty($post['page']))
+{
 	$post['page'] = strip_bracket($post['page']);
 }
-if (!empty($post['msg'])) {
+if (!empty($post['msg']))
+{
 	$post['msg']  = str_replace("\r",'',$post['msg']);
 }
 
 $vars = array_merge($post,$get);
-if (!array_key_exists('page',$vars)) {
+if (!array_key_exists('page',$vars))
+{
 	$get['page'] = $post['page'] = $vars['page'] = '';
 }
 
 // 後方互換性 (?md5=...)
-if (array_key_exists('md5',$vars) and $vars['md5'] != '') {
+if (array_key_exists('md5',$vars) and $vars['md5'] != '')
+{
 	$vars['cmd'] = 'md5';
 }
 
 // cmdもpluginも指定されていない場合は、QUERY_STRINGをページ名かInterWikiNameであるとみなす
 if (!array_key_exists('cmd',$vars)  and !array_key_exists('plugin',$vars))
 {
-	if ($_SERVER['QUERY_STRING'] != '')
-	{
-		$arg = $_SERVER['QUERY_STRING'];
-	}
-	else if (array_key_exists(0,$_SERVER['argv']))
-	{
-		$arg = $_SERVER['argv'][0];
-	}
-	else
+	if ($arg == '')
 	{
 		//なにも指定されていなかった場合は$defaultpageを表示
 		$arg = $defaultpage;

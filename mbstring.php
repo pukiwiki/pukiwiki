@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: mbstring.php,v 1.1 2003/07/03 05:31:39 arino Exp $
+// $Id: mbstring.php,v 1.2 2003/07/05 04:46:35 arino Exp $
 //
 
 /*
@@ -47,23 +47,22 @@ function mb_convert_encoding($str,$to_encoding,$from_encoding='')
 }
 
 // mb_convert_variables -- 変数の文字コードを変換する
-function mb_convert_variables($to_encoding,$from_encoding,&$get,&$post)
+function mb_convert_variables($to_encoding,$from_encoding,&$vars)
 {
-	// 注: 可変長引数ではない。init.phpから呼ばれる2引数のみをサポート
+	// 注: 可変長引数ではない。init.phpから呼ばれる1引数のパターンのみをサポート
 	// 正直に実装するなら、可変引数をリファレンスで受ける方法が必要
-	$encoding = mb_detect_encoding(join_array(' ',array_merge($get,$post)));   
-	if ($encoding != 'ASCII' and $encoding != SOURCE_ENCODING)
+	if (is_array($from_encoding) or $from_encoding == '' or $from_encoding == 'auto')
 	{
-		foreach ($get as $key=>$value)
+		$from_encoding = mb_detect_encoding(join_array(' ',$vars));
+	}   
+	if ($from_encoding != 'ASCII' and $from_encoding != SOURCE_ENCODING)
+	{
+		foreach ($vars as $key=>$value)
 		{
-			$get[$key] = mb_convert_encoding($value,$to_encoding,$encode);
-		}
-		foreach ($post as $key=>$value)
-		{
-			$post[$key] = mb_convert_encoding($value,$to_encoding,$encode);
+			$vars[$key] = mb_convert_encoding($value,$to_encoding,$from_encoding);
 		}
 	}
-	return $encoding;
+	return $from_encoding;
 }
 
 // 補助関数:配列を再帰的にjoinする
