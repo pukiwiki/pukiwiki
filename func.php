@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.49 2003/09/03 02:01:02 arino Exp $
+// $Id: func.php,v 1.50 2003/09/12 00:34:18 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -543,7 +543,36 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 	}
 	return $result;
 }
-
+// pukiwiki.phpスクリプトのabsolute-uriを生成
+function get_script_uri()
+{
+	// scheme
+	$script  = ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://');
+	// host
+	$script .= $_SERVER['SERVER_NAME'];
+	// port
+	$script .= ($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT']);
+	// path
+	$path = $_SERVER['SCRIPT_NAME'];
+	// pathが'/'で始まっていない場合(cgiなど) REQUEST_URIを使ってみる
+	if ($path{0} != '/')
+	{
+		if (!array_key_exists('REQUEST_URI',$_SERVER) or $_SERVER['REQUEST_URI']{0} != '/')
+		{
+			return FALSE;
+		}
+		// REQUEST_URIをパースし、path部分だけを取り出す
+		$parse_url = parse_url($script.$_SERVER['REQUEST_URI']);
+		if (!isset($parse_url['path']) or $parse_url['path']{0} != '/')
+		{
+			return FALSE;
+		}
+		$path = $parse_url['path'];
+	}
+	$script .= $path;
+	
+	return $script;
+}
 /*
 変数内のnull(\0)バイトを削除する
 PHPはfopen("hoge.php\0.txt")で"hoge.php"を開いてしまうなどの問題あり
