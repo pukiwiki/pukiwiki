@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: popular.inc.php,v 1.9 2004/07/31 03:09:20 henoheno Exp $
+// $Id: popular.inc.php,v 1.10 2004/09/04 14:53:13 henoheno Exp $
 //
 
 /*
@@ -27,69 +27,58 @@
 
 function plugin_popular_convert()
 {
+	global $whatsnew, $non_list;
 	global $_popular_plugin_frame, $_popular_plugin_today_frame;
-	global $script,$whatsnew,$non_list;
 
 	$max = 10;
 	$except = '';
 
 	$array = func_get_args();
 	$today = FALSE;
-
 	switch (func_num_args()) {
-	case 3:
-		if ($array[2])
-			$today = get_date('Y/m/d');
-	case 2:
-		$except = $array[1];
-	case 1:
-		$max = $array[0];
+	case 3: if ($array[2]) $today = get_date('Y/m/d');
+	case 2: $except = $array[1];
+	case 1: $max = $array[0];
 	}
 
 	$counters = array();
-
-	foreach (get_existpages(COUNTER_DIR,'.count') as $file=>$page) {
-		if ($except != '' and ereg($except,$page)) {
-			continue;
-		}
-		if ($page == $whatsnew or preg_match("/$non_list/",$page) or !is_page($page)) {
+	foreach (get_existpages(COUNTER_DIR, '.count') as $file=>$page) {
+		if (($except != '' && ereg($except, $page)) ||
+		    $page == $whatsnew || preg_match("/$non_list/", $page) ||
+		    ! is_page($page)) {
 			continue;
 		}
 
-		$array = file(COUNTER_DIR.$file);
+		$array = file(COUNTER_DIR . $file);
 		$count = rtrim($array[0]);
-		$date = rtrim($array[1]);
+		$date  = rtrim($array[1]);
 		$today_count = rtrim($array[2]);
-		$yesterday_count = rtrim($array[3]);
 
 		if ($today) {
-			if ($today == $date) {
-				// $pageが数値に見える(たとえばencode('BBS')=424253)とき、
-				// array_splice()によってキー値が変更されてしまうのを防ぐ
-				$counters["_$page"] = $today_count;
-			}
-		}
-		else {
+			// $pageが数値に見える(たとえばencode('BBS')=424253)とき、
+			// array_splice()によってキー値が変更されてしまうのを防ぐ
+			if ($today == $date) $counters["_$page"] = $today_count;
+		} else {
 			$counters["_$page"] = $count;
 		}
 	}
 
 	asort($counters, SORT_NUMERIC);
-	$counters = array_splice(array_reverse($counters,TRUE),0,$max);
+	$counters = array_splice(array_reverse($counters, TRUE), 0, $max);
 
 	$items = '';
-	if (count($counters)) {
-		$items = '<ul class="popular_list">';
+	if (! empty($counters)) {
+		$items = "<ul class=\"popular_list\">\n";
 
 		foreach ($counters as $page=>$count) {
-			$page = substr($page,1);
+			$page = substr($page, 1);
 
 			$s_page = htmlspecialchars($page);
-			$items .= " <li>".make_pagelink($page,"$s_page<span class=\"counter\">($count)</span>")."</li>\n";
+			$items .= ' <li>' . make_pagelink($page, "$s_page<span class=\"counter\">($count)</span>") . "</li>\n";
 		}
-		$items .= '</ul>';
+		$items .= "</ul>\n";
 	}
-	return sprintf($today ? $_popular_plugin_today_frame : $_popular_plugin_frame,count($counters),$items);
-}
 
+	return sprintf($today ? $_popular_plugin_today_frame : $_popular_plugin_frame, count($counters), $items);
+}
 ?>
