@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.php,v 1.6 2004/10/01 12:43:18 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.7 2004/10/01 23:53:34 henoheno Exp $
 //
 
 // Prohibit direct access
@@ -48,7 +48,7 @@ if ($html_transitional) { ?>
 
  <title><?php echo "$title - $page_title" ?></title>
  <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>" type="text/css" media="screen" charset="<?php echo $css_charset ?>" />
- <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>&media=print" type="text/css" media="print" charset="<?php echo $css_charset ?>" />
+ <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>&amp;media=print" type="text/css" media="print" charset="<?php echo $css_charset ?>" />
 
 <?php
   global $trackback, $referer;
