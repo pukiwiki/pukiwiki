@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.98 2004/03/18 10:01:14 arino Exp $
+// $Id: html.php,v 1.99 2004/04/03 15:33:26 arino Exp $
 //
 
 // 本文を出力
@@ -204,7 +204,7 @@ EOD;
 	else {
 		$body .= <<<EOD
 <ul>
- <li><a href="$script?cmd=edit&amp;help=true&amp;page=$r_page">$_msg_help</a></li>
+ <li><a href="$script?cmd={$vars['cmd']}&amp;help=true&amp;page=$r_page">$_msg_help</a></li>
 </ul>
 EOD;
 	}
