@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.4 2004/10/10 03:23:57 henoheno Exp $
+// $Id: html.php,v 1.5 2004/10/11 02:05:12 henoheno Exp $
 //
 
 // 本文を出力
@@ -137,7 +137,7 @@ function inline2($str)
 function edit_form($page, $postdata, $digest = 0, $b_template = TRUE)
 {
 	global $script, $vars, $rows, $cols, $hr, $function_freeze;
-	global $_btn_addtop, $_btn_preview, $_btn_repreview, $_btn_update,
+	global $_btn_addtop, $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel,
 		$_btn_freeze, $_msg_help, $_btn_notchangetimestamp;
 	global $whatsnew, $_btn_template, $_btn_load, $non_list, $load_template_func;
 
@@ -196,7 +196,8 @@ $template
   <textarea name="msg" rows="$rows" cols="$cols">$s_postdata</textarea>
   <br />
   <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
-  <input type="submit" name="write"   value="$_btn_update" accesskey="s" />
+  <input type="submit" name="write"   value="$_btn_update" accesskey="s" /> &nbsp;
+  <input type="submit" name="cancel"  value="$_btn_cancel" accesskey="c" />
   $add_top
   <input type="checkbox" name="notimestamp" value="true"$checked_time />
   <span style="small">$_btn_notchangetimestamp</span>

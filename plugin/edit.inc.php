@@ -2,10 +2,10 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: edit.inc.php,v 1.18 2004/10/10 10:20:59 henoheno Exp $
+// $Id: edit.inc.php,v 1.19 2004/10/11 02:05:12 henoheno Exp $
 //
 
-// 編集
+// Edit plugin
 // cmd=edit
 function plugin_edit_action()
 {
@@ -19,6 +19,8 @@ function plugin_edit_action()
 		return plugin_edit_preview();
 	} else if (isset($vars['write'])) {
 		return plugin_edit_write();
+	} else if (isset($vars['cancel'])) {
+		return plugin_edit_cancel();
 	}
 
 	$postdata = @join('', get_source($page));
@@ -29,7 +31,7 @@ function plugin_edit_action()
 	return array('msg'=>$_title_edit, 'body'=>edit_form($page, $postdata));
 }
 
-// プレビュー
+// Preview
 function plugin_edit_preview()
 {
 	global $vars;
@@ -74,7 +76,7 @@ function plugin_edit_preview()
 	return array('msg'=>$_title_preview, 'body'=>$body);
 }
 
-// 書き込みもしくは追加もしくはコメントの挿入
+// Write, add, or insert new comment
 function plugin_edit_write()
 {
 	global $vars;
@@ -128,6 +130,14 @@ function plugin_edit_write()
 	}
 
 	return $retvars;
+}
+
+// Cancel (Back to the page / Escape edit page)
+function plugin_edit_cancel()
+{
+	global $vars;
+	header('Location: ' . get_script_uri() . '?' . rawurlencode($vars['page']));
+	exit;
 }
 
 ?>

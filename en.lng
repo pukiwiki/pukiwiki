@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng,v 1.26 2004/04/03 15:27:07 arino Exp $
+// $Id: en.lng,v 1.27 2004/10/11 02:05:12 henoheno Exp $
 //
 // PukiWiki message file (english)
 
@@ -55,6 +55,7 @@ $_symbol_noexists = '?';
 $_btn_preview = 'Preview';
 $_btn_repreview = 'Preview again';
 $_btn_update = 'Update';
+$_btn_cancel = 'Cancel';
 $_btn_notchangetimestamp = 'Do not change timestamp';
 $_btn_addtop = 'Add to top of page';
 $_btn_template = 'Use page as template';
