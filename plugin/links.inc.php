@@ -1,11 +1,10 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: links.inc.php,v 1.21 2005/01/23 07:47:48 henoheno Exp $
 //
-// $Id: links.inc.php,v 1.20 2004/07/31 03:09:20 henoheno Exp $
-//
+// Update link cache plugin
 
-// メッセージ設定
+// Message setting
 function plugin_links_init()
 {
 	$messages = array(
@@ -36,9 +35,10 @@ function plugin_links_action()
 	global $script, $post, $vars, $foot_explain;
 	global $_links_messages;
 
-	if (empty($vars['action']) or empty($post['adminpass']) or ! pkwk_login($post['adminpass']))
-	{
-		$body = convert_html($_links_messages['msg_usage']);
+	$msg = $body = '';
+	if (empty($vars['action']) || empty($post['adminpass']) || ! pkwk_login($post['adminpass'])) {
+		$msg   = & $_links_messages['title_update'];
+		$body  = convert_html($_links_messages['msg_usage']);
 		$body .= <<<EOD
 <form method="POST" action="$script">
  <div>
@@ -50,26 +50,16 @@ function plugin_links_action()
  </div>
 </form>
 EOD;
-		return array(
-			'msg'=>$_links_messages['title_update'],
-			'body'=>$body
-		);
-	}
-	else if ($vars['action'] == 'update')
-	{
+
+	} else if ($vars['action'] == 'update') {
 		links_init();
-
-		// 注釈を空にする
-		$foot_explain = array();
-		return array(
-			'msg'=>$_links_messages['title_update'],
-			'body'=>$_links_messages['msg_done']
-		);
+		$foot_explain = array(); // Exhaust footnotes
+		$msg  = & $_links_messages['title_update'];
+		$body = & $_links_messages['msg_done'    ];
+	} else {
+		$msg  = & $_links_messages['title_update'];
+		$body = & $_links_messages['err_invalid' ];
 	}
-
-	return array(
-		'msg'=>$_links_messages['title_update'],
-		'body'=>$_links_messages['err_invalid']
-	);
+	return array('msg'=>$msg, 'body'=>$body);
 }
 ?>
