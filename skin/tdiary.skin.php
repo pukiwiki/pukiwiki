@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.2 2004/12/30 08:51:46 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.3 2004/12/31 01:08:47 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -399,9 +399,9 @@ if ($disable_reverse_link === TRUE) {
 		// Read
 		echo $body;
 	} else {
-		// Edit and preview
+		// Edit, preview, search, etc
 		echo preg_replace('/(<form) (action="' . preg_quote($script, '/') .
-			'" method="post">)/', '$1 class="update" $2', $body);
+			')/', '$1 class="update" $2', $body);
 	}
 ?>
 	</div>
