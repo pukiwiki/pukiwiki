@@ -2,27 +2,19 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.5 2004/10/07 14:50:15 henoheno Exp $
+// $Id: file.php,v 1.6 2004/10/11 01:28:59 henoheno Exp $
 //
 
 // ソースを取得
 function get_source($page = NULL)
 {
-	if (! is_page($page)) {
-		return array();
-	} else {
-		return str_replace("\r", '', file(get_filename($page)));
-	}
+	return is_page($page) ? str_replace("\r", '', file(get_filename($page))) : array();
 }
 
 // ページの更新時刻を得る
 function get_filetime($page)
 {
-	if (! is_page($page)) {
-		return 0;
-	} else {
-		return filemtime(get_filename($page)) - LOCALZONE;
-	}
+	return is_page($page) ? filemtime(get_filename($page)) - LOCALZONE : 0;
 }
 
 // ページのファイル名を得る
@@ -38,11 +30,11 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 
 	// 差分ファイルの作成
 	$oldpostdata = is_page($page) ? join('', get_source($page)) : '';
-	$diffdata = do_diff($oldpostdata, $postdata);
+	$diffdata    = do_diff($oldpostdata, $postdata);
 	file_write(DIFF_DIR, $page, $diffdata);
 
 	// バックアップの作成
-	make_backup($page, $postdata == '');
+	make_backup($page, $postdata == ''); // Is $postdata null?
 
 	// ファイルの書き込み
 	file_write(DATA_DIR, $page, $postdata, $notimestamp);
@@ -52,7 +44,6 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	$lines = join("\n", preg_replace('/^\+/', '', preg_grep('/^\+/', explode("\n", $diffdata))));
 	tb_send($page, $lines);
 
-	// linkデータベースを更新
 	links_update($page);
 }
 
@@ -64,21 +55,18 @@ function make_str_rules($str)
 	$arr = explode("\n", $str);
 
 	$retvars = $matches = array();
-	foreach ($arr as $str)
-	{
-		if ($str != '' && $str{0} != ' ' && $str{0} != "\t")
-		{
+	foreach ($arr as $str) {
+		if ($str != '' && $str{0} != ' ' && $str{0} != "\t") {
 			foreach ($str_rules as $rule => $replace)
-			{
 				$str = preg_replace("/$rule/", $replace, $str);
-			}
 		}
+		
 		// 見出しに固有IDを付与する
 		if ($fixed_heading_anchor &&
 			preg_match('/^(\*{1,3}(.(?!\[#[A-Za-z][\w-]+\]))+)$/', $str, $matches))
 		{
 			// 固有IDを生成する
-			// ランダムな英字(1文字)+md5ハッシュのランダムな部分文字列(7文字)
+			// ランダムな英字(1文字) + md5ハッシュのランダムな部分文字列(7文字)
 			$anchor = chr(mt_rand(ord('a'), ord('z'))).
 				substr(md5(uniqid(substr($matches[1], 0, 100), 1)), mt_rand(0, 24), 7);
 			$str = rtrim($matches[1]) . " [#$anchor]";
@@ -102,9 +90,9 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		            str_replace('$2', 'WikiName', $_msg_invalidiwn))
 		);
 
-	$page = strip_bracket($page);
+	$page      = strip_bracket($page);
 	$timestamp = FALSE;
-	$file = $dir . encode($page) . '.txt';
+	$file      = $dir . encode($page) . '.txt';
 
 	if ($dir == DATA_DIR && $str == '' && file_exists($file)) {
 		unlink($file);
@@ -115,9 +103,8 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		$str = preg_replace("/\r/", '', $str);
 		$str = rtrim($str) . "\n";
 
-		if ($notimestamp && file_exists($file)) {
+		if ($notimestamp && file_exists($file))
 			$timestamp = filemtime($file) - LOCALZONE;
-		}
 
 		$fp = fopen($file, 'w') or
 			die_message('Cannot write page file or diff file or other ' .
@@ -274,10 +261,9 @@ function header_lastmod($page = NULL)
 {
 	global $lastmod;
 
-	if ($lastmod && is_page($page)) {
+	if ($lastmod && is_page($page))
 		header('Last-Modified: ' .
 			date('D, d M Y H:i:s', get_filetime($page)) . ' GMT');
-	}
 }
 
 // 全ページ名を配列に
@@ -353,25 +339,26 @@ function get_readings()
 				$fp = fopen($tmpfname, "w") or
 					die_message("Cannot write temporary file '$tmpfname'.\n");
 				foreach ($readings as $page => $reading) {
-					if($reading == '') {
-						fputs($fp, mb_convert_encoding("$page\n", $pagereading_kanji2kana_encoding, SOURCE_ENCODING));
-					}
+					if($reading != '') continue;
+					fputs($fp, mb_convert_encoding("$page\n",
+						$pagereading_kanji2kana_encoding, SOURCE_ENCODING));
 				}
 				fclose($fp);
 
 				$chasen = "$pagereading_chasen_path -F %y $tmpfname";
-				$fp = popen($chasen, "r");
+				$fp     = popen($chasen, 'r');
 				if($fp === FALSE) {
 					unlink($tmpfname);
 					die_message("ChaSen execution failed: $chasen");
 				}
 				foreach ($readings as $page => $reading) {
-					if($reading == '') {
-						$line = fgets($fp);
-						$line = mb_convert_encoding($line, SOURCE_ENCODING, $pagereading_kanji2kana_encoding);
-						$line = chop($line);
-						$readings[$page] = $line;
-					}
+					if($reading != '') continue;
+
+					$line = fgets($fp);
+					$line = mb_convert_encoding($line, SOURCE_ENCODING,
+						$pagereading_kanji2kana_encoding);
+					$line = chop($line);
+					$readings[$page] = $line;
 				}
 				pclose($fp);
 
@@ -385,28 +372,30 @@ function get_readings()
 					die_message("KAKASI not found: $pagereading_kakasi_path");
 
 				$tmpfname = tempnam(CACHE_DIR, 'PageReading');
-				$fp = fopen($tmpfname, "w") or
+				$fp       = fopen($tmpfname, 'w') or
 					die_message("Cannot write temporary file '$tmpfname'.\n");
 				foreach ($readings as $page => $reading) {
-					if($reading == '') {
-						fputs($fp, mb_convert_encoding("$page\n", $pagereading_kanji2kana_encoding, SOURCE_ENCODING));
-					}
+					if($reading != '') continue;
+					fputs($fp, mb_convert_encoding("$page\n",
+						$pagereading_kanji2kana_encoding, SOURCE_ENCODING));
 				}
 				fclose($fp);
 
 				$kakasi = "$pagereading_kakasi_path -kK -HK -JK < $tmpfname";
-				$fp = popen($kakasi, "r");
+				$fp     = popen($kakasi, 'r');
 				if($fp === FALSE) {
 					unlink($tmpfname);
 					die_message("KAKASI execution failed: $kakasi");
 				}
+
 				foreach ($readings as $page => $reading) {
-					if($reading == '') {
-						$line = fgets($fp);
-						$line = mb_convert_encoding($line, SOURCE_ENCODING, $pagereading_kanji2kana_encoding);
-						$line = chop($line);
-						$readings[$page] = $line;
-					}
+					if($reading != '') continue;
+
+					$line = fgets($fp);
+					$line = mb_convert_encoding($line, SOURCE_ENCODING,
+						$pagereading_kanji2kana_encoding);
+					$line = chop($line);
+					$readings[$page] = $line;
 				}
 				pclose($fp);
 
@@ -424,12 +413,12 @@ function get_readings()
 					}
 				}
 				foreach ($readings as $page => $reading) {
-					if($reading == '') {
-						$readings[$page] = $page;
-						foreach ($patterns as $no => $pattern) {
-							$readings[$page] = mb_convert_kana(mb_ereg_replace($pattern, $replacements[$no], $readings[$page]), "aKCV");
-						}
-					}
+					if($reading != '') continue;
+
+					$readings[$page] = $page;
+					foreach ($patterns as $no => $pattern)
+						$readings[$page] = mb_convert_kana(mb_ereg_replace($pattern,
+							$replacements[$no], $readings[$page]), "aKCV");
 				}
 				break;
 
