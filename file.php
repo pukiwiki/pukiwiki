@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.3.2.2 2003/01/27 04:28:05 panda Exp $
+// $Id: file.php,v 1.3.2.3 2003/01/31 10:05:12 panda Exp $
 /////////////////////////////////////////////////
 
 // ソースを取得
@@ -95,7 +95,7 @@ function put_lastmodified()
 		}
 		if($cnt > $maxshow) break;
 	}
-	flock($fp,LOCK_EX);
+	flock($fp,LOCK_UN);
 	fclose($fp);
 }
 
