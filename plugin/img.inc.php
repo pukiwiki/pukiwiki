@@ -2,39 +2,41 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: img.inc.php,v 1.8 2003/05/29 08:25:35 arino Exp $
+// $Id: img.inc.php,v 1.9 2004/08/18 14:25:52 henoheno Exp $
 //
-// 画像を表示
+
+// 画像をインライン表示
 function plugin_img_convert()
 {
-	if (func_num_args() != 2)
-	{
-		return FALSE;
-	}
-	$aryargs = func_get_args();
-	$url = $aryargs[0];
-	$align = strtoupper($aryargs[1]);
-	if ($align == 'R' || $align == 'RIGHT')
-	{
+	static $usage = '#img(): USAGE: (URI-to-image,r|right|l|left[,clear])';
+
+	$args = func_get_args();
+
+	$url = isset($args[0]) ? $args[0] : '';
+	if (! is_url($url) || ! preg_match('/\.(jpe?g|gif|png)$/i', $url))
+		return $usage;
+
+	$arg = isset($args[1]) ? strtoupper($args[1]) : '';
+	if ($arg == 'R' || $arg == 'RIGHT') {
 		$align = 'right';
-	}
-	else if ($align == 'L' || $align == 'LEFT')
-	{
+	} else if ($arg == 'L' || $arg == 'LEFT') {
 		$align = 'left';
+	} else {
+		return '<div style="clear:both"></div>'; // Ugly but compatible
 	}
-	else
-	{
-		return '<div style="clear:both"></div>';
+
+	$arg = isset($args[2]) ? strtoupper($args[2]) : '';
+	if ($arg == 'C' || $arg == 'CLEAR') {
+		$clear = '<div style="clear:both"></div>'; // No word-wrap
+	} else {
+		$clear = '';
 	}
-	if (!is_url($url) or !preg_match('/\.(jpe?g|gif|png)$/i', $url))
-	{
-		return FALSE;
-	}
+
 	return <<<EOD
 
 <div style="float:$align;padding:.5em 1.5em .5em 1.5em">
  <img src="$url" alt="" />
-</div>
+</div>$clear
 EOD;
 }
 ?>
