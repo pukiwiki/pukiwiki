@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.12 2005/01/16 04:27:00 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.13 2005/01/16 06:49:34 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -52,12 +52,62 @@ case 'christmas':
 }
 
 // Adjust reverse-link default design manually
-$disable_reverse_link = FALSE;
+$disable_backlink = FALSE;
 switch(TDIARY_THEME){
 case 'hatena':	/*FALLTHROUGH*/
-case 'repro':
-case 'yukon':
-	$disable_reverse_link = TRUE;
+	$disable_backlink = TRUE;
+	break;
+}
+
+// Select title design (which is fancy, date and text?)
+$title_design_date = 1; // Default: Select the date desin, or 'the same design'
+switch(TDIARY_THEME){
+case '3minutes':
+case 'black-lingerie':
+case 'blog':
+case 'book':
+case 'book2-feminine':
+case 'book3-sky':
+case 'candy':
+case 'cards':
+case 'desert':
+case 'dot':
+case 'himawari':
+case 'light-blue':
+case 'lovely':
+case 'lovely_pink':
+case 'lr':
+case 'magic':
+case 'maroon':
+case 'midnight':
+case 'momonga':
+case 'nande-ya-nen':
+case 'narrow':
+case 'nebula':
+case 'orange':
+case 'parabola':
+case 'plum':
+case 'pool_side':
+case 'rainy-season':
+case 'right':
+case 's-blue':
+case 's-pink':
+case 'sky':
+case 'snow_man':
+case 'spring':
+case 'tag':
+case 'white-lingerie':
+case 'whiteout':
+case 'wood':
+	$title_design_date = 0; // Select text design	
+	break;
+
+// Show both :)
+case 'arrow':
+case 'fluxbox':
+case 'fluxbox2':
+case 'fluxbox3':
+	$title_design_date = 2;
 	break;
 }
 
@@ -256,7 +306,7 @@ if (isset($pkwk_dtd)) {
 <?php if (! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
 <?php if (PKWK_ALLOW_JAVASCRIPT && isset($javascript)) { ?> <meta http-equiv="Content-Script-Type" content="text/javascript" /><?php } ?>
 
- <title><?php echo "$title - $page_title" ?></title>
+ <title><?php echo $title ?> - <?php echo $page_title ?></title>
 
  <link rel="stylesheet" href="skin/theme/base.css" type="text/css" media="all" />
  <link rel="stylesheet" href="skin/theme/<?php echo $theme ?>/<?php echo $theme ?>.css" type="text/css" media="all" />
@@ -369,21 +419,35 @@ function _navigator($key, $value = '', $javascript = ''){
 
 <div class="day">
 
-<h2><span class="date"></span> <span class="title"><?php
-if ($disable_reverse_link === TRUE) {
+<?php
+// Page title (page name)
+$title = '';
+if ($disable_backlink) {
 	if ($_page != '') {
-		echo htmlspecialchars($_page);
+		$title = htmlspecialchars($_page);
 	} else {
-		echo $page; // Search, or something message
+		$title = $page; // Search, or something message
 	}
 } else {
 	if ($page != '') {
-		echo $page;
+		$title = $page;
 	} else {
-		echo htmlspecialchars($_page);
+		$title =  htmlspecialchars($_page);
 	}
 }
-?></span></h2>
+$title_date = $title_text = '';
+switch($title_design_date){
+case 1: $title_date = & $title; break;
+case 0: $title_text = & $title; break;
+default:
+	// Show both (for debug or someting)
+	$title_date = & $title;
+	$title_text = & $title;
+	break;
+}
+?>
+<h2><span class="date"><?php  echo $title_date ?></span>
+    <span class="title"><?php echo $title_text ?></span></h2>
 
 <div class="body">
 	<div class="section">
