@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.74 2003/05/14 10:13:29 arino Exp $
+// $Id: html.php,v 1.75 2003/05/16 05:46:46 arino Exp $
 //
 
 // 本文を出力
@@ -291,7 +291,7 @@ function make_heading($str)
 	global $NotePattern;
 	
 	// 見出しの固有ID部を削除
-	$str = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m','$1$2',$str);
+	$str = preg_replace('/^\*{0,3}(.*?)\[#[A-Za-z][\w-]+\](.*?)$/m','$1$2',$str);
 	
 	return strip_htmltag(make_link(preg_replace($NotePattern,'',$str)));
 }
