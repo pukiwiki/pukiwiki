@@ -1,13 +1,11 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.19 2005/01/23 14:08:45 henoheno Exp $
+$Id: UPDATING.txt,v 1.20 2005/01/31 15:02:24 henoheno Exp $
 
 
 互換性に関する記述
 ==================
 
-PukiWiki 1.4.5_rc1: PukiWiki 1.4.4との非互換点
-
-    詳しくは dev:開発日記 を参照して下さい。
+PukiWiki 1.4.5: PukiWiki 1.4.4との非互換点
 
     1. デフォルトのスキン(enとja)が統合されています。
        従来のスキンはほぼそのまま利用できますが、ファイル名を含め、
@@ -25,6 +23,15 @@ PukiWiki 1.4.5_rc1: PukiWiki 1.4.4との非互換点
     4. 1.4.5以降のスキン、および :config/plugin/tracker/default の
        内容は新しく用意された機能あるいは変数を使用しているため、
        下位互換ではありません。(以前のPukiWikiでは利用できません)
+
+    5. ワームなどによる「非現実的な長さのクエリ文字列」をブロック
+      する機能が盛り込まれたため、今までに「極端にページ名が長い
+      ページ」に「極端にファイル名が長いファイル」が添付されている
+      場合、それに操作ができなくなる可能性があります。この場合、定数
+      PKWK_QUERY_STRING_MAX を調節することができます。
+
+      イントラネット向けであれば、PKWK_QUERY_STRING_MAX の値を 0 に
+      することにより、この機能を無効にすることができます。
 
 
 PukiWiki 1.4.4: PukiWiki 1.4.3との非互換点
@@ -67,7 +74,11 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
 更新履歴
 ========
 
-    *   2005-01-?? 1.4.5 by PukiWiki Developers Team
+    *   2005-02-01 1.4.5 by PukiWiki Developers Team
+
+
+
+
 
     *   2004-09-04 1.4.4 by PukiWiki Developers Team
 
