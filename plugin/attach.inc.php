@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.39 2004/03/18 10:02:13 arino Exp $
+//  $Id: attach.inc.php,v 1.40 2004/06/22 11:56:25 henoheno Exp $
 //
 
 /*
@@ -36,7 +36,7 @@ define('ATTACH_FILE_MODE',0644);
 // file icon image
 if (!defined('FILE_ICON'))
 {
-	define('FILE_ICON','<img src="./image/file.png" width="20" height="20" alt="file" style="border-width:0px" />');
+	define('FILE_ICON','<img src="' . IMAGE_DIR . 'file.png" width="20" height="20" alt="file" style="border-width:0px" />');
 }
 
 // mime-typeを記述したページ
