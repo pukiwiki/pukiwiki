@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.62 2004/09/20 02:36:34 henoheno Exp $
+//  $Id: attach.inc.php,v 1.63 2004/11/11 13:27:39 henoheno Exp $
 //
 
 /*
@@ -591,9 +591,21 @@ EOD;
 		$this->getstatus();
 		$this->status['count'][$this->age]++;
 		$this->putstatus();
+		$filename = $this->file;
 
-		// for Japanese (???)
-		$filename = htmlspecialchars(mb_convert_encoding($this->file,'SJIS','auto'));
+		// Care for Japanese-character-included file name
+		if (LANG == 'ja') {
+			switch(UA_NAME . '/' . UA_PROFILE){
+			case 'Opera/default':
+				// Care for using _auto-encode-detecting_ function
+				$filename = mb_convert_encoding($filename, 'UTF-8', 'auto');
+				break;
+			case 'MSIE/default':
+				$filename = mb_convert_encoding($filename, 'SJIS', 'auto');
+				break;
+			}
+		}
+		$filename = htmlspecialchars($filename);
 
 		ini_set('default_charset', '');
 		mb_http_output('pass');

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ref.inc.php,v 1.42 2004/09/21 12:04:54 henoheno Exp $
+// $Id: ref.inc.php,v 1.43 2004/11/11 13:27:39 henoheno Exp $
 //
 // Include an attached image-file as an inline-image
 
@@ -380,10 +380,10 @@ function plugin_ref_action()
 	if (! isset($vars['page']) || ! isset($vars['src']))
 		return array('msg'=>'Invalid argument', 'body'=>$usage);
 
-	$page = $vars['page'];
-	$file = $vars['src'];
+	$page     = $vars['page'];
+	$filename = $vars['src'] ;
 
-	$ref = UPLOAD_DIR . encode($page) . '_' . encode(preg_replace('#^.*/#','',$file));
+	$ref = UPLOAD_DIR . encode($page) . '_' . encode(preg_replace('#^.*/#', '', $filename));
 	if(! file_exists($ref))
 		return array('msg'=>'Attach file not found', 'body'=>$usage);
 
@@ -398,10 +398,23 @@ function plugin_ref_action()
 		return array('msg'=>'Seems not an image', 'body'=>$usage);
 	}
 
-	// Output
-	$file = htmlspecialchars($file);
+	// Care for Japanese-character-included file name
+	if (LANG == 'ja') {
+		switch(UA_NAME . '/' . UA_PROFILE){
+		case 'Opera/default':
+			// Care for using _auto-encode-detecting_ function
+			$filename = mb_convert_encoding($filename, 'UTF-8', 'auto');
+			break;
+		case 'MSIE/default':
+			$filename = mb_convert_encoding($filename, 'SJIS', 'auto');
+			break;
+		}
+	}
+	$file = htmlspecialchars($filename);
 	$size = filesize($ref);
-	header('Content-Disposition: inline; filename="' . $file . '"');
+
+	// Output
+	header('Content-Disposition: inline; filename="' . $filename . '"');
 	header('Content-Length: ' . $size);
 	header('Content-Type: '   . $type);
 	@readfile($ref);
