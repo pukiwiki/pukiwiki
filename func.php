@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.55 2003/11/22 04:51:28 arino Exp $
+// $Id: func.php,v 1.56 2003/11/29 17:04:09 arino Exp $
 //
 
 // Ê¸»úÎó¤¬InterWikiName¤«¤É¤¦¤«
@@ -315,7 +315,10 @@ function page_list($pages, $cmd = 'read', $withfilename=FALSE)
 		$str .= "</li>";
 		
 		if($pagereading_enable) {
-			if(mb_ereg('^([A-Za-z¥¡-¥ö])',$readings[$page],$matches)) {
+			if(mb_ereg('^([A-Za-z])',mb_convert_kana($page,'a'),$matches)) {
+				$head = $matches[1];
+			}
+			elseif(mb_ereg('^([¥¡-¥ö])',$readings[$page],$matches)) {
 				$head = $matches[1];
 			}
 			elseif (mb_ereg('^[ -~]|[^¤¡-¤ó°¡-ô¦]',$page)) {
