@@ -1,7 +1,7 @@
 <?php
-// $Id: trackback.php,v 1.3 2004/12/11 15:44:45 henoheno Exp $
+// $Id: trackback.php,v 1.4 2004/12/12 08:35:24 henoheno Exp $
 /*
- * PukiWiki TrackBack プログラム
+ * PukiWiki/TrackBack
  * (C) 2003-2004 PukiWiki Developer Team
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
  * License: GPL
@@ -9,29 +9,30 @@
  * http://localhost/pukiwiki/pukiwiki.php?FrontPage と明確に指定しないと
  * TrackBack ID の取得はできない
  *
- * tb_get_id($page)        TrackBack Ping IDを取得
- * tb_id2page($tb_id)      TrackBack Ping ID からページ名を取得
- * tb_get_filename($page)  TrackBack Ping データファイル名を取得
- * tb_count($page)         TrackBack Ping データ個数取得  // pukiwiki.skin.LANG.php
- * tb_send($page, $data)   TrackBack Ping 送信  // file.php
- * tb_delete($page)        TrackBack Ping データ削除  // edit.inc.php
+ * tb_get_id($page)        Get TrackBack Ping ID from page name
+ * tb_id2page($tb_id)      Get page name from TrackBack Ping ID
+ * tb_get_filename($page)  Get file name of TrackBack Ping data
+ * tb_count($page)         Count the number of TrackBack Pings included for the page
+ *                         // pukiwiki.skin.LANG.php
+ * tb_send($page, $data)   Send TrackBack Ping(s) automatically // file.php
+ * tb_delete($page)        Remove TrackBack Ping data // edit.inc.php
  * tb_get($file, $key = 1) TrackBack Ping データ入力
  * tb_get_rdf($page)       文章中に埋め込むためのrdfをデータを生成 // pukiwiki.php
  * tb_get_url($url)        文書をGETし、埋め込まれたTrackBack Ping URLを取得
  * class TrackBack_XML     XMLからTrackBack Ping IDを取得するクラス
  * == Referer 対応分 ==
- * ref_save($page)         Referer データ保存(更新) // pukiwiki.php
+ * ref_save($page)         Save or update referer data // pukiwiki.php
  */
 
 define('PLUGIN_TRACKBACK_VERSION', 'PukiWiki/TrackBack 0.2');
 
-// TrackBack Ping IDを取得
+// Get TrackBack Ping ID from page name
 function tb_get_id($page)
 {
 	return md5($page);
 }
 
-// TrackBack Ping ID からページ名を取得
+// Get page name from TrackBack Ping ID
 function tb_id2page($tb_id)
 {
 	static $pages, $cache = array();
@@ -44,28 +45,30 @@ function tb_id2page($tb_id)
 		$_tb_id = tb_get_id($page);
 		$cache[$_tb_id] = $page;
 		unset($pages[$page]);
-		if ($_tb_id == $tb_id) return $page;
+		if ($tb_id == $_tb_id) return $cache[$tb_id];
 	}
 
-	return FALSE; // Not found
+	$cache[$tb_id] = FALSE;
+
+	return $cache[$tb_id]; // Not found
 }
 
-// TrackBack Ping データファイル名を取得
+// Get file name of TrackBack Ping data
 function tb_get_filename($page, $ext = '.txt')
 {
 	return TRACKBACK_DIR . encode($page) . $ext;
 }
 
-// TrackBack Ping データ個数取得
+// Count the number of TrackBack Pings included for the page
 function tb_count($page, $ext = '.txt')
 {
 	$filename = tb_get_filename($page, $ext);
 	return file_exists($filename) ? count(file($filename)) : 0;
 }
 
-// Send TrackBack Ping
-// $plus  = Newly added lines
-// $minus = Removed lines
+// Send TrackBack Ping(s) automatically
+// $plus  = Newly added lines may include URLs
+// $minus = Removed lines may include URLs
 function tb_send($page, $plus, $minus = '')
 {
 	global $script, $trackback;
@@ -101,18 +104,17 @@ function tb_send($page, $plus, $minus = '')
 	$r_page  = rawurlencode($page);
 	$excerpt = strip_htmltag(convert_html(get_source($page)));
 
-	// 自文書の情報
+	// Sender's information
 	$putdata = array(
 		'title'     => $page, // Title = It's page name
-		'url'       => "$script?$r_page", // 送信時に再度、rawurlencode される
+		'url'       => "$script?$r_page", // will be rawurlencode() at send phase
 		'excerpt'   => mb_strimwidth(preg_replace("/[\r\n]/", ' ', $excerpt), 0, 255, '...'),
 		'blog_name' => PLUGIN_TRACKBACK_VERSION,
-		'charset'   => SOURCE_ENCODING // 送信側文字コード(未既定)
+		'charset'   => SOURCE_ENCODING // Ping text encoding (Not defined)
 	);
 
 	foreach ($links as $link) {
-		// URL から TrackBack ID を取得する
-		$tb_id = tb_get_url($link);
+		$tb_id = tb_get_url($link);  // Get Trackback ID from the URL
 		if (empty($tb_id)) continue; // Trackback is not supported
 
 		$result = http_request($tb_id, 'POST', '', $putdata);
@@ -120,12 +122,11 @@ function tb_send($page, $plus, $minus = '')
 	}
 }
 
-// TrackBack Ping データ削除
+// Remove TrackBack Ping data
 function tb_delete($page)
 {
 	$filename = tb_get_filename($page);
-	if (file_exists($filename))
-		@unlink($filename);
+	if (file_exists($filename)) @unlink($filename);
 }
 
 // TrackBack Ping データ入力
@@ -209,7 +210,7 @@ class TrackBack_XML
 
 	function parse($buf, $url)
 	{
-		// 初期化
+		// Init
 		$this->url    = $url;
 		$this->tb_url = FALSE;
 
@@ -223,8 +224,7 @@ class TrackBack_XML
 /*			die(sprintf('XML error: %s at line %d in %s',
 				xml_error_string(xml_get_error_code($xml_parser)),
 				xml_get_current_line_number($xml_parser),
-				$buf
-			));
+				$buf));
 */
 			return FALSE;
 		}
@@ -232,33 +232,27 @@ class TrackBack_XML
 		return $this->tb_url;
 	}
 
-	function start_element($parser, $name, $attrs) {
+	function start_element($parser, $name, $attrs)
+	{
 		if ($name !== 'RDF:DESCRIPTION') return;
 
 		$about = $url = $tb_url = '';
 		foreach ($attrs as $key=>$value) {
 			switch ($key) {
-			case 'RDF:ABOUT':
-				$about = $value;
-				break;
-			case 'DC:IDENTIFER':
-			case 'DC:IDENTIFIER':
-				$url = $value;
-				break;
-			case 'TRACKBACK:PING':
-				$tb_url = $value;
-				break;
+			case 'RDF:ABOUT'     : $about  = $value; break;
+			case 'DC:IDENTIFER'  : /*FALLTHROUGH*/
+			case 'DC:IDENTIFIER' : $url    = $value; break;
+			case 'TRACKBACK:PING': $tb_url = $value; break;
 			}
 		}
-		if ($about == $this->url || $url == $this->url) {
+		if ($about == $this->url || $url == $this->url)
 			$this->tb_url = $tb_url;
-		}
 	}
 
 	function end_element($parser, $name) {}
 }
 
-// Referer データ保存(更新)
+// Save or update referer data
 function ref_save($page)
 {
 	global $referer;
@@ -267,17 +261,15 @@ function ref_save($page)
 
 	$url = $_SERVER['HTTP_REFERER'];
 
-	// URI の妥当性評価
-	// 自サイト内の場合は処理しない
+	// Validate URI (Ignore own)
 	$parse_url = parse_url($url);
 	if (empty($parse_url['host']) || $parse_url['host'] == $_SERVER['HTTP_HOST'])
 		return;
 
-	// TRACKBACK_DIR の存在と書き込み可能かの確認
-	if (! is_dir(TRACKBACK_DIR))      die(TRACKBACK_DIR.': No such directory');
-	if (! is_writable(TRACKBACK_DIR)) die(TRACKBACK_DIR.': Permission denied');
+	if (! is_dir(TRACKBACK_DIR))      die('No such directory: TRACKBACK_DIR');
+	if (! is_writable(TRACKBACK_DIR)) die('Permission denied: TRACKBACK_DIR');
 
-	// Referer のデータを更新
+	// Update referer data
 	if (ereg("[,\"\n\r]", $url))
 		$url = '"' . str_replace('"', '""', $url) . '"';
 
@@ -285,7 +277,8 @@ function ref_save($page)
 	$data     = tb_get($filename, 3);
 	$d_url    = rawurldecode($url);
 	if (! isset($data[$d_url])) {
-		// 0:最終更新日時, 1:初回登録日時, 2:参照カウンタ, 3:Referer ヘッダ, 4:利用可否フラグ(1は有効)
+		// 0:最終更新日時, 1:初回登録日時, 2:参照カウンタ,
+		// 3:Referer ヘッダ, 4:利用可否フラグ(1は有効)
 		$data[$d_url] = array(UTIME, UTIME, 0, $url, 1);
 	}
 	$data[$d_url][0] = UTIME;
@@ -296,9 +289,8 @@ function ref_save($page)
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
-	foreach ($data as $line) {
+	foreach ($data as $line)
 		fwrite($fp, join(',', $line) . "\n");
-	}
 	flock($fp, LOCK_UN);
 	fclose($fp);
 
