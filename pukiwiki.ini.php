@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.19 2003/02/03 10:25:11 panda Exp $
+// $Id: pukiwiki.ini.php,v 1.20 2003/02/03 12:46:56 panda Exp $
 //
 // PukiWiki setting file
 
@@ -229,6 +229,7 @@ $line_rules = array(
 "''(?!')((?:(?!'').)*)''" => '<strong>$1</strong>',
 '&amp;(#[0-9]+|#x[0-9a-f]+|[0-9a-zA-Z]+);' => '&$1;',
 "~\r" => '<br />', /* 行末にチルダは改行 */
+'#related' => '<del>#related</del>',
 );
 
 /////////////////////////////////////////////////

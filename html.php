@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.49 2003/01/31 01:49:35 panda Exp $
+// $Id: html.php,v 1.50 2003/02/03 12:46:56 panda Exp $
 //
 
 // 本文を出力
@@ -39,7 +39,7 @@ function catbody($title,$page,$body)
 	$lastmodified = $is_read ?
 		get_date('D, d M Y H:i:s T',get_filetime($_page)).' '.get_pg_passage($_page,FALSE) : '';
 	
-	$related = ($is_read and $related_link) ? make_related($_page,FALSE) : '';
+	$related = ($is_read and $related_link) ? make_related($_page) : '';
 	
 	$attaches = ($is_read and exist_plugin_action('attach')) ? attach_filelist() : '';
 	
@@ -185,9 +185,10 @@ EOD;
 }
 
 // 関連するページ
-function make_related($page,$_isrule)
+function make_related($page,$tag='')
 {
 	global $script,$vars,$related,$rule_related_str,$related_str;
+	global $_list_left_margin, $_list_margin, $_list_pad_str;
 	
 	$links = links_get_related($page);
 	
@@ -202,12 +203,23 @@ function make_related($page,$_isrule)
 		$r_page = rawurlencode($page);
 		$s_page = htmlspecialchars($page);
 		$passage = get_passage($lastmod);
-		$_links[] = $_isrule ?
+		$_links[] = $tag ?
 			"<a href=\"$script?$r_page\" title=\"$s_page $passage\">$s_page</a>" :
 			"<a href=\"$script?$r_page\">$s_page</a>$passage";
 	}
 	
-	return join($_isrule ? $rule_related_str : $related_str,$_links);
+	if ($tag) {
+		$retval = join($rule_related_str,$_links);
+		if ($tag == 'p') {
+			$margin = $_list_left_margin + $_list_margin;
+			$style = sprintf($_list_pad_str,1,$margin,$margin);
+			$retval =  "\n<ul class=\"list1\" style=\"$style\">\n<li>$retval</li>\n</ul>\n";
+		}
+	}
+	else {
+		$retval = join($related_str,$_links);
+	}
+	return $retval;
 }
 
 // 注釈処理
