@@ -1,13 +1,5 @@
 <?php
-// $Id: newpage.inc.php,v 1.7 2003/05/28 04:47:10 arino Exp $
-
-function plugin_newpage_init()
-{
-	$messages = array(
-		'_msg_newpage' => 'ページ新規作成'
-	);
-	set_plugin_messages($messages);
-}
+// $Id: newpage.inc.php,v 1.8 2003/07/03 05:23:08 arino Exp $
 
 function plugin_newpage_convert()
 {

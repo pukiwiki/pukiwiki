@@ -3,7 +3,7 @@
  * PukiWiki calendar_viewerプラグイン
  *
  *
- *$Id: calendar_viewer.inc.php,v 1.8 2003/06/22 06:37:19 arino Exp $
+ *$Id: calendar_viewer.inc.php,v 1.9 2003/07/03 05:18:50 arino Exp $
   calendarrecentプラグインを元に作成
  */
 /**
@@ -40,23 +40,13 @@
 
  */
 
-function plugin_calendar_viewer_init()
-{
-	$messages = array(
-		'_err_calendar_viewer_param'  => '引数指定してね',
-		'_err_calendar_viewer_param2' => '第2引数が変だよ',
-		'_msg_calendar_viewer_right'  => '次の%d件&gt;&gt;',
-		'_msg_calendar_viewer_left'   => '&lt;&lt;前の%d件'
-	);
-	set_plugin_messages($messages);
-}
-
-
 function plugin_calendar_viewer_convert()
 {
   global $WikiName,$BracketName,$vars,$get,$post,$hr,$script;
   global $_err_calendar_viewer_param,$_err_calendar_viewer_param2;
   global $_msg_calendar_viewer_right,$_msg_calendar_viewer_left;
+  global $_msg_calendar_viewer_restrict;
+
   //*デフォルト値をセット
   //基準となるページ名
   $pagename = "";
@@ -184,7 +174,7 @@ function plugin_calendar_viewer_convert()
 	if (check_readable($page,false,false)) {
 		$body = convert_html(get_source($page));
 	} else {
-		$body = $page." は閲覧制限がかかっているためcalendar_viewerによる参照はできません";
+		$body = str_replace('$1',$page,$_msg_calendar_viewer_restrict);
 	}
 	
     $r_page = rawurlencode($page);

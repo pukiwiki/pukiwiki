@@ -1,5 +1,5 @@
 <?php
-// $Id: template.inc.php,v 1.12 2003/05/16 06:19:15 arino Exp $
+// $Id: template.inc.php,v 1.13 2003/07/03 05:27:08 arino Exp $
 
 define('MAX_LEN',60);
 
@@ -7,6 +7,8 @@ function plugin_template_action()
 {
 	global $script,$vars;
 	global $_title_edit;
+	global $_msg_template_start,$_msg_template_end,$_msg_template_page,$_msg_template_refer;
+	global $_btn_template_create,$_title_template;
 	
 	if (!is_page($vars['refer']))
 	{
@@ -43,7 +45,7 @@ function plugin_template_action()
 	// input mb_strwidth()
 	else
 	{
-		$begin_select = "開始行:<br /><select name=\"begin\" size=\"10\">\n";
+		$begin_select = $_msg_template_start."<select name=\"begin\" size=\"10\">\n";
 		for ($i = 0; $i < count($lines); $i++)
 		{
 			$lines[$i] = mb_strimwidth($lines[$i],0,MAX_LEN,'...');
@@ -54,7 +56,7 @@ function plugin_template_action()
 		}
 		$begin_select.= "</select><br />\n<br />\n";
 		
-		$end_select = "終了行:<br /><select name=\"end\" size=\"10\">\n";
+		$end_select = $_msg_template_end."<select name=\"end\" size=\"10\">\n";
 		for ($i = 0; $i < count($lines); $i++)
 		{
 			$tag = ($i == count($lines) - 1) ? ' selected="selected"' : '';
@@ -92,7 +94,7 @@ EOD;
 		$select.= "</table><br />\n";
 */
 	}
-	$s_refer = htmlspecialchars($vars['refer']);
+	$s_refer = str_replace('$1',htmlspecialchars($vars['refer']),$_msg_template_page);
 	$ret = <<<EOD
 <form action="$script" method="post">
  <div>
@@ -100,13 +102,13 @@ EOD;
   <input type="hidden" name="refer" value="$s_refer" />
   $begin_select
   $end_select
-  ページ名: <input type="text" name="page" value="$s_refer/複製" />
-  <input type="submit" name="submit" value="作成" />
+  $_msg_template_refer <input type="text" name="page" value="$s_refer" />
+  <input type="submit" name="submit" value="$_btn_template_create" />
  </div>
 </form>
 EOD;
 	
-	$retvar['msg'] = '$1 をテンプレートにして作成';
+	$retvar['msg'] = $_title_template;
 	$retvar['body'] = $ret;
 	
 	return $retvar;

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: popular.inc.php,v 1.3 2003/03/03 07:07:28 panda Exp $
+// $Id: popular.inc.php,v 1.4 2003/07/03 05:24:43 arino Exp $
 //
 
 /*
@@ -28,21 +28,6 @@
 // counter file : counter プラグインで設定しているものと同じにして下さい。
 if (!defined('COUNTER_DIR'))
 	define('COUNTER_DIR', './counter/');
-
-function plugin_popular_init()
-{
-	if (LANG == 'ja')
-		$messages = array(
-			'_popular_plugin_frame' => '<h5>人気の%d件</h5><div>%s</div>',
-			'_popular_plugin_today_frame' => '<h5>今日の%d件</h5><div>%s</div>',
-		);
-	else
-		$messages = array(
-			'_popular_plugin_frame' => '<h5>popular(%d)</h5><div>%s</div>',
-			'_popular_plugin_today_frame' => '<h5>today\'s(%d)</h5><div>%s</div>',
-		);
-	set_plugin_messages($messages);
-}
 
 function plugin_popular_convert()
 {

@@ -5,25 +5,8 @@
  * CopyRight 2002 S.YOSHIMURA GPL2
  * http://masui.net/pukiwiki/ yosimura@excellence.ac.jp
  *
- * $Id: versionlist.inc.php,v 1.5 2003/03/02 07:25:20 panda Exp $
+ * $Id: versionlist.inc.php,v 1.6 2003/07/03 05:27:46 arino Exp $
  */
-
-function plugin_versionlist_init()
-{
-	if (LANG == 'ja')
-	{
-		$messages = array(
-			'_title_versionlist'    => '構成ファイルのバージョン一覧'
-		);
-	}
-	else
-	{
-		$messages = array(
-			'_title_versionlist'    => 'version list'
-		);
-	}
-	set_plugin_messages($messages);
-}
 
 function plugin_versionlist_action()
 {

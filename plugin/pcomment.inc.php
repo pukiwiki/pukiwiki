@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.19 2003/06/24 01:17:32 arino Exp $
+// $Id: pcomment.inc.php,v 1.20 2003/07/03 05:24:28 arino Exp $
 //
 
 /*
@@ -53,24 +53,6 @@ define('PCMT_FORMAT',"\x08MSG\x08 -- \x08NAME\x08 \x08DATE\x08");
 // 自動過去ログ化 1ページあたりの件数を指定 0で無効
 define('PCMT_AUTO_LOG',0);
 
-function plugin_pcomment_init()
-{
-	$messages = array(
-		'_pcmt_messages'=>array(
-			'btn_name' => 'お名前: ',
-			'btn_comment' => 'コメントの挿入',
-			'msg_comment' => 'コメント: ',
-			'msg_recent' => '最新の%d件を表示しています。',
-			'msg_all' => 'コメントページを参照',
-			'msg_none' => 'コメントはありません。',
-			'title_collided' => '$1 で【更新の衝突】が起きました',
-			'msg_collided' => 'あなたがこのページを編集している間に、他の人が同じページを更新してしまったようです。<br />
-コメントを追加しましたが、違う位置に挿入されているかもしれません。<br />',
-			'err_pagename' => basename(__FILE__).' : ページ名 [[%s]] は使用できません。 正しいページ名を指定してください。',
-		)
-	);
-	set_plugin_messages($messages);
-}
 function plugin_pcomment_action()
 {
 	global $script,$post,$vars;

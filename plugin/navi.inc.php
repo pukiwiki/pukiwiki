@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: navi.inc.php,v 1.14 2003/05/20 10:31:21 arino Exp $
+// $Id: navi.inc.php,v 1.15 2003/07/03 05:22:36 arino Exp $
 //
 
 /*
@@ -40,22 +40,10 @@ define('NAVI_EXCLUDE_PATTERN','');
 // <link>タグを出力する (TRUE|FALSE)
 define('NAVI_LINK_TAGS',FALSE);
 
-function plugin_navi_init()
-{
-	$messages = array(
-		'_navi_messages'=>array(
-			'msg_prev'=>'Prev',
-			'msg_next'=>'Next',
-			'msg_up'  =>'Up',
-			'msg_home'  =>'Home'
-		)
-	);
-	set_plugin_messages($messages);
-}
 function plugin_navi_convert()
 {
 	global $vars, $script, $head_tags;
-	global $_navi_messages;
+	global $_navi_prev,$_navi_next,$_navi_up,$_navi_home;
 	static $navi = array();
 	
 	$home = $current = $vars['page'];
@@ -105,20 +93,20 @@ function plugin_navi_convert()
 		if ($pos > 0)
 		{
 			$up = substr($current, 0, $pos);
-			$navi[$home]['up'] = make_pagelink($up,$_navi_messages['msg_up']);
+			$navi[$home]['up'] = make_pagelink($up,$_navi_up);
 		}
 		if (!$is_home)
 		{
 			$navi[$home]['prev'] = make_pagelink($prev);
-			$navi[$home]['prev1'] = make_pagelink($prev,$_navi_messages['msg_prev']);
+			$navi[$home]['prev1'] = make_pagelink($prev,$_navi_prev);
 		}
 		if ($next != '')
 		{
 			$navi[$home]['next'] = make_pagelink($next);
-			$navi[$home]['next1'] = make_pagelink($next,$_navi_messages['msg_next']);
+			$navi[$home]['next1'] = make_pagelink($next,$_navi_next);
 		}
 		$navi[$home]['home'] = make_pagelink($home);
-		$navi[$home]['home1'] = make_pagelink($home,$_navi_messages['msg_home']);
+		$navi[$home]['home1'] = make_pagelink($home,$_navi_home);
 		
 		// <link>タグを生成する : start next prev(previous) parent(up)
 		// 未対応 : contents(toc) search first(begin) last(end)

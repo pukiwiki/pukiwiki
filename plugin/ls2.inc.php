@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ls2.inc.php,v 1.14 2003/05/17 11:18:22 arino Exp $
+// $Id: ls2.inc.php,v 1.15 2003/07/03 05:21:48 arino Exp $
 //
 
 /*
@@ -37,19 +37,10 @@ define('LS2_ANCHOR_ORIGIN',0);
 //見出しレベルを調整する(デフォルト値)
 define('LS2_LIST_COMPACT',FALSE);
 
-function plugin_ls2_init()
-{
-	$messages = array('_ls2_messages'=>array(
-		'err_nopages' => '<p>\'$1\' には、下位層のページがありません。</p>',
-		'msg_title' => '\'$1\'で始まるページの一覧',
-		'msg_go' => '<span class="small">...</span>',
-	));
-	set_plugin_messages($messages);
-}
 function plugin_ls2_action()
 {
 	global $vars;
-	global $_ls2_messages;
+	global $_ls2_msg_title;
 	
 	$params = array();
 	foreach (array('title','include','reverse') as $key)
@@ -61,14 +52,14 @@ function plugin_ls2_action()
 	
 	return array(
 		'body'=>$body,
-		'msg'=>str_replace('$1',htmlspecialchars($prefix),$_ls2_messages['msg_title'])
+		'msg'=>str_replace('$1',htmlspecialchars($prefix),$_ls2_msg_title)
 	);
 }
 
 function plugin_ls2_convert()
 {
 	global $script,$vars;
-	global $_ls2_messages;
+	global $_ls2_msg_title;
 
 	$prefix = '';
 	if (func_num_args())
@@ -97,7 +88,7 @@ function plugin_ls2_convert()
 	array_walk($args, 'ls2_check_arg', &$params);
 	$title = (count($params['_args']) > 0) ?
 		join(',', $params['_args']) :
-		str_replace('$1',htmlspecialchars($prefix),$_ls2_messages['msg_title']);
+		str_replace('$1',htmlspecialchars($prefix),$_ls2_msg_title);
 
 	if ($params['link'])
 	{
@@ -117,15 +108,22 @@ function plugin_ls2_convert()
 }
 function ls2_show_lists($prefix,&$params)
 {
-	global $_ls2_messages;
+	global $_ls2_err_nopages;
 	
-	$pages = array();
-	foreach (get_existpages() as $_page)
+	if (strlen($prefix))
 	{
-		if (strpos($_page,$prefix) === 0)
+		$pages = array();
+		foreach (get_existpages() as $_page)
 		{
-			$pages[] = $_page;
+			if (strpos($_page,$prefix) === 0)
+			{
+				$pages[] = $_page;
+			}
 		}
+	}
+	else
+	{
+		$pages = get_existpages();
 	}
 	natcasesort($pages);
 	
@@ -139,7 +137,7 @@ function ls2_show_lists($prefix,&$params)
 	}
 	if (count($pages) == 0)
 	{
-		return str_replace('$1',htmlspecialchars($prefix),$_ls2_messages['err_nopages']);
+		return str_replace('$1',htmlspecialchars($prefix),$_ls2_err_nopages);
 	}
 	
 	$params['result'] = array();
@@ -154,7 +152,6 @@ function ls2_show_lists($prefix,&$params)
 function ls2_get_headings($page,&$params,$level,$include = FALSE)
 {
 	global $script;
-	global $_ls2_messages;
 	static $_ls2_anchor = 0;
 	
 	$is_done = (isset($params["page_$page"]) and $params["page_$page"] > 0); //ページが表示済みのときTrue
@@ -193,9 +190,7 @@ function ls2_get_headings($page,&$params,$level,$include = FALSE)
 			$level = strlen($matches[1]);
 			$id = LS2_CONTENT_HEAD.$anchor++;
 			ls2_list_push($params,$level + strlen($level));
-			array_push($params['result'], '<li>'.$line.
-				'<a href="'.$href.$id.'">'.$_ls2_messages['msg_go'].'</a>'
-			);
+			array_push($params['result'], "<li><a href=\"$href$id\">$line</a>");
 		}
 		else if ($params['include']
 			and preg_match('/^#include\((.+)\)/',$line,$matches) and is_page($matches[1]))

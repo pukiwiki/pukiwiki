@@ -2,28 +2,9 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: deleted.inc.php,v 1.2 2003/04/01 08:05:26 panda Exp $
+// $Id: deleted.inc.php,v 1.3 2003/07/03 05:19:37 arino Exp $
 //
 //削除されたページ(BACKUP_DIRにあって、DATA_DIRにないファイル)の一覧を表示する
-
-function plugin_deleted_init()
-{
-	if (LANG == 'ja')
-	{
-		$messages = array(
-			'_deleted_plugin_title' => '削除ページの一覧',
-			'_deleted_plugin_title_withfilename' => '削除ページファイルの一覧',
-		);
-	}
-	else
-	{
-		$messages = array(
-			'_deleted_plugin_title' => 'deleted pages',
-			'_deleted_plugin_title_withfilename' => 'deleted pages (with filename)',
-		);
-	}
-	set_plugin_messages($messages);
-}
 
 function plugin_deleted_action()
 {

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rename.inc.php,v 1.7 2003/06/18 00:11:09 arino Exp $
+// $Id: rename.inc.php,v 1.8 2003/07/03 05:25:10 arino Exp $
 //
 
 /*
@@ -20,38 +20,6 @@
 
 define('RENAME_LOGPAGE',':RenameLog');
 
-function plugin_rename_init()
-{
-	$messages = array(
-		'_rename_messages'=>array(
-			'err' => '<p>エラー:%s</p>',
-			'err_nomatch' => 'マッチするページがありません。',
-			'err_notvalid' => 'リネーム後のページ名が正しくありません。',
-			'err_adminpass' => '管理者パスワードが正しくありません。',
-			'err_notpage' => '%sはページ名ではありません。',
-			'err_norename' => '%sをリネームすることはできません。',
-			'err_already' => 'ページがすでに存在します。:%s',
-			'err_already_below' => '以下のファイルがすでに存在します。',
-			'msg_title' => 'ページ名の変更',
-			'msg_page' => '変更元ページを指定',
-			'msg_regex' => '正規表現で置換',
-			'msg_related' => '関連ページ',
-			'msg_do_related' => '関連ページもリネームする',
-			'msg_rename' => '%sの名前を変更します。',
-			'msg_oldname' => '現在の名前',
-			'msg_newname' => '新しい名前',
-			'msg_adminpass' => '管理者パスワード',
-			'msg_arrow' => '→',
-			'msg_exist_none' => 'そのページを処理しない',
-			'msg_exist_overwrite' => 'そのファイルを上書きする',
-			'msg_confirm' => '以下のファイルをリネームします。',
-			'msg_result' => '以下のファイルを上書きしました。',
-			'btn_submit' => '実行',
-			'btn_next' => '次へ'
-		)
-	);
-	set_plugin_messages($messages);
-}
 function plugin_rename_action()
 {
 	global $adminpass,$whatsnew,$WikiName,$BracketName;

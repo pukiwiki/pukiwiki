@@ -2,27 +2,8 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: vote.inc.php,v 1.13 2003/05/14 10:13:31 arino Exp $
+// $Id: vote.inc.php,v 1.14 2003/07/03 05:28:04 arino Exp $
 //
-
-function plugin_vote_init()
-{
-	if (LANG == 'ja')
-	{
-		$messages = array(
-			'_vote_plugin_choice' => 'ÁªÂò»è',
-			'_vote_plugin_votes' => 'ÅêÉ¼',
-		);
-	}
-	else
-	{
-		$messages = array(
-			'_vote_plugin_choice' => 'Selection',
-			'_vote_plugin_votes' => 'Vote',
-		);
-	}
-	set_plugin_messages($messages);
-}
 
 function plugin_vote_action()
 {
