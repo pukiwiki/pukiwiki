@@ -453,13 +453,18 @@ div#navigator
 	padding:4px 0px 0px 0px;
 	margin:0px;
 }
+ 
+td.menubar
+{
+	width:130px;
+}
 
 div#menubar
 {
 	float:left;
-	width:120px;
-	padding:0px;
-	margin:0px;
+	height:100%;
+	padding:4px;
+	margin:0px 10px 0px 0px;
 	word-break:break-all;
 	font-size:90%;
 	overflow:hidden;
@@ -471,11 +476,13 @@ div#menubar ul
 	padding:0px 0px 0px .5em;
 }
 
-div#menubar ul li {
+div#menubar ul li
+{
 	line-height:110%;
 }
 
-div#menubar h4 {
+div#menubar h4
+{
 	font-size:110%;
 }
 

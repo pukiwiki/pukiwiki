@@ -23,6 +23,14 @@ div#navigator
 {
 	display:none;
 }
+td.menubar
+{
+	display:none;
+}
+div#menubar
+{
+	display:none;
+}
 /*
 div#note
 {
