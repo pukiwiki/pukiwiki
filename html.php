@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.68 2003/03/14 06:33:49 panda Exp $
+// $Id: html.php,v 1.69 2003/03/21 22:46:55 panda Exp $
 //
 
 // 本文を出力
@@ -56,6 +56,7 @@ function catbody($title,$page,$body)
 	$attaches = ($is_read and exist_plugin_action('attach')) ? attach_filelist() : '';
 	
 	// 注釈のリスト
+	ksort($foot_explain,SORT_NUMERIC);
 	$notes = count($foot_explain) ? $note_hr.join("\n",$foot_explain) : '';
 	
 	// 1.3.x compat
