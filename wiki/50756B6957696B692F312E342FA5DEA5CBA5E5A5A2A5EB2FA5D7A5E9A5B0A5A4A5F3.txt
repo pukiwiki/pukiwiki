@@ -1,6 +1,5 @@
 #freeze
 #contents
-
 *プラグインマニュアル [#v0ed77c7]
 
 #ls2(,title)

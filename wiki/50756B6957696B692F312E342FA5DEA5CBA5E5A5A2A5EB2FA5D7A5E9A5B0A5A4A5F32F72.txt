@@ -110,9 +110,11 @@
 --PLUGIN_REF_USAGE　引数未指定時に表示されるヘルプ
 --PLUGIN_REF_IMAGE　マッチ時に指定ファイルを画像とみなす正規表現
 --FILE_ICON　アイコンイメージのファイル
---REF_DEFAULT_ALIGN　left,center,right省略時の表示位置
---REF_WRAP_TABLE　wrap,nowrap省略時にテーブルタグで囲むか
---REF_URL_GETIMAGESIZE　URL指定時に画像サイズを取得するか
+--PLUGIN_REF_DEFAULT_ALIGN　left,center,right省略時の表示位置
+--PLUGIN_REF_WRAP_TABLE　wrap,nowrap省略時にテーブルタグで囲むか
+--PLUGIN_REF_URL_GET_IMAGE_SIZE　URL指定時に画像サイズを取得するか
+--PLUGIN_REF_DIRECT_ACCESS　添付ファイルの画像表示で UPLOAD_DIR のデータに直接アクセスするか
+
 :備考|
 ~aroundで行った回り込み指定を解除するには clearプラグイン、あるいはimgプラグインを使用して下さい。
 ~"ほげ"という別ページの添付ファイル"fuga.jpg"をインラインプラグイン形式で参照する場合、下記２通りの記述方法が存在します。
