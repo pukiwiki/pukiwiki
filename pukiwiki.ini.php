@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.56 2004/06/19 14:05:12 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.57 2004/06/19 14:27:35 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -32,9 +32,6 @@ define('TRACKBACK_DIR','./trackback/');
 
 /////////////////////////////////////////////////
 // ディレクトリ指定 最後に / が必要
-/////////////////////////////////////////////////
-// サブルーチンの格納先ディレクトリ (他の *.phpファイル等)
-define('SUB_DIR','./');
 /////////////////////////////////////////////////
 // プラグインファイル格納先ディレクトリ
 define('PLUGIN_DIR','./plugin/');

@@ -29,30 +29,32 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.30 2003/09/24 00:38:43 arino Exp $
+// $Id: pukiwiki.php,v 1.31 2004/06/19 14:27:35 henoheno Exp $
 /////////////////////////////////////////////////
 
-
 /////////////////////////////////////////////////
-// プログラムファイル読み込み
-require('func.php');
-require('file.php');
-require('plugin.php');
-require('html.php');
-require('backup.php');
+// サブルーチンの格納先ディレクトリ (他の *.phpファイル)
+define('SUB_DIR', './');
 
-require('convert_html.php');
-require('make_link.php');
-require('diff.php');
-require('config.php');
-require('link.php');
-require('trackback.php');
-require('auth.php');
-require('proxy.php');
-require('mail.php');
+// サブルーチンの読み込み
+require(SUB_DIR . 'func.php');
+require(SUB_DIR . 'file.php');
+require(SUB_DIR . 'plugin.php');
+require(SUB_DIR . 'html.php');
+require(SUB_DIR . 'backup.php');
+
+require(SUB_DIR . 'convert_html.php');
+require(SUB_DIR . 'make_link.php');
+require(SUB_DIR . 'diff.php');
+require(SUB_DIR . 'config.php');
+require(SUB_DIR . 'link.php');
+require(SUB_DIR . 'trackback.php');
+require(SUB_DIR . 'auth.php');
+require(SUB_DIR . 'proxy.php');
+require(SUB_DIR . 'mail.php');
 if (!extension_loaded('mbstring'))
 {
-	require('mbstring.php');
+	require(SUB_DIR . 'mbstring.php');
 }
 
 /////////////////////////////////////////////////
