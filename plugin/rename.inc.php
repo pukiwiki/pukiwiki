@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.26 2005/02/27 07:10:57 henoheno Exp $
+// $Id: rename.inc.php,v 1.27 2005/02/27 07:57:26 henoheno Exp $
 //
 // Rename plugin: Rename page-name and related data
 //
@@ -115,10 +115,10 @@ $msg
   <label for="_p_rename_page">{$_rename_messages['msg_page']}:</label>$select_refer<br />
   <input type="radio"  name="method" id="_p_rename_regex" value="regex"$radio_regex />
   <label for="_p_rename_regex">{$_rename_messages['msg_regex']}:</label><br />
-  From:<br />
-  <input type="text" name="src" size="80" value="$s_src" /><br />
-  To:<br />
-  <input type="text" name="dst" size="80" value="$s_dst" /><br />
+  <label for="_p_rename_from">From:</label><br />
+  <input type="text" name="src" id="_p_rename_from" size="80" value="$s_src" /><br />
+  <label for="_p_rename_to">To:</label><br />
+  <input type="text" name="dst" id="_p_rename_to"   size="80" value="$s_dst" /><br />
   <input type="submit" value="{$_rename_messages['btn_next']}" /><br />
  </div>
 </form>
@@ -139,8 +139,8 @@ function plugin_rename_phase2($err = '')
 	$msg_related = '';
 	$related = plugin_rename_getrelated($refer);
 	if (! empty($related))
-		$msg_related = $_rename_messages['msg_do_related'] .
-			'<input type="checkbox" name="related" value="1" checked="checked" /><br />';
+		$msg_related = '<label for="_p_rename_related">' . $_rename_messages['msg_do_related'] . '</label>' .
+		'<input type="checkbox" name="related" id="_p_rename_related" value="1" checked="checked" /><br />';
 
 	$msg_rename = sprintf($_rename_messages['msg_rename'], make_pagelink($refer));
 	$s_page  = htmlspecialchars($page);
@@ -155,7 +155,8 @@ $msg
   <input type="hidden" name="plugin" value="rename" />
   <input type="hidden" name="refer"  value="$s_refer" />
   $msg_rename<br />
-  {$_rename_messages['msg_newname']}:<input type="text" name="page" size="80" value="$s_page" /><br />
+  <label for="_p_rename_newname">{$_rename_messages['msg_newname']}:</label>
+  <input type="text" name="page" id="_p_rename_newname" size="80" value="$s_page" /><br />
   $msg_related
   <input type="submit" value="{$_rename_messages['btn_next']}" /><br />
  </div>
@@ -275,8 +276,8 @@ function plugin_rename_phase3($pages)
  <div>
   <input type="hidden" name="plugin" value="rename" />
   $input
-  {$_rename_messages['msg_adminpass']}
-  <input type="password" name="pass" value="" />
+  <label for="_p_rename_adminpass">{$_rename_messages['msg_adminpass']}</label>
+  <input type="password" name="pass" id="_p_rename_adminpass" value="" />
   <input type="submit" value="{$_rename_messages['btn_submit']}" />
  </div>
 </form>
