@@ -2,15 +2,16 @@ NAME
 
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
-        PukiWiki 1.4.3
-        Copyright (C) 2001,2002,2003 PukiWiki Developers Team.
-        License is GNU/GPL.
-        Based on "PukiWiki" 1.3 by sng
-        http://pukiwiki.org/
+        PukiWiki 1.4.4
+        Copyright (C) 2001-2004 PukiWiki Developers Team
+        License is GNU GPL
+        Based on "PukiWiki" 1.3 by yu-ji
 
 SYNOPSIS
 
         http://pukiwiki.org/
+	http://pukiwiki.sourceforge.jp/dev/
+	http://sourceforge.jp/projects/pukiwiki/
 
 DESCRIPTION
 
@@ -21,83 +22,67 @@ DESCRIPTION
         PukiWikiは、Webページ全体を自由に変更することができます。
 
         PukiWikiは、結城浩さんのYukiWikiの仕様を参考にして独自に作られました。
-        1.3まではsngさんが作成し、1.3.1b以降はPukiWiki Developers Teamによって
+        1.3まではyu-jiさんが作成し、1.3.1b以降はPukiWiki Developers Teamによって
         開発が続けられています。
 
         PukiWikiはPHPで書かれたPHPスクリプトとして実現されていますので、
         PHPが動作するWebサーバならば比較的容易に設置できます。
 
         PukiWikiはフリーソフトです。 ご自由にお使いください。
+        最新版は、 http://pukiwiki.org/ から入手できます。
 
 設置方法
 
-    入手
-
-        PukiWikiの最新版は、 http://pukiwiki.org/ から入手できます。
-
-    インストール
+    以下は一例です。Webサーバーへのシェルアクセスが可能であれば、
+    アーカイブをそのままサーバーに転送し、サーバー上で解凍する
+    だけでも動作の確認ができるはずです。
 
     1.  アーカイブを解きます。
 
     2.  必要に応じて設定ファイル(*.ini.php)の内容を確認します。
-        1.11 から設定ファイルが別ファイルのpukiwiki.ini.phpになりました。
-        1.4 から設定ファイルが分割されました。
+        1.11  から設定ファイルが別ファイルのpukiwiki.ini.phpになりました。
+        1.4   から設定ファイルが分割されました。
+        1.4.4 から携帯電話およびPDA向けの設定ファイルが一つに集約されました。
+	      (旧 i_mode.ini.php, jphone.ini.php の設定を keitai.ini.php に集約)
 
-        *   全体設定          : pukiwiki.ini.php
+        * 共通設定
+	  全体               : pukiwiki.ini.php
+          ユーザ定義         : rules.ini.php
 
-        *   エージェント別設定
-                I-MODE,AirH"  : i_mode.ini.php
-                J-PHONE       : jphone.ini.php
-                その他        : default.ini.php
-
-        *   ユーザ定義ルール  : rules.ini.php
+        * エージェント別設定
+          携帯電話およびPDA  : keitai.ini.php
+          その他             : default.ini.php
 
     3.  アーカイブの内容をサーバに転送します。
         ファイルの転送モードについては次項を参照してください。
 
-    4.  pukiwiki.ini.php内で指定した以下のディレクトリを作成します。
-
-        データの格納ディレクトリ               (デフォルトはwiki)
-        差分ファイル格納ディレクトリ           (デフォルトはdiff)
-        バックアップファイル格納ディレクトリ   (デフォルトはbackup)
-        キャッシュファイル格納ディレクトリ     (デフォルトはcache)
-        添付ファイル格納ディレクトリ           (デフォルトはattach)
-        カウンタファイル格納ディレクトリ       (デフォルトはcounter)
-        TrackBackファイル格納ディレクトリ      (デフォルトはtrackback)
-
-        ディレクトリ内にファイルがある場合には、そのファイルの属性を
-        666に変更してください。
-
-    5.  サーバ上のファイルおよびディレクトリのパーミッションを確認します。
-        ファイルのパーミッションについては次項を参照してください。
-
-    6.  pukiwiki.phpにブラウザからアクセスします。
-
-    パーミッション
+    4.  サーバ上のファイルおよびディレクトリのパーミッションを確認します。
 
         ディレクトリ   パーミッション
-        attach         777
-        backup         777
-        cache          777
-        counter        777
-        diff           777
-        face           755
-        image          755
-        plugin         755
-        skin           755
-        trackback      777
-        wiki           777
+        attach         777	添付ファイル格納ディレクトリ
+        backup         777	バックアップファイル格納ディレクトリ
+        cache          777	キャッシュファイル格納ディレクトリ
+        counter        777	カウンタファイル格納ディレクトリ
+        diff           777	差分ファイル格納ディレクトリ
+        image          755	画像ファイル
+        image/face     755 	(画像ファイル)フェイスマーク  
+        plugin         755	プラグイン
+        skin           755	スキン、CSS、JavaScirptファイル
+        trackback      777	TrackBackファイル格納ディレクトリ
+        wiki           777	データの格納ディレクトリ
 
         ファイル       パーミッション 転送モード
         *.php          644            ASCII
         *.lng          644            ASCII
-
         cache/*        666            ASCII
         face/*         644            BINARY
         image/*        644            BINARY
         plugin/*       644            ASCII
         skin/*         644            ASCII
         wiki/*         666            ASCII
+
+    5.  index.php あるいは pukiwiki.php にブラウザからアクセスします。
+        必要に応じて、さらに設定やデザインを調整して下さい。
 
 データのバックアップ方法
 
@@ -107,23 +92,29 @@ DESCRIPTION
         必要に応じて他のディレクトリの内容をバックアップします。
         (デフォルトディレクトリ名は attach,backup,counter,cache,diff,trackback)
 
+
 新しいページの作り方
 
+    「新規」リンクから新しくページを作成する以外に、ページの中に書いた語句から
+    そのページ名のページを作成することができます。
+
     1.  まず、適当なページ（例えばFrontPage）を選び、
-        ページの下にある「編集」リンクをたどります。
+        ページの上下にある「編集」リンクをたどります。
 
     2.  するとテキスト入力ができる状態になるので、 そこにNewPageのような単語
-        （大文字小文字混在している英文字列） を書いて「保存」します。
+        （大文字小文字混在している英文字列）や、 [[新しいページ名]] の様に
+	二重のブラケットで囲んだ語句を書いて「保存」します。
 
     3.  保存すると、FrontPageのページが書き換わり、
-        あなたが書いたNewPageという文字列の後ろに ?
-        というリンクが表示されます。 この ?
+        あなたが書いたNewPageという単語や「新しいページ名」という語句の
+	の後ろに '?' という小さなリンクが表示されます。 このリンク
         はそのページがまだ存在しないことを示す印です。
 
-    4.  その ? をクリックすると新しいページNewPageができますので、
+    4.  その '?' をクリックすると新しいページができますので、
         あなたの好きな文章をその新しいページに書いて保存します。
 
-    5.  NewPageページができるとFrontPageの ? は消えて、リンクとなります。
+    5.  新しいページができるとFrontPageのそれらの語句から '?' は消えて、
+        普通のハイパーリンクとなります。
 
 テキスト整形のルール
 
@@ -142,18 +133,15 @@ InterWiki
 
         詳細は [[InterWikiテクニカル]] ページを参照してください。
 
-RDF/RSS
+RDF/RSSの出力
 
         1.2.1から、RecentChangesのRDF/RSSを出力できるようになりました。
-        実用できるかはわからないですが、将来何かに使えれば、と思ってます。
 
-    *   RSS 0.91 の出力方法の例
+        * RSS 0.91 の出力方法の例
+            http://pukiwiki/index.php?cmd=rss
 
-        *   http://pukiwiki/index.php?cmd=rss
-
-    *   RSS 1.0 の出力方法の例
-
-        *   http://pukiwiki.org/index.php?cmd=rss10
+        * RSS 1.0 の出力方法の例
+            http://pukiwiki.org/index.php?cmd=rss10
 
 
 PukiWiki/1.3.xとの非互換点
@@ -168,6 +156,11 @@ PukiWiki/1.4.2との非互換点
     1.  trackback/ディレクトリ配下に作成されるファイルの名前の生成規則が変わりました。
         trackback/referer機能をお使いで、1.4.2から1.4.3へ移行される場合は、PukiWiki.devサイト
         (http://pukiwiki.sourceforge.jp/dev/)の、開発日記/2004-03-18ページを参照して作業を行ってください。
+
+PukiWiki/1.4.3との非互換点
+
+    1. 主要なライブラリなどが全て lib/ ディレクトリ以下に移動しました。pukiwiki.php も
+       lib/pukiwiki.php をインクルードする小さなファイルになっています。
 
 更新履歴
     *   2004-04-04 1.4.3 by PukiWiki Developers Team
@@ -365,45 +358,24 @@ PukiWiki/1.4.2との非互換点
 
 TODO
 
-    http://pukiwiki.org/?BugTrack
-
-作者
-
-    PukiWiki 1.4
-    Copyright (C) 2001,2002,2003 PukiWiki Developers Team. License is GNU/GPL.
-    Based on "PukiWiki" 1.3 by sng
-    http://pukiwiki.org/
 
     質問、意見、バグ報告は http://pukiwiki.org/ までお願いします。
 
-配布条件
-
-    PukiWikiは、 GNU General Public Licenseにて公開します。
-
-    PukiWikiはフリーソフトです。 ご自由にお使いください。
+    http://pukiwiki.org/?BugTrack
 
 謝辞
 
     PukiWiki Develpers Teamの皆さん、PukiWikiユーザの皆さんに感謝します。
-
-    PukiWiki を開発した、sngさんに感謝します。
-
+    PukiWiki を開発した、yu-ji(旧sng)さんに感謝します。
     YukiWiki のクローン化を許可していただいた結城浩さんに感謝します。
-
     本家のWikiWikiを作ったCunningham & Cunningham, Inc.に 感謝します。
 
 参照リンク
 
-    *   PukiWikiホームページ http://pukiwiki.org/
-
-    *   sngのホームページ http://factage.com/sng/
-
-    *   結城浩さんのホームページ http://www.hyuki.com/
-
-    *   YukiWikiホームページ http://www.hyuki.com/yukiwiki/
-
-    *   Tiki http://todo.org/cgi-bin/jp/tiki.cgi
-
-    *   本家のWikiWiki http://c2.com/cgi/wiki?WikiWikiWeb
-
-    *   本家のWikiWikiの作者(Cunningham & Cunningham, Inc.) http://c2.com/
+    * PukiWikiホームページ	http://pukiwiki.org/
+    * yu-jiのホームページ	http://factage.com/yu-ji/
+    * 結城浩さんのホームページ	http://www.hyuki.com/
+    * YukiWikiホームページ	http://www.hyuki.com/yukiwiki/
+    * Tiki	http://todo.org/cgi-bin/jp/tiki.cgi
+    * 本家のWikiWiki	http://c2.com/cgi/wiki?WikiWikiWeb
+    * 本家のWikiWikiの作者(Cunningham & Cunningham, Inc.)	http://c2.com/
