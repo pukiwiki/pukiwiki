@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.17 2005/02/05 03:40:13 henoheno Exp $
+// $Id: make_link.php,v 1.18 2005/04/02 03:04:14 henoheno Exp $
 //
 // Hyperlink-related functions
 
@@ -294,10 +294,14 @@ EOD;
 
 	function set($arr, $page)
 	{
-		global $foot_explain, $script, $vars;
+		global $foot_explain, $vars;
 		static $note_id = 0;
 
 		list(, $body) = $this->splice($arr);
+
+		$script = '';
+		if (! PKWK_ALLOW_RELATIVE_FOOTNOTE_ANCHOR)
+			$script = get_script_uri() . '?' . $page;
 
 		$id   = ++$note_id;
 		$note = make_link($body);
@@ -305,12 +309,12 @@ EOD;
 
 		// Footnote
 		$foot_explain[$id] = '<a id="notefoot_' . $id . '" href="' .
-			$script . '?' . $page . '#notetext_' . $id .
-			'" class="note_super">*' . $id . '</a>' . "\n" .
+			$script . '#notetext_' . $id . '" class="note_super">*' .
+			$id . '</a>' . "\n" .
 			'<span class="small">' . $note . '</span><br />';
 
 		// A hyperlink, content-body to footnote
-		$name = '<a id="notetext_' . $id . '" href="' . $script . '?' . $page .
+		$name = '<a id="notetext_' . $id . '" href="' . $script .
 			'#notefoot_' . $id . '" class="note_super" title="' .
 			htmlspecialchars(strip_tags($note)) . '">*' . $id . '</a>';
 
