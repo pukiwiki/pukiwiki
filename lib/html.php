@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.14 2004/11/20 04:32:49 henoheno Exp $
+// $Id: html.php,v 1.15 2004/11/23 11:33:25 henoheno Exp $
 //
 
 // 本文を出力
@@ -332,20 +332,22 @@ function make_search($page)
 	return "<a href=\"$script?cmd=search&amp;word=$r_page\">$s_page</a> ";
 }
 
-// 見出しを生成 (注釈やHTMLタグを除去)
+// 見出しを生成 (脚注やHTMLタグを除去)
 function make_heading(& $str, $strip = TRUE)
 {
 	global $NotePattern;
 
-	// 見出しの固有ID部を削除
+	// Cut fixed-anchors
 	$id = '';
-	if (preg_match('/^(\*{0,3})(.*?)\[#([A-Za-z][\w-]+)\](.*?)$/m', $str, $matches)) {
+	$matches = array();
+	if (preg_match('/^(\*{0,3})(.*?)\[#([a-z][a-f0-9]{7})\](.*?)$/m', $str, $matches)) {
 		$str = $matches[2] . $matches[4];
 		$id  = $matches[3];
 	} else {
 		$str = preg_replace('/^\*{0,3}/', '', $str);
 	}
 
+	// Cut footnotes and tags
 	if ($strip === TRUE)
 		$str = strip_htmltag(make_link(preg_replace($NotePattern, '', $str)));
 
