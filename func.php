@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.34 2003/04/23 08:26:01 arino Exp $
+// $Id: func.php,v 1.35 2003/04/29 00:35:43 arino Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -148,6 +148,9 @@ function auto_template($page)
 			if (is_page($template_page))
 			{
 				$body = join('',get_source($template_page));
+				// #freezeを削除
+				$body = preg_replace('/^#freeze\s*$/m','',$body);
+				
 				for ($i = 0; $i < count($matches); $i++)
 				{
 					$body = str_replace("\$$i",$matches[$i],$body);
