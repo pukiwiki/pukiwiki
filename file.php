@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.3.2.6 2004/06/28 13:38:26 henoheno Exp $
+// $Id: file.php,v 1.3.2.7 2004/06/28 13:57:06 henoheno Exp $
 /////////////////////////////////////////////////
 
 // ソースを取得
@@ -115,6 +115,7 @@ function is_page($page,$reload=false)
 {
 	return file_exists(get_filename(encode($page)));
 }
+function page_exists($page) { return is_page($page); } // compat
 
 // ページが編集可能か
 function is_editable($page)

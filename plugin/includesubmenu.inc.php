@@ -1,5 +1,5 @@
 <?php
-// $Id: includesubmenu.inc.php,v 1.1.2.1 2003/02/14 08:17:22 panda Exp $
+// $Id: includesubmenu.inc.php,v 1.1.2.2 2004/06/28 13:57:06 henoheno Exp $
 
 function plugin_includesubmenu_convert()
 {
@@ -29,10 +29,10 @@ function plugin_includesubmenu_convert()
   //echo "$SubMenuPageName2 <br>";
   //下階層にSubMenuがあるかチェック
   //あれば、それを使用
-  if (page_exists($SubMenuPageName1)){
+  if (is_page($SubMenuPageName1)){
     //下階層にSubMenu有り
     $SubMenuPageName=$SubMenuPageName1;
-  }elseif(page_exists($SubMenuPageName2)){
+  }elseif(is_page($SubMenuPageName2)){
     //同階層にSubMenu有り
     $SubMenuPageName=$SubMenuPageName2;
   }else{
