@@ -44,53 +44,56 @@ DESCRIPTION
         skinディレクトリ内に、pukiwiki.skin.ja.php(日本語)および
         pukiwiki.skin.en.php(英語)が用意されています。
 
-    5.  pukiwiki.ini.php内で指定したデータファイルディレクトリを
+    6.  pukiwiki.ini.php内で指定したデータファイルディレクトリを
         属性 777 で作成する。(ディフォルトは wiki )
         このディレクトリ以下にファイルがある場合には、そのファイルも
         属性 666に変更してください。
 
-    6.  pukiwiki.ini.php内で指定した差分ファイルディレクトリを
+    7.  pukiwiki.ini.php内で指定した差分ファイルディレクトリを
         属性 777 で作成する。(ディフォルトは diff )
 
-    7.  自動バックアップ機能(ディフォルトでは off)を使う場合、
+    8.  自動バックアップ機能(ディフォルトでは off)を使う場合、
         pukiwiki.ini.php内で指定した差分ファイルディレクトリを
         属性 777 で作成する。(ディフォルトは backup )
 
-    8.  attach.inc.php内で指定した添付ファイルディレクトリを
+    9.  attach.inc.php内で指定した添付ファイルディレクトリを
         属性 777 で作成する。(ディフォルトは attach )
 
-    9.  counter.inc.php内で指定したカウンターファイルディレクトリを
+    10. counter.inc.php内で指定したカウンターファイルディレクトリを
         属性 777 で作成する。(ディフォルトは counter )
 
-    10. pukiwiki.phpにブラウザからアクセスします。
+    11. pukiwiki.phpにブラウザからアクセスします。
 
   パーミッション
 
-            ファイル             パーミッション      転送モード
-            pukiwiki.php         644                 ASCII
-            pukiwiki.ini.php     644                 ASCII
-            pukiwiki.skin.en.php 644                 ASCII
-            pukiwiki.skin.ja.php 644                 ASCII
-            en.lng               644                 ASCII
-            ja.lng               644                 ASCII
-            func.php             644                 ASCII
-            file.php             644                 ASCII
-            html.php             644                 ASCII
-            init.php             644                 ASCII
-            plugin.php           644                 ASCII
-            template.php         644                 ASCII
-            rss.php              644                 ASCII
-            backup.php           644                 ASCII
-            pukiwiki.gif         644                 BINARY
+       ファイル                  パーミッション 転送モード
+       pukiwiki.php              644            ASCII
+       pukiwiki.ini.php          644            ASCII
+       en.lng                    644            ASCII
+       ja.lng                    644            ASCII
+       func.php                  644            ASCII
+       file.php                  644            ASCII
+       html.php                  644            ASCII
+       init.php                  644            ASCII
+       plugin.php                644            ASCII
+       template.php              644            ASCII
+       rss.php                   644            ASCII
+       backup.php                644            ASCII
+       pukiwiki.gif              644            BINARY
+       skin/pukiwiki.skin.en.php 644            ASCII
+       skin/pukiwiki.skin.ja.php 644            ASCII
+       skin/default.ja.css       644            ASCII
+       skin/default.ja.css       644            ASCII
+       skin/default.js           644            ASCII
 
-            ディレクトリ         パーミッション
-            wiki                 777
-            diff                 777
-            backup               777
-            attach               777
-            counter              777
-            skin                 755
-            plugin               755
+       ディレクトリ             パーミッション
+       attach                   777
+       backup                   777
+       counter                  777
+       diff                     777
+       plugin                   755
+       skin                     755
+       wiki                     777
 
    データのバックアップ方法
 
