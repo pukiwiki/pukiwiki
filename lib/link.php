@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: link.php,v 1.2 2004/10/10 03:58:20 henoheno Exp $
+// $Id: link.php,v 1.3 2004/10/21 15:07:21 henoheno Exp $
 //
 
 /*
@@ -20,15 +20,16 @@
 // データベースから関連ページを得る
 function links_get_related_db($page)
 {
-	$links = array();
 	$ref_name = CACHE_DIR . encode($page) . '.ref';
-	if (file_exists($ref_name)) {
-		foreach (file($ref_name) as $line) {
-			list($_page)   = explode("\t", rtrim($line));
-			$links[$_page] = get_filetime($_page);
-		}
+	if (! file_exists($ref_name)) return array();
+
+	$times = array();
+	foreach (file($ref_name) as $line) {
+		list($_page) = explode("\t", rtrim($line));
+		$time = get_filetime($_page);	
+		if($time != 0) $times[$_page] = $time;
 	}
-	return $links;
+	return $times;
 }
 
 //ページの関連を更新する
