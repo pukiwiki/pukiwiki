@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng.php,v 1.6 2005/01/15 02:51:44 henoheno Exp $
+// $Id: en.lng.php,v 1.7 2005/02/05 04:38:52 henoheno Exp $
 //
 // PukiWiki message file (english)
 
@@ -288,7 +288,7 @@ $_navi_home = 'Home';
 
 ///////////////////////////////////////
 // newpage.inc.php
-$_msg_newpage = 'new page';
+$_msg_newpage = 'New page';
 
 ///////////////////////////////////////
 // paint.inc.php
