@@ -1,5 +1,5 @@
 <?php
-// $Id: template.inc.php,v 1.15 2003/09/03 02:11:56 arino Exp $
+// $Id: template.inc.php,v 1.16 2003/11/12 00:47:39 arino Exp $
 
 define('MAX_LEN',60);
 
@@ -11,9 +11,9 @@ function plugin_template_action()
 	global $_btn_template_create,$_title_template;
 	global $_err_template_already,$_err_template_invalid,$_msg_template_force;
 	
-	if (!is_page($vars['refer']))
+	if (!array_key_exists('refer',$vars) or !is_page($vars['refer']))
 	{
-		return; 
+		return FALSE; 
 	}
 	
 	$lines = get_source($vars['refer']);
