@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.33 2003/09/24 00:38:43 arino Exp $
+// $Id: file.php,v 1.34 2003/10/27 02:43:19 arino Exp $
 //
 
 // ソースを取得
@@ -94,7 +94,7 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 {
 	global $post,$update_exec;
 	global $_msg_invalidiwn;
-	global $notify,$notify_to,$notify_from,$notify_subject,$notify_header;
+	global $notify,$notify_diff_only,$notify_to,$notify_from,$notify_subject,$notify_header;
 	global $smtp_server,$smtp_auth;
 	
 	if (!is_pagename($page))
@@ -150,6 +150,11 @@ function file_write($dir,$page,$str,$notimestamp=FALSE)
 	
 	if ($notify and $dir == DIFF_DIR)
 	{
+		if ($notify_diff_only)
+		{
+			// 差分だけを送信する
+			$str = preg_replace('/^[^-+].*$/m','',$str);
+		}
 		if ($smtp_auth)
 		{
 			pop_before_smtp();

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.48 2003/09/24 07:28:51 arino Exp $
+// $Id: pukiwiki.ini.php,v 1.49 2003/10/27 02:43:19 arino Exp $
 //
 // PukiWiki setting file
 
@@ -216,6 +216,8 @@ $no_proxy = array(
 ////////////////////////////////////////////////
 // ページの更新時にメールを送信する
 $notify = 0;
+// 差分だけを送信する
+$notify_diff_only = 0;
 // To:（宛先）
 $notify_to = 'xxx@yyy.zz';
 // From:（送り主）
