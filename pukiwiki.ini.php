@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.105 2005/01/16 03:00:53 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.106 2005/01/16 03:21:35 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -453,7 +453,7 @@ $agents = array(
 
 	// Planetweb http://www.planetweb.com/
 	// Sample: "Mozilla/3.0 (Planetweb/v1.07 Build 141; SPS JP)" ("EGBROWSER", Web browser for PlayStation 2)
-	array('pattern'=>'#\b(Planet[Ww]eb)/[a-z]?([0-9\.]+)#',	'profile'=>'keitai'),
+	array('pattern'=>'#\b(Planetweb)/v([0-9\.]+)#', 'profile'=>'keitai'),
 
 	// DreamPassport, Web browser for SEGA DreamCast
 	// Sample: "Mozilla/3.0 (DreamPassport/3.0)"
