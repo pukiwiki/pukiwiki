@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.15 2002/07/03 08:51:42 masui Exp $
+// $Id: html.php,v 1.16 2002/07/09 13:19:05 kawara Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -90,6 +90,10 @@ function convert_html($string)
 	$lines = split("\n", $string);
 	$note_id = 1;
 	$foot_explain = array();
+	// 各行の行頭書式を格納
+	$headform = array();
+	// 現在の行数を入れておこう
+	$_cnt = 0;
 
 	$table = 0;
 
@@ -108,91 +112,174 @@ function convert_html($string)
 
 		$comment_out = $comment_out[1];
 
-		if(preg_match("/^(\*{1,3})(.*)/",$line,$out))
-		{
-			$result = array_merge($result,$saved); $saved = array();
-			$str = inline($out[2]);
-			
-			$level = strlen($out[1]) + 1;
-			
-			array_push($result, "<h$level><a name=\"content:$content_id\"></a>$str $top_link</h$level>");
-			$arycontents[] = str_repeat("-",$level-1)."<a href=\"#content:$content_id\">".strip_htmltag(make_user_rules($str))."</a>\n";
-			$content_id++;
-		}
-		else if(preg_match("/^(-{1,4})(.*)/",$line,$out))
-		{
-			if(strlen($out[1]) == 4)
+		// 行頭書式かどうかの判定
+		$line_head = substr($line,0,1);
+		if(	$line_head == ' ' || 
+			$line_head == ':' || 
+			$line_head == '>' || 
+			$line_head == '-' || 
+			$line_head == '|' || 
+			$line_head == '*' || 
+			$line_head == '#' || 
+			$line_head == '/'
+		) {
+			if($headform[$_cnt-1] == '' && $_p){
+				array_push($result, "</p>");
+				$_p = false;
+			}
+			if($line_head != '>' && $_bq){
+				array_push($result, "</p>");
+				$_bq = false;
+			}
+
+			if($line_head == '#' ){
+				array_push($result, htmlspecialchars($line));
+			}
+			else if(preg_match("/^(\*{1,3})(.*)/",$line,$out))
 			{
 				$result = array_merge($result,$saved); $saved = array();
-				array_push($result, $hr);
-			}
-			else
-			{
-				back_push('ul', strlen($out[1]));
-				array_push($result, '<li>' . inline($out[2]) . '</li>');
-			}
-		}
-		else if (preg_match("/^:([^:]+):(.*)/",$line,$out))
-		{
-			back_push('dl', 1);
-			array_push($result, '<dt>' . inline($out[1]) . '</dt>', '<dd>' . inline($out[2]) . '</dd>');
-		}
-		else if(preg_match("/^(>{1,3})(.*)/",$line,$out))
-		{
-			back_push('blockquote', strlen($out[1]));
-			array_push($result, ltrim(inline($out[2])));
-		}
-		else if (preg_match("/^\s*$/",$line,$out))
-		{
-			$i = array_pop($saved);
-			array_push($saved,$i);
-			if($i == '</pre>' && preg_match("/^\s+$/",$line)) {
-			  back_push('pre', 1);	
-			  array_push($result, '');
-			}
-			else {
-			  $result = array_merge($result,$saved); $saved = array();
-			  //array_unshift($saved, "</p>");
-			  array_push($result, "<p>");
-			}
-		}
-		else if(preg_match("/^(\s+.*)/",$line,$out))
-		{
-			back_push('pre', 1);
-			array_push($result, htmlspecialchars($out[1],ENT_NOQUOTES));
-		}
-		else if(preg_match("/^\|(.+)\|$/",$line,$out))
-		{
-			$arytable = explode("|",$out[1]);
+				$headform[$_cnt] = $out[1];
+				$str = inline($out[2]);
+				
+				$level = strlen($out[1]) + 1;
 
-			if(!$table)
+				array_push($result, "<h$level><a name=\"content:$content_id\"></a>$str $top_link</h$level>");
+				$arycontents[] = str_repeat("-",$level-1)."<a href=\"#content:$content_id\">".strip_htmltag(make_user_rules($str))."</a>\n";
+				$content_id++;
+			}
+			else if(preg_match("/^(-{1,4})(.*)/",$line,$out))
 			{
-				$result = array_merge($result,$saved); $saved = array();
-				array_push($result,"<table class=\"style_table\" cellspacing=\"1\" border=\"0\">");
-				$table = count($arytable);
+				$headform[$_cnt] = $out[1];
+				if(strlen($out[1]) == 4)
+				{
+					$result = array_merge($result,$saved); $saved = array();
+					array_push($result, $hr);
+				}
+				else
+				{
+					back_push('ul', strlen($out[1]));
+					array_push($result, '<li>' . inline($out[2]) . '</li>');
+				}
+			}
+			else if (preg_match("/^:([^:]+):(.*)/",$line,$out))
+			{
+				$headform[$_cnt] = ':'.$out[1].':';
+				back_push('dl', 1);
+				array_push($result, '<dt>' . inline($out[1]) . '</dt>', '<dd>' . inline($out[2]) . '</dd>');
+			}
+			else if(preg_match("/^(>{1,3})(.*)/",$line,$out))
+			{
+				$headform[$_cnt] = $out[1];
+				back_push('blockquote', strlen($out[1]));
+				// ここのあたりで自前でback_pushかけてる感じ。無茶苦茶…
+				if($headform[$_cnt-1] != $headform[$_cnt] ) {
+					if(!$_bq) {
+						array_push($result, "<p class=\"quotation\">");
+						$_bq = true;
+					}
+					else if(substr($headform[$_cnt-1],0,1) == '>'){
+						$_level_diff = abs( strlen($out[1]) - strlen($headform[$_cnt-1]) );
+						if( $_level_diff == 1 ){
+							$i = array_pop($result);
+							array_push($result, "</p>");
+							array_push($result,$i);
+							array_push($result, "<p class=\"quotation\">");
+							$_bq = true;
+						} else {
+							$i = array();
+							$i[] = array_pop($result);
+							$i[] = array_pop($result);
+							array_push($result, "</p>");
+							$result = array_merge($result,$i);
+							array_push($result, "<p class=\"quotation\">");
+							$_bq = true;
+						}
+					}
+				}
+				array_push($result, ltrim(inline($out[2])));
+			}
+			else if(preg_match("/^(\s+.*)/",$line,$out))
+			{
+				$headform[$_cnt] = ' ';
+				back_push('pre', 1);
+				array_push($result, htmlspecialchars($out[1],ENT_NOQUOTES));
+			}
+			else if(preg_match("/^\|(.+)\|$/",$line,$out))
+			{
+				$headform[$_cnt] = '|';
+				$arytable = explode("|",$out[1]);
+
+				if(!$table)
+				{
+					$result = array_merge($result,$saved); $saved = array();
+					array_push($result,"<table class=\"style_table\" cellspacing=\"1\" border=\"0\">");
+					$table = count($arytable);
+				}
+
+				array_push($result,"<tr>");
+				foreach($arytable as $td)
+				{
+					array_push($result,"<td class=\"style_td\">");
+					array_push($result,ltrim(inline($td)));
+					array_push($result,"</td>");
+				}
+				array_push($result,"</tr>");
+
+			}
+			else if(strlen($comment_out) != 0)
+			{
+				$headform[$_cnt] = '//';
+				array_push($result," <!-- ".htmlspecialchars($comment_out)." -->");
 			}
 
-			array_push($result,"<tr>");
-			foreach($arytable as $td)
-			{
-				array_push($result,"<td class=\"style_td\">");
-				array_push($result,ltrim(inline($td)));
-				array_push($result,"</td>");
+		} else {
+
+			$headform[$_cnt] = '';
+			if($headform[$_cnt-1] != $headform[$_cnt]){
+				if(array_values($saved)){
+					if( $_bq ){
+						array_unshift($saved, "</p>");
+						$_bq = false;
+					}
+					$i = array_pop($saved);
+					array_push($saved,$i);
+					$result = array_merge($result,$saved); $saved = array();
+				}
+				if( substr($line,0,1) == '' && !$_p){
+					array_push($result, "<p>");
+					$_p = true;
+				}
+				else if( substr($line,0,1) != '' && $_p){
+					array_push($result, "</p>");
+					$_p = false;
+				}
 			}
-			array_push($result,"</tr>");
+			
+			if( substr($line,0,1) == '' && $_p){
+				array_push($result, "</p>");
+				$_p = false;
+			}
+			else if( substr($line,0,1) != '' && !$_p) {
+				array_push($result, "<p>");
+				$_p = true;
+			}
+			if( substr($line,0,1) != '' ){
+				array_push($result, inline($line));
+			}
 
 		}
-		else if(strlen($comment_out) != 0)
-		{
-			array_push($result," <!-- ".htmlspecialchars($comment_out)." -->");
-		}
-		else
-		{
-			array_push($result, inline($line));
-		}
+
+		$_cnt++;
+	}
+
+	if($_p) array_push($result, "</p>");
+	if($_bq) {
+		array_push($result, "</p>");
+		array_push($result, "</blockquote>");
+		$saved = array();
 	}
 	if($table) array_push($result, "</table>");
-
+	
 	$result_last = $result = array_merge($result,$saved); $saved = array();
 
 	if($content_id != 0)
@@ -228,9 +315,7 @@ function convert_html($string)
 	{
 		$str .= "\n";
 		$str .= "$note_hr\n";
-		//$str .= "<p>\n";
 		$str .= join("\n",inline2($foot_explain));
-		//$str .= "</p>\n";
 	}
 
 	$longtaketime = getmicrotime() - $start_mtime;
