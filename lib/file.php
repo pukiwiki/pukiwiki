@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: file.php,v 1.6 2004/10/11 01:28:59 henoheno Exp $
+// $Id: file.php,v 1.7 2004/11/23 01:58:53 henoheno Exp $
 //
 
 // ソースを取得
@@ -67,7 +67,7 @@ function make_str_rules($str)
 		{
 			// 固有IDを生成する
 			// ランダムな英字(1文字) + md5ハッシュのランダムな部分文字列(7文字)
-			$anchor = chr(mt_rand(ord('a'), ord('z'))).
+			$anchor = chr(mt_rand(ord('a'), ord('z'))) .
 				substr(md5(uniqid(substr($matches[1], 0, 100), 1)), mt_rand(0, 24), 7);
 			$str = rtrim($matches[1]) . " [#$anchor]";
 		}
