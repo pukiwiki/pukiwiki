@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.9 2005/01/08 11:24:21 henoheno Exp $
+// $Id: make_link.php,v 1.10 2005/01/15 03:16:22 henoheno Exp $
 //
 // Hyperlink-related functions
 
@@ -270,7 +270,7 @@ EOD;
 	}
 }
 
-// Ãí¼á
+// Footnotes
 class Link_note extends Link
 {
 	function Link_note($start)
@@ -294,21 +294,24 @@ EOD;
 
 	function set($arr, $page)
 	{
-		global $foot_explain, $script;
+		global $foot_explain, $script, $vars;
 		static $note_id = 0;
 
 		list(, $body) = $this->splice($arr);
 
 		$id   = ++$note_id;
 		$note = make_link($body);
+		$page = isset($vars['page']) ? htmlspecialchars($vars['page']) : '';
 
+		// Footnote
 		$foot_explain[$id] = <<<EOD
-<a id="notefoot_$id" href="$script#notetext_$id" class="note_super">*$id</a>
+<a id="notefoot_$id" href="$script?$page#notetext_$id" class="note_super">*$id</a>
 <span class="small">$note</span>
 <br />
 EOD;
+		// A hyperlink, content-body to footnote
 		$name = '<a id="notetext_' . $id . '" href="' .
-			$script . '#notefoot_' . $id .
+			$script . '?' . $page . '#notefoot_' . $id .
 			'" class="note_super">*' . $id . '</a>';
 
 		return parent::setParam($page, $name, $body);
