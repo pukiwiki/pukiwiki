@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: rss.inc.php,v 1.9 2004/11/07 12:48:59 henoheno Exp $
+// $Id: rss.inc.php,v 1.10 2004/11/28 04:23:13 henoheno Exp $
 //
 // Publishing RSS feed of RecentChanges
 // HOW TO USE: rss.inc.php?ver=[0.91(default)|1.0|2.0]
@@ -17,7 +17,12 @@ function plugin_rss_action()
 	$recent = CACHE_DIR . 'recent.dat';
 	if (! file_exists($recent)) die('recent.dat is not found');
 
-	$version = (isset($vars['ver']) && $vars['ver'] != '') ? $vars['ver'] : '0.91'; // default
+	$version = isset($vars['ver']) ? $vars['ver'] : '';
+	switch($version){
+		case '':  $version = '0.91'; break; // Default
+		case '1': $version = '1.0';  break;
+		case '2': $version = '2.0';  break;
+	}
 	$page_title_utf8 = mb_convert_encoding($page_title, 'UTF-8', SOURCE_ENCODING);
 
 	$items = $rdf_li = '';
