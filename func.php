@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.17 2003/02/22 06:25:36 panda Exp $
+// $Id: func.php,v 1.18 2003/02/22 07:29:26 panda Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -461,7 +461,7 @@ function get_autolink_pattern_sub(&$pages,$start,$end,$pos)
 		}
 		$count++;
 	}
-	if ($x or $count > 1)
+	if ($count > 1)
 	{
 		$result = '(?:'.$result.')';
 	}
