@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.53 2003/09/03 01:35:51 arino Exp $
+// $Id: convert_html.php,v 1.54 2003/09/03 02:07:56 arino Exp $
 //
 function convert_html($lines)
 {
@@ -102,13 +102,13 @@ class Block extends Element
 	}
 	function toString()
 	{
-		$ret = '';
+		$ret = array();
 		if (isset($this->elements) and count($this->elements) > 0) {
 			foreach ($this->elements as $obj) {
-				$ret .= $obj->toString();
+				$ret[] = $obj->toString();
 			}
 		}
-		return $ret;
+		return join("\n",$ret);
 	}
 	function wrap($string, $tag, $param = '')
 	{
