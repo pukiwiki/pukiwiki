@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.3.2.1 2003/01/27 04:25:41 panda Exp $
+// $Id: file.php,v 1.3.2.2 2003/01/27 04:28:05 panda Exp $
 /////////////////////////////////////////////////
 
 // ソースを取得
@@ -23,7 +23,9 @@ function page_exists($page)
 function file_write($dir,$page,$str)
 {
 	global $post,$update_exec;
-
+	
+	$timestamp = FALSE;
+	
 	if($str == "")
 	{
 		@unlink($dir.encode($page).".txt");
