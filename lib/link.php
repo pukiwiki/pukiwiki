@@ -1,12 +1,10 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: link.php,v 1.4 2005/01/29 13:51:44 henoheno Exp $
 //
-// $Id: link.php,v 1.3 2004/10/21 15:07:21 henoheno Exp $
-//
+// Backlinks / AutoLinks related functions
 
 /*
- * データ形式
  * CACHE_DIR/encode(ページ名).ref
  * 参照元ページ名<tab>AutoLinkによるリンクのみのとき1\n
  * 参照元ページ名<tab>AutoLinkによるリンクのみのとき1\n
@@ -14,7 +12,6 @@
  *
  * CACHE_DIR/encode(ページ名).rel
  * 参照先ページ名<tab>参照先ページ名<tab>...
- *
  */
 
 // データベースから関連ページを得る
@@ -35,6 +32,8 @@ function links_get_related_db($page)
 //ページの関連を更新する
 function links_update($page)
 {
+	if (PKWK_READONLY) return; // Do nothing
+
 	if (ini_get('safe_mode') == '0') set_time_limit(0);
 
 	$time = is_page($page, TRUE) ? get_filetime($page) : 0;
@@ -113,14 +112,16 @@ function links_update($page)
 	}
 }
 
-//ページの関連を初期化する
+// Init link cache (Called from link plugin)
 function links_init()
 {
 	global $whatsnew;
 
+	if (PKWK_READONLY) return; // Do nothing
+
 	if (ini_get('safe_mode') == '0') set_time_limit(0);
 
-	// データベースの初期化
+	// Init database
 	foreach (get_existfiles(CACHE_DIR, '.ref') as $cache)
 		unlink($cache);
 	foreach (get_existfiles(CACHE_DIR, '.rel') as $cache)
@@ -171,12 +172,14 @@ function links_init()
 
 function links_add($page, $add, $rel_auto)
 {
+	if (PKWK_READONLY) return; // Do nothing
+
 	$rel_auto = array_flip($rel_auto);
 	
 	foreach ($add as $_page) {
 		$all_auto = isset($rel_auto[$_page]);
 		$is_page  = is_page($_page);
-		$ref      = "$page\t" . ($all_auto ? 1 : 0) . "\n";
+		$ref      = $page . "\t" . ($all_auto ? 1 : 0) . "\n";
 
 		$ref_file = CACHE_DIR . encode($_page) . '.ref';
 		if (file_exists($ref_file)) {
@@ -198,6 +201,8 @@ function links_add($page, $add, $rel_auto)
 
 function links_delete($page, $del)
 {
+	if (PKWK_READONLY) return; // Do nothing
+
 	foreach ($del as $_page) {
 		$ref_file = CACHE_DIR . encode($_page) . '.ref';
 		if (! file_exists($ref_file)) continue;

@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.7 2004/12/18 14:32:58 henoheno Exp $
+// $Id: trackback.php,v 1.8 2005/01/29 13:53:37 henoheno Exp $
 /*
  * PukiWiki/TrackBack
  * (C) 2003-2004 PukiWiki Developer Team
@@ -257,7 +257,7 @@ function ref_save($page)
 {
 	global $referer;
 
-	if (! $referer || empty($_SERVER['HTTP_REFERER'])) return TRUE;
+	if (PKWK_READONLY || ! $referer || empty($_SERVER['HTTP_REFERER'])) return TRUE;
 
 	$url = $_SERVER['HTTP_REFERER'];
 
