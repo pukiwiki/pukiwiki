@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.99 2004/12/02 11:29:47 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.100 2004/12/30 13:42:13 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -126,7 +126,7 @@ $nowikiname = 0;
 // AutoLinkを有効にする場合は、AutoLink対象となる
 // ページ名の最短バイト数を指定
 // AutoLinkを無効にする場合は0
-$autolink = 0;
+$autolink = 8;
 
 /////////////////////////////////////////////////
 // 凍結機能を有効にする
