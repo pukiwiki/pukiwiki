@@ -1,5 +1,5 @@
 <?
-// $Id: comment.inc.php,v 1.5 2002/07/01 11:53:20 masui Exp $
+// $Id: comment.inc.php,v 1.6 2002/07/02 01:31:25 masui Exp $
 
 global $name_cols, $comment_cols, $msg_format, $name_format;
 global $msg_format, $now_format, $comment_format;
@@ -37,10 +37,6 @@ function plugin_comment_action()
 	global $_title_collided,$_msg_collided,$_title_updated;
 	global $_msg_comment_collided,$_title_comment_collided;
 
-	if(get_magic_quotes_gpc() {
-	  if($post["name"]) $post["name"] = stripslashes($post["name"]);
-	}
-	
 	$_comment_format = $comment_format;
 	if($post["nodate"]=="1") {
 		$_comment_format = str_replace('$now','',$_comment_format);
