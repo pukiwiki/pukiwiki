@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.6 2002/06/24 09:06:09 masui Exp $
+// $Id: html.php,v 1.7 2002/06/24 12:19:47 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -579,7 +579,7 @@ function make_note($str)
 // リンクを付加する
 function make_link($name)
 {
-	global $BracketName,$WikiName,$InterWikiName,$script,$link_target,$interwiki_target;
+	global $BracketName,$WikiName,$InterWikiName,$InterWikiNameNoBracket,$script,$link_target,$interwiki_target;
 	global $related,$show_passage,$vars,$defaultpage;
 
 	$aryconv_htmlspecial = array("&amp;","&lt;","&gt;");
@@ -610,6 +610,15 @@ function make_link($name)
 	{
 		return "<a href=\"mailto:$name\">$page</a>";
 	}
+	else if(preg_match("/^(.+?)&gt;($InterWikiNameNoBracket)$/",strip_bracket($name),$match))
+	{
+		$page = $match[1];
+		$name = '[['.$match[2].']]';
+		$percent_name = str_replace($aryconv_htmlspecial,$aryconv_html,$name);
+		$percent_name = rawurlencode($percent_name);
+
+		return "<a href=\"$script?$percent_name\" target=\"$interwiki_target\">$page</a>";
+	}
 	else if(preg_match("/^($InterWikiName)$/",$name))
 	{
 		$page = strip_bracket($page);
@@ -620,8 +629,9 @@ function make_link($name)
 	}
 	else if(preg_match("/^($BracketName)|($WikiName)$/",$name))
 	{
-		if(preg_match("/^([^>]+)>([^>]+)$/",strip_bracket($name),$match))
+		if(preg_match("/^(.+?)&gt;(.+)$/",strip_bracket($name),$match))
 		{
+
 			$page = $match[1];
 			$name = $match[2];
 			if(!preg_match("/^($BracketName)|($WikiName)$/",$page))
@@ -629,7 +639,6 @@ function make_link($name)
 			if(!preg_match("/^($BracketName)|($WikiName)$/",$name))
 				$name = "[[$name]]";
 		}
-		
 		if(preg_match("/^\[\[\.\/([^\]]*)\]\]/",$name,$match))
 		{
 			if(!$match[1])
