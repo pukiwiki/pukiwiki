@@ -227,3 +227,9 @@ address {
 	margin-top:0px;
 	margin-bottom:.5em;
 }
+span.diff_added {
+	color: blue;
+}
+span.diff_removed {
+	color: red;
+}

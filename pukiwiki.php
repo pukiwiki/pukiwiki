@@ -26,7 +26,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.9 2002/07/03 08:47:02 masui Exp $
+// $Id: pukiwiki.php,v 1.10 2002/07/09 13:47:09 kawara Exp $
 /////////////////////////////////////////////////
 
 
@@ -420,11 +420,12 @@ else if(arg_check("diff"))
 		$page = str_replace('$1',make_search($get["page"]),$_title_diff);
 
 		$diffdata = file(DIFF_DIR.encode($get["page"]).".txt");
-		$diffdata = preg_replace("/^(\-)(.*)/","<span style=\"color:red\"> $2</span>",$diffdata);
-		$diffdata = preg_replace("/^(\+)(.*)/","<span style=\"color:blue\"> $2</span>",$diffdata);
+                for ($i = 0; $i < count($diffdata); $i++) { $diffdata[$i] = htmlspecialchars($diffdata[$i]); }
+		$diffdata = preg_replace("/^(\-)(.*)/","<span class=\"diff_removed\"> $2</span>",$diffdata);
+		$diffdata = preg_replace("/^(\+)(.*)/","<span class=\"diff_added\"> $2</span>",$diffdata);
 		
 		$body .= "<pre>\n"
-			.htmlspecialchars(join("",$diffdata))
+                        .join("",$diffdata)
 			."\n"
 			."</pre>\n";
 	}
@@ -556,15 +557,16 @@ else if($do_backup && arg_check("backup"))
 		
 		if(arg_check("backup_diff") || arg_check("backup_nowdiff"))
 		{
-			$diffdata = preg_replace("/^(\-)(.*)/","<span style=\"color:red\"> $2</span>",$diffdata);
-			$diffdata = preg_replace("/^(\+)(.*)/","<span style=\"color:blue\"> $2</span>",$diffdata);
+                  for ($i = 0; $i < count($diffdata); $i++) { $diffdata[$i] = htmlspecialchars($diffdata[$i]); }
+			$diffdata = preg_replace("/^(\-)(.*)/","<span class=\"diff_removed\"> $2</span>",$diffdata);
+			$diffdata = preg_replace("/^(\+)(.*)/","<span class=\"diff_added\"> $2</span>",$diffdata);
 
 			$body .= "<br />\n"
 				."<li>$_msg_addline</li>\n"
 				."<li>$_msg_delline</li>\n"
 				."</ul>\n"
 				."$hr\n"
-				."<pre>\n".htmlspecialchars(join("\n",$diffdata))."</pre>\n";
+				."<pre>\n".join("\n",$diffdata)."</pre>\n";
 		}
 	}
 	else if($get["page"] && (file_exists(BACKUP_DIR.encode($get["page"]).".txt") || file_exists(BACKUP_DIR.encode($get["page"]).".gz")))
