@@ -306,12 +306,19 @@ RDF/RSS
 
 更新履歴
     *   2003-11-10 1.3.6 by PukiWiki Developers Team
-        attach/backup/cache/counter/diffディレクトリにdir.txtを配置
-        XSS脆弱性をfix(anchor.inc.php, memo.inc.php)
-        スキンにキャッシュ対策(pukiwiki.skin.*.php)
-        URI自動生成ルーチン調整(func.php, init.php, rss.php)
-        #contentsの出力を調整(html.php)
-        その他修正(img.inc.php, backup.php)
+        BugTrack/278 配布ファイル展開だけで必須ディレクトリを作成する
+        BugTrack/351 imgプラグインでインライン要素のタグにclear属性が
+                     指定されている
+        BugTrack/362 記号で始まるページがあると、一覧で記号パートの
+                     </ul>がなくてずれる
+        BugTrack/372 img.inc.phpのURL文字列精査の誤りで画像が出ない
+        BugTrack/386 memoプラグインにXSS脆弱性
+        BugTrack/387 pulgin/anchor.inc.php にスクリプト混入問題
+        BugTrack/442 ポート80以外の場合のRSS
+        BugTrack/458 #contents利用時ユーザ定義が表示される
+        BugTrack/479 CGI版PHPの場合、HTTPSで利用できない
+        BugTrack/486 headerでキャッシュ無効を
+        InterWikiNameページ修正(PukiWiki.org => utf8)
 
     *   2003-05-28 1.3.5 by PukiWiki Developers Team
         XSS脆弱性をfix
