@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.24 2002/07/18 16:05:09 masui Exp $
+// $Id: html.php,v 1.25 2002/07/18 16:35:08 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -178,7 +178,7 @@ function convert_html($string)
 					array_push($result, '<li>' . inline($out[2]) . '</li>');
 				}
 			}
-			else if(preg_match("/^(\+{1,4})(.*)/",$line,$out))
+			else if(preg_match("/^(\+{1,3})(.*)/",$line,$out))
 			{
 				$headform[$_cnt] = $out[1];
 				back_push('ol', strlen($out[1]));
