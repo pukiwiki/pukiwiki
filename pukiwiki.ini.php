@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.74 2004/08/08 04:08:37 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.75 2004/08/08 04:56:34 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -176,7 +176,7 @@ $auth_users = array(
 // 認証方式種別
 // pagename : ページ名
 // contents : ページ内容
-$auth_method_type = "contents";
+$auth_method_type = 'contents';
 
 /////////////////////////////////////////////////
 // 閲覧認証フラグ
@@ -210,11 +210,11 @@ $edit_auth_pages = array(
 $search_auth = 0;
 
 /////////////////////////////////////////////////
-// 更新履歴を表示するときの最大件数
-$maxshow = 80;
+// $whatsnew: 更新履歴を表示するときの最大件数
+$maxshow = 60;
 
-// 削除履歴の最大件数(0で記録しない)
-$maxshow_deleted = 0;
+// $whatsdeleted: 削除履歴の最大件数(0で記録しない)
+$maxshow_deleted = 60;
 
 /////////////////////////////////////////////////
 // 編集することのできないページの名前 , で区切る
@@ -245,11 +245,12 @@ $do_backup = 1;
 // ページを削除した際にバックアップもすべて削除する
 $del_backup = 0;
 
-// 定期バックアップの間隔を時間(hour)で指定します(0で更新毎)
-$cycle = 6;
-
-// バックアップの最大世代数
-$maxage = 20;
+// バックアップ間隔と世代数
+$cycle  = 3;	// 直前の修正から何時間経過していたらバックアップするか (0で更新毎)
+$maxage = 120;	// 世代数
+// NOTE:
+//   $cycle x $maxage / 24 = データを失うために最低限必要な日数
+//       3  x   120   / 24 = 15
 
 // バックアップの世代を区切る文字列
 // (通常はこのままで良いが、文章中で使われる可能性
@@ -265,11 +266,8 @@ $update_exec = '';
 // HTTPリクエストにプロキシサーバを使用する
 $use_proxy = 0;
 
-// proxyサーバ名
-$proxy_host = 'proxy.example.com';
-
-// ポート番号
-$proxy_port = 8080;
+$proxy_host = 'proxy.example.com'; // proxyサーバ名
+$proxy_port = 8080; // ポート番号
 
 // Basic認証を行う
 $need_proxy_auth = 0;
@@ -341,11 +339,11 @@ $auto_template_rules = array(
 
 /////////////////////////////////////////////////
 // 見出し行に固有のアンカーを自動挿入する
-$fixed_heading_anchor = 0;
+$fixed_heading_anchor = 1;
 
 /////////////////////////////////////////////////
 // <pre>の行頭スペースをひとつ取り除く
-$preformat_ltrim = 0;
+$preformat_ltrim = 1;
 
 /////////////////////////////////////////////////
 // 改行を反映する(改行を<br />に置換する)
