@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: paint.inc.php,v 1.15 2004/08/23 11:49:04 henoheno Exp $
+// $Id: paint.inc.php,v 1.16 2004/10/09 08:01:58 henoheno Exp $
 //
 
 /*
@@ -243,7 +243,7 @@ function paint_insert_ref($filename)
 		{
 			$postdata .= $line;
 		}
-		if (preg_match('/^#paint/',$line))
+		if (preg_match('/^#paint/i',$line))
 		{
 			if ($paint_no == $vars['paint_no'])
 			{

@@ -1,5 +1,5 @@
 <?php
-// $Id: insert.inc.php,v 1.10 2004/07/31 03:09:20 henoheno Exp $
+// $Id: insert.inc.php,v 1.11 2004/10/09 08:01:58 henoheno Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -33,7 +33,7 @@ function plugin_insert_action()
 		if (!INSERT_INS) {
 			$postdata .= $line;
 		}
-		if (preg_match('/^#insert$/',$line)) {
+		if (preg_match('/^#insert$/i',$line)) {
 			if ($insert_no == $vars['insert_no']) {
 				$postdata .= $insert;
 			}

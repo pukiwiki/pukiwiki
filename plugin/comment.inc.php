@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: comment.inc.php,v 1.23 2004/07/31 03:09:20 henoheno Exp $
+// $Id: comment.inc.php,v 1.24 2004/10/09 08:01:58 henoheno Exp $
 //
 
 /////////////////////////////////////////////////
@@ -70,7 +70,7 @@ function plugin_comment_action()
 		{
 			$postdata .= $line;
 		}
-		if (preg_match('/^#comment/', $line) and $comment_no++ == $vars['comment_no'])
+		if (preg_match('/^#comment/i', $line) and $comment_no++ == $vars['comment_no'])
 		{
 			$postdata = rtrim($postdata)."\n-$comment\n";
 			if ($comment_ins)

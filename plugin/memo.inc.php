@@ -1,5 +1,5 @@
 <?php
-// $Id: memo.inc.php,v 1.11 2004/07/24 14:58:41 henoheno Exp $
+// $Id: memo.inc.php,v 1.12 2004/10/09 08:01:58 henoheno Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -26,7 +26,7 @@ function plugin_memo_action()
 	$memo_no = 0;
 	foreach($postdata_old as $line)
 	{
-		if (preg_match("/^#memo\(?.*\)?$/", $line))
+		if (preg_match("/^#memo\(?.*\)?$/i", $line))
 		{
 			if ($memo_no == $vars['memo_no'])
 			{

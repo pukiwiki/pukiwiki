@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.19 2004/07/31 03:09:20 henoheno Exp $
+ $Id: article.inc.php,v 1.20 2004/10/09 08:01:58 henoheno Exp $
 
  */
 
@@ -104,7 +104,7 @@ function plugin_article_action()
 		if (! ARTICLE_INS) {
 			$postdata .= $line;
 		}
-		if (preg_match('/^#article/', $line)) {
+		if (preg_match('/^#article/i', $line)) {
 			if ($article_no == $post['article_no'] && $post['msg'] != '') {
 				$postdata .= "$article\n";
 			}

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pcomment.inc.php,v 1.32 2004/10/09 07:53:19 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.33 2004/10/09 08:01:58 henoheno Exp $
 //
 
 /*
@@ -327,7 +327,7 @@ function pcmt_get_comments($page, $count, $dir, $reply)
 		return array(str_replace('$1', $page, $_msg_pcomment_restrict));
 
 	$data = get_source($page);
-	$data = preg_replace('/^#pcomment\(?.*/', '', $data);	// Avoid eternal recurse
+	$data = preg_replace('/^#pcomment\(?.*/i', '', $data);	// Avoid eternal recurse
 
 	if (! is_array($data)) return array('', 0);
 
