@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.54 2003/08/05 05:04:39 arino Exp $
+// $Id: make_link.php,v 1.55 2003/08/05 05:33:32 arino Exp $
 //
 
 // リンクを付加する
@@ -272,18 +272,8 @@ class Link_note extends Link
 	function get_pattern()
 	{
 		return <<<EOD
-\(\(    # open paren
- (      # (1) note body
-  (?:
-   (?>  # once-only 
-    (?:
-     (?!\(\()(?!\)\)(?:[^\)]|$)).
-    )+
-   )
-   |
-   (?R) # or recursive of me
-  )*
- )
+\(\(
+ ((?:(?R)|(?!\)\)).)*) # (1) note body
 \)\)
 EOD;
 	}
