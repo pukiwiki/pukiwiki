@@ -2,13 +2,31 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: yetlist.inc.php,v 1.11 2003/02/28 03:22:31 panda Exp $
+// $Id: yetlist.inc.php,v 1.12 2003/03/02 02:41:30 panda Exp $
 //
+
+function plugin_yetlist_init()
+{
+	if (LANG == 'ja')
+	{
+		$messages = array(
+			'_title_yetlist'    => '未作成のページ一覧'
+		);
+	}
+	else
+	{
+		$messages = array(
+			'_title_yetlist'    => 'List of pages, are not made yet'
+		);
+	}
+	set_plugin_messages($messages);
+}
 function plugin_yetlist_action()
 {
 	global $script;
+	global $_title_yetlist;
 	
-	$ret['msg'] = 'List of pages, are not made yet';
+	$ret['msg'] = $_title_yetlist;
 	$ret['body'] = '';
 	
 	$refer = array();
