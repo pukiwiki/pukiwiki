@@ -1,17 +1,14 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: tracker_list.inc.php,v 1.2 2005/01/23 08:30:14 henoheno Exp $
 //
-// $Id: tracker_list.inc.php,v 1.1 2003/07/10 02:49:35 arino Exp $
-//
+// Issue tracker list plugin (a part of tracker plugin)
 
-require_once(PLUGIN_DIR.'tracker.inc.php');
+require_once(PLUGIN_DIR . 'tracker.inc.php');
 
 function plugin_tracker_list_init()
 {
 	if (function_exists('plugin_tracker_init'))
-	{
 		plugin_tracker_init();
-	}
 }
 ?>
