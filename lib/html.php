@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.24 2005/01/08 11:45:44 henoheno Exp $
+// $Id: html.php,v 1.25 2005/01/10 00:45:50 henoheno Exp $
 //
 // HTML-publishing related functions
 
@@ -425,14 +425,14 @@ function pkwk_output_dtd($pkwk_dtd = PKWK_DTD_XHTML_1_1)
 	if ($type == 'XHTML') echo '<?xml version="1.0" encoding="' . CONTENT_CHARSET . '" ?>' . "\n";
 
 	// Output doctype
-	echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD ' . $type . ' ' . $version . ($option != '' ? ' ' . $option : '') . '//EN" "' . $dtd . '">' . "\n";
+	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD ' . $type . ' ' . $version . ($option != '' ? ' ' . $option : '') . '//EN" "' . $dtd . '">' . "\n";
 
 	// Output <html> start tag
 	echo '<html';
 	if ($type == 'XHTML') {
 		echo ' xmlns="http://www.w3.org/1999/xhtml"'; // dir="ltr" /* LeftToRight */
 		echo ' xml:lang="' . LANG . '"';
-		if ($version == '1.0') echo ' lang="' . LANG . '"';
+		if ($version == '1.0') echo ' lang="' . LANG . '"'; // Only XHTML 1.0
 	} else {
 		echo ' lang="' . LANG . '"'; // HTML
 	}
