@@ -1,5 +1,5 @@
 <?php
-// $Id: referer.inc.php,v 1.8 2005/01/23 04:47:52 henoheno Exp $
+// $Id: referer.inc.php,v 1.9 2005/01/23 04:49:14 henoheno Exp $
 /*
  * PukiWiki Referer プラグイン(リンク元表示プラグイン)
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -122,7 +122,7 @@ function referer_body($page, $sort)
 		// 適用不可データのときはアンカーをつけない
 		$body .= referer_ignore_check($url) ?
 			'  <td>' . $s_url . '</td>' . "\n" :
-			'  <td><a href="' . $e_url . '">' . $s_url . '</a></td>' . "\n";
+			'  <td><a href="' . $e_url . '" rel="nofollow">' . $s_url . '</a></td>' . "\n";
 
 		$body .= ' </tr>' . "\n";
 	}
