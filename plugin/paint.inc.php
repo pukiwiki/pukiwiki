@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: paint.inc.php,v 1.5 2003/03/03 07:07:28 panda Exp $
+// $Id: paint.inc.php,v 1.6 2003/04/13 06:28:52 arino Exp $
 //
 
 /*
@@ -95,7 +95,7 @@ function plugin_paint_action()
 		$HTTP_POST_FILES['attach_file']['name'] = $attachname;
 		
 		$retval = do_plugin_action('attach');
-		$retval = insert_ref($HTTP_POST_FILES['attach_file']['name']);
+		$retval = paint_insert_ref($HTTP_POST_FILES['attach_file']['name']);
 	}
 	else
 	{
@@ -176,12 +176,16 @@ function plugin_paint_convert()
 {
 	global $script,$vars,$digest;
 	global $_paint_messages;
-	static $paint_no = 0;
+	static $numbers = array();
+	
+	if (!array_key_exists($vars['page'],$numbers))
+	{
+		$numbers[$vars['page']] = 0;
+	}
+	$paint_no = $numbers[$vars['page']]++;
 	
 	//戻り値
 	$ret = '';
-	
-	$paint_no++;
 	
 	//文字列を取得
 	$width = $height = 0;
@@ -222,7 +226,7 @@ function plugin_paint_convert()
 EOD;
 	return $ret;
 }
-function insert_ref($filename)
+function paint_insert_ref($filename)
 {
 	global $script,$vars,$now,$do_backup;
 	global $_paint_messages;
@@ -261,9 +265,13 @@ function insert_ref($filename)
 		{
 			$postdata .= $line;
 		}
-		if (preg_match('/^#paint/',$line) and (++$paint_no == $vars['paint_no']))
+		if (preg_match('/^#paint/',$line))
 		{
+			if ($paint_no == $vars['paint_no'])
+			{
 				$postdata .= $msg;
+			}
+			$paint_no++;
 		}
 		if (PAINT_INSERT_INS)
 		{

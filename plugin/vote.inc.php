@@ -1,5 +1,5 @@
 <?php
-// $Id: vote.inc.php,v 1.11 2003/01/27 05:38:47 panda Exp $
+// $Id: vote.inc.php,v 1.12 2003/04/13 06:28:52 arino Exp $
 
 function plugin_vote_init()
 {
@@ -32,7 +32,7 @@ function plugin_vote_action()
 			continue;
 		}
 		
-		if (++$vote_no != $post['vote_no']) {
+		if ($vote_no++ != $post['vote_no']) {
 			$postdata .= $line;
 			continue;
 		}
@@ -95,9 +95,13 @@ function plugin_vote_convert()
 {
 	global $script,$vars,$digest;
 	global $_vote_plugin_choice, $_vote_plugin_votes;
-	static $vote_no = 0;
+	static $numbers = array();
 	
-	$vote_no++;
+	if (!array_key_exists($vars['page'],$numbers))
+	{
+		$numbers[$vars['page']] = 0;
+	}
+	$vote_no = $numbers[$vars['page']]++;
 	
 	if (!func_num_args()) {
 		return '';

@@ -1,5 +1,5 @@
 <?php
-// $Id: memo.inc.php,v 1.6 2003/01/27 05:38:46 panda Exp $
+// $Id: memo.inc.php,v 1.7 2003/04/13 06:28:52 arino Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -77,7 +77,13 @@ function plugin_memo_convert()
 {
 	global $script,$vars,$digest;
 	global $_btn_memo_update;
-	static $memo_no = 0;
+	static $numbers = array();
+	
+	if (!array_key_exists($vars['page'],$numbers))
+	{
+		$numbers[$vars['page']] = 0;
+	}
+	$article_no = $numbers[$vars['page']]++;
 
 	$data = '';
 	if (func_num_args()) {
@@ -102,8 +108,6 @@ function plugin_memo_convert()
  </div>
 </form>
 EOD;
-	
-	$memo_no++;
 	
 	return $string;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.inc.php,v 1.15 2003/04/08 10:33:46 arino Exp $
+// $Id: comment.inc.php,v 1.16 2003/04/13 06:28:52 arino Exp $
 
 /////////////////////////////////////////////////
 // コメントの名前テキストエリアのカラム数
@@ -97,10 +97,13 @@ function plugin_comment_convert()
 {
 	global $script,$vars,$digest;
 	global $_btn_comment,$_btn_name,$_msg_comment;
-	static $comment_no_list_array = array();
+	static $numbers = array();
 	
-	$comment_no = array_key_exists($vars['page'],$comment_no_list_array) ?
-		$comment_no_list_array[$vars['page']] : 0;
+	if (!array_key_exists($vars['page'],$numbers))
+	{
+		$numbers[$vars['page']] = 0;
+	}
+	$comment_no = $numbers[$vars['page']]++;
 	
 	$options = func_num_args() ? func_get_args() : array();
 	
@@ -130,8 +133,6 @@ function plugin_comment_convert()
  </div>
 </form>
 EOD;
-	
-	$comment_no_list_array[$vars['page']] = ++$comment_no;
 	
 	return $string;
 }

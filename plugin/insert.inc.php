@@ -1,5 +1,5 @@
 <?php
-// $Id: insert.inc.php,v 1.7 2003/01/27 05:38:46 panda Exp $
+// $Id: insert.inc.php,v 1.8 2003/04/13 06:28:52 arino Exp $
 
 /////////////////////////////////////////////////
 // テキストエリアのカラム数
@@ -80,7 +80,13 @@ function plugin_insert_convert()
 {
 	global $script,$vars,$digest;
 	global $_btn_insert;
-	static $insert_no = 0;
+	static $numbers = array();
+	
+	if (!array_key_exists($vars['page'],$numbers))
+	{
+		$numbers[$vars['page']] = 0;
+	}
+	$insert_no = $numbers[$vars['page']]++;
 	
 	$s_page = htmlspecialchars($vars['page']);
 	$s_digest = htmlspecialchars($digest);
@@ -98,8 +104,6 @@ function plugin_insert_convert()
  </div>
 </form>
 EOD;
-	
-	$insert_no++;
 	
 	return $string;
 }

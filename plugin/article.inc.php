@@ -19,7 +19,7 @@
  -投稿内容のメール自動配信先
  を設定の上、ご使用ください。
 
- $Id: article.inc.php,v 1.11 2003/04/08 09:51:11 arino Exp $
+ $Id: article.inc.php,v 1.12 2003/04/13 06:28:52 arino Exp $
  
  */
 
@@ -102,7 +102,6 @@ function plugin_article_action()
 	
 	$postdata = '';
 	$postdata_old  = get_source($post['refer']);
-	
 	$article_no = 0;
 	
 	if ($post['name'] != '') {
@@ -124,7 +123,6 @@ function plugin_article_action()
 	if (ARTICLE_COMMENT) {
 		$article .= "\n\n#comment\n";
 	}
-	
 	
 	foreach($postdata_old as $line) {
 		if (!ARTICLE_INS) {
@@ -200,7 +198,13 @@ function plugin_article_convert()
 {
 	global $script,$vars,$digest;
 	global $_btn_article,$_btn_name,$_btn_subject;
-	static $article_no = 0;
+	static $numbers = array();
+	
+	if (!array_key_exists($vars['page'],$numbers))
+	{
+		$numbers[$vars['page']] = 0;
+	}
+	$article_no = $numbers[$vars['page']]++;
 	
 	$s_page = htmlspecialchars($vars['page']);
 	$s_digest = htmlspecialchars($digest);
@@ -222,8 +226,6 @@ function plugin_article_convert()
  </div>
 </form>
 EOD;
-
-	$article_no++;
 	
 	return $string;
 }
