@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: make_link.php,v 1.24 2003/03/07 07:46:24 panda Exp $
+// $Id: make_link.php,v 1.25 2003/03/13 14:12:35 panda Exp $
 //
 
 // リンクを付加する
@@ -25,26 +25,44 @@ class InlineConverter
 	var $pattern;
 	var $pos;
 	
-	function InlineConverter($converters = NULL)
+	function InlineConverter($converters=NULL,$excludes=NULL)
 	{
-		if ($converters == NULL)
+		if ($converters === NULL)
 		{
-			$converters = array('plugin','note','url','mailto','interwiki','page','auto');
+			$converters = array(
+				'plugin',        // インラインプラグイン
+				'note',          // 注釈 
+				'url',           // URL
+				'mailto',        // mailto:
+				'interwikiname', // InterWikiName
+				'bracketname',   // BracketName
+				'wikiname',      // WikiName
+				'autolink'       // AutoLink
+			);
+		}
+		if ($excludes !== NULL)
+		{
+			$converters = array_diff($converters,$excludes);
 		}
 		$this->converters = array();
-		$pattern = array();
+		$patterns = array();
 		$start = 1;
 		
 		foreach ($converters as $name)
 		{
 			$classname = "Link_$name";
 			$converter = new $classname($start);
-			$pattern[] = '('.$converter->get_pattern().')';
+			$pattern = $converter->get_pattern();
+			if ($pattern === FALSE)
+			{
+				continue;
+			}
+			$patterns[] = "($pattern)";
 			$this->converters[$start] = $converter;
 			$start += $converter->get_count();
 			$start++;
 		}
-		$this->pattern = join('|',$pattern);
+		$this->pattern = join('|',$patterns);
 	}
 	function convert($string,$page)
 	{
@@ -145,28 +163,60 @@ class Link
 		return TRUE;
 	}
 }
-
-// オートリンク,WikiName
-class Link_auto extends Link
+// WikiName
+class Link_wikiname extends Link
 {
-	var $forceignorepages = array();
-	
-	function Link_auto($start)
+	function Link_wikiname($start)
 	{
 		parent::Link($start);
 	}
 	function get_pattern()
 	{
-		global $WikiName,$autolink,$nowikiname;
+		global $WikiName,$nowikiname;
+		
+		return $nowikiname ? FALSE : $WikiName;
+	}
+	function get_count()
+	{
+		return 1;
+	}
+	function set($arr,$page)
+	{
+		$arr = $this->splice($arr);
+		$name = $alias = $arr[0];
+		return parent::setParam($page,$name,'pagename',$alias);
+	}
+	function toString()
+	{
+		return make_pagelink(
+			$this->name,
+			$this->alias,
+			'',
+			$this->page
+		);
+	}
+}
+// オートリンク
+class Link_autolink extends Link
+{
+	var $forceignorepages = array();
+	
+	function Link_autolink($start)
+	{
+		parent::Link($start);
+	}
+	function get_pattern()
+	{
+		global $autolink;
 		static $auto,$forceignorepages;
 		
 		if (!$autolink or !file_exists(CACHE_DIR.'autolink.dat'))
 		{
-			return $nowikiname ? '(?!)' : $WikiName;
+			return FALSE;
 		}
 		if (!isset($auto)) // and/or !isset($forceignorepages)
 		{
-			list($auto,$forceignorepages) = file(CACHE_DIR.'autolink.dat');
+			@list($auto,$forceignorepages) = file(CACHE_DIR.'autolink.dat');
 			$forceignorepages = explode("\t",$forceignorepages);
 		}
 		$this->forceignorepages = $forceignorepages;
@@ -182,9 +232,8 @@ class Link_auto extends Link
 		
 		$arr = $this->splice($arr);
 		$name = $alias = $arr[0];
-		// ミスマッチ、または無視リストに含まれるページを捨てる
-		if (in_array($name,$this->forceignorepages)
-			or (!preg_match("/^$WikiName$/",$name) and !is_page($name)))
+		// 無視リストに含まれている、あるいは存在しないページを捨てる
+		if (in_array($name,$this->forceignorepages) or !is_page($name))
 		{
 			return FALSE;
 		}
@@ -201,11 +250,11 @@ class Link_auto extends Link
 	}
 }
 //InterWiki
-class Link_interwiki extends Link
+class Link_interwikiname extends Link
 {
 	var $r_name;
 	
-	function Link_interwiki($start)
+	function Link_interwikiname($start)
 	{
 		parent::Link($start);
 	}
@@ -309,12 +358,12 @@ EOD;
 			.'</a>';
 	}
 }
-// ページ名
-class Link_page extends Link
+// BracketName
+class Link_bracketname extends Link
 {
 	var $anchor,$refer;
 	
-	function Link_page($start)
+	function Link_bracketname($start)
 	{
 		parent::Link($start);
 	}
@@ -399,8 +448,6 @@ EOD;
 	}
 	function toString()
 	{
-		global $script; //,$interwiki_target;
-		
 		return make_pagelink(
 			$this->name,
 			$this->alias,
