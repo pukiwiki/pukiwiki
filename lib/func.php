@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: func.php,v 1.15 2004/12/04 05:55:42 henoheno Exp $
+// $Id: func.php,v 1.16 2004/12/08 13:18:41 henoheno Exp $
 //
 
 // 文字列がInterWikiNameかどうか
@@ -268,7 +268,7 @@ function strip_bracket($str)
 // ページ一覧の作成
 function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 {
-	global $script, $list_index, $top;
+	global $script, $list_index;
 	global $_msg_symbol, $_msg_other;
 	global $pagereading_enable;
 
