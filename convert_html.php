@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.49 2003/07/27 13:37:42 arino Exp $
+// $Id: convert_html.php,v 1.50 2003/07/27 13:40:41 arino Exp $
 //
 function convert_html($lines)
 {
@@ -749,7 +749,6 @@ class Body extends Block
 			}
 			
 			$line = preg_replace("/[\r\n]*$/",'',$line);
-			print "<pre>$line</pre>";
 			// 行頭文字
 			$head = substr($line,0,1);
 			
