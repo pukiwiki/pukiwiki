@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: navi.inc.php,v 1.11 2003/04/30 08:16:30 arino Exp $
+// $Id: navi.inc.php,v 1.12 2003/05/01 01:12:20 arino Exp $
 //
 
 /*
@@ -36,6 +36,9 @@ DobBook風のナビゲーションバーを表示する
 // 除外するページ (正規表現で)
 define('NAVI_EXCLUDE_PATTERN','');
 #define('NAVI_EXCLUDE_PATTERN','/\/_/');
+
+// <link>タグを出力する (TRUE|FALSE)
+define('NAVI_LINK_TAGS',FALSE);
 
 function plugin_navi_init()
 {
@@ -117,15 +120,18 @@ function plugin_navi_convert()
 		$navi[$home]['home'] = make_pagelink($home);
 		$navi[$home]['home1'] = make_pagelink($home,$_navi_messages['msg_home']);
 		
-		// <link>タグ用
-		// start next prev(previous) contents(toc) search parent(up) first(begin) last(end)
-		foreach (array('start'=>$home,'next'=>$next,'prev'=>$prev,'up'=>$up) as $rel=>$_page)
+		// <link>タグを生成する : start next prev(previous) parent(up)
+		// 未対応 : contents(toc) search first(begin) last(end)
+		if (NAVI_LINK_TAGS)
 		{
-			if ($_page != '')
+			foreach (array('start'=>$home,'next'=>$next,'prev'=>$prev,'up'=>$up) as $rel=>$_page)
 			{
-				$s_page = htmlspecialchars($_page);
-				$r_page = rawurlencode($_page);
-				$head_tags[] = " <link rel=\"$rel\" href=\"$script?$r_page\" title=\"$s_page\">";
+				if ($_page != '')
+				{
+					$s_page = htmlspecialchars($_page);
+					$r_page = rawurlencode($_page);
+					$head_tags[] = " <link rel=\"$rel\" href=\"$script?$r_page\" title=\"$s_page\">";
+				}
 			}
 		}
 	}
