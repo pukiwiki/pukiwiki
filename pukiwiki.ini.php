@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.72 2004/08/08 02:59:44 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.73 2004/08/08 03:09:17 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -171,10 +171,11 @@ $pagereading_config_dict = ':config/PageReading/dict';
 /////////////////////////////////////////////////
 // ユーザ定義
 $auth_users = array(
-'foo' => 'foo_passwd',
-'bar' => 'bar_passwd',
-'hoge' => 'hoge_passwd',
+	'foo'	=> 'foo_passwd',
+	'bar'	=> 'bar_passwd',
+	'hoge'	=> 'hoge_passwd',
 );
+
 /////////////////////////////////////////////////
 // 認証方式種別
 // pagename : ページ名
@@ -189,8 +190,8 @@ $read_auth = 0;
 
 // 閲覧認証対象パターン定義
 $read_auth_pages = array(
-'/ひきこもるほげ/' => 'hoge',
-'/(ネタバレ|ねたばれ)/' => 'foo,bar,hoge',
+	'/ひきこもるほげ/'	=> 'hoge',
+	'/(ネタバレ|ねたばれ)/'	=> 'foo,bar,hoge',
 );
 
 /////////////////////////////////////////////////
@@ -201,9 +202,9 @@ $edit_auth = 0;
 
 // 編集認証対象パターン定義
 $edit_auth_pages = array(
-'/Barの公開日記/' => 'bar',
-'/ひきこもるほげ/' => 'hoge',
-'/(ネタバレ|ねたばれ)/' => 'foo',
+	'/Barの公開日記/'	=> 'bar',
+	'/ひきこもるほげ/'	=> 'hoge',
+	'/(ネタバレ|ねたばれ)/'	=> 'foo',
 );
 
 /////////////////////////////////////////////////
@@ -281,12 +282,12 @@ $proxy_auth_pass = 'password';	// パスワード
 
 // プロキシサーバを使用しないホストのリスト
 $no_proxy = array(
-'localhost',        // localhost
-'127.0.0.0/8',      // loopback
-// '10.0.0.0/8'     // private class A
-// '172.16.0.0/12'  // private class B
-// '192.168.0.0/16' // private class C
-//'no-proxy.com',
+	'localhost',	// localhost
+	'127.0.0.0/8',	// loopback
+//	'10.0.0.0/8'	// private class A
+//	'172.16.0.0/12'	// private class B
+//	'192.168.0.0/16'	// private class C
+//	'no-proxy.com',
 );
 
 ////////////////////////////////////////////////
@@ -339,7 +340,7 @@ $search_non_list = 1;
 // ページ名に従って自動で、雛形とするページの読み込み
 $auto_template_func = 1;
 $auto_template_rules = array(
-'((.+)\/([^\/]+))' => '\2/template'
+	'((.+)\/([^\/]+))' => '\2/template'
 );
 
 /////////////////////////////////////////////////
