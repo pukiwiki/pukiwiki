@@ -1,4 +1,6 @@
 <?php
+if (!defined('DATA_DIR')) { exit; }
+
 global $script,$vars,$page_title,$max_size,$accesskey;
 
 header('Content-Type: text/html; charset=Shift_JIS');
