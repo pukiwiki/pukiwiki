@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.4 2003/01/31 05:11:38 panda Exp $
+// $Id: convert_html.php,v 1.5 2003/01/31 05:16:43 panda Exp $
 //
 
 function &convert_html(&$lines)
@@ -114,7 +114,7 @@ class Inline extends Element
 			$this->setParent($parent);
 		}
 		else {
-			$this->text = (substr($text,0,1) == "\n") ? $text : inline2(inline($text));
+			$this->text = (substr($text,0,1) == "\n") ? $text : inline2(inline($text)));
 		}
 	}
 	function &add(&$obj)
@@ -354,7 +354,7 @@ class DList extends _List
 		}
 		parent::_List('dl', 'dd', strlen($out[1]), $out[3]);
 		if ($out[2] != '') {
-			array_unshift($this->elements,new Inline("\n<dt>".inline($out[2])."</dt>\n"));
+			array_unshift($this->elements,new Inline("\n<dt>".inline2(inline($out[2]))."</dt>\n"));
 		}
 	}
 }
