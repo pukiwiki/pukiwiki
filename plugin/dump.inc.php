@@ -1,6 +1,6 @@
 <?php
 /////////////////////////////////////////////////
-// $Id: dump.inc.php,v 1.14 2004/09/26 11:57:55 henoheno Exp $
+// $Id: dump.inc.php,v 1.15 2004/09/26 12:01:53 henoheno Exp $
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
 
 // [更新履歴]
@@ -641,8 +641,8 @@ class tarlib
 			}
 			list($mtime) = sscanf('0' . trim($strmtime), '%i');
 
-			// タイプフラグ (NOT USED)
-			// $type = $buff{TARLIB_HDR_TYPE_OFFSET};
+			// タイプフラグ
+//			 $type = $buff{TARLIB_HDR_TYPE_OFFSET};
 
 			if ($name == TARLIB_DATA_LONGLINK)
 			{
@@ -650,7 +650,8 @@ class tarlib
 				$buff = fread( $this->fp, $pdsz );
 				$longname = substr($buff, 0, $size);
 			}
-			else if (preg_match("/$pattern/", $name) )
+			else
+			if (preg_match("/$pattern/", $name) )
 //			if ($type == 0 && preg_match("/$pattern/", $name) )
 			{
 				$buff = fread($this->fp, $pdsz);
