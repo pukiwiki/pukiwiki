@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-//  $Id: attach.inc.php,v 1.34 2003/09/30 07:08:43 arino Exp $
+//  $Id: attach.inc.php,v 1.35 2003/10/20 03:12:43 arino Exp $
 //
 
 /*
@@ -34,6 +34,10 @@ define('ATTACH_DELETE_ADMIN_NOBACKUP',FALSE); // FALSE or TRUE
 
 // アップロード/削除時にパスワードを要求する(ADMIN_ONLYが優先)
 define('ATTACH_PASSWORD_REQUIRE',FALSE); // FALSE or TRUE
+
+// ファイルのアクセス権
+define('ATTACH_FILE_MODE',0644);
+//define('ATTACH_FILE_MODE',0604); // for XREA.COM
 
 // file icon image
 if (!defined('FILE_ICON'))
@@ -176,7 +180,10 @@ function attach_upload($file,$page,$pass=NULL)
 	{
 		return array('result'=>FALSE,'msg'=>$_attach_messages['err_exists']);
 	}
-	move_uploaded_file($file['tmp_name'],$obj->filename);
+	if (move_uploaded_file($file['tmp_name'],$obj->filename))
+	{
+		chmod($obj->filename,ATTACH_FILE_MODE);
+	}
 	
 	if (is_page($page))
 	{
