@@ -1,82 +1,86 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.104 2005/01/15 13:08:49 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.105 2005/01/16 03:00:53 henoheno Exp $
 //
 // PukiWiki setting file
 
-// If you end testing this PukiWiki, set PKWK_OPTIMISE '1'.
-// If you feel in trouble about this PukiWiki, set this '0'.
+// PKWK_OPTIMISE
+//   If you end testing this PukiWiki, set '1'.
+//   If you feel in trouble about this PukiWiki, set '0'.
 if (! defined('PKWK_OPTIMISE'))
 	define('PKWK_OPTIMISE', 0); // 0 or 1
 
 /////////////////////////////////////////////////
 // Security settings
 
-// Safe mode prohibits some unsafe functions 
+// PKWK_SAFE_MODE - prohibits some unsafe(but compatible) functions 
 if (! defined('PKWK_SAFE_MODE'))
 	define('PKWK_SAFE_MODE', 0); // 0 or 1
 
-// Max length of GET method (prohibits some worm attack ASAP)
-// Beware: (page-name-length + attach-file-length) <= PKWK_QUERY_STRING_MAX
+// PKWK_QUERY_STRING_MAX
+//   Max length of GET method, prohibits some worm attack ASAP
+//   NOTE: Keep (page-name + attach-file-name) <= PKWK_QUERY_STRING_MAX
 define('PKWK_QUERY_STRING_MAX', 640);
 
 /////////////////////////////////////////////////
-// 初期設定 (文字エンコード、言語)
+// Language / Encoding settings
 
-// Internal Language ('en' or 'ja')
-define('LANG', 'ja');	// For internal message encoding
+// LANG - Internal content encoding ('en', 'ja', or ...)
+define('LANG', 'ja');
 
-// UI Language (Language for buttons, menus,  etc)
+// UI_LANG - Content Language for buttons, menus,  etc
 define('UI_LANG', LANG); // 'en' for Internationalized wikisite
 
 /////////////////////////////////////////////////
-// ディレクトリ指定 最後に / が必要 属性は 777
+// Directory settings I (ended with '/', permission '777')
 
-// データ格納ディレクトリ
-define('DATA_DIR',      DATA_HOME . 'wiki/');	// 最新のデータ
-define('DIFF_DIR',      DATA_HOME . 'diff/');	// 差分ファイル
-define('BACKUP_DIR',    DATA_HOME . 'backup/');	// バックアップ
-define('CACHE_DIR',     DATA_HOME . 'cache/');	// キャッシュ
-define('UPLOAD_DIR',    DATA_HOME . 'attach/');	// 添付ファイル
-define('COUNTER_DIR',   DATA_HOME . 'counter/');	// カウンタ
-define('TRACKBACK_DIR', DATA_HOME . 'trackback/');	// TrackBack
-define('PLUGIN_DIR',    DATA_HOME . 'plugin/'); // プラグインファイル
+// You may hide these directories (from web browsers)
+// by setting DATA_HOME at index.php.
+
+define('DATA_DIR',      DATA_HOME . 'wiki/'     ); // Latest wiki texts
+define('DIFF_DIR',      DATA_HOME . 'diff/'     ); // Latest diffs
+define('BACKUP_DIR',    DATA_HOME . 'backup/'   ); // Backups
+define('CACHE_DIR',     DATA_HOME . 'cache/'    ); // Some sort of caches
+define('UPLOAD_DIR',    DATA_HOME . 'attach/'   ); // Attached files and logs
+define('COUNTER_DIR',   DATA_HOME . 'counter/'  ); // Counter plugin's counts
+define('TRACKBACK_DIR', DATA_HOME . 'trackback/'); // TrackBack logs
+define('PLUGIN_DIR',    DATA_HOME . 'plugin/'   ); // Plugin directory
 
 /////////////////////////////////////////////////
-// ディレクトリ指定 最後に / が必要
-//
-//  PukiWiki本体をWebブラウザからアクセスできない
-//  場所に設置するときは、以下のディレクトリにある
-//  ファイルの一部を Webブラウザからアクセスできる
-//  場所に設置する必要があります。
-//  (無くとも動作はしますが、少々味気なくなるでしょう)
+// Directory settings II (ended with '/')
 
-// スキン/スタイルシートファイル格納ディレクトリ
+// Skins / Stylesheets
 define('SKIN_DIR', 'skin/');
-//  このディレクトリ以下のスキンファイル (*.php) は
-//  PukiWiki本体側(DATA_HOME/SKIN_DIR) に必要ですが、
-//  CSSファイル(*.css) およびJavaScriptファイル( *.js)
-//  はWebブラウザから見える場所(./SKIN_DIR)に配置
-//  して下さい
+// Skin files (SKIN_DIR/*.skin.php) are needed at
+// ./DATAHOME/SKIN_DIR from index.php, but
+// CSSs(*.css) and JavaScripts(*.js) are needed at
+// ./SKIN_DIR from index.php.
 
-// 画像ファイル格納ディレクトリ
+// Static image files
 define('IMAGE_DIR', 'image/');
-//  このディレクトリ以下の全てのファイルは
-//  Webブラウザから見える場所(./IMAGE_DIR)に配置
-//  して下さい
-
+// Keep this directory shown via web browsers like
+// ./IMAGE_DIR from index.php.
 
 /////////////////////////////////////////////////
-// ローカル時間
-define('ZONE','JST');
-define('ZONETIME',9 * 3600); // JST = GMT+9
+// Local time setting
+
+switch (LANG) { // or specifiy one
+case 'ja':
+	define('ZONE', 'JST');
+	define('ZONETIME', 9 * 3600); // JST = GMT + 9
+	break;
+default  :
+	define('ZONE', 'GMT');
+	define('ZONETIME', 0);
+	break;
+}
 
 /////////////////////////////////////////////////
-// ホームページのタイトル(修正してください)
-// * RSS に出力するチャンネル名を兼ねる
+// Title of your Wikisite (Define this)
+// and also RSS feed's channel name
 $page_title = 'PukiWiki';
 
-// index.php などに変更した場合のスクリプト名の設定
+// スクリプト名の設定
 // とくに設定しなくても問題なし
 //$script = 'http://example.com/pukiwiki/';
 
