@@ -2,34 +2,28 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: plugin.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
+// $Id: plugin.php,v 1.2 2004/08/09 13:57:41 henoheno Exp $
 //
 
-// プラグイン用に未定義の変数を設定
+// プラグイン用に未定義のグローバル変数を設定
 function set_plugin_messages($messages)
 {
-	foreach ($messages as $name=>$val)
-	{
-		global $$name;
-
-		if (!isset($$name))
-		{
-			$$name = $val;
-		}
+	foreach ($messages as $name=>$val) {
+		if (! isset($GLOBALS[$name])) $GLOBALS[$name] = $val;
 	}
 }
 
 //プラグインが存在するか
 function exist_plugin($name)
 {
-	$name = strtolower($name);	//Ryuji_edit(2003-03-18) add 大文字と小文字を区別しないファイルシステム対策
-	if (preg_match('/^\w{1,64}$/', $name)
-		and file_exists(PLUGIN_DIR . $name . '.inc.php'))
-	{
+	$name = strtolower($name);	// 大文字と小文字を区別しないファイルシステム対策
+	if (preg_match('/^\w{1,64}$/', $name) &&
+	    file_exists(PLUGIN_DIR . $name . '.inc.php')) {
 		require_once(PLUGIN_DIR . $name . '.inc.php');
 		return TRUE;
+	} else {
+		return FALSE;
 	}
-	return FALSE;
 }
 
 //プラグイン関数(action)が存在するか
@@ -53,84 +47,88 @@ function exist_plugin_inline($name) {
 //プラグインの初期化を実行
 function do_plugin_init($name)
 {
-	static $check = array();
+	static $checked = array();
 
-	if (array_key_exists($name,$check))
-	{
-		return $check[$name];
+	if (! isset($checked[$name])) {
+		$func = 'plugin_' . $name . '_init';
+		if (function_exists($func)) {
+			// TRUE or FALSE or NULL (return nothing)
+			$checked[$name] = call_user_func($func);
+		} else {
+			// Not exists
+			$checked[$name] = null;
+		}
 	}
-
-	$func = 'plugin_'.$name.'_init';
-	if ($check[$name] = function_exists($func))
-	{
-		@call_user_func($func);
-		return TRUE;
-	}
-	return FALSE;
+	return $checked[$name];
 }
 
 //プラグイン(action)を実行
 function do_plugin_action($name)
 {
-	if (!exist_plugin_action($name))
-	{
-		return array();
-	}
+	if (! exist_plugin_action($name)) return array();
 
-	do_plugin_init($name);
-	$retvar = call_user_func('plugin_'.$name.'_action');
+	if(do_plugin_init($name) === FALSE)
+		die_message("Plugin init failed: $name");
 
-	// 文字エンコーディング検出用 hidden フィールドを挿入する
-	return preg_replace('/(<form[^>]*>)/',"$1\n<div><input type=\"hidden\" name=\"encode_hint\" value=\"ぷ\" /></div>",$retvar);
+	$retvar = call_user_func('plugin_' . $name . '_action');
+
+	// 文字エンコーディング検出用 hidden フィールドを挿入
+	return preg_replace('/(<form[^>]*>)/',
+		"$1\n" . '<div><input type="hidden" name="encode_hint" value="ぷ" /></div>',
+		$retvar);
 }
 
 //プラグイン(convert)を実行
-function do_plugin_convert($name,$args='')
+function do_plugin_convert($name, $args = '')
 {
 	global $digest;
 
-	// digestを退避
-	$_digest = $digest;
+	if(do_plugin_init($name) === FALSE)
+		die_message("Plugin init failed: $name");
 
-	$aryargs = ($args !== '') ? csv_explode(',', $args) : array();
-
-	do_plugin_init($name);
-	$retvar = call_user_func_array('plugin_'.$name.'_convert',$aryargs);
-
-	// digestを復元
-	$digest = $_digest;
-
-	if ($retvar === FALSE)
-	{
-		return htmlspecialchars('#'.$name.($args ? "($args)" : ''));
+	if ($args !== '') {
+		$aryargs = csv_explode(',', $args);
+	} else {
+		$aryargs = array();
 	}
 
-	// 文字エンコーディング検出用 hidden フィールドを挿入する
-	return preg_replace('/(<form[^>]*>)/',"$1\n<div><input type=\"hidden\" name=\"encode_hint\" value=\"ぷ\" /></div>",$retvar);
+	$_digest = $digest;  // 退避
+	$retvar  = call_user_func_array('plugin_' . $name . '_convert', $aryargs);
+	$digest  = $_digest; // 復元
+
+	if ($retvar === FALSE) {
+		return htmlspecialchars('#' . $name . ($args ? "($args)" : ''));
+	} else {
+		// 文字エンコーディング検出用 hidden フィールドを挿入
+		return preg_replace('/(<form[^>]*>)/',
+			"$1\n" . '<div><input type="hidden" name="encode_hint" value="ぷ" /></div>',
+			$retvar);
+	}
 }
 
 //プラグイン(inline)を実行
-function do_plugin_inline($name,$args,$body)
+function do_plugin_inline($name, $args, & $body)
 {
 	global $digest;
 
-	// digestを退避
-	$_digest = $digest;
+	if(do_plugin_init($name) === FALSE)
+		die_message("Plugin init failed: $name");
 
-	$aryargs = ($args !== '') ? csv_explode(',',$args) : array();
-	$aryargs[] =& $body;
-
-	do_plugin_init($name);
-	$retvar = call_user_func_array('plugin_'.$name.'_inline',$aryargs);
-
-	// digestを復元
-	$digest = $_digest;
-
-	if($retvar === FALSE)
-	{
-		return htmlspecialchars("&${name}" . ($args ? "($args)" : '') . ';');
+	if ($args !== '') {
+		$aryargs = csv_explode(',', $args);
+	} else {
+		$aryargs = array();
 	}
+	$aryargs[] = & $body; // Added reference of $body
 
-	return $retvar;
+	$_digest = $digest;  // 退避
+	$retvar  = call_user_func_array('plugin_' . $name . '_inline', $aryargs);
+	$digest  = $_digest; // 復元
+
+	if($retvar === FALSE) {
+		return htmlspecialchars("&${name}" . ($args ? "($args)" : '') . ';');
+	} else {
+		return $retvar;
+	}
 }
 ?>
