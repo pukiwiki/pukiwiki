@@ -120,7 +120,7 @@ function &expand_bracket($name,$refer)
 // 相対参照を展開
 function get_fullname($name,$refer)
 {
-	global $defaultpage;
+	global $defaultpage,$WikiName;
 	
 	if ($name == '[[./]]')
 		return $refer;
