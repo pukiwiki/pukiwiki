@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.4 2002/06/24 12:19:47 masui Exp $
+// $Id: init.php,v 1.5 2002/07/02 01:30:12 masui Exp $
 /////////////////////////////////////////////////
 
 // 設定ファイルの場所
@@ -28,27 +28,32 @@ $InterWikiNameNoBracket = '(\[*[^\s\]]+?\]*):(\[*[^>\]]+?\]*)';
 
 //** 入力値の整形 **
 
-$post = $HTTP_POST_VARS;
-$get = $HTTP_GET_VARS;
+$cookie = $HTTP_COOKIE_VARS;
 
+if(get_magic_quotes_gpc())
+{
+	foreach($HTTP_GET_VARS as $key => $value) {
+		$get[$key] = stripslashes($HTTP_GET_VARS[$key]);
+	}
+	foreach($HTTP_POST_VARS as $key => $value) {
+		$post[$key] = stripslashes($HTTP_POST_VARS[$key]);
+	}
+	foreach($HTTP_COOKIE_VARS as $key => $value) {
+		$cookie[$key] = stripslashes($HTTP_COOKIE_VARS[$key]);
+	}
+}
+else {
+	$post = $HTTP_POST_VARS;
+	$get = $HTTP_GET_VARS;
+}
+
+if($post["msg"])
+{
+	$post["msg"] = preg_replace("/((\x0D\x0A)|(\x0D)|(\x0A))/","\n",$post["msg"]);
+}
 if($get["page"]) $get["page"] = rawurldecode($get["page"]);
 if($post["word"]) $post["word"] = rawurldecode($post["word"]);
 if($get["word"]) $get["word"] = rawurldecode($get["word"]);
-if(get_magic_quotes_gpc())
-{
-	if($get["page"]) $get["page"] = stripslashes($get["page"]);
-	if($post["page"]) $post["page"] = stripslashes($post["page"]);
-	if($get["word"]) $get["word"] = stripslashes($get["word"]);
-	if($post["word"]) $post["word"] = stripslashes($post["word"]);
-	if($post["msg"]) $post["msg"] = stripslashes($post["msg"]);
-}
-if($post["msg"])
-{
-	$post["msg"] = preg_replace("/<\/(textarea[^>]*)>/i", "&lt;/$1&gt;", $post["msg"]);
-	$post["msg"] = preg_replace("/(\x0D\x0A)/","\n",$post["msg"]);
-	$post["msg"] = preg_replace("/(\x0D)/","\n",$post["msg"]);
-	$post["msg"] = preg_replace("/(\x0A)/","\n",$post["msg"]);
-}
 
 $vars = array_merge($post,$get);
 $arg = rawurldecode($HTTP_SERVER_VARS["argv"][0]);
