@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.15 2004/12/12 15:03:24 henoheno Exp $
+// $Id: tb.inc.php,v 1.16 2004/12/25 00:39:45 henoheno Exp $
 /*
  * PukiWiki/TrackBack: TrackBack Ping receiver and viewer
  * (C) 2003-2004 PukiWiki Developer Team
@@ -100,7 +100,7 @@ function plugin_tb_save($url, $tb_id)
 // Return TrackBack ping via HTTP/XML
 function plugin_tb_return($rc, $msg = '')
 {
-	pkwk_headers_sent();
+	pkwk_common_headers();
 	header('Content-Type: text/xml');
 	echo '<?xml version="1.0" encoding="iso-8859-1"?>';
 	echo '<response>';
@@ -157,7 +157,7 @@ EOD;
 </response>
 EOD;
 
-	pkwk_headers_sent();
+	pkwk_common_headers();
 	header('Content-Type: text/xml');
 	echo mb_convert_encoding($rc, 'UTF-8', SOURCE_ENCODING);
 	exit;
@@ -225,12 +225,11 @@ EOD;
 </html>
 EOD;
 
-	pkwk_headers_sent(); // Check before header()
+	pkwk_common_headers();
 
 	// BugTrack/466 Care for MSIE trouble
 	// Logically correct, but MSIE will treat the data like 'file downloading'
 	//header('Content-type: application/xhtml+xml; charset=UTF-8');
-
 	header('Content-type: text/html; charset=UTF-8'); // Works well
 
 	echo mb_convert_encoding($msg, 'UTF-8', SOURCE_ENCODING);

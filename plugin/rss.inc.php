@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: rss.inc.php,v 1.12 2004/12/04 05:20:02 henoheno Exp $
+// $Id: rss.inc.php,v 1.13 2004/12/25 00:39:45 henoheno Exp $
 //
 // Publishing RSS feed of RecentChanges
 // Usage: rss.inc.php?ver=[0.91(default)|1.0|2.0]
@@ -77,7 +77,7 @@ EOD;
 	}
 
 	// Feeding start
-	pkwk_headers_sent();
+	pkwk_common_headers();
 	header('Content-type: application/xml');
 	print '<?xml version="1.0" encoding="UTF-8"?>' . "\n\n";
 

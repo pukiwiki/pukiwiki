@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: html.php,v 1.19 2004/12/24 15:04:32 henoheno Exp $
+// $Id: html.php,v 1.20 2004/12/25 00:38:21 henoheno Exp $
 //
 
 // 本文を出力
@@ -396,9 +396,10 @@ function pkwk_common_headers()
 {
 	if (! PKWK_OPTIMISE) pkwk_headers_sent();
 
+	$matches = array();
 	if(ini_get('zlib.output_compression') &&
-	    preg_match('/\bgzip\b/i', $_SERVER['HTTP_ACCEPT_ENCODING'])) {
-		header('Content-Encoding: gzip');
+	    preg_match('/\b(gzip|deflate)\b/i', $_SERVER['HTTP_ACCEPT_ENCODING'], $matches)) {
+		header('Content-Encoding: ' . $matches[1]);
 		header('Vary: Accept-Encoding');
 	}
 }
