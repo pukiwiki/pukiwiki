@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.12 2005/01/23 02:49:52 henoheno Exp $
+// $Id: make_link.php,v 1.13 2005/01/23 03:33:38 henoheno Exp $
 //
 // Hyperlink-related functions
 
@@ -360,7 +360,12 @@ EOD;
 
 	function toString()
 	{
-		return '<a href="' . $this->name . '" rel="nofollow">' . $this->alias . '</a>';
+		if (PKWK_READONLY) {
+			$rel = '';
+		} else {
+			$rel = ' rel="nofollow"';
+		}
+		return '<a href="' . $this->name . '"' . $rel . '>' . $this->alias . '</a>';
 	}
 }
 

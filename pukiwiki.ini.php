@@ -1,10 +1,17 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.106 2005/01/16 03:21:35 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.107 2005/01/23 03:33:38 henoheno Exp $
 //
 // PukiWiki setting file
 
-// PKWK_OPTIMISE
+/////////////////////////////////////////////////
+// Functionality settings
+
+// PKWK_READONLY - Prohibit editing (Not work yet)
+if (! defined('PKWK_READONLY'))
+	define('PKWK_READONLY', 0); // 0 or 1
+
+// PKWK_OPTIMISE - Ignore verbose but understandable checking and warning
 //   If you end testing this PukiWiki, set '1'.
 //   If you feel in trouble about this PukiWiki, set '0'.
 if (! defined('PKWK_OPTIMISE'))
