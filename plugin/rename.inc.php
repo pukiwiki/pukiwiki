@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.22 2004/12/30 13:04:12 henoheno Exp $
+// $Id: rename.inc.php,v 1.23 2005/01/23 08:08:00 henoheno Exp $
 //
 // Rename plugin: Rename page-name and related data
 //
@@ -11,6 +11,8 @@ define('PLUGIN_RENAME_LOGPAGE', ':RenameLog');
 function plugin_rename_action()
 {
 	global $whatsnew;
+
+	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits this');
 
 	$method = plugin_rename_getvar('method');
 	if ($method == 'regex') {
