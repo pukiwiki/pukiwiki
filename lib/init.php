@@ -2,29 +2,12 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: init.php,v 1.7 2004/09/04 03:01:39 henoheno Exp $
+// $Id: init.php,v 1.8 2004/09/19 13:27:15 henoheno Exp $
 //
 
 // 初期設定 (エラー出力レベル)
 error_reporting(E_ERROR | E_PARSE);	// (E_WARNING | E_NOTICE)を除外しています
 //error_reporting(E_ALL);
-
-/////////////////////////////////////////////////
-// 初期設定 (文字エンコード、言語)
-define('LANG', 'ja');	// Select 'ja' or 'en'
-define('SOURCE_ENCODING', 'EUC-JP');
-
-// mbstring extension 関連
-mb_language('Japanese');
-mb_internal_encoding(SOURCE_ENCODING);
-ini_set('mbstring.http_input', 'pass');
-mb_http_output('pass');
-mb_detect_order('auto');
-
-/////////////////////////////////////////////////
-// 初期設定(設定ファイルの場所)
-define('LANG_FILE', DATA_HOME . LANG . '.lng');
-define('INI_FILE',  DATA_HOME . 'pukiwiki.ini.php');
 
 /////////////////////////////////////////////////
 // バージョン / 著作権
@@ -59,14 +42,37 @@ define('UTIME', time() - LOCALZONE);
 define('MUTIME', getmicrotime());
 
 /////////////////////////////////////////////////
+// 初期設定(設定ファイルの場所)
+define('INI_FILE',  DATA_HOME . 'pukiwiki.ini.php');
+
 // ファイル読み込み
 $die = '';
-foreach(array('LANG_FILE', 'INI_FILE') as $file){
-	if (! file_exists(constant($file)) || ! is_readable(constant($file))) {
-		$die = "${die}File is not found. ($file)\n";
-	} else {
-		require(constant($file));
-	}
+if (! file_exists(INI_FILE) || ! is_readable(INI_FILE)) {
+	$die = "${die}File is not found. (INI_FILE)\n";
+} else {
+	require(INI_FILE);
+}
+if ($die) { die_message(nl2br("\n\n" . $die)); }
+
+/////////////////////////////////////////////////
+// INI_FILE: mbstring extension 関連
+
+mb_language('Japanese');
+mb_internal_encoding(SOURCE_ENCODING);
+ini_set('mbstring.http_input', 'pass');
+mb_http_output('pass');
+mb_detect_order('auto');
+
+/////////////////////////////////////////////////
+// INI_FILE: LANG 初期設定(言語ファイルの場所)
+define('LANG_FILE', DATA_HOME . LANG . '.lng');
+
+// ファイル読み込み
+$die = '';
+if (! file_exists(LANG_FILE) || ! is_readable(LANG_FILE)) {
+	$die = "${die}File is not found. (LANG_FILE)\n";
+} else {
+	require(LANG_FILE);
 }
 if ($die) { die_message(nl2br("\n\n" . $die)); }
 

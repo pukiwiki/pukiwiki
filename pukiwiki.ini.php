@@ -2,9 +2,22 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.79 2004/09/04 00:02:03 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.80 2004/09/19 13:27:15 henoheno Exp $
 //
 // PukiWiki setting file
+
+/////////////////////////////////////////////////
+// 初期設定 (文字エンコード、言語)
+
+// Internal Language ('en' or 'ja')
+if (! defined('LANG'))      define('LANG', 'ja');	// For internal messages
+if (! defined('SKIN_LANG')) define('SKIN_LANG', 'ja');	// For skin
+
+// Internal content encoding (for mbstring)
+define('SOURCE_ENCODING', 'EUC-JP'); // 'UTF-8' or 'ASCII' or 'EUC-JP'
+
+// Internal content encoding = Output content charset (for skin)
+define('CONTENT_CHARSET', 'EUC-JP'); // 'UTF-8' or 'iso-8859-1' or 'EUC-JP'
 
 /////////////////////////////////////////////////
 // ディレクトリ指定 最後に / が必要 属性は 777

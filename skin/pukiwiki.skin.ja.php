@@ -2,24 +2,24 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.ja.php,v 1.35 2004/09/18 09:45:14 henoheno Exp $
+// $Id: pukiwiki.skin.ja.php,v 1.36 2004/09/19 13:27:15 henoheno Exp $
 //
 if (!defined('DATA_DIR')) { exit; }
 header('Cache-control: no-cache');
 header('Pragma: no-cache');
-header('Content-Type: text/html; charset=EUC-JP');
-echo '<?xml version="1.0" encoding="EUC-JP"?>';
+header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
+echo '<?xml version="1.0" encoding="' . CONTENT_CHARSET . '"?>';
 ?>
 
 <?php if ($html_transitional) { ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo LANG ?>" lang="<?php echo LANG ?>">
 <?php } else { ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo LANG ?>">
 <?php } ?>
 <head>
- <meta http-equiv="content-type" content="application/xhtml+xml; charset=EUC-JP" />
+ <meta http-equiv="content-type" content="application/xhtml+xml; charset=<?php echo CONTENT_CHARSET ?>" />
  <meta http-equiv="content-style-type" content="text/css" />
 
 <?php if (!$is_read) { ?>
