@@ -2,92 +2,19 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: convert_html.php,v 1.7 2003/01/31 09:49:03 panda Exp $
+// $Id: convert_html.php,v 1.8 2003/02/03 10:22:11 panda Exp $
 //
 
 function &convert_html(&$lines)
 {
 	global $script,$vars,$digest;
 	static $contents_id = 0;
-
+	
 	$digest = md5(join('',get_source($vars['page'])));
-
-	$contents = new Contents(++$contents_id);
-
-	$body = new Body();
-	$last =& $body;
-
-	foreach ($lines as $line) {
-		if (substr($line,0,2) == '//') { //コメントは処理しない
-			continue;
-		}
-		
-		$line = rtrim($line);
-		
-		$align = '';
-		if (preg_match('/^(LEFT|CENTER|RIGHT):(.*)$/',$line,$matches)) {
-			$last =& $last->add(new Align(strtolower($matches[1]))); // <div style="text-align:...">
-			if ($matches[2] == '') {
-				continue;
-			}
-			$line = $matches[2];
-		}
-		
-		// 行頭文字
-		$head = substr($line,0,1);
-		
-		if ($line == '') { // 空行
-			$last =& $body;
-		}
-		else if (substr($line,0,4) == '----') { // HRule
-			$last =& $body->insert(new HRule());
-		}
-		else if ($head == ' ' or $head == "\t") { // Pre
-			$last =& $last->add(new Pre($line));
-		}
-		else if ($head == '*') { // Heading
-			$last =& $body->insert(new Heading($line, $contents));
-		}
-		else {
-			if (substr($line,-1) == '~') {
-				$line .= "\r";
-			}
-			if      ($head == '-') { // UList
-				$last =& $last->add(new UList($line));
-			}
-			else if ($head == '+') { // OList
-				$last =& $last->add(new OList($line));
-			}
-			else if ($head == ':') { // DList
-				$last =& $last->add(new DList($line));
-			}
-			else if ($head == '|') { // Table
-				$last =& $last->add(new Table($line));
-			}
-			else if ($head == ',') { // Table(YukiWiki互換)
-				$last =& $last->add(new YTable($line));
-			}
-			else if ($head == '>') { // BrockQuote
-				$last =& $last->add(new BQuote($line));
-			}
-			else if ($head == '<') { // BlockQuote end
-				$last =& bq_end($last, $line);
-			}
-			else if ($head == '#') { // Div
-				$last =& $last->add(new Div($line));
-			}
-			else { // 通常文字列
-				$last =& $last->add(new Inline($line));
-			}
-		}
-	}
+	
+	$body = new Body(++$contents_id);
+	$body->parse($lines);
 	$ret = $body->toString();
-	
-	// #contents
-	$ret = preg_replace("/<p>#contents<\/p>/",$contents->getContents(),$ret);
-	
-	// 関連するページ
-	$ret = preg_replace('/#related/e','make_related($vars[\'page\'],TRUE)',$ret);
 	
 	return $ret;
 }
@@ -180,17 +107,6 @@ class Block extends Element
 		return  ($string == '') ? '' : "\n<$tag$param>$string</$tag>\n";
 	}
 }
-class Body extends Block
-{ // Body
-	
-	function &insert(&$obj)
-	{
-		if (is_a($obj,'Inline')) {
-			$obj =& $obj->toPara();
-		}
-		return parent::insert($obj);
-	}
-}
 class Paragraph extends Block
 { // 段落
 	var $class;
@@ -219,13 +135,15 @@ class Paragraph extends Block
 
 class Heading extends Block
 { // *
-	var $level;
+	var $level,$top,$id;
+	
 	function Heading($text, &$contents)
 	{
 		parent::Block();
 		preg_match("/^(\*{1,3})\s*(.*)$/",$text,$out) or die("Heading");
 		$this->level = strlen($out[1]) + 1;
-		list($this->text,$this->contents_str) = $contents->getAnchor($out[2], $this->level);
+		list($this->top,$this->id) = $contents->getAnchor($out[2], $this->level);
+		$this->last =& $this->insert(new Inline($out[2]));
 	}
 	function canContain(&$obj)
 	{
@@ -233,7 +151,7 @@ class Heading extends Block
 	}
 	function toString()
 	{
-		return $this->wrap($this->text,'h'.$this->level, $this->contents_str);
+		return $this->wrap(parent::toString().$this->top,'h'.$this->level," id=\"{$this->id}\"");
 	}
 }
 class HRule extends Block
@@ -412,9 +330,71 @@ function &bq_end(&$last, $text)
 	}
 	return $last->insert(new Inline($text));
 }
+
+class TableCell extends Block
+{
+	var $tag; // {td|th}
+	var $colspan;
+	var $rowspan;
+	var $style; // is array('width'=>, 'align'=>...);
+	
+	function TableCell($text,$is_template=FALSE) {
+		parent::Block();
+		$this->tag = 'td';
+		$this->colspan = 1;
+		$this->rowspan = 1;
+		$this->style = array();
+		
+		if (preg_match("/^(LEFT|CENTER|RIGHT):(.*)$/",$text,$out)) {
+			$this->style['align'] = 'text-align:'.strtolower($out[1]).';';
+			$text = $out[2];
+		}
+		if ($is_template) {
+			if (is_numeric($text)) {
+				$this->style['width'] = "width:{$text}px;";
+			}
+		}
+		if ($text == '>') {
+			$this->colspan = 0;
+		}
+		else if ($text == '~') {
+			$this->rowspan = 0;
+		}
+		else if (substr($text,0,1) == '~') {
+			$this->tag = 'th';
+			$text = substr($text,1);
+		}
+		$this->last =& $this->insert(new Inline($text));
+	}
+	function setStyle(&$style) {
+		foreach ($style as $key=>$value) {
+			if (!array_key_exists($key,$this->style)) {
+				$this->style[$key] = $value;
+			}
+		}
+	}
+	function toString() {
+		if ($this->rowspan == 0 or $this->colspan == 0) {
+			return '';
+		}
+		$param = array();
+		if ($this->rowspan > 1) {
+			$param[] = 'rowspan="'.$this->rowspan.'"';
+		}
+		if ($this->colspan > 1) {
+			$param[] = 'colspan="'.$this->colspan.'"';
+			unset($this->style['width']);
+		}
+		if (count($this->style)) {
+			$param[] = 'style="'.join(' ',$this->style).'"';
+		}
+		return $this->wrap(parent::toString(),$this->tag,
+			" class=\"style_{$this->tag}\" ".join(' ',$param));
+	}
+}
 class Table extends Block
 { // |
-	var $col,$head,$foot;
+	var $type,$types;;
 	var $level;
 	
 	function Table($text)
@@ -424,178 +404,96 @@ class Table extends Block
 			$this = new Inline($text);
 			return;
 		}
-		$this->elements = array();
 		$cells = explode('|',$out[1]);
 		$this->level = count($cells);
-		$char = strtolower($out[2]);
-		if ($char == 'c') {
-			$this->col =& new Col($cells);
+		$this->type = strtolower($out[2]);
+		$this->types = array($this->type);
+		$is_template = ($this->type == 'c');
+		$row = array();
+		foreach ($cells as $cell) {
+			$row[] = new TableCell($cell,$is_template);
 		}
-		else {
-			$this->insert(new Row($cells,($char == 'h' ? 0 : ($char == 'f' ? 1 : 2))));
-		}
+		$this->elements[] = $row;
+		$this->last =& $this;
 	}
 	function canContain(&$obj)
 	{
-		return is_a($obj, 'Table') and $obj->level == $this->level;
+		return is_a($obj, 'Table') and ($obj->level == $this->level);
 	}
 	function &insert(&$obj)
 	{
-		if (is_a($obj, 'Table')) {
-			if (isset($obj->col) and is_object($obj->col)) {
-				$this->col = $obj->col;
-				return $this;
-			}
-			$obj =& $obj->elements[0];
-			$last = count($this->elements) - 1;
-			for ($n = 0; $n < count($obj->elements); $n++) {
-				if ($obj->elements[$n] != '~') {
-					continue;
-				}
-				$obj->type = $this->elements[$last]->type;
-				for ($m = $last; $m >= 0; $m--) {
-					if ($this->elements[$m]->elements[$n] == '~') {
-						continue;
-					}
-					$this->elements[$m]->row[$n]++;
-					break;
-				}
-			}
-		}
-		$this->elements[] = $obj;
+		$this->elements[] = $obj->elements[0];
+		$this->types[] = $obj->type;
 		return $this;
 	}
 	function toString()
 	{
-		$col = NULL;
-		if (isset($this->col) and is_object($this->col)) {
-			$col =& $this->col;
+		// rowspanを設定(下から上へ)
+		for ($ncol = 0; $ncol < $this->level; $ncol++) {
+			$rowspan = 1;
+			foreach (array_reverse(array_keys($this->elements)) as $nrow) {
+				$row =& $this->elements[$nrow];
+				if ($row[$ncol]->rowspan == 0) {
+					$rowspan++;
+				}
+				else {
+					$row[$ncol]->rowspan = $rowspan;
+					while (--$rowspan) { // 行種別を継承する
+						$this->types[$nrow + $rowspan] = $this->types[$nrow];
+					}
+					$rowspan = 1;
+				}
+			}
 		}
-		$string = $col ? $this->col->toString() : '';
-		$part = array(0=>'thead',1=>'tfoot',2=>'tbody');
-		foreach ($part as $type=>$str) {
-			$tmp = '';
-			foreach ($this->elements as $row) {
-				if ($row->type != $type) {
+		// colspan,styleを設定
+		$stylerow = NULL;
+		foreach (array_keys($this->elements) as $nrow) {
+			$row =& $this->elements[$nrow];
+			if ($this->types[$nrow] == 'c') {
+				$stylerow =& $row;
+			}
+			$colspan = 1;
+			foreach (array_keys($row) as $ncol) {
+				if ($row[$ncol]->colspan == 0) {
+					$colspan++;
+				}
+				else {
+					$row[$ncol]->colspan = $colspan;
+					if ($stylerow !== NULL) {
+						$row[$ncol]->setStyle($stylerow[$ncol]->style);
+						while (--$colspan) { // 列スタイルを継承する
+							$row[$ncol - $colspan]->setStyle($stylerow[$ncol]->style);
+						}
+					}
+					$colspan = 1;
+				}
+			}
+		}
+		// テキスト化
+		$string = '';
+		$parts = array('h'=>'thead',''=>'tbody','f'=>'tfoot');
+		foreach ($parts as $type=>$part) {
+			$part_string = '';
+			foreach (array_keys($this->elements) as $nrow) {
+				if ($this->types[$nrow] != $type) {
 					continue;
 				}
-				$tmp .= $row->toString($col);
+				$row =& $this->elements[$nrow];
+				$row_string = '';
+				foreach (array_keys($row) as $ncol) {
+					$row_string .= $row[$ncol]->toString();
+				}
+				$part_string .= $this->wrap($row_string,'tr');
 			}
-			if ($tmp != '') {
-				$string .= $this->wrap($tmp,$str);
-			}
+			$string .= $this->wrap($part_string,$part);
 		}
-		if ($string != '') {
-			$string = <<<EOD
-
+		return <<<EOD
 <div class="ie5">
  <table class="style_table" cellspacing="1" border="0">
   $string
  </table>
 </div>
 EOD;
-		}
-		return $string;
-	}
-}
-class Row extends Block
-{
-	var $col,$row,$type;
-	
-	function Row($cells,$type='')
-	{
-		parent::Block();
-		$this->elements = $cells;
-		$this->type = $type;
-		$span = 1;
-		for ($n = 0; $n < count($cells); $n++) {
-			$this->row[$n] = 1;
-			if ($cells[$n] == '>') {
-				$this->col[$n] = 0;
-				$span++;
-			}
-			else {
-				$this->col[$n] = $span;
-				$span = 1;
-			}
-		}
-	}
-	function toString($obj)
-	{
-		$cells = '';
-		for ($n = 0; $n < count($this->elements); $n++) {
-			$cell = $this->elements[$n];
-			if ($cell == '>' or $cell == '~') {
-				continue;
-			}
-			$row = $col = '';
-			if ($this->row[$n] > 1) {
-				$row = " rowspan=\"{$this->row[$n]}\"";
-			}
-			if ($this->col[$n] > 1) {
-				$col = " colspan=\"{$this->col[$n]}\"";
-			}
-			$align = $width = '';
-			if (is_object($obj)) {
-				$align = $obj->align[$n];
-				if ($this->col[$n] == 1) {
-					$width = $obj->width[$n];
-				}
-			}
-			if (preg_match("/^(LEFT|CENTER|RIGHT):(.*)$/",$cell,$out)) {
-				$align = strtolower($out[1]);
-				$cell = $out[2];
-			}
-			if (preg_match('/^~(.+)$/',$cell,$matches)) {
-				$tag = 'th'; $cell = $matches[1];
-			}
-			else {
-				$tag = 'td';
-			}
-			$style = $width == '' ? '' : 'width:'.$width.'px;';
-			$style.= $align == '' ? '' : 'text-align:'.$align.';';
-			$style = $style == '' ? '' : ' style="'.$style.'"';
-			$cells .= "\n<$tag class=\"style_$tag\"$style$row$col>".inline2(inline($cell))."</$tag>\n";
-		}
-		return $this->wrap($cells,'tr');
-	}
-}
-class Col extends Row
-{
-	var $width,$align;
-	
-	function Col($cells)
-	{
-		parent::Row($cells);
-		$align = $width = '';
-		for ($n = count($this->elements) - 1; $n >= 0; $n--) {
-			if ($cells[$n] == '') {
-				$align = $width = '';
-			}
-			else if ($cells[$n] != '>') {
-				if (preg_match("/^(LEFT|CENTER|RIGHT):(.*)$/",$cells[$n],$out)) {
-					$align = strtolower($out[1]);
-					$width = htmlspecialchars($out[2]);
-				}
-			}
-			$this->align[$n] = $align;
-			$this->width[$n] = $width;
-		}
-	}
-	function toString()
-	{
-		$cells = '';
-		for ($n = 0; $n < count($this->elements); $n++) {
-			$cell = $this->elements[$n];
-			if ($cell == '>') {
-				continue;
-			}
-			$span = " span=\"{$this->col[$n]}\"";
-			$align = $this->align[$n] == '' ? '' : ' align="'.$this->align[$n].'"';
-			$width = $this->width[$n] == '' ? '' : ' width="'.$this->width[$n].'"';
-			$cells .= "\n<colgroup$span$align$width></colgroup>\n";
-		}
-		return $cells;
 	}
 }
 class YTable extends Block
@@ -749,12 +647,11 @@ class Align extends Body
 		return $string;
 	}
 }
-//見出しの一覧関係
-class Contents
-{
+class Body extends Block
+{ // Body
 	var $id,$count,$top,$contents,$last;
 	
-	function Contents($id)
+	function Body($id)
 	{
 		global $top;
 		
@@ -763,38 +660,119 @@ class Contents
 		$this->top = "<a href=\"#contents_$id\">$top</a>";
 		$this->contents =& new Block();
 		$this->last =& $this->contents;
+		parent::Block();
+	}
+	function parse(&$lines)
+	{
+		$last =& $this;
+		
+		foreach ($lines as $line) {
+			if (substr($line,0,2) == '//') { //コメントは処理しない
+				continue;
+			}
+			
+			$line = rtrim($line);
+			
+			$align = '';
+			if (preg_match('/^(LEFT|CENTER|RIGHT):(.*)$/',$line,$matches)) {
+				$last =& $last->add(new Align(strtolower($matches[1]))); // <div style="text-align:...">
+				if ($matches[2] == '') {
+					continue;
+				}
+				$line = $matches[2];
+			}
+			
+			// 行頭文字
+			$head = substr($line,0,1);
+			
+			if ($line == '') { // 空行
+				$last =& $this;
+			}
+			else if (substr($line,0,4) == '----') { // HRule
+				$last =& $this->insert(new HRule());
+			}
+			else if ($head == '*') { // Heading
+				$last =& $this->insert(new Heading($line, $this));
+			}
+			else if ($head == ' ' or $head == "\t") { // Pre
+				$last =& $last->add(new Pre($line));
+			}
+			else {
+				if (substr($line,-1) == '~') {
+					$line .= "\r";
+				}
+				if      ($head == '-') { // UList
+					$last =& $last->add(new UList($line)); // inline
+				}
+				else if ($head == '+') { // OList
+					$last =& $last->add(new OList($line)); // inline
+				}
+				else if ($head == ':') { // DList
+					$last =& $last->add(new DList($line)); // inline
+				}
+				else if ($head == '|') { // Table
+					$last =& $last->add(new Table($line));
+				}
+				else if ($head == ',') { // Table(YukiWiki互換)
+					$last =& $last->add(new YTable($line));
+				}
+				else if ($head == '>') { // BrockQuote
+					$last =& $last->add(new BQuote($line));
+				}
+				else if ($head == '<') { // BlockQuote end
+					$last =& bq_end($last, $line);
+				}
+				else if ($head == '#') { // Div
+					$last =& $last->add(new Div($line));
+				}
+				else { // 通常文字列
+					$last =& $last->add(new Inline($line));
+				}
+			}
+		}
 	}
 	function getAnchor($text,$level)
 	{
-		$content_str = "content_{$this->id}_{$this->count}";
-		$this->last =& $this->last->add(new Contents_UList($text,$this->id,$level,$content_str));
+		$id = "content_{$this->id}_{$this->count}";
 		$this->count++;
-		return array(inline2(inline($text)).$this->top," id=\"{$content_str}\"");
+		$this->last =& $this->last->add(new Contents_UList($text,$this->id,$level,$id));
+		return array(&$this->top,$id);
 	}
 	function getContents()
 	{
-		global $strip_link_wall;
-		
 		$contents  = "<a id=\"contents_{$this->id}\"></a>";
 		$contents .= $this->contents->toString();
-		if ($strip_link_wall) {
-			$contents = preg_replace("/\[\[([^\]]+)\]\]/","$1",$contents);
-		}
 		return $contents;
+	}
+	function &insert(&$obj)
+	{
+		if (is_a($obj,'Inline')) {
+			$obj =& $obj->toPara();
+		}
+		return parent::insert($obj);
+	}
+	function toString()
+	{
+		global $vars;
+		
+		$text = parent::toString();
+		
+		// #contents
+		$text = preg_replace("/<p>#contents<\/p>/",$this->getContents(),$text);
+		
+		// 関連するページ
+		$text = preg_replace('/#related/e','make_related($vars[\'page\'],TRUE)',$text);
+		
+		return $text;
 	}
 }
 class Contents_UList extends _List
-{ // -
-	var $id;
-	
-	function Contents_UList($text,$id,$level,$content_str)
+{
+	function Contents_UList($text,$id,$level,$id)
 	{
-		$this->id = $id;
 		// テキストのリフォーム
 		// 行頭\nで整形済みを表す ... X(
-		$text = "\n<a href=\"#{$content_str}\">".
-			strip_htmltag(inline2(inline($text,TRUE))).
-			"</a>\n";
+		$text = "\n<a href=\"#$id\">".strip_htmltag(inline2(inline($text,TRUE)))."</a>\n";
 		parent::_List('ul', 'li', --$level, $text);
 	}
 }
