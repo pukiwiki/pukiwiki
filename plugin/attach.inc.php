@@ -2,7 +2,7 @@
 // プラグイン attach
 
 // changed by Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
-// $Id: attach.inc.php,v 1.6 2002/07/02 04:20:20 masui Exp $
+// $Id: attach.inc.php,v 1.7 2002/07/15 07:47:20 masui Exp $
 
 // set PHP value to enable file upload
 ini_set("file_uploads","1");
@@ -26,6 +26,7 @@ function plugin_attach_convert()
 	
 	$ret = "";
 	$decoded_pgname = encode($vars["page"]);
+	$count = 0;
 	
 	$icon = FILE_ICON;
 	
@@ -59,7 +60,7 @@ function plugin_attach_convert()
 			
 			$into = "$open <span class=\"small\">$del</span>";
 			
-			$attach_files[$lastmod] = $into;
+			$attach_files[$lastmod.++$count] = $into;
 		}
 		closedir($dir);
 		@krsort($attach_files);
