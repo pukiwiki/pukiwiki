@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: plugin.php,v 1.4 2004/10/31 03:45:52 henoheno Exp $
+// $Id: plugin.php,v 1.5 2004/11/04 12:11:18 henoheno Exp $
 //
 
 // プラグイン用に未定義のグローバル変数を設定
@@ -16,12 +16,18 @@ function set_plugin_messages($messages)
 //プラグインが存在するか
 function exist_plugin($name)
 {
+	static $exists = array();
+
 	$name = strtolower($name);	// 大文字と小文字を区別しないファイルシステム対策
+	if(isset($exists[$name])) return $exists[$name];
+
 	if (preg_match('/^\w{1,64}$/', $name) &&
 	    file_exists(PLUGIN_DIR . $name . '.inc.php')) {
+		$exists[$name] = TRUE;
 		require_once(PLUGIN_DIR . $name . '.inc.php');
 		return TRUE;
 	} else {
+		$exists[$name] = FALSE;
 		return FALSE;
 	}
 }
