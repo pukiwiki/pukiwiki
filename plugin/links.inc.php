@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: links.inc.php,v 1.5 2003/02/17 08:38:03 panda Exp $
+// $Id: links.inc.php,v 1.6 2003/02/18 10:37:09 panda Exp $
 //
 
 function plugin_links_action()
@@ -189,9 +189,9 @@ function links_init_db()
 }
 function links_update_db($page)
 {
-	global $whatsnew;
+	global $vars,$whatsnew;
 
-	if ($vars['page'] != $whatsnew) {
+	if ($page == $whatsnew) {
 		return;
 	}
 	
@@ -225,17 +225,19 @@ function links_update_db($page)
 	
 	$id = $pages[$page];
 	
-	$obj = new InlineConverter();
+	$obj = new InlineConverter(array('page','auto'));
 	$links = $obj->get_objects(join('',get_source($page)),$page);
 	foreach ($links as $_obj) {
-		if ($_obj->type == 'pagename') {
-			$_page = $_obj->name;
-			if (array_key_exists($_page,$pages)) {
-				$ref_id = $pages[$_page];
-				if ($ref_id and $ref_id != $id) {
-					db_exec("INSERT INTO link (page_id,ref_id) VALUES ($id,$ref_id);");
-				}
-			}
+		if (!isset($_obj->type) or $_obj->type != 'pagename') {
+			continue;
+		}			
+		$_page = $_obj->name;
+		if (!array_key_exists($_page,$pages)) {
+			continue;
+		}
+		$ref_id = $pages[$_page];
+		if ($ref_id and $ref_id != $id) {
+			db_exec("INSERT INTO link (page_id,ref_id) VALUES ($id,$ref_id);");
 		}
 	}
 }
