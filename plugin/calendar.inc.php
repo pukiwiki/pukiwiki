@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar.inc.php,v 1.17 2003/06/04 14:14:00 arino Exp $
+// $Id: calendar.inc.php,v 1.18 2003/06/04 14:20:36 arino Exp $
 
 function plugin_calendar_convert()
 {
@@ -110,7 +110,7 @@ EOD;
 		
 		$refer = ($cmd == "edit") ? '&amp;refer='.rawurlencode($page) : '';
 		
-		if ($cmd == 'read' and !is_page($page))
+		if ($cmd == 'read' and !is_page($name))
 			$link = "<strong>$day</strong>";
 		else
 			$link = "<a href=\"$script?cmd=$cmd&amp;page=$r_page$refer\" title=\"$s_page\"><strong>$day</strong></a>";
