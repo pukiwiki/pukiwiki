@@ -1,6 +1,6 @@
 <?
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.29 2002/07/26 02:30:08 masui Exp $
+// $Id: html.php,v 1.30 2002/07/28 16:41:58 masui Exp $
 /////////////////////////////////////////////////
 
 // 本文をページ名から出力
@@ -21,8 +21,9 @@ function catbodyall($page,$title="",$pg="")
 function catbody($title,$page,$body)
 {
 	global $script,$vars,$arg,$do_backup,$modifier,$modifierlink,$defaultpage,$whatsnew,$hr;
-	global $date_format,$weeklabels,$time_format,$longtaketime,$related_link;
+	global $date_format,$weeklabels,$time_format,$related_link;
 	global $HTTP_SERVER_VARS,$cantedit;
+	global $longtaketime;
 
 	if($vars["page"] && !arg_check("backup") && $vars["page"] != $whatsnew)
 	{
@@ -65,7 +66,7 @@ function catbody($title,$page,$body)
 // テキスト本体をHTMLに変換する
 function convert_html($string)
 {
-	global $result,$saved,$hr,$script,$page,$vars,$top;
+	global $hr,$script,$page,$vars,$top;
 	global $note_id,$foot_explain,$digest,$note_hr;
 	global $user_rules,$str_rules,$line_rules,$strip_link_wall;
 	global $InterWikiName, $BracketName;
@@ -78,9 +79,6 @@ function convert_html($string)
 	$start_mtime = getmicrotime();
 
 	$digest = md5(@join("",get_source($vars["page"])));
-
-	$content_id = 0;
-	$user_rules = array_merge($str_rules,$line_rules);
 
 	$result = array();
 	$saved = array();
@@ -174,26 +172,26 @@ function convert_html($string)
 				}
 				else
 				{
-					back_push('ul', strlen($out[1]));
+					back_push($result,$saved,'ul', strlen($out[1]));
 					array_push($result, '<li>' . inline($out[2]) . '</li>');
 				}
 			}
 			else if(preg_match("/^(\+{1,3})(.*)/",$line,$out))
 			{
 				$headform[$_cnt] = $out[1];
-				back_push('ol', strlen($out[1]));
+				back_push($result,$saved,'ol', strlen($out[1]));
 				array_push($result, '<li>' . inline($out[2]) . '</li>');
 			}
 			else if (preg_match("/^:([^:]+):(.*)/",$line,$out))
 			{
 				$headform[$_cnt] = ':'.$out[1].':';
-				back_push('dl', 1);
+				back_push($result,$saved,'dl', 1);
 				array_push($result, '<dt>' . inline($out[1]) . '</dt>', '<dd>' . inline($out[2]) . '</dd>');
 			}
 			else if(preg_match("/^(>{1,3})(.*)/",$line,$out))
 			{
 				$headform[$_cnt] = $out[1];
-				back_push('blockquote', strlen($out[1]));
+				back_push($result,$saved,'blockquote', strlen($out[1]));
 				// ここのあたりで自前でback_pushかけてる感じ。無茶苦茶…
 				if($headform[$_cnt-1] != $headform[$_cnt] ) {
 					if(!$_bq) {
@@ -224,7 +222,7 @@ function convert_html($string)
 			else if(preg_match("/^(\s+.*)/",$line,$out))
 			{
 				$headform[$_cnt] = ' ';
-				back_push('pre', 1);
+				back_push($result,$saved,'pre', 1);
 				array_push($result, htmlspecialchars($out[1],ENT_NOQUOTES));
 			}
 			else if(preg_match("/^\|(.+)\|$/",$line,$out))
@@ -318,7 +316,7 @@ function convert_html($string)
 		{
 			if(preg_match("/^(-{1,3})(.*)/",$line,$out))
 			{
-				back_push('ul', strlen($out[1]));
+				back_push($result,$saved,'ul', strlen($out[1]));
 				array_push($result, '<li>'.$out[2].'</li>');
 			}
 		}
@@ -354,10 +352,8 @@ function convert_html($string)
 }
 
 // $tagのタグを$levelレベルまで詰める。
-function back_push($tag, $level)
+function back_push(&$result,&$saved,$tag, $level)
 {
-	global $result,$saved;
-	
 	while (count($saved) > $level) {
 		array_push($result, array_shift($saved));
 	}
