@@ -2,7 +2,7 @@
 // プラグイン attach
 
 // changed by Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
-// $Id: attach.inc.php,v 1.11 2003/01/27 05:38:44 panda Exp $
+// $Id: attach.inc.php,v 1.12 2003/02/18 04:28:43 panda Exp $
 
 // modified by PANDA <panda@arino.jp> http://home.arino.jp/
 // Last-Update:2002-12-08 rev.8
@@ -442,10 +442,18 @@ function attach_mime_content_type($filename)
 		return $type;
 	}
 	
+	if (!preg_match('/_([0-9A-Z]+)$/',$filename,$matches)) {
+		return $type;
+	}
+	$filename = decode($matches[1]);
+	
 	foreach (get_source($config) as $line) {
-		$cells = explode('|',$line);
-		$_type = trim($cells[1]);
-		$exts = preg_split('/\s+|,/',trim($cells[2]),-1,PREG_SPLIT_NO_EMPTY);
+		if (!preg_match('/\|(.+)\|/',$line,$matches)) {
+			continue;
+		}
+		$cells = explode('|',$matches[1]);
+		$_type = trim($cells[0]);
+		$exts = preg_split('/\s+|,/',trim($cells[1]),-1,PREG_SPLIT_NO_EMPTY);
 		
 		foreach ($exts as $ext) {
 			if (preg_match("/\.$ext$/i",$filename)) {
