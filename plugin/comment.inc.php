@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: comment.inc.php,v 1.26 2005/01/23 07:01:56 henoheno Exp $
+// $Id: comment.inc.php,v 1.27 2005/02/27 09:25:26 henoheno Exp $
 //
 // Comment plugin
 
@@ -89,10 +89,11 @@ function plugin_comment_convert()
 	$options = func_num_args() ? func_get_args() : array();
 
 	if (in_array('noname', $options)) {
-		$nametags = $_msg_comment;
+		$nametags = '<label for="_p_comment_comment_' . $comment_no . '">' . $_msg_comment . '</label>';
 	} else {
-		$nametags = $_btn_name .
-			'<input type="text" name="name" size="' . PLUGIN_COMMENT_SIZE_NAME . "\" />\n";
+		$nametags = '<label for="_p_comment_name_' . $comment_no . '">' . $_btn_name . '</label>' .
+			'<input type="text" name="name" id="_p_comment_name_' . $comment_no .
+			'" size="' . PLUGIN_COMMENT_SIZE_NAME . '" />' . "\n";
 	}
 
 	$nodate = in_array('nodate', $options) ? '1' : '0';
@@ -112,7 +113,7 @@ function plugin_comment_convert()
   <input type="hidden" name="above"  value="$above" />
   <input type="hidden" name="digest" value="$digest" />
   $nametags
-  <input type="text"   name="msg" size="$comment_cols" />
+  <input type="text"   name="msg" id="_p_comment_comment_{$comment_no}" size="$comment_cols" />
   <input type="submit" name="comment" value="$_btn_comment" />
  </div>
 </form>
