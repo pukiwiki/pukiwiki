@@ -1,8 +1,8 @@
 <?php
-// $Id: trackback.php,v 1.8 2005/01/29 13:53:37 henoheno Exp $
+// $Id: trackback.php,v 1.9 2005/04/09 03:18:56 henoheno Exp $
 /*
  * PukiWiki/TrackBack
- * (C) 2003-2004 PukiWiki Developer Team
+ * (C) 2003-2004 PukiWiki Developers Team
  * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
  * License: GPL
  *

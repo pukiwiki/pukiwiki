@@ -1,13 +1,13 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: popular.inc.php,v 1.13 2005/01/16 13:12:45 henoheno Exp $
+// $Id: popular.inc.php,v 1.14 2005/04/09 03:18:06 henoheno Exp $
 //
 // Popular pages plugin: Show an access ranking of this wiki
 // -- like recent plugin, using counter plugin's count --
 
 /*
- * (C) 2003-2005 PukiWiki Developer Team
- * (C) 2002, Kazunori Mizushima <kazunori@uc.netyou.jp>
+ * (C) 2003-2005 PukiWiki Developers Team
+ * (C) 2002 Kazunori Mizushima <kazunori@uc.netyou.jp>
  *
  * 通算および今日に別けて一覧を作ることができます。
  *

@@ -1,12 +1,12 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: amazon.inc.php,v 1.14 2005/02/12 03:04:06 henoheno Exp $
+// $Id: amazon.inc.php,v 1.15 2005/04/09 03:18:06 henoheno Exp $
 // Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 ´×¼Ë
 //
 // Amazon plugin: Book-review maker via amazon.com/amazon.jp
 //
 // Copyright:
-//	2004 PukiWiki Developer Team
+//	2004-2005 PukiWiki Developers Team
 //	2003 ´×¼Ë <raku@rakunet.org> (Original author)
 //
 // License: GNU/GPL

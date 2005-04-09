@@ -1,9 +1,9 @@
 <?php
-// $Id: tb.inc.php,v 1.17 2005/01/23 03:15:40 henoheno Exp $
+// $Id: tb.inc.php,v 1.18 2005/04/09 03:18:06 henoheno Exp $
 /*
  * PukiWiki/TrackBack: TrackBack Ping receiver and viewer
- * (C) 2003-2004 PukiWiki Developer Team
- * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
+ * (C) 2003-2004 PukiWiki Developers Team
+ * (C) 2003 Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
  * License: GPL
  *
  * plugin_tb_action()    action
