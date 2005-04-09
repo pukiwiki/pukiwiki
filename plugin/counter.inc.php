@@ -1,15 +1,15 @@
 <?php
-/*
- * PukiWiki counter plugin
- * $Id: counter.inc.php,v 1.15 2004/12/04 06:54:34 henoheno Exp $
- *
- * (C) 2004 PukiWiki Developer Team
- * (C) 2002 Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net
- */
+// $Id: counter.inc.php,v 1.16 2005/04/09 03:08:09 henoheno Exp $
+//
+// PukiWiki counter plugin
+//
+// (C) 2002-2005 PukiWiki Developers Team
+// (C) 2002 Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net
 
 // Counter file's suffix
 define('PLUGIN_COUNTER_SUFFIX', '.count');
 
+// Report one
 function plugin_counter_inline()
 {
 	global $vars;
@@ -27,6 +27,7 @@ function plugin_counter_inline()
 	}
 }
 
+// Report all
 function plugin_counter_convert()
 {
 	global $vars;
@@ -41,6 +42,7 @@ yesterday: {$counter['yesterday']}
 EOD;
 }
 
+// Return a summary
 function plugin_counter_get_count($page)
 {
 	global $vars;
@@ -64,7 +66,7 @@ function plugin_counter_get_count($page)
 
 	$file = COUNTER_DIR . encode($page) . PLUGIN_COUNTER_SUFFIX;
 	$fp = fopen($file, file_exists($file) ? 'r+' : 'w+')
-		or die_message('counter.inc.php: Cannot open ' . $file);
+		or die('counter.inc.php: Cannot open COUTER_DIR/' . basename($file));
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
