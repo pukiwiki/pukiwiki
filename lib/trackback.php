@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.10 2005/04/10 07:51:30 henoheno Exp $
+// $Id: trackback.php,v 1.11 2005/04/10 08:06:03 henoheno Exp $
 /*
  * PukiWiki/TrackBack
  * (C) 2003-2005 PukiWiki Developers Team
@@ -154,16 +154,11 @@ function tb_get($file, $key = 1)
 // Get a RDF comment to bury TrackBack-ping-URI under HTML(XHTML) output
 function tb_get_rdf($page)
 {
-	global $trackback;
-
-	if (! $trackback) return '';
-
+	$_script = get_script_uri(); // Get absolute path
 	$r_page = rawurlencode($page);
 	$tb_id  = tb_get_id($page);
 	// $dcdate = substr_replace(get_date('Y-m-d\TH:i:sO', $time), ':', -2, 0);
 	// dc:date="$dcdate"
-
-	$_script = get_script_uri(); // Get absolute path
 
 	return <<<EOD
 <!--
