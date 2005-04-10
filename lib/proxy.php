@@ -1,5 +1,5 @@
 <?php
-// $Id: proxy.php,v 1.3 2005/04/10 07:04:13 henoheno Exp $
+// $Id: proxy.php,v 1.4 2005/04/10 08:30:34 henoheno Exp $
 //
 // HTTP Proxy related functions
 
@@ -55,6 +55,7 @@ function http_request($url, $method = 'GET', $headers = '', $post = array(),
 	$query .= $headers;
 
 	if (strtoupper($method) == 'POST') {
+		// 'application/x-www-form-urlencoded', especially for TrackBack ping
 		$POST = array();
 		foreach ($post as $name=>$val) $POST[] = $name . '=' . urlencode($val);
 		$data = join('&', $POST);
