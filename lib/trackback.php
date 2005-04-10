@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.12 2005/04/10 08:46:28 henoheno Exp $
+// $Id: trackback.php,v 1.13 2005/04/10 09:11:24 henoheno Exp $
 /*
  * PukiWiki/TrackBack
  * (C) 2003-2005 PukiWiki Developers Team
@@ -119,7 +119,7 @@ function tb_send($page, $plus, $minus = '')
 		$tb_id = tb_get_url($link);  // Get Trackback ID from the URL
 		if (empty($tb_id)) continue; // Trackback is not supported
 
-		$result = http_request($tb_id, 'POST', '', $putdata);
+		$result = http_request($tb_id, 'POST', '', $putdata, 2, CONTENT_CHARSET);
 		// FIXME: Create warning notification space at pukiwiki.skin!
 	}
 }
