@@ -1,10 +1,10 @@
 <?php
-// $Id: proxy.php,v 1.4 2005/04/10 08:30:34 henoheno Exp $
+// $Id: proxy.php,v 1.5 2005/04/10 09:09:13 henoheno Exp $
 //
 // HTTP Proxy related functions
 
 // Max number of 'track' redirection message with 301 or 302 response
-define('PKWK_HTTP_REQUEST_URL_REDIRECT_MAX', 10);
+define('PKWK_HTTP_REQUEST_URL_REDIRECT_MAX', 2);
 
 // Separate IPv4 network-address and its netmask
 define('PKWK_CIDR_NETWORK_REGEX', '/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:\/([0-9.]+))?$/');
@@ -17,9 +17,10 @@ define('PKWK_CIDR_NETWORK_REGEX', '/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:\/([
  * $headers : Additional HTTP headers, ended with "\r\n"
  * $post    : An array of data to send via POST method ('key'=>'value')
  * $redirect_max : Max number of HTTP redirect
+ * $content_charset : Content charset. Use '' or CONTENT_CHARSET
 */
 function http_request($url, $method = 'GET', $headers = '', $post = array(),
-	$redirect_max = PKWK_HTTP_REQUEST_URL_REDIRECT_MAX)
+	$redirect_max = PKWK_HTTP_REQUEST_URL_REDIRECT_MAX, $content_charset = '')
 {
 	global $proxy_host, $proxy_port;
 	global $need_proxy_auth, $proxy_auth_user, $proxy_auth_pass;
@@ -59,7 +60,16 @@ function http_request($url, $method = 'GET', $headers = '', $post = array(),
 		$POST = array();
 		foreach ($post as $name=>$val) $POST[] = $name . '=' . urlencode($val);
 		$data = join('&', $POST);
-		$query .= 'Content-Type: application/x-www-form-urlencoded' . "\r\n";
+
+		if (preg_match('/^[a-zA-Z0-9_-]+$/', $content_charset)) {
+			// Legacy but simple
+			$query .= 'Content-Type: application/x-www-form-urlencoded' . "\r\n";
+		} else {
+			// With charset (NOTE: Some implementation may hate this)
+			$query .= 'Content-Type: application/x-www-form-urlencoded' .
+				'; charset=' . strtolower($content_charset) . "\r\n";
+		}
+
 		$query .= 'Content-Length: ' . strlen($data) . "\r\n";
 		$query .= "\r\n";
 		$query .= $data;
