@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: auth.php,v 1.11 2005/04/10 03:09:27 henoheno Exp $
+// $Id: auth.php,v 1.12 2005/04/10 03:12:35 henoheno Exp $
 //
 // Authentication related functions
 
@@ -13,7 +13,7 @@ function pkwk_login($pass = '')
 	global $adminpass;
 
 	if (! PKWK_READONLY && isset($adminpass) &&
-		pkwk_hash_compute($adminpass, $pass) == $adminpass) {
+		pkwk_hash_compute($adminpass, $pass) === $adminpass) {
 		return TRUE;
 	} else {
 		sleep(2);       // Blocking brute force attack
@@ -188,7 +188,7 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 		! in_array($_SERVER['PHP_AUTH_USER'], $user_list) ||
 		! isset($auth_users[$_SERVER['PHP_AUTH_USER']]) ||
 		pkwk_hash_compute($auth_users[$_SERVER['PHP_AUTH_USER']],
-			$_SERVER['PHP_AUTH_PW']) != $auth_users[$_SERVER['PHP_AUTH_USER']])
+			$_SERVER['PHP_AUTH_PW']) !== $auth_users[$_SERVER['PHP_AUTH_USER']])
 	{
 		// Auth failed
 		pkwk_common_headers();
