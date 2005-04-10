@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.13 2005/04/05 13:44:05 henoheno Exp $
+// $Id: md5.inc.php,v 1.14 2005/04/10 02:28:23 henoheno Exp $
 //
 //  MD5 plugin
 
@@ -46,24 +46,24 @@ function plugin_md5_action()
   <label for="_p_md5_phrase">Phrase:</label>
   <input type="text" name="key"  id="_p_md5_phrase" size="60" $value/><br />
 
-  <input type="radio" name="scheme" id="_p_md5_sha1" value="php_sha1" />
+  <input type="radio" name="scheme" id="_p_md5_sha1" value="x-php-sha1" />
   <label for="_p_md5_sha1">PHP sha1()</label><br />
-  <input type="radio" name="scheme" id="_p_md5_md5"  value="php_md5" checked="checked" />
+  <input type="radio" name="scheme" id="_p_md5_md5"  value="x-php-md5" checked="checked" />
   <label for="_p_md5_md5">PHP md5()</label><br />
-  <input type="radio" name="scheme" id="_p_md5_crpt" value="php_crypt" />
+  <input type="radio" name="scheme" id="_p_md5_crpt" value="x-php-crypt" />
   <label for="_p_md5_crpt">PHP crypt() *</label><br />
 
-  <input type="radio" name="scheme" id="_p_md5_lssha" value="ldap_ssha" />
+  <input type="radio" name="scheme" id="_p_md5_lssha" value="SSHA" />
   <label for="_p_md5_lssha">LDAP SSHA (sha-1 with a seed)</label><br />
-  <input type="radio" name="scheme" id="_p_md5_lsha" value="ldap_sha" />
+  <input type="radio" name="scheme" id="_p_md5_lsha" value="SHA" />
   <label for="_p_md5_lsha">LDAP SHA (sha-1)</label><br />
 
-  <input type="radio" name="scheme" id="_p_md5_lsmd5" value="ldap_smd5" />
+  <input type="radio" name="scheme" id="_p_md5_lsmd5" value="SMD5" />
   <label for="_p_md5_lsmd5">LDAP SMD5 (md5 with a seed)</label><br />
-  <input type="radio" name="scheme" id="_p_md5_lmd5" value="ldap_md5" />
+  <input type="radio" name="scheme" id="_p_md5_lmd5" value="MD5" />
   <label for="_p_md5_lmd5">LDAP MD5</label><br />
 
-  <input type="radio" name="scheme" id="_p_md5_lcrpt" value="ldap_crypt" />
+  <input type="radio" name="scheme" id="_p_md5_lcrpt" value="CRYPT" />
   <label for="_p_md5_lcrpt">LDAP CRYPT *</label><br />
 
   <input type="checkbox" name="prefix" id="_p_md5_prefix" checked="checked" />
