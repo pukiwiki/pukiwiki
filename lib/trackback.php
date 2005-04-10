@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.14 2005/04/10 09:15:16 henoheno Exp $
+// $Id: trackback.php,v 1.15 2005/04/10 09:18:54 henoheno Exp $
 /*
  * PukiWiki/TrackBack
  * (C) 2003-2005 PukiWiki Developers Team
@@ -111,7 +111,7 @@ function tb_send($page, $plus, $minus = '')
 		'title'     => $page, // Title = It's page name
 		'url'       => $script . '?' . $r_page, // will be rawurlencode() at send phase
 		'excerpt'   => mb_strimwidth(preg_replace("/[\r\n]/", ' ', $excerpt), 0, 255, '...'),
-		'blog_name' => $page_title . '(' . PLUGIN_TRACKBACK_VERSION . ')',
+		'blog_name' => $page_title . ' (' . PLUGIN_TRACKBACK_VERSION . ')',
 		'charset'   => SOURCE_ENCODING // Ping text encoding (Not defined)
 	);
 
