@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: convert_html.php,v 1.7 2005/01/21 13:17:16 henoheno Exp $
+// $Id: convert_html.php,v 1.8 2005/04/10 18:41:10 teanan Exp $
 //
 // function 'convert_html()', wiki text parser
 // and related classes-and-functions
@@ -893,14 +893,9 @@ class Body extends Element
 		$text = parent::toString();
 
 		// #contents
-		$text = preg_replace_callback('/(<p[^>]*>)<del>#contents<\/del>(\s*)(<\/p>)/',
+		$text = preg_replace_callback('/<#_contents_>/',
 			array(& $this, 'replace_contents'), $text);
 
-		// 関連するページ
-		// <p>のときは行頭から、<del>のときは他の要素の子要素として存在
-		$text = preg_replace_callback('/(<p[^>]*>)<del>#related<\/del>(\s*)(<\/p>)/',
-			array(& $this, 'replace_related'), $text);
-		$text = preg_replace('/<del>#related<\/del>/', make_related($vars['page'], 'del'), $text);
 		return $text . "\n";
 	}
 
@@ -912,16 +907,6 @@ class Body extends Element
 				'</div>' . "\n";
 		array_shift($arr);
 		return ($arr[1] != '') ? $contents . join('', $arr) : $contents;
-	}
-
-	function replace_related($arr)
-	{
-		global $vars;
-		static $related = NULL;
-
-		if (is_null($related)) $related = make_related($vars['page'], 'p');
-		array_shift($arr);
-		return ($arr[1] != '') ? $related . join('', $arr) : $related;
 	}
 }
 

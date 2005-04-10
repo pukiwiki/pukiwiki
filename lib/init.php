@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.28 2005/04/02 06:41:03 henoheno Exp $
+// $Id: init.php,v 1.29 2005/04/10 18:41:10 teanan Exp $
 //
 // Init PukiWiki here
 
@@ -391,8 +391,6 @@ $entity_pattern = trim(join('', file(CACHE_DIR . 'entities.dat')));
 $line_rules = array_merge(array(
 	'&amp;(#[0-9]+|#x[0-9a-f]+|' . $entity_pattern . ');' => '&$1;',
 	"\r"          => '<br />' . "\n",	/* 行末にチルダは改行 */
-	'#related$'   => '<del>#related</del>',
-	'^#contents$' => '<del>#contents</del>'
 ), $line_rules);
 
 ?>

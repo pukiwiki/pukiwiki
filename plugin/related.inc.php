@@ -1,16 +1,15 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: related.inc.php,v 1.5 2005/04/02 06:33:39 henoheno Exp $
+// $Id: related.inc.php,v 1.6 2005/04/10 18:41:02 teanan Exp $
 //
 // Related plugin: Show Backlinks for the page
 
-// TODO: move '#related' here
-//function plugin_related_convert()
-//{
-//	global $related_link;
-//	$related_link = 0;
-//	// Do
-//}
+function plugin_related_convert()
+{
+	global $vars;
+
+	return make_related($vars['page'], 'p');
+}
 
 // Show Backlinks: via related caches for the page
 function plugin_related_action()
