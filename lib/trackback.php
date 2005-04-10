@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.16 2005/04/10 09:31:15 henoheno Exp $
+// $Id: trackback.php,v 1.17 2005/04/10 09:32:06 henoheno Exp $
 /*
  * PukiWiki/TrackBack
  * (C) 2003-2005 PukiWiki Developers Team
@@ -27,7 +27,7 @@
  * ref_save($page)         Save or update referer data // lib/pukiwiki.php
  */
 
-define('PLUGIN_TRACKBACK_VERSION', 'PukiWiki/TrackBack 0.2');
+define('PLUGIN_TRACKBACK_VERSION', 'PukiWiki/TrackBack 0.3');
 
 // Get TrackBack ID from page name
 function tb_get_id($page)
