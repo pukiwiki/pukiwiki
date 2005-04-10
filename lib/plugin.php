@@ -1,8 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.8 2005/04/05 14:42:02 henoheno Exp $
+// $Id: plugin.php,v 1.9 2005/04/10 01:01:17 henoheno Exp $
 //
 // Plugin related functions
+
+define('PKWK_PLUGIN_CALL_TIME_LIMIT', 512);
 
 // Set global variables for plugins
 function set_plugin_messages($messages)
@@ -15,18 +17,30 @@ function set_plugin_messages($messages)
 // Check plugin '$name' is here
 function exist_plugin($name)
 {
-	static $exists = array();
+	global $vars;
+	static $exist = array(), $count = array();
 
 	$name = strtolower($name);
-	if(isset($exists[$name])) return $exists[$name];
+	if(isset($exist[$name])) {
+		if (++$count[$name] > PKWK_PLUGIN_CALL_TIME_LIMIT)
+			die('Alert: plugin "' . htmlspecialchars($name) .
+			'" was called over ' . PKWK_PLUGIN_CALL_TIME_LIMIT .
+			' times. SPAM or someting?<br />' . "\n" .
+			'<a href="' . get_script_uri() . '?cmd=edit&amp;page='.
+			rawurlencode($vars['page']) . '">Try to edit this page</a><br />' . "\n" .
+			'<a href="' . get_script_uri() . '">Return to frontpage</a>');
+		return $exist[$name];
+	}
 
 	if (preg_match('/^\w{1,64}$/', $name) &&
 	    file_exists(PLUGIN_DIR . $name . '.inc.php')) {
-		$exists[$name] = TRUE;
+	    	$exist[$name] = TRUE;
+	    	$count[$name] = 1;
 		require_once(PLUGIN_DIR . $name . '.inc.php');
 		return TRUE;
 	} else {
-		$exists[$name] = FALSE;
+	    	$exist[$name] = FALSE;
+	    	$count[$name] = 1;
 		return FALSE;
 	}
 }
