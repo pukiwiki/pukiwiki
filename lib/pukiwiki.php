@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.php,v 1.7 2005/04/10 04:48:42 henoheno Exp $
+// $Id: pukiwiki.php,v 1.8 2005/04/10 08:06:03 henoheno Exp $
 //
 // PukiWiki 1.4.*
 //  Copyright (C) 2002-2005 by PukiWiki Developers Team
@@ -110,8 +110,9 @@ if (isset($retvars['body']) && $retvars['body'] != '') {
 	$vars['page'] = & $base;
 
 	$body  = convert_html(get_source($base));
-	$body .= tb_get_rdf($base);
-	ref_save($base);
+
+	if ($trackback) $body .= tb_get_rdf($base); // Add TrackBack-Ping URI
+	if ($referer) ref_save($base);
 }
 
 // Output
