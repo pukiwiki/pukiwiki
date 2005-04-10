@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.15 2005/04/10 09:18:54 henoheno Exp $
+// $Id: trackback.php,v 1.16 2005/04/10 09:31:15 henoheno Exp $
 /*
  * PukiWiki/TrackBack
  * (C) 2003-2005 PukiWiki Developers Team
@@ -187,7 +187,7 @@ function tb_get_url($url)
 	if ($data['rc'] !== 200) return '';
 
 	$matches = array();
-	if (! preg_match_all('#<rdf:RDF[^>]*>(.*?)</rdf:RDF>#si', $data['data'],
+	if (! preg_match_all('#<rdf:RDF[^>]*xmlns:trackback=[^>]*>(.*?)</rdf:RDF>#si', $data['data'],
 	    $matches, PREG_PATTERN_ORDER))
 		return '';
 
