@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.11 2005/04/10 08:06:03 henoheno Exp $
+// $Id: trackback.php,v 1.12 2005/04/10 08:46:28 henoheno Exp $
 /*
  * PukiWiki/TrackBack
  * (C) 2003-2005 PukiWiki Developers Team
@@ -10,18 +10,18 @@
  *     To get TrackBack ID correctly, specify URI clearly like:
  *     http://localhost/pukiwiki/pukiwiki.php?FrontPage
  *
- * tb_get_id($page)        Get TrackBack Ping ID from page name
- * tb_id2page($tb_id)      Get page name from TrackBack Ping ID
- * tb_get_filename($page)  Get file name of TrackBack Ping data
- * tb_count($page)         Count the number of TrackBack Pings included for the page
+ * tb_get_id($page)        Get TrackBack ID from page name
+ * tb_id2page($tb_id)      Get page name from TrackBack ID
+ * tb_get_filename($page)  Get file name of TrackBack ping data
+ * tb_count($page)         Count the number of TrackBack pings included for the page
  *                         // pukiwiki.skin.php
- * tb_send($page, $data)   Send TrackBack Ping(s) automatically // file.php
- * tb_delete($page)        Remove TrackBack Ping data // edit.inc.php
- * tb_get($file, $key = 1) Import TrackBack Ping data from file
+ * tb_send($page, $data)   Send TrackBack ping(s) automatically // file.php
+ * tb_delete($page)        Remove TrackBack ping data // edit.inc.php
+ * tb_get($file, $key = 1) Import TrackBack ping data from file
  * tb_get_rdf($page)       Get a RDF comment to bury TrackBack-ping-URI under HTML(XHTML) output
  *                         // lib/pukiwiki.php
- * tb_get_url($url)        HTTP-GET from $uri, and reveal TrackBack-Ping-URI
- * class TrackBack_XML     Parse and reveal TrackBack-Ping-URI from RDF data
+ * tb_get_url($url)        HTTP-GET from $uri, and reveal the TrackBack Ping URL
+ * class TrackBack_XML     Parse and reveal the TrackBack Ping URL from RDF data
  *
  * == Referer related ==
  * ref_save($page)         Save or update referer data // lib/pukiwiki.php
@@ -29,13 +29,13 @@
 
 define('PLUGIN_TRACKBACK_VERSION', 'PukiWiki/TrackBack 0.2');
 
-// Get TrackBack Ping ID from page name
+// Get TrackBack ID from page name
 function tb_get_id($page)
 {
 	return md5($page);
 }
 
-// Get page name from TrackBack Ping ID
+// Get page name from TrackBack ID
 function tb_id2page($tb_id)
 {
 	static $pages, $cache = array();
@@ -54,20 +54,20 @@ function tb_id2page($tb_id)
 	return $cache[$tb_id]; // Not found
 }
 
-// Get file name of TrackBack Ping data
+// Get file name of TrackBack ping data
 function tb_get_filename($page, $ext = '.txt')
 {
 	return TRACKBACK_DIR . encode($page) . $ext;
 }
 
-// Count the number of TrackBack Pings included for the page
+// Count the number of TrackBack pings included for the page
 function tb_count($page, $ext = '.txt')
 {
 	$filename = tb_get_filename($page, $ext);
 	return file_exists($filename) ? count(file($filename)) : 0;
 }
 
-// Send TrackBack Ping(s) automatically
+// Send TrackBack ping(s) automatically
 // $plus  = Newly added lines may include URLs
 // $minus = Removed lines may include URLs
 function tb_send($page, $plus, $minus = '')
@@ -124,14 +124,14 @@ function tb_send($page, $plus, $minus = '')
 	}
 }
 
-// Remove TrackBack Ping data
+// Remove TrackBack ping data
 function tb_delete($page)
 {
 	$filename = tb_get_filename($page);
 	if (file_exists($filename)) @unlink($filename);
 }
 
-// Import TrackBack Ping data from file
+// Import TrackBack ping data from file
 function tb_get($file, $key = 1)
 {
 	if (! file_exists($file)) return array();
@@ -175,7 +175,7 @@ function tb_get_rdf($page)
 EOD;
 }
 
-// HTTP-GET from $uri, and reveal TrackBack-Ping-URI
+// HTTP-GET from $uri, and reveal the TrackBack Ping URL
 function tb_get_url($url)
 {
 	// Don't go across HTTP-proxy server
@@ -200,7 +200,7 @@ function tb_get_url($url)
 	return '';
 }
 
-// Parse and reveal TrackBack-Ping-URI from RDF(XML) data
+// Parse and reveal the TrackBack Ping URL from RDF(XML) data
 class TrackBack_XML
 {
 	var $url;
