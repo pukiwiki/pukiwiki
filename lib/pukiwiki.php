@@ -1,22 +1,21 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: pukiwiki.php,v 1.5 2005/04/10 04:19:42 henoheno Exp $
 //
 // PukiWiki 1.4.*
-//  Copyright (C) 2002 by PukiWiki Developers Team
+//  Copyright (C) 2002-2005 by PukiWiki Developers Team
 //  http://pukiwiki.org/
 //
 // PukiWiki 1.3.*
-//  Copyright (C) 2002 by PukiWiki Developers Team
+//  Copyright (C) 2002-2004 by PukiWiki Developers Team
 //  http://pukiwiki.org/
 //
 // PukiWiki 1.3 (Base)
-//  Copyright (C) 2001,2002 by sng.
-//  <sng@factage.com>
+//  Copyright (C) 2001-2002 by yu-ji <sng@factage.com>
 //  http://factage.com/sng/pukiwiki/
 //
 // Special thanks
-//  YukiWiki by Hiroshi Yuki
-//  <hyuki@hyuki.com>
+//  YukiWiki by Hiroshi Yuki <hyuki@hyuki.com>
 //  http://www.hyuki.com/yukiwiki/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -28,22 +27,13 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-// $Id: pukiwiki.php,v 1.4 2004/10/10 12:58:30 henoheno Exp $
-/////////////////////////////////////////////////
-
-/////////////////////////////////////////////////
-// データを格納するディレクトリや設定ファイルを置くディレクトリ
 
 if (! defined('DATA_HOME')) define('DATA_HOME', '');
 
 /////////////////////////////////////////////////
-// サブルーチンの格納先ディレクトリ (他の *.phpファイル)
+// Include subroutines
 
 if (! defined('LIB_DIR')) define('LIB_DIR', '');
-
-/////////////////////////////////////////////////
-// Include subroutines
 
 require(LIB_DIR . 'func.php');
 require(LIB_DIR . 'file.php');
@@ -64,7 +54,7 @@ if (! extension_loaded('mbstring')) {
 	require(LIB_DIR . 'mbstring.php');
 }
 
-// 初期化: 設定ファイルの読み込み
+// Load *.ini.php files and init PukiWiki
 require(LIB_DIR . 'init.php');
 
 /////////////////////////////////////////////////
