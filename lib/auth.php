@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: auth.php,v 1.10 2005/04/05 13:29:26 henoheno Exp $
+// $Id: auth.php,v 1.11 2005/04/10 03:09:27 henoheno Exp $
 //
 // Authentication related functions
 
@@ -22,66 +22,77 @@ function pkwk_login($pass = '')
 }
 
 // Compute RFC2307 'userPassword' value, like slappasswd (OpenLDAP)
-// $scheme : Specify 'scheme' or '{scheme}' or '{scheme}salt'
+// $scheme : Specify '{scheme}' or '{scheme}salt'
 // $phrase : Pass-phrase
 // $prefix : Output with a scheme-prefix or not
-function pkwk_hash_compute($scheme = 'php_md5', $phrase = '', $prefix = TRUE)
+// $canonical : Correct or Preserve $scheme prefix
+function pkwk_hash_compute($scheme = '{php_md5}', $phrase = '', $prefix = TRUE, $canonical = FALSE)
 {
 	if (strlen($phrase) > PKWK_PASSPHRASE_LIMIT_LENGTH)
 		die('pkwk_hash_compute(): malicious message length');
 
 	// With a salt or not
 	$matches = array();
-	if (preg_match('/^\{(.+)\}(.*)$/', $scheme, $matches)) {
+	if (preg_match('/^(\{.+\})(.*)$/', $scheme, $matches)) {
 		$scheme = $matches[1];
 		$salt   = $matches[2];
 	} else if ($scheme != '') {
-		$scheme = ''; // Cleartext
+		$scheme = '{CLEARTEXT}';
 	}
 
 	// Compute and add a scheme-prefix
 	switch (strtolower($scheme)) {
-	case 'x-php-crypt' : /* FALLTHROUGH */
-	case 'php_crypt'   :
-		$hash = ($prefix ? '{x-php-crypt}' : '') .
-			($salt != '' ? crypt($phrase, $salt) : crypt($phrase)); break;
-	case 'x-php-md5'   : /* FALLTHROUGH */
-	case 'php_md5'     :
-		$hash = ($prefix ? '{x-php-md5}'   : '') . md5($phrase);  break;
-	case 'x-php-sha1'  : /* FALLTHROUGH */
-	case 'php_sha1'    :
-		$hash = ($prefix ? '{x-php-sha1}'  : '') . sha1($phrase); break;
+	case '{x-php-crypt}' : /* FALLTHROUGH */
+	case '{php_crypt}'   :
+		$hash = ($prefix ? ($canonical ? '{x-php-crypt}' : $scheme) : '') .
+			($salt != '' ? crypt($phrase, $salt) : crypt($phrase));
+		break;
+	case '{x-php-md5}'   : /* FALLTHROUGH */
+	case '{php_md5}'     :
+		$hash = ($prefix ? ($canonical ? '{x-php-md5}' : $scheme) : '') .
+			md5($phrase);
+		break;
+	case '{x-php-sha1}'  : /* FALLTHROUGH */
+	case '{php_sha1}'    :
+		$hash = ($prefix ? ($canonical ? '{x-php-sha1}' : $scheme) : '') .
+			sha1($phrase);
+		break;
 
-	case 'crypt'       : /* FALLTHROUGH */
-	case 'ldap_crypt'  :
-		$hash = ($prefix ? '{CRYPT}' : '') .
-			($salt != '' ? crypt($phrase, $salt) : crypt($phrase)); break;
+	case '{crypt}'       : /* FALLTHROUGH */
+	case '{ldap_crypt}'  :
+		$hash = ($prefix ? ($canonical ? '{CRYPT}' : $scheme) : '') .
+			($salt != '' ? crypt($phrase, $salt) : crypt($phrase));
+		break;
 
-	case 'md5'         : /* FALLTHROUGH */
-	case 'ldap_md5'    :
-		$hash = ($prefix ? '{MD5}' : '') . base64_encode(hex2bin(md5($phrase)));  break;
-	case 'smd5'        : /* FALLTHROUGH */
-	case 'ldap_smd5'   :
+	case '{md5}'         : /* FALLTHROUGH */
+	case '{ldap_md5}'    :
+		$hash = ($prefix ? ($canonical ? '{MD5}' : $scheme) : '') .
+			base64_encode(hex2bin(md5($phrase)));
+		break;
+	case '{smd5}'        : /* FALLTHROUGH */
+	case '{ldap_smd5}'   :
 		// MD5 Key length = 128bits = 16bytes
 		$salt = ($salt != '' ? substr(base64_decode($salt), 16) : substr(crypt(''), -8));
-		$hash = ($prefix ? '{SMD5}' : '') .
+		$hash = ($prefix ? ($canonical ? '{SMD5}' : $scheme) : '') .
 			base64_encode(hex2bin(md5($phrase . $salt)) . $salt);
 		break;
 
-	case 'sha'         : /* FALLTHROUGH */
-	case 'ldap_sha'    :
-		$hash = ($prefix ? '{SHA}' : '') . base64_encode(hex2bin(sha1($phrase))); break;
-	case 'ssha'        : /* FALLTHROUGH */
-	case 'ldap_ssha'   :
+	case '{sha}'         : /* FALLTHROUGH */
+	case '{ldap_sha}'    :
+		$hash = ($prefix ? ($canonical ? '{SHA}' : $scheme) : '') .
+			base64_encode(hex2bin(sha1($phrase)));
+		break;
+	case '{ssha}'        : /* FALLTHROUGH */
+	case '{ldap_ssha}'   :
 		// SHA-1 Key length = 160bits = 20bytes
 		$salt = ($salt != '' ? substr(base64_decode($salt), 20) : substr(crypt(''), -8));
-		$hash = ($prefix ? '{SSHA}' : '') .
+		$hash = ($prefix ? ($canonical ? '{SSHA}' : $scheme) : '') .
 			base64_encode(hex2bin(sha1($phrase . $salt)) . $salt);
 		break;
 
-	case 'cleartext'   : /* FALLTHROUGH */
-	case 'clear'       : /* FALLTHROUGH */
-	case ''            :
+	case '{cleartext}'   : /* FALLTHROUGH */
+	case '{clear}'       : /* FALLTHROUGH */
+	case ''              :
 		$hash = & $phrase; break; // Creartext, keep NO prefix
 
 	default:
