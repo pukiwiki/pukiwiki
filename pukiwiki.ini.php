@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.111.2.4 2005/03/27 13:56:17 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.111.2.5 2005/04/11 14:57:09 henoheno Exp $
 //
 // PukiWiki メイン設定ファイル
 
@@ -17,8 +17,8 @@ if (! defined('PKWK_OPTIMISE'))
 // セキュリティ設定
 
 // PKWK_READONLY - Webブラウザ経由の編集やメンテナンスを禁止する
-//   補足: カウンター関係の機能は動作します
-//         (counterプラグイン、attachプラグインのカウント機能など)
+//   補足: カウンター関係の機能は動作します(counterプラグインや、
+//         attachプラグインがダウンロード数をカウントする機能など)
 if (! defined('PKWK_READONLY'))
 	define('PKWK_READONLY', 0); // 0 or 1
 
@@ -36,15 +36,15 @@ define('PKWK_QUERY_STRING_MAX', 640); // Bytes, 0 = OFF
 /////////////////////////////////////////////////
 // 言語 / エンコーディング方式の設定
 
-// LANG - 内部コンテンツの言語指定 ('en', 'ja', or ...)
+// LANG - 内部コンテンツの言語を指定する ('en', 'ja', or ...)
 define('LANG', 'ja');
 
-// UI_LANG - メニューやボタンなどに使われる言語指定
+// UI_LANG - メニューやボタンなどに使う言語を指定する
 define('UI_LANG', LANG); // 'en' for Internationalized wikisite
 
 /////////////////////////////////////////////////
 // ディレクトリ関係の設定その1
-// ('/' で終わっていること。パーミッションは '777')
+// (末尾に '/' が必要。パーミッションは '777')
 
 // index.php の中で定数 DATA_HOME の値を変更することにより
 // これらのディレクトリをWebブラウザから隠すことができます
@@ -53,31 +53,31 @@ define('DATA_DIR',      DATA_HOME . 'wiki/'     ); // 最新のwikiテキスト
 define('DIFF_DIR',      DATA_HOME . 'diff/'     ); // 最新のdiff(直前のデータ)
 define('BACKUP_DIR',    DATA_HOME . 'backup/'   ); // バックアップデータ
 define('CACHE_DIR',     DATA_HOME . 'cache/'    ); // キャッシュデータ
-define('UPLOAD_DIR',    DATA_HOME . 'attach/'   ); // 添付ファイルとログ
+define('UPLOAD_DIR',    DATA_HOME . 'attach/'   ); // 添付ファイルとそのログ
 define('COUNTER_DIR',   DATA_HOME . 'counter/'  ); // counterプラグインのログ
 define('TRACKBACK_DIR', DATA_HOME . 'trackback/'); // TrackBackのログ
 define('PLUGIN_DIR',    DATA_HOME . 'plugin/'   ); // プラグインを収める場所
 
 /////////////////////////////////////////////////
-// ディレクトリ関係の設定その2 ('/' で終わっていること)
+// ディレクトリ関係の設定その2 (末尾に '/' が必要)
 
-// スキン / スタイルシートを格納する場所
+// スキン / スタイルシートを格納するディレクトリ
 define('SKIN_DIR', 'skin/');
 //  このディレクトリ以下のスキンファイル (*.php) はPukiWiki本体側
 //  (DATA_HOME/SKIN_DIR) に必要ですが、CSSファイル(*.css) および
 //  JavaScriptファイル( *.js) はWebブラウザから見える場所
 //  (index.php から見て ./SKIN_DIR にあたる場所)に配置して下さい
 
-// 静的な画像ファイルを格納する場所
+// 静的な画像ファイルを格納するディレクトリ
 define('IMAGE_DIR', 'image/');
-//  このディレクトリ以下の全てのファイルはWebブラウザから見える
+//  このディレクトリ以下の全てのファイルは、Webブラウザから見える
 //  場所(index.php から見て ./IMAGE_DIR にあたる場所)に配置して
 //  下さい
 
 /////////////////////////////////////////////////
-// ローカル時間の設定
+// ローカル時刻設定
 
-switch (LANG) { // または指定する
+switch (LANG) { // または一つを指定する
 case 'ja':
 	define('ZONE', 'JST');
 	define('ZONETIME', 9 * 3600); // JST = GMT + 9
@@ -97,6 +97,9 @@ $page_title = 'PukiWiki';
 //$script = 'http://example.com/pukiwiki/';
 
 // $scriptを短くする: ファイル名を取り除く (デフォルト:取り除かない)
+// ディレクトリのインデックス候補として 'index.php' が設定されて
+// おり、かつ 'index.php' よりも優先順位の高いファイルが存在しない
+// 環境でなければ、この設定は活用できません
 //$script_directory_index = 'index.php';
 
 // サイト管理者の名前 (※変更して下さい)
@@ -160,7 +163,7 @@ $function_freeze = 1;
 /////////////////////////////////////////////////
 // このWikiサイトの管理者パスワード
 
-// *変更して下さい*
+// ※変更して下さい※
 $adminpass = '1a1dc91c907325c69271ddf0c944bc72'; // md5('pass')
 
 // = 注意 =
@@ -206,9 +209,9 @@ $adminpass = '1a1dc91c907325c69271ddf0c944bc72'; // md5('pass')
 // あれば、この方法は使わないで下さい。
 
 /////////////////////////////////////////////////
-// ページ名に読みがなをつける機能 に関する設定
-// (ページ一覧の並び順を正しくするために、漢字仮名まじりのページ
-//  名について、自動的に読みがなを生成する)
+// Page-reading (ページ名に読みがなをつける機能) に関する設定
+// (「ページ一覧」の並び順を正しくするために、漢字仮名まじりの
+// ページ名について、自動的に読みがなを生成する)
 
 // ChaSen または KAKASHI コマンドを使って読みがなを得る機能を
 // 有効にする (1:有効, 0:無効)
@@ -239,6 +242,7 @@ $pagereading_config_dict = ':config/PageReading/dict';
 /////////////////////////////////////////////////
 // ユーザー定義
 $auth_users = array(
+	// 'ユーザー名' => 'パスワード',
 	'foo'	=> 'foo_passwd',
 	'bar'	=> 'bar_passwd',
 	'hoge'	=> 'hoge_passwd',
@@ -297,7 +301,7 @@ $lastmod = 0;
 // 日付のフォーマット
 $date_format = 'Y-m-d';
 
-// 時間のフォーマット
+// 時刻のフォーマット
 $time_format = 'H:i:s';
 
 /////////////////////////////////////////////////
@@ -386,8 +390,8 @@ $pop_port   = 110;
 $pop_userid = '';
 $pop_passwd = '';
 
-// POPの変わりにAPOPを用いる (もしサーバーが対応していれば)
-//   Default = 自動 (可能ならAPOPを用いる)
+// POPの代わりにAPOPを用いる (もしサーバーが対応していれば)
+//   未設定  = 自動 (可能ならAPOPを用いる)
 //   1       = 常に APOP を用いる
 //   0       = 常に  POP を用いる
 // $pop_auth_use_apop = 1;
