@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.14 2005/04/10 02:28:23 henoheno Exp $
+// $Id: md5.inc.php,v 1.15 2005/04/11 14:59:54 henoheno Exp $
 //
 //  MD5 plugin
 
@@ -27,7 +27,7 @@ function plugin_md5_action()
 		}
 
 		return array('msg'=>'MD5',
-			'body'=>pkwk_hash_compute($salt, $key, $prefix));
+			'body'=>pkwk_hash_compute($salt, $key, $prefix, TRUE));
 
 	} else {
 		// If plugin=md5&md5=password, only set it (Don't compute)
