@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.16 2005/04/16 04:54:35 henoheno Exp $
+// $Id: file.php,v 1.17 2005/04/16 04:56:49 henoheno Exp $
 //
 // File related functions
 
@@ -125,8 +125,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		flock($fp, LOCK_UN);
 		fclose($fp);
 
-		// With safe_mode, touch() always check UID
-		if ($timestamp) touch($file, $timestamp + LOCALZONE);
+		if ($timestamp) pkwk_touch_file($file, $timestamp + LOCALZONE);
 	}
 
 	// Clear is_page() cache
