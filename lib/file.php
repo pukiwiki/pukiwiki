@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.17 2005/04/16 04:56:49 henoheno Exp $
+// $Id: file.php,v 1.18 2005/04/16 04:59:09 henoheno Exp $
 //
 // File related functions
 
@@ -555,7 +555,7 @@ function pkwk_chown($filename, $preserve_time = TRUE)
 function pkwk_touch_file($filename, $time = FALSE, $atime = FALSE)
 {
 	// Is the owner incorrected and unable to correct?
-	if (pkwk_chown($filename)) {
+	if (! file_exists($filename) || pkwk_chown($filename)) {
 		if ($time === FALSE) {
 			$result = touch($filename);
 		} else if ($atime === FALSE) {
