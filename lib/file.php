@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.15 2005/04/14 13:33:29 henoheno Exp $
+// $Id: file.php,v 1.16 2005/04/16 04:54:35 henoheno Exp $
 //
 // File related functions
 
@@ -496,5 +496,78 @@ function links_get_related($page)
 	$links[$page] += links_get_related_db($vars['page']);
 
 	return $links[$page];
+}
+
+// _If needed_, re-create the file to change/correct ownership into PHP's
+// NOTE: Not works for Windows
+function pkwk_chown($filename, $preserve_time = TRUE)
+{
+	static $php_uid; // PHP's UID
+
+	if (! isset($php_uid)) {
+		if (extension_loaded('posix')) {
+			$php_uid = posix_getuid(); // Unix
+		} else {
+			$php_uid = 0; // Windows
+		}
+	}
+
+	// Lock for pkwk_chown()
+	$lockfile = CACHE_DIR . 'pkwk_chown.lock';
+	$flock = fopen($lockfile, 'a') or
+		die('pkwk_chown(): fopen() failed for: CACHEDIR/' .
+			basename(htmlspecialchars($lockfile)));
+	flock($flock, LOCK_EX) or die('pkwk_chown(): flock() failed for lock');
+
+	// Check owner
+	$stat = stat($filename) or
+		die('pkwk_chown(): stat() failed for: '  . basename(htmlspecialchars($filename)));
+	if ($stat[4] === $php_uid) {
+		// NOTE: Windows always here
+		$result = TRUE; // Seems the same UID. Nothing to do
+	} else {
+		$tmp = $filename . '.' . getmypid() . '.tmp';
+
+		// Lock source $filename to avoid file corruption
+		// NOTE: Not 'r+'. Don't check write permission here
+		$ffile = fopen($filename, 'r') or
+			die('pkwk_chown(): fopen() failed for: ' .
+				basename(htmlspecialchars($filename)));
+
+		// Try to chown by re-creating files
+		// NOTE: @unlink() before rename() is for Windows but here's for Unix only
+		flock($ffile, LOCK_EX) or die('pkwk_chown(): flock() failed');
+		$result = copy($filename, $tmp) &&
+			($preserve_time ? touch($tmp, $stat[9], $stat[8]) : TRUE) &&
+			rename($tmp, $filename);
+		flock($ffile, LOCK_UN) or die('pkwk_chown(): flock() failed');
+
+		fclose($ffile) or die('pkwk_chown(): fclose() failed');
+	}
+
+	// Unlock for pkwk_chown()
+	flock($flock, LOCK_UN) or die('pkwk_chown(): flock() failed for lock');
+	fclose($flock) or die('pkwk_chown(): fclose() failed for lock');
+
+	return $result;
+}
+
+// touch() with trying pkwk_chown()
+function pkwk_touch_file($filename, $time = FALSE, $atime = FALSE)
+{
+	// Is the owner incorrected and unable to correct?
+	if (pkwk_chown($filename)) {
+		if ($time === FALSE) {
+			$result = touch($filename);
+		} else if ($atime === FALSE) {
+			$result = touch($filename, $time);
+		} else {
+			$result = touch($filename, $time, $atime);
+		}
+		return $result;
+	} else {
+		die('pkwk_touch_file(): Invalid UID and (not writable for the directory or not a flie): ' .
+			htmlspecialchars(basename($filename)));
+	}
 }
 ?>
