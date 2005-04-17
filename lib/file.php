@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.18 2005/04/16 04:59:09 henoheno Exp $
+// $Id: file.php,v 1.19 2005/04/17 05:22:51 henoheno Exp $
 //
 // File related functions
 
@@ -542,6 +542,8 @@ function pkwk_chown($filename, $preserve_time = TRUE)
 		flock($ffile, LOCK_UN) or die('pkwk_chown(): flock() failed');
 
 		fclose($ffile) or die('pkwk_chown(): fclose() failed');
+
+		if ($result === FALSE) @unlink($tmp);
 	}
 
 	// Unlock for pkwk_chown()
