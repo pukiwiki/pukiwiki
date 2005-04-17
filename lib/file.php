@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.19 2005/04/17 05:22:51 henoheno Exp $
+// $Id: file.php,v 1.20 2005/04/17 06:16:17 henoheno Exp $
 //
 // File related functions
 
@@ -534,10 +534,12 @@ function pkwk_chown($filename, $preserve_time = TRUE)
 				basename(htmlspecialchars($filename)));
 
 		// Try to chown by re-creating files
-		// NOTE: @unlink() before rename() is for Windows but here's for Unix only
+		// NOTE:
+		//   * @unlink() before rename() is for Windows but here's for Unix only
+		//   * (PHP 4 < PHP 4.2.0) touch() with the third argument is not implemented and retuns NULL and Warn.
 		flock($ffile, LOCK_EX) or die('pkwk_chown(): flock() failed');
 		$result = copy($filename, $tmp) &&
-			($preserve_time ? touch($tmp, $stat[9], $stat[8]) : TRUE) &&
+			($preserve_time ? (touch($tmp, $stat[9], $stat[8]) || touch($tmp, $stat[9])) : TRUE) &&
 			rename($tmp, $filename);
 		flock($ffile, LOCK_UN) or die('pkwk_chown(): flock() failed');
 
