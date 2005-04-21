@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: convert_html.php,v 1.8 2005/04/10 18:41:10 teanan Exp $
+// $Id: convert_html.php,v 1.9 2005/04/21 17:55:20 teanan Exp $
 //
 // function 'convert_html()', wiki text parser
 // and related classes-and-functions
@@ -905,8 +905,7 @@ class Body extends Element
 				'<a id="contents_' . $this->id . '"></a>' . "\n" .
 				$this->contents->toString() . "\n" .
 				'</div>' . "\n";
-		array_shift($arr);
-		return ($arr[1] != '') ? $contents . join('', $arr) : $contents;
+		return $contents;
 	}
 }
 
