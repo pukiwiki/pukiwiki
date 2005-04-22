@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.21 2005/04/17 06:42:26 henoheno Exp $
+// $Id: file.php,v 1.22 2005/04/22 23:14:41 henoheno Exp $
 //
 // File related functions
 
@@ -113,10 +113,10 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		if ($notimestamp && file_exists($file))
 			$timestamp = filemtime($file) - LOCALZONE;
 
-		$fp = fopen($file, 'w') or
-			die_message('Cannot write page file or diff file or other ' .
-			htmlspecialchars($page) .
-			'<br />Maybe permission is not writable or filename is too long');
+		$fp = fopen($file, 'w') or die('fopen() failed: ' .
+			htmlspecialchars(basename($dir) . '/' . encode($page) . '.txt') .	
+			'<br />' . "\n" .
+			'Maybe permission is not writable or filename is too long');
 
 		set_file_buffer($fp, 0);
 		flock($fp, LOCK_EX);
