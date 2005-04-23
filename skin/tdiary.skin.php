@@ -1,11 +1,15 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.20 2005/04/02 06:36:07 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.21 2005/04/23 11:34:04 henoheno Exp $
 //
 // tDiary-wrapper skin
 
+// ------------------------------------------------------------
+// Settings (define before here, if you want)
+
 // Select theme
-if (! defined('TDIARY_THEME')) define('TDIARY_THEME', 'loose-leaf'); // Default
+if (! defined('TDIARY_THEME'))
+	define('TDIARY_THEME', 'loose-leaf'); // Default
 
 // Show link(s) at your choice, with <div class="calendar"> design
 // NOTE: Some theme become looking worse with this!
@@ -25,7 +29,11 @@ if (! defined('PKWK_SKIN_SHOW_NAVBAR'))
 if (! defined('PKWK_SKIN_SHOW_TOOLBAR'))
 	define('PKWK_SKIN_SHOW_TOOLBAR', 0); // 0, 1
 
-// --------
+// TDIARY_SIDEBAR_POSITION: See below
+
+// ------------------------------------------------------------
+// Code start
+
 // Prohibit direct access
 if (! defined('UI_LANG')) die('UI_LANG is not set');
 if (! isset($_LANG)) die('$_LANG is not set');
@@ -47,7 +55,10 @@ if ($theme == '' || $theme == 'TDIARY_THEME') {
 	 }
 }
 
-// Adjust DTD (between theme(=CSS) and MSIE bug)
+// ------------------------------------------------------------
+// Exception
+
+// Adjust DTD (bug between these theme(=CSS) and MSIE)
 // NOTE:
 //    PukiWiki default: PKWK_DTD_XHTML_1_1
 //    tDiary's default: PKWK_DTD_HTML_4_01_STRICT
@@ -60,11 +71,12 @@ case 'christmas':
 // Adjust reverse-link default design manually
 $disable_backlink = FALSE;
 switch(TDIARY_THEME){
-case 'hatena':	/*FALLTHROUGH*/
-	$disable_backlink = TRUE;
+case 'hatena':
+	$disable_backlink = TRUE; // or very viewable title color
 	break;
 }
 
+// ------------------------------------------------------------
 // Select CSS color theme (testing)
 $css_theme = '';
 switch(TDIARY_THEME){
@@ -153,12 +165,11 @@ case 'wood':
 	$title_design_date = 0; // Select text design	
 	break;
 
-// Show both :)
 case 'arrow':
 case 'fluxbox':
 case 'fluxbox2':
 case 'fluxbox3':
-	$title_design_date = 2;
+	$title_design_date = 2; // Show both :)
 	break;
 }
 
@@ -166,12 +177,13 @@ case 'fluxbox3':
 if (defined('TDIARY_SIDEBAR_POSITION')) {
 	$sidebar = TDIARY_SIDEBAR_POSITION;
 } else {
-	// Themes including sidebar CSS < (AllTheme / 2)
+	$sidebar = 'another'; // Default: Show as an another page below
+
+	// List of themes having sidebar CSS < (AllTheme / 2)
 	// $ grep div.sidebar */*.css | cut -d: -f1 | cut -d/ -f1 | sort | uniq
 	// $ wc -l *.txt
-	//     75 list-sidebar.txt
-	//    193 list-all.txt
-	$sidebar = 'another'; // Default: Show as an another page below
+	//     78 list-sidebar.txt
+	//    196 list-all.txt
 	switch(TDIARY_THEME){
 	case '3minutes':	/*FALLTHROUGH*/
 	case '3pink':
@@ -248,14 +260,14 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'tinybox_green':
 	case 'wine':
 	case 'yukon':
-		$sidebar = 'bottom';	// This is the default position of tDiary's.
+		$sidebar = 'bottom'; // This is the default position of tDiary's.
 		break;
 	}
 
-	// Adjust sidebar's default position
+	// Manually adjust sidebar's default position
 	switch(TDIARY_THEME){
 
-	// Assuming sidebar is above of the body
+	// 'top': Assuming sidebar is above of the body
 	case 'autumn':	/*FALLTHROUGH*/
 	case 'cosmos':
 	case 'dice':	// Sidebar text (white) seems unreadable
@@ -269,7 +281,7 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 		$sidebar = 'top';
 		break;
 
-	// Strict separation between sidebar and main contents needed
+	// 'strict': Strict separation between sidebar and main contents needed
 	case '3minutes':	/*FALLTHROUGH*/
 	case '3pink':
 	case 'aoikuruma':
@@ -304,7 +316,7 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 		$sidebar = 'strict';
 		break;
 
-	// They have sidevar-design, but can not show it at the 'side' of the contents
+	// 'another': They have sidebar-design, but can not show it at the 'side' of the contents
 	case 'babypink':	/*FALLTHROUGH*/
 	case 'bubble':
 	case 'cherry':
@@ -319,15 +331,23 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 		$sidebar = 'another'; // Show as an another page below
 		break;
 	}
+
+	// 'none': Show no sidebar
 }
 // Check menu (sidebar) is ready and $menubar is there
-$menu = (arg_check('read') && is_page($GLOBALS['menubar']) &&
-	exist_plugin_convert('menu'));
-if ($menu) {
-	$menu_body = preg_replace('#<h2 ([^>]*)>(.*?)</h2>#',
-		'<h3 $1><span class="sanchor"></span> $2</h3>',
-		do_plugin_convert('menu'));
+if ($sidebar == 'none') {
+	$menu = FALSE;
+} else {
+	$menu = (arg_check('read') && is_page($GLOBALS['menubar']) &&
+		exist_plugin_convert('menu'));
+	if ($menu) {
+		$menu_body = preg_replace('#<h2 ([^>]*)>(.*?)</h2>#',
+			'<h3 $1><span class="sanchor"></span> $2</h3>',
+			do_plugin_convert('menu'));
+	}
 }
+
+// ------------------------------------------------------------
 
 $lang  = & $_LANG['skin'];
 $link  = & $_LINK;
@@ -338,6 +358,8 @@ $css_charset = 'iso-8859-1';
 switch(UI_LANG){
 	case 'ja': $css_charset = 'Shift_JIS'; break;
 }
+
+// ------------------------------------------------------------
 
 // Output HTTP headers
 pkwk_common_headers();
