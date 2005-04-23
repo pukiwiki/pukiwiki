@@ -1,18 +1,31 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: link.php,v 1.4 2005/01/29 13:51:44 henoheno Exp $
+// $Id: link.php,v 1.5 2005/04/23 00:13:00 henoheno Exp $
 //
 // Backlinks / AutoLinks related functions
 
-/*
- * CACHE_DIR/encode(ページ名).ref
- * 参照元ページ名<tab>AutoLinkによるリンクのみのとき1\n
- * 参照元ページ名<tab>AutoLinkによるリンクのみのとき1\n
- * ...
- *
- * CACHE_DIR/encode(ページ名).rel
- * 参照先ページ名<tab>参照先ページ名<tab>...
- */
+// ------------------------------------------------------------
+// DATA STRUCTURE of *.ref and *.rel files
+
+// CACHE_DIR/encode('foobar').ref
+// ---------------------------------
+// Page-name1<tab>0<\n>
+// Page-name2<tab>1<\n>
+// ...
+// Page-nameN<tab>0<\n>
+//
+//	0 = Added when link(s) to 'foobar' added clearly at this page
+//	1 = Added when the sentence 'foobar' found from the page
+//	    by AutoLink feature
+
+// CACHE_DIR/encode('foobar').rel
+// ---------------------------------
+// Page-name1<tab>Page-name2<tab> ... <tab>Page-nameN
+//
+//	List of page-names linked from 'foobar'
+
+// ------------------------------------------------------------
+
 
 // データベースから関連ページを得る
 function links_get_related_db($page)
