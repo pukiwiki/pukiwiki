@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.21 2005/04/23 11:34:04 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.22 2005/04/23 11:40:00 henoheno Exp $
 //
 // tDiary-wrapper skin
 
@@ -146,6 +146,7 @@ case 'midnight':
 case 'momonga':
 case 'nande-ya-nen':
 case 'narrow':
+case 'natrium':
 case 'nebula':
 case 'orange':
 case 'parabola':
@@ -159,6 +160,7 @@ case 'sky':
 case 'snow_man':
 case 'spring':
 case 'tag':
+case 'tdiarynet':
 case 'white-lingerie':
 case 'whiteout':
 case 'wood':
@@ -191,6 +193,7 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'arrow':
 	case 'autumn':
 	case 'babypink':
+	case 'be_r5';
 	case 'bill':
 	case 'bistro_menu':
 	case 'bluely':
@@ -227,6 +230,7 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'momonga':
 	case 'mono':
 	case 'moo':
+	case 'natrium':
 	case 'nippon':
 	case 'note':
 	case 'old-pavement':
@@ -253,6 +257,7 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'smoking_white':
 	case 'spring':
 	case 'sunset':
+	case 'tdiarynet':
 	case 'teacup':
 	case 'thin':
 	case 'tile':
