@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: aname.inc.php,v 1.18 2005/04/23 14:43:19 henoheno Exp $
+// $Id: aname.inc.php,v 1.19 2005/04/24 02:21:07 henoheno Exp $
 //
 // aname plugin - Set various anchor tag
 //   * A simple anchor <a id="key"></a>
@@ -32,9 +32,9 @@ function plugin_aname_usage($convert = TRUE, $message = '')
 {
 	if ($message == '') {
 		if ($convert) {
-			return '#aname(anchorID[,super][,full][,noid][,Link title])';
+			return '#aname(anchorID[[,super][,full][,noid],Link title])';
 		} else {
-			return '&amp;aname(anchorID[,super][,full][,noid])[{Link title}]';
+			return '&amp;aname(anchorID[,super][,full][,noid]){[Link title]}';
 		}
 	} else {
 		if ($convert) {
@@ -75,24 +75,21 @@ function plugin_aname_tag($args = array(), $convert = TRUE)
 			$body = array_pop($args);
 		}
 	}
+	$f_super = in_array('super', $args); // Option: CSS class
+	$f_noid  = in_array('noid',  $args); // Option: Without id attribute
+	$f_full  = in_array('full',  $args); // Option: With full(absolute) URI
 
-	// Option: CSS class
-	$class   = in_array('super', $args) ? 'anchor_super' : 'anchor';
-
-	// Option: Without id
-	$attr_id = in_array('noid',  $args) ? '' : ' id="' . $id . '"';
-
-	// Option: With full(absolute) URI
-	$url     = in_array('full',  $args) ?
-		get_script_uri() . '?' . rawurlencode($vars['page']) : '';
+	$class   = $f_super ? 'anchor_super' : 'anchor';
+	$attr_id = $f_noid  ? '' : ' id="' . $id . '"';
+	$url     = $f_full  ? get_script_uri() . '?' . rawurlencode($vars['page']) : '';
 
 	// href and title attribute
 	if ($body != '') {
 		$href  = ' href="' . $url . '#' . $id . '"';
 		$title = ' title="' . $id . '"';
 	} else {
-		if ($attr_id == '')
-			return plugin_aname_usage($convert, 'Meanless(No body and No id)');
+		if ($f_noid) return plugin_aname_usage($convert, 'Meaningless(No link-title with \'noid\')');
+		if ($f_full) return plugin_aname_usage($convert, 'Meaningless(No link-title with \'full\')');
 		$href = $title = '';
 	}
 
