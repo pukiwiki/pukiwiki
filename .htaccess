@@ -6,4 +6,13 @@
 
 ## Using zlib.output_compression per directory (via .htaccess),
 ## needs 'AllowOverride Options' at httpd.conf.
+## See BugTrack/738 for detail
+##
+## NOTE:
+##   Define PKWK_ZLIB_LOADABLE_MODULE somewhere if you are using
+##   PHP extension as loadable module (especially FreeBSD ports)
+##
+##   Bug #29350 output_compression not working with zlib as loadable module
+##   http://bugs.php.net/bug.php?id=29350
+##
 #php_flag zlib.output_compression On
