@@ -1,5 +1,10 @@
-# Apache .htaccess
-# $Id: .htaccess,v 1.12 2005/04/24 13:17:21 henoheno Exp $
+# Apache .htaccess for PukiWiki
+#
+# $Id: .htaccess,v 1.13 2005/04/29 09:53:27 henoheno Exp $
+# Copywrite (C)
+#   2002-2005 PukiWiki Developers Team
+#   2001      Originally written by yu-ji
+# License: GPL v2 or (at your option) any later version
 #
 # NOTE: Correct permission of this file 644(or 604)
 
