@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: convert_html.php,v 1.9 2005/04/21 17:55:20 teanan Exp $
+// $Id: convert_html.php,v 1.10 2005/04/29 09:10:11 henoheno Exp $
+// Copywrite (C) 2003-2005 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
 // function 'convert_html()', wiki text parser
 // and related classes-and-functions

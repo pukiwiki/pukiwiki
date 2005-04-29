@@ -1,9 +1,12 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: mail.php,v 1.2 2005/04/29 09:10:11 henoheno Exp $
+// Copywrite (C)
+//   2003-2005 PukiWiki Developers Team
+//   2003      Originally written by upk
+// License: GPL v2 or (at your option) any later version
 //
-// $Id: mail.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
-//
+// E-mail related functions
 
 // APOP/POP Before SMTP
 function pop_before_smtp($pop_userid = '', $pop_passwd = '',

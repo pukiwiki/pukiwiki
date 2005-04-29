@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.22 2005/04/22 23:14:41 henoheno Exp $
+// $Id: file.php,v 1.23 2005/04/29 09:10:11 henoheno Exp $
+// Copywrite (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001      Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // File related functions
 

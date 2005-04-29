@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.40 2005/04/16 05:37:13 henoheno Exp $
+// $Id: func.php,v 1.41 2005/04/29 09:10:11 henoheno Exp $
+// Copywrite (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001      Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // General functions
 
