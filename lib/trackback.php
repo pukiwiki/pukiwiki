@@ -1,6 +1,6 @@
 <?php
-// $Id: trackback.php,v 1.18 2005/04/29 09:10:11 henoheno Exp $
-// Copywrite (C)
+// $Id: trackback.php,v 1.19 2005/04/29 11:24:20 henoheno Exp $
+// Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2003      Originally written by Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
 // License: GPL v2 or (at your option) any later version
