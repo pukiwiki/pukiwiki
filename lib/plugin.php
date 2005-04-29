@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.10 2005/04/29 09:10:11 henoheno Exp $
+// $Id: plugin.php,v 1.11 2005/04/29 11:11:29 henoheno Exp $
 // Copywrite (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001      Originally written by yu-ji
@@ -8,7 +8,7 @@
 //
 // Plugin related functions
 
-define('PKWK_PLUGIN_CALL_TIME_LIMIT', 512);
+define('PKWK_PLUGIN_CALL_TIME_LIMIT', 768);
 
 // Set global variables for plugins
 function set_plugin_messages($messages)
