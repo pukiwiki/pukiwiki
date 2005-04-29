@@ -1,8 +1,8 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: default.ini.php,v 1.18 2005/04/02 03:04:14 henoheno Exp $
+// $Id: default.ini.php,v 1.19 2005/04/29 09:47:40 henoheno Exp $
+// Copywrite (C) 2003-2005 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
 // PukiWiki setting file (user agent:default)
 

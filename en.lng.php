@@ -1,10 +1,12 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: en.lng.php,v 1.8 2005/04/29 09:47:40 henoheno Exp $
+// Copywrite (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001      Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
-// $Id: en.lng.php,v 1.7 2005/02/05 04:38:52 henoheno Exp $
-//
-// PukiWiki message file (english)
+// PukiWiki message file (English)
 
 // NOTE: Encoding of this file, must equal to encoding setting
 

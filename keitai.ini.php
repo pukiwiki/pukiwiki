@@ -1,8 +1,10 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: keitai.ini.php,v 1.18 2005/03/19 01:26:53 henoheno Exp $
+// $Id: keitai.ini.php,v 1.19 2005/04/29 09:47:40 henoheno Exp $
+// Copywrite (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001      Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // PukiWiki setting file (Cell phones, PDAs and other thin clients)
 

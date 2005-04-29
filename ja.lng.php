@@ -1,8 +1,10 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: ja.lng.php,v 1.6 2005/01/15 02:51:44 henoheno Exp $
+// $Id: ja.lng.php,v 1.7 2005/04/29 09:47:40 henoheno Exp $
+// Copywrite (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001      Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // PukiWiki message file (japanese)
 
