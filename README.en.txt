@@ -4,12 +4,13 @@ NOTE: This document become old, needs help
 NAME
 
     PukiWiki - PHP scripts for Web pages which can be edited by anyone, 
-                                                              at any time, from anywhere. 
+               at any time, from anywhere. 
 
-        PukiWiki 1.4.5_1
-        Copyright (C) 2001-2004 PukiWiki Developers Team
-        License: GPL
-        Based on "PukiWiki" 1.3 by yu-ji
+        PukiWiki 1.4.6_alpha
+        Copyright (C)
+          2001-2005 PukiWiki Developers Team
+          2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
+        License: GPL version 2 or (at your option) any later version
         http://pukiwiki.org/
 
 SYNOPSIS
