@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.22 2005/04/23 11:40:00 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.23 2005/05/01 02:43:27 henoheno Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // tDiary-wrapper skin
 

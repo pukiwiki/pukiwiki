@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.css.php,v 1.10 2005/01/25 15:07:26 henoheno Exp $
+// $Id: pukiwiki.css.php,v 1.11 2005/05/01 02:43:27 henoheno Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // Defaul CSS
 
