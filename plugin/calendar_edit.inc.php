@@ -1,7 +1,12 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: calendar_edit.inc.php,v 1.8 2005/05/04 05:00:31 henoheno Exp $
+// $Id: calendar_edit.inc.php,v 1.9 2005/05/04 05:03:48 henoheno Exp $
+// Copyright (C)
+//   2003,2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
+// Calendar_ edit plugin (needs calendar plugin)
 
 function plugin_calendar_edit_convert()
 {
