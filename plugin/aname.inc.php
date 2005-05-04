@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: aname.inc.php,v 1.20 2005/04/24 02:59:10 henoheno Exp $
+// $Id: aname.inc.php,v 1.21 2005/05/04 03:20:20 henoheno Exp $
 //
 // aname plugin - Set various anchor tag
 //   * A simple anchor <a id="key"></a>
@@ -10,8 +10,15 @@
 // NOTE:
 //   Use 'id="key"' instead of 'name="key"' at XHTML 1.1
 
+// Check ID is unique or not (compatible: no-check)
+define('PLUGIN_ANAME_ID_MUST_UNIQUE', 0);
+
+// Max length of ID
+define('PLUGIN_ANAME_ID_MAX',   40);
+
+// Pattern of ID
 define('PLUGIN_ANAME_ID_REGEX', '/^[A-Za-z][\w\-]*$/');
-define('PLUGIN_ANAME_ID_MAX',   40); // Max length
+
 
 // #aname
 function plugin_aname_convert()
@@ -65,7 +72,7 @@ function plugin_aname_tag($args = array(), $convert = TRUE)
 		if ($f_full)  return plugin_aname_usage($convert, 'Meaningless(No link-title with \'full\')');
 	}
 
-	if (isset($_id[$id]) && ! $f_noid) {
+	if (PLUGIN_ANAME_ID_MUST_UNIQUE && isset($_id[$id]) && ! $f_noid) {
 		return plugin_aname_usage($convert, 'ID already used: '. $id);
 	} else {
 		if (strlen($id) > PLUGIN_ANAME_ID_MAX)
@@ -73,7 +80,7 @@ function plugin_aname_tag($args = array(), $convert = TRUE)
 		if (! preg_match(PLUGIN_ANAME_ID_REGEX, $id))
 			return plugin_aname_usage($convert, 'Invalid ID string: ' .
 				htmlspecialchars($id));
-		$_id[$id] = TRUE;
+		$_id[$id] = TRUE; // Set
 	}
 
 	if ($convert) $body = htmlspecialchars($body);
