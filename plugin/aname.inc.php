@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: aname.inc.php,v 1.21 2005/05/04 03:20:20 henoheno Exp $
+// $Id: aname.inc.php,v 1.22 2005/05/04 03:28:32 henoheno Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // aname plugin - Set various anchor tag
 //   * A simple anchor <a id="key"></a>

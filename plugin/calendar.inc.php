@@ -1,5 +1,11 @@
 <?php
-// $Id: calendar.inc.php,v 1.19 2004/07/31 03:09:20 henoheno Exp $
+// $Id: calendar.inc.php,v 1.20 2005/05/04 03:31:39 henoheno Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
+//
+// Calendar plugin
 
 function plugin_calendar_convert()
 {
