@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: comment.inc.php,v 1.28 2005/03/05 12:23:10 teanan Exp $
+// $Id: comment.inc.php,v 1.29 2005/05/06 01:50:29 henoheno Exp $
 //
 // Comment plugin
 
@@ -13,51 +13,50 @@ define('PLUGIN_COMMENT_FORMAT_MSG',  '$msg');
 define('PLUGIN_COMMENT_FORMAT_NAME', '[[$name]]');
 define('PLUGIN_COMMENT_FORMAT_NOW',  '&new{$now};');
 define('PLUGIN_COMMENT_FORMAT_STRING', "\x08MSG\x08 -- \x08NAME\x08 \x08NOW\x08");
+
 function plugin_comment_action()
 {
 	global $script, $vars, $now, $_title_updated, $_no_name;
 	global $_msg_comment_collided, $_title_comment_collided;
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
+
 	if (! isset($vars['msg']) || $vars['msg'] == '')
 		return array('msg'=>'', 'body'=>'');
 
-	$vars['msg'] = preg_replace("/\n/", '', $vars['msg']);
+	$vars['msg'] = preg_replace("/\n/", '', $vars['msg']); // Cut LFs
 
 	$head = '';
 	$match = array();
-	if (preg_match('/^(-{1,2})(.*)/', $vars['msg'], $match)) {
-		$head        = $match[1];
-		$vars['msg'] = $match[2];
+	if (preg_match('/^(-{1,2})\s*(.*)/', $vars['msg'], $match)) {
+		$head        = & $match[1];
+		$vars['msg'] = & $match[2];
 	}
-	unset($match);
 
-	$_msg  = str_replace('$msg', $vars['msg'], PLUGIN_COMMENT_FORMAT_MSG);
-
+	$comment  = str_replace('$msg', $vars['msg'], PLUGIN_COMMENT_FORMAT_MSG);
 	if(isset($vars['name']) || ($vars['nodate'] != '1')) {
 		$_name = (! isset($vars['name']) || $vars['name'] == '') ? $_no_name : $vars['name'];
 		$_name = ($_name == '') ? '' : str_replace('$name', $_name, PLUGIN_COMMENT_FORMAT_NAME);
 
-		$_now  = ($vars['nodate'] == '1') ? '' : str_replace('$now', $now, PLUGIN_COMMENT_FORMAT_NOW);
+		$_now  = ($vars['nodate'] == '1') ? '' :
+			str_replace('$now', $now, PLUGIN_COMMENT_FORMAT_NOW);
 
-		$comment = str_replace("\x08MSG\x08",  $_msg,  PLUGIN_COMMENT_FORMAT_STRING);
+		$comment = str_replace("\x08MSG\x08",  $comment, PLUGIN_COMMENT_FORMAT_STRING);
 		$comment = str_replace("\x08NAME\x08", $_name, $comment);
 		$comment = str_replace("\x08NOW\x08",  $_now,  $comment);
 	}
-	else {
-		$comment = $_msg;
-	}
 	$comment = $head . $comment;
 
-	$postdata = '';
+	$postdata      = '';
 	$postdata_old  = get_source($vars['refer']);
-	$comment_no = 0;
-	$comment_ins = ($vars['above'] == '1');
+	$comment_no    = 0;
+	$comment_ins   = ($vars['above'] == '1');
 
 	foreach ($postdata_old as $line) {
 		if (! $comment_ins) $postdata .= $line;
 		if (preg_match('/^#comment/i', $line) && $comment_no++ == $vars['comment_no']) {
-			$postdata = rtrim($postdata) . "\n-$comment\n";
+			$postdata = rtrim($postdata) . "\n" .
+				'-' . $comment . "\n";
 			if ($comment_ins) $postdata .= "\n";
 		}
 		if ($comment_ins) $postdata .= $line;
@@ -82,9 +81,9 @@ function plugin_comment_action()
 
 function plugin_comment_convert()
 {
-	global $script, $vars, $digest;
-	global $_btn_comment, $_btn_name, $_msg_comment;
+	global $vars, $digest, $_btn_comment, $_btn_name, $_msg_comment;
 	static $numbers = array();
+	static $comment_cols = PLUGIN_COMMENT_SIZE_MSG;
 
 	if (PKWK_READONLY) return ''; // Show nothing
 
@@ -92,28 +91,29 @@ function plugin_comment_convert()
 	$comment_no = $numbers[$vars['page']]++;
 
 	$options = func_num_args() ? func_get_args() : array();
-
 	if (in_array('noname', $options)) {
-		$nametags = '<label for="_p_comment_comment_' . $comment_no . '">' . $_msg_comment . '</label>';
+		$nametags = '<label for="_p_comment_comment_' . $comment_no . '">' .
+			$_msg_comment . '</label>';
 	} else {
-		$nametags = '<label for="_p_comment_name_' . $comment_no . '">' . $_btn_name . '</label>' .
-			'<input type="text" name="name" id="_p_comment_name_' . $comment_no .
-			'" size="' . PLUGIN_COMMENT_SIZE_NAME . '" />' . "\n";
+		$nametags = '<label for="_p_comment_name_' . $comment_no . '">' .
+			$_btn_name . '</label>' .
+			'<input type="text" name="name" id="_p_comment_name_' .
+			$comment_no .  '" size="' . PLUGIN_COMMENT_SIZE_NAME .
+			'" />' . "\n";
 	}
-
 	$nodate = in_array('nodate', $options) ? '1' : '0';
 	$above  = in_array('above',  $options) ? '1' :
 		(in_array('below', $options) ? '0' : PLUGIN_COMMENT_DIRECTION_DEFAULT);
 
+	$script = get_script_uri();
 	$s_page = htmlspecialchars($vars['page']);
-	static $comment_cols = PLUGIN_COMMENT_SIZE_MSG;
 	$string = <<<EOD
 <br />
 <form action="$script" method="post">
  <div>
-  <input type="hidden" name="comment_no" value="$comment_no" />
-  <input type="hidden" name="refer"  value="$s_page" />
   <input type="hidden" name="plugin" value="comment" />
+  <input type="hidden" name="refer"  value="$s_page" />
+  <input type="hidden" name="comment_no" value="$comment_no" />
   <input type="hidden" name="nodate" value="$nodate" />
   <input type="hidden" name="above"  value="$above" />
   <input type="hidden" name="digest" value="$digest" />
