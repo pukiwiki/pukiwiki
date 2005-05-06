@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: lookup.inc.php,v 1.20 2005/05/06 05:56:04 henoheno Exp $
+// $Id: lookup.inc.php,v 1.21 2005/05/06 05:59:43 henoheno Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // InterWiki lookup plugin
 
