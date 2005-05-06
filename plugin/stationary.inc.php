@@ -1,5 +1,5 @@
 <?php
-// $Id: stationary.inc.php,v 1.5 2005/04/02 07:43:19 henoheno Exp $
+// $Id: stationary.inc.php,v 1.6 2005/05/06 12:27:18 henoheno Exp $
 //
 // Stationary plugin
 // License: The same as PukiWiki
@@ -36,11 +36,11 @@ function plugin_stationary_convert()
 	if (func_num_args()) {
 		$args = func_get_args();
 		foreach	(array_keys($args) as $key)
-			$args[$key] = htmlspecialchars(trim($args[$key]));
-		$result = '(' . join(',', $args) . ')';
+			$args[$key] = trim($args[$key]);
+		$result = join(',', $args);
 	}
 
-	return '#stationary' . $result . '<br />';
+	return '#stationary(' . htmlspecialchars($result) . ')<br />';
 }
 
 // In-line type plugin: &stationary; or &stationary(foo); , or &stationary(foo){bar};
@@ -48,9 +48,15 @@ function plugin_stationary_inline()
 {
 	if (PKWK_SAFE_MODE || PKWK_READONLY) return ''; // See above
 
-	$result = '&stationary(){};';
+	// {bar} is always exists, and already sanitized
+	$args = func_get_args();
+	$body = strip_htmltag(array_pop($args)); // {bar}. strip_htmltag() is just for AutoLink insertion
 
-	return htmlspecialchars($result);
+	foreach	(array_keys($args) as $key)
+		$args[$key] = trim($args[$key]);
+	$result = join(',', $args);
+
+	return '&stationary(' . htmlspecialchars($result) . '){' . $body . '};';
 }
 
 // Action-type plugin: ?plugin=stationary&foo=bar
