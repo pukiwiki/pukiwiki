@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: comment.inc.php,v 1.30 2005/05/06 01:54:28 henoheno Exp $
+// $Id: comment.inc.php,v 1.31 2005/05/06 01:59:34 henoheno Exp $
 //
 // Comment plugin
 
@@ -21,17 +21,16 @@ function plugin_comment_action()
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
-	if (! isset($vars['msg']) || $vars['msg'] == '')
-		return array('msg'=>'', 'body'=>'');
+	if (! isset($vars['msg'])) return array('msg'=>'', 'body'=>''); // Do nothing
 
 	$vars['msg'] = preg_replace("/\n/", '', $vars['msg']); // Cut LFs
-
 	$head = '';
 	$match = array();
 	if (preg_match('/^(-{1,2})-*\s*(.*)/', $vars['msg'], $match)) {
 		$head        = & $match[1];
 		$vars['msg'] = & $match[2];
 	}
+	if ($vars['msg'] == '') return array('msg'=>'', 'body'=>''); // Do nothing
 
 	$comment  = str_replace('$msg', $vars['msg'], PLUGIN_COMMENT_FORMAT_MSG);
 	if(isset($vars['name']) || ($vars['nodate'] != '1')) {
