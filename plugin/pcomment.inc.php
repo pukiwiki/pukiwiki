@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pcomment.inc.php,v 1.40 2005/03/08 17:58:38 teanan Exp $
+// $Id: pcomment.inc.php,v 1.41 2005/05/06 08:34:47 henoheno Exp $
 //
 // pcomment plugin - Insetring comment into specified (another) page
 
@@ -132,7 +132,6 @@ function plugin_pcomment_convert()
 			'<input type="radio" name="reply" value="0" tabindex="0" checked="checked" />' : '';
 		$comment = '<input type="text" name="msg" size="' . PCMT_COLS_COMMENT . '" />';
 
-		// Excape
 		$s_page   = htmlspecialchars($page);
 		$s_refer  = htmlspecialchars($vars_page);
 		$s_nodate = htmlspecialchars($params['nodate']);
