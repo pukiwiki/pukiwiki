@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: comment.inc.php,v 1.29 2005/05/06 01:50:29 henoheno Exp $
+// $Id: comment.inc.php,v 1.30 2005/05/06 01:54:28 henoheno Exp $
 //
 // Comment plugin
 
@@ -28,7 +28,7 @@ function plugin_comment_action()
 
 	$head = '';
 	$match = array();
-	if (preg_match('/^(-{1,2})\s*(.*)/', $vars['msg'], $match)) {
+	if (preg_match('/^(-{1,2})-*\s*(.*)/', $vars['msg'], $match)) {
 		$head        = & $match[1];
 		$vars['msg'] = & $match[2];
 	}
@@ -45,7 +45,7 @@ function plugin_comment_action()
 		$comment = str_replace("\x08NAME\x08", $_name, $comment);
 		$comment = str_replace("\x08NOW\x08",  $_now,  $comment);
 	}
-	$comment = $head . $comment;
+	$comment = $head . ' ' . $comment;
 
 	$postdata      = '';
 	$postdata_old  = get_source($vars['refer']);
