@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: new.inc.php,v 1.7 2005/04/02 06:31:06 henoheno Exp $
+// $Id: new.inc.php,v 1.8 2005/05/06 11:42:05 henoheno Exp $
 //
 // New! plugin
 //
@@ -28,7 +28,8 @@ function plugin_new_inline()
 
 	$retval = '';
 	$args = func_get_args();
-	$date = array_pop($args); // {date} always exists
+	// {date} always exists. strip_htmltag() is just for AutoLink insertion
+	$date = strip_htmltag(array_pop($args));
 
 	if($date !== '') {
 		// Show 'New!' message by the time of the $date string
