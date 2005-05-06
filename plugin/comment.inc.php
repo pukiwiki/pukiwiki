@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: comment.inc.php,v 1.31 2005/05/06 01:59:34 henoheno Exp $
+// $Id: comment.inc.php,v 1.32 2005/05/06 04:27:30 henoheno Exp $
 //
 // Comment plugin
 
@@ -36,29 +36,31 @@ function plugin_comment_action()
 	if(isset($vars['name']) || ($vars['nodate'] != '1')) {
 		$_name = (! isset($vars['name']) || $vars['name'] == '') ? $_no_name : $vars['name'];
 		$_name = ($_name == '') ? '' : str_replace('$name', $_name, PLUGIN_COMMENT_FORMAT_NAME);
-
 		$_now  = ($vars['nodate'] == '1') ? '' :
 			str_replace('$now', $now, PLUGIN_COMMENT_FORMAT_NOW);
-
 		$comment = str_replace("\x08MSG\x08",  $comment, PLUGIN_COMMENT_FORMAT_STRING);
 		$comment = str_replace("\x08NAME\x08", $_name, $comment);
 		$comment = str_replace("\x08NOW\x08",  $_now,  $comment);
 	}
-	$comment = $head . ' ' . $comment;
+	$comment = '-' . $head . ' ' . $comment;
 
-	$postdata      = '';
-	$postdata_old  = get_source($vars['refer']);
-	$comment_no    = 0;
-	$comment_ins   = ($vars['above'] == '1');
-
-	foreach ($postdata_old as $line) {
-		if (! $comment_ins) $postdata .= $line;
+	$postdata    = '';
+	$comment_no  = 0;
+	$above       = (isset($vars['above']) && $vars['above'] == '1');
+	foreach (get_source($vars['refer']) as $line) {
+		if (! $above) $postdata .= $line;
 		if (preg_match('/^#comment/i', $line) && $comment_no++ == $vars['comment_no']) {
-			$postdata = rtrim($postdata) . "\n" .
-				'-' . $comment . "\n";
-			if ($comment_ins) $postdata .= "\n";
+			if ($above) {
+				$postdata = rtrim($postdata) . "\n" .
+					$comment . "\n" .
+					"\n";  // Insert one blank line above #commment, To avoid indentation
+			} else {
+				$postdata = rtrim($postdata) . "\n" .
+					"\n" . // Insert one blank line below #commment, too (only by design)
+					$comment; // "\n" is already there or EOF
+			}
 		}
-		if ($comment_ins) $postdata .= $line;
+		if ($above) $postdata .= $line;
 	}
 
 	$title = $_title_updated;
