@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: comment.inc.php,v 1.32 2005/05/06 04:27:30 henoheno Exp $
+// $Id: comment.inc.php,v 1.33 2005/05/06 04:32:26 henoheno Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // Comment plugin
 
