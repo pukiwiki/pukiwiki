@@ -1,11 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.inc.php,v 1.21 2005/05/07 15:48:52 henoheno Exp $
+// $Id: backup.inc.php,v 1.22 2005/05/07 16:21:51 henoheno Exp $
 //
 // Backup plugin
 
 // Prohibit rendering old wiki texts (suppresses load, transfer rate, and security risk)
-define('PLUGIN_BACKUP_DISABLE_BACKUP_RENDERING', PKWK_SAFE_MODE);
+define('PLUGIN_BACKUP_DISABLE_BACKUP_RENDERING', PKWK_SAFE_MODE || PKWK_OPTIMISE);
 
 function plugin_backup_action()
 {
