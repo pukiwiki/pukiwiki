@@ -1,8 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.inc.php,v 1.20 2005/05/07 15:26:59 henoheno Exp $
+// $Id: backup.inc.php,v 1.21 2005/05/07 15:48:52 henoheno Exp $
 //
 // Backup plugin
+
+// Prohibit rendering old wiki texts (suppresses load, transfer rate, and security risk)
+define('PLUGIN_BACKUP_DISABLE_BACKUP_RENDERING', PKWK_SAFE_MODE);
 
 function plugin_backup_action()
 {
@@ -100,9 +103,13 @@ function plugin_backup_action()
 		$body .= '<pre>' . htmlspecialchars(join('', $backups[$s_age]['data'])) .
 			'</pre>' . "\n";
 	} else {
-		$title = & $_title_backup;
-		$body .= $hr . "\n" .
-			drop_submit(convert_html($backups[$s_age]['data']));
+		if (PLUGIN_BACKUP_DISABLE_BACKUP_RENDERING) {
+			die_message('This feature is prohibited');
+		} else {
+			$title = & $_title_backup;
+			$body .= $hr . "\n" .
+				drop_submit(convert_html($backups[$s_age]['data']));
+		}
 	}
 
 	return array('msg'=>str_replace('$2', $s_age, $title), 'body'=>$body);
@@ -201,10 +208,15 @@ EOD;
 	$retval[1] .= '</a></li>' . "\n";
 
 	$href = $script . '?cmd=backup&amp;page=' . $r_page . '&amp;age=';
+	$_anchor_from = $_anchor_to   = '';
 	foreach ($backups as $age=>$data) {
+		if (! PLUGIN_BACKUP_DISABLE_BACKUP_RENDERING) {
+			$_anchor_from = '<a href="' . $href . $age . '">';
+			$_anchor_to   = '</a>';
+		}
 		$date = format_date($data['time'], TRUE);
 		$retval[1] .= <<<EOD
-   <li><a href="$href$age">$age $date</a>
+   <li>$_anchor_from$age $date$_anchor_to
      [ <a href="$href$age&amp;action=diff">$_msg_diff</a>
      | <a href="$href$age&amp;action=nowdiff">$_msg_nowdiff</a>
      | <a href="$href$age&amp;action=source">$_msg_source</a>
