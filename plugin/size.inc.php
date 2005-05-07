@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: size.inc.php,v 1.8 2005/01/02 06:54:12 henoheno Exp $
+// $Id: size.inc.php,v 1.9 2005/05/07 10:05:23 henoheno Exp $
 //
 // Text-size changing via CSS plugin
 
@@ -15,6 +15,11 @@ function plugin_size_inline()
 	if (func_num_args() != 2) return PLUGIN_SIZE_USAGE;
 
 	list($size, $body) = func_get_args();
+
+	// strip_htmltag() just for avoiding AutoLink insertion
+	// -- is not needed for size plugin
+	//$body = strip_htmltag($body);
+	
 	if ($size == '' || $body == '' || ! preg_match('/^\d+$/', $size))
 		return PLUGIN_SIZE_USAGE;
 
