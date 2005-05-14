@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.23 2005/05/01 02:43:27 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.24 2005/05/14 14:12:59 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -43,7 +43,9 @@ if (! defined('UI_LANG')) die('UI_LANG is not set');
 if (! isset($_LANG)) die('$_LANG is not set');
 if (! defined('PKWK_READONLY')) die('PKWK_READONLY is not set');
 
-// Check theme
+// ------------------------------------------------------------
+// Check tDiary theme
+
 $theme = TDIARY_THEME;
 if ($theme == '' || $theme == 'TDIARY_THEME') {
 	die('Theme is not specified. Set "TDIARY_THEME" correctly');
@@ -60,7 +62,7 @@ if ($theme == '' || $theme == 'TDIARY_THEME') {
 }
 
 // ------------------------------------------------------------
-// Exception
+// tDiary theme: Exception
 
 // Adjust DTD (bug between these theme(=CSS) and MSIE)
 // NOTE:
@@ -81,7 +83,8 @@ case 'hatena':
 }
 
 // ------------------------------------------------------------
-// Select CSS color theme (testing)
+// tDiary theme: Select CSS color theme (Now testing:black only)
+
 $css_theme = '';
 switch(TDIARY_THEME){
 case 'alfa':
@@ -125,7 +128,9 @@ case 'smoking_black':
 	;
 }
 
-// Select title design (which is fancy, date and text?)
+// ------------------------------------------------------------
+// tDiary theme: Page title design (which is fancy, date and text?)
+
 $title_design_date = 1; // Default: Select the date desin, or 'the same design'
 switch(TDIARY_THEME){
 case '3minutes':
@@ -179,7 +184,10 @@ case 'fluxbox3':
 	break;
 }
 
-// Sidebar: default position
+// ------------------------------------------------------------
+// tDiary 'Sidebar' position
+
+// Default position
 if (defined('TDIARY_SIDEBAR_POSITION')) {
 	$sidebar = TDIARY_SIDEBAR_POSITION;
 } else {
@@ -357,6 +365,7 @@ if ($sidebar == 'none') {
 }
 
 // ------------------------------------------------------------
+// Code continuing ...
 
 $lang  = & $_LANG['skin'];
 $link  = & $_LINK;
@@ -369,14 +378,15 @@ switch(UI_LANG){
 }
 
 // ------------------------------------------------------------
+// Output
 
-// Output HTTP headers
+// HTTP headers
 pkwk_common_headers();
 header('Cache-control: no-cache');
 header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
-// Output HTML DTD, <html>, and receive content-type
+// HTML DTD, <html>, and receive content-type
 if (isset($pkwk_dtd)) {
 	$meta_content_type = pkwk_output_dtd($pkwk_dtd);
 } else {

@@ -1,12 +1,15 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.43 2005/05/01 02:43:27 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.44 2005/05/14 14:12:59 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
 // PukiWiki default skin
+
+// ------------------------------------------------------------
+// Settings (define before here, if you want)
 
 // Set site logo
 $_IMAGE['skin']['logo']     = 'pukiwiki.png';
@@ -27,7 +30,9 @@ if (! defined('PKWK_SKIN_SHOW_NAVBAR'))
 if (! defined('PKWK_SKIN_SHOW_TOOLBAR'))
 	define('PKWK_SKIN_SHOW_TOOLBAR', 1); // 1, 0
 
-// ----
+// ------------------------------------------------------------
+// Code start
+
 // Prohibit direct access
 if (! defined('UI_LANG')) die('UI_LANG is not set');
 if (! isset($_LANG)) die('$_LANG is not set');
@@ -44,13 +49,16 @@ switch(UI_LANG){
 	case 'ja': $css_charset = 'Shift_JIS'; break;
 }
 
-// Output HTTP headers
+// ------------------------------------------------------------
+// Output
+
+// HTTP headers
 pkwk_common_headers();
 header('Cache-control: no-cache');
 header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
-// Output HTML DTD, <html>, and receive content-type
+// HTML DTD, <html>, and receive content-type
 if (isset($pkwk_dtd)) {
 	$meta_content_type = pkwk_output_dtd($pkwk_dtd);
 } else {
