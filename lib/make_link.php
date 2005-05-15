@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.22 2005/05/06 12:13:01 henoheno Exp $
+// $Id: make_link.php,v 1.23 2005/05/15 07:44:01 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -788,20 +788,18 @@ function get_interwiki_url($name, $param)
 	// Encoding
 	switch ($opt) {
 
-	case '':
-	case 'std': // As-Is (Internal encoding of this PukiWiki will be used)
+	case '':    /* FALLTHROUGH */
+	case 'std': // Simply URL-encode the string, whose base encoding is the internal-encoding
 		$param = rawurlencode($param);
 		break;
 
-	case 'asis': // As-Is
-	case 'raw':
-		// $param = htmlspecialchars($param);
+	case 'asis': /* FALLTHROUGH */
+	case 'raw' : // Truly as-is
 		break;
 
 	case 'yw': // YukiWiki
 		if (! preg_match('/' . $WikiName . '/', $param))
 			$param = '[[' . mb_convert_encoding($param, 'SJIS', SOURCE_ENCODING) . ']]';
-		// $param = htmlspecialchars($param);
 		break;
 
 	case 'moin': // MoinMoin
@@ -809,13 +807,14 @@ function get_interwiki_url($name, $param)
 		break;
 
 	default:
-		// Alias conversion
-		if (isset($encode_aliases[$opt])) $opt = $encode_aliases[$opt];
+		// Alias conversion of $opt
+		if (isset($encode_aliases[$opt])) $opt = & $encode_aliases[$opt];
+
 		// Encoding conversion into specified encode, and URLencode
 		$param = rawurlencode(mb_convert_encoding($param, $opt, 'auto'));
 	}
 
-	// Replace parameters
+	// Replace or Add the parameter
 	if (strpos($url, '$1') !== FALSE) {
 		$url = str_replace('$1', $param, $url);
 	} else {
