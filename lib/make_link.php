@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.23 2005/05/15 07:44:01 henoheno Exp $
+// $Id: make_link.php,v 1.24 2005/05/15 07:45:54 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -811,7 +811,7 @@ function get_interwiki_url($name, $param)
 		if (isset($encode_aliases[$opt])) $opt = & $encode_aliases[$opt];
 
 		// Encoding conversion into specified encode, and URLencode
-		$param = rawurlencode(mb_convert_encoding($param, $opt, 'auto'));
+		$param = rawurlencode(mb_convert_encoding($param, $opt, SOURCE_ENCODING));
 	}
 
 	// Replace or Add the parameter
