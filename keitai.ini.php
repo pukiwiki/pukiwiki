@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: keitai.ini.php,v 1.22 2005/05/16 12:49:00 henoheno Exp $
+// $Id: keitai.ini.php,v 1.23 2005/05/16 13:25:43 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -44,10 +44,17 @@ $_list_pad_str   = '';
 $top = '';
 
 /////////////////////////////////////////////////
+// 添付ファイルの一覧を常に表示する (負担がかかります)
+// ※keitaiスキンにはこの一覧を表示する機能がありません
+$attach_link = 0;
+
+/////////////////////////////////////////////////
 // 関連するページのリンク一覧を常に表示する(負担がかかります)
+// ※keitaiスキンにはこの一覧を表示する機能がありません
 $related_link = 0;
 
 // リンク一覧の区切り文字
+// ※上同
 $related_str = "\n ";
 
 // (#relatedプラグインが表示する) リンク一覧の区切り文字

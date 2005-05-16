@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: default.ini.php,v 1.22 2005/05/16 12:49:00 henoheno Exp $
+// $Id: default.ini.php,v 1.23 2005/05/16 13:25:43 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -50,6 +50,10 @@ $rows = 20;
 /////////////////////////////////////////////////
 // 大・小見出しから目次へ戻るリンクの文字
 $top = $_msg_content_back_to_top;
+
+/////////////////////////////////////////////////
+// 添付ファイルの一覧を常に表示する (負担がかかります)
+$attach_link = 1;
 
 /////////////////////////////////////////////////
 // 関連するページのリンク一覧を常に表示する(負担がかかります)

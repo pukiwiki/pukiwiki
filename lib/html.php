@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.35 2005/05/06 12:35:21 henoheno Exp $
+// $Id: html.php,v 1.36 2005/05/16 13:25:43 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -12,8 +12,8 @@
 function catbody($title, $page, $body)
 {
 	global $script, $vars, $arg, $defaultpage, $whatsnew, $help_page, $hr;
-	global $related_link, $cantedit, $function_freeze, $search_word_color, $_msg_word;
-	global $foot_explain, $note_hr, $head_tags;
+	global $attach_link, $related_link, $cantedit, $function_freeze;
+	global $search_word_color, $_msg_word, $foot_explain, $note_hr, $head_tags;
 	global $trackback, $trackback_javascript, $referer, $javascript;
 	global $_LANG, $_LINK, $_IMAGE;
 
@@ -96,11 +96,12 @@ function catbody($title, $page, $body)
 	$lastmodified = $is_read ?  get_date('D, d M Y H:i:s T', get_filetime($_page)) .
 		' ' . get_pg_passage($_page, FALSE) : '';
 
-	// List of related pages
-	$related = ($is_read && $related_link) ? make_related($_page) : '';
+	// List of attached files to the page
+	$attaches = ($attach_link && $is_read && exist_plugin_action('attach')) ?
+		attach_filelist() : '';
 
-	// List of attached files of the page
-	$attaches = ($is_read && exist_plugin_action('attach')) ? attach_filelist() : '';
+	// List of related pages
+	$related  = ($related_link && $is_read) ? make_related($_page) : '';
 
 	// List of footnotes
 	ksort($foot_explain, SORT_NUMERIC);
