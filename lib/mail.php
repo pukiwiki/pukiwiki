@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: mail.php,v 1.3 2005/04/29 11:24:20 henoheno Exp $
+// $Id: mail.php,v 1.4 2005/05/22 03:20:52 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2003      Originally written by upk
@@ -22,25 +22,25 @@ function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 	// Compat: GLOBALS > function arguments
 	foreach(array('pop_userid', 'pop_passwd', 'pop_server', 'pop_port') as $global) {
 		if(isset($GLOBALS[$global]) && $GLOBALS[$global] !== '')
-			${$global} = $GLOBALS[$global];
+			$$global = $GLOBALS[$global];
 	}
 
 	// Check
 	$die = '';
 	foreach(array('pop_userid', 'pop_server', 'pop_port') as $global)
-		if(${$global} == '') $die .= "pop_before_smtp(): \$$global seems blank\n";
+		if($$global == '') $die .= 'pop_before_smtp(): $' . $global . ' seems blank' . "\n";
 	if ($die) return ($die);
 
 	// Connect
 	$errno = 0; $errstr = '';
 	$fp = @fsockopen($pop_server, $pop_port, $errno, $errstr, 30);
-	if (! $fp) return ("pop_before_smtp(): $errstr ($errno)");
+	if (! $fp) return ('pop_before_smtp(): ' . $errstr . ' (' . $errno . ')');
 
 	// Greeting message from server, may include <challenge-string> of APOP
 	$message = fgets($fp, 1024); // 512byte max
 	if (! preg_match('/^\+OK/', $message)) {
 		fclose($fp);
-		return ("pop_before_smtp(): Greeting message seems invalid");
+		return ('pop_before_smtp(): Greeting message seems invalid');
 	}
 
 	$challenge = array();
@@ -59,25 +59,26 @@ function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 		$message = fgets($fp, 1024); // 512byte max
 		if (! preg_match('/^\+OK/', $message)) {
 			fclose($fp);
-			return ("pop_before_smtp(): USER seems invalid");
+			return ('pop_before_smtp(): USER seems invalid');
 		}
 		fputs($fp, 'PASS ' . $pop_passwd . "\r\n");
 	}
 
 	$result = fgets($fp, 1024); // 512byte max, auth result
 	$auth   = preg_match('/^\+OK/', $result);
+
 	if ($auth) {
-		fputs($fp, "STAT\r\n"); // STAT, trigger SMTP relay!
+		fputs($fp, 'STAT' . "\r\n"); // STAT, trigger SMTP relay!
 		$message = fgets($fp, 1024); // 512byte max
 	}
 
-	// Disconnect
-	fputs($fp, "QUIT\r\n");
-	$message = fgets($fp, 1024); // 512byte max, last "+OK"
+	// Disconnect anyway
+	fputs($fp, 'QUIT' . "\r\n");
+	$message = fgets($fp, 1024); // 512byte max, last '+OK'
 	fclose($fp);
 
 	if (! $auth) {
-		return ("pop_before_smtp(): $method authentication failed");
+		return ('pop_before_smtp(): ' . $method . ' authentication failed');
 	} else {
 		return TRUE;	// Success
 	}
