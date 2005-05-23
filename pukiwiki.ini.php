@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.122 2005/04/30 11:35:43 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.123 2005/05/23 14:22:29 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -122,6 +122,11 @@ $menubar      = 'MenuBar';       // Menu
 //$pkwk_dtd = PKWK_DTD_XHTML_1_0_TRANSITIONAL;
 //$pkwk_dtd = PKWK_DTD_HTML_4_01_STRICT;
 //$pkwk_dtd = PKWK_DTD_HTML_4_01_TRANSITIONAL;
+
+/////////////////////////////////////////////////
+// Always output "nofollow,noindex" attribute
+
+$nofollow = 0; // 1 = Hide from search engines
 
 /////////////////////////////////////////////////
 

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.45 2005/05/14 14:30:42 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.46 2005/05/23 14:22:30 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -69,7 +69,7 @@ if (isset($pkwk_dtd)) {
 <head>
  <?php echo $meta_content_type ?>
  <meta http-equiv="content-style-type" content="text/css" />
-<?php if (! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
+<?php if ($nofollow || ! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
 <?php if (PKWK_ALLOW_JAVASCRIPT && isset($javascript)) { ?> <meta http-equiv="Content-Script-Type" content="text/javascript" /><?php } ?>
 
  <title><?php echo $title ?> - <?php echo $page_title ?></title>
