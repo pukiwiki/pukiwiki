@@ -1,4 +1,5 @@
 #freeze
+#nofollow
 #norelated
 * テキスト整形のルール [#oca54177]
 
