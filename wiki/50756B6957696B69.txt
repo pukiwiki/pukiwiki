@@ -1,4 +1,5 @@
 #freeze
+#nofollow
 #norelated
 * PukiWiki [#v1621880]
 
