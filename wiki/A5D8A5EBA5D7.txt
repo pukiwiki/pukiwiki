@@ -1,4 +1,5 @@
 #freeze
+#nofollow
 #norelated
 * [[PukiWiki]]¥Ø¥ë¥× [#s14a5adf]
 
