@@ -1,15 +1,19 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: img.inc.php,v 1.13 2005/01/06 12:40:56 henoheno Exp $
+// $Id: img.inc.php,v 1.14 2005/05/28 13:31:57 henoheno Exp $
 //
 // Inline-image plugin
 
 define('PLUGIN_IMG_USAGE', '#img(): Usage: (URI-to-image[,right[,clear]])<br />' . "\n");
 define('PLUGIN_IMG_CLEAR', '<div style="clear:both"></div>' . "\n"); // Stop word-wrapping
 
-// 画像をインライン表示
+// Output inline-image tag from a URI
 function plugin_img_convert()
 {
+	if (PKWK_DISABLE_INLINE_IMAGE_FROM_URI)
+		return '#img(): PKWK_DISABLE_INLINE_IMAGE_FROM_URI prohibits this' .
+			'<br>' . "\n";
+
 	$args = func_get_args();
 
 	// Check the 2nd argument first, for compatibility

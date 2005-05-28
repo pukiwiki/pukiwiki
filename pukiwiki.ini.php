@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.123 2005/05/23 14:22:29 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.124 2005/05/28 13:31:56 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -28,6 +28,13 @@ if (! defined('PKWK_READONLY'))
 // PKWK_SAFE_MODE - Prohibits some unsafe(but compatible) functions 
 if (! defined('PKWK_SAFE_MODE'))
 	define('PKWK_SAFE_MODE', 0);
+
+// PKWK_DISABLE_INLINE_IMAGE_FROM_URI - Disallow using inline-image-tag for URIs
+//   Inline-image-tag for URIs may allow leakage of Wiki readers' information
+//   (in short, 'Web bug') or external malicious CGI (looks like an image's URL)
+//   attack to Wiki readers, but easy way to show images.
+if (! defined('PKWK_DISABLE_INLINE_IMAGE_FROM_URI'))
+	define('PKWK_DISABLE_INLINE_IMAGE_FROM_URI', 0);
 
 // PKWK_QUERY_STRING_MAX
 //   Max length of GET method, prohibits some worm attack ASAP
