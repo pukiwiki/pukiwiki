@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.13.2.3 2005/03/21 17:57:41 teanan Exp $
+// $Id: file.php,v 1.13.2.4 2005/05/29 18:47:05 teanan Exp $
 //
 // File related functions
 
@@ -27,6 +27,7 @@ function get_filename($page)
 function page_write($page, $postdata, $notimestamp = FALSE)
 {
 	global $trackback;
+	global $autoalias, $aliaspage;
 
 	if (PKWK_READONLY) return; // Do nothing
 
@@ -52,6 +53,18 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	}
 
 	links_update($page);
+
+	// for AutoAlias
+	if ($autoalias>0 && $page==$aliaspage) {
+		// AutoAliasName is updated
+		$pages = array_keys(get_autoaliases());
+		if(count($pages)>0) {
+			autolink_pattern_write(CACHE_DIR . 'autoalias.dat',
+				get_autolink_pattern($pages, $autoalias));
+		} else {
+			@unlink(CACHE_DIR . 'autoalias.dat');
+		}
+	}
 }
 
 // User-defined rules (replace the source)
@@ -90,7 +103,6 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	global $notify, $notify_diff_only, $notify_to, $notify_subject, $notify_header;
 	global $smtp_server, $smtp_auth;
 	global $whatsdeleted, $maxshow_deleted;
-	global $autoalias, $aliaspage;
 
 	if (PKWK_READONLY) return; // Do nothing
 
@@ -152,17 +164,6 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 
 		if ($smtp_auth) pop_before_smtp();
  		mb_send_mail($notify_to, $subject, $str, $notify_header);
-	}
-	// for AutoAlias
-	if ($autoalias>0 && $page==$aliaspage) {
-		// AutoAliasName is updated
-		$pages = array_keys(get_autoaliases());
-		if(count($pages)>0) {
-			autolink_pattern_write(CACHE_DIR . 'autoalias.dat',
-				get_autolink_pattern($pages, $autoalias));
-		} else {
-			@unlink(CACHE_DIR . 'autoalias.dat');
-		}
 	}
 }
 
