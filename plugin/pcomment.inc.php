@@ -1,58 +1,46 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pcomment.inc.php,v 1.41 2005/05/06 08:34:47 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.42 2005/05/29 10:49:59 henoheno Exp $
 //
-// pcomment plugin - Insetring comment into specified (another) page
+// pcomment plugin - Show/Insert comments into specified (another) page
+//
+// Usage: #pcomment([page][,max][,options])
+//
+//   page -- An another page-name that holds comments
+//           (default:PLUGIN_PCOMMENT_PAGE)
+//   max  -- Max number of recent comments to show
+//           (0:Show all, default:PLUGIN_PCOMMENT_NUM_COMMENTS)
+//
+// Options:
+//   above -- Comments are listed above the #pcomment (added by chronological order)
+//   below -- Comments are listed below the #pcomment (by reverse order)
+//   reply -- Show radio buttons allow to specify where to reply
 
-/*
+// Default recording page name (%s = $vars['page'] = original page name)
+switch (LANG) {
+case 'ja': define('PLUGIN_PCOMMENT_PAGE', '[[コメント/%s]]'); break;
+default:   define('PLUGIN_PCOMMENT_PAGE', '[[Comments/%s]]'); break;
+}
 
-*Usage
- #pcomment([ページ名][,表示するコメント数][,オプション])
+define('PLUGIN_PCOMMENT_NUM_COMMENTS',     10); // Default 'latest N posts'
+define('PLUGIN_PCOMMENT_DIRECTION_DEFAULT', 1); // 1: above 0: below
+define('PLUGIN_PCOMMENT_SIZE_MSG',  70);
+define('PLUGIN_PCOMMENT_SIZE_NAME', 15);
 
-*パラメータ
--ページ名~
- 投稿されたコメントを記録するページの名前
--表示するコメント数~
- 過去のコメントを何件表示するか(0で全件)
+// Auto log rotation
+define('PLUGIN_PCOMMENT_AUTO_LOG', 0); // 0:off 1-N:number of comments per page
 
-*オプション
--above~
- コメントをフィールドの前に表示(新しい記事が下)
--below~
- コメントをフィールドの後に表示(新しい記事が上)
--reply~
- 2レベルまでのコメントにリプライをつけるradioボタンを表示
+// Update recording page's timestamp instead of parent's page itself
+define('PLUGIN_PCOMMENT_TIMESTAMP', 0);
 
-*/
+// ----
+define('PLUGIN_PCOMMENT_FORMAT_NAME',	'[[$name]]');
+define('PLUGIN_PCOMMENT_FORMAT_MSG',	'$msg');
+define('PLUGIN_PCOMMENT_FORMAT_NOW',	'&new{$now};');
 
-// ページ名のデフォルト(%sに$vars['page']が入る)
-define('PCMT_PAGE', '[[コメント/%s]]');
-
-// 表示するコメント数のデフォルト
-define('PCMT_NUM_COMMENTS', 10);
-
-// コメントの名前テキストエリアのカラム数
-define('PCMT_COLS_NAME', 15);
-
-// コメントのテキストエリアのカラム数
-define('PCMT_COLS_COMMENT', 70);
-
-// 挿入する位置 1:末尾 0:先頭
-define('PCMT_INSERT_INS', 1);
-
-// コメントの挿入フォーマット
-// \x08は、投稿された文字列中に現れない文字であればなんでもいい。
-define('PCMT_NAME_FORMAT',	'[[$name]]');
-define('PCMT_MSG_FORMAT',	'$msg');
-define('PCMT_NOW_FORMAT',	'&new{$now};');
-define('PCMT_FORMAT',	"\x08MSG\x08 -- \x08NAME\x08 \x08DATE\x08");
-
-// 自動過去ログ化 1ページあたりの件数を指定 0で無効
-define('PCMT_AUTO_LOG', 0);
-
-// コメントページのタイムスタンプを更新せず、設置ページの
-// タイムスタンプを更新する
-define('PCMT_TIMESTAMP', 0);
+// "\x01", "\x02", "\x03", and "\x08" are used just as markers
+define('PLUGIN_PCOMMENT_FORMAT_STRING',
+	"\x08" . 'MSG' . "\x08" . ' -- ' . "\x08" . 'NAME' . "\x08" . ' ' . "\x08" . 'DATE' . "\x08");
 
 function plugin_pcomment_action()
 {
@@ -63,7 +51,7 @@ function plugin_pcomment_action()
 	if (! isset($vars['msg']) || $vars['msg'] == '') return array();
 	$refer = isset($vars['refer']) ? $vars['refer'] : '';
 
-	$retval = pcmt_insert();
+	$retval = plugin_pcomment_insert();
 	if ($retval['collided']) {
 		$vars['page'] = $refer;
 		return $retval;
@@ -76,13 +64,11 @@ function plugin_pcomment_action()
 
 function plugin_pcomment_convert()
 {
-	global $script, $vars;
+	global $vars;
 	global $_pcmt_messages;
 
-	// 戻り値
 	$ret = '';
 
-	// パラメータ変換
 	$params = array(
 		'noname'=>FALSE,
 		'nodate'=>FALSE,
@@ -91,53 +77,51 @@ function plugin_pcomment_convert()
 		'reply' =>FALSE,
 		'_args' =>array()
 	);
-	array_walk(func_get_args(), 'pcmt_check_arg', & $params);
+	array_walk(func_get_args(), 'plugin_pcomment_check_arg', & $params);
 
-	// 文字列を取得
 	$vars_page = isset($vars['page']) ? $vars['page'] : '';
 	$page  = (isset($params['_args'][0]) && $params['_args'][0] != '') ? $params['_args'][0] :
-		sprintf(PCMT_PAGE, strip_bracket($vars_page));
+		sprintf(PLUGIN_PCOMMENT_PAGE, strip_bracket($vars_page));
 	$count = (isset($params['_args'][1]) && $params['_args'][1] != '') ? $params['_args'][1] : 0;
 	if ($count == 0 && $count !== '0')
-		$count = PCMT_NUM_COMMENTS;
+		$count = PLUGIN_PCOMMENT_NUM_COMMENTS;
 
 	$_page = get_fullname(strip_bracket($page), $vars_page);
 	if (!is_pagename($_page))
 		return sprintf($_pcmt_messages['err_pagename'], htmlspecialchars($_page));
 
-	// 新しいコメントを追加する方向を決定
-	$dir = PCMT_INSERT_INS;
+	$dir = PLUGIN_PCOMMENT_DIRECTION_DEFAULT;
 	if ($params['below']) {
-		$dir = 0;	// 両方指定されたら、formの下に (^^;
+		$dir = 0;
 	} elseif ($params['above']) {
 		$dir = 1;
 	}
 
-	// コメントを取得
-	list($comments, $digest) = pcmt_get_comments($_page, $count, $dir, $params['reply']);
+	list($comments, $digest) = plugin_pcomment_get_comments($_page, $count, $dir, $params['reply']);
 
 	if (PKWK_READONLY) {
 		$form_start = $form = $form_end = '';
 	} else {
-		// フォームを表示
+		// Show a form
+
 		if ($params['noname']) {
 			$title = $_pcmt_messages['msg_comment'];
 			$name = '';
 		} else {
 			$title = $_pcmt_messages['btn_name'];
-			$name = '<input type="text" name="name" size="' . PCMT_COLS_NAME . '" />';
+			$name = '<input type="text" name="name" size="' . PLUGIN_PCOMMENT_SIZE_NAME . '" />';
 		}
 
 		$radio   = $params['reply'] ?
 			'<input type="radio" name="reply" value="0" tabindex="0" checked="checked" />' : '';
-		$comment = '<input type="text" name="msg" size="' . PCMT_COLS_COMMENT . '" />';
+		$comment = '<input type="text" name="msg" size="' . PLUGIN_PCOMMENT_SIZE_MSG . '" />';
 
 		$s_page   = htmlspecialchars($page);
 		$s_refer  = htmlspecialchars($vars_page);
 		$s_nodate = htmlspecialchars($params['nodate']);
 		$s_count  = htmlspecialchars($count);
 
-		$form_start = '<form action="' . $script . '" method="post">' . "\n";
+		$form_start = '<form action="' . get_script_uri() . '" method="post">' . "\n";
 		$form = <<<EOD
   <div>
   <input type="hidden" name="digest" value="$digest" />
@@ -182,33 +166,35 @@ EOD;
 	}
 }
 
-function pcmt_insert()
+function plugin_pcomment_insert()
 {
 	global $script, $vars, $now;
 	global $_title_updated, $_no_name, $_pcmt_messages;
 
 	$refer = isset($vars['refer']) ? $vars['refer'] : '';
-	$page = isset($vars['page']) ? $vars['page'] : '';
-	$page = get_fullname($page, $refer);
+	$page  = isset($vars['page'])  ? $vars['page']  : '';
+	$page  = get_fullname($page, $refer);
 
 	if (! is_pagename($page))
-		return array('msg'=>'invalid page name.', 'body'=>'cannot add comment.' , 'collided'=>TRUE);
+		return array(
+			'msg' =>'Invalid page name',
+			'body'=>'Cannot add comment' ,
+			'collided'=>TRUE
+		);
 
 	check_editable($page, true, true);
 
 	$ret = array('msg' => $_title_updated, 'collided' => FALSE);
 
-	//コメントフォーマットを適用
-	$msg = str_replace('$msg', rtrim($vars['msg']), PCMT_MSG_FORMAT);
-
+	$msg = str_replace('$msg', rtrim($vars['msg']), PLUGIN_PCOMMENT_FORMAT_MSG);
 	$name = (! isset($vars['name']) || $vars['name'] == '') ? $_no_name : $vars['name'];
-	$name = ($name == '') ? '' : str_replace('$name', $name, PCMT_NAME_FORMAT);
-
-	$date = (! isset($vars['nodate']) || $vars['nodate'] != '1') ? str_replace('$now', $now, PCMT_NOW_FORMAT) : '';
-	if ($date != '' or $name != '') {
-		$msg = str_replace("\x08MSG\x08", $msg,  PCMT_FORMAT);
-		$msg = str_replace("\x08NAME\x08",$name, $msg);
-		$msg = str_replace("\x08DATE\x08",$date, $msg);
+	$name = ($name == '') ? '' : str_replace('$name', $name, PLUGIN_PCOMMENT_FORMAT_NAME);
+	$date = (! isset($vars['nodate']) || $vars['nodate'] != '1') ?
+		str_replace('$now', $now, PLUGIN_PCOMMENT_FORMAT_NOW) : '';
+	if ($date != '' || $name != '') {
+		$msg = str_replace("\x08" . 'MSG'  . "\x08", $msg,  PLUGIN_PCOMMENT_FORMAT_STRING);
+		$msg = str_replace("\x08" . 'NAME' . "\x08", $name, $msg);
+		$msg = str_replace("\x08" . 'DATE' . "\x08", $date, $msg);
 	}
 
 	$reply_hash = isset($vars['reply']) ? $vars['reply'] : '';
@@ -218,109 +204,103 @@ function pcmt_insert()
 	$msg = rtrim($msg);
 
 	if (! is_page($page)) {
-		$postdata = '[[' . htmlspecialchars(strip_bracket($refer)) . "]]\n\n-$msg\n";
+		$postdata = '[[' . htmlspecialchars(strip_bracket($refer)) . ']]' . "\n\n" .
+			'-' . $msg . "\n";
 	} else {
-		//ページを読み出す
 		$postdata = get_source($page);
+		$count    = count($postdata);
 
-		// 更新の衝突を検出
 		$digest = isset($vars['digest']) ? $vars['digest'] : '';
 		if (md5(join('', $postdata)) != $digest) {
 			$ret['msg']  = $_pcmt_messages['title_collided'];
 			$ret['body'] = $_pcmt_messages['msg_collided'];
 		}
 
-		// 初期値
-		$level = 1;
-		$pos   = 0;
-
-		// コメントの開始位置を検索
-		while ($pos < count($postdata)) {
-			if (preg_match('/^\-/', $postdata[$pos])) break;
-			++$pos;
+		$start_position = 0;
+		while ($start_position < $count) {
+			if (preg_match('/^\-/', $postdata[$start_position])) break;
+			++$start_position;
 		}
-		$start_pos = $pos;
+		$end_position = $start_position;
 
 		$dir = isset($vars['dir']) ? $vars['dir'] : '';
 
-		//リプライ先のコメントを検索
+		// Find the comment to reply
+		$level   = 1;
 		$b_reply = FALSE;
 		if ($reply_hash != '') {
-			while ($pos < count($postdata)) {
+			while ($end_position < $count) {
 				$matches = array();
-				if (preg_match('/^(\-{1,2})(?!\-)(.*)$/', $postdata[$pos++], $matches)
+				if (preg_match('/^(\-{1,2})(?!\-)(.*)$/', $postdata[$end_position++], $matches)
 					&& md5($matches[2]) == $reply_hash)
 				{
 					$b_reply = TRUE;
-					$level = strlen($matches[1]) + 1; //挿入するレベル
+					$level   = strlen($matches[1]) + 1;
 
-					// コメントの末尾を検索
-					while ($pos < count($postdata)) {
-						if (preg_match('/^(\-{1,3})(?!\-)/',$postdata[$pos],$matches)
-							&& strlen($matches[1]) < $level)
-							break;
-						++$pos;
+					while ($end_position < $count) {
+						if (preg_match('/^(\-{1,3})(?!\-)/', $postdata[$end_position], $matches)
+							&& strlen($matches[1]) < $level) break;
+						++$end_position;
 					}
 					break;
 				}
 			}
 		}
 
-		if($b_reply==FALSE) {
-			$pos = ($dir == '0') ? $start_pos : count($postdata);
+		if ($b_reply == FALSE)
+			$end_position = ($dir == '0') ? $start_position : $count;
+
+		// Insert new comment
+		array_splice($postdata, $end_position, 0, str_repeat('-', $level) . $msg . "\n");
+
+		if (PLUGIN_PCOMMENT_AUTO_LOG) {
+			$_count = isset($vars['count']) ? $vars['count'] : '';
+			plugin_pcomment_auto_log($page, $dir, $_count, $postdata);
 		}
-
-		//コメントを挿入
-		array_splice($postdata, $pos, 0, str_repeat('-', $level) . "$msg\n");
-
-		// 過去ログ処理
-		$count = isset($vars['count']) ? $vars['count'] : '';
-		pcmt_auto_log($page, $dir, $count, $postdata);
 
 		$postdata = join('', $postdata);
 	}
-	page_write($page, $postdata, PCMT_TIMESTAMP);
+	page_write($page, $postdata, PLUGIN_PCOMMENT_TIMESTAMP);
 
-	if (PCMT_TIMESTAMP) {
-		// 親ページのタイムスタンプを更新する
-		if ($refer != '') touch(get_filename($refer));
+	if (PLUGIN_PCOMMENT_TIMESTAMP) {
+		if ($refer != '') pkwk_touch_file(get_filename($refer));
 		put_lastmodified();
 	}
 
 	return $ret;
 }
 
-// 過去ログ処理
-function pcmt_auto_log($page, $dir, $count, &$postdata)
+// Auto log rotation
+function plugin_pcomment_auto_log($page, $dir, $count, & $postdata)
 {
-	if (! PCMT_AUTO_LOG) return;
+	if (! PLUGIN_PCOMMENT_AUTO_LOG) return;
 
 	$keys = array_keys(preg_grep('/(?:^-(?!-).*$)/m', $postdata));
-	if (count($keys) < (PCMT_AUTO_LOG + $count)) return;
+	if (count($keys) < (PLUGIN_PCOMMENT_AUTO_LOG + $count)) return;
 
 	if ($dir) {
-		// 前からPCMT_AUTO_LOG件
-		$old = array_splice($postdata, $keys[0], $keys[PCMT_AUTO_LOG] - $keys[0]);
+		// Top N comments (N = PLUGIN_PCOMMENT_AUTO_LOG)
+		$old = array_splice($postdata, $keys[0], $keys[PLUGIN_PCOMMENT_AUTO_LOG] - $keys[0]);
 	} else {
-		// 後ろからPCMT_AUTO_LOG件
-		$old = array_splice($postdata, $keys[count($keys) - PCMT_AUTO_LOG]);
+		// Bottom N comments
+		$old = array_splice($postdata, $keys[count($keys) - PLUGIN_PCOMMENT_AUTO_LOG]);
 	}
 
-	// ページ名を決定
+	// Decide new page name
 	$i = 0;
 	do {
 		++$i;
-		$_page = "$page/$i";
+		$_page = $page . '/' . $i;
 	} while (is_page($_page));
 
-	page_write($_page, "[[$page]]\n\n" . join('', $old));
+	page_write($_page, '[[' . $page . ']]' . "\n\n" . join('', $old));
 
 	// Recurse :)
-	pcmt_auto_log($page, $dir, $count, $postdata);
+	plugin_pcomment_auto_log($page, $dir, $count, $postdata);
 }
 
-//オプションを解析する
-function pcmt_check_arg($val, $key, &$params)
+// Check arguments
+function plugin_pcomment_check_arg($val, $key, & $params)
 {
 	if ($val != '') {
 		$l_val = strtolower($val);
@@ -335,7 +315,7 @@ function pcmt_check_arg($val, $key, &$params)
 	$params['_args'][] = $val;
 }
 
-function pcmt_get_comments($page, $count, $dir, $reply)
+function plugin_pcomment_get_comments($page, $count, $dir, $reply)
 {
 	global $_msg_pcomment_restrict;
 
@@ -351,7 +331,7 @@ function pcmt_get_comments($page, $count, $dir, $reply)
 
 	$digest = md5(join('', $data));
 
-	//コメントを指定された件数だけ切り取る
+	// Get latest N comments
 	$num  = $cnt     = 0;
 	$cmts = $matches = array();
 	if ($dir) $data = array_reverse($data);
@@ -364,7 +344,8 @@ function pcmt_get_comments($page, $count, $dir, $reply)
 			// Ready for radio-buttons
 			if ($reply) {
 				++$num;
-				$cmts[] = "$matches[1]\x01$num\x02" . md5($matches[2]) . "\x03$matches[2]\n";
+				$cmts[] = $matches[1] . "\x01" . $num . "\x02" .
+					md5($matches[2]) . "\x03" . $matches[2] . "\n";
 				continue;
 			}
 		}
@@ -374,17 +355,16 @@ function pcmt_get_comments($page, $count, $dir, $reply)
 	if ($dir) $data = array_reverse($data);
 	unset($cmts, $matches);
 
-	//コメントより前のデータを取り除く。
+	// Remove lines before comments
 	while (! empty($data) && substr($data[0], 0, 1) != '-')
 		array_shift($data);
 
-	//html変換
 	$comments = convert_html($data);
 	unset($data);
 
-	// Add radio-buttons
+	// Add radio buttons
 	if ($reply)
-		$comments = preg_replace("/<li>\x01(\d+)\x02(.*)\x03/",
+		$comments = preg_replace('/<li>' . "\x01" . '(\d+)' . "\x02" . '(.*)' . "\x03" . '/',
 			'<li class="pcmt"><input class="pcmt" type="radio" name="reply" value="$2" tabindex="$1" />',
 			$comments);
 
