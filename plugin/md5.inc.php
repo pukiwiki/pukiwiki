@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.15 2005/04/11 14:59:54 henoheno Exp $
+// $Id: md5.inc.php,v 1.16 2005/06/04 01:28:53 henoheno Exp $
 //
 //  MD5 plugin
 
@@ -26,8 +26,11 @@ function plugin_md5_action()
 			$salt   = $scheme . $salt;
 		}
 
-		return array('msg'=>'MD5',
-			'body'=>pkwk_hash_compute($salt, $key, $prefix, TRUE));
+		return array(
+			'msg' =>'MD5',
+			'body'=>
+				//($prefix ? 'userPassword: ' : '') .
+				pkwk_hash_compute($salt, $key, $prefix, TRUE));
 
 	} else {
 		// If plugin=md5&md5=password, only set it (Don't compute)
@@ -54,12 +57,12 @@ function plugin_md5_action()
   <label for="_p_md5_crpt">PHP crypt() *</label><br />
 
   <input type="radio" name="scheme" id="_p_md5_lssha" value="SSHA" />
-  <label for="_p_md5_lssha">LDAP SSHA (sha-1 with a seed)</label><br />
+  <label for="_p_md5_lssha">LDAP SSHA (sha-1 with a seed) *</label><br />
   <input type="radio" name="scheme" id="_p_md5_lsha" value="SHA" />
   <label for="_p_md5_lsha">LDAP SHA (sha-1)</label><br />
 
   <input type="radio" name="scheme" id="_p_md5_lsmd5" value="SMD5" />
-  <label for="_p_md5_lsmd5">LDAP SMD5 (md5 with a seed)</label><br />
+  <label for="_p_md5_lsmd5">LDAP SMD5 (md5 with a seed) *</label><br />
   <input type="radio" name="scheme" id="_p_md5_lmd5" value="MD5" />
   <label for="_p_md5_lmd5">LDAP MD5</label><br />
 
@@ -69,10 +72,13 @@ function plugin_md5_action()
   <input type="checkbox" name="prefix" id="_p_md5_prefix" checked="checked" />
   <label for="_p_md5_prefix">Add scheme prefix (RFC2307, Using LDAP as NIS)</label><br />
 
-  <label for="_p_md5_salt">*Salt or userPassword itself:</label>
+  <label for="_p_md5_salt">Salt, '{scheme}', '{scheme}salt', or userPassword itself:</label>
   <input type="text" name="salt" id="_p_md5_salt" size="60" /><br />
 
-  <input type="submit" value="Compute" />
+  <input type="submit" value="Compute" /><br />
+
+  <hr>
+  * = Salt enabled<br />
  </div>
 </form>
 EOD;
