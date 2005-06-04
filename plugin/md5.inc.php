@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.16 2005/06/04 01:28:53 henoheno Exp $
+// $Id: md5.inc.php,v 1.17 2005/06/04 01:40:25 henoheno Exp $
 //
 //  MD5 plugin
 
@@ -27,7 +27,7 @@ function plugin_md5_action()
 		}
 
 		return array(
-			'msg' =>'MD5',
+			'msg' =>'Result',
 			'body'=>
 				//($prefix ? 'userPassword: ' : '') .
 				pkwk_hash_compute($salt, $key, $prefix, TRUE));
@@ -43,6 +43,8 @@ function plugin_md5_action()
 		$form = '';
 		if ($submit) $form .= '<strong>NO PHRASE</strong><br />';
 		$form .= <<<EOD
+<p><strong>NOTICE: Don't use this feature via untrustful or unsure network</strong></p>
+<hr>
 <form action="$self" method="post">
  <div>
   <input type="hidden" name="plugin" value="md5" />
@@ -78,11 +80,11 @@ function plugin_md5_action()
   <input type="submit" value="Compute" /><br />
 
   <hr>
-  * = Salt enabled<br />
+  <p>* = Salt enabled<p/>
  </div>
 </form>
 EOD;
-		return array('msg'=>'MD5', 'body'=>$form);
+		return array('msg'=>'Compute userPassword', 'body'=>$form);
 	}
 }
 ?>
