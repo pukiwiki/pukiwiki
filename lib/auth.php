@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: auth.php,v 1.14 2005/04/29 11:24:20 henoheno Exp $
+// $Id: auth.php,v 1.15 2005/06/04 00:40:14 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -33,13 +33,14 @@ function pkwk_hash_compute($scheme = '{php_md5}', $phrase = '', $prefix = TRUE, 
 	if (strlen($phrase) > PKWK_PASSPHRASE_LIMIT_LENGTH)
 		die('pkwk_hash_compute(): malicious message length');
 
-	// With a salt or not
+	// With a {scheme}salt or not
 	$matches = array();
 	if (preg_match('/^(\{.+\})(.*)$/', $scheme, $matches)) {
 		$scheme = $matches[1];
 		$salt   = $matches[2];
-	} else if ($scheme != '') {
-		$scheme = '{CLEARTEXT}';
+	} else {
+		$scheme  = ''; // Treat as '{CLEARTEXT}';
+		$salt    = '';
 	}
 
 	// Compute and add a scheme-prefix
@@ -95,7 +96,9 @@ function pkwk_hash_compute($scheme = '{php_md5}', $phrase = '', $prefix = TRUE, 
 	case '{cleartext}'   : /* FALLTHROUGH */
 	case '{clear}'       : /* FALLTHROUGH */
 	case ''              :
-		$hash = & $phrase; break; // Creartext, keep NO prefix
+		$hash = ($prefix ? ($canonical ? '' : $scheme) : '') .
+			$phrase; // Keep NO prefix with $canonical
+		break;
 
 	default:
 		$hash = FALSE; break; // Invalid scheme
