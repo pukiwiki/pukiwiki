@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.20 2005/06/04 02:15:28 henoheno Exp $
+// $Id: md5.inc.php,v 1.21 2005/06/04 12:30:50 henoheno Exp $
 //
 //  MD5 plugin
 
@@ -53,6 +53,7 @@ function plugin_md5_show_form($nophrase = FALSE, $value = '')
 		die_message('Limit: malicious message length');
 
 	if ($value != '') $value = 'value="' . htmlspecialchars($value) . '" ';
+	$sha1_enabled = function_exists('sha1');
 	$self = get_script_uri();
 
 	$form = <<<EOD
@@ -68,19 +69,28 @@ EOD;
   <input type="hidden" name="plugin" value="md5" />
   <label for="_p_md5_phrase">Phrase:</label>
   <input type="text" name="phrase"  id="_p_md5_phrase" size="60" $value/><br />
+EOD;
 
+	if ($sha1_enabled) $form .= <<<EOD
   <input type="radio" name="scheme" id="_p_md5_sha1" value="x-php-sha1" />
   <label for="_p_md5_sha1">PHP sha1()</label><br />
+EOD;
+
+	$form .= <<<EOD
   <input type="radio" name="scheme" id="_p_md5_md5"  value="x-php-md5" checked="checked" />
   <label for="_p_md5_md5">PHP md5()</label><br />
   <input type="radio" name="scheme" id="_p_md5_crpt" value="x-php-crypt" />
   <label for="_p_md5_crpt">PHP crypt() *</label><br />
+EOD;
 
+	if ($sha1_enabled) $form .= <<<EOD
   <input type="radio" name="scheme" id="_p_md5_lssha" value="SSHA" />
   <label for="_p_md5_lssha">LDAP SSHA (sha-1 with a seed) *</label><br />
   <input type="radio" name="scheme" id="_p_md5_lsha" value="SHA" />
   <label for="_p_md5_lsha">LDAP SHA (sha-1)</label><br />
+EOD;
 
+	$form .= <<<EOD
   <input type="radio" name="scheme" id="_p_md5_lsmd5" value="SMD5" />
   <label for="_p_md5_lsmd5">LDAP SMD5 (md5 with a seed) *</label><br />
   <input type="radio" name="scheme" id="_p_md5_lmd5" value="MD5" />
