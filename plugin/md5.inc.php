@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.19 2005/06/04 01:59:52 henoheno Exp $
+// $Id: md5.inc.php,v 1.20 2005/06/04 02:15:28 henoheno Exp $
 //
 //  MD5 plugin
 
@@ -12,10 +12,20 @@ function plugin_md5_action()
 	if (PKWK_SAFE_MODE || PKWK_READONLY) die_message('Prohibited');
 
 	// Wait POST
-	$submit = isset($post['key']);
-	$key    = isset($post['key']) ? $post['key'] : '';
-	if ($key != '') {
-		// Compute (Don't show its $key at the same time)
+	$phrase = isset($post['phrase']) ? $post['phrase'] : '';
+
+	if ($phrase == '') {
+		// Show the form
+
+		// If plugin=md5&md5=password, only set it (Don't compute)
+		$value  = isset($get['md5']) ? $get['md5'] : '';
+
+		return array(
+			'msg' =>'Compute userPassword',
+			'body'=>plugin_md5_show_form(isset($post['phrase']), $value));
+
+	} else {
+		// Compute (Don't show its $phrase at the same time)
 
 		$prefix = isset($post['prefix']);
 		$salt   = isset($post['salt']) ? $post['salt'] : '';
@@ -30,20 +40,13 @@ function plugin_md5_action()
 			'msg' =>'Result',
 			'body'=>
 				//($prefix ? 'userPassword: ' : '') .
-				pkwk_hash_compute($salt, $key, $prefix, TRUE));
-
-	} else {
-		// If plugin=md5&md5=password, only set it (Don't compute)
-		$value = isset($get['md5']) ? $get['md5'] : '';
-		return array(
-			'msg' =>'Compute userPassword',
-			'body'=>plugin_md5_show_form($submit, $value));
+				pkwk_hash_compute($salt, $phrase, $prefix, TRUE));
 	}
 }
 
-// $phrase = Passphrase is here or not
-// $value  = Default passphrase value
-function plugin_md5_show_form($phrase = FALSE, $value = '')
+// $nophrase = Passphrase is (submitted but) empty
+// $value    = Default passphrase value
+function plugin_md5_show_form($nophrase = FALSE, $value = '')
 {
 	if (PKWK_SAFE_MODE || PKWK_READONLY) die_message('Prohibited');
 	if (strlen($value) > PKWK_PASSPHRASE_LIMIT_LENGTH)
@@ -57,14 +60,14 @@ function plugin_md5_show_form($phrase = FALSE, $value = '')
 <hr>
 EOD;
 
-	if ($phrase) $form .= '<strong>NO PHRASE</strong><br />';
+	if ($nophrase) $form .= '<strong>NO PHRASE</strong><br />';
 
 	$form .= <<<EOD
 <form action="$self" method="post">
  <div>
   <input type="hidden" name="plugin" value="md5" />
   <label for="_p_md5_phrase">Phrase:</label>
-  <input type="text" name="key"  id="_p_md5_phrase" size="60" $value/><br />
+  <input type="text" name="phrase"  id="_p_md5_phrase" size="60" $value/><br />
 
   <input type="radio" name="scheme" id="_p_md5_sha1" value="x-php-sha1" />
   <label for="_p_md5_sha1">PHP sha1()</label><br />
