@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: auth.php,v 1.15 2005/06/04 00:40:14 henoheno Exp $
+// $Id: auth.php,v 1.16 2005/06/04 00:55:22 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -36,72 +36,79 @@ function pkwk_hash_compute($scheme = '{php_md5}', $phrase = '', $prefix = TRUE, 
 	// With a {scheme}salt or not
 	$matches = array();
 	if (preg_match('/^(\{.+\})(.*)$/', $scheme, $matches)) {
-		$scheme = $matches[1];
-		$salt   = $matches[2];
+		$scheme = & $matches[1];
+		$salt   = & $matches[2];
 	} else {
-		$scheme  = ''; // Treat as '{CLEARTEXT}';
+		$scheme  = ''; // Cleartext
 		$salt    = '';
 	}
 
 	// Compute and add a scheme-prefix
 	switch (strtolower($scheme)) {
-	case '{x-php-crypt}' : /* FALLTHROUGH */
-	case '{php_crypt}'   :
+
+	// PHP crypt()
+	case '{x-php-crypt}' :
 		$hash = ($prefix ? ($canonical ? '{x-php-crypt}' : $scheme) : '') .
 			($salt != '' ? crypt($phrase, $salt) : crypt($phrase));
 		break;
-	case '{x-php-md5}'   : /* FALLTHROUGH */
-	case '{php_md5}'     :
+
+	// PHP md5()
+	case '{x-php-md5}'   :
 		$hash = ($prefix ? ($canonical ? '{x-php-md5}' : $scheme) : '') .
 			md5($phrase);
 		break;
-	case '{x-php-sha1}'  : /* FALLTHROUGH */
-	case '{php_sha1}'    :
+
+	// PHP sha1()
+	case '{x-php-sha1}'  :
 		$hash = ($prefix ? ($canonical ? '{x-php-sha1}' : $scheme) : '') .
 			sha1($phrase);
 		break;
 
-	case '{crypt}'       : /* FALLTHROUGH */
-	case '{ldap_crypt}'  :
+	// LDAP CRYPT
+	case '{crypt}'       :
 		$hash = ($prefix ? ($canonical ? '{CRYPT}' : $scheme) : '') .
 			($salt != '' ? crypt($phrase, $salt) : crypt($phrase));
 		break;
 
-	case '{md5}'         : /* FALLTHROUGH */
-	case '{ldap_md5}'    :
+	// LDAP MD5
+	case '{md5}'         :
 		$hash = ($prefix ? ($canonical ? '{MD5}' : $scheme) : '') .
 			base64_encode(hex2bin(md5($phrase)));
 		break;
-	case '{smd5}'        : /* FALLTHROUGH */
-	case '{ldap_smd5}'   :
+
+	// LDAP SMD5
+	case '{smd5}'        :
 		// MD5 Key length = 128bits = 16bytes
 		$salt = ($salt != '' ? substr(base64_decode($salt), 16) : substr(crypt(''), -8));
 		$hash = ($prefix ? ($canonical ? '{SMD5}' : $scheme) : '') .
 			base64_encode(hex2bin(md5($phrase . $salt)) . $salt);
 		break;
 
-	case '{sha}'         : /* FALLTHROUGH */
-	case '{ldap_sha}'    :
+	// LDAP SHA
+	case '{sha}'         :
 		$hash = ($prefix ? ($canonical ? '{SHA}' : $scheme) : '') .
 			base64_encode(hex2bin(sha1($phrase)));
 		break;
-	case '{ssha}'        : /* FALLTHROUGH */
-	case '{ldap_ssha}'   :
+
+	// LDAP SSHA
+	case '{ssha}'        :
 		// SHA-1 Key length = 160bits = 20bytes
 		$salt = ($salt != '' ? substr(base64_decode($salt), 20) : substr(crypt(''), -8));
 		$hash = ($prefix ? ($canonical ? '{SSHA}' : $scheme) : '') .
 			base64_encode(hex2bin(sha1($phrase . $salt)) . $salt);
 		break;
 
+	// LDAP CLEARTEXT and just cleartext
 	case '{cleartext}'   : /* FALLTHROUGH */
-	case '{clear}'       : /* FALLTHROUGH */
 	case ''              :
 		$hash = ($prefix ? ($canonical ? '' : $scheme) : '') .
 			$phrase; // Keep NO prefix with $canonical
 		break;
 
+	// Invalid scheme
 	default:
-		$hash = FALSE; break; // Invalid scheme
+		$hash = FALSE;
+		break;
 	}
 
 	return $hash;
