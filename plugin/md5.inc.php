@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.18 2005/06/04 01:44:10 henoheno Exp $
+// $Id: md5.inc.php,v 1.19 2005/06/04 01:59:52 henoheno Exp $
 //
 //  MD5 plugin
 
@@ -12,8 +12,8 @@ function plugin_md5_action()
 	if (PKWK_SAFE_MODE || PKWK_READONLY) die_message('Prohibited');
 
 	// Wait POST
-	$key    = isset($post['key']) ? $post['key'] : '';
 	$submit = isset($post['key']);
+	$key    = isset($post['key']) ? $post['key'] : '';
 	if ($key != '') {
 		// Compute (Don't show its $key at the same time)
 
@@ -35,16 +35,31 @@ function plugin_md5_action()
 	} else {
 		// If plugin=md5&md5=password, only set it (Don't compute)
 		$value = isset($get['md5']) ? $get['md5'] : '';
-		if (strlen($value) > PKWK_PASSPHRASE_LIMIT_LENGTH)
-			die_message('Limit: malicious message length');
-		if ($value != '') $value  = 'value="' . htmlspecialchars($value) . '" ';
+		return array(
+			'msg' =>'Compute userPassword',
+			'body'=>plugin_md5_show_form($submit, $value));
+	}
+}
 
-		$self = get_script_uri();
-		$form = '';
-		if ($submit) $form .= '<strong>NO PHRASE</strong><br />';
-		$form .= <<<EOD
+// $phrase = Passphrase is here or not
+// $value  = Default passphrase value
+function plugin_md5_show_form($phrase = FALSE, $value = '')
+{
+	if (PKWK_SAFE_MODE || PKWK_READONLY) die_message('Prohibited');
+	if (strlen($value) > PKWK_PASSPHRASE_LIMIT_LENGTH)
+		die_message('Limit: malicious message length');
+
+	if ($value != '') $value = 'value="' . htmlspecialchars($value) . '" ';
+	$self = get_script_uri();
+
+	$form = <<<EOD
 <p><strong>NOTICE: Don't use this feature via untrustful or unsure network</strong></p>
 <hr>
+EOD;
+
+	if ($phrase) $form .= '<strong>NO PHRASE</strong><br />';
+
+	$form .= <<<EOD
 <form action="$self" method="post">
  <div>
   <input type="hidden" name="plugin" value="md5" />
@@ -84,7 +99,7 @@ function plugin_md5_action()
  </div>
 </form>
 EOD;
-		return array('msg'=>'Compute userPassword', 'body'=>$form);
-	}
+
+	return $form;
 }
 ?>
