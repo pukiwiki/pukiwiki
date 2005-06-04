@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.17 2005/06/04 01:40:25 henoheno Exp $
+// $Id: md5.inc.php,v 1.18 2005/06/04 01:44:10 henoheno Exp $
 //
 //  MD5 plugin
 
@@ -74,7 +74,7 @@ function plugin_md5_action()
   <input type="checkbox" name="prefix" id="_p_md5_prefix" checked="checked" />
   <label for="_p_md5_prefix">Add scheme prefix (RFC2307, Using LDAP as NIS)</label><br />
 
-  <label for="_p_md5_salt">Salt, '{scheme}', '{scheme}salt', or userPassword itself:</label>
+  <label for="_p_md5_salt">Salt, '{scheme}', '{scheme}salt', or userPassword itself to specify:</label><br />
   <input type="text" name="salt" id="_p_md5_salt" size="60" /><br />
 
   <input type="submit" value="Compute" /><br />
