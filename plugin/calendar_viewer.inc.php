@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: calendar_viewer.inc.php,v 1.33 2005/06/05 12:39:55 henoheno Exp $
+// $Id: calendar_viewer.inc.php,v 1.34 2005/06/05 12:46:59 henoheno Exp $
 //
 // Calendar viewer plugin - List pages that calendar/calnedar2 plugin created
 // (Based on calendar and recent plugin)
@@ -10,7 +10,7 @@
 //  * '$\w' = weeklabel defined in $_msg_week
 define('PLUGIN_CALENDAR_VIEWER_DATE_FORMAT',
 	//	FALSE         // 'pagename/2004-02-09' -- As is
-	//	'D, d M, Y'    // 'Mon, 09 Feb, 2004'
+	//	'D, d M, Y'   // 'Mon, 09 Feb, 2004'
 	//	'F d, Y'      // 'February 09, 2004'
 	//	'[Y-m-d]'     // '[2004-02-09]'
 		'Y/n/j ($\w)' // '2004/2/9 (Mon)'
