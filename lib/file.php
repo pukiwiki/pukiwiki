@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.25 2005/04/30 05:21:00 henoheno Exp $
+// $Id: file.php,v 1.26 2005/06/07 14:37:46 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -90,9 +90,7 @@ function make_str_rules($str)
 // Output to a file
 function file_write($dir, $page, $str, $notimestamp = FALSE)
 {
-	global $update_exec, $_msg_invalidiwn;
-	global $notify, $notify_diff_only, $notify_to, $notify_subject, $notify_header;
-	global $smtp_server, $smtp_auth;
+	global $update_exec, $_msg_invalidiwn, $notify, $notify_diff_only, $notify_subject;
 	global $whatsdeleted, $maxshow_deleted;
 
 	if (PKWK_READONLY) return; // Do nothing
@@ -144,17 +142,15 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 
 	if ($notify && $dir == DIFF_DIR) {
 		if ($notify_diff_only) $str = preg_replace('/^[^-+].*\n/m', '', $str);
-		$str .= "\n" .
-			str_repeat('-', 30) . "\n" .
-			'URI: ' . get_script_uri() . '?' . rawurlencode($page) . "\n" .
-			'REMOTE_ADDR: ' . $_SERVER['REMOTE_ADDR'] . "\n";
 
- 		$subject = str_replace('$page', $page, $notify_subject);
-		ini_set('SMTP', $smtp_server);
- 		mb_language(LANG);
+		$footer['ACTION'] = 'Page update';
+		$footer['PAGE'] = $page;
+		$footer['URI']  = get_script_uri() . '?' . rawurlencode($page);
+		$footer['REMOTE_ADDR'] = TRUE;
+		$footer['USER_AGENT']  = TRUE;
 
-		if ($smtp_auth) pop_before_smtp();
- 		mb_send_mail($notify_to, $subject, $str, $notify_header);
+		pkwk_mail_notify($notify_subject, $str, $footer) or
+			die('pkwk_mail_notify(): Failed');
 	}
 }
 

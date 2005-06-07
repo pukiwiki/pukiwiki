@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.125 2005/06/03 13:56:25 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.126 2005/06/07 14:37:47 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -347,8 +347,8 @@ $notify_from = 'from@example.com';	// From:
 $notify_subject = '[PukiWiki] $page';
 
 // Mail header
-$notify_header = "From: $notify_from\r\n" .
-	'X-Mailer: PukiWiki/' .  S_VERSION . ' PHP/' . phpversion();
+// NOTE: Multiple items must be divided by "\r\n", not "\n".
+$notify_header = '';
 
 /////////////////////////////////////////////////
 // Mail: POP / APOP Before SMTP

@@ -1,12 +1,74 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: mail.php,v 1.4 2005/05/22 03:20:52 henoheno Exp $
+// $Id: mail.php,v 1.5 2005/06/07 14:37:46 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2003      Originally written by upk
 // License: GPL v2 or (at your option) any later version
 //
 // E-mail related functions
+
+// Send a mail to the administrator
+function pkwk_mail_notify($subject, $message, $footer = array())
+{
+	global $smtp_server, $smtp_auth, $notify_to, $notify_from, $notify_header;
+	static $_to, $_headers, $_after_pop;
+
+	// Init and lock
+	if (! isset($_to)) {
+		if (! PKWK_OPTIMISE) {
+			$mail_regex   = '/[^@]+@[^@]{1,}\.[^@]{2,}/';
+			$header_regex = "/\A(?:\r\n|\r|\n)|\r\n\r\n/";
+			if (! preg_match($mail_regex, $notify_to))
+				die('pkwk_mail_notify(): Invalid $notify_to');
+			if (! preg_match($mail_regex, $notify_from))
+				die('pkwk_mail_notify(): Invalid $notify_from');
+			if ($notify_header != '' && preg_match($header_regex, $notify_header))
+				die('pkwk_mail_notify(): Invalid $notify_header');
+		}
+
+		$_to      = $notify_to;
+		$_headers =
+			'X-Mailer: PukiWiki/' . S_VERSION .
+			' PHP/' . phpversion() . "\r\n" .
+			'From: ' . $notify_from;
+			
+		// Additional header(s) by admin
+		if ($notify_header != '') $_headers .= "\r\n" . $notify_header;
+
+		$_after_pop = $smtp_auth;
+	}
+
+	if ($subject == '' || ($message == '' && empty($footer))) return FALSE;
+
+	// Subject:
+	if (isset($footer['PAGE'])) $subject = str_replace('$page', $footer['PAGE'], $subject);
+
+	// Footer
+	if (isset($footer['REMOTE_ADDR'])) $footer['REMOTE_ADDR'] = & $_SERVER['REMOTE_ADDR'];
+	if (isset($footer['USER_AGENT']))
+		$footer['USER_AGENT']  = '(' . UA_PROFILE . ') ' . UA_NAME . '/' . UA_VERS;
+	if (! empty($footer)) {
+		if ($message != '') $_footer = "\n" . str_repeat('-', 30) . "\n";
+		foreach($footer as $key => $value)
+			$_footer .= $key . ': ' . $value . "\n";
+		$message .= $_footer;
+	}
+
+	// Wait POP/APOP auth completion
+	if ($_after_pop) {
+		$result = pop_before_smtp();
+		if ($result !== TRUE) die($result);
+	}
+
+	ini_set('SMTP', $smtp_server);
+	mb_language(LANG);
+	if ($_headers == '') {
+		return mb_send_mail($_to, $subject, $message);
+	} else {
+		return mb_send_mail($_to, $subject, $message, $_headers);
+	}
+}
 
 // APOP/POP Before SMTP
 function pop_before_smtp($pop_userid = '', $pop_passwd = '',
