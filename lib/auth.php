@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: auth.php,v 1.16 2005/06/04 00:55:22 henoheno Exp $
+// $Id: auth.php,v 1.17 2005/06/09 14:52:10 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -38,7 +38,7 @@ function pkwk_hash_compute($scheme = '{php_md5}', $phrase = '', $prefix = TRUE, 
 	if (preg_match('/^(\{.+\})(.*)$/', $scheme, $matches)) {
 		$scheme = & $matches[1];
 		$salt   = & $matches[2];
-	} else {
+	} else if ($scheme != '') {
 		$scheme  = ''; // Cleartext
 		$salt    = '';
 	}
@@ -101,8 +101,8 @@ function pkwk_hash_compute($scheme = '{php_md5}', $phrase = '', $prefix = TRUE, 
 	// LDAP CLEARTEXT and just cleartext
 	case '{cleartext}'   : /* FALLTHROUGH */
 	case ''              :
-		$hash = ($prefix ? ($canonical ? '' : $scheme) : '') .
-			$phrase; // Keep NO prefix with $canonical
+		$hash = ($prefix ? ($canonical ? '{CLEARTEXT}' : $scheme) : '') .
+			$phrase;
 		break;
 
 	// Invalid scheme
