@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: mail.php,v 1.6 2005/06/09 15:16:06 henoheno Exp $
+// $Id: mail.php,v 1.7 2005/06/09 15:16:41 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2003      Originally written by upk
@@ -28,7 +28,7 @@ function pkwk_mail_notify($subject, $message, $footer = array())
 				$header_regex = "/\A(?:\r\n|\r|\n)|\r\n\r\n/";
 				if (preg_match($header_regex, $notify_header))
 					die($func . 'Invalid $notify_header');
-				if (preg_match('/^From:/m', $notify_header))
+				if (preg_match('/^From:/im', $notify_header))
 					die($func . 'Redundant \'From:\' in $notify_header');
 			}
 		}
