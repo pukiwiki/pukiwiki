@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: mail.php,v 1.5 2005/06/07 14:37:46 henoheno Exp $
+// $Id: mail.php,v 1.6 2005/06/09 15:16:06 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2003      Originally written by upk
@@ -17,14 +17,20 @@ function pkwk_mail_notify($subject, $message, $footer = array())
 	// Init and lock
 	if (! isset($_to)) {
 		if (! PKWK_OPTIMISE) {
+			// Validation check
+			$func = 'pkwk_mail_notify(): ';
 			$mail_regex   = '/[^@]+@[^@]{1,}\.[^@]{2,}/';
-			$header_regex = "/\A(?:\r\n|\r|\n)|\r\n\r\n/";
 			if (! preg_match($mail_regex, $notify_to))
-				die('pkwk_mail_notify(): Invalid $notify_to');
+				die($func . 'Invalid $notify_to');
 			if (! preg_match($mail_regex, $notify_from))
-				die('pkwk_mail_notify(): Invalid $notify_from');
-			if ($notify_header != '' && preg_match($header_regex, $notify_header))
-				die('pkwk_mail_notify(): Invalid $notify_header');
+				die($func . 'Invalid $notify_from');
+			if ($notify_header != '') {
+				$header_regex = "/\A(?:\r\n|\r|\n)|\r\n\r\n/";
+				if (preg_match($header_regex, $notify_header))
+					die($func . 'Invalid $notify_header');
+				if (preg_match('/^From:/m', $notify_header))
+					die($func . 'Redundant \'From:\' in $notify_header');
+			}
 		}
 
 		$_to      = $notify_to;
@@ -49,6 +55,7 @@ function pkwk_mail_notify($subject, $message, $footer = array())
 	if (isset($footer['USER_AGENT']))
 		$footer['USER_AGENT']  = '(' . UA_PROFILE . ') ' . UA_NAME . '/' . UA_VERS;
 	if (! empty($footer)) {
+		$_footer = '';
 		if ($message != '') $_footer = "\n" . str_repeat('-', 30) . "\n";
 		foreach($footer as $key => $value)
 			$_footer .= $key . ': ' . $value . "\n";
