@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.25 2005/05/22 00:49:44 henoheno Exp $
+// $Id: make_link.php,v 1.26 2005/06/09 14:53:04 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -185,9 +185,9 @@ class Link
 		$this->name = $name;
 		$this->body = $body;
 		$this->type = $type;
-		if (is_url($alias) && preg_match('/\.(gif|png|jpe?g)$/i', $alias)) {
-			$alias = htmlspecialchars($alias);
-			$alias = '<img src="' . $alias . '" alt="' . $name . '" />';
+		if (! PKWK_DISABLE_INLINE_IMAGE_FROM_URI &&
+			is_url($alias) && preg_match('/\.(gif|png|jpe?g)$/i', $alias)) {
+			$alias = '<img src="' . htmlspecialchars($alias) . '" alt="' . $name . '" />';
 		} else if ($alias != '') {
 			if ($converter === NULL)
 				$converter = new InlineConverter(array('plugin'));
