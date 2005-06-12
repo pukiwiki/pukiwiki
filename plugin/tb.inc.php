@@ -1,16 +1,16 @@
 <?php
-// $Id: tb.inc.php,v 1.19 2005/04/10 08:10:05 henoheno Exp $
+// $Id: tb.inc.php,v 1.20 2005/06/12 03:13:32 henoheno Exp $
 /*
  * PukiWiki/TrackBack: TrackBack Ping receiver and viewer
- * (C) 2003-2004 PukiWiki Developers Team
+ * (C) 2003-2005 PukiWiki Developers Team
  * (C) 2003 Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
  * License: GPL
  *
  * plugin_tb_action()    action
- * plugin_tb_save($url, $tb_id) Save or update TrackBack Ping data
- * plugin_tb_return($rc, $msg)  Return TrackBack ping via HTTP/XML
- * plugin_tb_mode_rss($tb_id)   ?__mode=rss
- * plugin_tb_mode_view($tb_id)  ?__mode=view
+ * plugin_tb_save($url, $tb_id)          Save or update TrackBack Ping data
+ * plugin_tb_output_response($rc, $msg)  Show a response code of the ping via HTTP/XML (then exit)
+ * plugin_tb_output_rsslist($tb_id)      Show pings for the page via RSS
+ * plugin_tb_output_htmllist($tb_id)     Show pings for the page via XHTML
  */
 
 switch(LANG){
@@ -18,32 +18,43 @@ case 'ja': define('PLUGIN_TB_LANGUAGE', 'ja-jp'); break;
 default  : define('PLUGIN_TB_LANGUAGE', 'en-us'); break;
 }
 
+// ----
+
+define('PLUGIN_TB_ERROR',   1);
+define('PLUGIN_TB_NOERROR', 0);
+
 function plugin_tb_action()
 {
-	global $vars, $trackback;
+	global $trackback, $vars;
 
-	if (isset($vars['url'])) {
+	if ($trackback && isset($vars['url'])) {
 		// Receive and save a TrackBack Ping (both GET and POST)
 		$url   = $vars['url'];
 		$tb_id = isset($vars['tb_id']) ? $vars['tb_id'] : '';
-		plugin_tb_save($url, $tb_id); // Send a response (and exit)
+		list($error, $message) = plugin_tb_save($url, $tb_id);
+
+		// Output the response
+		plugin_tb_output_response($error, $message);
+		exit;
 
 	} else {
 		if ($trackback && isset($vars['__mode']) && isset($vars['tb_id'])) {
 			// Show TrackBacks received (and exit)
 			switch ($vars['__mode']) {
-			case 'rss' : plugin_tb_mode_rss($vars['tb_id']);  break;
-			case 'view': plugin_tb_mode_view($vars['tb_id']); break;
+			case 'rss' : plugin_tb_output_rsslist($vars['tb_id']);  break;
+			case 'view': plugin_tb_output_htmllist($vars['tb_id']); break;
 			}
-		}
+			exit;
 
-		// Show List of pages that TrackBacks reached
-		$pages = get_existpages(TRACKBACK_DIR, '.txt');
-		if (! empty($pages)) {
-			return array('msg'=>'trackback list',
-				'body'=>page_list($pages, 'read', FALSE));
 		} else {
-			return array('msg'=>'', 'body'=>'');
+			// Show List of pages that TrackBacks reached
+			$pages = get_existpages(TRACKBACK_DIR, '.txt');
+			if (! empty($pages)) {
+				return array('msg'=>'Trackback list',
+					'body'=>page_list($pages, 'read', FALSE));
+			} else {
+				return array('msg'=>'', 'body'=>'');
+			}
 		}
 	}
 }
@@ -58,17 +69,17 @@ function plugin_tb_save($url, $tb_id)
 	if (! $trackback) $die .= 'TrackBack feature disabled. ';
 	if ($url   == '') $die .= 'URL parameter is not set. ';
 	if ($tb_id == '') $die .= 'TrackBack Ping ID is not set. ';
-	if ($die != '') plugin_tb_return(1, $die);
+	if ($die != '') return array(PLUGIN_TB_ERROR, $die);
 
-	if (! file_exists(TRACKBACK_DIR)) plugin_tb_return(1, 'No such directory: TRACKBACK_DIR');
-	if (! is_writable(TRACKBACK_DIR)) plugin_tb_return(1, 'Permission denied: TRACKBACK_DIR');
+	if (! file_exists(TRACKBACK_DIR)) return array(PLUGIN_TB_ERROR, 'No such directory: TRACKBACK_DIR');
+	if (! is_writable(TRACKBACK_DIR)) return array(PLUGIN_TB_ERROR, 'Permission denied: TRACKBACK_DIR');
 
 	$page = tb_id2page($tb_id);
-	if ($page === FALSE) plugin_tb_return(1, 'TrackBack ID is invalid.');
+	if ($page === FALSE) return array(PLUGIN_TB_ERROR, 'TrackBack ID is invalid.');
 
 	// URL validation (maybe worse of processing time limit)
 	$result = http_request($url, 'HEAD');
-	if ($result['rc'] !== 200) plugin_tb_return(1, 'URL is fictitious.');
+	if ($result['rc'] !== 200) return array(PLUGIN_TB_ERROR, 'URL is fictitious.');
 
 	// Update TrackBack Ping data
 	$filename = tb_get_filename($page);
@@ -94,24 +105,30 @@ function plugin_tb_save($url, $tb_id)
 	flock($fp, LOCK_UN);
 	fclose($fp);
 
-	plugin_tb_return(0); // Return OK
+	return array(PLUGIN_TB_NOERROR, '');
 }
 
-// Return TrackBack ping via HTTP/XML
-function plugin_tb_return($rc, $msg = '')
+// Show a response code of the ping via HTTP/XML (then exit)
+function plugin_tb_output_response($rc, $msg = '')
 {
+	if ($rc == PLUGIN_TB_NOERROR) {
+		$rc = 0; // for PLUGIN_TB_NOERROR
+	} else {
+		$rc = 1; // for PLUGIN_TB_ERROR
+	}
+
 	pkwk_common_headers();
 	header('Content-Type: text/xml');
 	echo '<?xml version="1.0" encoding="iso-8859-1"?>';
 	echo '<response>';
 	echo ' <error>' . $rc . '</error>';
-	if ($rc !== 0) echo '<message>' . $msg . '</message>';
+	if ($rc) echo '<message>' . $msg . '</message>';
 	echo '</response>';
 	exit;
 }
 
-// ?__mode=rss
-function plugin_tb_mode_rss($tb_id)
+// Show pings for the page via RSS
+function plugin_tb_output_rsslist($tb_id)
 {
 	global $script, $vars, $entity_pattern;
 
@@ -163,8 +180,8 @@ EOD;
 	exit;
 }
 
-// ?__mode=view
-function plugin_tb_mode_view($tb_id)
+// Show pings for the page via XHTML
+function plugin_tb_output_htmllist($tb_id)
 {
 	global $script, $page_title;
 	global $_tb_title, $_tb_header, $_tb_entry, $_tb_refer, $_tb_date;
@@ -202,12 +219,19 @@ function plugin_tb_mode_view($tb_id)
 </div>
 EOD;
 	}
+
+	// Output start
+	pkwk_common_headers();
+
+	// BugTrack/466 Care for MSIE trouble
+	// Logically correct, but MSIE will treat the data like 'file downloading'
+	//header('Content-type: application/xhtml+xml; charset=UTF-8');
+	header('Content-type: text/html; charset=UTF-8'); // Works well
+
+	$meta_content_type = pkwk_output_dtd(PKWK_DTD_XHTML_1_0_TRANSITIONAL, 'UTF-8');
 	$msg = <<<EOD
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
 <head>
- <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+ $meta_content_type
  <title>$tb_title</title>
  <link rel="stylesheet" href="skin/trackback.css" type="text/css" />
 </head>
@@ -224,14 +248,6 @@ EOD;
 </body>
 </html>
 EOD;
-
-	pkwk_common_headers();
-
-	// BugTrack/466 Care for MSIE trouble
-	// Logically correct, but MSIE will treat the data like 'file downloading'
-	//header('Content-type: application/xhtml+xml; charset=UTF-8');
-	header('Content-type: text/html; charset=UTF-8'); // Works well
-
 	echo mb_convert_encoding($msg, 'UTF-8', SOURCE_ENCODING);
 	exit;
 }
