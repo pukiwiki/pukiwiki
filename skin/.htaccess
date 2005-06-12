@@ -1,4 +1,0 @@
-<FilesMatch "\.(skin\.php)$">
-        Order allow,deny
-        Deny from all
-</FilesMatch>
