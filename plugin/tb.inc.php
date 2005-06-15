@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.20 2005/06/12 03:13:32 henoheno Exp $
+// $Id: tb.inc.php,v 1.21 2005/06/15 15:57:11 henoheno Exp $
 /*
  * PukiWiki/TrackBack: TrackBack Ping receiver and viewer
  * (C) 2003-2005 PukiWiki Developers Team
@@ -183,18 +183,19 @@ EOD;
 // Show pings for the page via XHTML
 function plugin_tb_output_htmllist($tb_id)
 {
-	global $script, $page_title;
-	global $_tb_title, $_tb_header, $_tb_entry, $_tb_refer, $_tb_date;
-	global $_tb_header_Excerpt, $_tb_header_Weblog, $_tb_header_Tracked;
+	pkwk_common_headers();
+	echo 'This function had been removed now. It will be created soon.<br />' . "\n";
+	echo 'Sorry for your inconvenience.';
+	exit;
+
+	// ----
+	// Skeleton Logic
+
+	global $script;
+	global $_tb_date;
 
 	$page = tb_id2page($tb_id);
 	if ($page === FALSE) return FALSE;
-
-	$r_page = rawurlencode($page);
-
-	$tb_title = sprintf($_tb_title, $page);
-	$tb_refer = sprintf($_tb_refer, '<a href="' . $script . '?' . $r_page .
-		'">\'' . $page . '\'</a>', '<a href="' . $script . '">' . $page_title . '</a>');
 
 	$data = tb_get(tb_get_filename($page));
 
@@ -210,13 +211,6 @@ function plugin_tb_output_htmllist($tb_id)
 
 		$time = date($_tb_date, $time + LOCALZONE); // May 2, 2003 11:25 AM
 		$tb_body .= <<<EOD
-<div class="trackback-body">
- <span class="trackback-post"><a href="$url" target="new" rel="nofollow">$title</a><br />
-  <strong>$_tb_header_Excerpt</strong> $excerpt<br />
-  <strong>$_tb_header_Weblog</strong> $blog_name<br />
-  <strong>$_tb_header_Tracked</strong> $time
- </span>
-</div>
 EOD;
 	}
 
@@ -232,19 +226,10 @@ EOD;
 	$msg = <<<EOD
 <head>
  $meta_content_type
- <title>$tb_title</title>
- <link rel="stylesheet" href="skin/trackback.css" type="text/css" />
 </head>
 <body>
- <div id="banner-commentspop">$_tb_header</div>
- <div class="blog">
-  <div class="trackback-url">
-   $_tb_entry<br />
-   $script?tb_id=$tb_id<br /><br />
-   $tb_refer
-  </div>
-  $tb_body
- </div>
+ $script?tb_id=$tb_id<br /><br />
+ $tb_body
 </body>
 </html>
 EOD;
