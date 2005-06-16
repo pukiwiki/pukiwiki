@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.26 2005/06/09 14:53:04 henoheno Exp $
+// $Id: make_link.php,v 1.27 2005/06/16 15:04:07 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -675,7 +675,7 @@ class Link_autolink extends Link
 
 	function toString()
 	{
-		return make_pagelink($this->name, $this->alias, '', $this->page);
+		return make_pagelink($this->name, $this->alias, '', $this->page, TRUE);
 	}
 }
 
@@ -693,7 +693,7 @@ class Link_autolink_a extends Link_autolink
 }
 
 // Make hyperlink for the page
-function make_pagelink($page, $alias = '', $anchor = '', $refer = '')
+function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolink = FALSE)
 {
 	global $script, $vars, $link_compact, $related, $_symbol_noexists;
 
@@ -708,15 +708,24 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '')
 	if (! isset($related[$page]) && $page != $vars['page'] && is_page($page))
 		$related[$page] = get_filetime($page);
 
-	if (is_page($page)) {
+	if ($isautolink || is_page($page)) {
 		// Hyperlink to the page
 		if ($link_compact) {
 			$title   = '';
 		} else {
 			$title   = ' title="' . $s_page . get_pg_passage($page, FALSE) . '"';
 		}
-		return '<a href="' . $script . '?' . $r_page . $anchor . '"' . $title . '>' .
-			$s_alias . '</a>';
+
+		// AutoLink marker
+		if ($isautolink) {
+			$al_left  = '<!--autolink-->';
+			$al_right = '<!--/autolink-->';
+		} else {
+			$al_left = $al_right = '';
+		}
+
+		return $al_left . '<a ' . 'href="' . $script . '?' . $r_page . $anchor .
+			'"' . $title . '>' . $s_alias . '</a>' . $al_right;
 	} else {
 		// Dangling link
 		if (PKWK_READONLY) return $s_alias; // No dacorations

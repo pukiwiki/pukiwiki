@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.38 2005/06/12 03:03:05 henoheno Exp $
+// $Id: html.php,v 1.39 2005/06/16 15:04:07 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -324,6 +324,12 @@ function strip_htmltag($str)
 	//$str = preg_replace('/<a[^>]+>\?<\/a>/', '', $str);
 
 	return preg_replace('/<[^>]+>/', '', $str);
+}
+
+// Remove AutoLink marker with AutLink itself
+function strip_autolink($str)
+{
+	return preg_replace('#<!--autolink--><a [^>]+>|</a><!--/autolink-->#', '', $str);
 }
 
 // Make a backlink. searching-link of the page name, by the page name, for the page name

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.34 2005/05/07 07:37:32 henoheno Exp $
+// $Id: edit.inc.php,v 1.35 2005/06/16 15:04:08 henoheno Exp $
 //
 // Edit plugin
 // cmd=edit
@@ -87,8 +87,7 @@ function plugin_edit_inline()
 
 	// Arguments
 	$args = func_get_args();
-	$s_label = strip_htmltag(array_pop($args)); // {label}
-		// strip_htmltag() is just for avoiding AutoLink insertion
+	$s_label = strip_autolink(array_pop($args)); // {label}
 	$page    = array_shift($args);
 	if($page == NULL) $page = '';
 	$_noicon = $_nolabel = FALSE;
