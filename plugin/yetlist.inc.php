@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: yetlist.inc.php,v 1.22 2005/06/16 18:26:52 teanan Exp $
+// $Id: yetlist.inc.php,v 1.23 2005/06/18 10:44:00 teanan Exp $
 //
 // Yet list plugin - Show a dangling link list (not yet created)
 
@@ -15,8 +15,7 @@ function plugin_yetlist_action()
 	);
 
 	$refer = array();
-	$exists = get_existpages();
-	$pages = array_diff(get_existpages(CACHE_DIR, '.ref'), $exists);
+	$pages = array_diff(get_existpages(CACHE_DIR, '.ref'), get_existpages());
 	foreach ($pages as $page) {
 		foreach (file(CACHE_DIR . encode($page) . '.ref') as $line) {
 			list($_page) = explode("\t", rtrim($line));
