@@ -1,5 +1,5 @@
 <?php
-// $Id: stationary.inc.php,v 1.6 2005/05/06 12:27:18 henoheno Exp $
+// $Id: stationary.inc.php,v 1.7 2005/06/20 14:56:19 henoheno Exp $
 //
 // Stationary plugin
 // License: The same as PukiWiki
@@ -50,7 +50,7 @@ function plugin_stationary_inline()
 
 	// {bar} is always exists, and already sanitized
 	$args = func_get_args();
-	$body = strip_htmltag(array_pop($args)); // {bar}. strip_htmltag() is just for AutoLink insertion
+	$body = strip_autolink(array_pop($args)); // {bar}
 
 	foreach	(array_keys($args) as $key)
 		$args[$key] = trim($args[$key]);
