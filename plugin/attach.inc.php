@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.75 2005/05/22 04:19:06 henoheno Exp $
+// $Id: attach.inc.php,v 1.76 2005/06/20 14:55:52 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
@@ -101,26 +101,27 @@ function plugin_attach_action()
 	if (isset($_FILES['attach_file'])) {
 		// Upload
 		return attach_upload($_FILES['attach_file'], $refer, $pass);
-	}
-	switch ($pcmd) {
-	case 'delete':	/*FALLTHROUGH*/
-	case 'freeze':
-	case 'unfreeze':
-		if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
-	}
-	switch ($pcmd) {
-	case 'info'     : return attach_info();
-	case 'delete'   : return attach_delete();
-	case 'open'     : return attach_open();
-	case 'list'     : return attach_list();
-	case 'freeze'   : return attach_freeze(TRUE);
-	case 'unfreeze' : return attach_freeze(FALSE);
-	case 'upload'   : return attach_showform();
-	}
-	if ($page == '' || ! is_page($page)) {
-		return attach_list();
 	} else {
-		return attach_showform();
+		switch ($pcmd) {
+		case 'delete':	/*FALLTHROUGH*/
+		case 'freeze':
+		case 'unfreeze':
+			if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
+		}
+		switch ($pcmd) {
+		case 'info'     : return attach_info();
+		case 'delete'   : return attach_delete();
+		case 'open'     : return attach_open();
+		case 'list'     : return attach_list();
+		case 'freeze'   : return attach_freeze(TRUE);
+		case 'unfreeze' : return attach_freeze(FALSE);
+		case 'upload'   : return attach_showform();
+		}
+		if ($page == '' || ! is_page($page)) {
+			return attach_list();
+		} else {
+			return attach_showform();
+		}
 	}
 }
 
@@ -147,7 +148,7 @@ function attach_filelist()
 // $pass = TRUE : アップロード許可
 function attach_upload($file, $page, $pass = NULL)
 {
-	global $_attach_messages;
+	global $_attach_messages, $notify, $notify_subject;
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
@@ -192,6 +193,28 @@ function attach_upload($file, $page, $pass = NULL)
 	$obj->getstatus();
 	$obj->status['pass'] = ($pass !== TRUE && $pass !== NULL) ? md5($pass) : '';
 	$obj->putstatus();
+
+	if ($notify) {
+		$footer['ACTION']   = 'File attached';
+		$footer['FILENAME'] = & $file['name'];
+		$footer['FILESIZE'] = & $file['size'];
+		$footer['PAGE']     = & $page;
+
+		$footer['URI']      = get_script_uri() .
+			//'?' . rawurlencode($page);
+
+			// MD5 may heavy
+			'?plugin=attach' .
+				'&refer=' . rawurlencode($page) .
+				'&file='  . rawurlencode($file['name']) .
+				'&pcmd=info';
+
+		$footer['USER_AGENT']  = TRUE;
+		$footer['REMOTE_ADDR'] = TRUE;
+
+		pkwk_mail_notify($notify_subject, "\n", $footer) or
+			die('pkwk_mail_notify(): Failed');
+	}
 
 	return array(
 		'result'=>TRUE,
