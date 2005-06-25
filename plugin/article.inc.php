@@ -1,15 +1,15 @@
 <?php
-// $Id: article.inc.php,v 1.23 2005/03/02 13:05:07 henoheno Exp $
+// $Id: article.inc.php,v 1.24 2005/06/25 07:06:12 henoheno Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2002      Originally written by OKAWARA,Satoshi <kawara@dml.co.jp>
+//             http://www.dml.co.jp/~kawara/pukiwiki/pukiwiki.php
+//
+// article: BBS-like plugin
+
  /*
-
- PukiWiki BBS風プラグイン
-
- CopyRight 2002 OKAWARA,Satoshi
- http://www.dml.co.jp/~kawara/pukiwiki/pukiwiki.php
- kawara@dml.co.jp
-
  メッセージを変更したい場合はLANGUAGEファイルに下記の値を追加してからご使用ください
-	$_btn_name = 'お名前';
+	$_btn_name    = 'お名前';
 	$_btn_article = '記事の投稿';
 	$_btn_subject = '題名: ';
 
