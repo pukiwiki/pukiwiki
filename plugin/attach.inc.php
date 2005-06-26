@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.77 2005/06/26 08:24:24 henoheno Exp $
+// $Id: attach.inc.php,v 1.78 2005/06/26 09:51:38 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
@@ -251,8 +251,6 @@ function attach_delete()
 		return array('msg'=>$_attach_messages['err_notfound']);
 		
 	return $obj->delete($pass);
-
-
 }
 
 // Åà·ë
@@ -605,13 +603,10 @@ EOD;
 			$footer['ACTION']   = 'File deleted';
 			$footer['FILENAME'] = & $this->file;
 			$footer['PAGE']     = & $this->page;
-
 			$footer['URI']      = get_script_uri() .
 				'?' . rawurlencode($this->page);
-
 			$footer['USER_AGENT']  = TRUE;
 			$footer['REMOTE_ADDR'] = TRUE;
-
 			pkwk_mail_notify($notify_subject, "\n", $footer) or
 				die('pkwk_mail_notify(): Failed');
 		}
