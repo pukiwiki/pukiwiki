@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.76 2005/06/20 14:55:52 henoheno Exp $
+// $Id: attach.inc.php,v 1.77 2005/06/26 08:24:24 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
@@ -243,14 +243,16 @@ function attach_delete()
 	foreach (array('refer', 'file', 'age', 'pass') as $var)
 		${$var} = isset($vars[$var]) ? $vars[$var] : '';
 
-	if (is_freeze($refer) || ! is_editable($refer)) {
+	if (is_freeze($refer) || ! is_editable($refer))
 		return array('msg'=>$_attach_messages['err_noparm']);
-	} else {
-		$obj = & new AttachFile($refer, $file, $age);
-		return $obj->getstatus() ?
-			$obj->delete($pass) :
-			array('msg'=>$_attach_messages['err_notfound']);
-	}
+
+	$obj = & new AttachFile($refer, $file, $age);
+	if (! $obj->getstatus())
+		return array('msg'=>$_attach_messages['err_notfound']);
+		
+	return $obj->delete($pass);
+
+
 }
 
 // Åà·ë
@@ -564,7 +566,7 @@ EOD;
 
 	function delete($pass)
 	{
-		global $_attach_messages;
+		global $_attach_messages, $notify, $notify_subject;
 
 		if ($this->status['freeze']) return attach_info('msg_isfreeze');
 
@@ -598,6 +600,21 @@ EOD;
 
 		if (is_page($this->page))
 			touch(get_filename($this->page));
+
+		if ($notify) {
+			$footer['ACTION']   = 'File deleted';
+			$footer['FILENAME'] = & $this->file;
+			$footer['PAGE']     = & $this->page;
+
+			$footer['URI']      = get_script_uri() .
+				'?' . rawurlencode($this->page);
+
+			$footer['USER_AGENT']  = TRUE;
+			$footer['REMOTE_ADDR'] = TRUE;
+
+			pkwk_mail_notify($notify_subject, "\n", $footer) or
+				die('pkwk_mail_notify(): Failed');
+		}
 
 		return array('msg'=>$_attach_messages['msg_deleted']);
 	}
