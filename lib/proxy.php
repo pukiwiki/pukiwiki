@@ -1,5 +1,5 @@
 <?php
-// $Id: proxy.php,v 1.7 2005/04/29 11:24:20 henoheno Exp $
+// $Id: proxy.php,v 1.8 2005/06/27 14:47:40 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -7,9 +7,6 @@
 
 // Max number of 'track' redirection message with 301 or 302 response
 define('PKWK_HTTP_REQUEST_URL_REDIRECT_MAX', 2);
-
-// Separate IPv4 network-address and its netmask
-define('PKWK_CIDR_NETWORK_REGEX', '/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:\/([0-9.]+))?$/');
 
 /*
  * http_request($url)
@@ -24,13 +21,13 @@ define('PKWK_CIDR_NETWORK_REGEX', '/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:\/([
 function http_request($url, $method = 'GET', $headers = '', $post = array(),
 	$redirect_max = PKWK_HTTP_REQUEST_URL_REDIRECT_MAX, $content_charset = '')
 {
-	global $proxy_host, $proxy_port;
+	global $use_proxy, $no_proxy, $proxy_host, $proxy_port;
 	global $need_proxy_auth, $proxy_auth_user, $proxy_auth_pass;
 
 	$rc  = array();
 	$arr = parse_url($url);
 
-	$via_proxy = via_proxy($arr['host']);
+	$via_proxy = $use_proxy ? ! in_the_net($no_proxy, $arr['host']) : FALSE;
 
 	// query
 	$arr['query'] = isset($arr['query']) ? '?' . $arr['query'] : '';
@@ -128,35 +125,44 @@ function http_request($url, $method = 'GET', $headers = '', $post = array(),
 	);
 }
 
-// Check HTTP proxy server is needed or not for the $host
-function via_proxy($host)
+// Separate IPv4 network-address and its netmask
+define('PKWK_CIDR_NETWORK_REGEX', '/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:\/([0-9.]+))?$/');
+
+// Check if the $host is in the specified network(s)
+function in_the_net($networks = array(), $host = '')
 {
-	global $use_proxy, $no_proxy;
-
-	if (! $use_proxy) return FALSE;
-
-	$ip   = gethostbyname($host);
-	$l_ip = ip2long($ip);
-	$is_valid = (is_long($l_ip) && long2ip($l_ip) == $ip); // Valid IP address
+	if (empty($networks) || $hosts == '') return FALSE;
 
 	$matches = array();
-	foreach ($no_proxy as $network) {
-		if ($is_valid && preg_match(PKWK_CIDR_NETWORK_REGEX, $network, $matches)) {
-			// Sample: '10.0.0.0/8' or '10.0.0.0/255.0.0.0'
-			$l_net = ip2long($matches[1]); // '10.0.0.0'
-			$mask  = isset($matches[2]) ? $matches[2] : 32; // '8' or '255.0.0.0'
-			$mask  = is_numeric($mask) ?
-				pow(2, 32) - pow(2, 32 - $mask) : // '8' means '8-bit mask'
-				ip2long($mask);                   // '255.0.0.0' (the same)
 
-			if (($l_ip & $mask) == $l_net) return FALSE;
-		} else {
-			// Hostname, or a part of hostname
-			if (preg_match('/' . preg_quote($network, '/') . '$/', $host))
-				return FALSE;
+	if (preg_match(PKWK_CIDR_NETWORK_REGEX, $host, $matches)) {
+		$ip = $matches[1];
+	} else {
+		$ip = gethostbyname($host); // May heavy
+	}
+	$l_ip = ip2long($ip);
+
+	if (is_long($l_ip) && long2ip($l_ip) == $ip) {
+		// $host seems valid IPv4 address
+		foreach ($networks as $network) {
+			if (preg_match(PKWK_CIDR_NETWORK_REGEX, $network, $matches)) {
+				// Sample: '10.0.0.0/8' or '10.0.0.0/255.0.0.0'
+				$l_net = ip2long($matches[1]); // '10.0.0.0'
+				$mask  = isset($matches[2]) ? $matches[2] : 32; // '8' or '255.0.0.0'
+				$mask  = is_numeric($mask) ?
+					pow(2, 32) - pow(2, 32 - $mask) : // '8' means '8-bit mask'
+					ip2long($mask);                   // '255.0.0.0' (the same)
+
+				if (($l_ip & $mask) == $l_net) return TRUE;
+			}
 		}
+	} else {
+		// $host seems not IPv4 address. May be a DNS name like 'foobar.example.com'?
+		foreach ($networks as $network)
+			if (preg_match('/\b' . preg_quote($network, '/') . '$/', $host))
+				return TRUE;
 	}
 
-	return TRUE; // Proxy needed
+	return FALSE; // Not found
 }
 ?>
