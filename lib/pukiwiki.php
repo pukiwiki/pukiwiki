@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.php,v 1.8 2005/04/10 08:06:03 henoheno Exp $
+// $Id: pukiwiki.php,v 1.9 2005/06/27 14:12:11 henoheno Exp $
 //
 // PukiWiki 1.4.*
 //  Copyright (C) 2002-2005 by PukiWiki Developers Team
@@ -46,7 +46,6 @@ require(LIB_DIR . 'make_link.php');
 require(LIB_DIR . 'diff.php');
 require(LIB_DIR . 'config.php');
 require(LIB_DIR . 'link.php');
-require(LIB_DIR . 'trackback.php');
 require(LIB_DIR . 'auth.php');
 require(LIB_DIR . 'proxy.php');
 require(LIB_DIR . 'mail.php');
@@ -56,6 +55,13 @@ if (! extension_loaded('mbstring')) {
 
 // Load *.ini.php files and init PukiWiki
 require(LIB_DIR . 'init.php');
+
+// Load optional libraries
+if ($trackback || $referer) {
+	// Referer functionality uses trackback functions
+	// without functional reason now
+	require(LIB_DIR . 'trackback.php');
+}
 
 /////////////////////////////////////////////////
 // Main
