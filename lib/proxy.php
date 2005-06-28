@@ -1,5 +1,5 @@
 <?php
-// $Id: proxy.php,v 1.8 2005/06/27 14:47:40 henoheno Exp $
+// $Id: proxy.php,v 1.9 2005/06/28 14:03:29 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -131,7 +131,8 @@ define('PKWK_CIDR_NETWORK_REGEX', '/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:\/([
 // Check if the $host is in the specified network(s)
 function in_the_net($networks = array(), $host = '')
 {
-	if (empty($networks) || $hosts == '') return FALSE;
+	if (empty($networks) || $host == '') return FALSE;
+	if (! is_array($networks)) $networks = array($networks);
 
 	$matches = array();
 
@@ -142,25 +143,24 @@ function in_the_net($networks = array(), $host = '')
 	}
 	$l_ip = ip2long($ip);
 
-	if (is_long($l_ip) && long2ip($l_ip) == $ip) {
-		// $host seems valid IPv4 address
-		foreach ($networks as $network) {
-			if (preg_match(PKWK_CIDR_NETWORK_REGEX, $network, $matches)) {
-				// Sample: '10.0.0.0/8' or '10.0.0.0/255.0.0.0'
-				$l_net = ip2long($matches[1]); // '10.0.0.0'
-				$mask  = isset($matches[2]) ? $matches[2] : 32; // '8' or '255.0.0.0'
-				$mask  = is_numeric($mask) ?
-					pow(2, 32) - pow(2, 32 - $mask) : // '8' means '8-bit mask'
-					ip2long($mask);                   // '255.0.0.0' (the same)
+	foreach ($networks as $network) {
+		if (preg_match(PKWK_CIDR_NETWORK_REGEX, $network, $matches) &&
+		    is_long($l_ip) && long2ip($l_ip) == $ip) {
+			// $host seems valid IPv4 address
+			// Sample: '10.0.0.0/8' or '10.0.0.0/255.0.0.0'
+			$l_net = ip2long($matches[1]); // '10.0.0.0'
+			$mask  = isset($matches[2]) ? $matches[2] : 32; // '8' or '255.0.0.0'
+			$mask  = is_numeric($mask) ?
+				pow(2, 32) - pow(2, 32 - $mask) : // '8' means '8-bit mask'
+				ip2long($mask);                   // '255.0.0.0' (the same)
 
-				if (($l_ip & $mask) == $l_net) return TRUE;
-			}
+			if (($l_ip & $mask) == $l_net) return TRUE;
+		} else {
+			// $host seems not IPv4 address. May be a DNS name like 'foobar.example.com'?
+			foreach ($networks as $network)
+				if (preg_match('/\.?\b' . preg_quote($network, '/') . '$/', $host))
+					return TRUE;
 		}
-	} else {
-		// $host seems not IPv4 address. May be a DNS name like 'foobar.example.com'?
-		foreach ($networks as $network)
-			if (preg_match('/\b' . preg_quote($network, '/') . '$/', $host))
-				return TRUE;
 	}
 
 	return FALSE; // Not found
