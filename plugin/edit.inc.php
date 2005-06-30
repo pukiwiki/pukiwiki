@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.35 2005/06/16 15:04:08 henoheno Exp $
+// $Id: edit.inc.php,v 1.36 2005/06/30 12:52:57 henoheno Exp $
 //
 // Edit plugin
 // cmd=edit
@@ -172,7 +172,7 @@ function plugin_edit_inline()
 // Write, add, or insert new comment
 function plugin_edit_write()
 {
-	global $vars;
+	global $vars, $trackback;
 	global $_title_collided, $_msg_collided_auto, $_msg_collided, $_title_deleted;
 	global $notimeupdate, $_msg_invalidpass;
 
@@ -225,7 +225,8 @@ function plugin_edit_write()
 			page_write($page, $postdata);
 			$retvars['msg'] = $_title_deleted;
 			$retvars['body'] = str_replace('$1', htmlspecialchars($page), $_title_deleted);
-			tb_delete($page);
+
+			if ($trackback) tb_delete($page);
 		}
 	}
 
