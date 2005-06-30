@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.27 2005/06/25 14:18:01 henoheno Exp $
+// $Id: file.php,v 1.28 2005/06/30 14:38:48 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -58,33 +58,38 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	links_update($page);
 }
 
-// User-defined rules (replace the source)
-function make_str_rules($str)
+// Modify ogirinal text with user-defined / system-defined rules
+function make_str_rules($source)
 {
 	global $str_rules, $fixed_heading_anchor;
 
-	$arr = explode("\n", $str);
+	$lines = explode("\n", $source);
+	$count = count($lines);
 
-	$retvars = $matches = array();
-	foreach ($arr as $str) {
-		if ($str != '' && $str{0} != ' ' && $str{0} != "\t")
-			foreach ($str_rules as $rule => $replace)
-				$str = preg_replace('/' . $rule . '/', $replace, $str);
+	$matches = array();
+	for ($i = 0; $i < $count; $i++) {
+		$line = & $lines[$i]; // Modify directly
+
+		// Ignore nothing and preformatted texts
+		if ($line == '' || $line{0} == ' ' || $line{0} == "\t") continue;
+
+		// Replace with $str_rules
+		foreach ($str_rules as $pattern => $replacement)
+			$line = preg_replace('/' . $pattern . '/', $replacement, $line);
 		
 		// Adding fixed anchor into headings
 		if ($fixed_heading_anchor &&
-			preg_match('/^(\*{1,3}(.(?!\[#[A-Za-z][\w-]+\]))+)$/', $str, $matches))
+			preg_match('/^(\*{1,3}(.(?!\[#[A-Za-z][\w-]+\]))+)$/', $line, $matches))
 		{
 			// Generate ID:
 			// A random alphabetic letter + 7 letters of random strings from md()
 			$anchor = chr(mt_rand(ord('a'), ord('z'))) .
 				substr(md5(uniqid(substr($matches[1], 0, 100), 1)), mt_rand(0, 24), 7);
-			$str = rtrim($matches[1]) . ' [#' . $anchor . ']';
+			$line = rtrim($matches[1]) . ' [#' . $anchor . ']';
 		}
-		$retvars[] = $str;
 	}
 
-	return join("\n", $retvars);
+	return implode("\n", $lines);
 }
 
 // Output to a file
