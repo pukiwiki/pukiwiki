@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.19 2005/04/29 11:24:20 henoheno Exp $
+// $Id: trackback.php,v 1.20 2005/06/30 12:55:57 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2003      Originally written by Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -74,9 +74,7 @@ function tb_count($page, $ext = '.txt')
 // $minus = Removed lines may include URLs
 function tb_send($page, $plus, $minus = '')
 {
-	global $trackback, $page_title;
-
-	if (! $trackback) return;
+	global $page_title;
 
 	$script = get_script_uri();
 
