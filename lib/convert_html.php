@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: convert_html.php,v 1.12 2005/04/30 05:21:00 henoheno Exp $
+// $Id: convert_html.php,v 1.13 2005/06/30 13:20:05 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -134,12 +134,15 @@ function & Factory_YTable(& $root, $text)
 
 function & Factory_Div(& $root, $text)
 {
-	if (! preg_match('/^\#([^\(]+)(?:\((.*)\))?/', $text, $out) ||
-	    ! exist_plugin_convert($out[1])) {
-		return new Paragraph($text);
-	} else {
-		return new Div($out);
+	$matches = array();
+
+	// Seems block plugin?
+	if (preg_match('/^\#([^\(]+)(?:\((.*)\))?/', $text, $matches) &&
+	    exist_plugin_convert($matches[1])) {
+		return new Div($matches);
 	}
+
+	return new Paragraph($text);
 }
 
 // インライン要素
@@ -728,7 +731,7 @@ class Pre extends Element
 	}
 }
 
-// #something (started with '#')
+// Block plugin: #something (started with '#')
 class Div extends Element
 {
 	var $name;
@@ -747,6 +750,7 @@ class Div extends Element
 
 	function toString()
 	{
+		// Call #plugin
 		return do_plugin_convert($this->name, $this->param);
 	}
 }
