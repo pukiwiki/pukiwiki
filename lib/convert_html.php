@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: convert_html.php,v 1.14 2005/07/03 14:16:23 henoheno Exp $
+// $Id: convert_html.php,v 1.15 2005/07/03 14:59:14 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -912,9 +912,11 @@ class Body extends Element
 		$id = make_heading($text, FALSE); // Cut fixed-anchor from $text
 		$anchor = ($id == '') ?  '' : ' &aname(' . $id . ',super,full){' . $_symbol_anchor . '};';
 
-		$text = ' ' . $text;
-		$id = 'content_' . $this->id . '_' . $this->count;
+		// If $id is not specified, number it
+		if ($id == '') $id = 'content_' . $this->id . '_' . $this->count;
 		$this->count++;
+
+		$text = ' ' . $text;
 		$this->contents_last = & $this->contents_last->add(new Contents_UList($text, $level, $id));
 
 		return array($text . $anchor, $this->count > 1 ? "\n" . $top : '', $id);
