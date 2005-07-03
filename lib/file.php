@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.28 2005/06/30 14:38:48 henoheno Exp $
+// $Id: file.php,v 1.29 2005/07/03 02:55:54 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -70,7 +70,7 @@ function make_str_rules($source)
 	for ($i = 0; $i < $count; $i++) {
 		$line = & $lines[$i]; // Modify directly
 
-		// Ignore nothing and preformatted texts
+		// Ignore null string and preformatted texts
 		if ($line == '' || $line{0} == ' ' || $line{0} == "\t") continue;
 
 		// Replace with $str_rules
