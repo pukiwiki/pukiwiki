@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.126 2005/06/07 14:37:47 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.127 2005/07/03 14:16:23 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -40,6 +40,20 @@ if (! defined('PKWK_DISABLE_INLINE_IMAGE_FROM_URI'))
 //   Max length of GET method, prohibits some worm attack ASAP
 //   NOTE: Keep (page-name + attach-file-name) <= PKWK_QUERY_STRING_MAX
 define('PKWK_QUERY_STRING_MAX', 640); // Bytes, 0 = OFF
+
+/////////////////////////////////////////////////
+// Experimental features
+
+// Multiline plugin hack (See BugTrack2/84)
+// EXAMPLE(with a known BUG):
+//   #plugin(args1,args2,...,argsN){{
+//   argsN+1
+//   argsN+1
+//   #memo(foo)
+//   argsN+1
+//   }}
+//   #memo(This makes '#memo(foo)' to this)
+define('PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK', 1); // 1 = Disabled
 
 /////////////////////////////////////////////////
 // Language / Encoding settings

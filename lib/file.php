@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.29 2005/07/03 02:55:54 henoheno Exp $
+// $Id: file.php,v 1.30 2005/07/03 14:16:23 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -66,12 +66,34 @@ function make_str_rules($source)
 	$lines = explode("\n", $source);
 	$count = count($lines);
 
-	$matches = array();
+	$modify    = TRUE;
+	$multiline = 0;
+	$matches   = array();
 	for ($i = 0; $i < $count; $i++) {
 		$line = & $lines[$i]; // Modify directly
 
 		// Ignore null string and preformatted texts
 		if ($line == '' || $line{0} == ' ' || $line{0} == "\t") continue;
+
+		// Modify this line?
+		if ($modify) {
+			if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK &&
+			    $multiline == 0 &&
+			    preg_match('/#[^{]*(\{\{+)\s*$/', $line, $matches)) {
+			    	// Multiline convert plugin start
+				$modify    = FALSE;
+				$multiline = strlen($matches[1]); // Set specific number
+			}
+		} else {
+			if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK &&
+			    $multiline != 0 &&
+			    preg_match('/^\}{' . $multiline . '}\s*$/', $line)) {
+			    	// Multiline convert plugin end
+				$modify    = TRUE;
+				$multiline = 0;
+			}
+		}
+		if ($modify === FALSE) continue;
 
 		// Replace with $str_rules
 		foreach ($str_rules as $pattern => $replacement)
@@ -88,6 +110,11 @@ function make_str_rules($source)
 			$line = rtrim($matches[1]) . ' [#' . $anchor . ']';
 		}
 	}
+
+	// Multiline part has no stopper
+	if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK &&
+	    $modify === FALSE && $multiline != 0)
+		$lines[] = str_repeat('}', $multiline);
 
 	return implode("\n", $lines);
 }

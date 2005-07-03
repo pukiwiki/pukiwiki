@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.14 2005/06/30 13:20:05 henoheno Exp $
+// $Id: plugin.php,v 1.15 2005/07/03 14:16:23 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -112,10 +112,22 @@ function do_plugin_convert($name, $args = '')
 	if(do_plugin_init($name) === FALSE)
 		return '[Plugin init failed: ' . $name . ']';
 
+	if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK) {
+		// Multiline plugin?
+		$pos  = strpos($args, "\r"); // "\r" is just a delimiter
+		if ($pos !== FALSE) {
+			$body = substr($args, $pos + 1);
+			$args = substr($args, 0, $pos);
+		}
+	}
+
 	if ($args === '') {
 		$aryargs = array();                 // #plugin()
 	} else {
 		$aryargs = csv_explode(',', $args); // #plugin(A,B,C,D)
+	}
+	if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK) {
+		if (isset($body)) $aryargs[] = & $body;     // #plugin(){{body}}
 	}
 
 	$_digest = $digest;

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: convert_html.php,v 1.13 2005/06/30 13:20:05 henoheno Exp $
+// $Id: convert_html.php,v 1.14 2005/07/03 14:16:23 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -137,9 +137,25 @@ function & Factory_Div(& $root, $text)
 	$matches = array();
 
 	// Seems block plugin?
-	if (preg_match('/^\#([^\(]+)(?:\((.*)\))?/', $text, $matches) &&
-	    exist_plugin_convert($matches[1])) {
-		return new Div($matches);
+	if (PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK) {
+		// Usual code
+		if (preg_match('/^\#([^\(]+)(?:\((.*)\))?/', $text, $matches) &&
+		    exist_plugin_convert($matches[1])) {
+			return new Div($matches);
+		}
+	} else {
+		// Hack code
+		if(preg_match('/^#([^\(\{]+)(?:\(([^\r]*)\))?(\{*)/', $text, $matches) &&
+		   exist_plugin_convert($matches[1])) {
+			$len  = strlen($matches[3]);
+			$body = array();
+			if ($len == 0) {
+				return new Div($matches); // Seems legacy block plugin
+			} else if (preg_match('/\{{' . $len . '}\s*\r(.*)\r\}{' . $len . '}/', $text, $body)) { 
+				$matches[2] .= "\r" . $body[1] . "\r";
+				return new Div($matches); // Seems multiline-enabled block plugin
+			}
+		}
 	}
 
 	return new Paragraph($text);
@@ -833,6 +849,22 @@ class Body extends Element
 			if (substr($line, 0, 4) == '----') {
 				$this->insert(new HRule($this, $line));
 				continue;
+			}
+
+			// Multiline-enabled block plugin
+			if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK &&
+			    preg_match('/^#[^{]+(\{\{+)\s*$/', $line, $matches)) {
+				$len = strlen($matches[1]);
+				$line .= "\r"; // Delimiter
+				while (! empty($lines)) {
+					$next_line = preg_replace("/[\r\n]*$/", '', array_shift($lines));
+					if (preg_match('/\}{' . $len . '}/', $next_line)) {
+						$line .= $next_line;
+						break;
+					} else {
+						$line .= $next_line .= "\r"; // Delimiter
+					}
+				}
 			}
 
 			// The first character
