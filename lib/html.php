@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.39 2005/06/16 15:04:07 henoheno Exp $
+// $Id: html.php,v 1.40 2005/07/03 14:51:18 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -344,17 +344,17 @@ function make_search($page)
 		'">' . $s_page . '</a> ';
 }
 
-// Make heading (remove footnotes and HTML tags)
+// Make heading string (remove heading-related decorations from Wiki text)
 function make_heading(& $str, $strip = TRUE)
 {
 	global $NotePattern;
 
-	// Cut fixed-anchors
+	// Cut fixed-heading anchors
 	$id = '';
 	$matches = array();
 	if (preg_match('/^(\*{0,3})(.*?)\[#([A-Za-z][\w-]+)\](.*?)$/m', $str, $matches)) {
 		$str = $matches[2] . $matches[4];
-		$id  = $matches[3];
+		$id  = & $matches[3];
 	} else {
 		$str = preg_replace('/^\*{0,3}/', '', $str);
 	}
