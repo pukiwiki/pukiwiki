@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.26 2005/05/23 14:22:30 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.27 2005/07/04 14:16:04 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -46,11 +46,10 @@ if (! defined('PKWK_READONLY')) die('PKWK_READONLY is not set');
 // ------------------------------------------------------------
 // Check tDiary theme
 
-$theme = TDIARY_THEME;
-if ($theme == '' || $theme == 'TDIARY_THEME') {
+if (! defined('TDIARY_THEME') || TDIARY_THEME == '') {
 	die('Theme is not specified. Set "TDIARY_THEME" correctly');
 } else {
-	$theme = rawurlencode($theme); // Supress all nasty letters
+	$theme = rawurlencode(TDIARY_THEME); // Supress all nasty letters
 	$theme_css = SKIN_DIR . 'theme/' . $theme . '/' . $theme . '.css';
 	if (! file_exists($theme_css)) {
 		echo 'tDiary theme wrapper: ';
@@ -85,103 +84,115 @@ case 'hatena':
 // ------------------------------------------------------------
 // tDiary theme: Select CSS color theme (Now testing:black only)
 
-$css_theme = '';
-switch(TDIARY_THEME){
-case 'alfa':
-case 'bill':
-case 'black-lingerie':
-case 'bubble':
-case 'cosmos':
-case 'darkness-pop':
-case 'fine':
-case 'fri':
-case 'giza':
-case 'kaizou':
-case 'lightning':
-case 'lime':
-case 'line':
-case 'midnight':
-case 'moo':
-case 'nachtmusik':
-case 'nebula':
-case 'nippon':
-case 'noel':
-case 'petith-b':
-case 'quiet_black':
-case 'redgrid':
-case 'starlight':
-case 'tinybox_green':
-case 'white-lingerie':
-case 'whiteout':
-case 'wine':
-case 'wood':
-case 'xmastree':
-case 'yukon':
-	$css_theme = 'black';
+if (defined('TDIARY_COLOR_THEME')) {
+	$css_theme = rawurlencode(TDIARY_COLOR_THEME);
+} else {
+	$css_theme = '';
 
-// Another theme needed?
-case 'bluely':
-case 'brown':
-case 'deepblue':
-case 'scarlet':
-case 'smoking_black':
-	;
+	switch(TDIARY_THEME){
+	case 'alfa':
+	case 'bill':
+	case 'black-lingerie':
+	case 'bubble':
+	case 'cosmos':
+	case 'darkness-pop':
+	case 'fine':
+	case 'fri':
+	case 'giza':
+	case 'kaizou':
+	case 'lightning':
+	case 'lime':
+	case 'line':
+	case 'midnight':
+	case 'moo':
+	case 'nachtmusik':
+	case 'nebula':
+	case 'nippon':
+	case 'noel':
+	case 'petith-b':
+	case 'quiet_black':
+	case 'redgrid':
+	case 'starlight':
+	case 'tinybox_green':
+	case 'white-lingerie':
+	case 'whiteout':
+	case 'wine':
+	case 'wood':
+	case 'xmastree':
+	case 'yukon':
+		$css_theme = 'black';
+
+	// Another theme needed?
+	case 'bluely':
+	case 'brown':
+	case 'deepblue':
+	case 'scarlet':
+	case 'smoking_black':
+		;
+	}
 }
 
 // ------------------------------------------------------------
 // tDiary theme: Page title design (which is fancy, date and text?)
 
-$title_design_date = 1; // Default: Select the date desin, or 'the same design'
-switch(TDIARY_THEME){
-case '3minutes':
-case 'aoikuruma':
-case 'black-lingerie':
-case 'blog':
-case 'book':
-case 'book2-feminine':
-case 'book3-sky':
-case 'candy':
-case 'cards':
-case 'desert':
-case 'dot':
-case 'himawari':
-case 'light-blue':
-case 'lovely':
-case 'lovely_pink':
-case 'lr':
-case 'magic':
-case 'maroon':
-case 'midnight':
-case 'momonga':
-case 'nande-ya-nen':
-case 'narrow':
-case 'natrium':
-case 'nebula':
-case 'orange':
-case 'parabola':
-case 'plum':
-case 'pool_side':
-case 'rainy-season':
-case 'right':
-case 's-blue':
-case 's-pink':
-case 'sky':
-case 'snow_man':
-case 'spring':
-case 'tag':
-case 'tdiarynet':
-case 'white-lingerie':
-case 'whiteout':
-case 'wood':
-	$title_design_date = 0; // Select text design	
-	break;
+if (defined('TDIARY_TITLE_DESIGN_DATE') &&
+    (TDIARY_TITLE_DESIGN_DATE  == 0 ||
+     TDIARY_TITLE_DESIGN_DATE  == 1 ||
+     TDIARY_TITLE_DESIGN_DATE  == 2)) {
+	$title_design_date = TDIARY_TITLE_DESIGN_DATE;
+} else {
+	$title_design_date = 1; // Default: Select the date desin, or 'the same design'
+	switch(TDIARY_THEME){
+	case '3minutes':
+	case 'aoikuruma':
+	case 'black-lingerie':
+	case 'blog':
+	case 'book':
+	case 'book2-feminine':
+	case 'book3-sky':
+	case 'candy':
+	case 'cards':
+	case 'desert':
+	case 'dot':
+	case 'himawari':
+	case 'light-blue':
+	case 'lovely':
+	case 'lovely_pink':
+	case 'lr':
+	case 'magic':
+	case 'maroon':
+	case 'midnight':
+	case 'momonga':
+	case 'nande-ya-nen':
+	case 'narrow':
+	case 'natrium':
+	case 'nebula':
+	case 'orange':
+	case 'parabola':
+	case 'plum':
+	case 'pool_side':
+	case 'rainy-season':
+	case 'right':
+	case 's-blue':
+	case 's-pink':
+	case 'sky':
+	case 'snow_man':
+	case 'spring':
+	case 'tag':
+	case 'tdiarynet':
+	case 'white-lingerie':
+	case 'whiteout':
+	case 'wood':
+		$title_design_date = 0; // Select text design	
+		break;
 
-case 'arrow':
-case 'fluxbox':
-case 'fluxbox2':
-case 'fluxbox3':
-	$title_design_date = 2; // Show both :)
-	break;
+	case 'arrow':
+	case 'fluxbox':
+	case 'fluxbox2':
+	case 'fluxbox3':
+		$title_design_date = 2; // Show both :)
+		break;
+	}
 }
 
 // ------------------------------------------------------------
