@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.40 2005/07/03 14:51:18 henoheno Exp $
+// $Id: html.php,v 1.41 2005/07/04 14:14:10 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -94,7 +94,7 @@ function catbody($title, $page, $body)
 	$is_freeze = is_freeze($_page);
 
 	// Last modification date (string) of the page
-	$lastmodified = $is_read ?  get_date('D, d M Y H:i:s T', get_filetime($_page)) .
+	$lastmodified = $is_read ?  format_date(get_filetime($_page)) .
 		' ' . get_pg_passage($_page, FALSE) : '';
 
 	// List of attached files to the page
