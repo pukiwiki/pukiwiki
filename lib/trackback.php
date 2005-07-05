@@ -1,5 +1,5 @@
 <?php
-// $Id: trackback.php,v 1.20 2005/06/30 12:55:57 henoheno Exp $
+// $Id: trackback.php,v 1.21 2005/07/05 12:51:08 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2003      Originally written by Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -178,9 +178,12 @@ EOD;
 // HTTP-GET from $uri, and reveal the TrackBack Ping URL
 function tb_get_url($url)
 {
+	global $use_proxy, $no_proxy;
+
 	// Don't go across HTTP-proxy server
 	$parse_url = parse_url($url);
-	if (empty($parse_url['host']) || via_proxy($parse_url['host']))
+	if (empty($parse_url['host']) ||
+	   ($use_proxy && ! in_the_net($no_proxy, $parse_url['host'])))
 		return '';
 
 	$data = http_request($url);
