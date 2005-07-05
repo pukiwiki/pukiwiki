@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: keitai.skin.php,v 1.10 2005/07/05 13:23:34 henoheno Exp $
+// $Id: keitai.skin.php,v 1.11 2005/07/05 13:40:54 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -34,10 +34,16 @@ $body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]*alt="([^"]+)"[^>]*>(?(2)
 // Without ALT option
 $body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]+>(?(2)</a>)(?(1)</div>)#i', '[img]', $body);
 
-// Page numbers, divided by this skin
+// Check content volume, Page numbers, divided by this skin
 $pageno = (isset($vars['p']) && is_numeric($vars['p'])) ? $vars['p'] : 0;
 $pagecount = ceil(strlen($body) / $max_size);
 $lastpage = $pagecount - 1;
+
+// Too large contents to edit
+if (((isset($vars['cmd'])    && $vars['cmd']    == 'edit') ||
+     (isset($vars['plugin']) && $vars['plugin'] == 'edit')) &&
+   $pagecount > 1)
+   	die('Unable to edit: Too large contents for your device');
 
 // Top navigation (text) bar
 $navi = array();
