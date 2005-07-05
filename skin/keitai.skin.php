@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: keitai.skin.php,v 1.9 2005/05/01 02:43:27 henoheno Exp $
+// $Id: keitai.skin.php,v 1.10 2005/07/05 13:23:34 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -35,7 +35,7 @@ $body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]*alt="([^"]+)"[^>]*>(?(2)
 $body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]+>(?(2)</a>)(?(1)</div>)#i', '[img]', $body);
 
 // Page numbers, divided by this skin
-$pageno = (isset($vars['p']) and is_numeric($vars['p'])) ? $vars['p'] : 0;
+$pageno = (isset($vars['p']) && is_numeric($vars['p'])) ? $vars['p'] : 0;
 $pagecount = ceil(strlen($body) / $max_size);
 $lastpage = $pagecount - 1;
 
@@ -45,7 +45,7 @@ $navi[] = '<a href="' . $link['top']  . '" ' . $accesskey . '="0">0.Top</a>';
 if ($rw) {
 	$navi[] = '<a href="' . $link['new']  . '" ' . $accesskey . '="1">1.New</a>';
 	$navi[] = '<a href="' . $link['edit'] . '" ' . $accesskey . '="2">2.Edit</a>';
-	if ($is_read and $function_freeze) {
+	if ($is_read && $function_freeze) {
 		if (! $is_freeze) {
 			$navi[] = '<a href="' . $link['freeze']   . '" ' . $accesskey . '="3">3.Freeze</a>';
 		} else {
@@ -61,11 +61,13 @@ if ($pagecount > 1) {
 	$prev = $pageno - 1;
 	$next = $pageno + 1;
 	if ($pageno > 0) {
-		$navi[] = '<a href="' . $script . '?cmd=read&amp;page=' . $r_page . '&amp;p=' . $prev . '" ' . $accesskey . '="7">7.Prev</a>';
+		$navi[] = '<a href="' . $script . '?cmd=read&amp;page=' . $r_page .
+			'&amp;p=' . $prev . '" ' . $accesskey . '="7">7.Prev</a>';
 	}
 	$navi[] = $next . '/' . $pagecount . ' ';
 	if ($pageno < $lastpage) {
-		$navi[] = '<a href="' . $script . '?cmd=read&amp;page=' . $r_page . '&amp;p=' . $next . '" ' . $accesskey . '="8">8.Next</a>';
+		$navi[] = '<a href="' . $script . '?cmd=read&amp;page=' . $r_page .
+			'&amp;p=' . $next . '" ' . $accesskey . '="8">8.Next</a>';
 	}
 }
 
