@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: keitai.skin.php,v 1.12 2005/07/05 14:13:53 henoheno Exp $
+// $Id: keitai.skin.php,v 1.13 2005/07/05 14:23:27 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -14,10 +14,24 @@ $pageno = (isset($vars['p']) && is_numeric($vars['p'])) ? $vars['p'] : 0;
 $edit = (isset($vars['cmd'])    && $vars['cmd']    == 'edit') ||
 	(isset($vars['plugin']) && $vars['plugin'] == 'edit');
 
-global $max_size, $accesskey, $menubar;
+global $max_size, $accesskey, $menubar, $_symbol_anchor;
 $max_size = --$max_size * 1024; // Make 1KByte spare (for $navi, etc)
 $link = $_LINK;
 $rw = ! PKWK_READONLY;
+
+// ----
+// Modify
+
+// Ignore &dagger;s
+$body = preg_replace('#<a[^>]+>' . $_symbol_anchor . '</a>#', '', $body);
+
+// Shrink IMG tags (= images) with character strings
+// With ALT option
+$body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]*alt="([^"]+)"[^>]*>(?(2)</a>)(?(1)</div>)#i', '[$3]', $body);
+// Without ALT option
+$body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]+>(?(2)</a>)(?(1)</div>)#i', '[img]', $body);
+
+// ----
 
 // Check content volume, Page numbers, divided by this skin
 $pagecount = ceil(strlen($body) / $max_size);
@@ -25,12 +39,6 @@ $pagecount = ceil(strlen($body) / $max_size);
 // Too large contents to edit
 if ($edit && $pagecount > 1)
    	die('Unable to edit: Too large contents for your device');
-
-// Shrink IMG tags (= images) with character strings
-// With ALT option
-$body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]*alt="([^"]+)"[^>]*>(?(2)</a>)(?(1)</div>)#i', '[$3]', $body);
-// Without ALT option
-$body = preg_replace('#(<div[^>]+>)?(<a[^>]+>)?<img[^>]+>(?(2)</a>)(?(1)</div>)#i', '[img]', $body);
 
 // Get one page
 $body = substr($body, $pageno * $max_size, $max_size);
