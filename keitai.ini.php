@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: keitai.ini.php,v 1.23 2005/05/16 13:25:43 henoheno Exp $
+// $Id: keitai.ini.php,v 1.24 2005/07/05 13:19:36 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -63,6 +63,15 @@ $rule_related_str = "</li>\n<li>";
 /////////////////////////////////////////////////
 // 水平線のタグ
 $hr = '<hr>';
+
+/////////////////////////////////////////////////
+// 脚注機能関連
+
+// 脚注のアンカーを相対パスで表示する (0 = 絶対パス)
+//  * 相対パスの場合、以前のバージョンのOperaで問題になることがあります
+//  * 絶対パスの場合、calendar_viewerなどで問題になることがあります
+// (詳しくは: BugTrack/698)
+define('PKWK_ALLOW_RELATIVE_FOOTNOTE_ANCHOR', 1);
 
 // 文末の注釈の直前に表示するタグ
 $note_hr = '<hr>';
