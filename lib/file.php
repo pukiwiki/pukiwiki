@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.30 2005/07/03 14:16:23 henoheno Exp $
+// $Id: file.php,v 1.31 2005/07/05 12:39:19 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -101,12 +101,10 @@ function make_str_rules($source)
 		
 		// Adding fixed anchor into headings
 		if ($fixed_heading_anchor &&
-			preg_match('/^(\*{1,3}(.(?!\[#[A-Za-z][\w-]+\]))+)$/', $line, $matches))
-		{
-			// Generate ID:
-			// A random alphabetic letter + 7 letters of random strings from md()
-			$anchor = chr(mt_rand(ord('a'), ord('z'))) .
-				substr(md5(uniqid(substr($matches[1], 0, 100), 1)), mt_rand(0, 24), 7);
+		    preg_match('/^(\*{1,3}.*?)(?:\[#([A-Za-z][\w-]*)\]\s*)?$/', $line, $matches) &&
+		    (! isset($matches[2]) || $matches[2] == '')) {
+			// Generate unique id
+			$anchor = generate_fixed_heading_anchor_id($matches[1]);
 			$line = rtrim($matches[1]) . ' [#' . $anchor . ']';
 		}
 	}
@@ -117,6 +115,15 @@ function make_str_rules($source)
 		$lines[] = str_repeat('}', $multiline);
 
 	return implode("\n", $lines);
+}
+
+// Generate ID
+function generate_fixed_heading_anchor_id($seed)
+{
+	// A random alphabetic letter + 7 letters of random strings from md()
+	return chr(mt_rand(ord('a'), ord('z'))) .
+		substr(md5(uniqid(substr($seed, 0, 100), TRUE)),
+		mt_rand(0, 24), 7);
 }
 
 // Output to a file
