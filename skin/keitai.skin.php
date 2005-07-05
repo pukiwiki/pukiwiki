@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: keitai.skin.php,v 1.13 2005/07/05 14:23:27 henoheno Exp $
+// $Id: keitai.skin.php,v 1.14 2005/07/05 14:41:33 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -23,7 +23,7 @@ $rw = ! PKWK_READONLY;
 // Modify
 
 // Ignore &dagger;s
-$body = preg_replace('#<a[^>]+>' . $_symbol_anchor . '</a>#', '', $body);
+$body = preg_replace('#<a[^>]+>' . preg_quote($_symbol_anchor, '#') . '</a>#', '', $body);
 
 // Shrink IMG tags (= images) with character strings
 // With ALT option
