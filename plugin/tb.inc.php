@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.17 2005/01/23 03:15:40 henoheno Exp $
+// $Id: tb.inc.php,v 1.17.4.1 2005/07/07 14:42:46 henoheno Exp $
 /*
  * PukiWiki/TrackBack: TrackBack Ping receiver and viewer
  * (C) 2003-2004 PukiWiki Developer Team
@@ -166,73 +166,9 @@ EOD;
 // ?__mode=view
 function plugin_tb_mode_view($tb_id)
 {
-	global $script, $page_title;
-	global $_tb_title, $_tb_header, $_tb_entry, $_tb_refer, $_tb_date;
-	global $_tb_header_Excerpt, $_tb_header_Weblog, $_tb_header_Tracked;
-
-	$page = tb_id2page($tb_id);
-	if ($page === FALSE) return FALSE;
-
-	$r_page = rawurlencode($page);
-
-	$tb_title = sprintf($_tb_title, $page);
-	$tb_refer = sprintf($_tb_refer, '<a href="' . $script . '?' . $r_page .
-		'">\'' . $page . '\'</a>', '<a href="' . $script . '">' . $page_title . '</a>');
-
-	$data = tb_get(tb_get_filename($page));
-
-	// Sort: The first is the latest
-	usort($data, create_function('$a,$b', 'return $b[0] - $a[0];'));
-
-	$tb_body = '';
-	foreach ($data as $x) {
-		if (count($x) != 5) continue; // Ignore incorrect record
-
-		list ($time, $url, $title, $excerpt, $blog_name) = $x;
-		if ($title == '') $title = 'no title';
-
-		$time = date($_tb_date, $time + LOCALZONE); // May 2, 2003 11:25 AM
-		$tb_body .= <<<EOD
-<div class="trackback-body">
- <span class="trackback-post"><a href="$url" target="new" rel="nofollow">$title</a><br />
-  <strong>$_tb_header_Excerpt</strong> $excerpt<br />
-  <strong>$_tb_header_Weblog</strong> $blog_name<br />
-  <strong>$_tb_header_Tracked</strong> $time
- </span>
-</div>
-EOD;
-	}
-	$msg = <<<EOD
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
-<head>
- <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
- <title>$tb_title</title>
- <link rel="stylesheet" href="skin/trackback.css" type="text/css" />
-</head>
-<body>
- <div id="banner-commentspop">$_tb_header</div>
- <div class="blog">
-  <div class="trackback-url">
-   $_tb_entry<br />
-   $script?tb_id=$tb_id<br /><br />
-   $tb_refer
-  </div>
-  $tb_body
- </div>
-</body>
-</html>
-EOD;
-
 	pkwk_common_headers();
-
-	// BugTrack/466 Care for MSIE trouble
-	// Logically correct, but MSIE will treat the data like 'file downloading'
-	//header('Content-type: application/xhtml+xml; charset=UTF-8');
-	header('Content-type: text/html; charset=UTF-8'); // Works well
-
-	echo mb_convert_encoding($msg, 'UTF-8', SOURCE_ENCODING);
+	echo 'This function had been removed now. It will be created soon.<br />' . "\n";
+	echo 'Sorry for your inconvenience.';
 	exit;
 }
 ?>

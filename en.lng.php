@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: en.lng.php,v 1.7 2005/02/05 04:38:52 henoheno Exp $
+// $Id: en.lng.php,v 1.7.4.1 2005/07/07 14:42:46 henoheno Exp $
 //
 // PukiWiki message file (english)
 
@@ -81,14 +81,7 @@ $rule_page = 'Text Formatting Rules';
 $help_page = 'Help';
 
 ///////////////////////////////////////
-// TrackBack
-$_tb_title  = 'TrackBack: Discussion on TrackBack in %s';
-$_tb_header = 'Continuing the discussion...';
-$_tb_entry  = 'TrackBack URL for this entry:';
-$_tb_refer  = ' Listed below are links to weblogs that reference %s from %s.';
-$_tb_header_Excerpt = 'Summary:';
-$_tb_header_Weblog  = 'Weblog:';
-$_tb_header_Tracked = 'Tracked:';
+// TrackBack (REMOVED)
 $_tb_date   = 'F j, Y, g:i A';
 
 /////////////////////////////////////////////////
