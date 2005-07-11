@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.33 2005/07/03 15:16:27 henoheno Exp $
+// $Id: init.php,v 1.34 2005/07/11 13:41:36 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -57,20 +57,41 @@ if ($die) die_message(nl2br("\n\n" . $die));
 /////////////////////////////////////////////////
 // INI_FILE: LANG に基づくエンコーディング設定
 
+// CONTENT_CHARSET: Internal content encoding = Output content charset (for skin)
+//   'UTF-8', 'iso-8859-1', 'EUC-JP' or ...
+
+// MB_LANGUAGE: mb_language (for mbstring extension)
+//   'uni'(means UTF-8), 'English', or 'Japanese'
+
+// SOURCE_ENCODING: Internal content encoding (for mbstring extension)
+//   'UTF-8', 'ASCII', or 'EUC-JP'
+
 switch (LANG){
 case 'en':
-	// Internal content encoding = Output content charset (for skin)
-	define('CONTENT_CHARSET', 'iso-8859-1'); // 'UTF-8', 'iso-8859-1', 'EUC-JP' or ...
-	// mb_language (for mbstring extension)
-	define('MB_LANGUAGE',   'English');	// 'uni'(means UTF-8), 'English', or 'Japanese'
-	// Internal content encoding (for mbstring extension)
-	define('SOURCE_ENCODING', 'ASCII');	// 'UTF-8', 'ASCII', or 'EUC-JP'
+	// ASCII
+	define('CONTENT_CHARSET', 'iso-8859-1');
+	define('MB_LANGUAGE',     'English');
+	define('SOURCE_ENCODING', 'ASCII');
+
+	// UTF-8
+	//define('CONTENT_CHARSET', 'UTF-8');
+	//define('MB_LANGUAGE',     'English');
+	//define('SOURCE_ENCODING', 'UTF-8');
+
 	break;
 	
-case 'ja': // EUC-JP
+case 'ja':
+	// EUC-JP
 	define('CONTENT_CHARSET', 'EUC-JP');
-	define('MB_LANGUAGE',   'Japanese');
+	define('MB_LANGUAGE',     'Japanese');
 	define('SOURCE_ENCODING', 'EUC-JP');
+	break;
+
+case 'ko':
+	// UTF-8 (See BugTrack2/13 for all hack about Korean support, and give us your report!)
+	define('CONTENT_CHARSET', 'UTF-8');
+	define('MB_LANGUAGE',     'Korean');
+	define('SOURCE_ENCODING', 'UTF-8');
 	break;
 
 default:
