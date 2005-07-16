@@ -1,5 +1,5 @@
 <?php
-// $Id: recent.inc.php,v 1.14 2005/06/05 10:24:01 henoheno Exp $
+// $Id: recent.inc.php,v 1.15 2005/07/16 14:37:14 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2002      Y.MASUI http://masui.net/pukiwiki/ masui@masui.net
@@ -12,6 +12,9 @@
 // Default number of 'Show latest N changes'
 define('PLUGIN_RECENT_DEFAULT_LINES', 10);
 
+// Limit number of executions
+define('PLUGIN_RECENT_EXEC_LIMIT', 2); // N times per one output
+
 // ----
 
 define('PLUGIN_RECENT_USAGE', '#recent(number-to-show)');
@@ -22,7 +25,7 @@ define('PLUGIN_RECENT_CACHE', CACHE_DIR . 'recent.dat');
 function plugin_recent_convert()
 {
 	global $vars, $date_format, $_recent_plugin_frame;
-	static $done;
+	static $exec_count = 0;
 
 	$recent_lines = PLUGIN_RECENT_DEFAULT_LINES;
 	if (func_num_args()) {
@@ -35,7 +38,8 @@ function plugin_recent_convert()
 	}
 
 	// Show only the first one
-	if (isset($done)) return '<!-- #recent(): You already view changes -->';
+	if (++$exec_count > PLUGIN_RECENT_EXEC_LIMIT)
+		return '<!-- #recent(): You called me too much -->';
 
 	// Get latest N changes
 	if (file_exists(PLUGIN_RECENT_CACHE)) {
@@ -73,8 +77,6 @@ function plugin_recent_convert()
 	}
 	// End of the day
 	if ($date != '') $items .= '</ul>' . "\n";
-
-	$done = TRUE;
 
 	return sprintf($_recent_plugin_frame, count($lines), $items);
 }
