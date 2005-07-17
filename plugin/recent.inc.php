@@ -1,5 +1,5 @@
 <?php
-// $Id: recent.inc.php,v 1.15 2005/07/16 14:37:14 henoheno Exp $
+// $Id: recent.inc.php,v 1.16 2005/07/17 10:55:28 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2002      Y.MASUI http://masui.net/pukiwiki/ masui@masui.net
@@ -25,7 +25,7 @@ define('PLUGIN_RECENT_CACHE', CACHE_DIR . 'recent.dat');
 function plugin_recent_convert()
 {
 	global $vars, $date_format, $_recent_plugin_frame;
-	static $exec_count = 0;
+	static $exec_count = 1;
 
 	$recent_lines = PLUGIN_RECENT_DEFAULT_LINES;
 	if (func_num_args()) {
@@ -37,9 +37,12 @@ function plugin_recent_convert()
 		}
 	}
 
-	// Show only the first one
-	if (++$exec_count > PLUGIN_RECENT_EXEC_LIMIT)
-		return '<!-- #recent(): You called me too much -->';
+	// Show only N times
+	if ($exec_count > PLUGIN_RECENT_EXEC_LIMIT) {
+		return '#recent(): You called me too much' . '<br />' . "\n";
+	} else {
+		++$exec_count;
+	}
 
 	// Get latest N changes
 	if (file_exists(PLUGIN_RECENT_CACHE)) {
