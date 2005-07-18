@@ -25,7 +25,9 @@ InterWiki用のサーバリストです。
 -[http://www.google.co.jp/search?ie=utf8&oe=utf8&q=$1&lr=lang_ja&hl=ja Google] utf8 
 //IEのGoogleツールバー対策でUTF-8になってます。
 -[http://search.yahoo.co.jp/bin/search?p= Yahoo] euc
--[http://www.wikipedia.org/wiki/? WikiPedia] euc
+-[http://www.wikipedia.org/wiki/ WikiPedia] utf8
+-[http://en.wikipedia.org/wiki/ WikiPedia.en] utf8
+-[http://ja.wikipedia.org/wiki/ WikiPedia.ja] utf8
 
 ** 拡張InterWikiName [#q192ea38]
 -[./?cmd=add&page= 新規]
