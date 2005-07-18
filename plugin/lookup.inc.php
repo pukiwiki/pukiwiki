@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: lookup.inc.php,v 1.21 2005/05/06 05:59:43 henoheno Exp $
+// $Id: lookup.inc.php,v 1.22 2005/07/18 18:59:27 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -49,13 +49,13 @@ function plugin_lookup_action()
 	$page  = isset($post['page'])  ? $post['page']  : '';
 	$inter = isset($post['inter']) ? $post['inter'] : '';
 	if ($page == '') return FALSE; // Do nothing
-	if ($inter == '') return array(msg=>'Invalid access', body=>'');
+	if ($inter == '') return array('msg'=>'Invalid access', 'body'=>'');
 
 	$url = get_interwiki_url($inter, $page);
 	if ($url === FALSE) {
 		$msg = sprintf('InterWikiName "%s" not found', $inter);
 		$msg = htmlspecialchars($msg);
-		return array(msg=>'Not found', body=>$msg);
+		return array('msg'=>'Not found', 'body'=>$msg);
 	}
 
 	pkwk_headers_sent();
