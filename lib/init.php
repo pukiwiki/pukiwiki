@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.35 2005/07/18 13:52:59 henoheno Exp $
+// $Id: init.php,v 1.36 2005/07/19 19:32:09 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -346,7 +346,7 @@ if (isset($vars['msg'])) {
 }
 
 // 後方互換性 (?md5=...)
-if (isset($vars['md5']) && $vars['md5'] != '') {
+if (!isset($vars['cmd']) && !isset($vars['plugin']) && isset($vars['md5']) && $vars['md5'] != '') {
 	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'md5';
 }
 
