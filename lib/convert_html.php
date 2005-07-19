@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: convert_html.php,v 1.15 2005/07/03 14:59:14 henoheno Exp $
+// $Id: convert_html.php,v 1.16 2005/07/19 15:38:35 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -909,17 +909,27 @@ class Body extends Element
 	{
 		global $top, $_symbol_anchor;
 
-		$id = make_heading($text, FALSE); // Cut fixed-anchor from $text
-		$anchor = ($id == '') ?  '' : ' &aname(' . $id . ',super,full){' . $_symbol_anchor . '};';
-
-		// If $id is not specified, number it
-		if ($id == '') $id = 'content_' . $this->id . '_' . $this->count;
+		// Heading id (auto-generated)
+		$autoid = 'content_' . $this->id . '_' . $this->count;
 		$this->count++;
 
+		// Heading id (specified by users)
+		$id = make_heading($text, FALSE); // Cut fixed-anchor from $text
+		if ($id == '') {
+			// Not specified
+			$id     = & $autoid;
+			$anchor = '';
+		} else {
+			$anchor = ' &aname(' . $id . ',super,full){' . $_symbol_anchor . '};';
+		}
+
 		$text = ' ' . $text;
+
+		// Add 'page contents' link to its heading
 		$this->contents_last = & $this->contents_last->add(new Contents_UList($text, $level, $id));
 
-		return array($text . $anchor, $this->count > 1 ? "\n" . $top : '', $id);
+		// Add heding
+		return array($text . $anchor, $this->count > 1 ? "\n" . $top : '', $autoid);
 	}
 
 	function & insert(& $obj)
