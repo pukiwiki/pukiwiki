@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.36 2005/08/01 15:04:29 henoheno Exp $
+// $Id: file.php,v 1.37 2005/08/01 15:07:36 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -183,7 +183,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		flock($fp, LOCK_EX);
 
 		// Write
-		if (! ftruncate($fp, 0)) return FALSE;
+		ftruncate($fp, 0);
 		rewind($fp);
 		fputs($fp, $str);
 
