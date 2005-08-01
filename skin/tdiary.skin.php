@@ -1,12 +1,12 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.27 2005/07/04 14:16:04 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.28 2005/08/01 15:19:02 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
-// tDiary-wrapper skin
+// tDiary-wrapper skin (Updated for tdiary-theme 2.1.2)
 
 // ------------------------------------------------------------
 // Settings (define before here, if you want)
@@ -76,7 +76,20 @@ case 'christmas':
 // Adjust reverse-link default design manually
 $disable_backlink = FALSE;
 switch(TDIARY_THEME){
-case 'hatena':
+case 'hatena':		/* FALLTHROUGH */
+case 'hatena-black':
+case 'hatena-brown':
+case 'hatena-darkgray':
+case 'hatena-green':
+case 'hatena-lightblue':
+case 'hatena-lightgray':
+case 'hatena-purple':
+case 'hatena-red':
+case 'hatena-white':
+case 'hatena_cinnamon':
+case 'hatena_japanese':
+case 'hatena_leaf':
+case 'hatena_water':
 	$disable_backlink = TRUE; // or very viewable title color
 	break;
 }
@@ -93,12 +106,18 @@ if (defined('TDIARY_COLOR_THEME')) {
 	case 'alfa':
 	case 'bill':
 	case 'black-lingerie':
+	case 'blackboard':
 	case 'bubble':
 	case 'cosmos':
 	case 'darkness-pop':
+	case 'digital_gadgets':
 	case 'fine':
 	case 'fri':
 	case 'giza':
+	case 'hatena-black':
+	case 'hatena_savanna-blue':
+	case 'hatena_savanna-green':
+	case 'hatena_savanna-red':
 	case 'kaizou':
 	case 'lightning':
 	case 'lime':
@@ -115,6 +134,7 @@ if (defined('TDIARY_COLOR_THEME')) {
 	case 'starlight':
 	case 'tinybox_green':
 	case 'white-lingerie':
+	case 'white_flower':
 	case 'whiteout':
 	case 'wine':
 	case 'wood':
@@ -143,7 +163,8 @@ if (defined('TDIARY_TITLE_DESIGN_DATE') &&
 } else {
 	$title_design_date = 1; // Default: Select the date desin, or 'the same design'
 	switch(TDIARY_THEME){
-	case '3minutes':
+	case '3minutes':	/* FALLTHROUGH */
+	case '90':
 	case 'aoikuruma':
 	case 'black-lingerie':
 	case 'blog':
@@ -155,6 +176,9 @@ if (defined('TDIARY_TITLE_DESIGN_DATE') &&
 	case 'desert':
 	case 'dot':
 	case 'himawari':
+	case 'kitchen-classic':
+	case 'kitchen-french':
+	case 'kitchen-natural':
 	case 'light-blue':
 	case 'lovely':
 	case 'lovely_pink':
@@ -176,20 +200,25 @@ if (defined('TDIARY_TITLE_DESIGN_DATE') &&
 	case 's-blue':
 	case 's-pink':
 	case 'sky':
+	case 'sleepy_kitten':
 	case 'snow_man':
 	case 'spring':
 	case 'tag':
 	case 'tdiarynet':
+	case 'treetop':
 	case 'white-lingerie':
+	case 'white_flower':
 	case 'whiteout':
 	case 'wood':
 		$title_design_date = 0; // Select text design	
 		break;
 
+	case 'aqua':
 	case 'arrow':
 	case 'fluxbox':
 	case 'fluxbox2':
 	case 'fluxbox3':
+	case 'ymck':
 		$title_design_date = 2; // Show both :)
 		break;
 	}
@@ -207,16 +236,25 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	// List of themes having sidebar CSS < (AllTheme / 2)
 	// $ grep div.sidebar */*.css | cut -d: -f1 | cut -d/ -f1 | sort | uniq
 	// $ wc -l *.txt
-	//     78 list-sidebar.txt
-	//    196 list-all.txt
+	//    142 list-sidebar.txt
+	//    286 list-all.txt
 	switch(TDIARY_THEME){
 	case '3minutes':	/*FALLTHROUGH*/
 	case '3pink':
 	case 'aoikuruma':
+	case 'aqua':
 	case 'arrow':
+	case 'artnouveau-blue':
+	case 'artnouveau-green':
+	case 'artnouveau-red':
+	case 'asterisk-blue':
+	case 'asterisk-lightgray':
+	case 'asterisk-maroon':
+	case 'asterisk-orange':
+	case 'asterisk-pink':
 	case 'autumn':
 	case 'babypink':
-	case 'be_r5';
+	case 'be_r5':
 	case 'bill':
 	case 'bistro_menu':
 	case 'bluely':
@@ -224,26 +262,70 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'book2-feminine':
 	case 'book3-sky':
 	case 'bright-green':
+	case 'britannian':
 	case 'bubble':
 	case 'candy':
 	case 'cat':
 	case 'cherry':
+	case 'cherry_blossom':
+	case 'chiffon_leafgreen':
+	case 'chiffon_pink':
+	case 'chiffon_skyblue':
 	case 'citrus':
 	case 'clover':
+	case 'colorlabel':
 	case 'cool_ice':
 	case 'cosmos':
+	case 'curtain':
 	case 'darkness-pop':
+	case 'delta':
 	case 'diamond_dust':
 	case 'dice':
+	case 'digital_gadgets':
+	case 'dot-lime':
+	case 'dot-orange':
+	case 'dot-pink':
+	case 'dot-sky':
+	case 'dotted_line-blue':
+	case 'dotted_line-green':
+	case 'dotted_line-red':
 	case 'emboss':
 	case 'flower':
 	case 'gear':
 	case 'germany':
 	case 'gray2':
+	case 'green_leaves':
 	case 'happa':
 	case 'hatena':
+	case 'hatena-black':
+	case 'hatena-brown':
+	case 'hatena-darkgray':
+	case 'hatena-green':
+	case 'hatena-lightblue':
+	case 'hatena-lightgray':
+	case 'hatena-lime':
+	case 'hatena-orange':
+	case 'hatena-pink':
+	case 'hatena-purple':
+	case 'hatena-red':
+	case 'hatena-sepia':
+	case 'hatena-tea':
+	case 'hatena-white':
+	case 'hatena_cinnamon':
+	case 'hatena_japanese':
+	case 'hatena_leaf':
+	case 'hatena_rainyseason':
+	case 'hatena_savanna-blue':
+	case 'hatena_savanna-green':
+	case 'hatena_savanna-red':
+	case 'hatena_savanna-white':
+	case 'hatena_water':
 	case 'himawari':
+	case 'jungler':
 	case 'kaeru':
+	case 'kitchen-classic':
+	case 'kitchen-french':
+	case 'kitchen-natural':
 	case 'kotatsu':
 	case 'light-blue':
 	case 'loose-leaf':
@@ -257,6 +339,7 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'nippon':
 	case 'note':
 	case 'old-pavement':
+	case 'orange_flower':
 	case 'pain':
 	case 'pale':
 	case 'paper':
@@ -269,6 +352,12 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'rainy-season':
 	case 'rectangle':
 	case 'repro':
+	case 'rim-daidaiiro':
+	case 'rim-fujiiro':
+	case 'rim-mizuiro':
+	case 'rim-sakurairo':
+	case 'rim-tanpopoiro':
+	case 'rim-wakabairo':
 	case 'russet':
 	case 's-blue':
 	case 'sagegreen':
@@ -276,6 +365,7 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'scarlet':
 	case 'sepia':
 	case 'simple':
+	case 'sleepy_kitten':
 	case 'smoking_black':
 	case 'smoking_white':
 	case 'spring':
@@ -286,14 +376,25 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'tile':
 	case 'tinybox':
 	case 'tinybox_green':
+	case 'treetop':
+	case 'white_flower':
 	case 'wine':
 	case 'yukon':
+	case 'zef':
 		$sidebar = 'bottom'; // This is the default position of tDiary's.
 		break;
 	}
 
 	// Manually adjust sidebar's default position
 	switch(TDIARY_THEME){
+
+	// 'bottom'
+	case '90': // But upper navigatin UI will be hidden by sidebar
+	case 'blackboard':
+	case 'quirky':
+	case 'quirky2':
+		$sidebar = 'bottom';
+		break;
 
 	// 'top': Assuming sidebar is above of the body
 	case 'autumn':	/*FALLTHROUGH*/
@@ -306,6 +407,7 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'sunset':
 	case 'tinybox':	// For MSIE with narrow window width, seems meanless
 	case 'tinybox_green':	// The same
+	case 'ymck':
 		$sidebar = 'top';
 		break;
 
@@ -313,23 +415,78 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case '3minutes':	/*FALLTHROUGH*/
 	case '3pink':
 	case 'aoikuruma':
+	case 'aqua':
+	case 'artnouveau-blue':
+	case 'artnouveau-green':
+	case 'artnouveau-red':
+	case 'asterisk-blue':
+	case 'asterisk-lightgray':
+	case 'asterisk-maroon':
+	case 'asterisk-orange':
+	case 'asterisk-pink':
 	case 'bill':
 	case 'candy':
 	case 'cat':
+	case 'chiffon_leafgreen':
+	case 'chiffon_pink':
+	case 'chiffon_skyblue':
+	case 'city':
 	case 'clover':
+	case 'colorlabel':
 	case 'cool_ice':
+	case 'dot-lime':
+	case 'dot-orange':
+	case 'dot-pink':
+	case 'dot-sky':
+	case 'dotted_line-blue':
+	case 'dotted_line-green':
+	case 'dotted_line-red':
 	case 'flower':
 	case 'germany':
+	case 'green-tea':
+	case 'hatena':
+	case 'hatena-black':
+	case 'hatena-brown':
+	case 'hatena-darkgray':
+	case 'hatena-green':
+	case 'hatena-lightblue':
+	case 'hatena-lightgray':
+	case 'hatena-lime':
+	case 'hatena-orange':
+	case 'hatena-pink':
+	case 'hatena-purple':
+	case 'hatena-red':
+	case 'hatena-sepia':
+	case 'hatena-tea':
+	case 'hatena-white':
 	case 'hiki':
 	case 'himawari':
+	case 'kasumi':
+	case 'kitchen-classic':
+	case 'kitchen-french':
+	case 'kitchen-natural':
 	case 'kotatsu':
+	case 'kurenai':
 	case 'light-blue':
 	case 'loose-leaf':
 	case 'marguerite':
 	case 'matcha':
+	case 'memo':
+	case 'memo2':
+	case 'memo3':
+	case 'mirage':
 	case 'mizu':
 	case 'mono':
 	case 'moo':	// For MSIE, strict seems meanless
+	case 'navy':
+	case 'pict':
+	case 'pokke-blue':
+	case 'pokke-orange':
+	case 'query000':
+	case 'query011':
+	case 'query101':
+	case 'query110':
+	case 'query111or':
 	case 'puppy':
 	case 'rainy-season':
 	case 's-blue':	// For MSIE, strict seems meanless
@@ -338,24 +495,28 @@ if (defined('TDIARY_SIDEBAR_POSITION')) {
 	case 'scarlet':
 	case 'sepia':
 	case 'simple':
+	case 'smoking_gray':
 	case 'spring':
 	case 'teacup':
 	case 'wine':
 		$sidebar = 'strict';
 		break;
 
-	// 'another': They have sidebar-design, but can not show it at the 'side' of the contents
+	// 'another': They have sidebar-design, but can not show it
+	//  at the 'side' of the contents
 	case 'babypink':	/*FALLTHROUGH*/
 	case 'bubble':
 	case 'cherry':
 	case 'darkness-pop':
 	case 'diamond_dust':
 	case 'gear':
+	case 'necktie':
 	case 'pale':
 	case 'pink-border':
 	case 'rectangle':
 	case 'russet':
 	case 'smoking_black':
+	case 'zef':
 		$sidebar = 'another'; // Show as an another page below
 		break;
 	}
