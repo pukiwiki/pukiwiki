@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.34 2005/08/01 14:35:02 henoheno Exp $
+// $Id: file.php,v 1.35 2005/08/01 14:55:55 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -158,17 +158,18 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		            str_replace('$2', 'WikiName', $_msg_invalidiwn)));
 
 	$page      = strip_bracket($page);
-	$timestamp = FALSE;
 	$file      = $dir . encode($page) . '.txt';
+	$timestamp = FALSE;
 
-	if ($dir == DATA_DIR && $str == '' && file_exists($file)) {
-		unlink($file);
-		add_recent($page, $whatsdeleted, '', $maxshow_deleted); // RecentDeleted
-	}
-
-	if ($str != '') {
-		$str = preg_replace('/' . "\r" . '/', '', $str);
-		$str = rtrim($str) . "\n";
+	if ($str === '') {
+		if ($dir == DATA_DIR && file_exists($file)) {
+			// File deletion
+			unlink($file);
+			add_recent($page, $whatsdeleted, '', $maxshow_deleted); // RecentDeleted
+		}
+	} else {
+		// File replacement (Edit)
+		$str = rtrim(preg_replace('/' . "\r" . '/', '', $str)) . "\n";
 
 		if ($notimestamp && file_exists($file))
 			$timestamp = filemtime($file) - LOCALZONE;
@@ -177,11 +178,12 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 			htmlspecialchars(basename($dir) . '/' . encode($page) . '.txt') .	
 			'<br />' . "\n" .
 			'Maybe permission is not writable or filename is too long');
-
 		set_file_buffer($fp, 0);
 		flock($fp, LOCK_EX);
+
 		rewind($fp);
 		fputs($fp, $str);
+
 		flock($fp, LOCK_UN);
 		fclose($fp);
 
