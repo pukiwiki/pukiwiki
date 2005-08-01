@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.35 2005/08/01 14:55:55 henoheno Exp $
+// $Id: file.php,v 1.36 2005/08/01 15:04:29 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -174,17 +174,21 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		if ($notimestamp && file_exists($file))
 			$timestamp = filemtime($file) - LOCALZONE;
 
-		$fp = fopen($file, 'w') or die('fopen() failed: ' .
+		$fp = fopen($file, 'r+') or die('fopen() failed: ' .
 			htmlspecialchars(basename($dir) . '/' . encode($page) . '.txt') .	
 			'<br />' . "\n" .
 			'Maybe permission is not writable or filename is too long');
 		set_file_buffer($fp, 0);
+
 		flock($fp, LOCK_EX);
 
+		// Write
+		if (! ftruncate($fp, 0)) return FALSE;
 		rewind($fp);
 		fputs($fp, $str);
 
 		flock($fp, LOCK_UN);
+
 		fclose($fp);
 
 		if ($timestamp) pkwk_touch_file($file, $timestamp + LOCALZONE);
