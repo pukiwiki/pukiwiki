@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: aname.inc.php,v 1.24 2005/06/16 15:04:08 henoheno Exp $
+// $Id: aname.inc.php,v 1.25 2005/08/07 13:42:26 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -23,41 +23,48 @@ define('PLUGIN_ANAME_ID_MAX',   40);
 // Pattern of ID
 define('PLUGIN_ANAME_ID_REGEX', '/^[A-Za-z][\w\-]*$/');
 
+// Show usage
+function plugin_aname_usage($convert = TRUE, $message = '')
+{
+	if ($convert) {
+		if ($message == '') {
+			return '#aname(anchorID[[,super][,full][,noid],Link title])' . '<br />';
+		} else {
+			return '#aname: ' . $message . '<br />';
+		}
+	} else {
+		if ($message == '') {
+			return '&amp;aname(anchorID[,super][,full][,noid]){[Link title]};';
+		} else {
+			return '&amp;aname: ' . $message . ';';
+		}
+	}
+}
 
 // #aname
 function plugin_aname_convert()
 {
-	$args = func_get_args(); // Zero or more
-	return plugin_aname_tag($args);
+	$convert = TRUE;
+
+	if (func_num_args() < 1)
+		return plugin_aname_usage($convert);
+
+	return plugin_aname_tag(func_get_args(), $convert);
 }
 
 // &aname;
 function plugin_aname_inline()
 {
-	$args = func_get_args(); // ONE or more
+	$convert = FALSE;
 
+	if (func_num_args() < 2)
+		return plugin_aname_usage($convert);
+
+	$args = func_get_args(); // ONE or more
 	$body = strip_autolink(array_pop($args));
 	array_push($args, $body);
 
-	return plugin_aname_tag($args, FALSE);
-}
-
-// Show usage
-function plugin_aname_usage($convert = TRUE, $message = '')
-{
-	if ($message == '') {
-		if ($convert) {
-			return '#aname(anchorID[[,super][,full][,noid],Link title])';
-		} else {
-			return '&amp;aname(anchorID[,super][,full][,noid]){[Link title]}';
-		}
-	} else {
-		if ($convert) {
-			return '#aname: ' . $message;
-		} else {
-			return '&amp;aname: ' . $message . ';';
-		}
-	}
+	return plugin_aname_tag($args, $convert);
 }
 
 // Aname plugin itself
@@ -67,6 +74,7 @@ function plugin_aname_tag($args = array(), $convert = TRUE)
 	static $_id = array();
 
 	if (empty($args) || $args[0] == '') return plugin_aname_usage($convert);
+
 	$id = array_shift($args);
 	$body = '';
 	if (! empty($args)) $body = array_pop($args);
