@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.78 2005/06/26 09:51:38 henoheno Exp $
+// $Id: attach.inc.php,v 1.79 2005/08/08 14:54:15 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
@@ -10,6 +10,9 @@
 //
 // File attach plugin
 
+// NOTE (PHP > 4.2.3):
+//    This feature is disabled at newer version of PHP.
+//    Set this at php.ini if you want.
 // Max file size for upload on PHP (PHP default: 2MB)
 ini_set('upload_max_filesize', '2M');
 
