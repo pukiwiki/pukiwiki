@@ -75,8 +75,9 @@ DESCRIPTION
 
         ファイル       パーミッション 転送モード
         *.php          644            ASCII
-	attach/*       666            ASCII
-	backup/*       666            ASCII
+	attach/*       666            BINARY
+	backup/*.gz    666            BINARY
+	backup/*.txt   666            ASCII
         cache/*        666            ASCII
         counter/*      666            ASCII
         diff/*.txt     666            ASCII
