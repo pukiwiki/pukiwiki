@@ -1,6 +1,6 @@
 NAME
 
-    PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
+    PukiWiki - 自由にページを追加・削除・編集できるWebページ構築スクリプト
 
         PukiWiki 1.4.6
         Copyright (C)
@@ -16,46 +16,58 @@ SYNOPSIS
 
 DESCRIPTION
 
-        PukiWikiは参加者が自由にページを追加・削除・編集できる
-        Webページ群を作るPHPスクリプトです。
-        Webで動作する掲示板とちょっと似ていますが、
-        Web掲示板が単にメッセージを追加するだけなのに対して、
-        PukiWikiは、Webページ全体を自由に変更することができます。
+        PukiWiki(ぷきうぃき)は自由にページを追加・削除・編集できる
+        ページ群を作ることができるWebアプリケーション(WikiWikiWeb)
+        です。Web掲示板が単にメッセージを追加するだけなのに対して、
+        コンテンツ全体を自由に変更することができます。
 
-        PukiWikiは、結城浩さんのYukiWikiの仕様を参考にして独自に作られました。
-        1.3まではyu-jiさんが作成し、1.3.1b以降はPukiWiki Developers Team
-        によって開発が続けられています。
+        特にPukiWikiはPHP言語で書かれたPHPスクリプトですので、PHPが
+        動作するWebサーバならば容易に設置できます。
 
-        PukiWikiはPHPで書かれたPHPスクリプトとして実現されていますので、
-        PHPが動作するWebサーバならば比較的容易に設置できます。
+        PukiWikiは、結城浩さんが作られたYukiWikiの仕様を参考に独自に
+        開発されました。PukiWiki バージョン1.3まではyu-jiさんが個人
+        で製作し、1.3.1b 以降は PukiWiki Developers Team によって開発
+        が続けられています。
 
-        PukiWikiはフリーソフトです。 ご自由にお使いください。
-        最新版は、 http://pukiwiki.org/ から入手できます。
+        PukiWikiは、yu-jiさんを含む PukiWiki Develpers Team やその貢献
+        者が、各自の著作物にGPLバージョン2(または _あなたの選択で_ 
+        それ以降のGPL)を適用している「フリーソフトウェア(自由なソフト
+        ウェア)」です。最新版はPukiWiki公式サイトから入手できます。
 
 設置方法
 
-        以下は一例です。Webサーバーへのシェルアクセスが可能であれば、
-        アーカイブをそのままサーバーに転送し、サーバー上で解凍
-        (tar pzxf pukiwiki*.tar.gz) するだけでも動作するはずです。
+        Webサーバーへのシェルアクセスが可能であれば、PukiWikiのアー
+        カイブをそのままサーバーに転送し、サーバー上で解凍
+        (tar pzxf pukiwiki*.tar.gz) するだけでパーミッションの設定も
+        行われます。
 
-    1.  アーカイブを解きます。
+        PukiWikiはPHPスクリプトなので、(例えばPerlのように)スクリプト
+        に実行権を付ける必要はありません。CGI起動でないのであれば、
+        スクリプトの一行目を修正する必要もありません。
+
+        以下に、事前にクライアントPCで作業を行う場合の例を記します。
+
+    1.  PukiWikiのアーカイブを展開します。
 
     2.  必要に応じて設定ファイル(*.ini.php)の内容を確認します。
-        1.11  から設定ファイルが別ファイルのpukiwiki.ini.phpになりました。
-        1.4   から設定ファイルが分割されました。
-        1.4.4 から携帯電話およびPDA向けの設定ファイルが一つに集約されました。
-          (i_mode.ini.php, jphone.ini.php の設定+αを keitai.ini.php に集約)
+        スクリプトの中の日本語は(あれば、基本的に)EUC-JPで、また改行
+        コードはLFで記述されていますので、日本語文字コードと改行コード
+        の自動判別ができ、それを元のまま保存できるテキストエディタを
+        使用して下さい。
 
         * 共通設定
           全体               : pukiwiki.ini.php
           ユーザ定義         : rules.ini.php
 
-        * エージェント別設定
+        * ユーザーエージェント別設定
           携帯電話およびPDA  : keitai.ini.php
-          その他             : default.ini.php
+                               (旧 i_mode.ini.php/jphone.ini.php)
+          デスクトップPC     : default.ini.php
 
-    3.  アーカイブの内容をサーバに転送します。
-        ファイルの転送モードについては次項を参照してください。
+    3.  ファイルをFTPなどでサーバに転送します。
+        ※ここまでの間に文字コードや改行コードを壊していないので
+          あれば、転送モードは全て「バイナリ」で行うことができる
+          はずです
 
     4.  サーバ上のファイルおよびディレクトリのパーミッションを確認します。
 
@@ -73,24 +85,32 @@ DESCRIPTION
         trackback      777	TrackBackファイル格納ディレクトリ
         wiki           777	データの格納ディレクトリ
 
-        ファイル       パーミッション 転送モード
+        ファイル       パーミッション データの種類(参考)
+        .htaccess      644            ASCII
+        .htpasswd      644            ASCII
+        */.htaccess    644            ASCII
+
+        ファイル       パーミッション データの種類(参考)
         *.php          644            ASCII
-	attach/*       666            BINARY
-	backup/*.gz    666            BINARY
-	backup/*.txt   666            ASCII
-        cache/*        666            ASCII
-        counter/*      666            ASCII
-        diff/*.txt     666            ASCII
+        */*.php        644            ASCII
+        attach/*       666            BINARY (インストール時は存在せず)
+        backup/*.gz    666            BINARY (インストール時は存在せず)
+        backup/*.txt   666            ASCII  (多くの環境では存在せず)
+        cache/*        666            ASCII  (一部のプラグインはバイナリファイルを保存する)
+        counter/*      666            ASCII  (インストール時は存在せず)
+        diff/*.txt     666            ASCII  (インストール時は存在せず)
         wiki/*.txt     666            ASCII
         image/*        644            BINARY
         image/face/*   644            BINARY
         lib/*          644            ASCII
         plugin/*       644            ASCII
         skin/*         644            ASCII
-        wiki/*         666            ASCII
 
-    5.  index.php あるいは pukiwiki.php にブラウザからアクセスします。
-        必要に応じて、さらに設定やデザインを調整して下さい。
+    5.  サーバーに設置した index.php あるいは pukiwiki.php に、Web
+        ブラウザからアクセスします。
+
+    6.  必要に応じて、さらに設定やデザインを調整して下さい。
+
 
 データのバックアップ方法
 
