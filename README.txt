@@ -36,14 +36,14 @@ DESCRIPTION
 
 設置方法
 
+        PukiWikiはPHPスクリプトなので、(例えばPerlのように)スクリプト
+        に実行権を付ける必要はありません。CGI起動でないのであれば、
+        スクリプトの一行目を修正する必要もありません。
+
         Webサーバーへのシェルアクセスが可能であれば、PukiWikiのアー
         カイブをそのままサーバーに転送し、サーバー上で解凍
         (tar pzxf pukiwiki*.tar.gz) するだけでパーミッションの設定も
         行われます。
-
-        PukiWikiはPHPスクリプトなので、(例えばPerlのように)スクリプト
-        に実行権を付ける必要はありません。CGI起動でないのであれば、
-        スクリプトの一行目を修正する必要もありません。
 
         以下に、事前にクライアントPCで作業を行う場合の例を記します。
 
@@ -147,11 +147,9 @@ DESCRIPTION
 
 テキスト整形のルール
 
-        [[整形ルール]] のページを参照してください。
+        [[ヘルプ]][[整形ルール]] のページを参照してください。
 
-InterWiki
-
-        1.11 からInterWikiが実装されました。
+InterWikiについて
 
         InterWiki とは、Wikiサーバーをつなげる機能です。
         最初はそうだったんで InterWiki という名前なのだそうですが、
@@ -185,8 +183,8 @@ BUG
         バグ報告は devサイトまでお願いします。
         (我々はPukiWikiでPukiWikiのバグトラッキングを行っています)
 
-        dev:BugTrack
-        http://pukiwiki.sourceforge.jp/dev/?BugTrack
+        dev:BugTrack2
+        http://pukiwiki.sourceforge.jp/dev/?BugTrack2
 
 謝辞
 
