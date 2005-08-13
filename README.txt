@@ -54,11 +54,12 @@
       の自動判別ができ、それを元のまま保存できるテキストエディタを
       使用して下さい。
 
-    * 共通設定ファイル
+      ※インターネットに公開するPukiWikiであるならば、PKWK_SAFE_MODE
+        を有効にすることをお薦めします。(詳細:BugTrack/787)
+
       全体               : pukiwiki.ini.php
       ユーザ定義         : rules.ini.php
 
-    * ユーザーエージェント別設定ファイル
       デスクトップPC     : default.ini.php
       携帯電話およびPDA  : keitai.ini.php
            (旧 i_mode.ini.php/jphone.ini.php)
