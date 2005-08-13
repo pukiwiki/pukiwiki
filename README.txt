@@ -222,10 +222,12 @@ FAQ
 
 BUG
 
+        PukiWikiのセキュリティに関する情報は以下でまとめられています。
+        http://pukiwiki.org/?PukiWiki/Errata
+
+
         バグ報告は devサイトまでお願いします。
         (我々はPukiWikiでPukiWikiのバグトラッキングを行っています)
-
-        dev:BugTrack2
         http://pukiwiki.sourceforge.jp/dev/?BugTrack2
 
 謝辞
