@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.127 2005/07/03 14:16:23 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.128 2005/08/24 14:52:25 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -147,7 +147,7 @@ $menubar      = 'MenuBar';       // Menu
 /////////////////////////////////////////////////
 // Always output "nofollow,noindex" attribute
 
-$nofollow = 0; // 1 = Hide from search engines
+$nofollow = 0; // 1 = Try hiding from search engines
 
 /////////////////////////////////////////////////
 
