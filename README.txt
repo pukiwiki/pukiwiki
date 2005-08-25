@@ -1,15 +1,18 @@
 名前
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築スクリプト
 
-    PukiWiki 1.4.6
+    Version 1.4.6
     Copyright (C)
       2001-2005 PukiWiki Developers Team
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
+
     URL:
       http://pukiwiki.org/
       http://pukiwiki.sourceforge.jp/dev/
       http://sourceforge.jp/projects/pukiwiki/
+
+    $Id: README.txt,v 1.20 2005/08/25 15:27:37 henoheno Exp $
 
 書式
     index.php?PAGE_NAME_ENCODED
@@ -32,121 +35,6 @@
     著作物にGPLバージョン2(または _あなたの選択で_ それ以降のGPL)を適用してい
     る「フリーソフトウェア(自由なソフトウェア)」です。最新版はPukiWiki公式サイ
     トから入手できます。
-
-インストール
-    PukiWikiはPHPスクリプトなので、(例えばPerlのように)スクリプトに実行権を付
-    ける必要はありません。CGI起動でないのであれば、スクリプトの一行目を修正す
-    る必要もありません。
-
-    Webサーバーへのシェルアクセスが可能であれば、PukiWikiのアーカイブをそのま
-    まサーバーに転送し、サーバー上で解凍(tar pzxf pukiwiki*.tar.gz) するだけで
-    パーミッションの設定も行われ、すぐに使い始める事ができるでしょう。
-
-    以下に、事前にクライアントPCで作業を行う場合の例を記します。
-
-    1. PukiWikiのアーカイブを展開します。
-
-    2. 必要に応じて設定ファイル(*.ini.php)の内容を確認します。
-      スクリプトの中の日本語は(あれば、基本的に)EUC-JPで、また改行コードはLFで
-      記述されていますので、日本語文字コードと改行コードの自動判別ができ、それ
-      を元のまま保存できるテキストエディタを使用して下さい。
-
-      ※インターネットに公開するPukiWikiであるならば、PKWK_SAFE_MODEを有効にす
-        ることをお薦めします。(詳細:BugTrack/787)
-
-        全体設定           : pukiwiki.ini.php
-        ユーザ定義         : rules.ini.php
-
-        デスクトップPC     : default.ini.php
-        携帯電話およびPDA  : keitai.ini.php
-           (旧 i_mode.ini.php/jphone.ini.php)
-
-    3.  ファイルをFTPなどでサーバに転送します。
-      ※FTPの転送モードは「バイナリ(bin)」を使用して下さい
-
-    4.  サーバ上のファイルおよびディレクトリのパーミッションを確認します。
-
-    ディレクトリ パーミッション
-      attach         777	添付ファイル格納ディレクトリ
-      backup         777	バックアップファイル格納ディレクトリ
-      cache          777	キャッシュファイル格納ディレクトリ
-      counter        777	カウンタファイル格納ディレクトリ
-      diff           777	差分ファイル格納ディレクトリ
-      image          755	画像ファイル
-      image/face     755 	(画像ファイル)フェイスマーク  
-      lib            755	ライブラリ
-      plugin         755	プラグイン
-      skin           755	スキン、CSS、JavaScirptファイル
-      trackback      777	TrackBackファイル格納ディレクトリ
-      wiki           777	データの格納ディレクトリ
-
-    ファイル    パーミッション データの種類(参考)
-      .htaccess      644       ASCII
-      .htpasswd      644       ASCII
-      */.htaccess    644       ASCII
-
-    ファイル    パーミッション データの種類(参考)
-      *.php          644       ASCII
-      */*.php        644       ASCII
-      attach/*       666       BINARY (はじめは存在せず)
-      backup/*.gz    666       BINARY (インストール時は存在せず)
-      backup/*.txt   666       ASCII  (多くの環境では存在せず)
-      cache/*        666       ASCII
-        (一部のプラグインはバイナリファイルを保存します)
-      counter/*      666       ASCII  (はじめは存在せず)
-      diff/*.txt     666       ASCII  (はじめは存在せず)
-      wiki/*.txt     666       ASCII
-      image/*        644       BINARY
-      image/face/*   644       BINARY
-      lib/*          644       ASCII
-      plugin/*       644       ASCII
-      skin/*         644       ASCII
-
-    5.  サーバーに設置した PukiWiki の index.php あるいは pukiwiki.php に、Web
-      ブラウザからアクセスします。
-
-    6.  必要に応じて、さらに設定やデザインを調整して下さい。
-
-      ※CSS(外見)は skin/スキン名.css.php にあります。これは目的に応じたCSSを
-        出力することのできる、単独のPHPスクリプトです。これを静的なファイルに
-        したい場合は、出力結果をWebブラウザで取り出して下さい。どのようなCSS
-        が求められているかはスキンに記述されています。
-      ※スキン(外見の骨組み)に関する設定項目は skin/スキン名.skin.php の先頭に
-        あります。また tDiaryスキン の使用法は BugTrack/769 を参照して下さい。
-      ※プラグイン独自の設定項目は plugin/プラグイン名.inc.php の先頭にありま
-        す
-
-バックアップとリストア
-    ページの最新データを収めているディレクトリ(デフォルトの名前は wiki)以下
-    を、また必要に応じて他のデータを収めているディレクトリ以下をバックアップし
-    て下さい。(同 attach, backup, cache, counter, diff, trackback)
-
-    cacheディレクトリもバックアップすることをお薦めします。
-    1. cache/*.rel ファイルと cache/*.ref ファイルは linksプラグイン で再生
-       成可能ですが、この処理は非常に重く、環境によっては処理が必ず失敗する
-       (中断する)場合があります。
-    2. cache/*.rel ファイルがPukiWikiに全くない時に既存のページを編集すると、
-      linksプラグインを実行した状態とほぼ同等の負荷がかかります。
-      (詳細:BugTrack2/56)
-    3. amazonプラグインはここに画像(のキャッシュ)を保存します。
-
-    データを配置した時は、ファイルのパーミッションが期待されている通りかどう
-    か、また実際に動作するかどうかを確認して下さい。(例: 配置したページの更新
-    を試みる)
-
-    PukiWiki 1.4.5 以降では、添付されている dumpプラグイン で、wiki/attach/
-    backup ディレクトリのリモートバックアップ(*.tar.gzないし*.tar形式)が可能で
-    す。
-      起動の例: http://path/to/pukiwiki/index.php?plugin=dump
-
-    dumpプラグインにはdumpプラグインで取得したファイルの中身をPukiWikiに展開す
-    る機能(リモートリストア)も用意されています。ただしファイルに含まれていない
-    データをPukiWikiから削除する機能はありません(常に上書きになります)し、Web
-    サーバーやPHPのアップロードファイルサイズ制限を越えるファイルを利用するこ
-    とはできません。またこの機能はデフォルトで無効になっています。
-
-    その他、PukiWikiの更新内容をメールで通知する機能は、既存のデータを失わない
-    ための機能としてとらえる事ができるでしょう。
 
 ページの作成
     そのページが置かれるはずのURLに直接アクセスしたり、「新規」リンクから新し
