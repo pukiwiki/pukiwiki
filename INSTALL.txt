@@ -7,7 +7,7 @@
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
 
-    $Id: INSTALL.txt,v 1.2 2005/08/27 15:30:17 henoheno Exp $
+    $Id: INSTALL.txt,v 1.3 2005/08/27 15:36:47 henoheno Exp $
 
 インストール
     PukiWikiはPHPスクリプトなので、(例えばPerlのように)スクリプトに実行権を付
@@ -81,6 +81,9 @@
     5.  サーバーに設置した PukiWiki の index.php あるいは pukiwiki.php に、Web
       ブラウザからアクセスします。
 
+      ※Apache WebサーバーでInternal Server Error が出る場合: 下記を参照して
+        下さい
+
     6.  必要に応じて、さらに設定やデザインを調整して下さい。
 
       ※CSS(外見)は skin/スキン名.css.php にあります。これは目的に応じたCSSを
@@ -91,6 +94,24 @@
         あります。また tDiaryスキン の使用法は BugTrack/769 を参照して下さい。
       ※プラグイン独自の設定項目は plugin/プラグイン名.inc.php の先頭にありま
         す
+
+サーバーエラーが出る場合
+    PukiWiki 1.4.4 から .htaccess ファイルを添付する様になっていますが、
+    Apache Web サーバーの設定によっては "Internal Server Error" を起こす場合
+   があります。
+
+    A: Webブラウザに "Internal Server Error" と表示され
+       Webサーバーのエラーログには "order not allowed here" というエラーが記
+       録される
+
+       PukiWikiを設置したい場所で .htaccess による設定変更が許可されていない
+       (特に "AllowOverride Limit" でない)のが原因です。
+
+       回避策: .htaccess、および skin/.htaccess を削除する
+
+       解決策：
+         Apache設定ファイル(httpd.conf)の、PukiWikiを設置したいディレクトリに
+         関する部分に "AllowOverride Limit" を追加する
 
 バックアップとリストア
     ページの最新データを収めているディレクトリ(デフォルトの名前は wiki)以下
