@@ -7,7 +7,7 @@
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
 
-    $Id: INSTALL.txt,v 1.1 2005/08/25 15:27:37 henoheno Exp $
+    $Id: INSTALL.txt,v 1.2 2005/08/27 15:30:17 henoheno Exp $
 
 インストール
     PukiWikiはPHPスクリプトなので、(例えばPerlのように)スクリプトに実行権を付
@@ -113,7 +113,7 @@
     PukiWiki 1.4.5 以降では、添付されている dumpプラグイン で、wiki/attach/
     backup ディレクトリのリモートバックアップ(*.tar.gzないし*.tar形式)が可能で
     す。
-      起動の例: http://path/to/pukiwiki/index.php?plugin=dump
+      起動の例: index.php?plugin=dump
 
     dumpプラグインにはdumpプラグインで取得したファイルの中身をPukiWikiに展開す
     る機能(リモートリストア)も用意されています。ただしファイルに含まれていない
