@@ -12,7 +12,7 @@
       http://pukiwiki.sourceforge.jp/dev/
       http://sourceforge.jp/projects/pukiwiki/
 
-    $Id: README.txt,v 1.22 2005/08/30 15:51:03 henoheno Exp $
+    $Id: README.txt,v 1.23 2005/09/01 15:05:52 henoheno Exp $
 
 書式
     index.php
@@ -23,7 +23,7 @@
     PukiWiki(ぷきうぃき)はハイパーテキストを素早く自由に追加・削除・編集でき
     るWebアプリケーション(WikiWikiWeb)です。テキストデータからXHTML1.1を生成
     することができ、そのテキストはWebブラウザから何度でも修正することができま
-    す。それぞれのページは自然にハイパーリンクで結びつけることができます。
+    す。それぞれのページは自然にハイパーリンクで結びつきます。
 
     PukiWikiはPHP言語で書かれたスクリプトであるため、PHP(PHP4.1.2〜PHP5)が動
     作するWebサーバに容易に設置でき、軽快に動作します。
@@ -170,6 +170,16 @@
        Wikiページを表示する代わりに、独自の効果を発揮するものです。
        ※RSSの出力(rss)、ページ名の変更(rename)など
 
+文字列置換ルール
+    いくつかの機能は、プラグインではなく文字列の置換か、それとの組み合わせに
+    よって実現されています。
+
+    テキストを表示する際にWebコンテンツと置き換えるタイプ
+       ※ハートマーク(&heart;)の描画、顔文字を画像に置き換える機構など
+
+    テキストを保存する瞬間に置き換え、結果を保存するタイプ
+       ※&now; を、「その時の現在時刻」に置き換える機構など
+
 InterWikiについて
     InterWiki とは、WikiとWikiをつなげる機能です。例えば
     [[Wikiサイト名:ページ名]]
@@ -180,14 +190,18 @@ InterWikiについて
     この機能は Tiki からほぼ完全に移植されています。
     詳細は [[InterWikiテクニカル]] のページを参照してください。
 
-RDF/RSSの出力
-    一部のWebブラウザなどに搭載されているRSSリーダーを使って、PukiWikiの更新状
-    況を確認することができます。
+Wikiの様子を見る
+    Wikiの更新状況(更新された順に並べた一覧)は RecentChanges という特殊なペー
+    ジからチェックすることができます。(名前は変更できます)
 
-    出力方法の例:
-      RSS 0.91 index.php?plugin=rss
-      RSS 1.0  index.php?plugin=rss&ver=1.0
-      RSS 2.0  index.php?plugin=rss&ver=2.0
+    #recentプラグインはこの内容をコンパクトなリストとして表示します。
+      ※デフォルトでMenuBarに追加されています
+
+    rssプラグインはこの内容をRSSのフォーマットで提供することができます。
+      出力方法の例:
+        RSS 0.91 index.php?plugin=rss
+        RSS 1.0  index.php?plugin=rss&ver=1.0
+        RSS 2.0  index.php?plugin=rss&ver=2.0
 
 関連項目
     INSTALL.txt (インストールとアップグレード)
@@ -214,10 +228,10 @@ RDF/RSSの出力
     PukiWikiは、結城浩さんが作られたYukiWikiの仕様を参考に独自に開発されまし
     た。PukiWiki バージョン1.3まではyu-jiさんが個人で製作していました。
 
+    バージョン1.2.1 から、RecentChangesのRDF/RSSを出力できるようになりました。
+
     バージョン1.3.1b 以降はPukiWiki Developers Team によって開発が続けられて
     います。
-
-    バージョン1.2.1 から、RecentChangesのRDF/RSSを出力できるようになりました。
 
  　 バージョン1.4.5 から、RSS 2.0 を出力できるようになりました。
 
