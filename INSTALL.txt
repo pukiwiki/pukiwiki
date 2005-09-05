@@ -7,7 +7,7 @@
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
 
-    $Id: INSTALL.txt,v 1.4 2005/09/05 13:37:21 henoheno Exp $
+    $Id: INSTALL.txt,v 1.5 2005/09/05 14:32:40 henoheno Exp $
 
 インストール
     PukiWikiはPHPスクリプトであるため、(例えばPerlのように)スクリプトに実行権
@@ -95,11 +95,10 @@
       plugin/*       644       ASCII
       skin/*         644       ASCII
 
-    5.  サーバーに設置した PukiWiki の index.php あるいは pukiwiki.php に、Web
+    5. サーバーに設置した PukiWiki の index.php あるいは pukiwiki.php に、Web
       ブラウザからアクセスし、PukiWikiが動作するか様子を見ます。
 
-      ※Apache WebサーバーでInternal Server Error が出る場合: 下記を参照して
-        下さい
+      ※エラーが出る場合: 下記を参照して下さい
 
     6.  必要に応じて、さらに設定やデザインを調整して下さい。
 
@@ -113,7 +112,7 @@
         す
       ※tDiaryテーマ(tDiaryスキン)の使用法は BugTrack/769 を参照して下さい。
 
-エラーが出る場合: CGI
+エラーが出る場合
     CGI版のPHPが設置されたサーバー(特にsuExecと組み合わされている環境)で動作
     させようとした場合に "Internal Server Error" などと表示される場合がありま
     す。詳しくはサーバー管理者がPHPスクリプト向けに提供している情報を確認して
