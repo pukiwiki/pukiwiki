@@ -8,7 +8,6 @@
 //-[[ウヰキエリア:FrontPage]]
 **PukiWikiのページで飛んでみよう。 [#sfce4c27]
 -[[pukiwiki:FrontPage]]
--[[pukiwiki.org:FrontPage]]
 -[[pukiwiki.dev:FrontPage]]
 **検索だって出来る。 [#wec8fb2d]
 :Googleでpukiwikiを検索|

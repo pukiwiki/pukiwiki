@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.38 2005/07/27 14:13:12 henoheno Exp $
+// $Id: init.php,v 1.39 2005/09/11 05:58:33 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -14,7 +14,7 @@ define('S_VERSION', '1.4.6');
 define('S_COPYRIGHT',
 	'<strong>PukiWiki ' . S_VERSION . '</strong>' .
 	' Copyright &copy; 2001-2005' .
-	' <a href="http://pukiwiki.org/">PukiWiki Developers Team</a>.' .
+	' <a href="http://pukiwiki.sourceforge.jp/">PukiWiki Developers Team</a>.' .
 	' License is <a href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br />' .
 	' Based on "PukiWiki" 1.3 by <a href="http://factage.com/yu-ji/">yu-ji</a>'
 );

@@ -1,5 +1,5 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.31 2005/08/23 13:59:21 henoheno Exp $
+$Id: UPDATING.txt,v 1.32 2005/09/11 05:58:33 henoheno Exp $
 
 
 互換性に関する記述
@@ -184,4 +184,4 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
 
 ※詳細は公式Webサイトを参照して下さい
 
-http://pukiwiki.org/?PukiWiki%2F%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89
+http://pukiwiki.sourceforge.jp/?PukiWiki%2F%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89

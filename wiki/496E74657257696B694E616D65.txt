@@ -16,8 +16,7 @@ InterWiki用のサーバリストです。
 
 ** PukiWiki [#j0d346fa]
 // PukiWiki Official Main Site
--[http://pukiwiki.org/? pukiwiki] utf8
--[http://pukiwiki.org/? pukiwiki.org] utf8
+-[http://pukiwiki.sourceforge.jp/? pukiwiki] utf8
 // PukiWiki Developer Site
 -[http://pukiwiki.sourceforge.jp/dev/? pukiwiki.dev] euc
 

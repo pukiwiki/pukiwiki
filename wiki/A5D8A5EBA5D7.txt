@@ -3,7 +3,7 @@
 #norelated
 * [[PukiWiki]]ヘルプ [#s14a5adf]
 
-- [[FAQ(pukiwiki.org)>pukiwiki:FAQ]](日本語)
+- [[FAQ(PukiWiki-official)>pukiwiki:FAQ]](日本語)
 - [[テキスト整形のルール>整形ルール]] 
 - [[プラグインマニュアル>PukiWiki/1.4/Manual/Plugin]] 
 ----------------------------

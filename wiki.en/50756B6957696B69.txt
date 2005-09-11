@@ -2,7 +2,8 @@
 #norelated
 * PukiWiki
 
-http://pukiwiki.org/
+- http://pukiwiki.sourceforge.jp/
+- http://sourceforge.jp/projects/pukiwiki/
 
 PukiWiki is one of the WikiEngines ,which enables everyone to edit any pages.
 
@@ -17,7 +18,7 @@ And ,without your learning special knowledge, fomatted sentenses are created jus
 
 ** Links
 
-- [[PukiWiki.org:http://pukiwiki.org/]] - PukiWiki official site
+- [[PukiWiki-official:http://pukiwiki.sourceforge.jp/]] - PukiWiki official site
 -- Questions and comments are welcomed :)
 
 - Pukiwiki-dev - http://pukiwiki.sourceforge.jp/dev/

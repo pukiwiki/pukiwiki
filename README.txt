@@ -8,11 +8,11 @@
     License: GPL version 2 or (at your option) any later version
 
     URL:
-      http://pukiwiki.org/
+      http://pukiwiki.sourceforge.jp/
       http://pukiwiki.sourceforge.jp/dev/
       http://sourceforge.jp/projects/pukiwiki/
 
-    $Id: README.txt,v 1.23 2005/09/01 15:05:52 henoheno Exp $
+    $Id: README.txt,v 1.24 2005/09/11 05:58:33 henoheno Exp $
 
 書式
     index.php
@@ -212,13 +212,13 @@ Wikiの様子を見る
     その他、リリース版の基本的な使い方に関する情報はPukiWiki.orgをご覧下さい。
     以下のようなコンテンツが特に有用です。
 
-    FAQ        http://pukiwiki.org/?FAQ
-    質問箱     http://pukiwiki.org/?%E8%B3%AA%E5%95%8F%E7%AE%B1
-    続・質問箱 http://pukiwiki.org/?%E7%B6%9A%E3%83%BB%E8%B3%AA%E5%95%8F%E7%AE%B1
+    FAQ        http://pukiwiki.sourceforge.jp/?FAQ
+    質問箱     http://pukiwiki.sourceforge.jp/?%E8%B3%AA%E5%95%8F%E7%AE%B1
+    続・質問箱 http://pukiwiki.sourceforge.jp/?%E7%B6%9A%E3%83%BB%E8%B3%AA%E5%95%8F%E7%AE%B1
 
 バグ
     PukiWikiのセキュリティに関する情報は以下でまとめられています。
-    http://pukiwiki.org/?PukiWiki/Errata
+    http://pukiwiki.sourceforge.jp/?PukiWiki/Errata
 
     バグ報告は devサイトまでお願いします。
     (我々はPukiWikiでPukiWikiのバグトラッキングを行っています)

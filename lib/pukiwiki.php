@@ -1,14 +1,14 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.php,v 1.10 2005/06/28 14:06:06 henoheno Exp $
+// $Id: pukiwiki.php,v 1.11 2005/09/11 05:58:33 henoheno Exp $
 //
 // PukiWiki 1.4.*
 //  Copyright (C) 2002-2005 by PukiWiki Developers Team
-//  http://pukiwiki.org/
+//  http://pukiwiki.sourceforge.jp/
 //
 // PukiWiki 1.3.*
 //  Copyright (C) 2002-2004 by PukiWiki Developers Team
-//  http://pukiwiki.org/
+//  http://pukiwiki.sourceforge.jp/
 //
 // PukiWiki 1.3 (Base)
 //  Copyright (C) 2001-2002 by yu-ji <sng@factage.com>
