@@ -1,18 +1,17 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: aname.inc.php,v 1.26 2005/08/22 14:59:24 henoheno Exp $
+// $Id: aname.inc.php,v 1.27 2005/09/18 09:32:55 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
-// aname plugin - Set various anchor tag
-//   * A simple anchor <a id="key"></a>
-//   * A clickable link to the anchor <a href="#key">string</a>
-//   * Clickable anchor with the key itself <a id="key" href="#key">string</a>
+// aname plugin - Set various anchor tags
+//   * With just an anchor id: <a id="key"></a>
+//   * With a hyperlink to the anchor id: <a href="#key">string</a>
+//   * With an anchor id and a link to the id itself: <a id="key" href="#key">string</a>
 //
-// NOTE:
-//   Use 'id="key"' instead of 'name="key"' at XHTML 1.1
+// NOTE: Use 'id="key"' instead of 'name="key"' at XHTML 1.1
 
 // Check ID is unique or not (compatible: no-check)
 define('PLUGIN_ANAME_ID_MUST_UNIQUE', 0);
