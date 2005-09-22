@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.inc.php,v 1.22 2005/05/07 16:21:51 henoheno Exp $
+// $Id: backup.inc.php,v 1.23 2005/09/22 13:45:02 henoheno Exp $
 //
 // Backup plugin
 
@@ -202,10 +202,12 @@ EOD;
 		return join('', $retval);
 	}
 
-	$retval[1] .= '   <li><a href="' . $script . '?cmd=backup&amp;action=delete&amp;page=' .
-		$r_page . '">';
-	$retval[1] .= str_replace('$1', $s_page, $_title_backup_delete);
-	$retval[1] .= '</a></li>' . "\n";
+	if (! PKWK_READONLY) {
+		$retval[1] .= '   <li><a href="' . $script . '?cmd=backup&amp;action=delete&amp;page=' .
+			$r_page . '">';
+		$retval[1] .= str_replace('$1', $s_page, $_title_backup_delete);
+		$retval[1] .= '</a></li>' . "\n";
+	}
 
 	$href = $script . '?cmd=backup&amp;page=' . $r_page . '&amp;age=';
 	$_anchor_from = $_anchor_to   = '';
