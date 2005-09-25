@@ -7,7 +7,7 @@
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
 
-    $Id: INSTALL.txt,v 1.6 2005/09/05 15:01:09 henoheno Exp $
+    $Id: INSTALL.txt,v 1.7 2005/09/25 10:07:52 henoheno Exp $
 
 インストール
     PukiWikiはPHPスクリプトであるため、(例えばPerlのように)スクリプトに実行権
@@ -167,6 +167,11 @@
     データを書き込むディレクトリ(やファイル)に書き込み権限が無い場合、このよ
     うなメッセージを表示します。xxx_DIR がどこにあたるかは、設定ファイルで同
     名の定数を定義している部分を参照して下さい。
+
+エラーが出る場合: CSSが動作しない
+    pukiwiki.css.php は単独のPHPプログラムであるため、CGI起動が必要な環境で
+    あったり、mod_layoutによる広告挿入回避を行う場合はこのファイルについても
+    index.phpと同様の対応を行う必要があります。
 
 バックアップとリストア
     ページの最新データを収めているディレクトリ(デフォルトの名前は wiki)以下
