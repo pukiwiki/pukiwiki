@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.38 2005/08/01 15:38:26 henoheno Exp $
+// $Id: file.php,v 1.39 2005/10/02 16:15:05 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -296,7 +296,11 @@ function put_lastmodified()
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
-	foreach (array_splice(array_keys($recent_pages), 0, $maxshow) as $page) {
+
+	// Only variables can be passed by reference from PHP 5.0.5
+	$tmp_array = array_keys($recent_pages); // with array_splice()
+
+	foreach (array_splice($tmp_array, 0, $maxshow) as $page) {
 		$time      = $recent_pages[$page];
 		$s_lastmod = htmlspecialchars(format_date($time));
 		$s_page    = htmlspecialchars($page);

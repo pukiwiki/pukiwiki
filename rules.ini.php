@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: rules.ini.php,v 1.7 2005/04/30 11:35:43 henoheno Exp $
+// $Id: rules.ini.php,v 1.8 2005/10/02 16:15:05 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -25,6 +25,10 @@ $datetime_rules = array(
 //  前後に必ず / を含めてください。行頭指定は ^ を頭に。
 //  行末指定は $ を後ろに。
 //
+
+// Only variables can be passed by reference from PHP 5.0.5
+$page_array = explode('/', $vars['page']); // with array_pop()
+
 $str_rules = array(
 	'now\?' 	=> format_date(UTIME),
 	'date\?'	=> get_date($date_format),
@@ -32,9 +36,10 @@ $str_rules = array(
 	'&now;' 	=> format_date(UTIME),
 	'&date;'	=> get_date($date_format),
 	'&time;'	=> get_date($time_format),
-	'&page;'	=> array_pop(explode('/', $vars['page'])),
+	'&page;'	=> array_pop($page_array),
 	'&fpage;'	=> $vars['page'],
 	'&t;'   	=> "\t",
 );
+unset($page_array);
 
 ?>

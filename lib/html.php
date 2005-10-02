@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.42 2005/08/22 14:35:47 henoheno Exp $
+// $Id: html.php,v 1.43 2005/10/02 16:15:05 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -119,9 +119,12 @@ function catbody($title, $page, $body)
 	if ($search_word_color && isset($vars['word'])) {
 		$body = '<div class="small">' . $_msg_word . htmlspecialchars($vars['word']) .
 			'</div>' . $hr . "\n" . $body;
-		$words = array_flip(array_splice(
-			preg_split('/\s+/', $vars['word'], -1, PREG_SPLIT_NO_EMPTY),
-			0, 10));
+
+		// Only variables can be passed by reference from PHP 5.0.5
+		// with array_splice()
+		$tmp_array = preg_split('/\s+/', $vars['word'], -1, PREG_SPLIT_NO_EMPTY);
+
+		$words = array_flip(array_splice($tmp_array, 0, 10));
 		$keys = array();
 		foreach ($words as $word=>$id) $keys[$word] = strlen($word);
 		arsort($keys, SORT_NUMERIC);
