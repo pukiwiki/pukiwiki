@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.29 2005/03/02 13:31:05 henoheno Exp $
+// $Id: tracker.inc.php,v 1.30 2005/10/04 14:18:06 henoheno Exp $
 //
 // Issue tracker plugin (See Also bugtrack plugin)
 
@@ -836,9 +836,12 @@ class Tracker_list
 
 		if (is_array($order) && isset($order[$sort]))
 		{
-			$index = array_flip(array_keys($order));
+			$order_keys = array_keys($order);
+
+			$index = array_flip($order_keys);
 			$pos = 1 + $index[$sort];
-			$b_end = ($sort == array_shift(array_keys($order)));
+			$b_end = ($sort == array_slice($order_keys, 0, 1));
+
 			$b_order = ($order[$sort] == SORT_ASC);
 			$dir = ($b_end xor $b_order) ? SORT_ASC : SORT_DESC;
 			$arrow = '&br;'.($b_order ? '&uarr;' : '&darr;')."($pos)";
