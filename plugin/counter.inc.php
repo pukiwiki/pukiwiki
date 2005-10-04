@@ -1,5 +1,5 @@
 <?php
-// $Id: counter.inc.php,v 1.16 2005/04/09 03:08:09 henoheno Exp $
+// $Id: counter.inc.php,v 1.17 2005/10/04 14:31:22 henoheno Exp $
 //
 // PukiWiki counter plugin
 //
@@ -14,7 +14,10 @@ function plugin_counter_inline()
 {
 	global $vars;
 
-	$arg = strtolower(array_shift(func_get_args()));
+	// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
+	$args = func_get_args(); // with array_shift()
+
+	$arg = strtolower(array_shift($args));
 	switch ($arg) {
 	case ''     : $arg = 'total'; /*FALLTHROUGH*/
 	case 'total': /*FALLTHROUGH*/

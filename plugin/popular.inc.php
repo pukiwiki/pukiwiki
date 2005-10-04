@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: popular.inc.php,v 1.14 2005/04/09 03:18:06 henoheno Exp $
+// $Id: popular.inc.php,v 1.15 2005/10/04 14:31:22 henoheno Exp $
 //
 // Popular pages plugin: Show an access ranking of this wiki
 // -- like recent plugin, using counter plugin's count --
@@ -65,7 +65,10 @@ function plugin_popular_convert()
 	}
 
 	asort($counters, SORT_NUMERIC);
-	$counters = array_splice(array_reverse($counters, TRUE), 0, $max);
+
+	// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
+	$counters = array_reverse($counters, TRUE); // with array_splice()
+	$counters = array_splice($counters, 0, $max);
 
 	$items = '';
 	if (! empty($counters)) {

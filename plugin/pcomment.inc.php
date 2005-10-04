@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pcomment.inc.php,v 1.42 2005/05/29 10:49:59 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.43 2005/10/04 14:31:22 henoheno Exp $
 //
 // pcomment plugin - Show/Insert comments into specified (another) page
 //
@@ -77,7 +77,10 @@ function plugin_pcomment_convert()
 		'reply' =>FALSE,
 		'_args' =>array()
 	);
-	array_walk(func_get_args(), 'plugin_pcomment_check_arg', & $params);
+
+	// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
+	$args = func_get_args(); // with array_walk()
+	array_walk($args, 'plugin_pcomment_check_arg', & $params);
 
 	$vars_page = isset($vars['page']) ? $vars['page'] : '';
 	$page  = (isset($params['_args'][0]) && $params['_args'][0] != '') ? $params['_args'][0] :
