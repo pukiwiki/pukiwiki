@@ -1,5 +1,5 @@
 <?php
-// $Id: recent.inc.php,v 1.17 2005/10/02 16:15:06 henoheno Exp $
+// $Id: recent.inc.php,v 1.18 2005/10/04 13:41:03 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2002      Y.MASUI http://masui.net/pukiwiki/ masui@masui.net
@@ -46,7 +46,7 @@ function plugin_recent_convert()
 
 	// Get latest N changes
 	if (file_exists(PLUGIN_RECENT_CACHE)) {
-		// Only variables can be passed by reference from PHP 5.0.5
+		// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
 		$file_array = file(PLUGIN_RECENT_CACHE); // with array_splice()
 		$lines      = array_splice($file_array, 0, $recent_lines);
 	} else {
