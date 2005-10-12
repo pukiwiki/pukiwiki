@@ -1,12 +1,12 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.css.php,v 1.11 2005/05/01 02:43:27 henoheno Exp $
+// $Id: pukiwiki.css.php,v 1.12 2005/10/12 13:06:27 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
-// Defaul CSS
+// Default CSS
 
 // Send header
 header('Content-Type: text/css');
