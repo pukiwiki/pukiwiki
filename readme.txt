@@ -1,14 +1,20 @@
 NAME
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築PHPスクリプト
 
-        PukiWiki 1.3.8rc1
-        Copyright (C) 2001-2004 by sng, PukiWiki Developers Team
-	License is GNU/GPL.
-	Based on "PukiWiki" 1.3 by yu-ji
-        http://pukiwiki.org/
+    PukiWiki 1.3.8rc1
+    Copyright (C) 2001-2004 by sng, PukiWiki Developers Team
+    License: GPL version 2 or (at your option) any later version
+        
+    URL:
+      http://pukiwiki.sourceforge.jp/
+      http://pukiwiki.sourceforge.jp/dev/
+      http://sourceforge.jp/projects/pukiwiki/
+
+    $Id: readme.txt,v 1.9.2.10 2005/10/16 08:30:43 henoheno Exp $
 
 SYNOPSIS
-        http://pukiwiki.org/
+    index.php?PAGE_NAME_ENCODED
+    index.php?plugin=PLUGIN_NAME
 
 DESCRIPTION
 
@@ -31,7 +37,7 @@ DESCRIPTION
 
   入手
 
-    PukiWikiの最新版は、 http://pukiwiki.org/ から入手できます。
+    PukiWikiの最新版はPukiWiki公式サイトから入手できます。
 
   インストール
 
@@ -185,14 +191,14 @@ DESCRIPTION
             大かっこの中にはスペースを含めてはいけません。
             日本語も使えます。
 
-        *   また、[[pukiwiki:http://pukiwiki.org/]] のようにすると factage の文字に
-            http://pukiwiki.org/ へのリンクが貼れます。
+        *   また、[[pukiwiki:http://example.com/]] のようにすると pukiwiki の文字に
+            http://example.com/ へのリンクが貼れます。
 
         *   [[サーバ名:WikiName]] のようにすると InterWikiName になります。
 
-        *   http://pukiwiki.org/ のようなURLは自動的にリンクになります。
+        *   http://example.com/ のようなURLは自動的にリンクになります。
 
-        *   team@pukiwiki.org のようなメールアドレスも自動的にリンクになります。
+        *   team@example.com のようなメールアドレスも自動的にリンクになります。
 
     *   行頭がスペースやタブで始まっていると、
         それは整形済みの段落`<pre>'として扱われます。
@@ -212,11 +218,11 @@ DESCRIPTION
 
     *   #related を書くと、現在のページ名を含む別のページ(関連ページ)へのリンクを表示します。 
 
-    * #norelated を行頭に書くと、そのページの一番下に表示される関連ページを非表示にします。 
+    *   #norelated を行頭に書くと、そのページの一番下に表示される関連ページを非表示にします。 
 
-    * #calendar_read(200202) を行頭に書くと、その日付のページを表示するカレンダーが表示されます。括弧内は年月を表しますが、省略すると現在の年月が使用されます。(日記向け) 
+    *   #calendar_read(200202) を行頭に書くと、その日付のページを表示するカレンダーが表示されます。括弧内は年月を表しますが、省略すると現在の年月が使用されます。(日記向け) 
 
-    * #calendar_edit(200202) を行頭に書くと、その日付のページを編集するカレンダーが表示されます。括弧内は年月を表しますが、省略すると現在の年月が使用されます。(日記向け) 
+    *   #calendar_edit(200202) を行頭に書くと、その日付のページを編集するカレンダーが表示されます。括弧内は年月を表しますが、省略すると現在の年月が使用されます。(日記向け) 
 
     *   その他、pukiwiki.php を編集することにより他のルールをスクリプト設置者が定義できます。
 
@@ -242,11 +248,11 @@ RDF/RSS
 
     *   RSS 0.91 の出力方法の例
 
-        *   http://pukiwiki/index.php?cmd=rss
+        *   index.php?cmd=rss
 
     *   RSS 1.0 の出力方法の例
 
-        *   http://pukiwiki.org/index.php?cmd=rss10
+        *   index.php?cmd=rss10
 
 更新履歴
     *   2004-04-04 1.3.7 by PukiWiki Developers Team
@@ -301,7 +307,7 @@ RDF/RSS
 
     *   2002-07-15 1.3.2 by PukiWiki Developers Team
 
-        開発をPukiWiki Developers Team (http://pukiwiki.org/)に移行して初めてのリリース。
+        開発を PukiWiki Developers Team に移行して初めてのリリース。
         以前のリリースに含まれていたXSS脆弱性を修正。
         HTMLがHTML4.01に準拠するように修正
         その他多数のバグを修正
@@ -376,40 +382,25 @@ RDF/RSS
     *   2001-11-25 0.90 by sng. 一応公開。YukiWiki の検索と差分はまだ。
 
 TODO
-        - http://pukiwiki.org/?BugTrack
-
-作者
-        PukiWiki 1.3.3 by PukiWiki Developers Team
-         Copyright (C) 2002 by sng & PukiWiki Developers Team
-         http://pukiwiki.org/
-
-    質問、意見、バグ報告は http://pukiwiki.org/ までお願いします。
+    質問、意見、バグ報告は http://pukiwiki.sourceforge.jp/ までお願いします。
+    http://pukiwiki.sourceforge.jp/?BugTrack
 
 配布条件
-    PukiWikiは、 GNU General Public Licenseにて公開します。
+    PukiWikiは、 GNU General Public License version 2 or (at your option)
+    any later versionにて公開しています。
 
-    PukiWikiはフリーソフトです。 ご自由にお使いください。
+    PukiWikiはフリーソフトウェア(自由なソフトウェア)です。 ご自由にお使いください。
 
 謝辞
     PukiWiki Develpers Teamの皆さん、PukiWikiユーザの皆さんに感謝します。
-
     PukiWiki を開発した、sngさんに感謝します。
-
     YukiWiki のクローン化を許可していただいた結城浩さんに感謝します。
-
     本家のWikiWikiを作ったCunningham & Cunningham, Inc.に 感謝します。
 
 参照リンク
-    *   PukiWikiホームページ http://pukiwiki.org/
-
-    *   sngのホームページ http://factage.com/sng/
-
+    *   yu-jiさんのホームページ   http://factage.com/yu-ji/
     *   結城浩さんのホームページ http://www.hyuki.com/
-
     *   YukiWikiホームページ http://www.hyuki.com/yukiwiki/
-
     *   Tiki http://todo.org/cgi-bin/jp/tiki.cgi
-
     *   本家のWikiWiki http://c2.com/cgi/wiki?WikiWikiWeb
-
     *   本家のWikiWikiの作者(Cunningham & Cunningham, Inc.) http://c2.com/
