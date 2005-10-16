@@ -29,7 +29,6 @@
 * 大見出し2
 
 ** 小見出し2-1
-http://pukiwiki.org/
 
 ** 小見出し2-2
 段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1段落1
@@ -79,10 +78,10 @@ http://pukiwiki.org/
 
 URLやメールアドレスは自動的にリンクになります
 
-- ホームページ -- http://pukiwiki.org/
-- メールアドレス -- foo@pexample.com
+- ホームページ -- http://example.com/
+- メールアドレス -- foo@example.com
 - URLが各種画像ファイルであればそのまま表示します
--- http://pukiwiki.org/pukiwiki.gif
+-- http://pukiwiki.sourceforge.jp/image/b_pukiwiki.official.png
 
 * その他の文字装飾
 

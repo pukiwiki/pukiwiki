@@ -141,10 +141,10 @@ WikiClone¤È¤Ï¤½¤¦¤¤¤¦¤â¤Î¤Ç¤¹¡£Ã¯¤Ç¤â¤É¤³¤Ç¤â±ø¤·¤¿¤ê¡¢¾Ã¤·¤¿¤ê¡¢¹Ó¤é¤·¤¿¤ê¤Ç¤­¤
  [[¤³¤Á¤é>hogehoge#hogera]]
  [[¤³¤Á¤é>#piyo]]
 ¤Î¤è¤¦¤Ë½ñ¤¯¤È¡¢¡Ö¤³¤Á¤é¡×¤ÎÊ¸»ú¤ËÂÐ¤·¤Æ¡¢PukiWikiÆâ¤Îhogehoge¤Î¥Ú¡¼¥¸¤Ø¤Î¥ê¥ó¥¯¤È¤Ê¤ê¤Þ¤¹¡£Æ±ÍÍ¤Ëhogehoge¤Î¥Ú¡¼¥¸Ãæ¤Î¥¢¥ó¥«¡¼hogera¤Ø¤Î¥ê¥ó¥¯¤ä¡¢Æ±°ì¥Ú¡¼¥¸¤Î¥¢¥ó¥«¡¼piyo¤Ø¤Î¥ê¥ó¥¯¤âµ­½Ò¤Ç¤­¤Þ¤¹¡£(¥¨¥¤¥ê¥¢¥¹µ¡Ç½)
- [[hogehoge:http://www.pukiwiki.org/]]
-¤Î¤è¤¦¤Ë½ñ¤¯¤È¡Öhogehoge¡×¤ÎÊ¸»ú¤ËÂÐ¤·¤Æ http://www.pukiwiki.org/ ¤Ø¤Î¥ê¥ó¥¯¤òÅ½¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£ 
- http://www.pukiwiki.org/
- webmaster@pukiwiki.org
+ [[hogehoge:http://example.com/]]
+¤Î¤è¤¦¤Ë½ñ¤¯¤È¡Öhogehoge¡×¤ÎÊ¸»ú¤ËÂÐ¤·¤Æ http://example.com/ ¤Ø¤Î¥ê¥ó¥¯¤òÅ½¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£ 
+ http://example.com/
+ webmaster@example.com
 ¤Î¤è¤¦¤ÊURL¡¦¥á¡¼¥ë¥¢¥É¥ì¥¹¤Ï¼«Æ°Åª¤Ë¥ê¥ó¥¯¤Ë¤Ê¤ê¤Þ¤¹¡£ 
  &aname(testanchor);
 µ­½Ò¤·¤¿¸Ä½ê¤Ëtestanchor¤È¤¤¤¦Ì¾Á°¤Î¥¢¥ó¥«¡¼¤òËä¤á¹þ¤ß¤Þ¤¹¡£

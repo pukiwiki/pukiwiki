@@ -2,12 +2,11 @@
 // pukiwiki.php - Yet another WikiWikiWeb clone.
 //
 // PukiWiki 1.3.*
-//  Copyright (C) 2002 by PukiWiki Developers Team
-//  http://pukiwiki.org/
+//  Copyright (C) 2002-2004 by PukiWiki Developers Team
+//  http://pukiwiki.sourceforge.jp/
 //
 // PukiWiki 1.3 (Base)
-//  Copyright (C) 2001,2002 by sng.
-//  <sng@factage.com>
+//  Copyright (C) 2001-2002 by yu-ji <sng@factage.com>
 //  http://factage.com/sng/pukiwiki/
 //
 // Special thanks
@@ -25,7 +24,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: pukiwiki.php,v 1.16.2.13 2004/08/08 02:39:05 henoheno Exp $
+// $Id: pukiwiki.php,v 1.16.2.14 2005/10/16 08:45:12 henoheno Exp $
 /////////////////////////////////////////////////
 
 /////////////////////////////////////////////////
