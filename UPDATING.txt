@@ -1,11 +1,11 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.32 2005/09/11 05:58:33 henoheno Exp $
+$Id: UPDATING.txt,v 1.33 2005/11/02 14:08:09 henoheno Exp $
 
 
 互換性に関する記述
 ==================
 
-PukiWiki 1.4.6: PukiWiki PukiWiki 1.4.5_1 との非互換点
+PukiWiki 1.4.6: PukiWiki 1.4.5_1 との非互換点
 
     1. 管理者パスワードとベーシック認証で用いるユーザーパスワードについて、パ
        スワードの保存方法を九種類の中から選択できる様になりました。この指定方
