@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.39 2005/09/11 05:58:33 henoheno Exp $
+// $Id: init.php,v 1.40 2005/11/12 05:57:44 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -327,6 +327,10 @@ if (empty($_POST)) {
 	$vars = array_merge($_GET, $_POST); // Considered reliable than $_REQUEST
 }
 
+// 入力チェック: 'cmd=' prohibits nasty 'plugin='
+if (isset($vars['cmd']) && isset($vars['plugin']))
+	die('Using both cmd= and plugin= is not allowed');
+
 // 入力チェック: cmd, plugin の文字列は英数字以外ありえない
 foreach(array('cmd', 'plugin') as $var) {
 	if (isset($vars[$var]) && ! preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $vars[$var]))
@@ -367,11 +371,6 @@ if (! isset($vars['cmd']) && ! isset($vars['plugin'])) {
 	$arg = input_filter($arg);
 	$get['page'] = $post['page'] = $vars['page'] = $arg;
 }
-
-// 入力チェック: 'cmd=' prohibits nasty 'plugin='
-if (isset($vars['cmd']) && isset($vars['plugin']))
-	unset($get['plugin'], $post['plugin'], $vars['plugin']);
-
 
 /////////////////////////////////////////////////
 // 初期設定($WikiName,$BracketNameなど)
