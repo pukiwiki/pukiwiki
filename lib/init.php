@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.40 2005/11/12 05:57:44 henoheno Exp $
+// $Id: init.php,v 1.41 2005/11/19 13:11:31 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -327,7 +327,7 @@ if (empty($_POST)) {
 	$vars = array_merge($_GET, $_POST); // Considered reliable than $_REQUEST
 }
 
-// 入力チェック: 'cmd=' prohibits nasty 'plugin='
+// 入力チェック: 'cmd=' and 'plugin=' can't live together
 if (isset($vars['cmd']) && isset($vars['plugin']))
 	die('Using both cmd= and plugin= is not allowed');
 
