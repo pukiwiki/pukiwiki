@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.46 2005/07/03 15:09:27 henoheno Exp $
+// $Id: func.php,v 1.47 2005/11/20 05:31:17 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -126,58 +126,71 @@ function auto_template($page)
 	return $body;
 }
 
-// Expand search words
-function get_search_words($words, $do_escape = FALSE)
+// Expand all search-words to regexes and push them into an array
+function get_search_words($words = array(), $do_escape = FALSE)
 {
-	$retval = array();
+	static $init, $mb_convert_kana, $pre, $post, $quote = '/';
 
-	$pre = $post = '';
-	if (SOURCE_ENCODING == 'EUC-JP') {
-		// Perl memo - Correct pattern-matching with EUC-JP
-		// http://www.din.or.jp/~ohzaki/perl.htm#JP_Match (Japanese)
-		$pre  = '(?<!\x8F)';
-		$post =	'(?=(?:[\xA1-\xFE][\xA1-\xFE])*' . // JIS X 0208
-			'(?:[\x00-\x7F\x8E\x8F]|\z))';     // ASCII, SS2, SS3, or the last
+	if (! is_array($words)) $words = array($words);
+
+	if (! isset($init)) {
+		// function: mb_convert_kana() is for Japanese code only
+		if (LANG == 'ja' && function_exists('mb_convert_kana')) {
+			$mb_convert_kana = create_function('$str, $option',
+				'return mb_convert_kana($str, $option);');
+		} else {
+			$mb_convert_kana = create_function('$str, $option',
+				'return $str;');
+		}
+		if (SOURCE_ENCODING == 'EUC-JP') {
+			// Perl memo - Correct pattern-matching with EUC-JP
+			// http://www.din.or.jp/~ohzaki/perl.htm#JP_Match (Japanese)
+			$pre  = '(?<!\x8F)';
+			$post =	'(?=(?:[\xA1-\xFE][\xA1-\xFE])*' . // JIS X 0208
+				'(?:[\x00-\x7F\x8E\x8F]|\z))';     // ASCII, SS2, SS3, or the last
+		} else {
+			$pre = $post = '';
+		}
+		$init = TRUE;
 	}
 
-	// function: just preg_quote()
-	$quote_func = create_function('$str', 'return preg_quote($str, \'/\');');
-
-	// function: mb_convert_kana() or nothing
-	$convert_kana = create_function('$str, $option',
-		(LANG == 'ja' && function_exists('mb_convert_kana')) ?
-			'return mb_convert_kana($str, $option);' : 'return $str;');
-
+	// Generate regex for the words
+	$regex = array();
 	foreach ($words as $word) {
-		// 'a': Zenkaku-Alphabet to Hankaku-Alphabet
-		// 'K': Hankaku-Katakana to Zenkaku-Katakana
-		// 'C': Zenkaku-Hiragana to Zenkaku-Katakana
-		// 'V': Merge 'A character and A voiced sound symbol' to 'A character with the symbol'
-		$word_zk = $convert_kana($word, 'aKCV');
-		$len     = mb_strlen($word_zk);
-		$chars   = array();
-		for ($pos = 0; $pos < $len; $pos++) {
-			$char = mb_substr($word_zk, $pos, 1);
-			$arr = array($quote_func($do_escape ? htmlspecialchars($char) : $char));
+		$word = trim($word);
+		if ($word == '') continue;
+
+		// Normalize: ASCII letters = to single-byte. Others = to Zenkaku and Katakana
+		$word_nm = $mb_convert_kana($word, 'aKCV');
+		$nmlen   = mb_strlen($word_nm);
+
+		// Each chars may be served ...
+		$chars = array();
+		for ($pos = 0; $pos < $nmlen; $pos++) {
+			$char = mb_substr($word_nm, $pos, 1);
+
+			// Just normalized one? (ASCII char or Zenkaku-Katakana?)
+			$or = array(preg_quote($do_escape ? htmlspecialchars($char) : $char, $quote));
 			if (strlen($char) == 1) {
-				// Single-byte characters
+				// An ASCII (single-byte) character
 				foreach (array(strtoupper($char), strtolower($char)) as $_char) {
-					if ($char != '&') $arr[] = $quote_func($_char);
-					$ord = ord($_char);
-					$arr[] = sprintf('&#(?:%d|x%x);', $ord, $ord);    // Entity references
-					$arr[] = $quote_func($convert_kana($_char, 'A')); // Zenkaku-Alphabet
+					if ($char != '&') $or[] = preg_quote($_char, $quote); // As-is?
+					$ascii = ord($_char);
+					$or[] = sprintf('&#(?:%d|x%x);', $ascii, $ascii); // As an entity reference?
+					$or[] = preg_quote($mb_convert_kana($_char, 'A'), $quote); // As Zenkaku?
 				}
 			} else {
-				// Multi-byte characters
-				$arr[] = $quote_func($convert_kana($char, 'c')); // Zenkaku-Katakana to Zenkaku-Hiragana
-				$arr[] = $quote_func($convert_kana($char, 'k')); // Zenkaku-Katakana to Hankaku-Katakana
+				// A multi-byte character
+				$or[] = preg_quote($mb_convert_kana($char, 'c'), $quote); // As Hiragana?
+				$or[] = preg_quote($mb_convert_kana($char, 'k'), $quote); // As Hankaku-Katakana?
 			}
-			$chars[] = '(?:' . join('|', array_unique($arr)) . ')';
+			$chars[] = '(?:' . join('|', array_unique($or)) . ')'; // Regex for the character
 		}
-		$retval[$word] = $pre . join('', $chars) . $post;
+
+		$regex[$word] = $pre . join('', $chars) . $post; // For the word
 	}
 
-	return $retval;
+	return $regex; // For all words
 }
 
 // 'Search' main function
