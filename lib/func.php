@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.48 2005/11/23 07:41:06 henoheno Exp $
+// $Id: func.php,v 1.49 2005/11/23 14:52:59 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -180,7 +180,7 @@ function get_search_words($words = array(), $do_escape = FALSE)
 					$or[] = preg_quote($mb_convert_kana($_char, 'A'), $quote); // As Zenkaku?
 				}
 			} else {
-				// NEVER COME HERE except with mb_substr(string, 'EUC-JP') etc
+				// NEVER COME HERE with mb_substr(string, 'ASCII')
 				// A multi-byte character
 				$or[] = preg_quote($mb_convert_kana($char, 'c'), $quote); // As Hiragana?
 				$or[] = preg_quote($mb_convert_kana($char, 'k'), $quote); // As Hankaku-Katakana?
