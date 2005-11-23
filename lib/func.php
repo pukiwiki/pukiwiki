@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.47 2005/11/20 05:31:17 henoheno Exp $
+// $Id: func.php,v 1.48 2005/11/23 07:41:06 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -137,7 +137,7 @@ function get_search_words($words = array(), $do_escape = FALSE)
 		// function: mb_convert_kana() is for Japanese code only
 		if (LANG == 'ja' && function_exists('mb_convert_kana')) {
 			$mb_convert_kana = create_function('$str, $option',
-				'return mb_convert_kana($str, $option);');
+				'return mb_convert_kana($str, $option, SOURCE_ENCODING);');
 		} else {
 			$mb_convert_kana = create_function('$str, $option',
 				'return $str;');
@@ -162,12 +162,12 @@ function get_search_words($words = array(), $do_escape = FALSE)
 
 		// Normalize: ASCII letters = to single-byte. Others = to Zenkaku and Katakana
 		$word_nm = $mb_convert_kana($word, 'aKCV');
-		$nmlen   = mb_strlen($word_nm);
+		$nmlen   = mb_strlen($word_nm, SOURCE_ENCODING);
 
 		// Each chars may be served ...
 		$chars = array();
 		for ($pos = 0; $pos < $nmlen; $pos++) {
-			$char = mb_substr($word_nm, $pos, 1);
+			$char = mb_substr($word_nm, $pos, 1, SOURCE_ENCODING);
 
 			// Just normalized one? (ASCII char or Zenkaku-Katakana?)
 			$or = array(preg_quote($do_escape ? htmlspecialchars($char) : $char, $quote));
@@ -180,6 +180,7 @@ function get_search_words($words = array(), $do_escape = FALSE)
 					$or[] = preg_quote($mb_convert_kana($_char, 'A'), $quote); // As Zenkaku?
 				}
 			} else {
+				// NEVER COME HERE except with mb_substr(string, 'EUC-JP') etc
 				// A multi-byte character
 				$or[] = preg_quote($mb_convert_kana($char, 'c'), $quote); // As Hiragana?
 				$or[] = preg_quote($mb_convert_kana($char, 'k'), $quote); // As Hankaku-Katakana?
