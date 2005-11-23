@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.49 2005/11/23 14:52:59 henoheno Exp $
+// $Id: func.php,v 1.50 2005/11/23 15:32:23 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -131,8 +131,6 @@ function get_search_words($words = array(), $do_escape = FALSE)
 {
 	static $init, $mb_convert_kana, $pre, $post, $quote = '/';
 
-	if (! is_array($words)) $words = array($words);
-
 	if (! isset($init)) {
 		// function: mb_convert_kana() is for Japanese code only
 		if (LANG == 'ja' && function_exists('mb_convert_kana')) {
@@ -153,6 +151,8 @@ function get_search_words($words = array(), $do_escape = FALSE)
 		}
 		$init = TRUE;
 	}
+
+	if (! is_array($words)) $words = array($words);
 
 	// Generate regex for the words
 	$regex = array();
@@ -180,7 +180,7 @@ function get_search_words($words = array(), $do_escape = FALSE)
 					$or[] = preg_quote($mb_convert_kana($_char, 'A'), $quote); // As Zenkaku?
 				}
 			} else {
-				// NEVER COME HERE with mb_substr(string, 'ASCII')
+				// NEVER COME HERE with mb_substr(string, start, length, 'ASCII')
 				// A multi-byte character
 				$or[] = preg_quote($mb_convert_kana($char, 'c'), $quote); // As Hiragana?
 				$or[] = preg_quote($mb_convert_kana($char, 'k'), $quote); // As Hankaku-Katakana?
