@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.33 2005/10/05 13:57:35 henoheno Exp $
+// $Id: tracker.inc.php,v 1.34 2005/11/28 17:48:30 teanan Exp $
 //
 // Issue tracker plugin (See Also bugtrack plugin)
 
@@ -778,7 +778,7 @@ class Tracker_list
 			}
 			foreach ($this->rows as $row)
 			{
-				$keys[$field][] = $this->fields[$field]->get_value($row[$field]);
+				$keys[$field][] = isset($row[$field])? $this->fields[$field]->get_value($row[$field]) : '';
 			}
 			$params[] = $keys[$field];
 			$params[] = $this->fields[$field]->sort_type;
