@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.50 2005/11/23 15:32:23 henoheno Exp $
+// $Id: func.php,v 1.51 2005/11/29 08:13:26 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -195,7 +195,7 @@ function get_search_words($words = array(), $do_escape = FALSE)
 }
 
 // 'Search' main function
-function do_search($word, $type = 'AND', $non_format = FALSE)
+function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 {
 	global $script, $whatsnew, $non_list, $search_non_list;
 	global $_msg_andresult, $_msg_orresult, $_msg_notfoundresult;
@@ -207,6 +207,9 @@ function do_search($word, $type = 'AND', $non_format = FALSE)
 	$keys = get_search_words(preg_split('/\s+/', $word, -1, PREG_SPLIT_NO_EMPTY));
 
 	$_pages = get_existpages();
+	if ($base != '') {
+		$_pages = preg_grep('/^' . $base . '/', $_pages);
+	}
 	$pages = array();
 
 	$non_list_pattern = '/' . $non_list . '/';
