@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: search.inc.php,v 1.12 2005/11/29 15:12:10 henoheno Exp $
+// $Id: search.inc.php,v 1.13 2005/11/29 18:19:51 teanan Exp $
 //
 // Search plugin
 
@@ -80,7 +80,7 @@ function plugin_search_search_form($s_word = '', $type = '', $bases = array())
 		foreach($bases as $base) {
 			++$_num;
 			if (PLUGIN_SEARCH_MAX_BASE < $_num) break;
-			$label_id = '_base_label_id_' . $_num;
+			$label_id = '_p_search_base_id_' . $_num;
 			$s_base   = htmlspecialchars($base);
 			$base_str = '<strong>' . $s_base . '</strong>';
 			$base_label = str_replace('$1', $base_str, $_search_pages);
@@ -93,8 +93,8 @@ EOD;
 			$check = '';
 		}
 		$base_msg .=<<<EOD
-  <input type="radio" name="base" id="_base_label_id_all" value="" />
-  <label for="_base_label_id_all">$_search_all</label>
+  <input type="radio" name="base" id="_p_search_base_id_all" value="" />
+  <label for="_p_search_base_id_all">$_search_all</label>
 EOD;
 		$base_option = '<div class="small">' . $base_msg . '</div>';
 	}
