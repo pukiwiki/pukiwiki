@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: search.inc.php,v 1.10 2005/11/29 09:53:27 teanan Exp $
+// $Id: search.inc.php,v 1.11 2005/11/29 10:05:15 teanan Exp $
 //
 // Search plugin
 
@@ -39,7 +39,7 @@ function plugin_search_action()
 	}
 
 	$type = isset($vars['type']) ? $vars['type'] : '';
-	$base = isset($vars['base']) ? $vars['base']: '';
+	$base = isset($vars['base']) ? $vars['base'] : '';
 
 	if ($s_word != '') {
 		// Search
@@ -53,7 +53,8 @@ function plugin_search_action()
 	}
 
 	// Show search form
-	$body .= plugin_search_search_form($s_word, $type, array($base));
+	$bases = ($base != '') ? array($base) : '';
+	$body .= plugin_search_search_form($s_word, $type, $bases);
 
 	return array('msg'=>$msg, 'body'=>$body);
 }
