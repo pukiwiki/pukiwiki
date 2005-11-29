@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: search.inc.php,v 1.9 2005/11/29 08:14:44 teanan Exp $
+// $Id: search.inc.php,v 1.10 2005/11/29 09:53:27 teanan Exp $
 //
 // Search plugin
 
@@ -39,11 +39,12 @@ function plugin_search_action()
 	}
 
 	$type = isset($vars['type']) ? $vars['type'] : '';
+	$base = isset($vars['base']) ? $vars['base']: '';
 
 	if ($s_word != '') {
 		// Search
 		$msg  = str_replace('$1', $s_word, $_title_result);
-		$body = do_search($vars['word'], $type, FALSE, $vars['base']);
+		$body = do_search($vars['word'], $type, FALSE, $base);
 	} else {
 		// Init
 		unset($vars['word']); // Stop using $_msg_word at lib/html.php
@@ -52,7 +53,7 @@ function plugin_search_action()
 	}
 
 	// Show search form
-	$body .= plugin_search_search_form($s_word, $type, array($vars['base']));
+	$body .= plugin_search_search_form($s_word, $type, array($base));
 
 	return array('msg'=>$msg, 'body'=>$body);
 }
@@ -97,7 +98,6 @@ EOD;
 	return <<<EOD
 <form action="$script?cmd=search" method="post">
  <div>
-  <input type="hidden" name="base" value="$s_base" />
   <input type="text"  name="word" value="$s_word" size="20" />
   <input type="radio" name="type" id="_p_search_AND" value="AND" $and_check />
   <label for="_p_search_AND">$_btn_and</label>
