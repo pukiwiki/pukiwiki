@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: search.inc.php,v 1.11 2005/11/29 10:05:15 teanan Exp $
+// $Id: search.inc.php,v 1.12 2005/11/29 15:12:10 henoheno Exp $
 //
 // Search plugin
 
@@ -9,6 +9,7 @@
 define('PLUGIN_SEARCH_DISABLE_GET_ACCESS', 1); // 1, 0
 
 define('PLUGIN_SEARCH_MAX_LENGTH', 80);
+define('PLUGIN_SEARCH_MAX_BASE',   16); // #search(1,2,3,...,15,16)
 
 // Show a search box on a page
 function plugin_search_convert()
@@ -53,7 +54,7 @@ function plugin_search_action()
 	}
 
 	// Show search form
-	$bases = ($base != '') ? array($base) : '';
+	$bases = ($base == '') ? array() : array($base);
 	$body .= plugin_search_search_form($s_word, $type, $bases);
 
 	return array('msg'=>$msg, 'body'=>$body);
@@ -77,7 +78,9 @@ function plugin_search_search_form($s_word = '', $type = '', $bases = array())
 		$_num = 0;
 		$check = ' checked="checked"';
 		foreach($bases as $base) {
-			$label_id = '_base_label_id_' . $_num++;
+			++$_num;
+			if (PLUGIN_SEARCH_MAX_BASE < $_num) break;
+			$label_id = '_base_label_id_' . $_num;
 			$s_base   = htmlspecialchars($base);
 			$base_str = '<strong>' . $s_base . '</strong>';
 			$base_label = str_replace('$1', $base_str, $_search_pages);
