@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.skin.en.php,v 1.14.2.7 2005/10/16 08:45:12 henoheno Exp $
+// $Id: pukiwiki.skin.en.php,v 1.14.2.8 2005/12/04 05:34:18 henoheno Exp $
 //
 
 if (!defined('DATA_DIR')) { exit; }
@@ -25,7 +25,6 @@ global $page_title;
 
 	<title><?php echo $page_title ?> - <?php echo $title ?></title>
 	<link rel="stylesheet" href="skin/default.en.css" type="text/css" media="screen" charset="iso-8859-1">
-	<script language=javascript src="skin/default.js"></script>
 </head>
 <body>
 <div>
