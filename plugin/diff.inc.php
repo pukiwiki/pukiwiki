@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: diff.inc.php,v 1.14 2005/09/22 13:45:02 henoheno Exp $
+// $Id: diff.inc.php,v 1.15 2005/12/09 10:41:06 teanan Exp $
 //
 
 //ページの差分を表示する
@@ -46,8 +46,9 @@ function plugin_diff_view($page)
 	$filename = DIFF_DIR . encode($page) . '.txt';
 	if (file_exists($filename)) {
 		$diffdata = htmlspecialchars(join('', file($filename)));
-		$diffdata = preg_replace('/^(\-)(.*)$/m', '<span class="diff_removed"> $2</span>', $diffdata);
-		$diffdata = preg_replace('/^(\+)(.*)$/m', '<span class="diff_added"  > $2</span>', $diffdata);
+		$diffdata = preg_replace('/^(\-)(.*)$/m', '<span class="diff_removed">$2</span>', $diffdata);
+		$diffdata = preg_replace('/^(\+)(.*)$/m', '<span class="diff_added"  >$2</span>', $diffdata);
+		$diffdata = preg_replace('/^\s(.*)$/m', '$1', $diffdata);
 
 		if (! PKWK_READONLY) {
 			$menu[] = "<li><a href=\"$script?cmd=diff&amp;action=delete&amp;page=$r_page\">" .
