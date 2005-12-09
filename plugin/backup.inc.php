@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.inc.php,v 1.23 2005/09/22 13:45:02 henoheno Exp $
+// $Id: backup.inc.php,v 1.24 2005/12/09 12:00:33 teanan Exp $
 //
 // Backup plugin
 
@@ -159,8 +159,9 @@ function plugin_backup_diff($str)
 	global $_msg_addline, $_msg_delline,$hr;
 
 	$str = htmlspecialchars($str);
-	$str = preg_replace('/^(\-)(.*)$/m', '<span class="diff_removed"> $2</span>', $str);
-	$str = preg_replace('/^(\+)(.*)$/m', '<span class="diff_added"> $2</span>', $str);
+	$str = preg_replace('/^(\-)(.*)$/m', '<span class="diff_removed">$2</span>', $str);
+	$str = preg_replace('/^(\+)(.*)$/m', '<span class="diff_added">$2</span>', $str);
+	$str = preg_replace('/^\s(.*)$/m', '$1', $str);
 	$str = trim($str);
 	$str = <<<EOD
 $hr
