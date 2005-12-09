@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.40 2005/10/04 13:41:03 henoheno Exp $
+// $Id: file.php,v 1.41 2005/12/09 17:52:20 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -149,7 +149,7 @@ function generate_fixed_heading_anchor_id($seed)
 function file_write($dir, $page, $str, $notimestamp = FALSE)
 {
 	global $update_exec, $_msg_invalidiwn, $notify, $notify_diff_only, $notify_subject;
-	global $whatsdeleted, $maxshow_deleted;
+	global $non_list, $whatsdeleted, $maxshow_deleted;
 
 	if (PKWK_READONLY) return; // Do nothing
 
@@ -162,7 +162,8 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	$timestamp = FALSE;
 
 	if ($str === '') {
-		if ($dir == DATA_DIR && file_exists($file)) {
+		$non_list_pattern = '/' . $non_list . '/';
+		if ($dir == DATA_DIR && file_exists($file) && !preg_match($non_list_pattern, $page)) {
 			// File deletion
 			unlink($file);
 			add_recent($page, $whatsdeleted, '', $maxshow_deleted); // RecentDeleted
