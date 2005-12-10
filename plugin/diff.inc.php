@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: diff.inc.php,v 1.16 2005/12/10 10:28:48 henoheno Exp $
+// $Id: diff.inc.php,v 1.17 2005/12/10 10:36:17 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2002      Originally written by yu-ji
@@ -33,15 +33,16 @@ function plugin_diff_view($page)
 	$s_page = htmlspecialchars($page);
 
 	$menu = array(
-		"<li>$_msg_addline</li>",
-		"<li>$_msg_delline</li>"
+		'<li>' . $_msg_addline . '</li>',
+		'<li>' . $_msg_delline . '</li>'
 	);
 
 	$is_page = is_page($page);
 	if ($is_page) {
-		$menu[] = ' <li>' . str_replace('$1', "<a href=\"$script?$r_page\">$s_page</a>", $_msg_goto) . '</li>';
+		$menu[] = ' <li>' . str_replace('$1', '<a href="' . $script . '?' . $r_page . '">' .
+			$s_page . '</a>', $_msg_goto) . '</li>';
 	} else {
-		$menu[] = ' <li>' . str_replace('$1', $s_page,$_msg_deleted) . '</li>';
+		$menu[] = ' <li>' . str_replace('$1', $s_page, $_msg_deleted) . '</li>';
 	}
 
 	$filename = DIFF_DIR . encode($page) . '.txt';
@@ -55,7 +56,7 @@ function plugin_diff_view($page)
 
 		if (! PKWK_READONLY) {
 			$menu[] = '<li><a href="' . $script . '?cmd=diff&amp;action=delete&amp;page=' .
-				$r_page . '">"' . str_replace('$1', $s_page, $_title_diff_delete) . '</a></li>';
+				$r_page . '">' . str_replace('$1', $s_page, $_title_diff_delete) . '</a></li>';
 		}
 
 		$msg = '<pre>' . $diffdata . '</pre>' . "\n";
