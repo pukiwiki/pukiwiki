@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: diff.inc.php,v 1.17 2005/12/10 10:36:17 henoheno Exp $
+// $Id: diff.inc.php,v 1.18 2005/12/10 12:48:02 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2002      Originally written by yu-ji
@@ -47,19 +47,11 @@ function plugin_diff_view($page)
 
 	$filename = DIFF_DIR . encode($page) . '.txt';
 	if (file_exists($filename)) {
-		$diffdata = htmlspecialchars(join('', file($filename)));
-
-		// Cut diff markers ('+' or '-' or ' ')
-		$diffdata = preg_replace('/^\-(.*)$/m', '<span class="diff_removed">$1</span>', $diffdata);
-		$diffdata = preg_replace('/^\+(.*)$/m', '<span class="diff_added"  >$1</span>', $diffdata);
-		$diffdata = preg_replace('/^ (.*)$/m',  '$1', $diffdata);
-
 		if (! PKWK_READONLY) {
 			$menu[] = '<li><a href="' . $script . '?cmd=diff&amp;action=delete&amp;page=' .
 				$r_page . '">' . str_replace('$1', $s_page, $_title_diff_delete) . '</a></li>';
 		}
-
-		$msg = '<pre>' . $diffdata . '</pre>' . "\n";
+		$msg = '<pre>' . diff_style_to_css(htmlspecialchars(join('', file($filename)))) . '</pre>' . "\n";
 	} else if ($is_page) {
 		$diffdata = trim(htmlspecialchars(join('', get_source($page))));
 		$msg = '<pre><span class="diff_added">' . $diffdata . '</span></pre>' . "\n";

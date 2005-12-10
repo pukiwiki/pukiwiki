@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.inc.php,v 1.26 2005/12/10 10:55:31 henoheno Exp $
+// $Id: backup.inc.php,v 1.27 2005/12/10 12:48:02 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -164,24 +164,15 @@ EOD;
 function plugin_backup_diff($str)
 {
 	global $_msg_addline, $_msg_delline, $hr;
-
-	$str = htmlspecialchars($str);
-
-	// Cut diff markers ('+' or '-' or ' ')
-	$str = preg_replace('/^\-(.*)$/m', '<span class="diff_removed">$1</span>', $str);
-	$str = preg_replace('/^\+(.*)$/m', '<span class="diff_added"  >$1</span>', $str);
-	$str = preg_replace('/^ (.*)$/m',  '$1', $str);
-
-	$str = <<<EOD
+	$ul = <<<EOD
 $hr
 <ul>
  <li>$_msg_addline</li>
  <li>$_msg_delline</li>
 </ul>
-<pre>$str</pre>
 EOD;
 
-	return $str;
+	return $ul . '<pre>' . diff_style_to_css(htmlspecialchars($str)) . '</pre>' . "\n";
 }
 
 function plugin_backup_get_list($page)

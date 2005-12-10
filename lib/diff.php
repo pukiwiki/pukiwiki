@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: diff.php,v 1.6 2005/12/10 12:23:24 henoheno Exp $
+// $Id: diff.php,v 1.7 2005/12/10 12:48:02 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -16,6 +16,18 @@ function do_diff($strlines1, $strlines2)
 	$obj = new line_diff();
 	$str = $obj->str_compare($strlines1, $strlines2);
 	return $str;
+}
+
+// Visualize diff-style-text to text-with-CSS
+//   '+Added'   => '<span added>Added</span>'
+//   '-Removed' => '<span removed>Removed</span>'
+//   ' Nothing' => 'Nothing'
+function diff_style_to_css($str = '')
+{
+	// Cut diff markers ('+' or '-' or ' ')
+	$str = preg_replace('/^\-(.*)$/m', '<span class="diff_removed">$1</span>', $str);
+	$str = preg_replace('/^\+(.*)$/m', '<span class="diff_added"  >$1</span>', $str);
+	return preg_replace('/^ (.*)$/m',  '$1', $str);
 }
 
 // Merge helper (when it conflicts)
