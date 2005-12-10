@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: link.php,v 1.7 2005/04/29 11:24:20 henoheno Exp $
+// $Id: link.php,v 1.8 2005/12/10 12:00:52 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -250,6 +250,7 @@ function & links_get_objects($page, $refresh = FALSE)
 	if (! isset($obj) || $refresh)
 		$obj = & new InlineConverter(NULL, array('note'));
 
-	return $obj->get_objects(join('', preg_grep('/^(?!\/\/|\s)./', get_source($page))), $page);
+	$result = $obj->get_objects(join('', preg_grep('/^(?!\/\/|\s)./', get_source($page))), $page);
+	return $result;
 }
 ?>
