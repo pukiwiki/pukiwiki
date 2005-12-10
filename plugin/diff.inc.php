@@ -1,11 +1,13 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: diff.inc.php,v 1.16 2005/12/10 10:28:48 henoheno Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2002      Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
-// $Id: diff.inc.php,v 1.15 2005/12/09 10:41:06 teanan Exp $
-//
+// Showing colored-diff plugin
 
-//ページの差分を表示する
 function plugin_diff_action()
 {
 	global $vars;
@@ -21,7 +23,6 @@ function plugin_diff_action()
 	return $retval;
 }
 
-// 差分を表示
 function plugin_diff_view($page)
 {
 	global $script, $hr;
@@ -46,22 +47,22 @@ function plugin_diff_view($page)
 	$filename = DIFF_DIR . encode($page) . '.txt';
 	if (file_exists($filename)) {
 		$diffdata = htmlspecialchars(join('', file($filename)));
-		$diffdata = preg_replace('/^(\-)(.*)$/m', '<span class="diff_removed">$2</span>', $diffdata);
-		$diffdata = preg_replace('/^(\+)(.*)$/m', '<span class="diff_added"  >$2</span>', $diffdata);
-		$diffdata = preg_replace('/^\s(.*)$/m', '$1', $diffdata);
+
+		// Cut diff markers ('+' or '-' or ' ')
+		$diffdata = preg_replace('/^\-(.*)$/m', '<span class="diff_removed">$1</span>', $diffdata);
+		$diffdata = preg_replace('/^\+(.*)$/m', '<span class="diff_added"  >$1</span>', $diffdata);
+		$diffdata = preg_replace('/^ (.*)$/m',  '$1', $diffdata);
 
 		if (! PKWK_READONLY) {
-			$menu[] = "<li><a href=\"$script?cmd=diff&amp;action=delete&amp;page=$r_page\">" .
-			str_replace('$1', $s_page, $_title_diff_delete) . '</a></li>';
+			$menu[] = '<li><a href="' . $script . '?cmd=diff&amp;action=delete&amp;page=' .
+				$r_page . '">"' . str_replace('$1', $s_page, $_title_diff_delete) . '</a></li>';
 		}
 
-		$msg = "<pre>$diffdata</pre>\n";
-	}
-	else if ($is_page) {
+		$msg = '<pre>' . $diffdata . '</pre>' . "\n";
+	} else if ($is_page) {
 		$diffdata = trim(htmlspecialchars(join('', get_source($page))));
-		$msg = "<pre><span class=\"diff_added\">$diffdata</span></pre>\n";
-	}
-	else {
+		$msg = '<pre><span class="diff_added">' . $diffdata . '</span></pre>' . "\n";
+	} else {
 		return array('msg'=>$_title_diff, 'body'=>$_msg_notfound);
 	}
 
@@ -76,7 +77,6 @@ EOD;
 	return array('msg'=>$_title_diff, 'body'=>$body . $msg);
 }
 
-// バックアップを削除
 function plugin_diff_delete($page)
 {
 	global $script, $vars;
@@ -85,8 +85,8 @@ function plugin_diff_delete($page)
 
 	$filename = DIFF_DIR . encode($page) . '.txt';
 	$body = '';
-	if (! is_pagename($page))     $body = "Invalid page name";
-	if (! file_exists($filename)) $body = make_pagelink($page) . "'s diff seems not found";
+	if (! is_pagename($page))     $body = 'Invalid page name';
+	if (! file_exists($filename)) $body = make_pagelink($page) . '\'s diff seems not found';
 	if ($body) return array('msg'=>$_title_diff_delete, 'body'=>$body);
 
 	if (isset($vars['pass'])) {
@@ -97,7 +97,7 @@ function plugin_diff_delete($page)
 				'body' => str_replace('$1', make_pagelink($page), $_msg_diff_deleted)
 			);
 		} else {
-			$body .= "<p><strong>$_msg_invalidpass</strong></p>\n";
+			$body .= '<p><strong>' . $_msg_invalidpass . '</strong></p>' . "\n";
 		}
 	}
 
