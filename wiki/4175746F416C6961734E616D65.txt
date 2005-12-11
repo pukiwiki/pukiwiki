@@ -2,5 +2,5 @@
 AutoAlias用の定義リストです。
 
 * PukiWiki [#ee87d39e]
--[[pukiwiki.org>http://pukiwiki.org/]]
+-[[pukiwiki.official>http://pukiwiki.sourceforge.jp/]]
 -[[pukiwiki.dev>http://pukiwiki.sourceforge.jp/dev/]]
