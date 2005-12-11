@@ -1,5 +1,5 @@
 #contents
--[[FAQ(pukiwiki.org)>pukiwiki:PukiWiki/FAQ]](Japanese)
+-[[FAQ(PukiWiki-official)>pukiwiki:PukiWiki/FAQ]](Japanese)
 -[[Text Formatting Rule Abstract>FormatRule]] (also included as the last part of this page)
 --[[Text Formatting Rule>TextFormattingRule]] (now preparing. Please refer to pukiwiki.dev site: [[Text Formatting Rule:http://pukiwiki.sourceforge.jp/dev/index.php?cmd=read&page=%3ACategoryDev%2FDocument%2FText%20Formatting%20Rule]].)
 -[[Plugin Help>PluginHelp]]

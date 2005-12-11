@@ -1,5 +1,5 @@
 <?php
-// $Id: dump.inc.php,v 1.35 2005/03/02 13:09:21 henoheno Exp $
+// $Id: dump.inc.php,v 1.35.2.1 2005/12/11 18:03:46 teanan Exp $
 //
 // Remote dump / restore plugin
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
@@ -438,7 +438,7 @@ class tarlib
 
 			// ファイルサイズを取得
 			$size = filesize($name);
-			if ($size == FALSE) {
+			if ($size === FALSE) {
 				@unlink($this->filename);
 				die_message($name . ' is not found or not readable.');
 			}

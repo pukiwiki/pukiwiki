@@ -1,9 +1,81 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: mail.php,v 1.1.4.1 2005/12/11 18:03:45 teanan Exp $
+// Copyright (C)
+//   2003-2005 PukiWiki Developers Team
+//   2003      Originally written by upk
+// License: GPL v2 or (at your option) any later version
 //
-// $Id: mail.php,v 1.1 2004/08/01 01:54:35 henoheno Exp $
-//
+// E-mail related functions
+
+// Send a mail to the administrator
+function pkwk_mail_notify($subject, $message, $footer = array())
+{
+	global $smtp_server, $smtp_auth, $notify_to, $notify_from, $notify_header;
+	static $_to, $_headers, $_after_pop;
+
+	// Init and lock
+	if (! isset($_to)) {
+		if (! PKWK_OPTIMISE) {
+			// Validation check
+			$func = 'pkwk_mail_notify(): ';
+			$mail_regex   = '/[^@]+@[^@]{1,}\.[^@]{2,}/';
+			if (! preg_match($mail_regex, $notify_to))
+				die($func . 'Invalid $notify_to');
+			if (! preg_match($mail_regex, $notify_from))
+				die($func . 'Invalid $notify_from');
+			if ($notify_header != '') {
+				$header_regex = "/\A(?:\r\n|\r|\n)|\r\n\r\n/";
+				if (preg_match($header_regex, $notify_header))
+					die($func . 'Invalid $notify_header');
+				if (preg_match('/^From:/im', $notify_header))
+					die($func . 'Redundant \'From:\' in $notify_header');
+			}
+		}
+
+		$_to      = $notify_to;
+		$_headers =
+			'X-Mailer: PukiWiki/' . S_VERSION .
+			' PHP/' . phpversion() . "\r\n" .
+			'From: ' . $notify_from;
+			
+		// Additional header(s) by admin
+		if ($notify_header != '') $_headers .= "\r\n" . $notify_header;
+
+		$_after_pop = $smtp_auth;
+	}
+
+	if ($subject == '' || ($message == '' && empty($footer))) return FALSE;
+
+	// Subject:
+	if (isset($footer['PAGE'])) $subject = str_replace('$page', $footer['PAGE'], $subject);
+
+	// Footer
+	if (isset($footer['REMOTE_ADDR'])) $footer['REMOTE_ADDR'] = & $_SERVER['REMOTE_ADDR'];
+	if (isset($footer['USER_AGENT']))
+		$footer['USER_AGENT']  = '(' . UA_PROFILE . ') ' . UA_NAME . '/' . UA_VERS;
+	if (! empty($footer)) {
+		$_footer = '';
+		if ($message != '') $_footer = "\n" . str_repeat('-', 30) . "\n";
+		foreach($footer as $key => $value)
+			$_footer .= $key . ': ' . $value . "\n";
+		$message .= $_footer;
+	}
+
+	// Wait POP/APOP auth completion
+	if ($_after_pop) {
+		$result = pop_before_smtp();
+		if ($result !== TRUE) die($result);
+	}
+
+	ini_set('SMTP', $smtp_server);
+	mb_language(LANG);
+	if ($_headers == '') {
+		return mb_send_mail($_to, $subject, $message);
+	} else {
+		return mb_send_mail($_to, $subject, $message, $_headers);
+	}
+}
 
 // APOP/POP Before SMTP
 function pop_before_smtp($pop_userid = '', $pop_passwd = '',
@@ -19,25 +91,25 @@ function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 	// Compat: GLOBALS > function arguments
 	foreach(array('pop_userid', 'pop_passwd', 'pop_server', 'pop_port') as $global) {
 		if(isset($GLOBALS[$global]) && $GLOBALS[$global] !== '')
-			${$global} = $GLOBALS[$global];
+			$$global = $GLOBALS[$global];
 	}
 
 	// Check
 	$die = '';
 	foreach(array('pop_userid', 'pop_server', 'pop_port') as $global)
-		if(${$global} == '') $die .= "pop_before_smtp(): \$$global seems blank\n";
+		if($$global == '') $die .= 'pop_before_smtp(): $' . $global . ' seems blank' . "\n";
 	if ($die) return ($die);
 
 	// Connect
 	$errno = 0; $errstr = '';
 	$fp = @fsockopen($pop_server, $pop_port, $errno, $errstr, 30);
-	if (! $fp) return ("pop_before_smtp(): $errstr ($errno)");
+	if (! $fp) return ('pop_before_smtp(): ' . $errstr . ' (' . $errno . ')');
 
 	// Greeting message from server, may include <challenge-string> of APOP
 	$message = fgets($fp, 1024); // 512byte max
 	if (! preg_match('/^\+OK/', $message)) {
 		fclose($fp);
-		return ("pop_before_smtp(): Greeting message seems invalid");
+		return ('pop_before_smtp(): Greeting message seems invalid');
 	}
 
 	$challenge = array();
@@ -56,25 +128,26 @@ function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 		$message = fgets($fp, 1024); // 512byte max
 		if (! preg_match('/^\+OK/', $message)) {
 			fclose($fp);
-			return ("pop_before_smtp(): USER seems invalid");
+			return ('pop_before_smtp(): USER seems invalid');
 		}
 		fputs($fp, 'PASS ' . $pop_passwd . "\r\n");
 	}
 
 	$result = fgets($fp, 1024); // 512byte max, auth result
 	$auth   = preg_match('/^\+OK/', $result);
+
 	if ($auth) {
-		fputs($fp, "STAT\r\n"); // STAT, trigger SMTP relay!
+		fputs($fp, 'STAT' . "\r\n"); // STAT, trigger SMTP relay!
 		$message = fgets($fp, 1024); // 512byte max
 	}
 
-	// Disconnect
-	fputs($fp, "QUIT\r\n");
-	$message = fgets($fp, 1024); // 512byte max, last "+OK"
+	// Disconnect anyway
+	fputs($fp, 'QUIT' . "\r\n");
+	$message = fgets($fp, 1024); // 512byte max, last '+OK'
 	fclose($fp);
 
 	if (! $auth) {
-		return ("pop_before_smtp(): $method authentication failed");
+		return ('pop_before_smtp(): ' . $method . ' authentication failed');
 	} else {
 		return TRUE;	// Success
 	}

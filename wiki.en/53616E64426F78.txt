@@ -32,7 +32,7 @@ paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1
 ----
 * Heading2 [#e330e49e]
 ** Heading 2-1 [#jdc9672d]
-http://pukiwiki.org/
+http://pukiwiki.sourceforge.jp/
 ** Heading2-2 [#ge656fc5]
 
 [[FrontPage]]
@@ -71,11 +71,11 @@ lolololo2
 
 - Auto hyperlink
 -- URL suffix seems a image, show it as an inline image
---- http://pukiwiki.org/pukiwiki.gif
+--- http://pukiwiki.sourceforge.jp/image/b_pukiwiki-official.png
 -- Home
---- http://pukiwiki.org/
+--- http://example.org/
 -- Mail address
---- info@pukiwiki.org
+--- info@example.org
 
  Preformatted text preformatted text preformatted text 
  Preformatted text preformatted text preformatted text 

@@ -1,13 +1,13 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: showrss.inc.php,v 1.16 2005/01/23 02:06:44 henoheno Exp $
+// $Id: showrss.inc.php,v 1.16.2.1 2005/12/11 18:03:46 teanan Exp $
 //  Id:showrss.inc.php,v 1.40 2003/03/18 11:52:58 hiro Exp
 //
 // Show RSS of remote site plugin
 
 /*
  * Created by hiro_do3ob@yahoo.co.jp
- * Modified by PANDA <panda@arino.jp>, and PukiWiki Developer Team
+ * Modified by PANDA <panda@arino.jp>, and PukiWiki Developers Team
  * Licence: GPL, same as PukiWiki
  * This plugin needs 'PHP xml extension'
  */

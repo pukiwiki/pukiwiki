@@ -1,8 +1,10 @@
 #freeze
+#nofollow
 #norelated
 * PukiWiki [#v1621880]
 
-http://pukiwiki.org/
+- http://pukiwiki.sourceforge.jp/
+- http://sourceforge.jp/projects/pukiwiki/
 
 PukiWiki¤Ï Wiki([[WikiWikiWeb]]) ¤È¸Æ¤Ğ¤ì¤Æ¤¤¤ë¤â¤Î¤Î¤Ò¤È¤Ä¤Ç¡¢´ğËÜÅª¤ËÃ¯¤Ç¤âÁ´¤Æ¤Î¥Ú¡¼¥¸¤òºîÀ®¡¦ÊÔ½¸¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤¹¡£
 
@@ -18,7 +20,7 @@ PukiWiki¤Ï Wiki([[WikiWikiWeb]]) ¤È¸Æ¤Ğ¤ì¤Æ¤¤¤ë¤â¤Î¤Î¤Ò¤È¤Ä¤Ç¡¢´ğËÜÅª¤ËÃ¯¤Ç¤âÁ´¤
 
 ** ¥ê¥ó¥¯ [#nf50e667]
 
-- [[PukiWiki.org:http://pukiwiki.org/]] ¤«¤éPukiWiki ¸ø¼°¥µ¥¤¥È¤ØÈô¤Ù¤Ş¤¹
+- [[PukiWiki-official:http://sourceforge.jp/projects/pukiwiki/]] ¤«¤éPukiWiki ¸ø¼°¥µ¥¤¥È¤ØÈô¤Ù¤Ş¤¹
 -- ¤´¼ÁÌä¤ä¸æ°Õ¸«¤Ï¡¢¤³¤Á¤é¤Ø¤É¤¦¤¾¡£ :)
 
 - Pukiwiki-dev - http://pukiwiki.sourceforge.jp/dev/

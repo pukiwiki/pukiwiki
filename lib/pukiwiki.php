@@ -1,22 +1,21 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: pukiwiki.php,v 1.4.2.1 2005/12/11 18:03:45 teanan Exp $
 //
 // PukiWiki 1.4.*
-//  Copyright (C) 2002 by PukiWiki Developers Team
-//  http://pukiwiki.org/
+//  Copyright (C) 2002-2005 by PukiWiki Developers Team
+//  http://pukiwiki.sourceforge.jp/
 //
 // PukiWiki 1.3.*
-//  Copyright (C) 2002 by PukiWiki Developers Team
-//  http://pukiwiki.org/
+//  Copyright (C) 2002-2004 by PukiWiki Developers Team
+//  http://pukiwiki.sourceforge.jp/
 //
 // PukiWiki 1.3 (Base)
-//  Copyright (C) 2001,2002 by sng.
-//  <sng@factage.com>
+//  Copyright (C) 2001-2002 by yu-ji <sng@factage.com>
 //  http://factage.com/sng/pukiwiki/
 //
 // Special thanks
-//  YukiWiki by Hiroshi Yuki
-//  <hyuki@hyuki.com>
+//  YukiWiki by Hiroshi Yuki <hyuki@hyuki.com>
 //  http://www.hyuki.com/yukiwiki/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -28,22 +27,13 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-// $Id: pukiwiki.php,v 1.4 2004/10/10 12:58:30 henoheno Exp $
-/////////////////////////////////////////////////
-
-/////////////////////////////////////////////////
-// データを格納するディレクトリや設定ファイルを置くディレクトリ
 
 if (! defined('DATA_HOME')) define('DATA_HOME', '');
 
 /////////////////////////////////////////////////
-// サブルーチンの格納先ディレクトリ (他の *.phpファイル)
+// Include subroutines
 
 if (! defined('LIB_DIR')) define('LIB_DIR', '');
-
-/////////////////////////////////////////////////
-// Include subroutines
 
 require(LIB_DIR . 'func.php');
 require(LIB_DIR . 'file.php');
@@ -56,74 +46,87 @@ require(LIB_DIR . 'make_link.php');
 require(LIB_DIR . 'diff.php');
 require(LIB_DIR . 'config.php');
 require(LIB_DIR . 'link.php');
-require(LIB_DIR . 'trackback.php');
 require(LIB_DIR . 'auth.php');
 require(LIB_DIR . 'proxy.php');
-require(LIB_DIR . 'mail.php');
 if (! extension_loaded('mbstring')) {
 	require(LIB_DIR . 'mbstring.php');
 }
 
-// 初期化: 設定ファイルの読み込み
+// Defaults
+$notify = $trackback = $referer = 0;
+
+// Load *.ini.php files and init PukiWiki
 require(LIB_DIR . 'init.php');
+
+// Load optional libraries
+if ($notify) {
+	require(LIB_DIR . 'mail.php'); // Mail notification
+}
+if ($trackback || $referer) {
+	// Referer functionality uses trackback functions
+	// without functional reason now
+	require(LIB_DIR . 'trackback.php'); // TrackBack
+}
 
 /////////////////////////////////////////////////
 // Main
 
-$base    = $defaultpage;
 $retvars = array();
+$is_cmd = FALSE;
+if (isset($vars['cmd'])) {
+	$is_cmd  = TRUE;
+	$plugin = & $vars['cmd'];
+} else if (isset($vars['plugin'])) {
+	$plugin = & $vars['plugin'];
+} else {
+	$plugin = '';
+}
+if ($plugin != '') {
+	if (exist_plugin_action($plugin)) {
+		// Found and exec
+		$retvars = do_plugin_action($plugin);
+		if ($retvars === FALSE) exit; // Done
 
-if (isset($vars['plugin'])) {
-	// Plug-in action
-	if (! exist_plugin_action($vars['plugin'])) {
-		$s_plugin = htmlspecialchars($vars['plugin']);
-		$msg      = "plugin=$s_plugin is not implemented.";
-		$retvars  = array('msg'=>$msg,'body'=>$msg);
-	} else {
-		$retvars  = do_plugin_action($vars['plugin']);
-		if ($retvars !== FALSE)
+		if ($is_cmd) {
+			$base = isset($vars['page'])  ? $vars['page']  : '';
+		} else {
 			$base = isset($vars['refer']) ? $vars['refer'] : '';
-	}
-
-} else if (isset($vars['cmd'])) {
-	// Command action
-	if (! exist_plugin_action($vars['cmd'])) {
-		$s_cmd   = htmlspecialchars($vars['cmd']);
-		$msg     = "cmd=$s_cmd is not implemented.";
-		$retvars = array('msg'=>$msg,'body'=>$msg);
-	} else {
-		$retvars = do_plugin_action($vars['cmd']);
-		$base    = $vars['page'];
-	}
-}
-
-if ($retvars !== FALSE) {
-	$title = htmlspecialchars(strip_bracket($base));
-	$page  = make_search($base);
-
-	if (isset($retvars['msg']) && $retvars['msg'] != '') {
-		$title = str_replace('$1', $title, $retvars['msg']);
-		$page  = str_replace('$1', $page,  $retvars['msg']);
-	}
-
-	if (isset($retvars['body']) && $retvars['body'] != '') {
-		$body = $retvars['body'];
-	} else {
-		if ($base == '' || ! is_page($base)) {
-			$base  = $defaultpage;
-			$title = htmlspecialchars(strip_bracket($base));
-			$page  = make_search($base);
 		}
+	} else {
+		// Not found
+		$msg = 'plugin=' . htmlspecialchars($plugin) .
+			' is not implemented.';
+		$retvars = array('msg'=>$msg,'body'=>$msg);
+		$base    = & $defaultpage;
+	}
+}
 
-		$vars['cmd']  = 'read';
-		$vars['page'] = $base;
-		$body  = convert_html(get_source($base));
-		$body .= tb_get_rdf($vars['page']);
-		ref_save($vars['page']);
+$title = htmlspecialchars(strip_bracket($base));
+$page  = make_search($base);
+if (isset($retvars['msg']) && $retvars['msg'] != '') {
+	$title = str_replace('$1', $title, $retvars['msg']);
+	$page  = str_replace('$1', $page,  $retvars['msg']);
+}
+
+if (isset($retvars['body']) && $retvars['body'] != '') {
+	$body = & $retvars['body'];
+} else {
+	if ($base == '' || ! is_page($base)) {
+		$base  = & $defaultpage;
+		$title = htmlspecialchars(strip_bracket($base));
+		$page  = make_search($base);
 	}
 
-	// Output
-	catbody($title, $page, $body);
+	$vars['cmd']  = 'read';
+	$vars['page'] = & $base;
+
+	$body  = convert_html(get_source($base));
+
+	if ($trackback) $body .= tb_get_rdf($base); // Add TrackBack-Ping URI
+	if ($referer) ref_save($base);
 }
-// End
+
+// Output
+catbody($title, $page, $body);
+exit;
 ?>

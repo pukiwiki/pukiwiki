@@ -1,10 +1,12 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: config.php,v 1.4 2004/12/23 02:59:05 henoheno Exp $
+// $Id: config.php,v 1.4.2.1 2005/12/11 18:03:45 teanan Exp $
+// Copyright (C) 2003-2005 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
+//
+// Parse a PukiWiki page as a configuration page
+
 /*
- * Parse a PukiWiki page as a configuration page
- *
  * $obj = new Config('plugin/plugin_name/')
  * $obj->read();
  * $array = & $obj->get($title);

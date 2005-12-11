@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.30 2005/03/13 17:29:02 teanan Exp $
+// $Id: html.php,v 1.30.2.1 2005/12/11 18:03:45 teanan Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // HTML-publishing related functions
 
@@ -8,9 +12,10 @@
 function catbody($title, $page, $body)
 {
 	global $script, $vars, $arg, $defaultpage, $whatsnew, $help_page, $hr;
-	global $related_link, $cantedit, $function_freeze, $search_word_color, $_msg_word;
-	global $foot_explain, $note_hr, $head_tags;
+	global $attach_link, $related_link, $cantedit, $function_freeze;
+	global $search_word_color, $_msg_word, $foot_explain, $note_hr, $head_tags;
 	global $trackback, $trackback_javascript, $referer, $javascript;
+	global $nofollow;
 	global $_LANG, $_LINK, $_IMAGE;
 
 	global $pkwk_dtd;     // XHTML 1.1, XHTML1.0, HTML 4.01 Transitional...
@@ -89,14 +94,15 @@ function catbody($title, $page, $body)
 	$is_freeze = is_freeze($_page);
 
 	// Last modification date (string) of the page
-	$lastmodified = $is_read ?  get_date('D, d M Y H:i:s T', get_filetime($_page)) .
+	$lastmodified = $is_read ?  format_date(get_filetime($_page)) .
 		' ' . get_pg_passage($_page, FALSE) : '';
 
-	// List of related pages
-	$related = ($is_read && $related_link) ? make_related($_page) : '';
+	// List of attached files to the page
+	$attaches = ($attach_link && $is_read && exist_plugin_action('attach')) ?
+		attach_filelist() : '';
 
-	// List of attached files of the page
-	$attaches = ($is_read && exist_plugin_action('attach')) ? attach_filelist() : '';
+	// List of related pages
+	$related  = ($related_link && $is_read) ? make_related($_page) : '';
 
 	// List of footnotes
 	ksort($foot_explain, SORT_NUMERIC);
@@ -113,9 +119,13 @@ function catbody($title, $page, $body)
 	if ($search_word_color && isset($vars['word'])) {
 		$body = '<div class="small">' . $_msg_word . htmlspecialchars($vars['word']) .
 			'</div>' . $hr . "\n" . $body;
-		$words = array_flip(array_splice(
-			preg_split('/\s+/', $vars['word'], -1, PREG_SPLIT_NO_EMPTY),
-			0, 10));
+
+		// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
+		// with array_splice(), array_flip()
+		$tmp_array = preg_split('/\s+/', $vars['word'], -1, PREG_SPLIT_NO_EMPTY);
+		$tmp_array = array_splice($tmp_array, 0, 10);
+		$words = array_flip($tmp_array);
+
 		$keys = array();
 		foreach ($words as $word=>$id) $keys[$word] = strlen($word);
 		arsort($keys, SORT_NUMERIC);
@@ -141,7 +151,7 @@ function catbody($title, $page, $body)
 }
 
 // Show 'edit' form
-function edit_form($page, $postdata, $digest = 0, $b_template = TRUE)
+function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 {
 	global $script, $vars, $rows, $cols, $hr, $function_freeze;
 	global $_btn_addtop, $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel,
@@ -149,9 +159,10 @@ function edit_form($page, $postdata, $digest = 0, $b_template = TRUE)
 	global $whatsnew, $_btn_template, $_btn_load, $non_list, $load_template_func;
 	global $notimeupdate;
 
-	$refer = $template = $addtag = $add_top = '';
+	// Newly generate $digest or not
+	if ($digest === FALSE) $digest = md5(join('', get_source($page)));
 
-	if ($digest == 0) $digest = md5(join('', get_source($page)));
+	$refer = $template = $addtag = $add_top = '';
 
 	$checked_top  = isset($vars['add_top'])     ? ' checked="checked"' : '';
 	$checked_time = isset($vars['notimestamp']) ? ' checked="checked"' : '';
@@ -304,16 +315,32 @@ function make_line_rules($str)
 	return preg_replace($pattern, $replace, $str);
 }
 
-function strip_htmltag($str)
+// Remove all HTML tags(or just anchor tags), and WikiName-speific decorations
+function strip_htmltag($str, $all = TRUE)
 {
 	global $_symbol_noexists;
+	static $noexists_pattern;
 
-	$noexists_pattern = '#<span class="noexists">([^<]*)<a[^>]+>' .
-		preg_quote($_symbol_noexists, '#') . '</a></span>#';
+	if (! isset($noexists_pattern))
+		$noexists_pattern = '#<span class="noexists">([^<]*)<a[^>]+>' .
+			preg_quote($_symbol_noexists, '#') . '</a></span>#';
 
+	// Strip Dagnling-Link decoration (Tags and "$_symbol_noexists")
 	$str = preg_replace($noexists_pattern, '$1', $str);
-	//$str = preg_replace('/<a[^>]+>\?<\/a>/', '', $str);
-	return preg_replace('/<[^>]+>/', '', $str);
+
+	if ($all) {
+		// All other HTML tags
+		return preg_replace('#<[^>]+>#',        '', $str);
+	} else {
+		// All other anchor-tags only
+		return preg_replace('#<a[^>]+>|</a>#i', '', $str);
+	}
+}
+
+// Remove AutoLink marker with AutLink itself
+function strip_autolink($str)
+{
+	return preg_replace('#<!--autolink--><a [^>]+>|</a><!--/autolink-->#', '', $str);
 }
 
 // Make a backlink. searching-link of the page name, by the page name, for the page name
@@ -328,17 +355,17 @@ function make_search($page)
 		'">' . $s_page . '</a> ';
 }
 
-// Make heading (remove footnotes and HTML tags)
+// Make heading string (remove heading-related decorations from Wiki text)
 function make_heading(& $str, $strip = TRUE)
 {
 	global $NotePattern;
 
-	// Cut fixed-anchors
+	// Cut fixed-heading anchors
 	$id = '';
 	$matches = array();
 	if (preg_match('/^(\*{0,3})(.*?)\[#([A-Za-z][\w-]+)\](.*?)$/m', $str, $matches)) {
 		$str = $matches[2] . $matches[4];
-		$id  = $matches[3];
+		$id  = & $matches[3];
 	} else {
 		$str = preg_replace('/^\*{0,3}/', '', $str);
 	}
@@ -419,33 +446,67 @@ define('PKWK_DTD_HTML_4_01_STRICT',        3);
 define('PKWK_DTD_HTML_4_01_TRANSITIONAL',  2);
 define('PKWK_DTD_HTML_4_01_FRAMESET',      1);
 
+define('PKWK_DTD_TYPE_XHTML',  1);
+define('PKWK_DTD_TYPE_HTML',   0);
+
 // Output HTML DTD, <html> start tag. Return content-type.
-function pkwk_output_dtd($pkwk_dtd = PKWK_DTD_XHTML_1_1)
+function pkwk_output_dtd($pkwk_dtd = PKWK_DTD_XHTML_1_1, $charset = CONTENT_CHARSET)
 {
 	static $called;
 	if (isset($called)) die('pkwk_output_dtd() already called. Why?');
 	$called = TRUE;
 
-	$type = 'XHTML';
+	$type = PKWK_DTD_TYPE_XHTML;
 	$option = '';
 	switch($pkwk_dtd){
-	case PKWK_DTD_XHTML_1_1             : $version = '1.1' ; $dtd = 'http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd'; break;
-	case PKWK_DTD_XHTML_1_0_STRICT      : $version = '1.0' ; $option = 'Strict';       $dtd = 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd';      break;
-	case PKWK_DTD_XHTML_1_0_TRANSITIONAL: $version = '1.0' ; $option = 'Transitional'; $dtd = 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'; break;
-	case PKWK_DTD_HTML_4_01_STRICT      : $type = 'HTML'; $version = '4.01'; $dtd = 'http://www.w3.org/TR/html4/strict.dtd';   break;
-	case PKWK_DTD_HTML_4_01_TRANSITIONAL: $type = 'HTML'; $version = '4.01'; $option = 'Transitional'; $dtd = 'http://www.w3.org/TR/html4/loose.dtd';    break;
-	default: die('DTD not specified or invalid DTD'); break;
+	case PKWK_DTD_XHTML_1_1             :
+		$version = '1.1' ;
+		$dtd     = 'http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd';
+		break;
+	case PKWK_DTD_XHTML_1_0_STRICT      :
+		$version = '1.0' ;
+		$option  = 'Strict';
+		$dtd     = 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd';
+		break;
+	case PKWK_DTD_XHTML_1_0_TRANSITIONAL:
+		$version = '1.0' ;
+		$option  = 'Transitional';
+		$dtd     = 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd';
+		break;
+
+	case PKWK_DTD_HTML_4_01_STRICT      :
+		$type    = PKWK_DTD_TYPE_HTML;
+		$version = '4.01';
+		$dtd     = 'http://www.w3.org/TR/html4/strict.dtd';
+		break;
+	case PKWK_DTD_HTML_4_01_TRANSITIONAL:
+		$type    = PKWK_DTD_TYPE_HTML;
+		$version = '4.01';
+		$option  = 'Transitional';
+		$dtd     = 'http://www.w3.org/TR/html4/loose.dtd';
+		break;
+
+	default: die('DTD not specified or invalid DTD');
+		break;
 	}
 
+	$charset = htmlspecialchars($charset);
+
 	// Output XML or not
-	if ($type == 'XHTML') echo '<?xml version="1.0" encoding="' . CONTENT_CHARSET . '" ?>' . "\n";
+	if ($type == PKWK_DTD_TYPE_XHTML) echo '<?xml version="1.0" encoding="' . $charset . '" ?>' . "\n";
 
 	// Output doctype
-	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD ' . $type . ' ' . $version . ($option != '' ? ' ' . $option : '') . '//EN" "' . $dtd . '">' . "\n";
+	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD ' .
+		($type == PKWK_DTD_TYPE_XHTML ? 'XHTML' : 'HTML') . ' ' .
+		$version .
+		($option != '' ? ' ' . $option : '') .
+		'//EN" "' .
+		$dtd .
+		'">' . "\n";
 
 	// Output <html> start tag
 	echo '<html';
-	if ($type == 'XHTML') {
+	if ($type == PKWK_DTD_TYPE_XHTML) {
 		echo ' xmlns="http://www.w3.org/1999/xhtml"'; // dir="ltr" /* LeftToRight */
 		echo ' xml:lang="' . LANG . '"';
 		if ($version == '1.0') echo ' lang="' . LANG . '"'; // Only XHTML 1.0
@@ -455,11 +516,11 @@ function pkwk_output_dtd($pkwk_dtd = PKWK_DTD_XHTML_1_1)
 	echo '>' . "\n"; // <html>
 
 	// Return content-type (with MIME type)
-	if ($type == 'XHTML') {
+	if ($type == PKWK_DTD_TYPE_XHTML) {
 		// NOTE: XHTML 1.1 browser will ignore http-equiv
-		return '<meta http-equiv="content-type" content="application/xhtml+xml; charset=' . CONTENT_CHARSET . '" />' . "\n";
+		return '<meta http-equiv="content-type" content="application/xhtml+xml; charset=' . $charset . '" />' . "\n";
 	} else {
-		return '<meta http-equiv="content-type" content="text/html; charset=' . CONTENT_CHARSET . '" />' . "\n";
+		return '<meta http-equiv="content-type" content="text/html; charset=' . $charset . '" />' . "\n";
 	}
 }
 ?>

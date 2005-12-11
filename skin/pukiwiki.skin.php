@@ -1,8 +1,15 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.41 2005/01/26 13:04:08 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.41.2.1 2005/12/11 18:03:46 teanan Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // PukiWiki default skin
+
+// ------------------------------------------------------------
+// Settings (define before here, if you want)
 
 // Set site logo
 $_IMAGE['skin']['logo']     = 'pukiwiki.png';
@@ -23,7 +30,9 @@ if (! defined('PKWK_SKIN_SHOW_NAVBAR'))
 if (! defined('PKWK_SKIN_SHOW_TOOLBAR'))
 	define('PKWK_SKIN_SHOW_TOOLBAR', 1); // 1, 0
 
-// ----
+// ------------------------------------------------------------
+// Code start
+
 // Prohibit direct access
 if (! defined('UI_LANG')) die('UI_LANG is not set');
 if (! isset($_LANG)) die('$_LANG is not set');
@@ -40,13 +49,16 @@ switch(UI_LANG){
 	case 'ja': $css_charset = 'Shift_JIS'; break;
 }
 
-// Output HTTP headers
+// ------------------------------------------------------------
+// Output
+
+// HTTP headers
 pkwk_common_headers();
 header('Cache-control: no-cache');
 header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
-// Output HTML DTD, <html>, and receive content-type
+// HTML DTD, <html>, and receive content-type
 if (isset($pkwk_dtd)) {
 	$meta_content_type = pkwk_output_dtd($pkwk_dtd);
 } else {
@@ -57,13 +69,13 @@ if (isset($pkwk_dtd)) {
 <head>
  <?php echo $meta_content_type ?>
  <meta http-equiv="content-style-type" content="text/css" />
-<?php if (! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
+<?php if ($nofollow || ! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
 <?php if (PKWK_ALLOW_JAVASCRIPT && isset($javascript)) { ?> <meta http-equiv="Content-Script-Type" content="text/javascript" /><?php } ?>
 
  <title><?php echo $title ?> - <?php echo $page_title ?></title>
- <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>" type="text/css" media="screen" charset="<?php echo $css_charset ?>" />
- <link rel="stylesheet" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>&amp;media=print" type="text/css" media="print" charset="<?php echo $css_charset ?>" />
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
+ <link rel="stylesheet" type="text/css" media="screen" href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>" charset="<?php echo $css_charset ?>" />
+ <link rel="stylesheet" type="text/css" media="print"  href="skin/pukiwiki.css.php?charset=<?php echo $css_charset ?>&amp;media=print" charset="<?php echo $css_charset ?>" />
+ <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
 
 <?php if (PKWK_ALLOW_JAVASCRIPT && $trackback_javascript) { ?> <script type="text/javascript" src="skin/trackback.js"></script><?php } ?>
 
@@ -141,7 +153,7 @@ function _navigator($key, $value = '', $javascript = ''){
 
 <?php if ($trackback) { ?> &nbsp;
  [ <?php _navigator('trackback', $lang['trackback'] . '(' . tb_count($_page) . ')',
- 	($trackback_javascript == 1) ? 'onClick="OpenTrackback(this.href); return false"' : '') ?> ]
+ 	($trackback_javascript == 1) ? 'onclick="OpenTrackback(this.href); return false"' : '') ?> ]
 <?php } ?>
 <?php if ($referer)   { ?> &nbsp;
  [ <?php _navigator('refer') ?> ]

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.33 2005/03/13 17:29:02 teanan Exp $
+// $Id: edit.inc.php,v 1.33.2.1 2005/12/11 18:03:46 teanan Exp $
 //
 // Edit plugin
 // cmd=edit
@@ -87,7 +87,8 @@ function plugin_edit_inline()
 
 	// Arguments
 	$args = func_get_args();
-	$s_label = array_pop($args); // {label}
+	$s_label = strip_htmltag(array_pop($args), FALSE);
+		// {label}. Strip anchor tags only
 	$page    = array_shift($args);
 	if($page == NULL) $page = '';
 	$_noicon = $_nolabel = FALSE;
@@ -172,7 +173,7 @@ function plugin_edit_inline()
 // Write, add, or insert new comment
 function plugin_edit_write()
 {
-	global $vars;
+	global $vars, $trackback;
 	global $_title_collided, $_msg_collided_auto, $_msg_collided, $_title_deleted;
 	global $notimeupdate, $_msg_invalidpass;
 
@@ -225,7 +226,8 @@ function plugin_edit_write()
 			page_write($page, $postdata);
 			$retvars['msg'] = $_title_deleted;
 			$retvars['body'] = str_replace('$1', htmlspecialchars($page), $_title_deleted);
-			tb_delete($page);
+
+			if ($trackback) tb_delete($page);
 		}
 	}
 

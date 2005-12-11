@@ -1,8 +1,10 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: diff.php,v 1.2 2004/10/07 14:34:55 henoheno Exp $
+// $Id: diff.php,v 1.2.2.1 2005/12/11 18:03:45 teanan Exp $
+// Copyright (C)
+//   2003-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 //衝突時に対応表を出す
 define('DIFF_SHOW_TABLE',TRUE);

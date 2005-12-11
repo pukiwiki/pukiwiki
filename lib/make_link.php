@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.17.2.3 2005/03/21 17:57:41 teanan Exp $
+// $Id: make_link.php,v 1.17.2.4 2005/12/11 18:03:45 teanan Exp $
+// Copyright (C)
+//   2003-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // Hyperlink-related functions
 
@@ -166,7 +170,8 @@ class Link
 	function toString() {}
 
 	// Private: Get needed parts from a matched array()
-	function splice($arr) {
+	function splice($arr)
+	{
 		$count = $this->get_count() + 1;
 		$arr   = array_pad(array_splice($arr, $this->start, $count), $count, '');
 		$this->text = $arr[0];
@@ -182,9 +187,9 @@ class Link
 		$this->name = $name;
 		$this->body = $body;
 		$this->type = $type;
-		if (is_url($alias) && preg_match('/\.(gif|png|jpe?g)$/i', $alias)) {
-			$alias = htmlspecialchars($alias);
-			$alias = '<img src="' . $alias . '" alt="' . $name . '" />';
+		if (! PKWK_DISABLE_INLINE_IMAGE_FROM_URI &&
+			is_url($alias) && preg_match('/\.(gif|png|jpe?g)$/i', $alias)) {
+			$alias = '<img src="' . htmlspecialchars($alias) . '" alt="' . $name . '" />';
 		} else if ($alias != '') {
 			if ($converter === NULL)
 				$converter = new InlineConverter(array('plugin'));
@@ -296,10 +301,16 @@ EOD;
 
 	function set($arr, $page)
 	{
-		global $foot_explain, $script, $vars;
+		global $foot_explain, $vars;
 		static $note_id = 0;
 
 		list(, $body) = $this->splice($arr);
+
+		if (PKWK_ALLOW_RELATIVE_FOOTNOTE_ANCHOR) {
+			$script = '';
+		} else {
+			$script = get_script_uri() . '?' . rawurlencode($page);
+		}
 
 		$id   = ++$note_id;
 		$note = make_link($body);
@@ -307,14 +318,14 @@ EOD;
 
 		// Footnote
 		$foot_explain[$id] = '<a id="notefoot_' . $id . '" href="' .
-			$script . '?' . $page . '#notetext_' . $id .
-			'" class="note_super">*' . $id . '</a>' . "\n" .
+			$script . '#notetext_' . $id . '" class="note_super">*' .
+			$id . '</a>' . "\n" .
 			'<span class="small">' . $note . '</span><br />';
 
 		// A hyperlink, content-body to footnote
-		$name = '<a id="notetext_' . $id . '" href="' . $script . '?' . $page .
+		$name = '<a id="notetext_' . $id . '" href="' . $script .
 			'#notefoot_' . $id . '" class="note_super" title="' .
-			htmlspecialchars(strip_tags($note)) . '">*' . $id . '</a>';
+			strip_tags($note) . '">*' . $id . '</a>';
 
 		return parent::setParam($page, $name, $body);
 	}
@@ -668,7 +679,7 @@ class Link_autolink extends Link
 
 	function toString()
 	{
-		return make_pagelink($this->name, $this->alias, '', $this->page);
+		return make_pagelink($this->name, $this->alias, '', $this->page, TRUE);
 	}
 }
 
@@ -751,7 +762,7 @@ class Link_autoalias_a extends Link_autoalias
 }
 
 // Make hyperlink for the page
-function make_pagelink($page, $alias = '', $anchor = '', $refer = '')
+function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolink = FALSE)
 {
 	global $script, $vars, $link_compact, $related, $_symbol_noexists;
 
@@ -766,23 +777,37 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '')
 	if (! isset($related[$page]) && $page != $vars['page'] && is_page($page))
 		$related[$page] = get_filetime($page);
 
-	if (is_page($page)) {
-		// Hyperlinks
-		$passage = get_pg_passage($page, FALSE);
-		$title   = $link_compact ? '' : ' title="' . $s_page . $passage . '"';
-		return '<a href="' . $script . '?' . $r_page . $anchor . '"' . $title . '>' .
-			$s_alias . '</a>';
-	} else if (PKWK_READONLY) {
-		// Without hyperlink (= Suppress dangling link)
-		return $s_alias;
+	if ($isautolink || is_page($page)) {
+		// Hyperlink to the page
+		if ($link_compact) {
+			$title   = '';
+		} else {
+			$title   = ' title="' . $s_page . get_pg_passage($page, FALSE) . '"';
+		}
+
+		// AutoLink marker
+		if ($isautolink) {
+			$al_left  = '<!--autolink-->';
+			$al_right = '<!--/autolink-->';
+		} else {
+			$al_left = $al_right = '';
+		}
+
+		return $al_left . '<a ' . 'href="' . $script . '?' . $r_page . $anchor .
+			'"' . $title . '>' . $s_alias . '</a>' . $al_right;
 	} else {
-		// Dangling links
+		// Dangling link
+		if (PKWK_READONLY) return $s_alias; // No dacorations
+
 		$retval = $s_alias . '<a href="' .
 			$script . '?cmd=edit&amp;page=' . $r_page . $r_refer . '">' .
 			$_symbol_noexists . '</a>';
-		if (! $link_compact)
-			$retval = '<span class="noexists">' . $retval . '</span>';
-		return $retval;
+
+		if ($link_compact) {
+			return $retval;
+		} else {
+			return '<span class="noexists">' . $retval . '</span>';
+		}
 	}
 }
 
@@ -846,20 +871,18 @@ function get_interwiki_url($name, $param)
 	// Encoding
 	switch ($opt) {
 
-	case '':
-	case 'std': // As-Is (Internal encoding of this PukiWiki will be used)
+	case '':    /* FALLTHROUGH */
+	case 'std': // Simply URL-encode the string, whose base encoding is the internal-encoding
 		$param = rawurlencode($param);
 		break;
 
-	case 'asis': // As-Is
-	case 'raw':
-		// $param = htmlspecialchars($param);
+	case 'asis': /* FALLTHROUGH */
+	case 'raw' : // Truly as-is
 		break;
 
 	case 'yw': // YukiWiki
 		if (! preg_match('/' . $WikiName . '/', $param))
 			$param = '[[' . mb_convert_encoding($param, 'SJIS', SOURCE_ENCODING) . ']]';
-		// $param = htmlspecialchars($param);
 		break;
 
 	case 'moin': // MoinMoin
@@ -867,13 +890,14 @@ function get_interwiki_url($name, $param)
 		break;
 
 	default:
-		// Alias conversion
-		if (isset($encode_aliases[$opt])) $opt = $encode_aliases[$opt];
+		// Alias conversion of $opt
+		if (isset($encode_aliases[$opt])) $opt = & $encode_aliases[$opt];
+
 		// Encoding conversion into specified encode, and URLencode
-		$param = rawurlencode(mb_convert_encoding($param, $opt, 'auto'));
+		$param = rawurlencode(mb_convert_encoding($param, $opt, SOURCE_ENCODING));
 	}
 
-	// Replace parameters
+	// Replace or Add the parameter
 	if (strpos($url, '$1') !== FALSE) {
 		$url = str_replace('$1', $param, $url);
 	} else {

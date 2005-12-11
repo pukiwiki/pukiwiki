@@ -1,8 +1,10 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: default.ini.php,v 1.17 2005/03/19 01:26:53 henoheno Exp $
+// $Id: default.ini.php,v 1.17.2.1 2005/12/11 18:03:45 teanan Exp $
+// Copyright (C)
+//   2003-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // PukiWiki setting file (user agent:default)
 
@@ -50,11 +52,17 @@ $rows = 20;
 $top = $_msg_content_back_to_top;
 
 /////////////////////////////////////////////////
-// 関連ページ表示のページ名の区切り文字
-$related_str = "\n ";
+// 添付ファイルの一覧を常に表示する (負担がかかります)
+$attach_link = 1;
 
 /////////////////////////////////////////////////
-// 整形ルールでの関連ページ表示のページ名の区切り文字
+// 関連するページのリンク一覧を常に表示する(負担がかかります)
+$related_link = 1;
+
+// リンク一覧の区切り文字
+$related_str = "\n ";
+
+// (#relatedプラグインが表示する) リンク一覧の区切り文字
 $rule_related_str = "</li>\n<li>";
 
 /////////////////////////////////////////////////
@@ -62,12 +70,16 @@ $rule_related_str = "</li>\n<li>";
 $hr = '<hr class="full_hr" />';
 
 /////////////////////////////////////////////////
-// 文末の注釈の直前に表示するタグ
-$note_hr = '<hr class="note_hr" />';
+// 脚注機能関連
 
-/////////////////////////////////////////////////
-// 関連するリンクを常に表示する(負担がかかります)
-$related_link = 1;
+// 脚注のアンカーを相対パスで表示する (0 = 絶対パス)
+//  * 相対パスの場合、以前のバージョンのOperaで問題になることがあります
+//  * 絶対パスの場合、calendar_viewerなどで問題になることがあります
+// (詳しくは: BugTrack/698)
+define('PKWK_ALLOW_RELATIVE_FOOTNOTE_ANCHOR', 1);
+
+// 文末の脚注の直前に表示するタグ
+$note_hr = '<hr class="note_hr" />';
 
 /////////////////////////////////////////////////
 // WikiName,BracketNameに経過時間を付加する
@@ -75,6 +87,8 @@ $show_passage = 1;
 
 /////////////////////////////////////////////////
 // リンク表示をコンパクトにする
+// * ページに対するハイパーリンクからタイトルを外す
+// * Dangling linkのCSSを外す
 $link_compact = 0;
 
 /////////////////////////////////////////////////

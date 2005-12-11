@@ -1,10 +1,17 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: new.inc.php,v 1.6 2004/12/25 05:56:50 henoheno Exp $
+// $Id: new.inc.php,v 1.6.2.1 2005/12/11 18:03:46 teanan Exp $
 //
 // New! plugin
+//
+// Usage:
+//	&new([nodate]){date};     // Check the date string
+//	&new(pagename[,nolink]);  // Check the pages's timestamp
+//	&new(pagename/[,nolink]);
+//		// Check multiple pages started with 'pagename/',
+//		// and show the latest one
 
-define('PLUGIN_NEW_FORMAT', '<span class="comment_date">%s</span>');
+define('PLUGIN_NEW_DATE_FORMAT', '<span class="comment_date">%s</span>');
 
 function plugin_new_init()
 {
@@ -21,45 +28,51 @@ function plugin_new_inline()
 
 	$retval = '';
 	$args = func_get_args();
-	$date = array_pop($args); // {date} always exists
+	$date = strip_autolink(array_pop($args)); // {date} always exists
 
 	if($date !== '') {
-		$usage = '&new([nodate]){date};';
-		if (func_num_args() > 2) return $usage;
-		$timestamp = strtotime($date);
-	} else {
-		$usage = '&new(pagename[,nolink]);';
-		if (func_num_args() > 3) return $usage;
-	}
+		// Show 'New!' message by the time of the $date string
+		if (func_num_args() > 2) return '&new([nodate]){date};';
 
-	if (isset($timestamp) && $timestamp !== -1) {
-		// &new([nodate]){date};
+		$timestamp = strtotime($date);
+		if ($timestamp === -1) return '&new([nodate]){date}: Invalid date string;';
 		$timestamp -= ZONETIME;
-		$nodate = in_array('nodate', $args);
-		$retval = $nodate ? '' : htmlspecialchars($date);
+
+		$retval = in_array('nodate', $args) ? '' : htmlspecialchars($date);
 	} else {
-		// &new(pagename[,nolink]);
-		$timestamp = 0;
+		// Show 'New!' message by the timestamp of the page
+		if (func_num_args() > 3) return '&new(pagename[,nolink]);';
+
 		$name = strip_bracket(! empty($args) ? array_shift($args) : $vars['page']);
 		$page = get_fullname($name, $vars['page']);
 		$nolink = in_array('nolink', $args);
+
 		if (substr($page, -1) == '/') {
-			foreach (preg_grep('/^' . preg_quote($page, '/') . '/',
-			    get_existpages()) as $page) {
+			// Check multiple pages started with "$page"
+			$timestamp = 0;
+			$regex = '/^' . preg_quote($page, '/') . '/';
+			foreach (preg_grep($regex, get_existpages()) as $page) {
+				// Get the latest pagename and its timestamp
 				$_timestamp = get_filetime($page);
 				if ($timestamp < $_timestamp) {
-					// Show the latest page
-					$retval    = $nolink ? '' : make_pagelink($page);
 					$timestamp = $_timestamp;
+					$retval    = $nolink ? '' : make_pagelink($page);
 				}
 			}
-		} else if (is_page($page)) {
-			$retval    = $nolink ? '' : make_pagelink($page, $name);
-			$timestamp = get_filetime($page);
+			if ($timestamp == 0)
+				return '&new(pagename/[,nolink]): No such pages;';
+		} else {
+			// Check a page
+			if (is_page($page)) {
+				$timestamp = get_filetime($page);
+				$retval    = $nolink ? '' : make_pagelink($page, $name);
+			} else {
+				return '&new(pagename[,nolink]): No such page;';
+			}
 		}
-		if ($timestamp == 0) return '';
 	}
 
+	// Add 'New!' string by the elapsed time
 	$erapse = UTIME - $timestamp;
 	foreach ($_plugin_new_elapses as $limit=>$tag) {
 		if ($erapse <= $limit) {
@@ -67,6 +80,13 @@ function plugin_new_inline()
 			break;
 		}
 	}
-	return sprintf(PLUGIN_NEW_FORMAT, $retval);
+
+	if($date !== '') {
+		// Show a date string
+		return sprintf(PLUGIN_NEW_DATE_FORMAT, $retval);
+	} else {
+		// Show a page name
+		return $retval;
+	}
 }
 ?>

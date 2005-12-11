@@ -1,14 +1,37 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.13.2.4 2005/05/29 18:47:05 teanan Exp $
+// $Id: file.php,v 1.13.2.5 2005/12/11 18:03:45 teanan Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // File related functions
 
 // Get source(wiki text) data of the page
-function get_source($page = NULL)
+function get_source($page = NULL, $lock = TRUE)
 {
-	// Removing line-feeds: Because file() doesn't remove them.
-	return is_page($page) ? str_replace("\r", '', file(get_filename($page))) : array();
+	$array = array();
+
+	if (is_page($page)) {
+		$path  = get_filename($page);
+
+		if ($lock) {
+			$fp = @fopen($path, 'r');
+			if ($fp == FALSE) return $array;
+			flock($fp, LOCK_SH);
+		}
+
+		// Removing line-feeds: Because file() doesn't remove them.
+		$array = str_replace("\r", '', file($path));
+
+		if ($lock) {
+			flock($fp, LOCK_UN);
+			@fclose($fp);
+		}
+	}
+
+	return $array;
 }
 
 // Get last-modified filetime of the page
@@ -67,41 +90,78 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	}
 }
 
-// User-defined rules (replace the source)
-function make_str_rules($str)
+// Modify ogirinal text with user-defined / system-defined rules
+function make_str_rules($source)
 {
 	global $str_rules, $fixed_heading_anchor;
 
-	$arr = explode("\n", $str);
+	$lines = explode("\n", $source);
+	$count = count($lines);
 
-	$retvars = $matches = array();
-	foreach ($arr as $str) {
-		if ($str != '' && $str{0} != ' ' && $str{0} != "\t")
-			foreach ($str_rules as $rule => $replace)
-				$str = preg_replace('/' . $rule . '/', $replace, $str);
+	$modify    = TRUE;
+	$multiline = 0;
+	$matches   = array();
+	for ($i = 0; $i < $count; $i++) {
+		$line = & $lines[$i]; // Modify directly
+
+		// Ignore null string and preformatted texts
+		if ($line == '' || $line{0} == ' ' || $line{0} == "\t") continue;
+
+		// Modify this line?
+		if ($modify) {
+			if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK &&
+			    $multiline == 0 &&
+			    preg_match('/#[^{]*(\{\{+)\s*$/', $line, $matches)) {
+			    	// Multiline convert plugin start
+				$modify    = FALSE;
+				$multiline = strlen($matches[1]); // Set specific number
+			}
+		} else {
+			if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK &&
+			    $multiline != 0 &&
+			    preg_match('/^\}{' . $multiline . '}\s*$/', $line)) {
+			    	// Multiline convert plugin end
+				$modify    = TRUE;
+				$multiline = 0;
+			}
+		}
+		if ($modify === FALSE) continue;
+
+		// Replace with $str_rules
+		foreach ($str_rules as $pattern => $replacement)
+			$line = preg_replace('/' . $pattern . '/', $replacement, $line);
 		
 		// Adding fixed anchor into headings
 		if ($fixed_heading_anchor &&
-			preg_match('/^(\*{1,3}(.(?!\[#[A-Za-z][\w-]+\]))+)$/', $str, $matches))
-		{
-			// Generate ID:
-			// A random alphabetic letter + 7 letters of random strings from md()
-			$anchor = chr(mt_rand(ord('a'), ord('z'))) .
-				substr(md5(uniqid(substr($matches[1], 0, 100), 1)), mt_rand(0, 24), 7);
-			$str = rtrim($matches[1]) . ' [#' . $anchor . ']';
+		    preg_match('/^(\*{1,3}.*?)(?:\[#([A-Za-z][\w-]*)\]\s*)?$/', $line, $matches) &&
+		    (! isset($matches[2]) || $matches[2] == '')) {
+			// Generate unique id
+			$anchor = generate_fixed_heading_anchor_id($matches[1]);
+			$line = rtrim($matches[1]) . ' [#' . $anchor . ']';
 		}
-		$retvars[] = $str;
 	}
 
-	return join("\n", $retvars);
+	// Multiline part has no stopper
+	if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK &&
+	    $modify === FALSE && $multiline != 0)
+		$lines[] = str_repeat('}', $multiline);
+
+	return implode("\n", $lines);
+}
+
+// Generate ID
+function generate_fixed_heading_anchor_id($seed)
+{
+	// A random alphabetic letter + 7 letters of random strings from md()
+	return chr(mt_rand(ord('a'), ord('z'))) .
+		substr(md5(uniqid(substr($seed, 0, 100), TRUE)),
+		mt_rand(0, 24), 7);
 }
 
 // Output to a file
 function file_write($dir, $page, $str, $notimestamp = FALSE)
 {
-	global $update_exec, $_msg_invalidiwn;
-	global $notify, $notify_diff_only, $notify_to, $notify_subject, $notify_header;
-	global $smtp_server, $smtp_auth;
+	global $update_exec, $_msg_invalidiwn, $notify, $notify_diff_only, $notify_subject;
 	global $whatsdeleted, $maxshow_deleted;
 
 	if (PKWK_READONLY) return; // Do nothing
@@ -111,34 +171,40 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		            str_replace('$2', 'WikiName', $_msg_invalidiwn)));
 
 	$page      = strip_bracket($page);
-	$timestamp = FALSE;
 	$file      = $dir . encode($page) . '.txt';
+	$timestamp = FALSE;
 
-	if ($dir == DATA_DIR && $str == '' && file_exists($file)) {
-		unlink($file);
-		add_recent($page, $whatsdeleted, '', $maxshow_deleted); // RecentDeleted
-	}
-
-	if ($str != '') {
-		$str = preg_replace('/' . "\r" . '/', '', $str);
-		$str = rtrim($str) . "\n";
+	if ($str === '') {
+		if ($dir == DATA_DIR && file_exists($file)) {
+			// File deletion
+			unlink($file);
+			add_recent($page, $whatsdeleted, '', $maxshow_deleted); // RecentDeleted
+		}
+	} else {
+		// File replacement (Edit)
+		$str = rtrim(preg_replace('/' . "\r" . '/', '', $str)) . "\n";
 
 		if ($notimestamp && file_exists($file))
 			$timestamp = filemtime($file) - LOCALZONE;
 
-		$fp = fopen($file, 'w') or
-			die_message('Cannot write page file or diff file or other ' .
-			htmlspecialchars($page) .
-			'<br />Maybe permission is not writable or filename is too long');
-
+		$fp = fopen($file, 'a') or die('fopen() failed: ' .
+			htmlspecialchars(basename($dir) . '/' . encode($page) . '.txt') .	
+			'<br />' . "\n" .
+			'Maybe permission is not writable or filename is too long');
 		set_file_buffer($fp, 0);
+
 		flock($fp, LOCK_EX);
+
+		// Write
+		ftruncate($fp, 0);
 		rewind($fp);
 		fputs($fp, $str);
+
 		flock($fp, LOCK_UN);
+
 		fclose($fp);
-		if ($timestamp) 
-			touch($file, $timestamp + LOCALZONE);
+
+		if ($timestamp) pkwk_touch_file($file, $timestamp + LOCALZONE);
 	}
 
 	// Clear is_page() cache
@@ -153,17 +219,15 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 
 	if ($notify && $dir == DIFF_DIR) {
 		if ($notify_diff_only) $str = preg_replace('/^[^-+].*\n/m', '', $str);
-		$str .= "\n" .
-			str_repeat('-', 30) . "\n" .
-			'URI: ' . get_script_uri() . '?' . rawurlencode($page) . "\n" .
-			'REMOTE_ADDR: ' . $_SERVER['REMOTE_ADDR'] . "\n";
 
- 		$subject = str_replace('$page', $page, $notify_subject);
-		ini_set('SMTP', $smtp_server);
- 		mb_language(LANG);
+		$footer['ACTION'] = 'Page update';
+		$footer['PAGE']   = & $page;
+		$footer['URI']    = get_script_uri() . '?' . rawurlencode($page);
+		$footer['USER_AGENT']  = TRUE;
+		$footer['REMOTE_ADDR'] = TRUE;
 
-		if ($smtp_auth) pop_before_smtp();
- 		mb_send_mail($notify_to, $subject, $str, $notify_header);
+		pkwk_mail_notify($notify_subject, $str, $footer) or
+			die('pkwk_mail_notify(): Failed');
 	}
 }
 
@@ -245,7 +309,11 @@ function put_lastmodified()
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
-	foreach (array_splice(array_keys($recent_pages), 0, $maxshow) as $page) {
+
+	// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
+	$tmp_array = array_keys($recent_pages); // with array_splice()
+
+	foreach (array_splice($tmp_array, 0, $maxshow) as $page) {
 		$time      = $recent_pages[$page];
 		$s_lastmod = htmlspecialchars(format_date($time));
 		$s_page    = htmlspecialchars($page);
@@ -513,5 +581,83 @@ function links_get_related($page)
 	$links[$page] += links_get_related_db($vars['page']);
 
 	return $links[$page];
+}
+
+// _If needed_, re-create the file to change/correct ownership into PHP's
+// NOTE: Not works for Windows
+function pkwk_chown($filename, $preserve_time = TRUE)
+{
+	static $php_uid; // PHP's UID
+
+	if (! isset($php_uid)) {
+		if (extension_loaded('posix')) {
+			$php_uid = posix_getuid(); // Unix
+		} else {
+			$php_uid = 0; // Windows
+		}
+	}
+
+	// Lock for pkwk_chown()
+	$lockfile = CACHE_DIR . 'pkwk_chown.lock';
+	$flock = fopen($lockfile, 'a') or
+		die('pkwk_chown(): fopen() failed for: CACHEDIR/' .
+			basename(htmlspecialchars($lockfile)));
+	flock($flock, LOCK_EX) or die('pkwk_chown(): flock() failed for lock');
+
+	// Check owner
+	$stat = stat($filename) or
+		die('pkwk_chown(): stat() failed for: '  . basename(htmlspecialchars($filename)));
+	if ($stat[4] === $php_uid) {
+		// NOTE: Windows always here
+		$result = TRUE; // Seems the same UID. Nothing to do
+	} else {
+		$tmp = $filename . '.' . getmypid() . '.tmp';
+
+		// Lock source $filename to avoid file corruption
+		// NOTE: Not 'r+'. Don't check write permission here
+		$ffile = fopen($filename, 'r') or
+			die('pkwk_chown(): fopen() failed for: ' .
+				basename(htmlspecialchars($filename)));
+
+		// Try to chown by re-creating files
+		// NOTE:
+		//   * touch() before copy() is for 'rw-r--r--' instead of 'rwxr-xr-x' (with umask 022).
+		//   * (PHP 4 < PHP 4.2.0) touch() with the third argument is not implemented and retuns NULL and Warn.
+		//   * @unlink() before rename() is for Windows but here's for Unix only
+		flock($ffile, LOCK_EX) or die('pkwk_chown(): flock() failed');
+		$result = touch($tmp) && copy($filename, $tmp) &&
+			($preserve_time ? (touch($tmp, $stat[9], $stat[8]) || touch($tmp, $stat[9])) : TRUE) &&
+			rename($tmp, $filename);
+		flock($ffile, LOCK_UN) or die('pkwk_chown(): flock() failed');
+
+		fclose($ffile) or die('pkwk_chown(): fclose() failed');
+
+		if ($result === FALSE) @unlink($tmp);
+	}
+
+	// Unlock for pkwk_chown()
+	flock($flock, LOCK_UN) or die('pkwk_chown(): flock() failed for lock');
+	fclose($flock) or die('pkwk_chown(): fclose() failed for lock');
+
+	return $result;
+}
+
+// touch() with trying pkwk_chown()
+function pkwk_touch_file($filename, $time = FALSE, $atime = FALSE)
+{
+	// Is the owner incorrected and unable to correct?
+	if (! file_exists($filename) || pkwk_chown($filename)) {
+		if ($time === FALSE) {
+			$result = touch($filename);
+		} else if ($atime === FALSE) {
+			$result = touch($filename, $time);
+		} else {
+			$result = touch($filename, $time, $atime);
+		}
+		return $result;
+	} else {
+		die('pkwk_touch_file(): Invalid UID and (not writable for the directory or not a flie): ' .
+			htmlspecialchars(basename($filename)));
+	}
 }
 ?>

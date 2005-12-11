@@ -1,32 +1,50 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.7 2005/02/05 06:47:10 henoheno Exp $
+// $Id: plugin.php,v 1.7.2.1 2005/12/11 18:03:45 teanan Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // Plugin related functions
 
-// プラグイン用に未定義のグローバル変数を設定
+define('PKWK_PLUGIN_CALL_TIME_LIMIT', 768);
+
+// Set global variables for plugins
 function set_plugin_messages($messages)
 {
-	foreach ($messages as $name=>$val) {
-		if (! isset($GLOBALS[$name])) $GLOBALS[$name] = $val;
-	}
+	foreach ($messages as $name=>$val)
+		if (! isset($GLOBALS[$name]))
+			$GLOBALS[$name] = $val;
 }
 
 // Check plugin '$name' is here
 function exist_plugin($name)
 {
-	static $exists = array();
+	global $vars;
+	static $exist = array(), $count = array();
 
 	$name = strtolower($name);
-	if(isset($exists[$name])) return $exists[$name];
+	if(isset($exist[$name])) {
+		if (++$count[$name] > PKWK_PLUGIN_CALL_TIME_LIMIT)
+			die('Alert: plugin "' . htmlspecialchars($name) .
+			'" was called over ' . PKWK_PLUGIN_CALL_TIME_LIMIT .
+			' times. SPAM or someting?<br />' . "\n" .
+			'<a href="' . get_script_uri() . '?cmd=edit&amp;page='.
+			rawurlencode($vars['page']) . '">Try to edit this page</a><br />' . "\n" .
+			'<a href="' . get_script_uri() . '">Return to frontpage</a>');
+		return $exist[$name];
+	}
 
 	if (preg_match('/^\w{1,64}$/', $name) &&
 	    file_exists(PLUGIN_DIR . $name . '.inc.php')) {
-		$exists[$name] = TRUE;
+	    	$exist[$name] = TRUE;
+	    	$count[$name] = 1;
 		require_once(PLUGIN_DIR . $name . '.inc.php');
 		return TRUE;
 	} else {
-		$exists[$name] = FALSE;
+	    	$exist[$name] = FALSE;
+	    	$count[$name] = 1;
 		return FALSE;
 	}
 }
@@ -94,10 +112,22 @@ function do_plugin_convert($name, $args = '')
 	if(do_plugin_init($name) === FALSE)
 		return '[Plugin init failed: ' . $name . ']';
 
-	if ($args !== '') {
-		$aryargs = csv_explode(',', $args);
+	if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK) {
+		// Multiline plugin?
+		$pos  = strpos($args, "\r"); // "\r" is just a delimiter
+		if ($pos !== FALSE) {
+			$body = substr($args, $pos + 1);
+			$args = substr($args, 0, $pos);
+		}
+	}
+
+	if ($args === '') {
+		$aryargs = array();                 // #plugin()
 	} else {
-		$aryargs = array();
+		$aryargs = csv_explode(',', $args); // #plugin(A,B,C,D)
+	}
+	if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK) {
+		if (isset($body)) $aryargs[] = & $body;     // #plugin(){{body}}
 	}
 
 	$_digest = $digest;

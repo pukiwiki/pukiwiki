@@ -1,11 +1,10 @@
 <?php
-/*
- * back plugin
- * (C) 2003-2004 PukiWiki Developer Team
- * (C) 2002 Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
- *
- * $Id: back.inc.php,v 1.7 2004/12/02 12:46:05 henoheno Exp $
- */
+// $Id: back.inc.php,v 1.7.2.1 2005/12/11 18:03:46 teanan Exp $
+// Copyright (C)
+//   2003-2004 PukiWiki Developers Team
+//   2002      Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
+//
+// back plugin
 
 // Allow specifying back link by page name and anchor, or
 // by relative or site-abusolute path

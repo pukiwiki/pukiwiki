@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: convert_html.php,v 1.7 2005/01/21 13:17:16 henoheno Exp $
+// $Id: convert_html.php,v 1.7.2.1 2005/12/11 18:03:45 teanan Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // function 'convert_html()', wiki text parser
 // and related classes-and-functions
@@ -130,12 +134,31 @@ function & Factory_YTable(& $root, $text)
 
 function & Factory_Div(& $root, $text)
 {
-	if (! preg_match('/^\#([^\(]+)(?:\((.*)\))?/', $text, $out) ||
-	    ! exist_plugin_convert($out[1])) {
-		return new Paragraph($text);
+	$matches = array();
+
+	// Seems block plugin?
+	if (PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK) {
+		// Usual code
+		if (preg_match('/^\#([^\(]+)(?:\((.*)\))?/', $text, $matches) &&
+		    exist_plugin_convert($matches[1])) {
+			return new Div($matches);
+		}
 	} else {
-		return new Div($out);
+		// Hack code
+		if(preg_match('/^#([^\(\{]+)(?:\(([^\r]*)\))?(\{*)/', $text, $matches) &&
+		   exist_plugin_convert($matches[1])) {
+			$len  = strlen($matches[3]);
+			$body = array();
+			if ($len == 0) {
+				return new Div($matches); // Seems legacy block plugin
+			} else if (preg_match('/\{{' . $len . '}\s*\r(.*)\r\}{' . $len . '}/', $text, $body)) { 
+				$matches[2] .= "\r" . $body[1] . "\r";
+				return new Div($matches); // Seems multiline-enabled block plugin
+			}
+		}
 	}
+
+	return new Paragraph($text);
 }
 
 // インライン要素
@@ -724,7 +747,7 @@ class Pre extends Element
 	}
 }
 
-// #something (started with '#')
+// Block plugin: #something (started with '#')
 class Div extends Element
 {
 	var $name;
@@ -743,6 +766,7 @@ class Div extends Element
 
 	function toString()
 	{
+		// Call #plugin
 		return do_plugin_convert($this->name, $this->param);
 	}
 }
@@ -827,6 +851,22 @@ class Body extends Element
 				continue;
 			}
 
+			// Multiline-enabled block plugin
+			if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK &&
+			    preg_match('/^#[^{]+(\{\{+)\s*$/', $line, $matches)) {
+				$len = strlen($matches[1]);
+				$line .= "\r"; // Delimiter
+				while (! empty($lines)) {
+					$next_line = preg_replace("/[\r\n]*$/", '', array_shift($lines));
+					if (preg_match('/\}{' . $len . '}/', $next_line)) {
+						$line .= $next_line;
+						break;
+					} else {
+						$line .= $next_line .= "\r"; // Delimiter
+					}
+				}
+			}
+
 			// The first character
 			$head = $line{0};
 
@@ -869,15 +909,27 @@ class Body extends Element
 	{
 		global $top, $_symbol_anchor;
 
+		// Heading id (auto-generated)
+		$autoid = 'content_' . $this->id . '_' . $this->count;
+		$this->count++;
+
+		// Heading id (specified by users)
 		$id = make_heading($text, FALSE); // Cut fixed-anchor from $text
-		$anchor = ($id == '') ?  '' : ' &aname(' . $id . ',super,full){' . $_symbol_anchor . '};';
+		if ($id == '') {
+			// Not specified
+			$id     = & $autoid;
+			$anchor = '';
+		} else {
+			$anchor = ' &aname(' . $id . ',super,full){' . $_symbol_anchor . '};';
+		}
 
 		$text = ' ' . $text;
-		$id = 'content_' . $this->id . '_' . $this->count;
-		$this->count++;
+
+		// Add 'page contents' link to its heading
 		$this->contents_last = & $this->contents_last->add(new Contents_UList($text, $level, $id));
 
-		return array($text . $anchor, $this->count > 1 ? "\n" . $top : '', $id);
+		// Add heding
+		return array($text . $anchor, $this->count > 1 ? "\n" . $top : '', $autoid);
 	}
 
 	function & insert(& $obj)
@@ -893,14 +945,9 @@ class Body extends Element
 		$text = parent::toString();
 
 		// #contents
-		$text = preg_replace_callback('/(<p[^>]*>)<del>#contents<\/del>(\s*)(<\/p>)/',
+		$text = preg_replace_callback('/<#_contents_>/',
 			array(& $this, 'replace_contents'), $text);
 
-		// 関連するページ
-		// <p>のときは行頭から、<del>のときは他の要素の子要素として存在
-		$text = preg_replace_callback('/(<p[^>]*>)<del>#related<\/del>(\s*)(<\/p>)/',
-			array(& $this, 'replace_related'), $text);
-		$text = preg_replace('/<del>#related<\/del>/', make_related($vars['page'], 'del'), $text);
 		return $text . "\n";
 	}
 
@@ -910,18 +957,7 @@ class Body extends Element
 				'<a id="contents_' . $this->id . '"></a>' . "\n" .
 				$this->contents->toString() . "\n" .
 				'</div>' . "\n";
-		array_shift($arr);
-		return ($arr[1] != '') ? $contents . join('', $arr) : $contents;
-	}
-
-	function replace_related($arr)
-	{
-		global $vars;
-		static $related = NULL;
-
-		if (is_null($related)) $related = make_related($vars['page'], 'p');
-		array_shift($arr);
-		return ($arr[1] != '') ? $related . join('', $arr) : $related;
+		return $contents;
 	}
 }
 

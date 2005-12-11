@@ -1,38 +1,43 @@
 <?php
-// $Id: trackback.php,v 1.8 2005/01/29 13:53:37 henoheno Exp $
+// $Id: trackback.php,v 1.8.2.1 2005/12/11 18:03:45 teanan Exp $
+// Copyright (C)
+//   2003-2005 PukiWiki Developers Team
+//   2003      Originally written by Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
+// License: GPL v2 or (at your option) any later version
+//
+// PukiWiki/TrackBack
+
 /*
- * PukiWiki/TrackBack
- * (C) 2003-2004 PukiWiki Developer Team
- * (C) 2003, Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
- * License: GPL
+ * NOTE:
+ *     To get TrackBack ID correctly, specify URI clearly like:
+ *     http://localhost/pukiwiki/pukiwiki.php?FrontPage
  *
- * http://localhost/pukiwiki/pukiwiki.php?FrontPage と明確に指定しないと
- * TrackBack ID の取得はできない
+ * tb_get_id($page)        Get TrackBack ID from page name
+ * tb_id2page($tb_id)      Get page name from TrackBack ID
+ * tb_get_filename($page)  Get file name of TrackBack ping data
+ * tb_count($page)         Count the number of TrackBack pings included for the page
+ *                         // pukiwiki.skin.php
+ * tb_send($page, $data)   Send TrackBack ping(s) automatically // file.php
+ * tb_delete($page)        Remove TrackBack ping data // edit.inc.php
+ * tb_get($file, $key = 1) Import TrackBack ping data from file
+ * tb_get_rdf($page)       Get a RDF comment to bury TrackBack-ping-URI under HTML(XHTML) output
+ *                         // lib/pukiwiki.php
+ * tb_get_url($url)        HTTP-GET from $uri, and reveal the TrackBack Ping URL
+ * class TrackBack_XML     Parse and reveal the TrackBack Ping URL from RDF data
  *
- * tb_get_id($page)        Get TrackBack Ping ID from page name
- * tb_id2page($tb_id)      Get page name from TrackBack Ping ID
- * tb_get_filename($page)  Get file name of TrackBack Ping data
- * tb_count($page)         Count the number of TrackBack Pings included for the page
- *                         // pukiwiki.skin.LANG.php
- * tb_send($page, $data)   Send TrackBack Ping(s) automatically // file.php
- * tb_delete($page)        Remove TrackBack Ping data // edit.inc.php
- * tb_get($file, $key = 1) TrackBack Ping データ入力
- * tb_get_rdf($page)       文章中に埋め込むためのrdfをデータを生成 // pukiwiki.php
- * tb_get_url($url)        文書をGETし、埋め込まれたTrackBack Ping URLを取得
- * class TrackBack_XML     XMLからTrackBack Ping IDを取得するクラス
- * == Referer 対応分 ==
- * ref_save($page)         Save or update referer data // pukiwiki.php
+ * == Referer related ==
+ * ref_save($page)         Save or update referer data // lib/pukiwiki.php
  */
 
-define('PLUGIN_TRACKBACK_VERSION', 'PukiWiki/TrackBack 0.2');
+define('PLUGIN_TRACKBACK_VERSION', 'PukiWiki/TrackBack 0.3');
 
-// Get TrackBack Ping ID from page name
+// Get TrackBack ID from page name
 function tb_get_id($page)
 {
 	return md5($page);
 }
 
-// Get page name from TrackBack Ping ID
+// Get page name from TrackBack ID
 function tb_id2page($tb_id)
 {
 	static $pages, $cache = array();
@@ -40,40 +45,38 @@ function tb_id2page($tb_id)
 	if (isset($cache[$tb_id])) return $cache[$tb_id];
 
 	if (! isset($pages)) $pages = get_existpages();
-
 	foreach ($pages as $page) {
 		$_tb_id = tb_get_id($page);
 		$cache[$_tb_id] = $page;
 		unset($pages[$page]);
-		if ($tb_id == $_tb_id) return $cache[$tb_id];
+		if ($tb_id == $_tb_id) return $cache[$tb_id]; // Found
 	}
 
 	$cache[$tb_id] = FALSE;
-
 	return $cache[$tb_id]; // Not found
 }
 
-// Get file name of TrackBack Ping data
+// Get file name of TrackBack ping data
 function tb_get_filename($page, $ext = '.txt')
 {
 	return TRACKBACK_DIR . encode($page) . $ext;
 }
 
-// Count the number of TrackBack Pings included for the page
+// Count the number of TrackBack pings included for the page
 function tb_count($page, $ext = '.txt')
 {
 	$filename = tb_get_filename($page, $ext);
 	return file_exists($filename) ? count(file($filename)) : 0;
 }
 
-// Send TrackBack Ping(s) automatically
+// Send TrackBack ping(s) automatically
 // $plus  = Newly added lines may include URLs
 // $minus = Removed lines may include URLs
 function tb_send($page, $plus, $minus = '')
 {
-	global $script, $trackback;
+	global $page_title;
 
-	if (! $trackback) return;
+	$script = get_script_uri();
 
 	// Disable 'max execution time' (php.ini: max_execution_time)
 	if (ini_get('safe_mode') == '0') set_time_limit(0);
@@ -106,9 +109,9 @@ function tb_send($page, $plus, $minus = '')
 	// Sender's information
 	$putdata = array(
 		'title'     => $page, // Title = It's page name
-		'url'       => "$script?$r_page", // will be rawurlencode() at send phase
+		'url'       => $script . '?' . $r_page, // will be rawurlencode() at send phase
 		'excerpt'   => mb_strimwidth(preg_replace("/[\r\n]/", ' ', $excerpt), 0, 255, '...'),
-		'blog_name' => PLUGIN_TRACKBACK_VERSION,
+		'blog_name' => $page_title . ' (' . PLUGIN_TRACKBACK_VERSION . ')',
 		'charset'   => SOURCE_ENCODING // Ping text encoding (Not defined)
 	);
 
@@ -116,19 +119,19 @@ function tb_send($page, $plus, $minus = '')
 		$tb_id = tb_get_url($link);  // Get Trackback ID from the URL
 		if (empty($tb_id)) continue; // Trackback is not supported
 
-		$result = http_request($tb_id, 'POST', '', $putdata);
+		$result = http_request($tb_id, 'POST', '', $putdata, 2, CONTENT_CHARSET);
 		// FIXME: Create warning notification space at pukiwiki.skin!
 	}
 }
 
-// Remove TrackBack Ping data
+// Remove TrackBack ping data
 function tb_delete($page)
 {
 	$filename = tb_get_filename($page);
 	if (file_exists($filename)) @unlink($filename);
 }
 
-// TrackBack Ping データ入力
+// Import TrackBack ping data from file
 function tb_get($file, $key = 1)
 {
 	if (! file_exists($file)) return array();
@@ -148,19 +151,14 @@ function tb_get($file, $key = 1)
 	return $result;
 }
 
-// 文章中に trackback:ping を埋め込むためのデータを生成
+// Get a RDF comment to bury TrackBack-ping-URI under HTML(XHTML) output
 function tb_get_rdf($page)
 {
-	global $trackback;
-
-	if (! $trackback) return '';
-
+	$_script = get_script_uri(); // Get absolute path
 	$r_page = rawurlencode($page);
 	$tb_id  = tb_get_id($page);
 	// $dcdate = substr_replace(get_date('Y-m-d\TH:i:sO', $time), ':', -2, 0);
 	// dc:date="$dcdate"
-
-	$_script = get_script_uri(); // Get absolute path
 
 	return <<<EOD
 <!--
@@ -177,19 +175,22 @@ function tb_get_rdf($page)
 EOD;
 }
 
-// 文書をGETし、埋め込まれたTrackBack Ping urlを取得
+// HTTP-GET from $uri, and reveal the TrackBack Ping URL
 function tb_get_url($url)
 {
-	// プロキシを経由する必要があるホストにはpingを送信しない
+	global $use_proxy, $no_proxy;
+
+	// Don't go across HTTP-proxy server
 	$parse_url = parse_url($url);
-	if (empty($parse_url['host']) || via_proxy($parse_url['host']))
+	if (empty($parse_url['host']) ||
+	   ($use_proxy && ! in_the_net($no_proxy, $parse_url['host'])))
 		return '';
 
 	$data = http_request($url);
 	if ($data['rc'] !== 200) return '';
 
 	$matches = array();
-	if (! preg_match_all('#<rdf:RDF[^>]*>(.*?)</rdf:RDF>#si', $data['data'],
+	if (! preg_match_all('#<rdf:RDF[^>]*xmlns:trackback=[^>]*>(.*?)</rdf:RDF>#si', $data['data'],
 	    $matches, PREG_PATTERN_ORDER))
 		return '';
 
@@ -202,7 +203,7 @@ function tb_get_url($url)
 	return '';
 }
 
-// 埋め込まれたデータから TrackBack Ping urlを取得するクラス
+// Parse and reveal the TrackBack Ping URL from RDF(XML) data
 class TrackBack_XML
 {
 	var $url;
@@ -267,7 +268,7 @@ function ref_save($page)
 		return TRUE;
 
 	if (! is_dir(TRACKBACK_DIR))      die('No such directory: TRACKBACK_DIR');
-	if (! is_writable(TRACKBACK_DIR)) die('Permission denied: TRACKBACK_DIR');
+	if (! is_writable(TRACKBACK_DIR)) die('Permission denied to write: TRACKBACK_DIR');
 
 	// Update referer data
 	if (ereg("[,\"\n\r]", $url))
@@ -277,9 +278,13 @@ function ref_save($page)
 	$data     = tb_get($filename, 3);
 	$d_url    = rawurldecode($url);
 	if (! isset($data[$d_url])) {
-		// 0:最終更新日時, 1:初回登録日時, 2:参照カウンタ,
-		// 3:Referer ヘッダ, 4:利用可否フラグ(1は有効)
-		$data[$d_url] = array(UTIME, UTIME, 0, $url, 1);
+		$data[$d_url] = array(
+			'',    // [0]: Last update date
+			UTIME, // [1]: Creation date
+			0,     // [2]: Reference counter
+			$url,  // [3]: Referer header
+			1      // [4]: Enable / Disable flag (1 = enable)
+		);
 	}
 	$data[$d_url][0] = UTIME;
 	$data[$d_url][2]++;

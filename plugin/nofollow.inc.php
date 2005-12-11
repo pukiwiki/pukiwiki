@@ -1,5 +1,5 @@
 <?php
-// $Id: nofollow.inc.php,v 1.1 2005/05/23 14:22:30 henoheno Exp $
+// $Id: nofollow.inc.php,v 1.1.2.1 2005/12/11 18:03:46 teanan Exp $
 // Copyright (C) 2005 PukiWiki Developers Team
 // License: The same as PukiWiki
 //

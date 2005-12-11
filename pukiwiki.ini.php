@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.114.2.3 2005/03/21 17:57:41 teanan Exp $
+// $Id: pukiwiki.ini.php,v 1.114.2.4 2005/12/11 18:03:45 teanan Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // PukiWiki main setting file
 
@@ -25,10 +29,31 @@ if (! defined('PKWK_READONLY'))
 if (! defined('PKWK_SAFE_MODE'))
 	define('PKWK_SAFE_MODE', 0);
 
+// PKWK_DISABLE_INLINE_IMAGE_FROM_URI - Disallow using inline-image-tag for URIs
+//   Inline-image-tag for URIs may allow leakage of Wiki readers' information
+//   (in short, 'Web bug') or external malicious CGI (looks like an image's URL)
+//   attack to Wiki readers, but easy way to show images.
+if (! defined('PKWK_DISABLE_INLINE_IMAGE_FROM_URI'))
+	define('PKWK_DISABLE_INLINE_IMAGE_FROM_URI', 0);
+
 // PKWK_QUERY_STRING_MAX
 //   Max length of GET method, prohibits some worm attack ASAP
 //   NOTE: Keep (page-name + attach-file-name) <= PKWK_QUERY_STRING_MAX
 define('PKWK_QUERY_STRING_MAX', 640); // Bytes, 0 = OFF
+
+/////////////////////////////////////////////////
+// Experimental features
+
+// Multiline plugin hack (See BugTrack2/84)
+// EXAMPLE(with a known BUG):
+//   #plugin(args1,args2,...,argsN){{
+//   argsN+1
+//   argsN+1
+//   #memo(foo)
+//   argsN+1
+//   }}
+//   #memo(This makes '#memo(foo)' to this)
+define('PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK', 1); // 1 = Disabled
 
 /////////////////////////////////////////////////
 // Language / Encoding settings
@@ -36,7 +61,7 @@ define('PKWK_QUERY_STRING_MAX', 640); // Bytes, 0 = OFF
 // LANG - Internal content encoding ('en', 'ja', or ...)
 define('LANG', 'ja');
 
-// UI_LANG - Content Language for buttons, menus,  etc
+// UI_LANG - Content encoding for buttons, menus,  etc
 define('UI_LANG', LANG); // 'en' for Internationalized wikisite
 
 /////////////////////////////////////////////////
@@ -84,8 +109,8 @@ default  :
 }
 
 /////////////////////////////////////////////////
-// Title of your Wikisite (Define this)
-// and also RSS feed's channel name
+// Title of your Wikisite (Name this)
+// Also used as RSS feed's channel name etc
 $page_title = 'PukiWiki';
 
 // Specify PukiWiki URL (default: auto)
@@ -121,8 +146,13 @@ $menubar      = 'MenuBar';       // Menu
 //$pkwk_dtd = PKWK_DTD_HTML_4_01_TRANSITIONAL;
 
 /////////////////////////////////////////////////
+// Always output "nofollow,noindex" attribute
 
-// PKWK_ALLOW_JAVASCRIPT - Allow using JavaScript
+$nofollow = 0; // 1 = Try hiding from search engines
+
+/////////////////////////////////////////////////
+
+// PKWK_ALLOW_JAVASCRIPT - Allow / Prohibit using JavaScript
 define('PKWK_ALLOW_JAVASCRIPT', 0);
 
 /////////////////////////////////////////////////
@@ -131,7 +161,7 @@ define('PKWK_ALLOW_JAVASCRIPT', 0);
 // Enable Trackback
 $trackback = 0;
 
-// Show trackbacks with an another window
+// Show trackbacks with an another window (using JavaScript)
 $trackback_javascript = 0;
 
 /////////////////////////////////////////////////
@@ -145,8 +175,8 @@ $nowikiname = 0;
 /////////////////////////////////////////////////
 // AutoLink feature
 
-// AutoLink minimum bytes (0 = Disable)
-$autolink = 8;
+// AutoLink minimum length of page name
+$autolink = 8; // Bytes, 0 = OFF
 
 /////////////////////////////////////////////////
 // AutoAlias feature
@@ -167,10 +197,13 @@ $function_freeze = 1;
 $notimeupdate = 1;
 
 /////////////////////////////////////////////////
-// Wikisite admin password
+// Admin password for this Wikisite
 
 // CHANGE THIS
-$adminpass = '1a1dc91c907325c69271ddf0c944bc72'; // md5('pass')
+$adminpass = '{x-php-md5}1a1dc91c907325c69271ddf0c944bc72'; // md5('pass')
+//$adminpass = '{CRYPT}$1$AR.Gk94x$uCe8fUUGMfxAPH83psCZG/'; // CRYPT 'pass'
+//$adminpass = '{MD5}Gh3JHJBzJcaScd3wyUS8cg==';             // MD5   'pass'
+//$adminpass = '{SMD5}o7lTdtHFJDqxFOVX09C8QnlmYmZnd2Qx';    // SMD5  'pass'
 
 /////////////////////////////////////////////////
 // Page-reading feature settings
@@ -205,17 +238,16 @@ $pagereading_config_dict = ':config/PageReading/dict';
 /////////////////////////////////////////////////
 // User definition
 $auth_users = array(
-	'foo'	=> 'foo_passwd',
-	'bar'	=> 'bar_passwd',
-	'hoge'	=> 'hoge_passwd',
+	'foo'	=> 'foo_passwd', // Cleartext
+	'bar'	=> '{x-php-md5}f53ae779077e987718cc285b14dfbe86', // md5('bar_passwd')
+	'hoge'	=> '{SMD5}OzJo/boHwM4q5R+g7LCOx2xGMkFKRVEx', // SMD5 'hoge_passwd'
 );
 
 /////////////////////////////////////////////////
 // Authentication method
 
-// 'pagename' : by Page name
-// 'contents' : by Page contents
-$auth_method_type = 'contents';
+$auth_method_type = 'contents';	// By Page contents
+//$auth_method_type = 'pagename';	// By Page name
 
 /////////////////////////////////////////////////
 // Read auth (0:Disable, 1:Enable)
@@ -257,7 +289,7 @@ $maxshow_deleted = 60;
 $cantedit = array( $whatsnew, $whatsdeleted );
 
 /////////////////////////////////////////////////
-// HTTP: Send Last-Modified header
+// HTTP: Output Last-Modified header
 $lastmod = 0;
 
 /////////////////////////////////////////////////
@@ -281,13 +313,13 @@ $do_backup = 1;
 $del_backup = 0;
 
 // Bacukp interval and generation
-$cycle  = 3;    // Wait N hours between backup (0 = no wait)
+$cycle  =   3; // Wait N hours between backup (0 = no wait)
 $maxage = 120; // Stock latest N backups
 
 // NOTE: $cycle x $maxage / 24 = Minimum days to lost your data
 //          3   x   120   / 24 = 15
 
-// Spilitter of backup data (NOTE: Too dangerous to change)
+// Splitter of backup data (NOTE: Too dangerous to change)
 define('PKWK_SPLITTER', '>>>>>>>>>>');
 
 /////////////////////////////////////////////////
@@ -296,7 +328,7 @@ $update_exec = '';
 //$update_exec = '/usr/bin/mknmz --media-type=text/pukiwiki -O /var/lib/namazu/index/ -L ja -c -K /var/www/wiki/';
 
 /////////////////////////////////////////////////
-// Proxy setting (for TrackBack etc)
+// HTTP proxy setting (for TrackBack etc)
 
 // Use HTTP proxy server to get remote data
 $use_proxy = 0;
@@ -331,6 +363,7 @@ $notify_diff_only = 1;
 // SMTP server (Windows only. Usually specified at php.ini)
 $smtp_server = 'localhost';
 
+// Mail recipient (To:) and sender (From:)
 $notify_to   = 'to@example.com';	// To:
 $notify_from = 'from@example.com';	// From:
 
@@ -338,8 +371,8 @@ $notify_from = 'from@example.com';	// From:
 $notify_subject = '[PukiWiki] $page';
 
 // Mail header
-$notify_header = "From: $notify_from\r\n" .
-	'X-Mailer: PukiWiki/' .  S_VERSION . ' PHP/' . phpversion();
+// NOTE: Multiple items must be divided by "\r\n", not "\n".
+$notify_header = '';
 
 /////////////////////////////////////////////////
 // Mail: POP / APOP Before SMTP
@@ -384,7 +417,7 @@ $fixed_heading_anchor = 1;
 $preformat_ltrim = 1;
 
 /////////////////////////////////////////////////
-// Convert linebreaks into <br/>
+// Convert linebreaks into <br />
 $line_break = 0;
 
 /////////////////////////////////////////////////

@@ -1,13 +1,18 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: lookup.inc.php,v 1.19 2005/02/27 09:36:31 henoheno Exp $
+// $Id: lookup.inc.php,v 1.19.2.1 2005/12/11 18:03:46 teanan Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // InterWiki lookup plugin
 
 define('PLUGIN_LOOKUP_USAGE', '#lookup(interwikiname[,button_name[,default]])');
+
 function plugin_lookup_convert()
 {
-	global $script, $vars;
+	global $vars;
 	static $id = 0;
 
 	$num = func_num_args();
@@ -21,6 +26,7 @@ function plugin_lookup_convert()
 	$s_page    = htmlspecialchars($vars['page']);
 	++$id;
 
+	$script = get_script_uri();
 	$ret = <<<EOD
 <form action="$script" method="post">
  <div>
@@ -43,13 +49,13 @@ function plugin_lookup_action()
 	$page  = isset($post['page'])  ? $post['page']  : '';
 	$inter = isset($post['inter']) ? $post['inter'] : '';
 	if ($page == '') return FALSE; // Do nothing
-	if ($inter == '') return array(msg=>'Invalid access', body=>'');
+	if ($inter == '') return array('msg'=>'Invalid access', 'body'=>'');
 
 	$url = get_interwiki_url($inter, $page);
 	if ($url === FALSE) {
 		$msg = sprintf('InterWikiName "%s" not found', $inter);
 		$msg = htmlspecialchars($msg);
-		return array(msg=>'Not found', body=>$msg);
+		return array('msg'=>'Not found', 'body'=>$msg);
 	}
 
 	pkwk_headers_sent();

@@ -1,61 +1,87 @@
 <?php
-/*
- * PukiWiki 最新の?件を表示するプラグイン
- *
- * CopyRight 2002 Y.MASUI GPL2
- * http://masui.net/pukiwiki/ masui@masui.net
- *
- * 変更履歴:
- *  2002.04.08: patさん、みのるさんの指摘により、リンク先が日本語の場合に
- *              化けるのを修正
- *
- *  2002.06.17: plugin_recent_init()を設定
- *  2002.07.02: <ul>による出力に変更し構造化
- *
- * $Id: recent.inc.php,v 1.13 2004/09/04 14:26:52 henoheno Exp $
- */
+// $Id: recent.inc.php,v 1.13.4.1 2005/12/11 18:03:46 teanan Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2002      Y.MASUI http://masui.net/pukiwiki/ masui@masui.net
+// License: GPL version 2
+//
+// Recent plugin -- Show RecentChanges list
+//   * Usually used at 'MenuBar' page
+//   * Also used at special-page, without no #recnet at 'MenuBar'
 
-// RecentChangesのキャッシュ
+// Default number of 'Show latest N changes'
+define('PLUGIN_RECENT_DEFAULT_LINES', 10);
+
+// Limit number of executions
+define('PLUGIN_RECENT_EXEC_LIMIT', 2); // N times per one output
+
+// ----
+
+define('PLUGIN_RECENT_USAGE', '#recent(number-to-show)');
+
+// Place of the cache of 'RecentChanges'
 define('PLUGIN_RECENT_CACHE', CACHE_DIR . 'recent.dat');
 
 function plugin_recent_convert()
 {
-	global $script, $vars, $date_format;
-	global $_recent_plugin_frame;
+	global $vars, $date_format, $_recent_plugin_frame;
+	static $exec_count = 1;
 
-	if (! file_exists(PLUGIN_RECENT_CACHE)) return '';
-
-	$recent_lines = 10;
+	$recent_lines = PLUGIN_RECENT_DEFAULT_LINES;
 	if (func_num_args()) {
 		$args = func_get_args();
-		if (is_numeric($args[0]))
+		if (! is_numeric($args[0]) || isset($args[1])) {
+			return PLUGIN_RECENT_USAGE . '<br />';
+		} else {
 			$recent_lines = $args[0];
+		}
 	}
 
-	// 先頭のN件(行)を取り出す
-	$lines = array_splice(file(PLUGIN_RECENT_CACHE), 0, $recent_lines);
+	// Show only N times
+	if ($exec_count > PLUGIN_RECENT_EXEC_LIMIT) {
+		return '#recent(): You called me too much' . '<br />' . "\n";
+	} else {
+		++$exec_count;
+	}
 
+	// Get latest N changes
+	if (file_exists(PLUGIN_RECENT_CACHE)) {
+		// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
+		$file_array = file(PLUGIN_RECENT_CACHE); // with array_splice()
+		$lines      = array_splice($file_array, 0, $recent_lines);
+	} else {
+		return '#recent(): Cache file of RecentChanges not found' . '<br />';
+	}
+
+	$script = get_script_uri();
 	$date = $items = '';
 	foreach ($lines as $line) {
 		list($time, $page) = explode("\t", rtrim($line));
+
 		$_date = get_date($date_format, $time);
 		if ($date != $_date) {
-			if ($date != '') $items .= '</ul>';
+			// End of the day
+			if ($date != '') $items .= '</ul>' . "\n";
+
+			// New day
 			$date = $_date;
-			$items .= "<strong>$date</strong>\n" .
-				"<ul class=\"recent_list\">\n";
+			$items .= '<strong>' . $date . '</strong>' . "\n" .
+				'<ul class="recent_list">' . "\n";
 		}
+
 		$s_page = htmlspecialchars($page);
-		$r_page = rawurlencode($page);
-		$pg_passage = get_pg_passage($page, FALSE);
 		if($page == $vars['page']) {
-			// No need to link itself, notifies where you just read
-			$items .= " <li><span title=\"$s_page $pg_passage\">$s_page</span></li>\n";
+			// No need to link to the page now you read, notifies where you just read
+			$items .= ' <li>' . $s_page . '</li>' . "\n";
 		} else {
-			$items .= " <li><a href=\"$script?$r_page\" title=\"$s_page $pg_passage\">$s_page</a></li>\n";
+			$r_page = rawurlencode($page);
+			$pg_passage = get_pg_passage($page, FALSE);
+			$items .= ' <li><a href="' . $script . '?' . $r_page . '" title="' .
+				$s_page . ' ' . $pg_passage . '">' . $s_page . '</a></li>' . "\n";
 		}
 	}
-	if (! empty($lines)) $items .= "</ul>\n";
+	// End of the day
+	if ($date != '') $items .= '</ul>' . "\n";
 
 	return sprintf($_recent_plugin_frame, count($lines), $items);
 }

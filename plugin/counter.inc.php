@@ -1,20 +1,23 @@
 <?php
-/*
- * PukiWiki counter plugin
- * $Id: counter.inc.php,v 1.15 2004/12/04 06:54:34 henoheno Exp $
- *
- * (C) 2004 PukiWiki Developer Team
- * (C) 2002 Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net
- */
+// $Id: counter.inc.php,v 1.15.2.1 2005/12/11 18:03:46 teanan Exp $
+//
+// PukiWiki counter plugin
+//
+// (C) 2002-2005 PukiWiki Developers Team
+// (C) 2002 Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net
 
 // Counter file's suffix
 define('PLUGIN_COUNTER_SUFFIX', '.count');
 
+// Report one
 function plugin_counter_inline()
 {
 	global $vars;
 
-	$arg = strtolower(array_shift(func_get_args()));
+	// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
+	$args = func_get_args(); // with array_shift()
+
+	$arg = strtolower(array_shift($args));
 	switch ($arg) {
 	case ''     : $arg = 'total'; /*FALLTHROUGH*/
 	case 'total': /*FALLTHROUGH*/
@@ -27,6 +30,7 @@ function plugin_counter_inline()
 	}
 }
 
+// Report all
 function plugin_counter_convert()
 {
 	global $vars;
@@ -41,6 +45,7 @@ yesterday: {$counter['yesterday']}
 EOD;
 }
 
+// Return a summary
 function plugin_counter_get_count($page)
 {
 	global $vars;
@@ -64,7 +69,7 @@ function plugin_counter_get_count($page)
 
 	$file = COUNTER_DIR . encode($page) . PLUGIN_COUNTER_SUFFIX;
 	$fp = fopen($file, file_exists($file) ? 'r+' : 'w+')
-		or die_message('counter.inc.php: Cannot open ' . $file);
+		or die('counter.inc.php: Cannot open COUTER_DIR/' . basename($file));
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);

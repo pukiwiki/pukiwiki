@@ -1,8 +1,10 @@
 <?php
-/////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: ja.lng.php,v 1.6 2005/01/15 02:51:44 henoheno Exp $
+// $Id: ja.lng.php,v 1.6.2.1 2005/12/11 18:03:45 teanan Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // PukiWiki message file (japanese)
 
@@ -83,14 +85,7 @@ $rule_page = '整形ルール';
 $help_page = 'ヘルプ';
 
 ///////////////////////////////////////
-// TrackBack
-$_tb_title  = 'TrackBack: %s への議論は継続される...';
-$_tb_header = 'ディスカッションの継続...';
-$_tb_entry  = 'このエントリの TrackBack URL:';
-$_tb_refer  = ' この一覧は、次のエントリを参照しています: %s, %s.';
-$_tb_header_Excerpt = '要約:';
-$_tb_header_Weblog  = 'Weblog:';
-$_tb_header_Tracked = '日時:';
+// TrackBack (REMOVED)
 $_tb_date  = 'Y年n月j日 H:i:s';
 
 /////////////////////////////////////////////////
