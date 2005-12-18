@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.51 2005/11/29 08:13:26 teanan Exp $
+// $Id: func.php,v 1.52 2005/12/18 15:11:08 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -90,6 +90,18 @@ function is_freeze($page, $clearcache = FALSE)
 		$is_freeze[$page] = ($buffer != FALSE && rtrim($buffer, "\r\n") == '#freeze');
 		return $is_freeze[$page];
 	}
+}
+
+// Handling $non_list
+// $non_list will be preg_quote($str, '/') later.
+function check_non_list($page = '')
+{
+	global $non_list;
+	static $regex;
+
+	if (! isset($regex)) $regex = '/' . $non_list . '/';
+
+	return preg_match($regex, $page);
 }
 
 // Auto template

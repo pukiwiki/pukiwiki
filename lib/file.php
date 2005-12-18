@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.42 2005/12/09 17:59:29 teanan Exp $
+// $Id: file.php,v 1.43 2005/12/18 15:12:37 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -149,7 +149,7 @@ function generate_fixed_heading_anchor_id($seed)
 function file_write($dir, $page, $str, $notimestamp = FALSE)
 {
 	global $update_exec, $_msg_invalidiwn, $notify, $notify_diff_only, $notify_subject;
-	global $non_list, $whatsdeleted, $maxshow_deleted;
+	global $whatsdeleted, $maxshow_deleted;
 
 	if (PKWK_READONLY) return; // Do nothing
 
@@ -165,10 +165,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		if ($dir == DATA_DIR && file_exists($file)) {
 			// File deletion
 			unlink($file);
-			$non_list_pattern = '/' . $non_list . '/';
-			if (!preg_match($non_list_pattern, $page)) {
-				add_recent($page, $whatsdeleted, '', $maxshow_deleted); // RecentDeleted
-			}
+			add_recent($page, $whatsdeleted, '', $maxshow_deleted); // RecentDeleted
 		}
 	} else {
 		// File replacement (Edit)
@@ -221,10 +218,23 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	}
 }
 
+// Handling $non_list
+// $non_list will be preg_quote($str, '/') later.
+function check_non_list($page = '')
+{
+	global $non_list;
+	static $regex;
+	
+	if (! isset($regex)) $regex = '/' . $non_list . '/';
+
+	return preg_match($regex, $page);
+}
+
 // Update RecentDeleted
 function add_recent($page, $recentpage, $subject = '', $limit = 0)
 {
-	if (PKWK_READONLY || $limit == 0 || $page == '' || $recentpage == '') return;
+	if (PKWK_READONLY || $limit == 0 || $page == '' || $recentpage == '' ||
+	    check_non_list($page)) return;
 
 	// Load
 	$lines = $matches = array();
