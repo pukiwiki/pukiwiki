@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: related.inc.php,v 1.6 2005/04/10 18:41:02 teanan Exp $
+// $Id: related.inc.php,v 1.7 2005/12/18 15:28:55 henoheno Exp $
 //
 // Related plugin: Show Backlinks for the page
 
@@ -14,7 +14,7 @@ function plugin_related_convert()
 // Show Backlinks: via related caches for the page
 function plugin_related_action()
 {
-	global $vars, $script, $non_list, $defaultpage, $whatsnew;
+	global $vars, $script, $defaultpage, $whatsnew;
 
 	$_page = isset($vars['page']) ? $vars['page'] : '';
 	if ($_page == '') $_page = $defaultpage;
@@ -23,10 +23,9 @@ function plugin_related_action()
 	$data = links_get_related_db($_page);
 	if (! empty($data)) {
 		// Hide by array keys (not values)
-		$non_list_pattern = '/' . $non_list . '/';
 		foreach(array_keys($data) as $page)
 			if ($page == $whatsnew ||
-			    preg_match($non_list_pattern, $page))
+			    check_non_list($page))
 				unset($data[$page]);
 	}
 

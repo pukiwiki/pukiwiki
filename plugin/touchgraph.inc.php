@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: touchgraph.inc.php,v 1.9 2005/09/24 01:30:08 henoheno Exp $
+// $Id: touchgraph.inc.php,v 1.10 2005/12/18 15:28:55 henoheno Exp $
 //
 // Output an index for 'TouchGraph WikiBrowser'
 // http://www.touchgraph.com/
@@ -32,18 +32,15 @@ function plugin_touchgraph_action()
 // Normal
 function plugin_touchgraph_rel()
 {
-	global $non_list;
-
- 	$non_list_pattern = '/' . $non_list . '/';
 	foreach (get_existpages() as $page) {
-		if (preg_match($non_list_pattern, $page)) continue;
+		if (check_non_list($page)) continue;
 
 		$file = CACHE_DIR . encode($page) . '.rel';
 		if (file_exists($file)) {
 			echo $page;
 			$data = file($file);
 			foreach(explode("\t", trim($data[0])) as $name) {
-				if (preg_match($non_list_pattern, $name)) continue;
+				if (check_non_list($name)) continue;
 				echo ' ', $name;
 			}
 			echo "\n";
@@ -54,18 +51,15 @@ function plugin_touchgraph_rel()
 // Reverse
 function plugin_touchgraph_ref()
 {
-	global $non_list;
- 
- 	$non_list_pattern = '/' . $non_list . '/';
 	foreach (get_existpages() as $page) {
-		if (preg_match($non_list_pattern, $page)) continue;
+		if (check_non_list($page)) continue;
 
 		$file = CACHE_DIR . encode($page) . '.ref';
 		if (file_exists($file)) {
 			echo $page;
 			foreach (file($file) as $line) {
 				list($name) = explode("\t", $line);
-				if (preg_match($non_list_pattern, $name)) continue;
+				if (check_non_list($name)) continue;
 				echo ' ', $name;
 			}
 			echo "\n";
