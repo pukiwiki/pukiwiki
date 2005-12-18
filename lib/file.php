@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.43 2005/12/18 15:12:37 henoheno Exp $
+// $Id: file.php,v 1.44 2005/12/18 15:14:23 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -218,18 +218,6 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	}
 }
 
-// Handling $non_list
-// $non_list will be preg_quote($str, '/') later.
-function check_non_list($page = '')
-{
-	global $non_list;
-	static $regex;
-	
-	if (! isset($regex)) $regex = '/' . $non_list . '/';
-
-	return preg_match($regex, $page);
-}
-
 // Update RecentDeleted
 function add_recent($page, $recentpage, $subject = '', $limit = 0)
 {
@@ -272,15 +260,14 @@ function add_recent($page, $recentpage, $subject = '', $limit = 0)
 // Update RecentChanges
 function put_lastmodified()
 {
-	global $maxshow, $whatsnew, $non_list, $autolink;
+	global $maxshow, $whatsnew, $autolink;
 
 	if (PKWK_READONLY) return; // Do nothing
 
 	$pages = get_existpages();
 	$recent_pages = array();
-	$non_list_pattern = '/' . $non_list . '/';
 	foreach($pages as $page)
-		if ($page != $whatsnew && ! preg_match($non_list_pattern, $page))
+		if ($page != $whatsnew && ! check_non_list($page))
 			$recent_pages[$page] = get_filetime($page);
 
 	// Sort decending order of last-modification date

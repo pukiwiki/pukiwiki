@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.47 2005/11/24 18:00:27 teanan Exp $
+// $Id: html.php,v 1.48 2005/12/18 15:19:24 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -156,7 +156,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 	global $script, $vars, $rows, $cols, $hr, $function_freeze;
 	global $_btn_addtop, $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel,
 		$_msg_help, $_btn_notchangetimestamp;
-	global $whatsnew, $_btn_template, $_btn_load, $non_list, $load_template_func;
+	global $whatsnew, $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
 
 	// Newly generate $digest or not
@@ -176,9 +176,8 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 
 	if($load_template_func && $b_template) {
 		$pages  = array();
-		$non_list_pattern = '/' . $non_list . '/';
 		foreach(get_existpages() as $_page) {
-			if ($_page == $whatsnew || preg_match($non_list_pattern, $_page))
+			if ($_page == $whatsnew || check_non_list($_page))
 				continue;
 			$s_page = htmlspecialchars($_page);
 			$pages[$_page] = '   <option value="' . $s_page . '">' .
@@ -257,7 +256,7 @@ EOD;
 // Related pages
 function make_related($page, $tag = '')
 {
-	global $script, $vars, $rule_related_str, $related_str, $non_list;
+	global $script, $vars, $rule_related_str, $related_str;
 	global $_ul_left_margin, $_ul_margin, $_list_pad_str;
 
 	$links = links_get_related($page);
@@ -269,9 +268,8 @@ function make_related($page, $tag = '')
 	}
 
 	$_links = array();
-	$non_list_pattern = '/' . $non_list . '/';
 	foreach ($links as $page=>$lastmod) {
-		if (preg_match($non_list_pattern, $page)) continue;
+		if (check_non_list($page)) continue;
 
 		$r_page   = rawurlencode($page);
 		$s_page   = htmlspecialchars($page);
