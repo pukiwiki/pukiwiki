@@ -17,6 +17,6 @@
 - [[PukiWiki]] -- PukiWikiのご紹介
 
 *** ドキュメント [#o366701b]
-- [[ヘルプ]] -- PukiWikiで編集するには？
+- [[ヘルプ>Help]] -- PukiWikiで編集するには？
 - [[テキスト整形のルール(詳細版)>FormattingRules]]
 - [[プラグインマニュアル>PukiWiki/1.4/Manual/Plugin]]

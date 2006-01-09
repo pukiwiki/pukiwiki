@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: ja.lng.php,v 1.12 2006/01/09 11:06:05 henoheno Exp $
+// $Id: ja.lng.php,v 1.13 2006/01/09 12:09:57 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -80,9 +80,9 @@ $_title_cannotread = '$1 は閲覧できません';
 $_msg_auth         = 'PukiWikiAuth';
 
 ///////////////////////////////////////
-// Help 'wiki format rule'.
-$rule_page = 'FormattingRules';
-$help_page = 'ヘルプ';
+// Page name
+$rule_page = 'FormattingRules';	// Formatting rules
+$help_page = 'Help';		// Help
 
 ///////////////////////////////////////
 // TrackBack (REMOVED)

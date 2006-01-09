@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: en.lng.php,v 1.13 2006/01/09 11:06:05 henoheno Exp $
+// $Id: en.lng.php,v 1.14 2006/01/09 12:09:57 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -78,9 +78,9 @@ $_title_cannotread = ' $1 is not readable';
 $_msg_auth         = 'PukiWikiAuth';
 
 ///////////////////////////////////////
-// Help 'wiki format rule'.
-$rule_page = 'FormattingRules';
-$help_page = 'Help';
+// Page name
+$rule_page = 'FormattingRules';	// Formatting rules
+$help_page = 'Help';		// Help
 
 ///////////////////////////////////////
 // TrackBack (REMOVED)
