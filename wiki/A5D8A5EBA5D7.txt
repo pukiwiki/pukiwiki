@@ -4,7 +4,7 @@
 * [[PukiWiki]]ヘルプ [#s14a5adf]
 
 - [[FAQ(PukiWiki-official)>pukiwiki:FAQ]](日本語)
-- [[テキスト整形のルール>整形ルール]] 
+- [[テキスト整形のルール>FormattingRules]] 
 - [[プラグインマニュアル>PukiWiki/1.4/Manual/Plugin]] 
 ----------------------------
 #contents
