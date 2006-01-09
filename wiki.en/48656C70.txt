@@ -1,7 +1,6 @@
 #contents
 -[[FAQ(PukiWiki-official)>pukiwiki:PukiWiki/FAQ]](Japanese)
--[[Text Formatting Rule Abstract>FormatRule]] (also included as the last part of this page)
---[[Text Formatting Rule>TextFormattingRule]] (now preparing. Please refer to pukiwiki.dev site: [[Text Formatting Rule:http://pukiwiki.sourceforge.jp/dev/index.php?cmd=read&page=%3ACategoryDev%2FDocument%2FText%20Formatting%20Rule]].)
+-[[Text Formatting Rules Abstract>FormattingRules]]
 -[[Plugin Help>PluginHelp]]
 
 ***What's PukiWiki? [#vf6f358a]
@@ -26,5 +25,3 @@ Yes! In WikiClone, such as PukiWiki, anyone can dirty, remove, and even ruin pag
 If another person is editing the page you are editing, what happens? It's OK. PukiWiki checks the differences between the changes on the original page and your modifications, by comparing the date of the  updated original page with the date of your updated page. 
 
 In the case of conflict, you should reload the page you have edited and try to edit it again.
-
-#include(FormatRule)
