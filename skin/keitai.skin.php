@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: keitai.skin.php,v 1.14 2005/07/05 14:41:33 henoheno Exp $
+// $Id: keitai.skin.php,v 1.15 2006/01/09 10:04:11 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -59,7 +59,7 @@ if ($rw) {
 		}
 	}
 }
-$navi[] = '<a href="' . $script . '?' . $menubar . '" ' . $accesskey . '="4">4.Menu</a>';
+$navi[] = '<a href="' . $script . '?' . rawurlencode($menubar) . '" ' . $accesskey . '="4">4.Menu</a>';
 $navi[] = '<a href="' . $link['recent'] . '" ' . $accesskey . '="5">5.Recent</a>';
 
 // Previous / Next block
