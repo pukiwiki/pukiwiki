@@ -13,7 +13,6 @@
 -[[InterWiki]] InterWiki
 -[[InterWikiName]] InterWikiName
 -[[InterWikiSandBox]] InterWikiSandBox
--[[InterWikiテクニカル]] InterWikiテクニカル
 -[[MenuBar]] MenuBar
 -[[PHP]] PHP
 -[[PukiWiki]] PukiWiki
