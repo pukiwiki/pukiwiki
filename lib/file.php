@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.44 2005/12/18 15:14:23 henoheno Exp $
+// $Id: file.php,v 1.45 2006/01/09 10:32:35 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -77,7 +77,7 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	links_update($page);
 }
 
-// Modify ogirinal text with user-defined / system-defined rules
+// Modify original text with user-defined / system-defined rules
 function make_str_rules($source)
 {
 	global $str_rules, $fixed_heading_anchor;
