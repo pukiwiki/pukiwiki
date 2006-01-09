@@ -1,3 +1,4 @@
+#freeze
 #contents
 -[[FAQ(PukiWiki-official)>pukiwiki:PukiWiki/FAQ]](Japanese)
 -[[Text Formatting Rules Abstract>FormattingRules]]
@@ -5,7 +6,7 @@
 
 ***What's PukiWiki? [#vf6f358a]
 Anyone can edit all of the pages((except for pages frozen by the administrators)) in the PukiWiki. You move to the page you want to edit, and click "[ Edit ]" at the top of the page. Then you can see a textfield, in which you can edit the descriptions of page.
-The edited content are formed by the [[FormatRule]].
+The edited content are formed by the [[FormattingRules]].
 
 You can edit the page [[ForPractice]] in any way as a rule. So we advise you to try and edit a page!
 
