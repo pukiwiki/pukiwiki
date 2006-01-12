@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.45 2006/01/09 10:32:35 henoheno Exp $
+// $Id: file.php,v 1.46 2006/01/12 01:00:51 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -422,7 +422,7 @@ function get_readings()
 				if(! file_exists($pagereading_chasen_path))
 					die_message('ChaSen not found: ' . $pagereading_chasen_path);
 
-				$tmpfname = tempnam(CACHE_DIR, 'PageReading');
+				$tmpfname = tempnam(realpath(CACHE_DIR), 'PageReading');
 				$fp = fopen($tmpfname, 'w') or
 					die_message('Cannot write temporary file "' . $tmpfname . '".' . "\n");
 				foreach ($readings as $page => $reading) {
@@ -458,7 +458,7 @@ function get_readings()
 				if(! file_exists($pagereading_kakasi_path))
 					die_message('KAKASI not found: ' . $pagereading_kakasi_path);
 
-				$tmpfname = tempnam(CACHE_DIR, 'PageReading');
+				$tmpfname = tempnam(realpath(CACHE_DIR), 'PageReading');
 				$fp       = fopen($tmpfname, 'w') or
 					die_message('Cannot write temporary file "' . $tmpfname . '".' . "\n");
 				foreach ($readings as $page => $reading) {
