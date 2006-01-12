@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: link.php,v 1.8 2005/12/10 12:00:52 henoheno Exp $
+// $Id: link.php,v 1.9 2006/01/12 08:49:54 teanan Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -142,10 +142,8 @@ function links_init()
 	foreach (get_existfiles(CACHE_DIR, '.rel') as $cache)
 		unlink($cache);
 
-	$pages = get_existpages();
 	$ref   = array(); // 参照元
-	$ref_notauto = array();
-	foreach ($pages as $page) {
+	foreach (get_existpages() as $page) {
 		if ($page == $whatsnew) continue;
 
 		$rel   = array(); // 参照先
@@ -156,10 +154,10 @@ function links_init()
 				continue;
 
 			$rel[] = $_obj->name;
-			if (! is_a($_obj, 'Link_autolink')) {
-				$ref_notauto[$_obj->name][$page] = TRUE;
-			}
-			$ref[$_obj->name][] = $page;
+			if (! isset($ref[$_obj->name][$page]))
+				$ref[$_obj->name][$page] = 1;
+			if (! is_a($_obj, 'Link_autolink'))
+				$ref[$_obj->name][$page] = 0;
 		}
 		$rel = array_unique($rel);
 		if (! empty($rel)) {
@@ -171,16 +169,10 @@ function links_init()
 	}
 
 	foreach ($ref as $page=>$arr) {
-		if (empty($arr)) continue;
-
-		$arr = array_unique($arr);
 		$fp  = fopen(CACHE_DIR . encode($page) . '.ref', 'w')
 			or die_message('cannot write ' . htmlspecialchars(CACHE_DIR . encode($page) . '.ref'));
-		foreach ($arr as $ref_page) {
-			$ref_auto = (isset($ref_notauto[$page])
-				&& isset($ref_notauto[$page][$ref_page])) ? 0 : 1;
-			fputs($fp, "$ref_page\t$ref_auto\n");
-		}
+		foreach ($arr as $ref_page=>$ref_auto)
+			fputs($fp, $ref_page . "\t" . $ref_auto . "\n");
 		fclose($fp);
 	}
 }
