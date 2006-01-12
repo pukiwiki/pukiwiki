@@ -1,7 +1,7 @@
 <?php
-// $Id: recent.inc.php,v 1.18 2005/10/04 13:41:03 henoheno Exp $
+// $Id: recent.inc.php,v 1.19 2006/01/12 18:34:20 teanan Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2006 PukiWiki Developers Team
 //   2002      Y.MASUI http://masui.net/pukiwiki/ masui@masui.net
 // License: GPL version 2
 //
@@ -14,6 +14,9 @@ define('PLUGIN_RECENT_DEFAULT_LINES', 10);
 
 // Limit number of executions
 define('PLUGIN_RECENT_EXEC_LIMIT', 2); // N times per one output
+
+// Show elapsed date of the pate
+define('PLUGIN_RECENT_SHOW_PASSAGE', TRUE);
 
 // ----
 
@@ -75,9 +78,14 @@ function plugin_recent_convert()
 			$items .= ' <li>' . $s_page . '</li>' . "\n";
 		} else {
 			$r_page = rawurlencode($page);
-			$pg_passage = get_pg_passage($page, FALSE);
-			$items .= ' <li><a href="' . $script . '?' . $r_page . '" title="' .
-				$s_page . ' ' . $pg_passage . '">' . $s_page . '</a></li>' . "\n";
+			if (PLUGIN_RECENT_SHOW_PASSAGE) {
+				$pg_passage = get_passage($time);
+				$items .= ' <li><a href="' . $script . '?' . $r_page . '" title="' .
+					$s_page . ' ' . $pg_passage . '">' . $s_page . '</a></li>' . "\n";
+			} else {
+				$items .= ' <li><a href="' . $script . '?' . $r_page . '">' .
+					$s_page . '</a></li>' . "\n";
+			}
 		}
 	}
 	// End of the day
