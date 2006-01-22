@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: convert_html.php,v 1.16 2005/07/19 15:38:35 henoheno Exp $
+// $Id: convert_html.php,v 1.17 2006/01/22 15:01:16 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -837,7 +837,7 @@ class Body extends Element
 				$line = $matches[2];
 			}
 
-			$line = preg_replace("/[\r\n]*$/", '', $line);
+			$line = rtrim($line, "\r\n");
 
 			// Empty
 			if ($line == '') {
