@@ -11,7 +11,7 @@
  * @access  public
  * @author
  * @create
- * @version $Id: backup.php,v 1.11 2006/02/02 13:26:37 henoheno Exp $
+ * @version $Id: backup.php,v 1.12 2006/02/02 13:27:57 henoheno Exp $
  * Copyright (C)
  *   2002-2006 PukiWiki Developers Team
  *   2001-2002 Originally written by yu-ji
@@ -98,12 +98,15 @@ function get_backup($page, $age = 0)
 	$regex_splitter = '/^' . preg_quote(PKWK_SPLITTER) . '\s(\d+)$/';
 	foreach($lines as $index => $line) {
 		if (preg_match($regex_splitter, $line, $match)) {
+			// A splitter, tells new data of backup will come
 			++$_age;
 			if ($age > 0 && $_age > $age)
 				return $retvars[$age];
 
+			// Allocate
 			$retvars[$_age] = array('time'=>$match[1], 'data'=>array());
 		} else {
+			// The first ... the last line of the data
 			$retvars[$_age]['data'][] = $line;
 		}
 		unset($lines[$index]);
