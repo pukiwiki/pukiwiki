@@ -11,9 +11,9 @@
  * @access  public
  * @author
  * @create
- * @version $Id: backup.php,v 1.10 2005/09/24 01:05:49 henoheno Exp $
+ * @version $Id: backup.php,v 1.11 2006/02/02 13:26:37 henoheno Exp $
  * Copyright (C)
- *   2002-2005 PukiWiki Developers Team
+ *   2002-2006 PukiWiki Developers Team
  *   2001-2002 Originally written by yu-ji
  * License: GPL v2 or (at your option) any later version
  **/
@@ -57,6 +57,7 @@ function make_backup($page, $delete = FALSE)
 		foreach($backups as $age=>$data) {
 			$strout .= PKWK_SPLITTER . ' ' . $data['time'] . "\n"; // Splitter format
 			$strout .= join('', $data['data']);
+			unset($backups[$age]);
 		}
 		$strout = preg_replace("/([^\n])\n*$/", "$1\n", $strout);
 
@@ -95,7 +96,7 @@ function get_backup($page, $age = 0)
 	$_age = 0;
 	$retvars = $match = array();
 	$regex_splitter = '/^' . preg_quote(PKWK_SPLITTER) . '\s(\d+)$/';
-	foreach($lines as $line) {
+	foreach($lines as $index => $line) {
 		if (preg_match($regex_splitter, $line, $match)) {
 			++$_age;
 			if ($age > 0 && $_age > $age)
@@ -105,6 +106,7 @@ function get_backup($page, $age = 0)
 		} else {
 			$retvars[$_age]['data'][] = $line;
 		}
+		unset($lines[$index]);
 	}
 
 	return $retvars;
