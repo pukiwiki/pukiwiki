@@ -1,5 +1,5 @@
 <?php
-// $Id: stationary.inc.php,v 1.7 2005/06/20 14:56:19 henoheno Exp $
+// $Id: stationary.inc.php,v 1.8 2006/02/07 06:26:42 teanan Exp $
 //
 // Stationary plugin
 // License: The same as PukiWiki
@@ -56,7 +56,7 @@ function plugin_stationary_inline()
 		$args[$key] = trim($args[$key]);
 	$result = join(',', $args);
 
-	return '&stationary(' . htmlspecialchars($result) . '){' . $body . '};';
+	return '&amp;stationary(' . htmlspecialchars($result) . '){' . $body . '};';
 }
 
 // Action-type plugin: ?plugin=stationary&foo=bar
