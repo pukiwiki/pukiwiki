@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: ref.inc.php,v 1.49 2005/05/28 13:31:57 henoheno Exp $
+// $Id: ref.inc.php,v 1.50 2006/02/24 01:35:34 teanan Exp $
+// Copyright (C)
+//   2002-2006 PukiWiki Developers Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // Image refernce plugin
 // Include an attached image-file as an inline-image
@@ -190,7 +194,7 @@ function plugin_ref_body($args)
 					// Because of possibility of race condition, in the future
 					$params['_error'] = 'The style ref(filename,pagename) is ambiguous ' .
 						'and become obsolete. ' .
-						'Please try ref(pagename/filname)';
+						'Please try ref(pagename/filename)';
 				}
 				return $params;
 			}
