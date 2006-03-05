@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.46 2006/01/12 01:00:51 teanan Exp $
+// $Id: file.php,v 1.47 2006/03/05 08:11:19 henoheno Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -197,6 +197,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	// Clear is_page() cache
 	is_page($page, TRUE);
 
+	// Update RecentChanges
 	if (! $timestamp && $dir == DATA_DIR)
 		put_lastmodified();
 
@@ -264,7 +265,10 @@ function put_lastmodified()
 
 	if (PKWK_READONLY) return; // Do nothing
 
+	// Get whole page list
 	$pages = get_existpages();
+
+	// Check ALL filetime
 	$recent_pages = array();
 	foreach($pages as $page)
 		if ($page != $whatsnew && ! check_non_list($page))
@@ -274,10 +278,11 @@ function put_lastmodified()
 	arsort($recent_pages, SORT_NUMERIC);
 
 	// Create recent.dat (for recent.inc.php)
-	$fp = fopen(CACHE_DIR . 'recent.dat', 'w') or
-		die_message('Cannot write cache file ' .
-		CACHE_DIR . 'recent.dat' .
-		'<br />Maybe permission is not writable or filename is too long');
+	$file = 'recent.dat';
+	$fp = fopen(CACHE_DIR . $file, 'w') or
+		die_message('Cannot write file ' .
+		'CACHE_DIR/' . $file . '<br />' . "\n" .
+		'Maybe permission is not writable');
 
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
