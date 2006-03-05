@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.48 2005/12/18 15:19:24 henoheno Exp $
+// $Id: html.php,v 1.49 2006/03/05 01:55:41 henoheno Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -122,9 +122,9 @@ function catbody($title, $page, $body)
 
 		// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
 		// with array_splice(), array_flip()
-		$tmp_array = preg_split('/\s+/', $vars['word'], -1, PREG_SPLIT_NO_EMPTY);
-		$tmp_array = array_splice($tmp_array, 0, 10);
-		$words = array_flip($tmp_array);
+		$words = preg_split('/\s+/', $vars['word'], -1, PREG_SPLIT_NO_EMPTY);
+		$words = array_splice($words, 0, 10); // Max: 10 words
+		$words = array_flip($words);
 
 		$keys = array();
 		foreach ($words as $word=>$id) $keys[$word] = strlen($word);
@@ -133,14 +133,23 @@ function catbody($title, $page, $body)
 		$id = 0;
 		foreach ($keys as $key=>$pattern) {
 			$s_key    = htmlspecialchars($key);
-			$pattern  = '/<textarea[^>]*>.*?<\/textarea>|<[^>]*>|(' . $pattern . ')|&[^;]+;/s';
-			$callback = create_function(
-				'$arr',
-				'return (count($arr) > 1) ? \'<strong class="word' .
-					$id++ . '">\' . $arr[1] . \'</strong>\' : $arr[0];'
+			$pattern  = '/' .
+				'<textarea[^>]*>.*?<\/textarea>' .	// Ignore textareas
+				'|' . '<[^>]*>' .			// Ignore tags
+				'|' . '&[^;]+;' .			// Ignore entities
+				'|' . '(' . $pattern . ')' .		// $matches[1]: Regex for a search word
+				'/s';
+			$decorate_Nth_word = create_function(
+				'$matches',
+				'return (isset($matches[1])) ? ' .
+					'\'<strong class="word' .
+						$id .
+					'">\' . $matches[1] . \'</strong>\' : ' .
+					'$matches[0];'
 			);
-			$body  = preg_replace_callback($pattern, $callback, $body);
-			$notes = preg_replace_callback($pattern, $callback, $notes);
+			$body  = preg_replace_callback($pattern, $decorate_Nth_word, $body);
+			$notes = preg_replace_callback($pattern, $decorate_Nth_word, $notes);
+			++$id;
 		}
 	}
 
