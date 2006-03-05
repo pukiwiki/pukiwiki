@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.49 2006/03/05 14:57:35 henoheno Exp $
+// $Id: file.php,v 1.50 2006/03/05 15:31:23 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -319,9 +319,9 @@ function put_lastmodified()
 
 	// Create RecentChanges
 	$fp = fopen(get_filename($whatsnew), 'w') or
-		die_message('Cannot write page file ' .
-		htmlspecialchars($whatsnew) .
-		'<br />Maybe permission is not writable or filename is too long');
+		die_message('Cannot write file ' .
+		htmlspecialchars($whatsnew) . '<br />' . "\n" .
+		'Maybe permission is not writable or filename is too long');
 
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
@@ -345,10 +345,12 @@ function put_lastmodified()
 		list($pattern, $pattern_a, $forceignorelist) =
 			get_autolink_pattern($pages);
 
-		$fp = fopen(CACHE_DIR . 'autolink.dat', 'w') or
-			die_message('Cannot write autolink file ' .
-			CACHE_DIR . '/autolink.dat' .
-			'<br />Maybe permission is not writable');
+		$file = 'autolink.dat';
+		$fp = fopen(CACHE_DIR . $file, 'w') or
+			die_message('Cannot write file ' .
+			'CACHE_DIR/' . $file . '<br />' . "\n" .
+			'Maybe permission is not writable');
+		
 		set_file_buffer($fp, 0);
 		flock($fp, LOCK_EX);
 		rewind($fp);
