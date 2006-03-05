@@ -1,5 +1,5 @@
 <?php
-// $Id: recent.inc.php,v 1.19 2006/01/12 18:34:20 teanan Exp $
+// $Id: recent.inc.php,v 1.20 2006/03/05 13:03:30 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2002      Y.MASUI http://masui.net/pukiwiki/ masui@masui.net
@@ -15,7 +15,7 @@ define('PLUGIN_RECENT_DEFAULT_LINES', 10);
 // Limit number of executions
 define('PLUGIN_RECENT_EXEC_LIMIT', 2); // N times per one output
 
-// Show elapsed date of the pate
+// Show elapsed date of the page
 define('PLUGIN_RECENT_SHOW_PASSAGE', TRUE);
 
 // ----
@@ -57,7 +57,7 @@ function plugin_recent_convert()
 	}
 
 	$script = get_script_uri();
-	$date = $items = '';
+	$date = $items = $passage = '';
 	foreach ($lines as $line) {
 		list($time, $page) = explode("\t", rtrim($line));
 
@@ -74,18 +74,15 @@ function plugin_recent_convert()
 
 		$s_page = htmlspecialchars($page);
 		if($page == $vars['page']) {
-			// No need to link to the page now you read, notifies where you just read
+			// No need to link to the page you just read, or notify where you just read
 			$items .= ' <li>' . $s_page . '</li>' . "\n";
 		} else {
 			$r_page = rawurlencode($page);
 			if (PLUGIN_RECENT_SHOW_PASSAGE) {
-				$pg_passage = get_passage($time);
-				$items .= ' <li><a href="' . $script . '?' . $r_page . '" title="' .
-					$s_page . ' ' . $pg_passage . '">' . $s_page . '</a></li>' . "\n";
-			} else {
-				$items .= ' <li><a href="' . $script . '?' . $r_page . '">' .
-					$s_page . '</a></li>' . "\n";
+				$passage = ' title="' . $s_page . ' ' . get_passage($time) . '"';
 			}
+			$items .= ' <li><a href="' . $script . '?' . $r_page . '"' . 
+				$passage . '>' . $s_page . '</a></li>' . "\n";
 		}
 	}
 	// End of the day
