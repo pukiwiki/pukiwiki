@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rss.inc.php,v 1.17 2005/10/04 13:41:03 henoheno Exp $
+// $Id: rss.inc.php,v 1.18 2006/03/05 15:01:31 henoheno Exp $
 //
 // RSS plugin: Publishing RSS of RecentChanges
 //
@@ -36,10 +36,7 @@ function plugin_rss_action()
 	// Creating <item>
 	$items = $rdf_li = '';
 
-	// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
-	$file_array = file($recent); // with array_splice()
-
-	foreach (array_splice($file_array, 0, $rss_max) as $line) {
+	foreach (file_head($recent, $rss_max) as $line) {
 		list($time, $page) = explode("\t", rtrim($line));
 		$r_page = rawurlencode($page);
 		$title  = mb_convert_encoding($page, 'UTF-8', SOURCE_ENCODING);

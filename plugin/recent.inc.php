@@ -1,5 +1,5 @@
 <?php
-// $Id: recent.inc.php,v 1.22 2006/03/05 13:56:23 henoheno Exp $
+// $Id: recent.inc.php,v 1.23 2006/03/05 14:59:29 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2002      Y.MASUI http://masui.net/pukiwiki/ masui@masui.net
@@ -44,14 +44,12 @@ function plugin_recent_convert()
 		++$exec_count;
 	}
 
-	// Get latest N changes
-	if (file_exists(PLUGIN_RECENT_CACHE)) {
-		// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
-		$lines = file(PLUGIN_RECENT_CACHE); // with array_splice()
-		$lines = array_splice($lines, 0, $recent_lines);
-	} else {
+	if (! file_exists(PLUGIN_RECENT_CACHE))
 		return '#recent(): Cache file of RecentChanges not found' . '<br />';
-	}
+
+	// Get latest N changes
+	$lines = file_head(PLUGIN_RECENT_CACHE, $recent_lines);
+	if ($lines == FALSE) return '#recent(): File can not open' . '<br />' . "\n";
 
 	$script = get_script_uri();
 	$date = $items = '';
