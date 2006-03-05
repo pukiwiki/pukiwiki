@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.47 2006/03/05 08:11:19 henoheno Exp $
+// $Id: file.php,v 1.48 2006/03/05 13:29:34 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -335,7 +335,7 @@ function put_lastmodified()
 	}
 }
 
-// Get elapsed date of the pate
+// Get elapsed date of the page
 function get_pg_passage($page, $sw = TRUE)
 {
 	global $show_passage;
