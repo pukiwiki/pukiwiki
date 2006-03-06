@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.50 2006/03/05 15:31:23 henoheno Exp $
+// $Id: file.php,v 1.51 2006/03/06 15:16:43 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -302,6 +302,9 @@ function put_lastmodified()
 	// Sort decending order of last-modification date
 	arsort($recent_pages, SORT_NUMERIC);
 
+	// Cut unused lines
+	$recent_pages = array_splice($recent_pages, 0, $maxshow);
+
 	// Create recent.dat (for recent.inc.php)
 	$file = 'recent.dat';
 	$fp = fopen(CACHE_DIR . $file, 'w') or
@@ -327,10 +330,7 @@ function put_lastmodified()
 	flock($fp, LOCK_EX);
 	rewind($fp);
 
-	// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
-	$tmp_array = array_keys($recent_pages); // with array_splice()
-
-	foreach (array_splice($tmp_array, 0, $maxshow) as $page) {
+	foreach (array_keys($recent_pages) as $page) {
 		$time      = $recent_pages[$page];
 		$s_lastmod = htmlspecialchars(format_date($time));
 		$s_page    = htmlspecialchars($page);
