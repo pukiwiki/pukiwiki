@@ -1,9 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.37 2005/08/22 14:59:24 henoheno Exp $
+// $Id: edit.inc.php,v 1.38 2006/03/21 12:56:43 henoheno Exp $
+// Copyright (C) 2001-2006 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
-// Edit plugin
-// cmd=edit
+// Edit plugin (cmd=edit)
 
 // Remove #freeze written by hand
 define('PLUGIN_EDIT_FREEZE_REGEX', '/^(?:#freeze(?!\w)\s*)+/im');
@@ -60,10 +61,10 @@ function plugin_edit_preview()
 		}
 	}
 
-	$body = "$_msg_preview<br />\n";
+	$body = $_msg_preview . '<br />' . "\n";
 	if ($postdata == '')
-		$body .= "<strong>$_msg_preview_delete</strong>";
-	$body .= "<br />\n";
+		$body .= '<strong>' . $_msg_preview_delete . '</strong>';
+	$body .= '<br />' . "\n";
 
 	if ($postdata) {
 		$postdata = make_str_rules($postdata);
@@ -87,24 +88,28 @@ function plugin_edit_inline()
 
 	// Arguments
 	$args = func_get_args();
+
+	// {label}. Strip anchor tags only
 	$s_label = strip_htmltag(array_pop($args), FALSE);
-		// {label}. Strip anchor tags only
+
 	$page    = array_shift($args);
-	if($page == NULL) $page = '';
+	if ($page == NULL) $page = '';
 	$_noicon = $_nolabel = FALSE;
 	foreach($args as $arg){
 		switch($arg){
-		case '': break;
+		case ''       :                   break;
 		case 'nolabel': $_nolabel = TRUE; break;
-		case 'noicon':  $_noicon  = TRUE; break;
-		default: return $usage;
+		case 'noicon' : $_noicon  = TRUE; break;
+		default       : return $usage;
 		}
 	}
 
 	// Separate a page-name and a fixed anchor
 	list($s_page, $id, $editable) = anchor_explode($page, TRUE);
+
 	// Default: This one
 	if ($s_page == '') $s_page = isset($vars['page']) ? $vars['page'] : '';
+
 	// $s_page fixed
 	$isfreeze = is_freeze($s_page);
 	$ispage   = is_page($s_page);
@@ -150,11 +155,7 @@ function plugin_edit_inline()
 	if ($isfreeze) {
 		$url   = $script . '?cmd=unfreeze&amp;page=' . rawurlencode($s_page);
 	} else {
-		if ($id != '') {
-			$s_id = '&amp;id=' . $id;
-		} else {
-			$s_id = '';
-		}
+		$s_id = ($id == '') ? '' : '&amp;id=' . $id;
 		$url  = $script . '?cmd=edit&amp;page=' . rawurlencode($s_page) . $s_id;
 	}
 	$atag  = '<a' . $class . ' href="' . $url . '" title="' . $title . '">';
@@ -180,7 +181,7 @@ function plugin_edit_write()
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	$retvars = array();
 
-	$vars['msg'] = preg_replace(PLUGIN_EDIT_FREEZE_REGEX,'',$vars['msg']);
+	$vars['msg'] = preg_replace(PLUGIN_EDIT_FREEZE_REGEX, '', $vars['msg']);
 	$postdata = $postdata_input = $vars['msg'];
 
 	if (isset($vars['add']) && $vars['add']) {
@@ -191,6 +192,7 @@ function plugin_edit_write()
 		}
 	}
 
+	// Collision Detection
 	$oldpagesrc = join('', get_source($page));
 	$oldpagemd5 = md5($oldpagesrc);
 
@@ -208,30 +210,33 @@ function plugin_edit_write()
 		}
 
 		$retvars['body'] .= edit_form($page, $postdata_input, $oldpagemd5, FALSE);
-	}
-	else {
-		if ($postdata) {
-			$notimestamp = ($notimeupdate != 0) && (isset($vars['notimestamp']) && $vars['notimestamp'] != '');
-			if($notimestamp && ($notimeupdate == 2) && !pkwk_login($vars['pass'])) {
-				// enable only administrator & password error
-				$retvars['body']  = "<p><strong>$_msg_invalidpass</strong></p>\n";
-				$retvars['body'] .= edit_form($page, $vars['msg'], $vars['digest'], FALSE);
-			} else {
-				page_write($page, $postdata, $notimestamp);
-				pkwk_headers_sent();
-				header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
-				exit;
-			}
-		} else {
-			page_write($page, $postdata);
-			$retvars['msg'] = $_title_deleted;
-			$retvars['body'] = str_replace('$1', htmlspecialchars($page), $_title_deleted);
-
-			if ($trackback) tb_delete($page);
-		}
+		return $retvars;
 	}
 
-	return $retvars;
+	// NULL POSTING, OR removing existing page
+	if ($postdata == '') {
+		page_write($page, $postdata);
+		$retvars['msg'] = $_title_deleted;
+		$retvars['body'] = str_replace('$1', htmlspecialchars($page), $_title_deleted);
+
+		if ($trackback) tb_delete($page);
+
+		return $retvars;
+	}
+
+	// $notimeupdate: Checkbox 'Do not change timestamp'
+	$notimestamp = isset($vars['notimestamp']) && $vars['notimestamp'] != '';
+	if ($notimeupdate > 1 && $notimestamp && ! pkwk_login($vars['pass'])) {
+		// Enable only administrator & password error
+		$retvars['body']  = '<p><strong>' . $_msg_invalidpass . '</strong></p>' . "\n";
+		$retvars['body'] .= edit_form($page, $vars['msg'], $vars['digest'], FALSE);
+		return $retvars;
+	}
+
+	page_write($page, $postdata, $notimeupdate != 0 && $notimestamp);
+	pkwk_headers_sent();
+	header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
+	exit;
 }
 
 // Cancel (Back to the page / Escape edit page)
