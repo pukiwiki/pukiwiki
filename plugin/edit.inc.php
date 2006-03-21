@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.39 2006/03/21 12:57:57 henoheno Exp $
+// $Id: edit.inc.php,v 1.40 2006/03/21 14:26:25 henoheno Exp $
 // Copyright (C) 2001-2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -176,47 +176,50 @@ function plugin_edit_write()
 {
 	global $vars, $trackback;
 	global $_title_collided, $_msg_collided_auto, $_msg_collided, $_title_deleted;
-	global $notimeupdate, $_msg_invalidpass;
+	global $notimeupdate, $_msg_invalidpass, $do_update_diff_table;
 
-	$page = isset($vars['page']) ? $vars['page'] : '';
-	$retvars = array();
+	$page   = isset($vars['page'])   ? $vars['page']   : '';
+	$add    = isset($vars['add'])    ? $vars['add']    : '';
+	$digest = isset($vars['digest']) ? $vars['digest'] : '';
 
 	$vars['msg'] = preg_replace(PLUGIN_EDIT_FREEZE_REGEX, '', $vars['msg']);
-	$postdata = $postdata_input = $vars['msg'];
+	$msg = & $vars['msg']; // Reference
 
-	if (isset($vars['add']) && $vars['add']) {
-		if (isset($vars['add_top']) && $vars['add_top']) {
-			$postdata  = $postdata . "\n\n" . @join('', get_source($page));
-		} else {
-			$postdata  = @join('', get_source($page)) . "\n\n" . $postdata;
-		}
-	}
+	$retvars = array();
 
 	// Collision Detection
 	$oldpagesrc = join('', get_source($page));
 	$oldpagemd5 = md5($oldpagesrc);
+	if ($digest != $oldpagemd5) {
+		$vars['digest'] = $oldpagemd5; // Reset
 
-	if (! isset($vars['digest']) || $vars['digest'] != $oldpagemd5) {
-		$vars['digest'] = $oldpagemd5;
+		$original = isset($vars['original']) ? $vars['original'] : '';
+		list($postdata_input, $auto) = do_update_diff($oldpagesrc, $msg, $original);
 
-		$retvars['msg'] = $_title_collided;
-		list($postdata_input, $auto) = do_update_diff($oldpagesrc, $postdata_input, $vars['original']);
-
+		$retvars['msg' ] = $_title_collided;
 		$retvars['body'] = ($auto ? $_msg_collided_auto : $_msg_collided) . "\n";
-
-		if (TRUE) {
-			global $do_update_diff_table;
-			$retvars['body'] .= $do_update_diff_table;
-		}
-
+		$retvars['body'] .= $do_update_diff_table;
 		$retvars['body'] .= edit_form($page, $postdata_input, $oldpagemd5, FALSE);
 		return $retvars;
+	}
+
+	// Action?
+	if ($add) {
+		// Add
+		if (isset($vars['add_top']) && $vars['add_top']) {
+			$postdata  = $msg . "\n\n" . @join('', get_source($page));
+		} else {
+			$postdata  = @join('', get_source($page)) . "\n\n" . $msg;
+		}
+	} else {
+		// Edit or Remove
+		$postdata = & $msg; // Reference
 	}
 
 	// NULL POSTING, OR removing existing page
 	if ($postdata == '') {
 		page_write($page, $postdata);
-		$retvars['msg'] = $_title_deleted;
+		$retvars['msg' ] = $_title_deleted;
 		$retvars['body'] = str_replace('$1', htmlspecialchars($page), $_title_deleted);
 
 		if ($trackback) tb_delete($page);
@@ -229,7 +232,7 @@ function plugin_edit_write()
 	if ($notimeupdate > 1 && $notimestamp && ! pkwk_login($vars['pass'])) {
 		// Enable only administrator & password error
 		$retvars['body']  = '<p><strong>' . $_msg_invalidpass . '</strong></p>' . "\n";
-		$retvars['body'] .= edit_form($page, $vars['msg'], $vars['digest'], FALSE);
+		$retvars['body'] .= edit_form($page, $msg, $digest, FALSE);
 		return $retvars;
 	}
 
