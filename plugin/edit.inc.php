@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.38 2006/03/21 12:56:43 henoheno Exp $
+// $Id: edit.inc.php,v 1.39 2006/03/21 12:57:57 henoheno Exp $
 // Copyright (C) 2001-2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -96,7 +96,7 @@ function plugin_edit_inline()
 	if ($page == NULL) $page = '';
 	$_noicon = $_nolabel = FALSE;
 	foreach($args as $arg){
-		switch($arg){
+		switch(strtolower($arg)){
 		case ''       :                   break;
 		case 'nolabel': $_nolabel = TRUE; break;
 		case 'noicon' : $_noicon  = TRUE; break;
