@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: link.php,v 1.10 2006/04/05 17:20:47 teanan Exp $
+// $Id: link.php,v 1.11 2006/04/06 03:00:00 teanan Exp $
 // Copyright (C) 2003-2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -214,15 +214,19 @@ function links_delete($page, $del)
 		$ref_file = CACHE_DIR . encode($_page) . '.ref';
 		if (! file_exists($ref_file)) continue;
 
+		$all_auto = TRUE;
 		$is_page = is_page($_page);
 
 		$ref = '';
 		foreach (file($ref_file) as $line) {
 			list($ref_page, $ref_auto) = explode("\t", rtrim($line));
-			if ($ref_page != $page) $ref .= $line;
+			if ($ref_page != $page) {
+				if (! $ref_auto) $all_auto = FALSE;
+				$ref .= $line;
+			}
 		}
 		unlink($ref_file);
-		if ($is_page && $ref != '') {
+		if (($is_page || ! $all_auto) && $ref != '') {
 			$fp = fopen($ref_file, 'w')
 				or die_message('cannot write ' . htmlspecialchars($ref_file));
 			fputs($fp, $ref);
