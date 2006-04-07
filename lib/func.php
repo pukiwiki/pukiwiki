@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.33.2.4 2005/12/11 18:03:45 teanan Exp $
+// $Id: func.php,v 1.33.2.5 2006/04/07 18:37:19 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -553,7 +553,7 @@ function get_autoaliases()
 	$pattern = <<<EOD
 \[\[                # open bracket
 ((?:(?!\]\]).)+)>   # (1) alias name
- (?:(?!\]\]).)+     # alias link
+((?:(?!\]\]).)+)    # (2) alias link
 \]\]                # close bracket
 EOD;
 
@@ -561,7 +561,7 @@ EOD;
 	$matches = array();
 	if(preg_match_all("/$pattern/x", $postdata, $matches, PREG_SET_ORDER)) {
 		foreach($matches as $match) {
-			$pages[$match[1]] = trim($match[0]);
+			$pages[$match[1]] = trim($match[2]);
 		}
 	}
 	// fail safe
