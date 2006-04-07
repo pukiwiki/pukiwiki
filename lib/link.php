@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: link.php,v 1.4.2.1 2005/12/11 18:03:45 teanan Exp $
+// $Id: link.php,v 1.4.2.2 2006/04/07 18:44:58 teanan Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -72,6 +72,11 @@ function links_update($page)
 
 		if (is_a($_obj, 'Link_autolink')) { // 行儀が悪い
 			$rel_auto[] = $_obj->name;
+		} else if (is_a($_obj, 'Link_autoalias')) {
+			$_alias = $_obj->get_alias($_obj->name);
+			if (is_pagename($_alias)) {
+				$rel_auto[] = $_alias;
+			}
 		} else {
 			$rel_new[]  = $_obj->name;
 		}
@@ -155,11 +160,24 @@ function links_init()
 			    $_obj->name == $page || $_obj->name == '')
 				continue;
 
-			$rel[] = $_obj->name;
+			$_name = $_obj->name;
 			if (! is_a($_obj, 'Link_autolink')) {
-				$ref_notauto[$_obj->name][$page] = TRUE;
+				if (is_a($_obj, 'Link_autoalias')) {
+					$_alias = $_obj->get_alias($_obj->name);
+					if (is_pagename($_alias)) {
+						$ref_notauto[$_alias][$page] = TRUE;
+						$_name = $_alias;
+					} else {
+						$_name = '';	// not PageName
+					}
+				} else {
+					$ref_notauto[$_obj->name][$page] = TRUE;
+				}
 			}
-			$ref[$_obj->name][] = $page;
+			if ($_name != '') {
+				$rel[] = $_name;
+				$ref[$_name][] = $page;
+			}
 		}
 		$rel = array_unique($rel);
 		if (! empty($rel)) {
