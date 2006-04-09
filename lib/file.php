@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.52 2006/04/09 14:49:38 henoheno Exp $
+// $Id: file.php,v 1.53 2006/04/09 15:27:41 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -188,7 +188,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 
 	if ($str === '') {
 		if ($dir == DATA_DIR) {
-			if (! file_exists($file)) return; // Ignore null posting
+			if (! file_exists($file)) return; // Ignore null posting for DATA_DIR
 
 			// Page deletion
 			unlink($file);
@@ -200,6 +200,8 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 			if (! $timestamp && $dir == DATA_DIR) put_lastmodified();
 		}
 	} else {
+		if ($dir == DIFF_DIR && $str === " \n") return; // Ignore null posting for DIFF_DIR
+
 		// File replacement (Edit)
 		$str = rtrim(preg_replace('/' . "\r" . '/', '', $str)) . "\n";
 
