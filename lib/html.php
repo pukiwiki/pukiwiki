@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.49 2006/03/05 01:55:41 henoheno Exp $
+// $Id: html.php,v 1.50 2006/04/09 04:32:05 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -163,7 +163,7 @@ function catbody($title, $page, $body)
 function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 {
 	global $script, $vars, $rows, $cols, $hr, $function_freeze;
-	global $_btn_addtop, $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel,
+	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel,
 		$_msg_help, $_btn_notchangetimestamp;
 	global $whatsnew, $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
@@ -171,16 +171,20 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 	// Newly generate $digest or not
 	if ($digest === FALSE) $digest = md5(join('', get_source($page)));
 
-	$refer = $template = $addtag = $add_top = '';
-
-	$checked_top  = isset($vars['add_top'])     ? ' checked="checked"' : '';
+	$refer = $template = '';
 	$checked_time = isset($vars['notimestamp']) ? ' checked="checked"' : '';
-
+ 
+ 	// Add plugin
+	$addtag = $add_top = '';
 	if(isset($vars['add'])) {
-		$addtag  = '<input type="hidden" name="add" value="true" />';
-		$add_top = '<input type="checkbox" name="add_top" value="true"' .
-			$checked_top . ' /><span class="small">' .
-			$_btn_addtop . '</span>';
+		global $_btn_addtop;
+		$addtag  = '<input type="hidden" name="add"    value="true" />';
+		$add_top = isset($vars['add_top']) ? ' checked="checked"' : '';
+		$add_top = '<input type="checkbox" name="add_top" ' .
+			'id="_edit_form_add_top" value="true"' . $add_top . ' />' . "\n" .
+			'  <label for="_edit_form_add_top">' .
+				'<span class="small">' . $_btn_addtop . '</span>' .
+			'</label>';
 	}
 
 	if($load_template_func && $b_template) {
@@ -219,7 +223,7 @@ EOD;
 	if ( $notimeupdate != 0 ) {
 		// enable 'do not change timestamp'
 		$add_notimestamp = <<<EOD
-  <input type="checkbox" name="notimestamp" id="_edit_form_notimestamp" value="true"$checked_time />
+<input type="checkbox" name="notimestamp" id="_edit_form_notimestamp" value="true"$checked_time />
   <label for="_edit_form_notimestamp"><span class="small">$_btn_notchangetimestamp</span></label>
 EOD;
 		if ( $notimeupdate == 2 ) {
