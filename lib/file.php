@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.51 2006/03/06 15:16:43 henoheno Exp $
+// $Id: file.php,v 1.52 2006/04/09 14:49:38 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -187,10 +187,17 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	$timestamp = FALSE;
 
 	if ($str === '') {
-		if ($dir == DATA_DIR && file_exists($file)) {
-			// File deletion
+		if ($dir == DATA_DIR) {
+			if (! file_exists($file)) return; // Ignore null posting
+
+			// Page deletion
 			unlink($file);
-			add_recent($page, $whatsdeleted, '', $maxshow_deleted); // RecentDeleted
+
+			// Update RecentDeleted (Add the $page)
+			add_recent($page, $whatsdeleted, '', $maxshow_deleted);
+
+			// Update RecentChanges (Remove the $page from RecentChanges)
+			if (! $timestamp && $dir == DATA_DIR) put_lastmodified();
 		}
 	} else {
 		// File replacement (Edit)
@@ -217,14 +224,13 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		fclose($fp);
 
 		if ($timestamp) pkwk_touch_file($file, $timestamp + LOCALZONE);
+
+		// Update RecentChanges (Add or renew the $page)
+		if (! $timestamp && $dir == DATA_DIR) put_lastmodified();
 	}
 
 	// Clear is_page() cache
 	is_page($page, TRUE);
-
-	// Update RecentChanges
-	if (! $timestamp && $dir == DATA_DIR)
-		put_lastmodified();
 
 	// Execute $update_exec here
 	if ($update_exec && $dir == DATA_DIR)
