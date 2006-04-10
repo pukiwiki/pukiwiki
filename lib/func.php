@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.53 2005/12/18 15:16:10 henoheno Exp $
+// $Id: func.php,v 1.54 2006/04/10 14:44:07 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -736,14 +736,9 @@ if (! function_exists('md5_file')) {
 // (PHP 4 >= 4.3.0, PHP5)
 if (! function_exists('sha1')) {
 	if (extension_loaded('mhash')) {
-		function sha1($str, $raw_output = FALSE)
+		function sha1($str)
 		{
-			if ($raw_output) {
-				// PHP 5.0.0 or lator only :)
-				return mhash(MHASH_SHA1, $str);
-			} else {
-				return bin2hex(mhash(MHASH_SHA1, $str));
-			}
+			return bin2hex(mhash(MHASH_SHA1, $str));
 		}
 	} else {
 		function sha1($str, $raw_output = FALSE)
