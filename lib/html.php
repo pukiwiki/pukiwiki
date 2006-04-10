@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.51 2006/04/10 13:15:15 henoheno Exp $
+// $Id: html.php,v 1.52 2006/04/10 13:18:32 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -163,8 +163,7 @@ function catbody($title, $page, $body)
 function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 {
 	global $script, $vars, $rows, $cols, $hr, $function_freeze;
-	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel,
-		$_msg_help, $_btn_notchangetimestamp;
+	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel, $_msg_help;
 	global $whatsnew, $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
 
@@ -172,7 +171,6 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 	if ($digest === FALSE) $digest = md5(join('', get_source($page)));
 
 	$refer = $template = '';
-	$checked_time = isset($vars['notimestamp']) ? ' checked="checked"' : '';
  
  	// Add plugin
 	$addtag = $add_top = '';
@@ -219,20 +217,22 @@ EOD;
 	$b_preview   = isset($vars['preview']); // TRUE when preview
 	$btn_preview = $b_preview ? $_btn_repreview : $_btn_preview;
 
+	// Checkbox 'do not change timestamp'
 	$add_notimestamp = '';
-	if ( $notimeupdate != 0 ) {
-		// enable 'do not change timestamp'
-		$add_notimestamp = <<<EOD
-<input type="checkbox" name="notimestamp" id="_edit_form_notimestamp" value="true"$checked_time />
-  <label for="_edit_form_notimestamp"><span class="small">$_btn_notchangetimestamp</span></label>
-EOD;
-		if ( $notimeupdate == 2 ) {
-			// enable only administrator
-			$add_notimestamp .= <<<EOD
-  <input type="password" name="pass" size="12" />
-EOD;
+	if ($notimeupdate != 0) {
+		global $_btn_notchangetimestamp;
+		$checked_time = isset($vars['notimestamp']) ? ' checked="checked"' : '';
+		// Only for administrator
+		if ($notimeupdate == 2) {
+			$add_notimestamp = '   ' .
+				'<input type="password" name="pass" size="12" />' . "\n";
 		}
-		$add_notimestamp .= '&nbsp;';
+		$add_notimestamp = '<input type="checkbox" name="notimestamp" ' .
+			'id="_edit_form_notimestamp" value="true"' . $checked_time . ' />' . "\n" .
+			'   ' . '<label for="_edit_form_notimestamp"><span class="small">' .
+			$_btn_notchangetimestamp . '</span></label>' . "\n" .
+			$add_notimestamp .
+			'&nbsp;';
 	}
 
 	$body = <<<EOD
