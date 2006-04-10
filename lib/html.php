@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.52 2006/04/10 13:18:32 henoheno Exp $
+// $Id: html.php,v 1.53 2006/04/10 15:51:21 teanan Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -237,7 +237,7 @@ EOD;
 
 	$body = <<<EOD
 <div class="edit_form">
- <form action="$script" method="post">
+ <form action="$script" method="post" style="margin-bottom:0px;">
 $template
   $addtag
   <input type="hidden" name="cmd"    value="edit" />
@@ -253,7 +253,7 @@ $template
   </div>
   <textarea name="original" rows="1" cols="1" style="display:none">$s_original</textarea>
  </form>
- <form action="$script" method="post">
+ <form action="$script" method="post" style="margin-top:0px;">
   <input type="hidden" name="cmd"    value="edit" />
   <input type="hidden" name="page"   value="$s_page" />
   <input type="submit" name="cancel" value="$_btn_cancel" accesskey="c" />
