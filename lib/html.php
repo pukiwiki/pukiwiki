@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.50 2006/04/09 04:32:05 henoheno Exp $
+// $Id: html.php,v 1.51 2006/04/10 13:15:15 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -236,8 +236,8 @@ EOD;
 	}
 
 	$body = <<<EOD
-<form action="$script" method="post">
- <div class="edit_form">
+<div class="edit_form">
+ <form action="$script" method="post">
 $template
   $addtag
   <input type="hidden" name="cmd"    value="edit" />
@@ -245,14 +245,20 @@ $template
   <input type="hidden" name="digest" value="$s_digest" />
   <textarea name="msg" rows="$rows" cols="$cols">$s_postdata</textarea>
   <br />
-  <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
-  <input type="submit" name="write"   value="$_btn_update" accesskey="s" />
-  $add_top
-  $add_notimestamp
-  <input type="submit" name="cancel"  value="$_btn_cancel" accesskey="c" />
+  <div style="float:left;">
+   <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
+   <input type="submit" name="write"   value="$_btn_update" accesskey="s" />
+   $add_top
+   $add_notimestamp
+  </div>
   <textarea name="original" rows="1" cols="1" style="display:none">$s_original</textarea>
- </div>
-</form>
+ </form>
+ <form action="$script" method="post">
+  <input type="hidden" name="cmd"    value="edit" />
+  <input type="hidden" name="page"   value="$s_page" />
+  <input type="submit" name="cancel" value="$_btn_cancel" accesskey="c" />
+ </form>
+</div>
 EOD;
 
 	if (isset($vars['help'])) {
