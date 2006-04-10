@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: en.lng.php,v 1.14 2006/01/09 12:09:57 henoheno Exp $
+// $Id: en.lng.php,v 1.15 2006/04/10 17:36:56 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -145,6 +145,7 @@ $_attach_messages = array(
 	'msg_deleted'  => 'Deleted the file in  $1',
 	'msg_freezed'  => 'The file has been frozen.',
 	'msg_unfreezed'=> 'The file has been unfrozen',
+	'msg_renamed'  => 'The file has been renamed',
 	'msg_upload'   => 'Upload to $1',
 	'msg_info'     => 'File information',
 	'msg_confirm'  => '<p>Delete %s.</p>',
@@ -160,6 +161,8 @@ $_attach_messages = array(
 	'msg_freeze'   => 'Freeze file.',
 	'msg_unfreeze' => 'Unfreeze file.',
 	'msg_isfreeze' => 'File is frozen.',
+	'msg_rename'   => 'Rename',
+	'msg_newname'  => 'New file name',
 	'msg_require'  => '(require administrator password)',
 	'msg_filesize' => 'size',
 	'msg_date'     => 'date',
@@ -173,6 +176,7 @@ $_attach_messages = array(
 	'err_notfound' => 'Could not fid the file in  $1',
 	'err_noexist'  => 'File does not exist.',
 	'err_delete'   => 'Cannot delete file in  $1',
+	'err_rename'   => 'Cannot rename this file',
 	'err_password' => 'Wrong password.',
 	'err_adminpass'=> 'Wrong administrator password',
 	'btn_upload'   => 'Upload',

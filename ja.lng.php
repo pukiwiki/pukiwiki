@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: ja.lng.php,v 1.13 2006/01/09 12:09:57 henoheno Exp $
+// $Id: ja.lng.php,v 1.14 2006/04/10 17:36:56 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -147,6 +147,7 @@ $_attach_messages = array(
 	'msg_deleted'  => '$1 からファイルを削除しました',
 	'msg_freezed'  => '添付ファイルを凍結しました。',
 	'msg_unfreezed'=> '添付ファイルを凍結解除しました。',
+	'msg_renamed'  => '添付ファイルの名前を変更しました。',
 	'msg_upload'   => '$1 への添付',
 	'msg_info'     => '添付ファイルの情報',
 	'msg_confirm'  => '<p>%s を削除します。</p>',
@@ -162,6 +163,8 @@ $_attach_messages = array(
 	'msg_freeze'   => 'このファイルを凍結します。',
 	'msg_unfreeze' => 'このファイルを凍結解除します。',
 	'msg_isfreeze' => 'このファイルは凍結されています。',
+	'msg_rename'   => '名前を変更します。',
+	'msg_newname'  => '新しい名前',
 	'msg_require'  => '(管理者パスワードが必要です)',
 	'msg_filesize' => 'サイズ',
 	'msg_date'     => '登録日時',
@@ -175,6 +178,7 @@ $_attach_messages = array(
 	'err_notfound' => '$1 にそのファイルは見つかりません',
 	'err_noexist'  => '添付ファイルがありません。',
 	'err_delete'   => '$1 からファイルを削除できませんでした',
+	'err_rename'   => 'ファイル名を変更できませんでした',
 	'err_password' => 'パスワードが一致しません。',
 	'err_adminpass'=> '管理者パスワードが一致しません。',
 	'btn_upload'   => 'アップロード',
