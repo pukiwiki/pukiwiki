@@ -1,12 +1,15 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.53 2006/04/09 15:27:41 henoheno Exp $
+// $Id: file.php,v 1.54 2006/04/10 13:32:27 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
 // File related functions
+
+define('PKWK_MAXSHOW_CACHE', 'recent.dat');
+define('PKWK_AUTOLINK_REGEX_CACHE', 'autolink.dat');
 
 // Get source(wiki text) data of the page
 function get_source($page = NULL, $lock = TRUE)
@@ -291,7 +294,8 @@ function add_recent($page, $recentpage, $subject = '', $limit = 0)
 	fclose($fp);
 }
 
-// Update RecentChanges
+// Re-create PKWK_MAXSHOW_CACHE
+
 function put_lastmodified()
 {
 	global $maxshow, $whatsnew, $autolink;
@@ -313,13 +317,11 @@ function put_lastmodified()
 	// Cut unused lines
 	$recent_pages = array_splice($recent_pages, 0, $maxshow);
 
-	// Create recent.dat (for recent.inc.php)
-	$file = 'recent.dat';
-	$fp = fopen(CACHE_DIR . $file, 'w') or
+	// Re-create PKWK_MAXSHOW_CACHE
+	$fp = fopen(CACHE_DIR . PKWK_MAXSHOW_CACHE, 'w') or
 		die_message('Cannot write file ' .
-		'CACHE_DIR/' . $file . '<br />' . "\n" .
+		'CACHE_DIR/' . PKWK_MAXSHOW_CACHE . '<br />' . "\n" .
 		'Maybe permission is not writable');
-
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
@@ -333,11 +335,9 @@ function put_lastmodified()
 		die_message('Cannot write file ' .
 		htmlspecialchars($whatsnew) . '<br />' . "\n" .
 		'Maybe permission is not writable or filename is too long');
-
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
-
 	foreach (array_keys($recent_pages) as $page) {
 		$time      = $recent_pages[$page];
 		$s_lastmod = htmlspecialchars(format_date($time));
@@ -353,12 +353,10 @@ function put_lastmodified()
 		list($pattern, $pattern_a, $forceignorelist) =
 			get_autolink_pattern($pages);
 
-		$file = 'autolink.dat';
-		$fp = fopen(CACHE_DIR . $file, 'w') or
+		$fp = fopen(CACHE_DIR . PKWK_AUTOLINK_REGEX_CACHE, 'w') or
 			die_message('Cannot write file ' .
-			'CACHE_DIR/' . $file . '<br />' . "\n" .
+			'CACHE_DIR/' . PKWK_AUTOLINK_REGEX_CACHE . '<br />' . "\n" .
 			'Maybe permission is not writable');
-		
 		set_file_buffer($fp, 0);
 		flock($fp, LOCK_EX);
 		rewind($fp);
