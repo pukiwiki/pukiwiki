@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.54 2006/04/10 13:32:27 henoheno Exp $
+// $Id: file.php,v 1.55 2006/04/10 14:22:25 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -180,79 +180,80 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	global $whatsdeleted, $maxshow_deleted;
 
 	if (PKWK_READONLY) return; // Do nothing
+	if ($dir != DATA_DIR && $dir != DIFF_DIR) die('file_write(): Invalid directory');
+
+	$page = strip_bracket($page);
+	$file = $dir . encode($page) . '.txt';
+	$file_exists = file_exists($file);
+
+	// ----
+	// Delete?
+
+	if ($dir == DATA_DIR && $str === '') {
+		// Page deletion
+		if (! $file_exists) return; // Ignore null posting for DATA_DIR
+
+		// Update RecentDeleted (Add the $page)
+		add_recent($page, $whatsdeleted, '', $maxshow_deleted);
+
+		unlink($file);
+
+		// Update RecentChanges (Remove the $page from RecentChanges)
+		put_lastmodified();
+
+		// Clear is_page() cache
+		is_page($page, TRUE);
+
+		return;
+
+	} else if ($dir == DIFF_DIR && $str === " \n") {
+		return; // Ignore null posting for DIFF_DIR
+	}
+
+	// ----
+	// File replacement (Edit)
 
 	if (! is_pagename($page))
 		die_message(str_replace('$1', htmlspecialchars($page),
 		            str_replace('$2', 'WikiName', $_msg_invalidiwn)));
 
-	$page      = strip_bracket($page);
-	$file      = $dir . encode($page) . '.txt';
-	$timestamp = FALSE;
+	$str = rtrim(preg_replace('/' . "\r" . '/', '', $str)) . "\n";
+	$timestamp = ($file_exists && $notimestamp) ? filemtime($file) : FALSE;
 
-	if ($str === '') {
-		if ($dir == DATA_DIR) {
-			if (! file_exists($file)) return; // Ignore null posting for DATA_DIR
+	$fp = fopen($file, 'a') or die('fopen() failed: ' .
+		htmlspecialchars(basename($dir) . '/' . encode($page) . '.txt') .	
+		'<br />' . "\n" .
+		'Maybe permission is not writable or filename is too long');
+	set_file_buffer($fp, 0);
+	flock($fp, LOCK_EX);
+	ftruncate($fp, 0);
+	rewind($fp);
+	fputs($fp, $str);
+	flock($fp, LOCK_UN);
+	fclose($fp);
 
-			// Page deletion
-			unlink($file);
+	if ($timestamp) pkwk_touch_file($file, $timestamp);
 
-			// Update RecentDeleted (Add the $page)
-			add_recent($page, $whatsdeleted, '', $maxshow_deleted);
-
-			// Update RecentChanges (Remove the $page from RecentChanges)
-			if (! $timestamp && $dir == DATA_DIR) put_lastmodified();
-		}
-	} else {
-		if ($dir == DIFF_DIR && $str === " \n") return; // Ignore null posting for DIFF_DIR
-
-		// File replacement (Edit)
-		$str = rtrim(preg_replace('/' . "\r" . '/', '', $str)) . "\n";
-
-		if ($notimestamp && file_exists($file))
-			$timestamp = filemtime($file) - LOCALZONE;
-
-		$fp = fopen($file, 'a') or die('fopen() failed: ' .
-			htmlspecialchars(basename($dir) . '/' . encode($page) . '.txt') .	
-			'<br />' . "\n" .
-			'Maybe permission is not writable or filename is too long');
-		set_file_buffer($fp, 0);
-
-		flock($fp, LOCK_EX);
-
-		// Write
-		ftruncate($fp, 0);
-		rewind($fp);
-		fputs($fp, $str);
-
-		flock($fp, LOCK_UN);
-
-		fclose($fp);
-
-		if ($timestamp) pkwk_touch_file($file, $timestamp + LOCALZONE);
-
+	// Optional actions
+	if ($dir == DATA_DIR) {
 		// Update RecentChanges (Add or renew the $page)
-		if (! $timestamp && $dir == DATA_DIR) put_lastmodified();
-	}
+		if ($timestamp === FALSE) put_lastmodified();
 
-	// Clear is_page() cache
-	is_page($page, TRUE);
+		// Execute $update_exec here
+		if ($update_exec) system($update_exec . ' > /dev/null &');
 
-	// Execute $update_exec here
-	if ($update_exec && $dir == DATA_DIR)
-		system($update_exec . ' > /dev/null &');
-
-	if ($notify && $dir == DIFF_DIR) {
+	} else if ($dir == DIFF_DIR && $notify) {
 		if ($notify_diff_only) $str = preg_replace('/^[^-+].*\n/m', '', $str);
-
 		$footer['ACTION'] = 'Page update';
 		$footer['PAGE']   = & $page;
 		$footer['URI']    = get_script_uri() . '?' . rawurlencode($page);
 		$footer['USER_AGENT']  = TRUE;
 		$footer['REMOTE_ADDR'] = TRUE;
-
 		pkwk_mail_notify($notify_subject, $str, $footer) or
 			die('pkwk_mail_notify(): Failed');
 	}
+
+	is_page($page, TRUE); // Clear is_page() cache
 }
 
 // Update RecentDeleted
