@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.55 2006/04/10 14:22:25 henoheno Exp $
+// $Id: file.php,v 1.56 2006/04/10 14:41:10 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -150,23 +150,22 @@ function generate_fixed_heading_anchor_id($seed)
 
 // Read top N lines as an array
 // (Use PHP file() function if you want to get ALL lines)
-function file_head($file, $count = 1)
+function file_head($file, $count = 1, $buffer = 8192, $lock = TRUE)
 {
-	$buffer = 8192;
 	$index  = 0;
 	$array  = array();
 
 	$fp = @fopen($file, 'r');
-	if ($fp == FALSE) return FALSE;
+	if ($fp === FALSE) return FALSE;
 	set_file_buffer($fp, 0);
 
-	flock($fp, LOCK_SH);
+	if ($lock) flock($fp, LOCK_SH);
 	while (! feof($fp)) {
 		$line = fgets($fp, $buffer);
 		if ($line != FALSE) $array[] = $line;
 		if (++$index >= $count) break;
 	}
-	flock($fp, LOCK_UN);
+	if ($lock) flock($fp, LOCK_UN);
 
 	if(! fclose($fp)) return FALSE;
 
