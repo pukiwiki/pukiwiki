@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.59 2006/04/12 14:38:51 henoheno Exp $
+// $Id: file.php,v 1.60 2006/04/12 15:45:26 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -9,8 +9,8 @@
 // File related functions
 
 // RecentChanges
-define('PKWK_MAXSHOW_CACHE', 'recent.dat');
 define('PKWK_MAXSHOW_ALLOWANCE', 10);
+define('PKWK_MAXSHOW_CACHE', 'recent.dat');
 
 // AutoLink
 define('PKWK_AUTOLINK_REGEX_CACHE', 'autolink.dat');
@@ -339,10 +339,10 @@ function lastmodified_add($page = '')
 
 
 	// ----
-	// Update RecentChanges for the $page (VERBOSE! VERBOSE!)
+	// Update the page 'RecentChanges'
 
-	$file   = get_filename($whatsnew);
-	$s_page = htmlspecialchars($page);
+	$recent_pages = array_splice($recent_pages, 0, $maxshow);
+	$file = get_filename($whatsnew);
 
 	// Open
 	pkwk_touch_file($file);
@@ -351,28 +351,12 @@ function lastmodified_add($page = '')
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 
-	// Read
-	$recent_pages = $matches = array();
-	foreach(file_head($file, $maxshow, FALSE) as $line)
-		if (preg_match('/^(- *[0-9].* - )\[\[(.+)\]\]$/', $line, $matches))
-			$recent_pages[$matches[2]] = $matches[1];
-
-	// If it already exists
-	if (isset($recent_pages[$s_page])) {
-		unset($recent_pages[$s_page]); // Remove it for renewal
-	} else {
-		array_pop($recent_pages);      // Remove the oldest one for $maxshow limit
-	}
-
-	// Add: array_unshift()
-	$s_lastmod = htmlspecialchars(format_date(get_filetime($page)));
-	$recent_pages = array($page => '-' . $s_lastmod . ' - ') + $recent_pages;
-
 	// Write
 	ftruncate($fp, 0);
 	rewind($fp);
-	foreach ($recent_pages as $page=>$line)
-		fputs($fp, $line . '[[' . $page . ']]' . "\n");
+	foreach ($recent_pages as $_page=>$time)
+		fputs($fp, '-' . htmlspecialchars(format_date($time)) .
+			' - ' . '[[' . htmlspecialchars($_page) . ']]' . "\n");
 	fputs($fp, '#norelated' . "\n"); // :)
 
 	flock($fp, LOCK_UN);
