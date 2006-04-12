@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.53 2006/04/10 15:51:21 teanan Exp $
+// $Id: html.php,v 1.54 2006/04/12 14:37:21 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -235,6 +235,8 @@ EOD;
 			'&nbsp;';
 	}
 
+	// 'margin-bottom', 'float:left', and 'margin-top'
+	// are for layout of 'cancel button'
 	$body = <<<EOD
 <div class="edit_form">
  <form action="$script" method="post" style="margin-bottom:0px;">
