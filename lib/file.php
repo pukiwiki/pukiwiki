@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.58 2006/04/11 14:31:37 henoheno Exp $
+// $Id: file.php,v 1.59 2006/04/12 14:38:51 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -8,7 +8,11 @@
 //
 // File related functions
 
+// RecentChanges
 define('PKWK_MAXSHOW_CACHE', 'recent.dat');
+define('PKWK_MAXSHOW_ALLOWANCE', 10);
+
+// AutoLink
 define('PKWK_AUTOLINK_REGEX_CACHE', 'autolink.dat');
 
 // Get source(wiki text) data of the page
@@ -235,7 +239,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	// Optional actions
 	if ($dir == DATA_DIR) {
 		// Update RecentChanges (Add or renew the $page)
-		if ($timestamp === FALSE) put_lastmodified();
+		if ($timestamp === FALSE) lastmodified_add($page);
 
 		// Execute $update_exec here
 		if ($update_exec) system($update_exec . ' > /dev/null &');
@@ -293,15 +297,96 @@ function add_recent($page, $recentpage, $subject = '', $limit = 0)
 	fclose($fp);
 }
 
-// Re-create PKWK_MAXSHOW_CACHE
+// Update PKWK_MAXSHOW_CACHE itself (Add or renew about the $page) (Light)
+// Use without $autolink
+function lastmodified_add($page = '')
+{
+	global $maxshow, $whatsnew, $autolink;
 
+	$file = CACHE_DIR . PKWK_MAXSHOW_CACHE;
+	if ($autolink || ! file_exists($file)) {
+		put_lastmodified(); // Try to (re)create ALL
+		return;
+	}
+
+	// Open
+	pkwk_touch_file($file);
+	$fp = fopen($file, 'r+') or
+		die_message('Cannot open ' . 'CACHE_DIR/' . PKWK_MAXSHOW_CACHE);
+	set_file_buffer($fp, 0);
+	flock($fp, LOCK_EX);
+
+	// Read
+	$recent_pages = $matches = array();
+	foreach(file_head($file, $maxshow + PKWK_MAXSHOW_ALLOWANCE, FALSE) as $line)
+		if (preg_match('/^([0-9]+)\t(.+)/', $line, $matches))
+			$recent_pages[$matches[2]] = $matches[1];
+
+	// Remove if exists
+	if (isset($recent_pages[$page])) unset($recent_pages[$page]);
+
+	// Add: array_unshift()
+	$recent_pages = array($page => get_filetime($page)) + $recent_pages;
+
+	// Write
+	ftruncate($fp, 0);
+	rewind($fp);
+	foreach ($recent_pages as $_page=>$time)
+		fputs($fp, $time . "\t" . $_page . "\n");
+
+	flock($fp, LOCK_UN);
+	fclose($fp);
+
+
+	// ----
+	// Update RecentChanges for the $page (VERBOSE! VERBOSE!)
+
+	$file   = get_filename($whatsnew);
+	$s_page = htmlspecialchars($page);
+
+	// Open
+	pkwk_touch_file($file);
+	$fp = fopen($file, 'r+') or
+		die_message('Cannot open ' . htmlspecialchars($whatsnew));
+	set_file_buffer($fp, 0);
+	flock($fp, LOCK_EX);
+
+	// Read
+	$recent_pages = $matches = array();
+	foreach(file_head($file, $maxshow, FALSE) as $line)
+		if (preg_match('/^(- *[0-9].* - )\[\[(.+)\]\]$/', $line, $matches))
+			$recent_pages[$matches[2]] = $matches[1];
+
+	// If it already exists
+	if (isset($recent_pages[$s_page])) {
+		unset($recent_pages[$s_page]); // Remove it for renewal
+	} else {
+		array_pop($recent_pages);      // Remove the oldest one for $maxshow limit
+	}
+
+	// Add: array_unshift()
+	$s_lastmod = htmlspecialchars(format_date(get_filetime($page)));
+	$recent_pages = array($page => '-' . $s_lastmod . ' - ') + $recent_pages;
+
+	// Write
+	ftruncate($fp, 0);
+	rewind($fp);
+	foreach ($recent_pages as $page=>$line)
+		fputs($fp, $line . '[[' . $page . ']]' . "\n");
+	fputs($fp, '#norelated' . "\n"); // :)
+
+	flock($fp, LOCK_UN);
+	fclose($fp);
+}
+
+// Re-create PKWK_MAXSHOW_CACHE (Heavy)
 function put_lastmodified()
 {
 	global $maxshow, $whatsnew, $autolink;
 
 	if (PKWK_READONLY) return; // Do nothing
 
-	// Get whole page list
+	// Get WHOLE page list
 	$pages = get_existpages();
 
 	// Check ALL filetime
@@ -314,15 +399,16 @@ function put_lastmodified()
 	arsort($recent_pages, SORT_NUMERIC);
 
 	// Cut unused lines
-	$recent_pages = array_splice($recent_pages, 0, $maxshow);
+	$recent_pages = array_splice($recent_pages, 0, $maxshow + PKWK_MAXSHOW_ALLOWANCE);
 
 	// Re-create PKWK_MAXSHOW_CACHE
-	$fp = fopen(CACHE_DIR . PKWK_MAXSHOW_CACHE, 'w') or
-		die_message('Cannot write file ' .
-		'CACHE_DIR/' . PKWK_MAXSHOW_CACHE . '<br />' . "\n" .
-		'Maybe permission is not writable');
+	$file = CACHE_DIR . PKWK_MAXSHOW_CACHE;
+	pkwk_touch_file($file);
+	$fp = fopen($file, 'r+') or
+		die_message('Cannot open' . 'CACHE_DIR/' . PKWK_MAXSHOW_CACHE);
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
+	ftruncate($fp, 0);
 	rewind($fp);
 	foreach ($recent_pages as $page=>$time)
 		fputs($fp, $time . "\t" . $page . "\n");
@@ -330,12 +416,13 @@ function put_lastmodified()
 	fclose($fp);
 
 	// Create RecentChanges
-	$fp = fopen(get_filename($whatsnew), 'w') or
-		die_message('Cannot write file ' .
-		htmlspecialchars($whatsnew) . '<br />' . "\n" .
-		'Maybe permission is not writable or filename is too long');
+	$file = get_filename($whatsnew);
+	pkwk_touch_file($file);
+	$fp = fopen($file, 'r+') or
+		die_message('Cannot open ' . htmlspecialchars($whatsnew));
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
+	ftruncate($fp, 0);
 	rewind($fp);
 	foreach (array_keys($recent_pages) as $page) {
 		$time      = $recent_pages[$page];
@@ -352,12 +439,13 @@ function put_lastmodified()
 		list($pattern, $pattern_a, $forceignorelist) =
 			get_autolink_pattern($pages);
 
-		$fp = fopen(CACHE_DIR . PKWK_AUTOLINK_REGEX_CACHE, 'w') or
-			die_message('Cannot write file ' .
-			'CACHE_DIR/' . PKWK_AUTOLINK_REGEX_CACHE . '<br />' . "\n" .
-			'Maybe permission is not writable');
+		$file = CACHE_DIR . PKWK_AUTOLINK_REGEX_CACHE;
+		pkwk_touch_file($file);
+		$fp = fopen($file, 'r+') or
+			die_message('Cannot open ' . 'CACHE_DIR/' . PKWK_AUTOLINK_REGEX_CACHE);
 		set_file_buffer($fp, 0);
 		flock($fp, LOCK_EX);
+		ftruncate($fp, 0);
 		rewind($fp);
 		fputs($fp, $pattern   . "\n");
 		fputs($fp, $pattern_a . "\n");
