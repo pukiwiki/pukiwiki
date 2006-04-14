@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.60 2006/04/12 15:45:26 henoheno Exp $
+// $Id: file.php,v 1.61 2006/04/14 18:30:37 teanan Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -16,21 +16,26 @@ define('PKWK_MAXSHOW_CACHE', 'recent.dat');
 define('PKWK_AUTOLINK_REGEX_CACHE', 'autolink.dat');
 
 // Get source(wiki text) data of the page
-function get_source($page = NULL, $lock = TRUE)
+function get_source($page = NULL, $lock = TRUE, $join = FALSE)
 {
-	$array = array();
+	$result = $join? '' : array();
 
 	if (is_page($page)) {
 		$path  = get_filename($page);
 
 		if ($lock) {
 			$fp = @fopen($path, 'r');
-			if ($fp == FALSE) return $array;
+			if ($fp == FALSE) return $result;
 			flock($fp, LOCK_SH);
 		}
 
-		// Removing line-feeds: Because file() doesn't remove them.
-		$array = str_replace("\r", '', file($path));
+		if ($join) {
+			// Overhead is fewer.
+			$result = fread($fp, filesize($path));
+		} else {
+			// Removing line-feeds: Because file() doesn't remove them.
+			$result = str_replace("\r", '', file($path));
+		}
 
 		if ($lock) {
 			flock($fp, LOCK_UN);
@@ -38,7 +43,7 @@ function get_source($page = NULL, $lock = TRUE)
 		}
 	}
 
-	return $array;
+	return $result;
 }
 
 // Get last-modified filetime of the page
