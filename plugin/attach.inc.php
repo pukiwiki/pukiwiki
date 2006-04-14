@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.81 2006/04/10 17:37:08 teanan Exp $
+// $Id: attach.inc.php,v 1.82 2006/04/14 23:51:12 teanan Exp $
 // Copyright (C)
 //   2003-2006 PukiWiki Developers Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
@@ -557,7 +557,7 @@ class AttachFile
 						$_attach_messages['msg_require'] . '</label><br />&nbsp;&nbsp;&nbsp;&nbsp;' .
 						'<label for="_p_attach_newname">' . $_attach_messages['msg_newname'] .
 						':</label> ' .
-						'<input type="test" name="newname" id="_p_attach_newname" size="40" value="' .
+						'<input type="text" name="newname" id="_p_attach_newname" size="40" value="' .
 						$this->file . '" /><br />';
 				}
 			}
