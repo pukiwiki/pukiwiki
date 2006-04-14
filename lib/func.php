@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.54 2006/04/10 14:44:07 henoheno Exp $
+// $Id: func.php,v 1.55 2006/04/14 05:18:31 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -185,12 +185,10 @@ function get_search_words($words = array(), $do_escape = FALSE)
 			$or = array(preg_quote($do_escape ? htmlspecialchars($char) : $char, $quote));
 			if (strlen($char) == 1) {
 				// An ASCII (single-byte) character
-				foreach (array(strtoupper($char), strtolower($char)) as $_char) {
-					if ($char != '&') $or[] = preg_quote($_char, $quote); // As-is?
-					$ascii = ord($_char);
-					$or[] = sprintf('&#(?:%d|x%x);', $ascii, $ascii); // As an entity reference?
-					$or[] = preg_quote($mb_convert_kana($_char, 'A'), $quote); // As Zenkaku?
-				}
+				if ($char != '&') $or[] = preg_quote($char, $quote); // As-is?
+				$ascii = ord($char);
+				$or[] = sprintf('&#(?:%d|x%x);', $ascii, $ascii); // As an entity reference?
+				$or[] = preg_quote($mb_convert_kana($char, 'A'), $quote); // As Zenkaku?
 			} else {
 				// NEVER COME HERE with mb_substr(string, start, length, 'ASCII')
 				// A multi-byte character
@@ -238,9 +236,9 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 			array_unshift($source, $page); // ページ名も検索対象に
 
 		$b_match = FALSE;
+		$haystack = join('', $source);
 		foreach ($keys as $key) {
-			$tmp     = preg_grep('/' . $key . '/', $source);
-			$b_match = ! empty($tmp);
+			$b_match = preg_match('/' . $key . '/i', $haystack);
 			if ($b_match xor $b_type) break;
 		}
 		if ($b_match) $pages[$page] = get_filetime($page);
