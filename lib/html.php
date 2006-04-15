@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.55 2006/04/14 05:18:31 teanan Exp $
+// $Id: html.php,v 1.56 2006/04/15 02:50:21 teanan Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -138,7 +138,7 @@ function catbody($title, $page, $body)
 				'|' . '<[^>]*>' .			// Ignore tags
 				'|' . '&[^;]+;' .			// Ignore entities
 				'|' . '(' . $pattern . ')' .		// $matches[1]: Regex for a search word
-				'/is';
+				'/s';
 			$decorate_Nth_word = create_function(
 				'$matches',
 				'return (isset($matches[1])) ? ' .
