@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.61 2006/04/14 18:30:37 teanan Exp $
+// $Id: file.php,v 1.62 2006/04/15 00:00:45 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -18,7 +18,7 @@ define('PKWK_AUTOLINK_REGEX_CACHE', 'autolink.dat');
 // Get source(wiki text) data of the page
 function get_source($page = NULL, $lock = TRUE, $join = FALSE)
 {
-	$result = $join? '' : array();
+	$result = $join ? '' : array();
 
 	if (is_page($page)) {
 		$path  = get_filename($page);
@@ -30,9 +30,10 @@ function get_source($page = NULL, $lock = TRUE, $join = FALSE)
 		}
 
 		if ($join) {
-			// Overhead is fewer.
+			// Returns a value
 			$result = fread($fp, filesize($path));
 		} else {
+			// Returns an array
 			// Removing line-feeds: Because file() doesn't remove them.
 			$result = str_replace("\r", '', file($path));
 		}
