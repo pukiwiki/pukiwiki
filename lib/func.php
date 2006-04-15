@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.58 2006/04/15 02:50:21 teanan Exp $
+// $Id: func.php,v 1.59 2006/04/15 17:33:35 teanan Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -239,7 +239,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 
 		$b_match = FALSE;
 		foreach ($keys as $key) {
-			$b_match = preg_match('/' . $key . '/', $source);
+			$b_match = preg_match('/' . $key . '/S', $source);
 			if ($b_match xor $b_type) break;
 		}
 		if ($b_match) $pages[$page] = get_filetime($page);
