@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.67 2006/04/16 13:53:04 henoheno Exp $
+// $Id: func.php,v 1.68 2006/04/16 14:29:54 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -211,7 +211,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 {
 	global $script, $whatsnew, $search_non_list;
 	global $_msg_andresult, $_msg_orresult, $_msg_notfoundresult;
-	global $search_auth;
+	global $search_auth, $show_passage;
 
 	$retval = array();
 
@@ -266,11 +266,12 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 		return str_replace('$1', $s_word, $_msg_notfoundresult);
 
 	ksort($pages);
+
 	$retval = '<ul>' . "\n";
 	foreach (array_keys($pages) as $page) {
 		$r_page  = rawurlencode($page);
 		$s_page  = htmlspecialchars($page);
-		$passage = get_passage(get_filetime($page));
+		$passage = $show_passage ? ' ' . get_passage(get_filetime($page)) : '';
 		$retval .= ' <li><a href="' . $script . '?cmd=read&amp;page=' .
 			$r_page . '&amp;word=' . $r_word . '">' . $s_page .
 			'</a>' . $passage . '</li>' . "\n";
