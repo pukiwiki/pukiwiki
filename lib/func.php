@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.60 2006/04/15 18:02:38 teanan Exp $
+// $Id: func.php,v 1.61 2006/04/16 01:08:57 teanan Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -235,7 +235,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 			$source = get_source($page, TRUE, TRUE);
 		}
 		if (! $non_format)
-			$source = $page . $source; // ページ名も検索対象に
+			$source = $page . "\n" . $source; // ページ名も検索対象に
 
 		$b_match = FALSE;
 		foreach ($keys as $key) {
