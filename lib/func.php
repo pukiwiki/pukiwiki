@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.63 2006/04/16 10:27:55 henoheno Exp $
+// $Id: func.php,v 1.64 2006/04/16 10:50:13 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -217,23 +217,28 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 
 	$b_type = ($type == 'AND'); // AND:TRUE OR:FALSE
 	$keys = get_search_words(preg_split('/\s+/', $word, -1, PREG_SPLIT_NO_EMPTY));
+	foreach ($keys as $key=>$value) {
+		$keys[$key] = '/' . $value . '/S';
+	}
 
 	$_pages = get_existpages();
-	if ($base != '') {
-		$_pages = preg_grep('/^' . $base . '/', $_pages);
-	}
-	$pages = array();
 
+	// Avoid
+	unset($_pages[encode($whatsnew) . '.txt']);
+	if ($base != '') {
+		$_pages = preg_grep('/^' . preg_quote('/', $base) . '/S', $_pages);
+	}
+
+	$pages = array();
 	foreach ($_pages as $page) {
-		if ($page == $whatsnew || (! $search_non_list && check_non_list($page)))
-			continue;
+		if (! $search_non_list && check_non_list($page)) continue;
 
 		$b_match = FALSE;
 
 		// Search for page name
 		if (! $non_format) {
 			foreach ($keys as $key) {
-				$b_match = preg_match('/' . $key . '/S', $page);
+				$b_match = preg_match($key, $page);
 				if ($b_type xor $b_match) break; // OR
 			}
 			if ($b_match) {
@@ -248,7 +253,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 
 		// Search for page contents
 		foreach ($keys as $key) {
-			$b_match = preg_match('/' . $key . '/S', get_source($page, TRUE, TRUE));
+			$b_match = preg_match($key, get_source($page, TRUE, TRUE));
 			if ($b_type xor $b_match) break; // OR
 		}
 		if ($b_match) $pages[$page] = $non_format ? 0 : get_filetime($page);
