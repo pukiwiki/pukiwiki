@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.66 2006/04/16 13:22:00 henoheno Exp $
+// $Id: func.php,v 1.67 2006/04/16 13:53:04 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -221,17 +221,18 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 		$keys[$key] = '/' . $value . '/S';
 	}
 
-	$_pages = get_existpages();
+	$pages = get_existpages();
 
 	// Avoid
-	unset($_pages[encode($whatsnew) . '.txt']);
 	if ($base != '') {
-		$_pages = preg_grep('/^' . preg_quote('/', $base) . '/S', $_pages);
+		$pages = preg_grep('/^' . preg_quote('/', $base) . '/S', $pages);
 	}
+	$pages = array_flip($pages);
+	unset($pages[$whatsnew]);
 
-	$pages = array();
-	foreach ($_pages as $page) {
-		if (! $search_non_list && check_non_list($page)) continue;
+	foreach (array_keys($pages) as $page) {
+		if (! $search_non_list && check_non_list($page))
+			unset($pages[$page]);
 
 		$b_match = FALSE;
 
@@ -241,22 +242,21 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 				$b_match = preg_match($key, $page);
 				if ($b_type xor $b_match) break; // OR
 			}
-			if ($b_match) {
-				$pages[$page] = TRUE;
-				continue;
-			}
+			if ($b_match) continue;
 		}
 
 		// Search auth for page contents
 		if ($search_auth && ! check_readable($page, false, false))
-			continue;
+			unset($pages[$page]);
 
 		// Search for page contents
 		foreach ($keys as $key) {
 			$b_match = preg_match($key, get_source($page, TRUE, TRUE));
 			if ($b_type xor $b_match) break; // OR
 		}
-		if ($b_match) $pages[$page] = TRUE;
+		if ($b_match) continue;
+
+		unset($pages[$page]); // Miss
 	}
 	if ($non_format) return array_keys($pages);
 
