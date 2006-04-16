@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.65 2006/04/16 11:20:52 henoheno Exp $
+// $Id: func.php,v 1.66 2006/04/16 13:22:00 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -260,9 +260,6 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 	}
 	if ($non_format) return array_keys($pages);
 
-	foreach ($pages as $page)
-		$pages[$page] = get_filetime($page);
-
 	$r_word = rawurlencode($word);
 	$s_word = htmlspecialchars($word);
 	if (empty($pages))
@@ -270,18 +267,19 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 
 	ksort($pages);
 	$retval = '<ul>' . "\n";
-	foreach ($pages as $page=>$time) {
+	foreach (array_keys($pages) as $page) {
 		$r_page  = rawurlencode($page);
 		$s_page  = htmlspecialchars($page);
-		$passage = get_passage($time);
+		$passage = get_passage(get_filetime($page));
 		$retval .= ' <li><a href="' . $script . '?cmd=read&amp;page=' .
 			$r_page . '&amp;word=' . $r_word . '">' . $s_page .
 			'</a>' . $passage . '</li>' . "\n";
 	}
 	$retval .= '</ul>' . "\n";
 
-	$retval .= str_replace('$1', $s_word, str_replace('$2', count($pages),
-		str_replace('$3', count($_pages), $b_type ? $_msg_andresult : $_msg_orresult)));
+	$count = count($pages);
+	$retval .= str_replace('$1', $s_word, str_replace('$2', $count,
+		str_replace('$3', $count, $b_type ? $_msg_andresult : $_msg_orresult)));
 
 	return $retval;
 }
