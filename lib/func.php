@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.61 2006/04/16 01:08:57 teanan Exp $
+// $Id: func.php,v 1.62 2006/04/16 10:26:25 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -228,19 +228,28 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 		if ($page == $whatsnew || (! $search_non_list && check_non_list($page)))
 			continue;
 
-		// 検索対象ページの制限をかけるかどうか (ページ名は制限外)
-		if ($search_auth && ! check_readable($page, false, false)) {
-			$source = ''; // Empty
-		} else {
-			$source = get_source($page, TRUE, TRUE);
-		}
-		if (! $non_format)
-			$source = $page . "\n" . $source; // ページ名も検索対象に
-
 		$b_match = FALSE;
+
+		// Search for page name
+		if (! $non_format) {
+			foreach ($keys as $key) {
+				$b_match = preg_match('/' . $key . '/S', $page);
+				if ($b_type xor $b_match) break; // OR
+			}
+			if ($b_match) {
+				$pages[$page] = $non_format ? 0 : get_filetime($page);
+				continue;
+			}
+		}
+
+		// Search auth for page contents
+		if ($search_auth && ! check_readable($page, false, false))
+			continue;
+
+		// Search for page contents
 		foreach ($keys as $key) {
-			$b_match = preg_match('/' . $key . '/S', $source);
-			if ($b_match xor $b_type) break;
+			$b_match = preg_match('/' . $key . '/S', get_source($page, TRUE, TRUE));
+			if ($b_type xor $b_match) break; // OR
 		}
 		if ($b_match) $pages[$page] = $non_format ? 0 : get_filetime($page);
 	}
