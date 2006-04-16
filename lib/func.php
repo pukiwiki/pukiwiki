@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.69 2006/04/16 14:43:35 henoheno Exp $
+// $Id: func.php,v 1.70 2006/04/16 14:45:49 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -283,7 +283,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 	}
 	$retval .= '</ul>' . "\n";
 
-	$retval .= str_replace('$1', $s_word, str_replace('$2', $count,
+	$retval .= str_replace('$1', $s_word, str_replace('$2', count($pages),
 		str_replace('$3', $count, $b_type ? $_msg_andresult : $_msg_orresult)));
 
 	return $retval;
