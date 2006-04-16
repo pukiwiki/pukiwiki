@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.68 2006/04/16 14:29:54 henoheno Exp $
+// $Id: func.php,v 1.69 2006/04/16 14:43:35 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -230,9 +230,12 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 	$pages = array_flip($pages);
 	unset($pages[$whatsnew]);
 
+	$count = count($pages);
 	foreach (array_keys($pages) as $page) {
-		if (! $search_non_list && check_non_list($page))
+		if (! $search_non_list && check_non_list($page)) {
 			unset($pages[$page]);
+			--$count;
+		}
 
 		$b_match = FALSE;
 
@@ -246,8 +249,10 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 		}
 
 		// Search auth for page contents
-		if ($search_auth && ! check_readable($page, false, false))
+		if ($search_auth && ! check_readable($page, false, false)) {
 			unset($pages[$page]);
+			--$count;
+		}
 
 		// Search for page contents
 		foreach ($keys as $key) {
@@ -278,7 +283,6 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 	}
 	$retval .= '</ul>' . "\n";
 
-	$count = count($pages);
 	$retval .= str_replace('$1', $s_word, str_replace('$2', $count,
 		str_replace('$3', $count, $b_type ? $_msg_andresult : $_msg_orresult)));
 
