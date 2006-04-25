@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.63 2006/04/15 00:18:37 henoheno Exp $
+// $Id: file.php,v 1.64 2006/04/25 13:51:56 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -312,6 +312,8 @@ function lastmodified_add($page = '')
 	$file = CACHE_DIR . PKWK_MAXSHOW_CACHE;
 	if ($autolink || ! file_exists($file)) {
 		put_lastmodified(); // Try to (re)create ALL
+		return;
+	} else if (check_non_list($page)) {
 		return;
 	}
 
