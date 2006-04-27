@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.130 2006/04/27 14:50:05 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.131 2006/04/27 14:50:58 henoheno Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
