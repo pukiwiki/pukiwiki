@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.65 2006/04/29 02:32:49 henoheno Exp $
+// $Id: file.php,v 1.66 2006/04/29 02:37:33 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -340,7 +340,7 @@ function lastmodified_add($page = '')
 	if (isset($recent_pages[$page])) unset($recent_pages[$page]);
 
 	// Add to the top: like array_unshift()
-	$recent_pages = array($page => get_filetime($page)) + $recent_pages;
+	if ($page != '') $recent_pages = array($page => get_filetime($page)) + $recent_pages;
 
 	// Write
 	ftruncate($fp, 0);
