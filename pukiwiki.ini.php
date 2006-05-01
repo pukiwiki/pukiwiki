@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: pukiwiki.ini.php,v 1.16.2.15 2004/08/08 05:16:38 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.16.2.16 2006/05/01 12:34:02 henoheno Exp $
 //
 // PukiWiki setting file
 
@@ -74,8 +74,8 @@ $function_freeze = 1;
 /////////////////////////////////////////////////
 // 管理者パスワード
 
-// 以下は md5('pass') の出力結果です
-$adminpass = '1a1dc91c907325c69271ddf0c944bc72';
+// デフォルト: 絶対に判定に失敗する値
+$adminpass = '!3c6c95586a1f7410b0921b2d46bfe08f';
 
 // = 注意 =
 //
