@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.132 2006/05/01 12:33:31 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.133 2006/05/02 01:22:56 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -316,9 +316,17 @@ $maxage = 120; // Stock latest N backups
 define('PKWK_SPLITTER', '>>>>>>>>>>');
 
 /////////////////////////////////////////////////
-// Command executed per update
-$update_exec = '';
-//$update_exec = '/usr/bin/mknmz --media-type=text/pukiwiki -O /var/lib/namazu/index/ -L ja -c -K /var/www/wiki/';
+// Command execution per update
+
+define('PKWK_UPDATE_EXEC', '');
+
+// Sample: Namazu (Serarch engine)
+//$target     = '/var/www/wiki/';
+//$mknmz      = '/usr/bin/mknmz';
+//$output_dir = '/var/lib/namazu/index/';
+//define('PKWK_UPDATE_EXEC',
+//	$mknmz . ' --media-type=text/pukiwiki' .
+//	' -O ' . $output_dir . ' -L ja -c -K ' . $target);
 
 /////////////////////////////////////////////////
 // HTTP proxy setting (for TrackBack etc)

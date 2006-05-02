@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.67 2006/04/30 03:58:35 henoheno Exp $
+// $Id: file.php,v 1.68 2006/05/02 01:22:56 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -184,7 +184,7 @@ function file_head($file, $count = 1, $lock = TRUE, $buffer = 8192)
 // Output to a file
 function file_write($dir, $page, $str, $notimestamp = FALSE)
 {
-	global $update_exec, $_msg_invalidiwn, $notify, $notify_diff_only, $notify_subject;
+	global $_msg_invalidiwn, $notify, $notify_diff_only, $notify_subject;
 	global $whatsdeleted, $maxshow_deleted;
 
 	if (PKWK_READONLY) return; // Do nothing
@@ -248,8 +248,9 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 		// Update RecentChanges (Add or renew the $page)
 		if ($timestamp === FALSE) lastmodified_add($page);
 
-		// Execute $update_exec here
-		if ($update_exec) system($update_exec . ' > /dev/null &');
+		// Command execution per update
+		if (defined(PKWK_UPDATE_EXEC)) 
+			system(PKWK_UPDATE_EXEC . ' > /dev/null &');
 
 	} else if ($dir == DIFF_DIR && $notify) {
 		if ($notify_diff_only) $str = preg_replace('/^[^-+].*\n/m', '', $str);
