@@ -1,16 +1,15 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: showrss.inc.php,v 1.17 2005/04/09 03:18:06 henoheno Exp $
+// $Id: showrss.inc.php,v 1.18 2006/05/02 01:28:01 henoheno Exp $
 //  Id:showrss.inc.php,v 1.40 2003/03/18 11:52:58 hiro Exp
+// Copyright (C):
+//     2002-2005 PukiWiki Developers Team
+//     2002      PANDA <panda@arino.jp>
+//     (Original)hiro_do3ob@yahoo.co.jp
+// License: GPL, same as PukiWiki
 //
-// Show RSS of remote site plugin
-
-/*
- * Created by hiro_do3ob@yahoo.co.jp
- * Modified by PANDA <panda@arino.jp>, and PukiWiki Developers Team
- * Licence: GPL, same as PukiWiki
- * This plugin needs 'PHP xml extension'
- */
+// Show RSS (of remote site) plugin
+// NOTE: This plugin needs 'PHP xml extension'
 
 // Show this plugin is enable or not for this PukiWiki
 function plugin_showrss_action()
