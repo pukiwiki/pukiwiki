@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.23 2006/05/04 05:04:17 henoheno Exp $
-// Copyright (C) 2001-2005 PukiWiki Developers Team
+// $Id: md5.inc.php,v 1.24 2006/05/04 05:04:43 henoheno Exp $
+// Copyright (C) 2001-2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 //  MD5 plugin: Allow to convert password/passphrase
