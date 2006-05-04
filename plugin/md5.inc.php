@@ -1,15 +1,23 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.22 2005/06/12 10:13:43 henoheno Exp $
+// $Id: md5.inc.php,v 1.23 2006/05/04 05:04:17 henoheno Exp $
+// Copyright (C) 2001-2005 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
-//  MD5 plugin
+//  MD5 plugin: Allow to convert password/passphrase
+//	* PHP sha1() -- If you have sha1() or mhash extension
+//	* PHP md5()
+//	* PHP crypt()
+//	* LDAP SHA / SSHA -- If you have sha1() or mhash extension
+//	* LDAP MD5 / SMD5
+//	* LDAP CRYPT
 
 // User interface of pkwk_hash_compute() for system admin
 function plugin_md5_action()
 {
 	global $get, $post;
 
-	if (PKWK_SAFE_MODE || PKWK_READONLY) die_message('Prohibited');
+	if (PKWK_SAFE_MODE || PKWK_READONLY) die_message('Prohibited by admin');
 
 	// Wait POST
 	$phrase = isset($post['phrase']) ? $post['phrase'] : '';
@@ -53,7 +61,15 @@ function plugin_md5_show_form($nophrase = FALSE, $value = '')
 		die_message('Limit: malicious message length');
 
 	if ($value != '') $value = 'value="' . htmlspecialchars($value) . '" ';
+
 	$sha1_enabled = function_exists('sha1');
+	$sha1_checked = $md5_checked = '';
+	if ($sha1_enabled) {
+		$sha1_checked = 'checked="checked" ';
+	} else {
+		$md5_checked  = 'checked="checked" ';
+	}
+
 	$self = get_script_uri();
 
 	$form = <<<EOD
@@ -77,21 +93,21 @@ EOD;
 EOD;
 
 	$form .= <<<EOD
-  <input type="radio" name="scheme" id="_p_md5_md5"  value="x-php-md5" checked="checked" />
+  <input type="radio" name="scheme" id="_p_md5_md5"  value="x-php-md5" />
   <label for="_p_md5_md5">PHP md5()</label><br />
   <input type="radio" name="scheme" id="_p_md5_crpt" value="x-php-crypt" />
   <label for="_p_md5_crpt">PHP crypt() *</label><br />
 EOD;
 
 	if ($sha1_enabled) $form .= <<<EOD
-  <input type="radio" name="scheme" id="_p_md5_lssha" value="SSHA" />
+  <input type="radio" name="scheme" id="_p_md5_lssha" value="SSHA" $sha1_checked/>
   <label for="_p_md5_lssha">LDAP SSHA (sha-1 with a seed) *</label><br />
   <input type="radio" name="scheme" id="_p_md5_lsha" value="SHA" />
   <label for="_p_md5_lsha">LDAP SHA (sha-1)</label><br />
 EOD;
 
 	$form .= <<<EOD
-  <input type="radio" name="scheme" id="_p_md5_lsmd5" value="SMD5" />
+  <input type="radio" name="scheme" id="_p_md5_lsmd5" value="SMD5" $md5_checked/>
   <label for="_p_md5_lsmd5">LDAP SMD5 (md5 with a seed) *</label><br />
   <input type="radio" name="scheme" id="_p_md5_lmd5" value="MD5" />
   <label for="_p_md5_lmd5">LDAP MD5</label><br />
