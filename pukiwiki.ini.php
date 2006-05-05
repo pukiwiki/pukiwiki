@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.133 2006/05/02 01:22:56 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.134 2006/05/05 10:37:12 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -320,7 +320,7 @@ define('PKWK_SPLITTER', '>>>>>>>>>>');
 
 define('PKWK_UPDATE_EXEC', '');
 
-// Sample: Namazu (Serarch engine)
+// Sample: Namazu (Search engine)
 //$target     = '/var/www/wiki/';
 //$mknmz      = '/usr/bin/mknmz';
 //$output_dir = '/var/lib/namazu/index/';
