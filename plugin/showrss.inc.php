@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: showrss.inc.php,v 1.20 2006/05/05 04:25:28 henoheno Exp $
+// $Id: showrss.inc.php,v 1.21 2006/05/05 04:32:09 henoheno Exp $
 //  Id:showrss.inc.php,v 1.40 2003/03/18 11:52:58 hiro Exp
 // Copyright (C):
 //     2002-2006 PukiWiki Developers Team
@@ -219,7 +219,7 @@ class ShowRSS_XML
 
 		// Detect encoding
 		$matches = array();
-		if(preg_match('/<?xml [^>]*\bencoding="([a-z0-9-_]+)"/i', $buf, $matches)) {
+		if(preg_match('/<\?xml [^>]*\bencoding="([a-z0-9-_]+)"/i', $buf, $matches)) {
 			$this->encoding = $matches[1];
 		} else {
 			$this->encoding = mb_detect_encoding($buf);
