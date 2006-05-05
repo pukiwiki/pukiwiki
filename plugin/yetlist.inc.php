@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: yetlist.inc.php,v 1.26 2006/05/05 03:16:38 henoheno Exp $
+// $Id: yetlist.inc.php,v 1.27 2006/05/05 03:22:34 henoheno Exp $
 // Copyright (C) 2001-2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -20,6 +20,8 @@ function plugin_yetlist_action()
 		return $retval;
 	}
 
+	$empty = TRUE;
+
 	// Load .ref files and Output
 	$script = get_script_uri();
 	asort($pages, SORT_STRING);
@@ -30,6 +32,7 @@ function plugin_yetlist_action()
 			$refer[] = $_page;
 		}
 		if (! empty($refer)) {
+			$empty = FALSE;
 			$refer = array_unique($refer);
 			sort($refer, SORT_STRING);
 
@@ -55,6 +58,11 @@ function plugin_yetlist_action()
 			}
 			$retval['body'] .= '<li>' . $href . ' <em>(' . $link_ref . ')</em></li>' . "\n";
 		}
+	}
+
+	if ($empty) {
+		$retval['body'] = $_err_notexist;
+		return $retval;
 	}
 
 	if ($retval['body'] != '')
