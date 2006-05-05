@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: showrss.inc.php,v 1.19 2006/05/02 08:15:43 henoheno Exp $
+// $Id: showrss.inc.php,v 1.20 2006/05/05 04:25:28 henoheno Exp $
 //  Id:showrss.inc.php,v 1.40 2003/03/18 11:52:58 hiro Exp
 // Copyright (C):
 //     2002-2006 PukiWiki Developers Team
@@ -218,7 +218,14 @@ class ShowRSS_XML
 		$this->tag     = '';
 
 		// Detect encoding
-		$this->encoding = mb_detect_encoding($buf);
+		$matches = array();
+		if(preg_match('/<?xml [^>]*\bencoding="([a-z0-9-_]+)"/i', $buf, $matches)) {
+			$this->encoding = $matches[1];
+		} else {
+			$this->encoding = mb_detect_encoding($buf);
+		}
+
+		// Normalize to UTF-8 / ASCII
 		if (! in_array(strtolower($this->encoding), array('us-ascii', 'iso-8859-1', 'utf-8'))) {
 			$buf = mb_convert_encoding($buf, 'utf-8', $this->encoding);
 			$this->encoding = 'utf-8';
