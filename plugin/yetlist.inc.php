@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: yetlist.inc.php,v 1.24 2006/05/05 02:32:52 henoheno Exp $
+// $Id: yetlist.inc.php,v 1.25 2006/05/05 02:52:46 henoheno Exp $
 // Copyright (C) 2001-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -8,7 +8,7 @@
 
 function plugin_yetlist_action()
 {
-	global $_title_yetlist, $_err_notexisto, $_symbol_noexists, $non_list;
+	global $_title_yetlist, $_err_notexist, $_symbol_noexists, $non_list;
 
 	$retval = array('msg' => $_title_yetlist, 'body' => '');
 
