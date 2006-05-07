@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: yetlist.inc.php,v 1.27 2006/05/05 03:22:34 henoheno Exp $
+// $Id: yetlist.inc.php,v 1.28 2006/05/07 03:55:26 henoheno Exp $
 // Copyright (C) 2001-2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -9,12 +9,12 @@
 function plugin_yetlist_action()
 {
 	global $_title_yetlist, $_err_notexist, $_symbol_noexists, $non_list;
+	global $whatsdeleted;
 
 	$retval = array('msg' => $_title_yetlist, 'body' => '');
 
 	// Diff
-	$pages = get_existpages(CACHE_DIR, '.ref');
-	$pages = array_diff($pages, preg_grep('/' . $non_list . '/S', $pages), get_existpages());
+	$pages = array_diff(get_existpages(CACHE_DIR, '.ref'), get_existpages());
 	if (empty($pages)) {
 		$retval['body'] = $_err_notexist;
 		return $retval;
@@ -23,7 +23,8 @@ function plugin_yetlist_action()
 	$empty = TRUE;
 
 	// Load .ref files and Output
-	$script = get_script_uri();
+	$script      = get_script_uri();
+	$refer_regex = '/' . $non_list . '|^' . preg_quote($whatsdeleted, '/') . '$/S';
 	asort($pages, SORT_STRING);
 	foreach ($pages as $file=>$page) {
 		$refer = array();
@@ -31,6 +32,8 @@ function plugin_yetlist_action()
 			list($_page) = explode("\t", rtrim($line));
 			$refer[] = $_page;
 		}
+		// Diff
+		$refer = array_diff($refer, preg_grep($refer_regex, $refer));
 		if (! empty($refer)) {
 			$empty = FALSE;
 			$refer = array_unique($refer);
