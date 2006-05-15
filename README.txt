@@ -1,7 +1,7 @@
 名前
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築スクリプト
 
-    Version 1.4.6
+    Version 1.4.7
     Copyright (C)
       2001-2005 PukiWiki Developers Team
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
@@ -12,7 +12,7 @@
       http://pukiwiki.sourceforge.jp/dev/
       http://sourceforge.jp/projects/pukiwiki/
 
-    $Id: README.txt,v 1.26 2005/11/25 23:34:34 henoheno Exp $
+    $Id: README.txt,v 1.27 2006/05/15 14:47:42 henoheno Exp $
 
 書式
     index.php
