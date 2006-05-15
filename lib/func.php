@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.72 2006/05/04 09:30:58 henoheno Exp $
+// $Id: func.php,v 1.73 2006/05/15 16:41:39 teanan Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -224,7 +224,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 
 	// Avoid
 	if ($base != '') {
-		$pages = preg_grep('/^' . preg_quote('/', $base) . '/S', $pages);
+		$pages = preg_grep('/^' . preg_quote($base, '/') . '/S', $pages);
 	}
 	if (! $search_non_list) {
 		$pages = array_diff($pages, preg_grep('/' . $non_list . '/S', $pages));
