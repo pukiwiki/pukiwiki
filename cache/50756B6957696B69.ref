@@ -1,6 +1,7 @@
-Help	0
 :config/PageReading	0
+FormattingRules	0
 FrontPage	0
+Help	0
 InterWiki	0
 InterWikiName	0
 InterWikiSandBox	0
@@ -13,4 +14,3 @@ PukiWiki/1.4/Manual/Plugin/O-R	0
 PukiWiki/1.4/Manual/Plugin/S-U	0
 PukiWiki/1.4/Manual/Plugin/V-Z	0
 YukiWiki	0
-FormattingRules	0
