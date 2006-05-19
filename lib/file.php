@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.68 2006/05/02 01:22:56 henoheno Exp $
+// $Id: file.php,v 1.69 2006/05/19 15:04:25 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -413,7 +413,15 @@ function put_lastmodified()
 	arsort($recent_pages, SORT_NUMERIC);
 
 	// Cut unused lines
-	$recent_pages = array_splice($recent_pages, 0, $maxshow + PKWK_MAXSHOW_ALLOWANCE);
+	// BugTrack2/179: array_splice() will break integer keys in hashtable
+	$count   = $maxshow + PKWK_MAXSHOW_ALLOWANCE;
+	$_recent = array();
+	foreach($recent_pages as $key=>$value) {
+		$_recent[$key] = $value;
+		unset($recent_pages[$key]);
+		if (--$count < 1) break;
+	}
+	$recent_pages = & $_recent;
 
 	// Re-create PKWK_MAXSHOW_CACHE
 	$file = CACHE_DIR . PKWK_MAXSHOW_CACHE;
