@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.69 2006/05/19 15:04:25 henoheno Exp $
+// $Id: file.php,v 1.70 2006/05/19 15:16:59 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -417,8 +417,8 @@ function put_lastmodified()
 	$count   = $maxshow + PKWK_MAXSHOW_ALLOWANCE;
 	$_recent = array();
 	foreach($recent_pages as $key=>$value) {
-		$_recent[$key] = $value;
 		unset($recent_pages[$key]);
+		$_recent[$key] = $value;
 		if (--$count < 1) break;
 	}
 	$recent_pages = & $_recent;
