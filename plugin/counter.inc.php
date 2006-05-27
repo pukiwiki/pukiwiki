@@ -1,10 +1,12 @@
 <?php
-// $Id: counter.inc.php,v 1.17 2005/10/04 14:31:22 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: counter.inc.php,v 1.18 2006/05/27 13:31:11 henoheno Exp $
+// Copyright (C)
+//   2002-2005 PukiWiki Developers Team
+//   2002 Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net
+// License: GPL2
 //
-// PukiWiki counter plugin
-//
-// (C) 2002-2005 PukiWiki Developers Team
-// (C) 2002 Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net
+// Counter plugin
 
 // Counter file's suffix
 define('PLUGIN_COUNTER_SUFFIX', '.count');
