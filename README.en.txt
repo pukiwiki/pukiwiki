@@ -8,7 +8,7 @@ NAME
 
         PukiWiki 1.4.7
         Copyright (C)
-          2001-2005 PukiWiki Developers Team
+          2001-2006 PukiWiki Developers Team
           2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
         License: GPL version 2 or (at your option) any later version
         http://pukiwiki.sourceforge.jp/
