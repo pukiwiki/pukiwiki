@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.44 2006/05/15 14:47:42 henoheno Exp $
+// $Id: init.php,v 1.45 2006/05/30 14:53:39 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -57,45 +57,37 @@ if ($die) die_message(nl2br("\n\n" . $die));
 /////////////////////////////////////////////////
 // INI_FILE: LANG に基づくエンコーディング設定
 
+// MB_LANGUAGE: mb_language (for mbstring extension)
+//   'uni'(means UTF-8), 'English', or 'Japanese'
+// SOURCE_ENCODING: Internal content encoding (for mbstring extension)
+//   'UTF-8', 'ASCII', or 'EUC-JP'
 // CONTENT_CHARSET: Internal content encoding = Output content charset (for skin)
 //   'UTF-8', 'iso-8859-1', 'EUC-JP' or ...
 
-// MB_LANGUAGE: mb_language (for mbstring extension)
-//   'uni'(means UTF-8), 'English', or 'Japanese'
-
-// SOURCE_ENCODING: Internal content encoding (for mbstring extension)
-//   'UTF-8', 'ASCII', or 'EUC-JP'
-
 switch (LANG){
-case 'en':
-	// ASCII
-	define('CONTENT_CHARSET', 'iso-8859-1');
-	define('MB_LANGUAGE',     'English');
-	define('SOURCE_ENCODING', 'ASCII');
+case 'en': define('MB_LANGUAGE', 'English' ); break;
+case 'ja': define('MB_LANGUAGE', 'Japanese'); break;
+//UTF-8:case 'ko': define('MB_LANGUAGE', 'Korean'  ); break;
+//UTF-8:	// See BugTrack2/13 for all hack about Korean support,
+//UTF-8:	// and give us your report!
+default: die_message('No such language "' . LANG . '"'); break;
+}
 
-	// UTF-8
-	//define('CONTENT_CHARSET', 'UTF-8');
-	//define('MB_LANGUAGE',     'English');
-	//define('SOURCE_ENCODING', 'UTF-8');
-
-	break;
-	
-case 'ja':
-	// EUC-JP
-	define('CONTENT_CHARSET', 'EUC-JP');
-	define('MB_LANGUAGE',     'Japanese');
-	define('SOURCE_ENCODING', 'EUC-JP');
-	break;
-
-case 'ko':
-	// UTF-8 (See BugTrack2/13 for all hack about Korean support, and give us your report!)
-	define('CONTENT_CHARSET', 'UTF-8');
-	define('MB_LANGUAGE',     'Korean');
+//UTF-8:define('PKWK_UTF8_ENABLE', 1);
+if (defined('PKWK_UTF8_ENABLE')) {
 	define('SOURCE_ENCODING', 'UTF-8');
-	break;
-
-default:
-	die_message('No such language "' . LANG . '"');
+	define('CONTENT_CHARSET', 'UTF-8');
+} else {
+	switch (LANG){
+	case 'en':
+		define('SOURCE_ENCODING', 'ASCII');
+		define('CONTENT_CHARSET', 'iso-8859-1');
+		break;
+	case 'ja':
+		define('SOURCE_ENCODING', 'EUC-JP');
+		define('CONTENT_CHARSET', 'EUC-JP');
+		break;
+	}
 }
 
 mb_language(MB_LANGUAGE);
