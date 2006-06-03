@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.136 2006/06/03 11:04:28 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.137 2006/06/03 11:08:29 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -239,8 +239,8 @@ $auth_users = array(
 /////////////////////////////////////////////////
 // Authentication method
 
-$auth_method_type = 'contents';	// By Page contents
-//$auth_method_type = 'pagename';	// By Page name
+$auth_method_type	= 'pagename';	// By Page name
+//$auth_method_type	= 'contents';	// By Page contents
 
 /////////////////////////////////////////////////
 // Read auth (0:Disable, 1:Enable)
