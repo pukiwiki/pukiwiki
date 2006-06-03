@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.134 2006/05/05 10:37:12 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.135 2006/06/03 10:46:50 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -175,7 +175,7 @@ $nowikiname = 0;
 // AutoLink feature
 
 // AutoLink minimum length of page name
-$autolink = 8; // Bytes, 0 = OFF
+$autolink = 0; // Bytes, 0 = OFF (try 8)
 
 /////////////////////////////////////////////////
 // Enable Freeze / Unfreeze feature
