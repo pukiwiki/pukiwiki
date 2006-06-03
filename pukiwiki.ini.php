@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.137 2006/06/03 11:08:29 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.138 2006/06/03 11:31:03 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -193,10 +193,11 @@ $notimeupdate = 1;
 $adminpass = '{x-php-md5}!';
 
 // Sample:
-//$adminpass = '{x-php-md5}1a1dc91c907325c69271ddf0c944bc72'; // md5('pass')
-//$adminpass = '{CRYPT}$1$AR.Gk94x$uCe8fUUGMfxAPH83psCZG/'; // CRYPT 'pass'
-//$adminpass = '{MD5}Gh3JHJBzJcaScd3wyUS8cg==';             // MD5   'pass'
-//$adminpass = '{SMD5}o7lTdtHFJDqxFOVX09C8QnlmYmZnd2Qx';    // SMD5  'pass'
+//$adminpass = 'pass'; // Cleartext
+//$adminpass = '{x-php-md5}1a1dc91c907325c69271ddf0c944bc72'; // PHP md5()  'pass'
+//$adminpass = '{CRYPT}$1$AR.Gk94x$uCe8fUUGMfxAPH83psCZG/';   // LDAP CRYPT 'pass'
+//$adminpass = '{MD5}Gh3JHJBzJcaScd3wyUS8cg==';               // LDAP MD5   'pass'
+//$adminpass = '{SMD5}o7lTdtHFJDqxFOVX09C8QnlmYmZnd2Qx';      // LDAP SMD5  'pass'
 
 /////////////////////////////////////////////////
 // Page-reading feature settings
@@ -232,8 +233,8 @@ $pagereading_config_dict = ':config/PageReading/dict';
 // User definition
 $auth_users = array(
 	'foo'	=> 'foo_passwd', // Cleartext
-	'bar'	=> '{x-php-md5}f53ae779077e987718cc285b14dfbe86', // md5('bar_passwd')
-	'hoge'	=> '{SMD5}OzJo/boHwM4q5R+g7LCOx2xGMkFKRVEx', // SMD5 'hoge_passwd'
+	'bar'	=> '{x-php-md5}f53ae779077e987718cc285b14dfbe86', // PHP md5() 'bar_passwd'
+	'hoge'	=> '{SMD5}OzJo/boHwM4q5R+g7LCOx2xGMkFKRVEx',      // LDAP SMD5 'hoge_passwd'
 );
 
 /////////////////////////////////////////////////
@@ -246,8 +247,8 @@ $auth_method_type	= 'pagename';	// By Page name
 // Read auth (0:Disable, 1:Enable)
 $read_auth = 0;
 
-// Read auth regex
 $read_auth_pages = array(
+	// Regex		   Username
 	'#ひきこもるほげ#'	=> 'hoge',
 	'#(ネタバレ|ねたばれ)#'	=> 'foo,bar,hoge',
 );
@@ -256,8 +257,8 @@ $read_auth_pages = array(
 // Edit auth (0:Disable, 1:Enable)
 $edit_auth = 0;
 
-// Edit auth regex
 $edit_auth_pages = array(
+	// Regex		   Username
 	'#Barの公開日記#'	=> 'bar',
 	'#ひきこもるほげ#'	=> 'hoge',
 	'#(ネタバレ|ねたばれ)#'	=> 'foo,bar,hoge',
