@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.135 2006/06/03 10:46:50 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.136 2006/06/03 11:04:28 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -190,7 +190,7 @@ $notimeupdate = 1;
 // Admin password for this Wikisite
 
 // Default: always fail
-$adminpass = '{x-php-md5}!2e3f7c23072177ca348c8720ec676949';
+$adminpass = '{x-php-md5}!';
 
 // Sample:
 //$adminpass = '{x-php-md5}1a1dc91c907325c69271ddf0c944bc72'; // md5('pass')
