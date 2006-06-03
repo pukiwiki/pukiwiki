@@ -1,52 +1,42 @@
-NOTE: This document become old, needs help
-(2004-08-28)
-----------------------------------------------
+PukiWiki UPDATING
+$Id: UPDATING.en.txt,v 1.2 2006/06/03 07:10:11 henoheno Exp $
 
 
-INCOMPATIBILITY INFORMATION
-===========================
+INCOMPATIBILITY INFORMATION BETWEEN RELEASES
+============================================
 
+PukiWiki 1.4.7: Incompatibility from PukiWiki 1.4.6
 
-INCOMPATIBILIY BETWEEN 1.3 AND 1.4
+   1. Default value of administrator's password ($adminpass) had been changed
+     from "pass" to "(A string never authenticatable)"
+       * Password for PukiWiki 1.4.6 is usable for 1.4.7
+       * Password format had been changed from 1.4.6 (See BugTrack/709)
 
-    1.  [[WikiName]] and WikiName means the same page.
-    2.  1.3.x is different from 1.4.x in the format of "Definition List":
-        ": :" in 1.3.X and ": |" in 1.4.X 
-    3.  "List" and "Quotation" can contain the other "List" and "Quotation" as its
-        Child Element. (1.3.x : "List" can contain only the same kind of "List",ex., 
-        "-" can contain "-","--"... . "Quataion" can contain only "Quatation".) 
+   2. The implementation of "OS command execution after write" had been
+     changed from "with a global variable($update_exec)" to "with a
+     constant(PKWK_UPDATE_EXEC)" for security reason
 
+      If someone tricks you into using malicious plugin, that can rewrite
+      $update_exec dynamically, there will be a vulnerability called
+      "OS command injection".
 
-CHANGELOG
-=========
+   3. Default contents: Page "FormatRule" had been renamed to
+     "FormattingRules" to show text-formatting-rules with edit plugin
+     correctly
 
-    *   2003-11-17 1.4.2 by PukiWiki Developers Team
+     And the setting "$rule_page" now specifies not "Text Formatting Rules"
+     (No such page ...) but "FormattingRules".  (See BugTrack2/118)
 
-         Fixed BugTrack/487 (AutoLink probrem)
-             [[cvs:func.php]](v1.4:r1.54)
-         Fixed BugTrack/488 (mb_substr() implementation)
-             [[cvs:mbsring.php]](v1.4:r1.9)
-         Fixed function name conflict
-             [[cvs:convert_html.php]](v1.4:r1.57)
-         Update plugin/tracker.inc.php
-             [[cvs:plugin/tracker.inc.php]](v1.4:r1.18)
-         Fixed parameter error handling
-             [[cvs:plugin/template.inc.php]](v1.4:r1.16)
-         Fixed variable name mismatch
-             [[cvs:plugin/rename.inc.php]](v1.4:r1.9)
+     If you add the page by hand, please don't forget to "freeze" the page!
 
-    *   2003-11-10 1.4.1 by PukiWiki Developers Team
+   4. Files: These files had been removed
+     pukiwiki.php    : If you want it, please just copy index.php
+     skin/default.js : No one use this file ...
 
-         Fixed BugTrack/478
-         Fixed BugTrack/479
-         Fixed BugTrack/480
-         Fixed BugTrack/482
-         Fixed BugTrack/483
-         Fixed BugTrack/485
-         Fixed BugTrack/486
-         Update plugin/tracker.inc.php
-         Fixed backup.php (array initialize) 
-        
-    *   2003-11-03 1.4 by PukiWiki Developers Team
-         First official release of 1.4 series
+   5. Footnotes: Footnote hyperlinks will never hold "Whole footnote text"
+      but "First N letters of the footnote text"
+
+   6. Plugins: These plugins will follow $non_list (non-listing filter
+     pattern) setting: attach, popular, related, touchgraph, yetlist
+     (See BugTrack2/140, BugTrack2/175)
 
