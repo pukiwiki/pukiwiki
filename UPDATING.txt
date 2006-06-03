@@ -1,5 +1,5 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.36 2006/05/30 14:51:25 henoheno Exp $
+$Id: UPDATING.txt,v 1.37 2006/06/03 07:10:39 henoheno Exp $
 
 
 互換性に関する記述
@@ -16,7 +16,7 @@ PukiWiki 1.4.7: PukiWiki 1.4.6 との非互換点
 
    2. コマンド実行機能の仕様変更
      ページが更新される度に、"管理者が指定したコマンド" をサーバー内部で実行
-     するためのグローバル変数($update_exec)は、定数(PKWK_UPDATE_ EXEC)になり
+     するためのグローバル変数($update_exec)は、定数(PKWK_UPDATE_EXEC)になり
      ました。
      
      グローバル変数にコマンド文字列を格納している場合、悪意のある第三者が作成
