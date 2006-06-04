@@ -223,9 +223,11 @@ stationaryプラグインは単純な文字列を表示する以外は何もしません。
 '';''
 ~''#topicpath''
 :概要|
-~パンくずリスト(topicpath)と呼ばれる、ページの階層表現のユーザーインターフェースを提供するプラグイン。
-~パンくずリスト（Topic path）は現在参照しているウェブページの階層を表現するユーザーインターフェースです。例えば[[PukiWiki/ツアー]]というページに#topicpathと書くと、以下の様な表記に置き換わります。
- [[Top>FrontPage]]/[[PukiWiki>PukiWiki]]/[[ツアー>PukiWiki/ツアー]]
+~パンくずリスト(topicpath)と呼ばれる、現在参照しているウェブページの階層を表現するユーザーインターフェースを提供するプラグインです。
+~例えば
+ [[PukiWiki/ツアー]]
+というページに#topicpathと書くと、以下の様な表記に置き換わります。
+ [[Top>FrontPage]] / [[PukiWiki>PukiWiki]] / [[ツアー>PukiWiki/ツアー]]
 ~基本的には以下の２通りの使い方を想定しています。
 ++「ほげ/ふが/げほ」など、２〜３階層以上の深いページでページの行き来をしやすくするために表示する
 ++スキンに組み込み、ページタイトル下のURLの代わりに全てのページで表示する
@@ -247,7 +249,7 @@ stationaryプラグインは単純な文字列を表示する以外は何もしません。
 :書式|
 ''?plugin=touchgraph''
 :概要|
-~TouchGraphWikiBrowser用のインデックスを作ります。
+~[[TouchGraphWikiBrowser>http://www.touchgraph.com/]]用のインデックスを作ります。
 
 
 **tracker [#rf5296e2]
