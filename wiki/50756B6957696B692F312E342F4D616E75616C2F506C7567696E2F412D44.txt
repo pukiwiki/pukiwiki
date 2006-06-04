@@ -161,6 +161,7 @@
 --PLUGIN_ATTACH_DELETE_ADMIN_ONLY　管理者だけが添付ファイルを削除できるようにするか
 --PLUGIN_ATTACH_DELETE_ADMIN_NOBACKUP　PLUGIN_ATTACH_DELETE_ADMIN_ONLYのとき、管理者が添付ファイルを削除するときは、バックアップを作らない
 --PLUGIN_ATTACH_PASSWORD_REQUIRE　アップロード/削除時にパスワードを要求するか(PLUGIN_ATTACH_〜_ADMIN_ONLYが優先)
+--PLUGIN_ATTACH_RENAME_ENABLE　ファイルのリネームが可能か
 --PLUGIN_ATTACH_FILE_MODE　アップロードされたファイルのアクセス権
 --PLUGIN_ATTACH_FILE_ICON　アイコンイメージのファイル
 --PLUGIN_ATTACH_CONFIG_PAGE_MIME　ダウンロード時のmime-typeを記述したページ
