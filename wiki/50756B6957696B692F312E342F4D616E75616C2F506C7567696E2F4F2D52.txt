@@ -1,7 +1,7 @@
 #freeze
 #nofollow
 #norelated
-#navi(PukiWiki/1.4/Manual/Plugin)
+#navi(../)
 #contents
 ------------------------------
 * O [#c4c5830a]
@@ -413,4 +413,4 @@
 ~XHTML 1.1のルビに対応したブラウザでないと、ルビとして表示されません。IE5.5/6では表示できます。Netscape 7/Mozillaでは[[XHTML Ruby Support:http://white.sakura.ne.jp/~piro/xul/_rubysupport.html]]を組み込めば表示できます。
 ~ルビに対応していないブラウザではルビをふる文字列の直後にルビが( )に入れられて表示されます。
 
-#navi(PukiWiki/1.4/Manual/Plugin)
+#navi(../)

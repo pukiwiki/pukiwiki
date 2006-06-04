@@ -1,7 +1,7 @@
 #freeze
 #nofollow
 #norelated
-#navi(PukiWiki/1.4/Manual/Plugin)
+#navi(../)
 #contents
 ------------------------------
 * S [#mee1bd43]
@@ -364,4 +364,4 @@ stationaryプラグインは単純な文字列を表示する以外は何もしません。
 ~配布ファイルに生成済のentities.datが付属するため、通常使用する機会はありません。
 
 
-#navi(PukiWiki/1.4/Manual/Plugin)
+#navi(../)

@@ -1,7 +1,7 @@
 #freeze
 #nofollow
 #norelated
-#navi(PukiWiki/1.4/Manual/Plugin)
+#navi(../)
 #contents
 ------------------------------
 * E [#q45dc325]
@@ -67,4 +67,5 @@
 ~ページ名には凍結するページを指定します。ページ名はエンコードされている必要があります。コマンド型でfreezeプラグインを実行するとブロック型プラグインが凍結対象のページ先頭に挿入（凍結解除の場合は削除）されます。
 ~ブロック型のfreezeプラグインはPukiWikiが内部的に利用するもので、基本的に利用者が意識する機会はありません。
 
-#navi(PukiWiki/1.4/Manual/Plugin)
+
+#navi(../)

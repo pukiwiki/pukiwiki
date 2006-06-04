@@ -1,7 +1,7 @@
 #freeze
 #nofollow
 #norelated
-#navi(PukiWiki/1.4/Manual/Plugin)
+#navi(../)
 #contents
 ------------------------------
 * A [#w8de4799]
@@ -570,4 +570,4 @@ Yellow = "#FFFF00"
 ページ間のリンク情報キャッシュを更新する必要があります。
 
 
-#navi(PukiWiki/1.4/Manual/Plugin)
+#navi(../)
