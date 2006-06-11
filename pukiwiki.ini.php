@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.139 2006/06/03 11:32:18 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.140 2006/06/11 14:35:39 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -250,8 +250,8 @@ $read_auth = 0;
 
 $read_auth_pages = array(
 	// Regex		   Username
-	'#ひきこもるほげ#'	=> 'hoge',
-	'#(ネタバレ|ねたばれ)#'	=> 'foo,bar,hoge',
+	'#HogeHoge#'		=> 'hoge',
+	'#(NETABARE|NetaBare)#'	=> 'foo,bar,hoge',
 );
 
 /////////////////////////////////////////////////
@@ -260,9 +260,9 @@ $edit_auth = 0;
 
 $edit_auth_pages = array(
 	// Regex		   Username
-	'#Barの公開日記#'	=> 'bar',
-	'#ひきこもるほげ#'	=> 'hoge',
-	'#(ネタバレ|ねたばれ)#'	=> 'foo,bar,hoge',
+	'#BarDiary#'		=> 'bar',
+	'#HogeHoge#'		=> 'hoge',
+	'#(NETABARE|NetaBare)#'	=> 'foo,bar,hoge',
 );
 
 /////////////////////////////////////////////////
