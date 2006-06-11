@@ -1,5 +1,5 @@
 PukiWiki UPDATING
-$Id: UPDATING.en.txt,v 1.2 2006/06/03 07:10:11 henoheno Exp $
+$Id: UPDATING.en.txt,v 1.3 2006/06/11 15:24:35 henoheno Exp $
 
 
 INCOMPATIBILITY INFORMATION BETWEEN RELEASES
@@ -9,16 +9,16 @@ PukiWiki 1.4.7: Incompatibility from PukiWiki 1.4.6
 
    1. Default value of administrator's password ($adminpass) had been changed
      from "pass" to "(A string never authenticatable)"
-       * Password for PukiWiki 1.4.6 is usable for 1.4.7
+       * Password for PukiWiki 1.4.6 is also usable for 1.4.7
        * Password format had been changed from 1.4.6 (See BugTrack/709)
 
    2. The implementation of "OS command execution after write" had been
      changed from "with a global variable($update_exec)" to "with a
      constant(PKWK_UPDATE_EXEC)" for security reason
 
-      If someone tricks you into using malicious plugin, that can rewrite
-      $update_exec dynamically, there will be a vulnerability called
-      "OS command injection".
+      If someone tricks you into using malicious (but obfuscated) plugin,
+      that can simply rewrite $update_exec, to do something nasty.
+      (a vulnerability called "OS command injection")
 
    3. Default contents: Page "FormatRule" had been renamed to
      "FormattingRules" to show text-formatting-rules with edit plugin
