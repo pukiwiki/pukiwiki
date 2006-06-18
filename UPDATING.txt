@@ -1,5 +1,5 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.38 2006/06/11 15:35:52 henoheno Exp $
+$Id: UPDATING.txt,v 1.39 2006/06/18 02:52:42 henoheno Exp $
 
 
 リリース間の互換性に関する記述
@@ -50,7 +50,7 @@ PukiWiki 1.4.7: PukiWiki 1.4.6 との非互換点
    5. 脚注: 脚注のリンクに埋め込まれていた "脚注そのもの(文字列)" は、脚注全
      文ではなく、決められた文字数だけ出力します。 (See BugTrack/420)
 
-   6. プラグイン: 以下の付プラグインは、$non_list(一覧しないパターン) に合致
+   6. プラグイン: 以下のプラグインは、$non_list(一覧しないパターン) に合致
      するページを表示しません。 (See BugTrack2/140, BugTrack2/175)
        attach, popular, related, touchgraph, yetlist
 
