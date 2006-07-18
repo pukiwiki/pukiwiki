@@ -6,13 +6,13 @@ This page will be shown when no page name is specified.
 Please edit as you like :) ((To avoid easy-SPAMming and easy-tricks, please freeze this page after describing your site's subject and/or destination. And please note about changing administrator's password!))
 
 
-** Test pages
+** Test pages [#g9940424]
 - [[SandBox]] - Edit this page freely. Try it.
 - [[InterWikiSandBox]] - Try [[InterWiki]] here.
 
-** About PukiWiki
+** About PukiWiki [#h1775f3c]
 - [[PukiWiki]] - Introduction to PukiWiki
 
-** Documents
+** Documents [#v69c449c]
 - [[Help]] - How to edit pages in PukiWiki.
-- [[FormatRule]] - Text formatting rules.
+- [[FormattingRules]] - Text formatting rules.

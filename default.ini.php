@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: default.ini.php,v 1.17.2.1 2005/12/11 18:03:45 teanan Exp $
+// $Id: default.ini.php,v 1.17.2.2 2006/07/18 17:56:23 teanan Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -71,6 +71,9 @@ $hr = '<hr class="full_hr" />';
 
 /////////////////////////////////////////////////
 // 脚注機能関連
+
+// 脚注のアンカーに埋め込む本文の最大長
+define('PKWK_FOOTNOTE_TITLE_MAX', 16); // Characters
 
 // 脚注のアンカーを相対パスで表示する (0 = 絶対パス)
 //  * 相対パスの場合、以前のバージョンのOperaで問題になることがあります
@@ -149,8 +152,8 @@ $facemark_rules = array(
 	'\s(\(\.\.;)'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/oh.png" />',
 	'\s(\(\^_-\))'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/wink.png" />',
 	'\s(\(--;)'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/sad.png" />',
-	'\s(\(\^\^;)'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/worried.png" />',
 	'\s(\(\^\^;\))'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/worried.png" />',
+	'\s(\(\^\^;)'	=> ' <img alt="$1" src="' . IMAGE_DIR . 'face/worried.png" />',
 
 	// Push buttons, 0-9 and sharp (Compatibility with cell phones)
 	'&amp;(pb1);'	=> '[1]',

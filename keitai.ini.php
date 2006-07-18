@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: keitai.ini.php,v 1.18.2.1 2005/12/11 18:03:45 teanan Exp $
+// $Id: keitai.ini.php,v 1.18.2.2 2006/07/18 17:56:23 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -66,6 +66,9 @@ $hr = '<hr>';
 
 /////////////////////////////////////////////////
 // 脚注機能関連
+
+// 脚注のアンカーに埋め込む本文の最大長
+define('PKWK_FOOTNOTE_TITLE_MAX', 0); // Characters
 
 // 脚注のアンカーを相対パスで表示する (0 = 絶対パス)
 //  * 相対パスの場合、以前のバージョンのOperaで問題になることがあります

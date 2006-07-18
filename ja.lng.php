@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: ja.lng.php,v 1.6.2.1 2005/12/11 18:03:45 teanan Exp $
+// $Id: ja.lng.php,v 1.6.2.2 2006/07/18 17:56:23 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -80,9 +80,9 @@ $_title_cannotread = '$1 ¤Ï±ÜÍ÷¤Ç¤­¤Þ¤»¤ó';
 $_msg_auth         = 'PukiWikiAuth';
 
 ///////////////////////////////////////
-// Help 'wiki format rule'.
-$rule_page = 'À°·Á¥ë¡¼¥ë';
-$help_page = '¥Ø¥ë¥×';
+// Page name
+$rule_page = 'FormattingRules';	// Formatting rules
+$help_page = 'Help';		// Help
 
 ///////////////////////////////////////
 // TrackBack (REMOVED)
@@ -147,6 +147,7 @@ $_attach_messages = array(
 	'msg_deleted'  => '$1 ¤«¤é¥Õ¥¡¥¤¥ë¤òºï½ü¤·¤Þ¤·¤¿',
 	'msg_freezed'  => 'ÅºÉÕ¥Õ¥¡¥¤¥ë¤òÅà·ë¤·¤Þ¤·¤¿¡£',
 	'msg_unfreezed'=> 'ÅºÉÕ¥Õ¥¡¥¤¥ë¤òÅà·ë²ò½ü¤·¤Þ¤·¤¿¡£',
+	'msg_renamed'  => 'ÅºÉÕ¥Õ¥¡¥¤¥ë¤ÎÌ¾Á°¤òÊÑ¹¹¤·¤Þ¤·¤¿¡£',
 	'msg_upload'   => '$1 ¤Ø¤ÎÅºÉÕ',
 	'msg_info'     => 'ÅºÉÕ¥Õ¥¡¥¤¥ë¤Î¾ðÊó',
 	'msg_confirm'  => '<p>%s ¤òºï½ü¤·¤Þ¤¹¡£</p>',
@@ -162,6 +163,8 @@ $_attach_messages = array(
 	'msg_freeze'   => '¤³¤Î¥Õ¥¡¥¤¥ë¤òÅà·ë¤·¤Þ¤¹¡£',
 	'msg_unfreeze' => '¤³¤Î¥Õ¥¡¥¤¥ë¤òÅà·ë²ò½ü¤·¤Þ¤¹¡£',
 	'msg_isfreeze' => '¤³¤Î¥Õ¥¡¥¤¥ë¤ÏÅà·ë¤µ¤ì¤Æ¤¤¤Þ¤¹¡£',
+	'msg_rename'   => 'Ì¾Á°¤òÊÑ¹¹¤·¤Þ¤¹¡£',
+	'msg_newname'  => '¿·¤·¤¤Ì¾Á°',
 	'msg_require'  => '(´ÉÍý¼Ô¥Ñ¥¹¥ï¡¼¥É¤¬É¬Í×¤Ç¤¹)',
 	'msg_filesize' => '¥µ¥¤¥º',
 	'msg_date'     => 'ÅÐÏ¿Æü»þ',
@@ -175,6 +178,7 @@ $_attach_messages = array(
 	'err_notfound' => '$1 ¤Ë¤½¤Î¥Õ¥¡¥¤¥ë¤Ï¸«¤Ä¤«¤ê¤Þ¤»¤ó',
 	'err_noexist'  => 'ÅºÉÕ¥Õ¥¡¥¤¥ë¤¬¤¢¤ê¤Þ¤»¤ó¡£',
 	'err_delete'   => '$1 ¤«¤é¥Õ¥¡¥¤¥ë¤òºï½ü¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿',
+	'err_rename'   => '¥Õ¥¡¥¤¥ëÌ¾¤òÊÑ¹¹¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿',
 	'err_password' => '¥Ñ¥¹¥ï¡¼¥É¤¬°ìÃ×¤·¤Þ¤»¤ó¡£',
 	'err_adminpass'=> '´ÉÍý¼Ô¥Ñ¥¹¥ï¡¼¥É¤¬°ìÃ×¤·¤Þ¤»¤ó¡£',
 	'btn_upload'   => '¥¢¥Ã¥×¥í¡¼¥É',
@@ -377,6 +381,8 @@ $_msg_searching = 'Á´¤Æ¤Î¥Ú¡¼¥¸¤«¤éÃ±¸ì¤ò¸¡º÷¤·¤Þ¤¹¡£ÂçÊ¸»ú¾®Ê¸»ú¤Î¶èÊÌ¤Ï¤¢¤ê¤Þ¤
 $_btn_search    = '¸¡º÷';
 $_btn_and       = 'AND¸¡º÷';
 $_btn_or        = 'OR¸¡º÷';
+$_search_pages  = '$1 ¤«¤é»Ï¤Þ¤ë¥Ú¡¼¥¸¤ò¸¡º÷';
+$_search_all    = 'Á´¤Æ¤Î¥Ú¡¼¥¸¤ò¸¡º÷';
 
 ///////////////////////////////////////
 // source.inc.php

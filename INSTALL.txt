@@ -7,7 +7,7 @@
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
 
-    $Id: INSTALL.txt,v 1.8.2.1 2005/12/11 18:03:45 teanan Exp $
+    $Id: INSTALL.txt,v 1.8.2.2 2006/07/18 17:56:23 teanan Exp $
 
 インストール
     PukiWikiはPHPスクリプトであるため、(例えばPerlのように)スクリプトに実行権
@@ -60,7 +60,9 @@
         とをお薦めします。(詳細:BugTrack/744)
 
     3.  ファイルをFTPなどでサーバに転送します。
-      ※FTPの転送モードは「バイナリ(bin)」を使用して下さい
+      基本的に何の変換も行わず、「そのまま」転送して下さい
+      ・ファイル名や、ファイル名の大文字小文字などを変更しないで下さい
+      ・FTPの転送モードは「バイナリ(bin)」を使用して下さい
 
     4.  サーバ上のファイルおよびディレクトリのパーミッションを確認します。
 

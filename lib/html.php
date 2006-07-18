@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.30.2.1 2005/12/11 18:03:45 teanan Exp $
+// $Id: html.php,v 1.30.2.2 2006/07/18 17:56:00 teanan Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -122,9 +122,9 @@ function catbody($title, $page, $body)
 
 		// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
 		// with array_splice(), array_flip()
-		$tmp_array = preg_split('/\s+/', $vars['word'], -1, PREG_SPLIT_NO_EMPTY);
-		$tmp_array = array_splice($tmp_array, 0, 10);
-		$words = array_flip($tmp_array);
+		$words = preg_split('/\s+/', $vars['word'], -1, PREG_SPLIT_NO_EMPTY);
+		$words = array_splice($words, 0, 10); // Max: 10 words
+		$words = array_flip($words);
 
 		$keys = array();
 		foreach ($words as $word=>$id) $keys[$word] = strlen($word);
@@ -133,14 +133,23 @@ function catbody($title, $page, $body)
 		$id = 0;
 		foreach ($keys as $key=>$pattern) {
 			$s_key    = htmlspecialchars($key);
-			$pattern  = '/<[^>]*>|(' . $pattern . ')|&[^;]+;/';
-			$callback = create_function(
-				'$arr',
-				'return (count($arr) > 1) ? \'<strong class="word' .
-					$id++ . '">\' . $arr[1] . \'</strong>\' : $arr[0];'
+			$pattern  = '/' .
+				'<textarea[^>]*>.*?<\/textarea>' .	// Ignore textareas
+				'|' . '<[^>]*>' .			// Ignore tags
+				'|' . '&[^;]+;' .			// Ignore entities
+				'|' . '(' . $pattern . ')' .		// $matches[1]: Regex for a search word
+				'/sS';
+			$decorate_Nth_word = create_function(
+				'$matches',
+				'return (isset($matches[1])) ? ' .
+					'\'<strong class="word' .
+						$id .
+					'">\' . $matches[1] . \'</strong>\' : ' .
+					'$matches[0];'
 			);
-			$body  = preg_replace_callback($pattern, $callback, $body);
-			$notes = preg_replace_callback($pattern, $callback, $notes);
+			$body  = preg_replace_callback($pattern, $decorate_Nth_word, $body);
+			$notes = preg_replace_callback($pattern, $decorate_Nth_word, $notes);
+			++$id;
 		}
 	}
 
@@ -154,31 +163,32 @@ function catbody($title, $page, $body)
 function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 {
 	global $script, $vars, $rows, $cols, $hr, $function_freeze;
-	global $_btn_addtop, $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel,
-		$_msg_help, $_btn_notchangetimestamp;
-	global $whatsnew, $_btn_template, $_btn_load, $non_list, $load_template_func;
+	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel, $_msg_help;
+	global $whatsnew, $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
 
 	// Newly generate $digest or not
 	if ($digest === FALSE) $digest = md5(join('', get_source($page)));
 
-	$refer = $template = $addtag = $add_top = '';
-
-	$checked_top  = isset($vars['add_top'])     ? ' checked="checked"' : '';
-	$checked_time = isset($vars['notimestamp']) ? ' checked="checked"' : '';
-
+	$refer = $template = '';
+ 
+ 	// Add plugin
+	$addtag = $add_top = '';
 	if(isset($vars['add'])) {
-		$addtag  = '<input type="hidden" name="add" value="true" />';
-		$add_top = '<input type="checkbox" name="add_top" value="true"' .
-			$checked_top . ' /><span class="small">' .
-			$_btn_addtop . '</span>';
+		global $_btn_addtop;
+		$addtag  = '<input type="hidden" name="add"    value="true" />';
+		$add_top = isset($vars['add_top']) ? ' checked="checked"' : '';
+		$add_top = '<input type="checkbox" name="add_top" ' .
+			'id="_edit_form_add_top" value="true"' . $add_top . ' />' . "\n" .
+			'  <label for="_edit_form_add_top">' .
+				'<span class="small">' . $_btn_addtop . '</span>' .
+			'</label>';
 	}
 
 	if($load_template_func && $b_template) {
 		$pages  = array();
-		$non_list_pattern = '/' . $non_list . '/';
 		foreach(get_existpages() as $_page) {
-			if ($_page == $whatsnew || preg_match($non_list_pattern, $_page))
+			if ($_page == $whatsnew || check_non_list($_page))
 				continue;
 			$s_page = htmlspecialchars($_page);
 			$pages[$_page] = '   <option value="' . $s_page . '">' .
@@ -207,25 +217,29 @@ EOD;
 	$b_preview   = isset($vars['preview']); // TRUE when preview
 	$btn_preview = $b_preview ? $_btn_repreview : $_btn_preview;
 
+	// Checkbox 'do not change timestamp'
 	$add_notimestamp = '';
-	if ( $notimeupdate != 0 ) {
-		// enable 'do not change timestamp'
-		$add_notimestamp = <<<EOD
-  <input type="checkbox" name="notimestamp" id="_edit_form_notimestamp" value="true"$checked_time />
-  <label for="_edit_form_notimestamp"><span class="small">$_btn_notchangetimestamp</span></label>
-EOD;
-		if ( $notimeupdate == 2 ) {
-			// enable only administrator
-			$add_notimestamp .= <<<EOD
-  <input type="password" name="pass" size="12" />
-EOD;
+	if ($notimeupdate != 0) {
+		global $_btn_notchangetimestamp;
+		$checked_time = isset($vars['notimestamp']) ? ' checked="checked"' : '';
+		// Only for administrator
+		if ($notimeupdate == 2) {
+			$add_notimestamp = '   ' .
+				'<input type="password" name="pass" size="12" />' . "\n";
 		}
-		$add_notimestamp .= '&nbsp;';
+		$add_notimestamp = '<input type="checkbox" name="notimestamp" ' .
+			'id="_edit_form_notimestamp" value="true"' . $checked_time . ' />' . "\n" .
+			'   ' . '<label for="_edit_form_notimestamp"><span class="small">' .
+			$_btn_notchangetimestamp . '</span></label>' . "\n" .
+			$add_notimestamp .
+			'&nbsp;';
 	}
 
+	// 'margin-bottom', 'float:left', and 'margin-top'
+	// are for layout of 'cancel button'
 	$body = <<<EOD
-<form action="$script" method="post">
- <div class="edit_form">
+<div class="edit_form">
+ <form action="$script" method="post" style="margin-bottom:0px;">
 $template
   $addtag
   <input type="hidden" name="cmd"    value="edit" />
@@ -233,14 +247,20 @@ $template
   <input type="hidden" name="digest" value="$s_digest" />
   <textarea name="msg" rows="$rows" cols="$cols">$s_postdata</textarea>
   <br />
-  <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
-  <input type="submit" name="write"   value="$_btn_update" accesskey="s" />
-  $add_top
-  $add_notimestamp
-  <input type="submit" name="cancel"  value="$_btn_cancel" accesskey="c" />
+  <div style="float:left;">
+   <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
+   <input type="submit" name="write"   value="$_btn_update" accesskey="s" />
+   $add_top
+   $add_notimestamp
+  </div>
   <textarea name="original" rows="1" cols="1" style="display:none">$s_original</textarea>
- </div>
-</form>
+ </form>
+ <form action="$script" method="post" style="margin-top:0px;">
+  <input type="hidden" name="cmd"    value="edit" />
+  <input type="hidden" name="page"   value="$s_page" />
+  <input type="submit" name="cancel" value="$_btn_cancel" accesskey="c" />
+ </form>
+</div>
 EOD;
 
 	if (isset($vars['help'])) {
@@ -257,7 +277,7 @@ EOD;
 // Related pages
 function make_related($page, $tag = '')
 {
-	global $script, $vars, $rule_related_str, $related_str, $non_list;
+	global $script, $vars, $rule_related_str, $related_str;
 	global $_ul_left_margin, $_ul_margin, $_list_pad_str;
 
 	$links = links_get_related($page);
@@ -269,9 +289,8 @@ function make_related($page, $tag = '')
 	}
 
 	$_links = array();
-	$non_list_pattern = '/' . $non_list . '/';
 	foreach ($links as $page=>$lastmod) {
-		if (preg_match($non_list_pattern, $page)) continue;
+		if (check_non_list($page)) continue;
 
 		$r_page   = rawurlencode($page);
 		$s_page   = htmlspecialchars($page);

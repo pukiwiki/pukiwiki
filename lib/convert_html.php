@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: convert_html.php,v 1.7.2.1 2005/12/11 18:03:45 teanan Exp $
+// $Id: convert_html.php,v 1.7.2.2 2006/07/18 17:56:00 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -25,12 +25,12 @@ function convert_html($lines)
 	return $body->toString();
 }
 
-// ブロック要素
+// Block elements
 class Element
 {
-	var $parent;   // 親要素
-	var $last;     // 次に要素を挿入する先
-	var $elements; // 要素の配列
+	var $parent;
+	var $elements; // References of childs
+	var $last;     // Insert new one at the back of the $last
 
 	function Element()
 	{
@@ -92,10 +92,11 @@ class Element
 	}
 }
 
+// Returns inline-related object
 function & Factory_Inline($text)
 {
+	// Check the first letter of the line
 	if (substr($text, 0, 1) == '~') {
-		// 行頭 '~' 。パラグラフ開始
 		return new Paragraph(' ' . substr($text, 1));
 	} else {
 		return new Inline($text);
@@ -161,7 +162,7 @@ function & Factory_Div(& $root, $text)
 	return new Paragraph($text);
 }
 
-// インライン要素
+// Inline elements
 class Inline extends Element
 {
 	function Inline($text)
@@ -282,6 +283,7 @@ class HRule extends Element
 	}
 }
 
+// Lists (UL, OL, DL)
 class ListContainer extends Element
 {
 	var $tag;
@@ -295,16 +297,13 @@ class ListContainer extends Element
 	{
 		parent::Element();
 
-		//マージンを取得
 		$var_margin      = '_' . $tag . '_margin';
 		$var_left_margin = '_' . $tag . '_left_margin';
-
 		global $$var_margin, $$var_left_margin;
 
 		$this->margin      = $$var_margin;
 		$this->left_margin = $$var_left_margin;
 
-		//初期化
 		$this->tag   = $tag;
 		$this->tag2  = $tag2;
 		$this->level = min(3, strspn($text, $head));
@@ -343,12 +342,11 @@ class ListContainer extends Element
 		if (! is_a($obj, get_class($this)))
 			return $this->last = & $this->last->insert($obj);
 
-		// 行頭文字のみの指定時はUL/OLブロックを脱出
-		// BugTrack/524
+		// Break if no elements found (BugTrack/524)
 		if (count($obj->elements) == 1 && empty($obj->elements[0]->elements))
-			return $this->last->parent; // up to ListElement.
+			return $this->last->parent; // up to ListElement
 
-		// Move elements.
+		// Move elements
 		foreach(array_keys($obj->elements) as $key)
 			parent::insert($obj->elements[$key]);
 
@@ -518,7 +516,7 @@ class TableCell extends Element
 		}
 
 		if ($text != '' && $text{0} == '#') {
-			// セル内容が'#'で始まるときはDivクラスを通してみる
+			// Try using Div class for this $text
 			$obj = & Factory_Div($this, $text);
 			if (is_a($obj, 'Paragraph'))
 				$obj = & $obj->elements[0];
@@ -594,7 +592,7 @@ class Table extends Element
 	{
 		static $parts = array('h'=>'thead', 'f'=>'tfoot', ''=>'tbody');
 
-		// rowspanを設定(下から上へ)
+		// Set rowspan (from bottom, to top)
 		for ($ncol = 0; $ncol < $this->col; $ncol++) {
 			$rowspan = 1;
 			foreach (array_reverse(array_keys($this->elements)) as $nrow) {
@@ -604,13 +602,14 @@ class Table extends Element
 					continue;
 				}
 				$row[$ncol]->rowspan = $rowspan;
-				while (--$rowspan) // 行種別を継承する
+				// Inherits row type
+				while (--$rowspan)
 					$this->types[$nrow + $rowspan] = $this->types[$nrow];
 				$rowspan = 1;
 			}
 		}
 
-		// colspan,styleを設定
+		// Set colspan and style
 		$stylerow = NULL;
 		foreach (array_keys($this->elements) as $nrow) {
 			$row = & $this->elements[$nrow];
@@ -625,14 +624,15 @@ class Table extends Element
 				$row[$ncol]->colspan = $colspan;
 				if ($stylerow !== NULL) {
 					$row[$ncol]->setStyle($stylerow[$ncol]->style);
-					while (--$colspan) // 列スタイルを継承する
+					// Inherits column style
+					while (--$colspan)
 						$row[$ncol - $colspan]->setStyle($stylerow[$ncol]->style);
 				}
 				$colspan = 1;
 			}
 		}
 
-		// テキスト化
+		// toString
 		$string = '';
 		foreach ($parts as $type => $part)
 		{
@@ -837,7 +837,7 @@ class Body extends Element
 				$line = $matches[2];
 			}
 
-			$line = preg_replace("/[\r\n]*$/", '', $line);
+			$line = rtrim($line, "\r\n");
 
 			// Empty
 			if ($line == '') {
@@ -965,8 +965,8 @@ class Contents_UList extends ListContainer
 {
 	function Contents_UList($text, $level, $id)
 	{
-		// テキストのリフォーム
-		// 行頭\nで整形済みを表す ... X(
+		// Reformatting $text
+		// A line started with "\n" means "preformatted" ... X(
 		make_heading($text);
 		$text = "\n" . '<a href="#' . $id . '">' . $text . '</a>' . "\n";
 		parent::ListContainer('ul', 'li', '-', str_repeat('-', $level));

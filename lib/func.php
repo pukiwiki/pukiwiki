@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.33.2.5 2006/04/07 18:37:19 teanan Exp $
+// $Id: func.php,v 1.33.2.6 2006/07/18 17:56:00 teanan Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -92,6 +92,18 @@ function is_freeze($page, $clearcache = FALSE)
 	}
 }
 
+// Handling $non_list
+// $non_list will be preg_quote($str, '/') later.
+function check_non_list($page = '')
+{
+	global $non_list;
+	static $regex;
+
+	if (! isset($regex)) $regex = '/' . $non_list . '/';
+
+	return preg_match($regex, $page);
+}
+
 // Auto template
 function auto_template($page)
 {
@@ -126,96 +138,127 @@ function auto_template($page)
 	return $body;
 }
 
-// Expand search words
-function get_search_words($words, $do_escape = FALSE)
+// Expand all search-words to regexes and push them into an array
+function get_search_words($words = array(), $do_escape = FALSE)
 {
-	$retval = array();
+	static $init, $mb_convert_kana, $pre, $post, $quote = '/';
 
-	$pre = $post = '';
-	if (SOURCE_ENCODING == 'EUC-JP') {
-		// Perl memo - Correct pattern-matching with EUC-JP
-		// http://www.din.or.jp/~ohzaki/perl.htm#JP_Match (Japanese)
-		$pre  = '(?<!\x8F)';
-		$post =	'(?=(?:[\xA1-\xFE][\xA1-\xFE])*' . // JIS X 0208
-			'(?:[\x00-\x7F\x8E\x8F]|\z))';     // ASCII, SS2, SS3, or the last
+	if (! isset($init)) {
+		// function: mb_convert_kana() is for Japanese code only
+		if (LANG == 'ja' && function_exists('mb_convert_kana')) {
+			$mb_convert_kana = create_function('$str, $option',
+				'return mb_convert_kana($str, $option, SOURCE_ENCODING);');
+		} else {
+			$mb_convert_kana = create_function('$str, $option',
+				'return $str;');
+		}
+		if (SOURCE_ENCODING == 'EUC-JP') {
+			// Perl memo - Correct pattern-matching with EUC-JP
+			// http://www.din.or.jp/~ohzaki/perl.htm#JP_Match (Japanese)
+			$pre  = '(?<!\x8F)';
+			$post =	'(?=(?:[\xA1-\xFE][\xA1-\xFE])*' . // JIS X 0208
+				'(?:[\x00-\x7F\x8E\x8F]|\z))';     // ASCII, SS2, SS3, or the last
+		} else {
+			$pre = $post = '';
+		}
+		$init = TRUE;
 	}
 
-	// function: just preg_quote()
-	$quote_func = create_function('$str', 'return preg_quote($str, \'/\');');
+	if (! is_array($words)) $words = array($words);
 
-	// function: mb_convert_kana() or nothing
-	$convert_kana = create_function('$str, $option',
-		(LANG == 'ja' && function_exists('mb_convert_kana')) ?
-			'return mb_convert_kana($str, $option);' : 'return $str;');
-
+	// Generate regex for the words
+	$regex = array();
 	foreach ($words as $word) {
-		// 'a': Zenkaku-Alphabet to Hankaku-Alphabet
-		// 'K': Hankaku-Katakana to Zenkaku-Katakana
-		// 'C': Zenkaku-Hiragana to Zenkaku-Katakana
-		// 'V': Merge 'A character and A voiced sound symbol' to 'A character with the symbol'
-		$word_zk = $convert_kana($word, 'aKCV');
-		$len     = mb_strlen($word_zk);
-		$chars   = array();
-		for ($pos = 0; $pos < $len; $pos++) {
-			$char = mb_substr($word_zk, $pos, 1);
-			$arr = array($quote_func($do_escape ? htmlspecialchars($char) : $char));
+		$word = trim($word);
+		if ($word == '') continue;
+
+		// Normalize: ASCII letters = to single-byte. Others = to Zenkaku and Katakana
+		$word_nm = $mb_convert_kana($word, 'aKCV');
+		$nmlen   = mb_strlen($word_nm, SOURCE_ENCODING);
+
+		// Each chars may be served ...
+		$chars = array();
+		for ($pos = 0; $pos < $nmlen; $pos++) {
+			$char = mb_substr($word_nm, $pos, 1, SOURCE_ENCODING);
+
+			// Just normalized one? (ASCII char or Zenkaku-Katakana?)
+			$or = array(preg_quote($do_escape ? htmlspecialchars($char) : $char, $quote));
 			if (strlen($char) == 1) {
-				// Single-byte characters
+				// An ASCII (single-byte) character
 				foreach (array(strtoupper($char), strtolower($char)) as $_char) {
-					if ($char != '&') $arr[] = $quote_func($_char);
-					$ord = ord($_char);
-					$arr[] = sprintf('&#(?:%d|x%x);', $ord, $ord);    // Entity references
-					$arr[] = $quote_func($convert_kana($_char, 'A')); // Zenkaku-Alphabet
+					if ($char != '&') $or[] = preg_quote($_char, $quote); // As-is?
+					$ascii = ord($_char);
+					$or[] = sprintf('&#(?:%d|x%x);', $ascii, $ascii); // As an entity reference?
+					$or[] = preg_quote($mb_convert_kana($_char, 'A'), $quote); // As Zenkaku?
 				}
 			} else {
-				// Multi-byte characters
-				$arr[] = $quote_func($convert_kana($char, 'c')); // Zenkaku-Katakana to Zenkaku-Hiragana
-				$arr[] = $quote_func($convert_kana($char, 'k')); // Zenkaku-Katakana to Hankaku-Katakana
+				// NEVER COME HERE with mb_substr(string, start, length, 'ASCII')
+				// A multi-byte character
+				$or[] = preg_quote($mb_convert_kana($char, 'c'), $quote); // As Hiragana?
+				$or[] = preg_quote($mb_convert_kana($char, 'k'), $quote); // As Hankaku-Katakana?
 			}
-			$chars[] = '(?:' . join('|', array_unique($arr)) . ')';
+			$chars[] = '(?:' . join('|', array_unique($or)) . ')'; // Regex for the character
 		}
-		$retval[$word] = $pre . join('', $chars) . $post;
+
+		$regex[$word] = $pre . join('', $chars) . $post; // For the word
 	}
 
-	return $retval;
+	return $regex; // For all words
 }
 
 // 'Search' main function
-function do_search($word, $type = 'AND', $non_format = FALSE)
+function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 {
 	global $script, $whatsnew, $non_list, $search_non_list;
 	global $_msg_andresult, $_msg_orresult, $_msg_notfoundresult;
-	global $search_auth;
+	global $search_auth, $show_passage;
 
 	$retval = array();
 
 	$b_type = ($type == 'AND'); // AND:TRUE OR:FALSE
 	$keys = get_search_words(preg_split('/\s+/', $word, -1, PREG_SPLIT_NO_EMPTY));
+	foreach ($keys as $key=>$value)
+		$keys[$key] = '/' . $value . '/S';
 
-	$_pages = get_existpages();
-	$pages = array();
+	$pages = get_existpages();
 
-	$non_list_pattern = '/' . $non_list . '/';
-	foreach ($_pages as $page) {
-		if ($page == $whatsnew || (! $search_non_list && preg_match($non_list_pattern, $page)))
-			continue;
+	// Avoid
+	if ($base != '') {
+		$pages = preg_grep('/^' . preg_quote($base, '/') . '/S', $pages);
+	}
+	if (! $search_non_list) {
+		$pages = array_diff($pages, preg_grep('/' . $non_list . '/S', $pages));
+	}
+	$pages = array_flip($pages);
+	unset($pages[$whatsnew]);
 
-		// 検索対象ページの制限をかけるかどうか (ページ名は制限外)
-		if ($search_auth && ! check_readable($page, false, false)) {
-			$source = get_source(); // Empty
-		} else {
-			$source = get_source($page);
-		}
-		if (! $non_format)
-			array_unshift($source, $page); // ページ名も検索対象に
-
+	$count = count($pages);
+	foreach (array_keys($pages) as $page) {
 		$b_match = FALSE;
-		foreach ($keys as $key) {
-			$tmp     = preg_grep('/' . $key . '/', $source);
-			$b_match = ! empty($tmp);
-			if ($b_match xor $b_type) break;
+
+		// Search for page name
+		if (! $non_format) {
+			foreach ($keys as $key) {
+				$b_match = preg_match($key, $page);
+				if ($b_type xor $b_match) break; // OR
+			}
+			if ($b_match) continue;
 		}
-		if ($b_match) $pages[$page] = get_filetime($page);
+
+		// Search auth for page contents
+		if ($search_auth && ! check_readable($page, false, false)) {
+			unset($pages[$page]);
+			--$count;
+		}
+
+		// Search for page contents
+		foreach ($keys as $key) {
+			$b_match = preg_match($key, get_source($page, TRUE, TRUE));
+			if ($b_type xor $b_match) break; // OR
+		}
+		if ($b_match) continue;
+
+		unset($pages[$page]); // Miss
 	}
 	if ($non_format) return array_keys($pages);
 
@@ -225,11 +268,12 @@ function do_search($word, $type = 'AND', $non_format = FALSE)
 		return str_replace('$1', $s_word, $_msg_notfoundresult);
 
 	ksort($pages);
+
 	$retval = '<ul>' . "\n";
-	foreach ($pages as $page=>$time) {
+	foreach (array_keys($pages) as $page) {
 		$r_page  = rawurlencode($page);
 		$s_page  = htmlspecialchars($page);
-		$passage = get_passage($time);
+		$passage = $show_passage ? ' ' . get_passage(get_filetime($page)) : '';
 		$retval .= ' <li><a href="' . $script . '?cmd=read&amp;page=' .
 			$r_page . '&amp;word=' . $r_word . '">' . $s_page .
 			'</a>' . $passage . '</li>' . "\n";
@@ -237,7 +281,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE)
 	$retval .= '</ul>' . "\n";
 
 	$retval .= str_replace('$1', $s_word, str_replace('$2', count($pages),
-		str_replace('$3', count($_pages), $b_type ? $_msg_andresult : $_msg_orresult)));
+		str_replace('$3', $count, $b_type ? $_msg_andresult : $_msg_orresult)));
 
 	return $retval;
 }
@@ -738,19 +782,9 @@ if (! function_exists('md5_file')) {
 // (PHP 4 >= 4.3.0, PHP5)
 if (! function_exists('sha1')) {
 	if (extension_loaded('mhash')) {
-		function sha1($str, $raw_output = FALSE)
+		function sha1($str)
 		{
-			if ($raw_output) {
-				// PHP 5.0.0 or lator only :)
-				return mhash(MHASH_SHA1, $str);
-			} else {
-				return bin2hex(mhash(MHASH_SHA1, $str));
-			}
-		}
-	} else {
-		function sha1($str, $raw_output = FALSE)
-		{
-			die('Function sha1() not found and extension \'mhash\' not exists');
+			return bin2hex(mhash(MHASH_SHA1, $str));
 		}
 	}
 }

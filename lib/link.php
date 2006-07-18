@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: link.php,v 1.4.2.2 2006/04/07 18:44:58 teanan Exp $
-// Copyright (C) 2003-2005 PukiWiki Developers Team
+// $Id: link.php,v 1.4.2.3 2006/07/18 17:56:00 teanan Exp $
+// Copyright (C) 2003-2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 // Backlinks / AutoLinks related functions
@@ -147,10 +147,8 @@ function links_init()
 	foreach (get_existfiles(CACHE_DIR, '.rel') as $cache)
 		unlink($cache);
 
-	$pages = get_existpages();
 	$ref   = array(); // 参照元
-	$ref_notauto = array();
-	foreach ($pages as $page) {
+	foreach (get_existpages() as $page) {
 		if ($page == $whatsnew) continue;
 
 		$rel   = array(); // 参照先
@@ -161,23 +159,17 @@ function links_init()
 				continue;
 
 			$_name = $_obj->name;
-			if (! is_a($_obj, 'Link_autolink')) {
-				if (is_a($_obj, 'Link_autoalias')) {
-					$_alias = $_obj->get_alias($_obj->name);
-					if (is_pagename($_alias)) {
-						$ref_notauto[$_alias][$page] = TRUE;
-						$_name = $_alias;
-					} else {
-						$_name = '';	// not PageName
-					}
-				} else {
-					$ref_notauto[$_obj->name][$page] = TRUE;
-				}
+			if (is_a($_obj, 'Link_autoalias')) {
+				$_alias = $_obj->get_alias($_obj->name);
+				if (! is_pagename($_alias))
+					continue;	// not PageName
+				$_name = $_alias;
 			}
-			if ($_name != '') {
-				$rel[] = $_name;
-				$ref[$_name][] = $page;
-			}
+			$rel[] = $_name;
+			if (! isset($ref[$_name][$page]))
+				$ref[$_name][$page] = 1;
+			if (! is_a($_obj, 'Link_autolink'))
+				$ref[$_name][$page] = 0;
 		}
 		$rel = array_unique($rel);
 		if (! empty($rel)) {
@@ -189,16 +181,10 @@ function links_init()
 	}
 
 	foreach ($ref as $page=>$arr) {
-		if (empty($arr)) continue;
-
-		$arr = array_unique($arr);
 		$fp  = fopen(CACHE_DIR . encode($page) . '.ref', 'w')
 			or die_message('cannot write ' . htmlspecialchars(CACHE_DIR . encode($page) . '.ref'));
-		foreach ($arr as $ref_page) {
-			$ref_auto = (isset($ref_notauto[$page])
-				&& isset($ref_notauto[$page][$ref_page])) ? 0 : 1;
-			fputs($fp, "$ref_page\t$ref_auto\n");
-		}
+		foreach ($arr as $ref_page=>$ref_auto)
+			fputs($fp, $ref_page . "\t" . $ref_auto . "\n");
 		fclose($fp);
 	}
 }
@@ -252,7 +238,7 @@ function links_delete($page, $del)
 			}
 		}
 		unlink($ref_file);
-		if ($is_page && ! $all_auto && $ref != '') {
+		if (($is_page || ! $all_auto) && $ref != '') {
 			$fp = fopen($ref_file, 'w')
 				or die_message('cannot write ' . htmlspecialchars($ref_file));
 			fputs($fp, $ref);
@@ -268,6 +254,7 @@ function & links_get_objects($page, $refresh = FALSE)
 	if (! isset($obj) || $refresh)
 		$obj = & new InlineConverter(NULL, array('note'));
 
-	return $obj->get_objects(join('', preg_grep('/^(?!\/\/|\s)./', get_source($page))), $page);
+	$result = $obj->get_objects(join('', preg_grep('/^(?!\/\/|\s)./', get_source($page))), $page);
+	return $result;
 }
 ?>

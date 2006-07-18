@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: en.lng.php,v 1.7.2.1 2005/12/11 18:03:45 teanan Exp $
+// $Id: en.lng.php,v 1.7.2.2 2006/07/18 17:56:23 teanan Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -78,9 +78,9 @@ $_title_cannotread = ' $1 is not readable';
 $_msg_auth         = 'PukiWikiAuth';
 
 ///////////////////////////////////////
-// Help 'wiki format rule'.
-$rule_page = 'Text Formatting Rules';
-$help_page = 'Help';
+// Page name
+$rule_page = 'FormattingRules';	// Formatting rules
+$help_page = 'Help';		// Help
 
 ///////////////////////////////////////
 // TrackBack (REMOVED)
@@ -145,6 +145,7 @@ $_attach_messages = array(
 	'msg_deleted'  => 'Deleted the file in  $1',
 	'msg_freezed'  => 'The file has been frozen.',
 	'msg_unfreezed'=> 'The file has been unfrozen',
+	'msg_renamed'  => 'The file has been renamed',
 	'msg_upload'   => 'Upload to $1',
 	'msg_info'     => 'File information',
 	'msg_confirm'  => '<p>Delete %s.</p>',
@@ -160,6 +161,8 @@ $_attach_messages = array(
 	'msg_freeze'   => 'Freeze file.',
 	'msg_unfreeze' => 'Unfreeze file.',
 	'msg_isfreeze' => 'File is frozen.',
+	'msg_rename'   => 'Rename',
+	'msg_newname'  => 'New file name',
 	'msg_require'  => '(require administrator password)',
 	'msg_filesize' => 'size',
 	'msg_date'     => 'date',
@@ -173,6 +176,7 @@ $_attach_messages = array(
 	'err_notfound' => 'Could not fid the file in  $1',
 	'err_noexist'  => 'File does not exist.',
 	'err_delete'   => 'Cannot delete file in  $1',
+	'err_rename'   => 'Cannot rename this file',
 	'err_password' => 'Wrong password.',
 	'err_adminpass'=> 'Wrong administrator password',
 	'btn_upload'   => 'Upload',
@@ -375,6 +379,8 @@ $_msg_searching = 'Key words are case-insenstive, and are searched for in all pa
 $_btn_search    = 'Search';
 $_btn_and       = 'AND';
 $_btn_or        = 'OR';
+$_search_pages  = 'Search for page starts from $1';
+$_search_all    = 'Search for all pages';
 
 ///////////////////////////////////////
 // source.inc.php

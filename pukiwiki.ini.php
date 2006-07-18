@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.114.2.4 2005/12/11 18:03:45 teanan Exp $
+// $Id: pukiwiki.ini.php,v 1.114.2.5 2006/07/18 17:56:23 teanan Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -176,7 +176,7 @@ $nowikiname = 0;
 // AutoLink feature
 
 // AutoLink minimum length of page name
-$autolink = 8; // Bytes, 0 = OFF
+$autolink = 0; // Bytes, 0 = OFF (try 8)
 
 /////////////////////////////////////////////////
 // AutoAlias feature
@@ -192,18 +192,22 @@ $autoalias_max_words = 50;
 $function_freeze = 1;
 
 /////////////////////////////////////////////////
-// Enable 'Do not change timestamp' at edit
-// (1:Enable, 2:Enable only administrator, 0:Disable)
+// Allow to use 'Do not change timestamp' checkbox
+// (0:Disable, 1:For everyone,  2:Only for the administrator)
 $notimeupdate = 1;
 
 /////////////////////////////////////////////////
 // Admin password for this Wikisite
 
-// CHANGE THIS
-$adminpass = '{x-php-md5}1a1dc91c907325c69271ddf0c944bc72'; // md5('pass')
-//$adminpass = '{CRYPT}$1$AR.Gk94x$uCe8fUUGMfxAPH83psCZG/'; // CRYPT 'pass'
-//$adminpass = '{MD5}Gh3JHJBzJcaScd3wyUS8cg==';             // MD5   'pass'
-//$adminpass = '{SMD5}o7lTdtHFJDqxFOVX09C8QnlmYmZnd2Qx';    // SMD5  'pass'
+// Default: always fail
+$adminpass = '{x-php-md5}!';
+
+// Sample:
+//$adminpass = 'pass'; // Cleartext
+//$adminpass = '{x-php-md5}1a1dc91c907325c69271ddf0c944bc72'; // PHP md5()  'pass'
+//$adminpass = '{CRYPT}$1$AR.Gk94x$uCe8fUUGMfxAPH83psCZG/';   // LDAP CRYPT 'pass'
+//$adminpass = '{MD5}Gh3JHJBzJcaScd3wyUS8cg==';               // LDAP MD5   'pass'
+//$adminpass = '{SMD5}o7lTdtHFJDqxFOVX09C8QnlmYmZnd2Qx';      // LDAP SMD5  'pass'
 
 /////////////////////////////////////////////////
 // Page-reading feature settings
@@ -238,36 +242,37 @@ $pagereading_config_dict = ':config/PageReading/dict';
 /////////////////////////////////////////////////
 // User definition
 $auth_users = array(
+	// Username => password
 	'foo'	=> 'foo_passwd', // Cleartext
-	'bar'	=> '{x-php-md5}f53ae779077e987718cc285b14dfbe86', // md5('bar_passwd')
-	'hoge'	=> '{SMD5}OzJo/boHwM4q5R+g7LCOx2xGMkFKRVEx', // SMD5 'hoge_passwd'
+	'bar'	=> '{x-php-md5}f53ae779077e987718cc285b14dfbe86', // PHP md5() 'bar_passwd'
+	'hoge'	=> '{SMD5}OzJo/boHwM4q5R+g7LCOx2xGMkFKRVEx',      // LDAP SMD5 'hoge_passwd'
 );
 
 /////////////////////////////////////////////////
 // Authentication method
 
-$auth_method_type = 'contents';	// By Page contents
-//$auth_method_type = 'pagename';	// By Page name
+$auth_method_type	= 'pagename';	// By Page name
+//$auth_method_type	= 'contents';	// By Page contents
 
 /////////////////////////////////////////////////
 // Read auth (0:Disable, 1:Enable)
 $read_auth = 0;
 
-// Read auth regex
 $read_auth_pages = array(
-	'#ひきこもるほげ#'	=> 'hoge',
-	'#(ネタバレ|ねたばれ)#'	=> 'foo,bar,hoge',
+	// Regex		   Username
+	'#HogeHoge#'		=> 'hoge',
+	'#(NETABARE|NetaBare)#'	=> 'foo,bar,hoge',
 );
 
 /////////////////////////////////////////////////
 // Edit auth (0:Disable, 1:Enable)
 $edit_auth = 0;
 
-// Edit auth regex
 $edit_auth_pages = array(
-	'#Barの公開日記#'	=> 'bar',
-	'#ひきこもるほげ#'	=> 'hoge',
-	'#(ネタバレ|ねたばれ)#'	=> 'foo,bar,hoge',
+	// Regex		   Username
+	'#BarDiary#'		=> 'bar',
+	'#HogeHoge#'		=> 'hoge',
+	'#(NETABARE|NetaBare)#'	=> 'foo,bar,hoge',
 );
 
 /////////////////////////////////////////////////
@@ -323,9 +328,17 @@ $maxage = 120; // Stock latest N backups
 define('PKWK_SPLITTER', '>>>>>>>>>>');
 
 /////////////////////////////////////////////////
-// Command executed per update
-$update_exec = '';
-//$update_exec = '/usr/bin/mknmz --media-type=text/pukiwiki -O /var/lib/namazu/index/ -L ja -c -K /var/www/wiki/';
+// Command execution per update
+
+define('PKWK_UPDATE_EXEC', '');
+
+// Sample: Namazu (Search engine)
+//$target     = '/var/www/wiki/';
+//$mknmz      = '/usr/bin/mknmz';
+//$output_dir = '/var/lib/namazu/index/';
+//define('PKWK_UPDATE_EXEC',
+//	$mknmz . ' --media-type=text/pukiwiki' .
+//	' -O ' . $output_dir . ' -L ja -c -K ' . $target);
 
 /////////////////////////////////////////////////
 // HTTP proxy setting (for TrackBack etc)
@@ -479,7 +492,7 @@ $agents = array(
 
 	// Opera, dressing up as other embedded browsers
 	// Sample: "Mozilla/3.0(DDIPOCKET;KYOCERA/AH-K3001V/1.4.1.67.000000/0.1/C100) Opera 7.0" (Like CNF at 'keitai'-mode)
-	array('pattern'=>'#\bDDIPOCKET\b.+\b(Opera) ([0-9\.]+)\b#',	'profile'=>'keitai'),
+	array('pattern'=>'#\b(?:DDIPOCKET|WILLCOM)\b.+\b(Opera) ([0-9\.]+)\b#',	'profile'=>'keitai'),
 
 	// Planetweb http://www.planetweb.com/
 	// Sample: "Mozilla/3.0 (Planetweb/v1.07 Build 141; SPS JP)" ("EGBROWSER", Web browser for PlayStation 2)

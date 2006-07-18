@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.27.2.1 2005/12/11 18:03:45 teanan Exp $
+// $Id: init.php,v 1.27.2.2 2006/07/18 17:56:00 teanan Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -10,10 +10,10 @@
 
 // PukiWiki version / Copyright / Licence
 
-define('S_VERSION', '1.4.6');
+define('S_VERSION', '1.4.7');
 define('S_COPYRIGHT',
 	'<strong>PukiWiki ' . S_VERSION . '</strong>' .
-	' Copyright &copy; 2001-2005' .
+	' Copyright &copy; 2001-2006' .
 	' <a href="http://pukiwiki.sourceforge.jp/">PukiWiki Developers Team</a>.' .
 	' License is <a href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br />' .
 	' Based on "PukiWiki" 1.3 by <a href="http://factage.com/yu-ji/">yu-ji</a>'
@@ -57,45 +57,37 @@ if ($die) die_message(nl2br("\n\n" . $die));
 /////////////////////////////////////////////////
 // INI_FILE: LANG に基づくエンコーディング設定
 
+// MB_LANGUAGE: mb_language (for mbstring extension)
+//   'uni'(means UTF-8), 'English', or 'Japanese'
+// SOURCE_ENCODING: Internal content encoding (for mbstring extension)
+//   'UTF-8', 'ASCII', or 'EUC-JP'
 // CONTENT_CHARSET: Internal content encoding = Output content charset (for skin)
 //   'UTF-8', 'iso-8859-1', 'EUC-JP' or ...
 
-// MB_LANGUAGE: mb_language (for mbstring extension)
-//   'uni'(means UTF-8), 'English', or 'Japanese'
-
-// SOURCE_ENCODING: Internal content encoding (for mbstring extension)
-//   'UTF-8', 'ASCII', or 'EUC-JP'
-
 switch (LANG){
-case 'en':
-	// ASCII
-	define('CONTENT_CHARSET', 'iso-8859-1');
-	define('MB_LANGUAGE',     'English');
-	define('SOURCE_ENCODING', 'ASCII');
+case 'en': define('MB_LANGUAGE', 'English' ); break;
+case 'ja': define('MB_LANGUAGE', 'Japanese'); break;
+//UTF-8:case 'ko': define('MB_LANGUAGE', 'Korean'  ); break;
+//UTF-8:	// See BugTrack2/13 for all hack about Korean support,
+//UTF-8:	// and give us your report!
+default: die_message('No such language "' . LANG . '"'); break;
+}
 
-	// UTF-8
-	//define('CONTENT_CHARSET', 'UTF-8');
-	//define('MB_LANGUAGE',     'English');
-	//define('SOURCE_ENCODING', 'UTF-8');
-
-	break;
-	
-case 'ja':
-	// EUC-JP
-	define('CONTENT_CHARSET', 'EUC-JP');
-	define('MB_LANGUAGE',     'Japanese');
-	define('SOURCE_ENCODING', 'EUC-JP');
-	break;
-
-case 'ko':
-	// UTF-8 (See BugTrack2/13 for all hack about Korean support, and give us your report!)
-	define('CONTENT_CHARSET', 'UTF-8');
-	define('MB_LANGUAGE',     'Korean');
+//UTF-8:define('PKWK_UTF8_ENABLE', 1);
+if (defined('PKWK_UTF8_ENABLE')) {
 	define('SOURCE_ENCODING', 'UTF-8');
-	break;
-
-default:
-	die_message('No such language "' . LANG . '"');
+	define('CONTENT_CHARSET', 'UTF-8');
+} else {
+	switch (LANG){
+	case 'en':
+		define('SOURCE_ENCODING', 'ASCII');
+		define('CONTENT_CHARSET', 'iso-8859-1');
+		break;
+	case 'ja':
+		define('SOURCE_ENCODING', 'EUC-JP');
+		define('CONTENT_CHARSET', 'EUC-JP');
+		break;
+	}
 }
 
 mb_language(MB_LANGUAGE);
@@ -327,6 +319,10 @@ if (empty($_POST)) {
 	$vars = array_merge($_GET, $_POST); // Considered reliable than $_REQUEST
 }
 
+// 入力チェック: 'cmd=' and 'plugin=' can't live together
+if (isset($vars['cmd']) && isset($vars['plugin']))
+	die('Using both cmd= and plugin= is not allowed');
+
 // 入力チェック: cmd, plugin の文字列は英数字以外ありえない
 foreach(array('cmd', 'plugin') as $var) {
 	if (isset($vars[$var]) && ! preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $vars[$var]))
@@ -367,11 +363,6 @@ if (! isset($vars['cmd']) && ! isset($vars['plugin'])) {
 	$arg = input_filter($arg);
 	$get['page'] = $post['page'] = $vars['page'] = $arg;
 }
-
-// 入力チェック: 'cmd=' prohibits nasty 'plugin='
-if (isset($vars['cmd']) && isset($vars['plugin']))
-	unset($get['plugin'], $post['plugin'], $vars['plugin']);
-
 
 /////////////////////////////////////////////////
 // 初期設定($WikiName,$BracketNameなど)
