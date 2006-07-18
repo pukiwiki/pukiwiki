@@ -1,7 +1,7 @@
 #freeze
 #nofollow
 #norelated
-#navi(PukiWiki/1.4/Manual/Plugin)
+#navi(../)
 #contents
 ------------------------------
 * H [#xfadc6da]
@@ -119,4 +119,5 @@
 :引数|
 ~InterWiki名にはジャンプ先をInterWiki形式で指定します。InterWiki名はエンコードされている必要があります。
 
-#navi(PukiWiki/1.4/Manual/Plugin)
+
+#navi(../)

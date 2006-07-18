@@ -7,13 +7,12 @@
 -[[:config/plugin/tracker/default/list]] :config/plugin/tracker/default/list
 -[[:config/plugin/tracker/default/page]] :config/plugin/tracker/default/page
 -[[BracketName]] BracketName
--[[FormatRule]] FormatRule
+-[[FormattingRules]] FormattingRules
 -[[FrontPage]] FrontPage
 -[[Help]] Help
 -[[InterWiki]] InterWiki
 -[[InterWikiName]] InterWikiName
 -[[InterWikiSandBox]] InterWikiSandBox
--[[InterWikiテクニカル]] InterWikiテクニカル
 -[[MenuBar]] MenuBar
 -[[PHP]] PHP
 -[[PukiWiki]] PukiWiki
@@ -23,6 +22,3 @@
 -[[WikiName]] WikiName
 -[[WikiWikiWeb]] WikiWikiWeb
 -[[YukiWiki]] YukiWiki
--[[整形ルール]] セイケイルール
--[[日本語]] ニホンゴ
--[[ヘルプ]] ヘルプ
