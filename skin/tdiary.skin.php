@@ -585,8 +585,6 @@ if (isset($pkwk_dtd)) {
  <link rel="stylesheet" type="text/css" media="print"  href="<?php echo SKIN_DIR ?>tdiary.css.php?charset=<?php echo $css_charset ?>&amp;color=<?php echo $css_theme ?>&amp;media=print" charset="<?php echo $css_charset ?>" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
 
-<?php if (PKWK_ALLOW_JAVASCRIPT && $trackback_javascript) { ?> <script type="text/javascript" src="<?php echo SKIN_DIR ?>trackback.js"></script><?php } ?>
-
 <?php echo $head_tag ?>
 </head>
 <body><!-- Theme:<?php echo htmlsc($theme) . ' Sidebar:' . $sidebar ?> -->

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.49 2006/07/19 17:43:27 teanan Exp $
+// $Id: pukiwiki.skin.php,v 1.50 2006/08/06 12:44:55 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -79,8 +79,6 @@ if (isset($pkwk_dtd)) {
  <link rel="stylesheet" type="text/css" media="screen" href="<?php echo SKIN_DIR ?>pukiwiki.css.php?charset=<?php echo $css_charset ?>" charset="<?php echo $css_charset ?>" />
  <link rel="stylesheet" type="text/css" media="print"  href="<?php echo SKIN_DIR ?>pukiwiki.css.php?charset=<?php echo $css_charset ?>&amp;media=print" charset="<?php echo $css_charset ?>" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
-
-<?php if (PKWK_ALLOW_JAVASCRIPT && $trackback_javascript) { ?> <script type="text/javascript" src="<?php echo SKIN_DIR ?>trackback.js"></script><?php } ?>
 
 <?php echo $head_tag ?>
 </head>
