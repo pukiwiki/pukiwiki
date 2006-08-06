@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ls2.inc.php,v 1.23 2004/12/05 11:37:37 henoheno Exp $
+// $Id: ls2.inc.php,v 1.24 2006/08/06 13:17:31 henoheno Exp $
 //
 // List plugin 2
 
@@ -66,7 +66,8 @@ function plugin_ls2_convert()
 	}
 	if ($prefix == '') $prefix = strip_bracket($vars['page']) . '/';
 
-	array_walk($args, 'plugin_ls2_check_arg', & $params);
+	foreach ($args as $key => $arg)
+		plugin_ls2_check_arg($arg, $key, $params);
 
 	$title = (! empty($params['_args'])) ? join(',', $params['_args']) :   // Manual
 		str_replace('$1', htmlspecialchars($prefix), $_ls2_msg_title); // Auto
