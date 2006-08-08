@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.72 2006/06/11 14:42:09 henoheno Exp $
+// $Id: file.php,v 1.73 2006/08/08 18:10:59 teanan Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -63,6 +63,7 @@ function get_filename($page)
 function page_write($page, $postdata, $notimestamp = FALSE)
 {
 	global $trackback;
+	global $autoalias, $aliaspage;
 
 	if (PKWK_READONLY) return; // Do nothing
 
@@ -88,6 +89,18 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	}
 
 	links_update($page);
+
+	// for AutoAlias
+	if ($autoalias>0 && $page==$aliaspage) {
+		// AutoAliasName is updated
+		$pages = array_keys(get_autoaliases());
+		if(count($pages)>0) {
+			autolink_pattern_write(CACHE_DIR . 'autoalias.dat',
+				get_autolink_pattern($pages, $autoalias));
+		} else {
+			@unlink(CACHE_DIR . 'autoalias.dat');
+		}
+	}
 }
 
 // Modify original text with user-defined / system-defined rules
@@ -457,24 +470,27 @@ function put_lastmodified()
 	fclose($fp);
 
 	// For AutoLink
-	if ($autolink) {
-		list($pattern, $pattern_a, $forceignorelist) =
-			get_autolink_pattern($pages);
-
-		$file = CACHE_DIR . PKWK_AUTOLINK_REGEX_CACHE;
-		pkwk_touch_file($file);
-		$fp = fopen($file, 'r+') or
-			die_message('Cannot open ' . 'CACHE_DIR/' . PKWK_AUTOLINK_REGEX_CACHE);
-		set_file_buffer($fp, 0);
-		flock($fp, LOCK_EX);
-		ftruncate($fp, 0);
-		rewind($fp);
-		fputs($fp, $pattern   . "\n");
-		fputs($fp, $pattern_a . "\n");
-		fputs($fp, join("\t", $forceignorelist) . "\n");
-		flock($fp, LOCK_UN);
-		fclose($fp);
+	if ($autolink){
+		autolink_pattern_write(CACHE_DIR . PKWK_AUTOLINK_REGEX_CACHE,
+			get_autolink_pattern($pages, $autolink));
 	}
+}
+
+// update autolink data
+function autolink_pattern_write($filename, $autolink_pattern)
+{
+	list($pattern, $pattern_a, $forceignorelist) = $autolink_pattern;
+
+	$fp = fopen($filename, 'w') or
+			die_message('Cannot open ' . $filename);
+	set_file_buffer($fp, 0);
+	flock($fp, LOCK_EX);
+	rewind($fp);
+	fputs($fp, $pattern   . "\n");
+	fputs($fp, $pattern_a . "\n");
+	fputs($fp, join("\t", $forceignorelist) . "\n");
+	flock($fp, LOCK_UN);
+	fclose($fp);
 }
 
 // Get elapsed date of the page

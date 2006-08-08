@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.30 2005/12/10 07:57:30 henoheno Exp $
+// $Id: make_link.php,v 1.31 2006/08/08 18:10:59 teanan Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -60,9 +60,11 @@ class InlineConverter
 				'url_interwiki', // URLs (interwiki definition)
 				'mailto',        // mailto: URL schemes
 				'interwikiname', // InterWikiNames
+				'autoalias',     // AutoAlias
 				'autolink',      // AutoLinks
 				'bracketname',   // BracketNames
 				'wikiname',      // WikiNames
+				'autoalias_a',   // AutoAlias(alphabet)
 				'autolink_a',    // AutoLinks(alphabet)
 			);
 		}
@@ -697,6 +699,85 @@ class Link_autolink_a extends Link_autolink
 		parent::Link_autolink($start);
 	}
 
+	function get_pattern()
+	{
+		return isset($this->auto_a) ? '(' . $this->auto_a . ')' : FALSE;
+	}
+}
+
+// AutoAlias
+class Link_autoalias extends Link
+{
+	var $forceignorepages = array();
+	var $auto;
+	var $auto_a; // alphabet only
+	var $alias;
+
+	function Link_autoalias($start)
+	{
+		global $autoalias, $aliaspage;
+
+		parent::Link($start);
+
+		if (!$autoalias || !file_exists(CACHE_DIR.'autoalias.dat') || $this->page==$aliaspage)
+		{
+			return;
+		}
+		@list($auto,$auto_a,$forceignorepages) = file(CACHE_DIR.'autoalias.dat');
+		$this->auto = $auto;
+		$this->auto_a = $auto_a;
+		$this->forceignorepages = explode("\t", trim($forceignorepages));
+		$this->alias = '';
+	}
+	function get_pattern()
+	{
+		return isset($this->auto) ? '(' . $this->auto . ')' : FALSE;
+	}
+	function get_count()
+	{
+		return 1;
+	}
+	function set($arr,$page)
+	{
+		list($name) = $this->splice($arr);
+		// Ignore pages listed
+		if (in_array($name, $this->forceignorepages)) {
+			return FALSE;
+		}
+		return parent::setParam($page,$name,'','pagename',$name);
+	}
+
+	function toString()
+	{
+		$this->alias = $this->get_alias($this->name);
+		if ($this->alias != '') {
+			$link = '[[' . $this->name . '>' . $this->alias . ']]';
+			return make_link($link);
+		}
+		return '';
+	}
+
+	function get_alias($name)
+	{
+		static $aliases;
+
+		if (!isset($aliases)) {
+			$aliases = get_autoaliases();
+		}
+		$result = '';
+		if (array_key_exists($name, $aliases)) {
+			$result = $aliases[$this->name];
+		}
+		return $result;
+	}
+}
+
+class Link_autoalias_a extends Link_autoalias
+{
+	function Link_autoalias_a($start)
+	{
+		parent::Link_autoalias($start);
+	}
 	function get_pattern()
 	{
 		return isset($this->auto_a) ? '(' . $this->auto_a . ')' : FALSE;
