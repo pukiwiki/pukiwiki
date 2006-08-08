@@ -83,9 +83,11 @@ class InlineConverter
 				'url_interwiki', // URLs (interwiki definition)
 				'mailto',        // mailto: URL schemes
 				'interwikiname', // InterWikiNames
+				'autoalias',     // AutoAlias
 				'autolink',      // AutoLinks
 				'bracketname',   // BracketNames
 				'wikiname',      // WikiNames
+				'autoalias_a',   // AutoAlias(alphabet)
 				'autolink_a',    // AutoLinks(alphabet)
 			);
 		}
@@ -766,6 +768,72 @@ class Link_autolink_a extends Link_autolink
 	}
 }
 
+// AutoAlias
+class Link_autoalias extends Link
+{
+	var $forceignorepages = array();
+	var $auto;
+	var $auto_a; // alphabet only
+	var $alias;
+
+	function Link_autoalias($start)
+	{
+		global $autoalias, $aliaspage;
+
+		parent::Link($start);
+
+		if (! $autoalias || ! file_exists(CACHE_DIR . PKWK_AUTOALIAS_REGEX_CACHE) || $this->page == $aliaspage)
+		{
+			return;
+		}
+
+		@list($auto, $auto_a, $forceignorepages) = file(CACHE_DIR . PKWK_AUTOALIAS_REGEX_CACHE);
+		$this->auto = $auto;
+		$this->auto_a = $auto_a;
+		$this->forceignorepages = explode("\t", trim($forceignorepages));
+		$this->alias = '';
+	}
+	function get_pattern()
+	{
+		return isset($this->auto) ? '(' . $this->auto . ')' : FALSE;
+	}
+	function get_count()
+	{
+		return 1;
+	}
+	function set($arr,$page)
+	{
+		list($name) = $this->splice($arr);
+		// Ignore pages listed
+		if (in_array($name, $this->forceignorepages)) {
+			return FALSE;
+		}
+		return parent::setParam($page,$name,'','pagename',$name);
+	}
+
+	function toString()
+	{
+		$this->alias = get_autoalias_right_link($this->name);
+		if ($this->alias != '') {
+			$link = '[[' . $this->name . '>' . $this->alias . ']]';
+			return make_link($link);
+		}
+		return '';
+	}
+}
+
+class Link_autoalias_a extends Link_autoalias
+{
+	function Link_autoalias_a($start)
+	{
+		parent::Link_autoalias($start);
+	}
+	function get_pattern()
+	{
+		return isset($this->auto_a) ? '(' . $this->auto_a . ')' : FALSE;
+	}
+}
+
 // Make hyperlink for the page
 function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolink = FALSE)
 {
@@ -994,4 +1062,26 @@ Reference: https://pukiwiki.osdn.jp/?AutoTicketLink
  );
 EOS;
 	page_write($autoticketlink_def_page, $body);
+}
+
+function init_autoalias_def_page()
+{
+	global $aliaspage; // 'AutoAliasName'
+	$autoticketlink_def_page = get_autoticketlink_def_page();
+	if (is_page($aliaspage)) {
+		return;
+	}
+	$body = <<<EOS
+#freeze
+*AutoAliasName [#qf9311bb]
+AutoAlias definition
+
+Reference: https://pukiwiki.osdn.jp/?AutoAlias
+
+* PukiWiki [#ee87d39e]
+-[[pukiwiki.official>https://pukiwiki.osdn.jp/]]
+-[[pukiwiki.dev>https://pukiwiki.osdn.jp/dev/]]
+EOS;
+	page_write($aliaspage, $body);
+	update_autoalias_cache_file();
 }

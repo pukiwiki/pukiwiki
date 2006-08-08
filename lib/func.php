@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // func.php
 // Copyright
-//   2002-2019 PukiWiki Development Team
+//   2002-2020 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -723,9 +723,9 @@ function drop_submit($str)
 }
 
 // Generate AutoLink patterns (thx to hirofummy)
-function get_autolink_pattern(& $pages)
+function get_autolink_pattern($pages, $min_length)
 {
-	global $WikiName, $autolink, $nowikiname;
+	global $WikiName, $nowikiname;
 
 	$config = new Config('AutoLink');
 	$config->read();
@@ -734,11 +734,12 @@ function get_autolink_pattern(& $pages)
 	unset($config);
 	$auto_pages = array_merge($ignorepages, $forceignorepages);
 
-	foreach ($pages as $page)
+	foreach ($pages as $page) {
 		if (preg_match('/^' . $WikiName . '$/', $page) ?
-		    $nowikiname : strlen($page) >= $autolink)
+		    $nowikiname : strlen($page) >= $min_length) {
 			$auto_pages[] = $page;
-
+		}
+	}
 	if (empty($auto_pages)) {
 		$result = $result_a = '(?!)';
 	} else {
@@ -754,7 +755,7 @@ function get_autolink_pattern(& $pages)
 	return array($result, $result_a, $forceignorepages);
 }
 
-function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
+function get_autolink_pattern_sub($pages, $start, $end, $pos)
 {
 	if ($end == 0) return '(?!)';
 
@@ -781,6 +782,50 @@ function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 	if ($x)               $result .= '?';
 
 	return $result;
+}
+
+// Get AutoAlias value
+function get_autoalias_right_link($alias_name)
+{
+	$pairs = get_autoaliases();
+	// A string: Seek the pair
+	if (isset($pairs[$alias_name])) {
+		return $pairs[$alias_name];
+	}
+	return '';
+}
+
+// Load setting pairs from AutoAliasName
+function get_autoaliases()
+{
+	global $aliaspage, $autoalias_max_words;
+	static $pairs;
+
+	if (! isset($pairs)) {
+		$pairs = array();
+		$pattern = <<<EOD
+\[\[                # open bracket
+((?:(?!\]\]).)+)>   # (1) alias name
+((?:(?!\]\]).)+)    # (2) alias link
+\]\]                # close bracket
+EOD;
+		$postdata = join('', get_source($aliaspage));
+		$matches  = array();
+		$count = 0;
+		$max   = max($autoalias_max_words, 0);
+		if (preg_match_all('/' . $pattern . '/x', $postdata, $matches, PREG_SET_ORDER)) {
+			foreach($matches as $key => $value) {
+				if ($count ==  $max) break;
+				$name = trim($value[1]);
+				if (! isset($pairs[$name])) {
+					++$count;
+					 $pairs[$name] = trim($value[2]);
+				}
+				unset($matches[$key]);
+			}
+		}
+	}
+	return $pairs;
 }
 
 /**

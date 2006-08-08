@@ -275,10 +275,16 @@ function plugin_edit_cancel()
  */
 function plugin_edit_setup_initial_pages()
 {
+	global $autoalias;
+
 	// Related: Rename plugin
 	if (exist_plugin('rename') && function_exists('plugin_rename_setup_initial_pages')) {
 		plugin_rename_setup_initial_pages();
 	}
 	// AutoTicketLinkName page
 	init_autoticketlink_def_page();
+	// AutoAliasName page
+	if ($autoalias) {
+		init_autoalias_def_page();
+	}
 }
