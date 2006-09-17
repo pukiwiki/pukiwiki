@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.31 2006/08/08 18:10:59 teanan Exp $
+// $Id: make_link.php,v 1.32 2006/09/17 14:41:33 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -719,11 +719,12 @@ class Link_autoalias extends Link
 
 		parent::Link($start);
 
-		if (!$autoalias || !file_exists(CACHE_DIR.'autoalias.dat') || $this->page==$aliaspage)
+		if (! $autoalias || ! file_exists(CACHE_DIR . PKWK_AUTOALIAS_REGEX_CACHE) || $this->page == $aliaspage)
 		{
 			return;
 		}
-		@list($auto,$auto_a,$forceignorepages) = file(CACHE_DIR.'autoalias.dat');
+
+		@list($auto, $auto_a, $forceignorepages) = file(CACHE_DIR . PKWK_AUTOALIAS_REGEX_CACHE);
 		$this->auto = $auto;
 		$this->auto_a = $auto_a;
 		$this->forceignorepages = explode("\t", trim($forceignorepages));
@@ -759,13 +760,9 @@ class Link_autoalias extends Link
 
 	function get_alias($name)
 	{
-		static $aliases;
-
-		if (!isset($aliases)) {
-			$aliases = get_autoaliases();
-		}
+		$aliases = get_autoaliases();
 		$result = '';
-		if (array_key_exists($name, $aliases)) {
+		if (isset($aliases[$name])) {
 			$result = $aliases[$this->name];
 		}
 		return $result;
