@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.74 2006/09/17 09:50:57 henoheno Exp $
+// $Id: file.php,v 1.75 2006/09/17 09:52:21 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -16,7 +16,7 @@ define('PKWK_MAXSHOW_CACHE', 'recent.dat');
 define('PKWK_AUTOLINK_REGEX_CACHE', 'autolink.dat');
 
 // AutoAlias
-define('PKWK_AUTOALIAS_CACHE', 'autoalias.dat');
+define('PKWK_AUTOALIAS_REGEX_CACHE', 'autoalias.dat');
 
 
 // Get source(wiki text) data of the page
@@ -98,10 +98,10 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 		$aliases = get_autoaliases();
 		if (empty($aliases)) {
 			// Remove
-			@unlink(CACHE_DIR . PKWK_AUTOALIAS_CACHE);
+			@unlink(CACHE_DIR . PKWK_AUTOALIAS_REGEX_CACHE);
 		} else {
 			// Create or Update
-			autolink_pattern_write(CACHE_DIR . PKWK_AUTOALIAS_CACHE,
+			autolink_pattern_write(CACHE_DIR . PKWK_AUTOALIAS_REGEX_CACHE,
 				get_autolink_pattern(array_keys($aliases), $autoalias));
 		}
 	}
