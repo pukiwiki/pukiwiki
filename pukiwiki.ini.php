@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.141 2006/08/08 18:10:59 teanan Exp $
+// $Id: pukiwiki.ini.php,v 1.142 2006/09/17 03:30:36 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -174,18 +174,20 @@ $nowikiname = 0;
 
 /////////////////////////////////////////////////
 // AutoLink feature
+// Automatic link to existing pages (especially helpful for non-wikiword pages, but heavy)
 
-// AutoLink minimum length of page name
+// Minimum length of page name
 $autolink = 0; // Bytes, 0 = OFF (try 8)
 
 /////////////////////////////////////////////////
 // AutoAlias feature
+// Automatic link from specified word, to specifiled URI, page or InterWiki
 
-// AutoAlias minimum bytes (0 = Disable)
-$autoalias = 0;
+// Minimum length of alias "from" word
+$autoalias = 0; // Bytes, 0 = OFF (try 8)
 
-// Maximum number of words which AutoAlias replace
-$autoalias_max_words = 50;
+// Limit loading valid alias pairs
+$autoalias_max_words = 50; // pairs
 
 /////////////////////////////////////////////////
 // Enable Freeze / Unfreeze feature
