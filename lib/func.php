@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.75 2006/09/17 13:36:57 henoheno Exp $
+// $Id: func.php,v 1.76 2006/09/18 05:12:45 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -589,38 +589,47 @@ function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 }
 
 // Load/get setting pairs from AutoAliasName
-function get_autoaliases()
+function get_autoaliases($word = '')
 {
 	global $aliaspage, $autoalias_max_words;
 	static $pairs;
 
-	if (isset($pairs)) return $pairs;
-
-	$pairs = array();
-	$pattern = <<<EOD
+	if (! isset($pairs)) {
+		$pairs = array();
+		$pattern = <<<EOD
 \[\[                # open bracket
 ((?:(?!\]\]).)+)>   # (1) alias name
 ((?:(?!\]\]).)+)    # (2) alias link
 \]\]                # close bracket
 EOD;
-
-	$postdata = join('', get_source($aliaspage));
-	$matches  = array();
-	$count = 0;
-	$max   = max($autoalias_max_words, 0);
-	if (preg_match_all('/' . $pattern . '/x', $postdata, $matches, PREG_SET_ORDER)) {
-		foreach($matches as $key => $value) {
-			if ($count ==  $max) break;
-			$name = trim($value[1]);
-			if (! isset($pairs[$name])) {
-				++$count;
-				 $pairs[$name] = trim($value[2]);
+		$postdata = join('', get_source($aliaspage));
+		$matches  = array();
+		$count = 0;
+		$max   = max($autoalias_max_words, 0);
+		if (preg_match_all('/' . $pattern . '/x', $postdata, $matches, PREG_SET_ORDER)) {
+			foreach($matches as $key => $value) {
+				if ($count ==  $max) break;
+				$name = trim($value[1]);
+				if (! isset($pairs[$name])) {
+					++$count;
+					 $pairs[$name] = trim($value[2]);
+				}
+				unset($matches[$key]);
 			}
-			unset($matches[$key]);
 		}
 	}
 
-	return $pairs;
+	if ($word === '') {
+		// An array(): All pairs
+		return $pairs;
+	} else {
+		// A string: Seek the pair
+		if (isset($pairs[$word])) {
+			return $pairs[$word];
+		} else {
+			return '';
+		}
+	}
 }
 
 // Get absolute-URI of this script

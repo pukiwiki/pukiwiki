@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: link.php,v 1.12 2006/08/08 18:10:59 teanan Exp $
+// $Id: link.php,v 1.13 2006/09/18 05:12:45 henoheno Exp $
 // Copyright (C) 2003-2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -73,7 +73,7 @@ function links_update($page)
 		if (is_a($_obj, 'Link_autolink')) { // 行儀が悪い
 			$rel_auto[] = $_obj->name;
 		} else if (is_a($_obj, 'Link_autoalias')) {
-			$_alias = $_obj->get_alias($_obj->name);
+			$_alias = get_autoaliases($_obj->name);
 			if (is_pagename($_alias)) {
 				$rel_auto[] = $_alias;
 			}
@@ -160,7 +160,7 @@ function links_init()
 
 			$_name = $_obj->name;
 			if (is_a($_obj, 'Link_autoalias')) {
-				$_alias = $_obj->get_alias($_obj->name);
+				$_alias = get_autoaliases($_obj->name);
 				if (! is_pagename($_alias))
 					continue;	// not PageName
 				$_name = $_alias;

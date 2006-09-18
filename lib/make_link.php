@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.33 2006/09/17 14:47:31 henoheno Exp $
+// $Id: make_link.php,v 1.34 2006/09/18 05:12:45 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -750,22 +750,12 @@ class Link_autoalias extends Link
 
 	function toString()
 	{
-		$this->alias = $this->get_alias($this->name);
+		$this->alias = get_autoaliases($this->name);
 		if ($this->alias != '') {
 			$link = '[[' . $this->name . '>' . $this->alias . ']]';
 			return make_link($link);
 		}
 		return '';
-	}
-
-	function get_alias($name)
-	{
-		$aliases = get_autoaliases();
-		$result = '';
-		if (isset($aliases[$name])) {
-			$result = $aliases[$name];
-		}
-		return $result;
 	}
 }
 
