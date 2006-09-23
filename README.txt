@@ -12,7 +12,7 @@
       http://pukiwiki.sourceforge.jp/dev/
       http://sourceforge.jp/projects/pukiwiki/
 
-    $Id: README.txt,v 1.28 2006/05/29 15:16:24 henoheno Exp $
+    $Id: README.txt,v 1.29 2006/09/23 11:41:42 henoheno Exp $
 
 書式
     index.php
@@ -256,7 +256,7 @@ Wikiの様子を見る
     バージョン1.3.1b 以降はPukiWiki Developers Team によって開発が続けられて
     います。
 
- 　 バージョン1.4.5 から、RSS 2.0 を出力できるようになりました。
+    バージョン1.4.5 から、RSS 2.0 を出力できるようになりました。
 
 謝辞
     PukiWiki Develpers Teamの皆さん、PukiWikiユーザの皆さんに感謝します。
