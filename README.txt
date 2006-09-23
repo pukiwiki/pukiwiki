@@ -1,7 +1,7 @@
 名前
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築スクリプト
 
-    Version 1.4.7
+    Version 1.4.8
     Copyright (C)
       2001-2006 PukiWiki Developers Team
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
@@ -12,7 +12,7 @@
       http://pukiwiki.sourceforge.jp/dev/
       http://sourceforge.jp/projects/pukiwiki/
 
-    $Id: README.txt,v 1.29 2006/09/23 11:41:42 henoheno Exp $
+    $Id: README.txt,v 1.30 2006/09/23 12:04:08 henoheno Exp $
 
 書式
     index.php
@@ -227,7 +227,7 @@ Wikiの様子を見る
         RSS 2.0  index.php?plugin=rss&ver=2.0
 
 関連項目
-    INSTALL.txt (インストールとアップグレード)
+    doc ディレクトリにあるドキュメント
 
     標準添付されているプラグインの簡潔な説明は、[[PukiWiki/1.4/Manual/Plugin]]
     のページを参照して下さい。

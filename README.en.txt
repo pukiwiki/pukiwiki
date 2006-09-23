@@ -6,7 +6,7 @@ NAME
     PukiWiki - PHP scripts for Web pages which can be edited by anyone, 
                at any time, from anywhere. 
 
-        PukiWiki 1.4.7
+        PukiWiki 1.4.8
         Copyright (C)
           2001-2006 PukiWiki Developers Team
           2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
@@ -149,6 +149,11 @@ LICENCE
     PukiWiki is distributed under GNU GPL/2 (GNU General Public License) .
      (http://www.gnu.org)
 
+SEE ALSO
+    "doc" directory for another documentation
+    PukiWiki Web Site         http://pukiwiki.sourceforge.jp/
+    PukiWiki Developer's Site http://pukiwiki.sourceforge.jp/dev/
+
 ACKNOWLEDGEMENT
 
     First of all, thanks so much to the users of PukiWiki and the members of
@@ -158,10 +163,6 @@ ACKNOWLEDGEMENT
     YukiWiki and 
     Cunningham & Cunningham, Inc. who created the original WikiWikiWeb.
 
-REFERENCE
-
-    * PukiWiki Web Site         http://pukiwiki.sourceforge.jp/
-    * PukiWiki Developer's Site http://pukiwiki.sourceforge.jp/dev/
     * yu-ji's Web Site          http://factage.com/yu-ji/ 
     * Hiroshi Yuki 's Web Site  http://www.hyuki.com/ 
     * YukiWiki                  http://www.hyuki.com/yukiwiki/ 
