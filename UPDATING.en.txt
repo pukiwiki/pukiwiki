@@ -1,5 +1,13 @@
 PukiWiki UPDATING
-$Id: UPDATING.en.txt,v 1.4 2006/06/11 16:18:17 henoheno Exp $
+$Id: UPDATING.en.txt,v 1.5 2006/09/23 12:00:19 henoheno Exp $
+
+
+CHANGES
+=======
+
+See description at PukiWiki-official
+http://pukiwiki.sourceforge.jp/?PukiWiki/Download
+
 
 
 INCOMPATIBILITY INFORMATION BETWEEN RELEASES
