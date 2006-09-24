@@ -1,31 +1,36 @@
-PukiWiki INSTALL
-$Id: SETTING.txt,v 1.1 2006/09/24 14:06:36 henoheno Exp $
+PukiWiki SETTING
+$Id: SETTING.txt,v 1.2 2006/09/24 14:17:48 henoheno Exp $
 
 
 設定の調整
 ==========
 
 概要
-
-    ※プラグイン独自の設定項目は plugin/プラグイン名.inc.php の先頭にありま
-      す
-
-設定の調整
-    スクリプトの中の日本語は(あれば、基本的に)EUC-JPで、また改行コードはLFで
-    記述されています。(UTF-8版の場合は全てUTF-8/LFで記述されています)
-    スクリプトを直接編集する場合は、文字コードと改行コードを判別でき、それを
-    維持できるテキストエディタを使用して下さい。
-
-    設定のほとんどの項目は pukiwiki.ini.php に集約されています。
-
+    PukiWikiの設定は、PHPスクリプトを管理者が編集する事によって行います。
+        実行開始地点       : index.php
         全体設定           : pukiwiki.ini.php
         ユーザ定義         : rules.ini.php
 
-  その他、ユーザーエージェントごとの設定が用意されています。
-
+    ユーザーエージェントのグループ(profile)ごとにも設定が用意されています。
         デスクトップPC     : default.ini.php
         携帯電話およびPDA  : keitai.ini.php
-           (旧 i_mode.ini.php/jphone.ini.php)
+
+    メッセージの多くは言語ごとにまとめられています。
+        英語(en)向け       : en.lng.php
+        日本語(ja)向け     : ja.lng.php
+
+    スキン(デザイン部分)独自の設定項目は skin/<スキン名称>.skin.php の先頭
+    にあります。
+
+    プラグイン独自の設定項目は plugin/<プラグイン名称>.inc.php の先頭にあり
+    ます。
+
+
+設定の修正
+    PHPスクリプトは(あれば、基本的に)EUC-JPで、また改行コードはLFで記述され
+    ています。(UTF-8版の場合は全てUTF-8/LFで記述されています)
+    スクリプトを直接編集する場合は、文字コードと改行コードを判別でき、それを
+    維持できるテキストエディタを使用して下さい。
 
     PukiWikiの管理者パスワードは、pukiwiki.ini.php にある変数 $adminpass
     です。簡単に試すだけであるならば、以下のような内容で充分でしょう。
@@ -43,3 +48,4 @@ $Id: SETTING.txt,v 1.1 2006/09/24 14:06:36 henoheno Exp $
 
       ※他人に編集させない環境をご要望であれば、PKWK_READONLY を有効にするこ
         とをお薦めします。(詳細:BugTrack/744)
+
