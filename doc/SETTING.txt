@@ -1,0 +1,45 @@
+PukiWiki INSTALL
+$Id: SETTING.txt,v 1.1 2006/09/24 14:06:36 henoheno Exp $
+
+
+設定の調整
+==========
+
+概要
+
+    ※プラグイン独自の設定項目は plugin/プラグイン名.inc.php の先頭にありま
+      す
+
+設定の調整
+    スクリプトの中の日本語は(あれば、基本的に)EUC-JPで、また改行コードはLFで
+    記述されています。(UTF-8版の場合は全てUTF-8/LFで記述されています)
+    スクリプトを直接編集する場合は、文字コードと改行コードを判別でき、それを
+    維持できるテキストエディタを使用して下さい。
+
+    設定のほとんどの項目は pukiwiki.ini.php に集約されています。
+
+        全体設定           : pukiwiki.ini.php
+        ユーザ定義         : rules.ini.php
+
+  その他、ユーザーエージェントごとの設定が用意されています。
+
+        デスクトップPC     : default.ini.php
+        携帯電話およびPDA  : keitai.ini.php
+           (旧 i_mode.ini.php/jphone.ini.php)
+
+    PukiWikiの管理者パスワードは、pukiwiki.ini.php にある変数 $adminpass
+    です。簡単に試すだけであるならば、以下のような内容で充分でしょう。
+     ('YourPassWord' の部分を、あなただけのキーワードで置き換えて下さい)
+
+        $adminpass = '{x-php-md5}' . md5('YourPassWord');
+
+      ※設定を「有効にする」とは、多くの場合、設定値を数字の 0 でない値(例え
+        ば1)にする事です。一部の設定は名前に DISABLE ないし $noXXX とあります
+        が、それらは値を 0 でないものにすることで、その設定値に対応する機能が
+        無効になります。(無効にする役割が有効になります)
+
+      ※インターネットに公開するPukiWikiであるならば、PKWK_SAFE_MODE を有効に
+        することをお薦めします。(詳細:BugTrack/787)
+
+      ※他人に編集させない環境をご要望であれば、PKWK_READONLY を有効にするこ
+        とをお薦めします。(詳細:BugTrack/744)
