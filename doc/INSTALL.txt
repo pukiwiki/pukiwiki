@@ -1,5 +1,5 @@
 PukiWiki INSTALL
-$Id: INSTALL.txt,v 1.5 2006/09/29 13:13:18 henoheno Exp $
+$Id: INSTALL.txt,v 1.6 2006/09/29 13:20:51 henoheno Exp $
 
 
 インストール
@@ -25,7 +25,7 @@ $Id: INSTALL.txt,v 1.5 2006/09/29 13:13:18 henoheno Exp $
         Windwos OSの場合: 何らかのツールでtarまたはzipパッケージを展開する
     4. Webブラウザから最低限の動作を確認する
        通常は pukiwiki-X.X.X(バージョン番号) というディレクトリが作成されて
-       おり、 http://path/to/your/pukiwiki-X.X.X/ にアクセスするだけで
+       おり、 http://example.org/path/to/your/pukiwiki-X.X.X/ にアクセスするだけで
        PukiWikiが動作します。
        Webサーバーの設定によっては pukiwiki-X.X.X/index.php にアクセスする
        必要があります。

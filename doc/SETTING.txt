@@ -1,5 +1,5 @@
 PukiWiki SETTING
-$Id: SETTING.txt,v 1.8 2006/09/29 13:16:53 henoheno Exp $
+$Id: SETTING.txt,v 1.9 2006/09/29 13:20:51 henoheno Exp $
 
 
 設定の調整とカスタマイズ
@@ -272,16 +272,16 @@ PHP言語について
         したとき、実際には 'index.php' にアクセスするよう設定されています。
         この場合、ファイル名を指定しないURLが、有効なURLの中では最もシンプ
         ルになります。
-            例: http://path/to/your/pukiwiki-X.X.X/
+            例: http://example.org/path/to/your/pkwk/
 
         このような時でも、自動的に $script の値が取得された場合、PukiWikiは
         ファイル名入りのURLを表示します。
-            例: http://path/to/your/pukiwiki-X.X.X/index.php
+            例: http://example.org/path/to/your/pkwk/index.php
 
         この状況を好ましく思わない場合、$script_directory_index に 'index.p
         hp' という値を設定すると、末尾が 'index.php' であるURLへのアクセス
         に対し、PukiWikiは簡潔なURLを表示します。
-            例: http://path/to/your/pukiwiki-X.X.X/
+            例: http://example.org/path/to/your/pkwk/
 
     変数 $modifier
         このPukiWikiの管理者が誰であるのかをユーザーに通知します。
