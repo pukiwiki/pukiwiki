@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.47 2006/09/17 02:48:04 henoheno Exp $
+// $Id: init.php,v 1.48 2006/09/30 02:35:35 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -403,7 +403,7 @@ unset($facemark_rules);
 
 // 実体参照パターンおよびシステムで使用するパターンを$line_rulesに加える
 //$entity_pattern = '[a-zA-Z0-9]{2,8}';
-$entity_pattern = trim(join('', file(CACHE_DIR . 'entities.dat')));
+$entity_pattern = trim(join('', file(CACHE_DIR . PKWK_ENTITIES_REGEX_CACHE)));
 
 $line_rules = array_merge(array(
 	'&amp;(#[0-9]+|#x[0-9a-f]+|' . $entity_pattern . ');' => '&$1;',
