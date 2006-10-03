@@ -38,7 +38,8 @@ function plugin_ls2_action()
 	global $vars, $_ls2_msg_title;
 
 	$params = array();
-	foreach (array('title', 'include', 'reverse') as $key)
+	$keys   = array('title', 'include', 'reverse');
+	foreach ($keys as $key)
 		$params[$key] = isset($vars[$key]);
 
 	$prefix = isset($vars['prefix']) ? $vars['prefix'] : '';
@@ -70,8 +71,8 @@ function plugin_ls2_convert()
 	}
 	if ($prefix == '') $prefix = strip_bracket($vars['page']) . '/';
 
-	foreach ($args as $key => $arg)
-		plugin_ls2_check_arg($arg, $key, $params);
+	foreach ($args as $arg)
+		plugin_ls2_check_arg($arg, $params);
 
 	$title = (! empty($params['_args'])) ? join(',', $params['_args']) :   // Manual
 		str_replace('$1', htmlsc($prefix), $_ls2_msg_title); // Auto
@@ -104,7 +105,7 @@ function plugin_ls2_show_lists($prefix, & $params)
 	natcasesort($pages);
 	if ($params['reverse']) $pages = array_reverse($pages);
 
-	foreach ($pages as $page) $params["page_$page"] = 0;
+	foreach ($pages as $page) $params['page_ ' . $page] = 0;
 
 	if (empty($pages)) {
 		return str_replace('$1', htmlsc($prefix), $_ls2_err_nopages);
@@ -201,7 +202,7 @@ function plugin_ls2_list_push(& $params, $level)
 }
 
 // オプションを解析する
-function plugin_ls2_check_arg($value, $key, & $params)
+function plugin_ls2_check_arg($value, & $params)
 {
 	if ($value == '') {
 		$params['_done'] = TRUE;
