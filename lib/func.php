@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.76 2006/09/18 05:12:45 henoheno Exp $
+// $Id: func.php,v 1.77 2006/10/07 05:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -561,31 +561,60 @@ function get_autolink_pattern(& $pages, $min_len = -1)
 
 function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 {
-	if ($end == 0) return '(?!)';
+	return get_matcher_regex(& $pages, $start, $end, $pos);
+}
 
-	$result = '';
-	$count = $i = $j = 0;
-	$x = (mb_strlen($pages[$start]) <= $pos);
-	if ($x) ++$start;
+// Generate a regex, that just matches with all $array values
+// NOTE: All array_keys($array) must be continuous integers, like 0 ... N
+// $offset = (int) $array[$offset] is the first value to check
+// $sentry = (int) $array[$sentry - 1] is the last value to check  
+// $pos    = (int) Position of letter to start checking. (0 = the first letter)
+function get_matcher_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
+{
+	if ($sentry === NULL) $sentry = count($array);
+	if (empty($array) || $offset < 0 || $sentry <= 0 || $pos < 0 ||
+	    $offset >= $sentry || ! isset($array[$offset]) || ! isset($array[$sentry - 1]))
+		return '(?!)'; // Invalid
 
-	for ($i = $start; $i < $end; $i = $j) {
-		$char = mb_substr($pages[$i], $pos, 1);
-		for ($j = $i; $j < $end; $j++)
-			if (mb_substr($pages[$j], $pos, 1) != $char) break;
+	// Too short. Skip this
+	$skip = ($pos >= mb_strlen($array[$offset]));
+	if ($skip) ++$offset;
 
-		if ($i != $start) $result .= '|';
-		if ($i >= ($j - 1)) {
-			$result .= str_replace(' ', '\\ ', preg_quote(mb_substr($pages[$i], $pos), '/'));
-		} else {
-			$result .= str_replace(' ', '\\ ', preg_quote($char, '/')) .
-				get_autolink_pattern_sub($pages, $i, $j, $pos + 1);
+	// Generate regex for each value
+	$regex = '';
+	$index = $offset;
+	$multi = FALSE;
+	while ($index < $sentry) {
+		if ($index != $offset) {
+			$multi = TRUE;
+			$regex .= '|'; // OR
 		}
-		++$count;
-	}
-	if ($x || $count > 1) $result = '(?:' . $result . ')';
-	if ($x)               $result .= '?';
 
-	return $result;
+		// Get one character from left side of the value
+		$char = mb_substr($array[$index], $pos, 1);
+
+		// How many continuous keys have the same letter
+		// at the same position?
+		for ($i = $index; $i < $sentry; $i++)
+			if (mb_substr($array[$i], $pos, 1) != $char) break;
+
+		if ($index < ($i - 1)) {
+			// Some more keys found
+			// Recurse
+			$regex .= str_replace(' ', '\\ ', preg_quote($char, '/')) .
+				get_matcher_regex($array, $index, $i, $pos + 1);
+		} else {
+			// Not found
+			$regex .= str_replace(' ', '\\ ',
+				preg_quote(mb_substr($array[$index], $pos), '/'));
+		}
+		$index = $i;
+	}
+
+	if ($skip || $multi) $regex = '(?:' . $regex . ')';
+	if ($skip) $regex .= '?'; // Match for $pages[$offset - 1]
+
+	return $regex;
 }
 
 // Load/get setting pairs from AutoAliasName
