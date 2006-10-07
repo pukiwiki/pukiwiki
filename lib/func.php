@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.78 2006/10/07 05:04:43 henoheno Exp $
+// $Id: func.php,v 1.79 2006/10/07 05:39:41 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -561,6 +561,7 @@ function get_autolink_pattern(& $pages, $min_len = -1)
 
 // Generate a regex, that just matches with all $array values
 // NOTE: All array_keys($array) must be continuous integers, like 0 ... N
+//       Also, all $array values must be strings.
 // $offset = (int) $array[$offset] is the first value to check
 // $sentry = (int) $array[$sentry - 1] is the last value to check  
 // $pos    = (int) Position of letter to start checking. (0 = the first letter)
