@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.77 2006/10/07 05:01:01 henoheno Exp $
+// $Id: func.php,v 1.78 2006/10/07 05:04:43 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -553,15 +553,10 @@ function get_autolink_pattern(& $pages, $min_len = -1)
 		$auto_pages_a = array_values(preg_grep('/^[A-Z]+$/i', $auto_pages));
 		$auto_pages   = array_values(array_diff($auto_pages,  $auto_pages_a));
 
-		$result   = get_autolink_pattern_sub($auto_pages,   0, count($auto_pages),   0);
-		$result_a = get_autolink_pattern_sub($auto_pages_a, 0, count($auto_pages_a), 0);
+		$result   = get_matcher_regex($auto_pages);
+		$result_a = get_matcher_regex($auto_pages_a);
 	}
 	return array($result, $result_a, $forceignorepages);
-}
-
-function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
-{
-	return get_matcher_regex(& $pages, $start, $end, $pos);
 }
 
 // Generate a regex, that just matches with all $array values
@@ -615,6 +610,11 @@ function get_matcher_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 	if ($skip) $regex .= '?'; // Match for $pages[$offset - 1]
 
 	return $regex;
+}
+// Compat
+function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
+{
+	return get_matcher_regex(& $pages, $start, $end, $pos);
 }
 
 // Load/get setting pairs from AutoAliasName
