@@ -1,5 +1,5 @@
 PukiWiki SETTING
-$Id: SETTING.txt,v 1.11 2006/10/08 04:17:35 henoheno Exp $
+$Id: SETTING.txt,v 1.12 2006/10/08 04:20:13 henoheno Exp $
 
 
 設定の調整とカスタマイズ
@@ -210,7 +210,7 @@ PHP言語について
         '<ここで指定したキーワード>.lng.php' というファイルの中に保存されて
         いるメッセージが、ユーザーに提示されることが想定されています。
 
-     定数: ディレクトリ設定
+     定数 ディレクトリ設定
      DATA_DIR, DIFF_DIR, BACKUP_DIR, CACHE_DIR, UPLOAD_DIR, COUNTER_DIR,
      TRACKBACK_DIR, PLUGIN_DIR
          ここで指定されているディレクトリは、PukiWiki(PHPスクリプト)が必要
@@ -228,7 +228,7 @@ PHP言語について
          ては、PukiWiki は書き込み権限を必要としません。(セキュリティ上の理
          由により、書き込み権限を与えてはいけません)
 
-    定数: SKIN_DIR
+    定数 SKIN_DIR
         この定数は現在二つの意味を持っています。
 
         1. PukiWikiが、PHPスクリプトとして 'スキン' ファイルを探すべき場所
@@ -243,12 +243,12 @@ PHP言語について
         定義しているディレクトリをWebブラウザから見える場所にも用意し、そこ
         にcssファイルを設置する必要があります。
 
-    定数: IMAGE_DIR
+    定数 IMAGE_DIR
         PukiWikiから参照される、アイコンやシンボルマークなどの画像が配置さ
         れたディレクトリの場所を指定します。このディレクトリとその内容は、
         Webブラウザからアクセスできる場所になければいけません。
 
-    定数: ZONE, ZONETIME
+    定数 ZONE, ZONETIME
         PukiWikiを設置しているサーバーが属する 'タイムゾーン' (時差が同じで
         あるとされている地域の大まかな呼び名)、およびGMT(ないしUTC)との時差
         を設定します。
@@ -301,7 +301,7 @@ PHP言語について
     変数 $modifierlink
         ユーザーが、このPukiWikiの管理者へ連絡を取るためのURLを設定します。
 
-    $defaultpage
+    変数 $defaultpage
         閲覧したいページをユーザーが特に指定しなかった時に表示する、入り口
         のページを名前で指定します。Wikiの実装によっては 'WelcomeVisitors'
         がデフォルトの値として用いられています。
