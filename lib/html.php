@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.57 2006/04/15 17:33:35 teanan Exp $
+// $Id: html.php,v 1.58 2006/10/08 11:24:30 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -14,8 +14,7 @@ function catbody($title, $page, $body)
 	global $script, $vars, $arg, $defaultpage, $whatsnew, $help_page, $hr;
 	global $attach_link, $related_link, $cantedit, $function_freeze;
 	global $search_word_color, $_msg_word, $foot_explain, $note_hr, $head_tags;
-	global $trackback, $trackback_javascript, $referer, $javascript;
-	global $nofollow;
+	global $trackback, $referer, $javascript, $nofollow;
 	global $_LANG, $_LINK, $_IMAGE;
 
 	global $pkwk_dtd;     // XHTML 1.1, XHTML1.0, HTML 4.01 Transitional...
@@ -30,7 +29,6 @@ function catbody($title, $page, $body)
 	$_LINK = $_IMAGE = array();
 
 	// Add JavaScript header when ...
-	if ($trackback && $trackback_javascript) $javascript = 1; // Set something If you want
 	if (! PKWK_ALLOW_JAVASCRIPT) unset($javascript);
 
 	$_page  = isset($vars['page']) ? $vars['page'] : '';

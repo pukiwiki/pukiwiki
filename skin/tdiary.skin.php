@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.32 2006/08/06 12:44:55 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.33 2006/10/08 11:24:30 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -651,8 +651,7 @@ function _navigator($key, $value = '', $javascript = ''){
    <?php _navigator('help')   ?>
 
 <?php if ($trackback) { ?> &nbsp;
-   <?php _navigator('trackback', $lang['trackback'] . '(' . tb_count($_page) . ')',
- 	($trackback_javascript == 1) ? 'onclick="OpenTrackback(this.href); return false"' : '') ?>
+   <?php _navigator('trackback', $lang['trackback'] . '(' . tb_count($_page) . ')') ?>
 <?php } ?>
 <?php if ($referer)   { ?> &nbsp;
    <?php _navigator('refer') ?>
