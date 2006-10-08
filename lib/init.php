@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.48 2006/09/30 02:35:35 henoheno Exp $
+// $Id: init.php,v 1.49 2006/10/08 03:06:23 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -261,8 +261,6 @@ if (isset($_GET['encode_hint']) && $_GET['encode_hint'] != '')
 /////////////////////////////////////////////////
 // QUERY_STRINGを取得
 
-// cmdもpluginも指定されていない場合は、QUERY_STRINGを
-// ページ名かInterWikiNameであるとみなす
 $arg = '';
 if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING']) {
 	$arg = & $_SERVER['QUERY_STRING'];
@@ -272,7 +270,6 @@ if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING']) {
 if (PKWK_QUERY_STRING_MAX && strlen($arg) > PKWK_QUERY_STRING_MAX) {
 	// Something nasty attack?
 	pkwk_common_headers();
-	sleep(1);	// Fake processing, and/or process other threads
 	echo('Query string too long');
 	exit;
 }
