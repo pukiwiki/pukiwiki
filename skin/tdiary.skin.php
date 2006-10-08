@@ -651,8 +651,7 @@ function _navigator($key, $value = '', $javascript = ''){
    <?php _navigator('help')   ?>
 
 <?php if ($trackback) { ?> &nbsp;
-   <?php _navigator('trackback', $lang['trackback'] . '(' . tb_count($_page) . ')',
- 	($trackback_javascript == 1) ? 'onclick="OpenTrackback(this.href); return false"' : '') ?>
+   <?php _navigator('trackback', $lang['trackback'] . '(' . tb_count($_page) . ')') ?>
 <?php } ?>
 <?php if ($referer)   { ?> &nbsp;
    <?php _navigator('refer') ?>

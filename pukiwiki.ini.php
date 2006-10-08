@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.140 2006/06/11 14:35:39 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.143 2006/10/08 11:27:06 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -159,9 +159,6 @@ define('PKWK_ALLOW_JAVASCRIPT', 0);
 
 // Enable Trackback
 $trackback = 0;
-
-// Show trackbacks with an another window (using JavaScript)
-$trackback_javascript = 0;
 
 /////////////////////////////////////////////////
 // Referer list feature
