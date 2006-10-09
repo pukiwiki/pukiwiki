@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.79 2006/10/07 05:39:41 henoheno Exp $
+// $Id: func.php,v 1.80 2006/10/09 22:06:00 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -568,9 +568,7 @@ function get_autolink_pattern(& $pages, $min_len = -1)
 function get_matcher_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 {
 	if ($sentry === NULL) $sentry = count($array);
-	if (empty($array) || $offset < 0 || $sentry <= 0 || $pos < 0 ||
-	    $offset >= $sentry || ! isset($array[$offset]) || ! isset($array[$sentry - 1]))
-		return '(?!)'; // Invalid
+	if ($sentry == 0) return '(?!)'; // Zero
 
 	// Too short. Skip this
 	$skip = ($pos >= mb_strlen($array[$offset]));
