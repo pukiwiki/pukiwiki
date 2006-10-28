@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.82 2006/10/24 13:13:51 henoheno Exp $
+// $Id: func.php,v 1.83 2006/10/28 14:35:42 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -616,7 +616,7 @@ function get_matcher_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 // Compat
 function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 {
-	return get_matcher_regex(& $pages, $start, $end, $pos);
+	return get_matcher_regex($pages, $start, $end, $pos);
 }
 
 // Load/get setting pairs from AutoAliasName
