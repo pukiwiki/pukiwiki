@@ -22,6 +22,9 @@ define('S_COPYRIGHT',
 /////////////////////////////////////////////////
 // Init server variables
 
+// Comapat and suppress notices
+if (!isset($HTTP_SERVER_VARS)) $HTTP_SERVER_VARS = array();
+
 foreach (array('SCRIPT_NAME', 'SERVER_ADMIN', 'SERVER_NAME',
 	'SERVER_PORT', 'SERVER_SOFTWARE') as $key) {
 	define($key, isset($_SERVER[$key]) ? $_SERVER[$key] : '');
