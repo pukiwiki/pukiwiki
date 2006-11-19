@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.49 2006/10/08 03:06:23 henoheno Exp $
+// $Id: init.php,v 1.50 2006/11/19 05:41:45 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -21,6 +21,9 @@ define('S_COPYRIGHT',
 
 /////////////////////////////////////////////////
 // Init server variables
+
+// Comapat and suppress notices
+if (!isset($HTTP_SERVER_VARS)) $HTTP_SERVER_VARS = array();
 
 foreach (array('SCRIPT_NAME', 'SERVER_ADMIN', 'SERVER_NAME',
 	'SERVER_PORT', 'SERVER_SOFTWARE') as $key) {
