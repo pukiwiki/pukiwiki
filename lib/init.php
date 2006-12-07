@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.50 2006/11/19 05:41:45 henoheno Exp $
+// $Id: init.php,v 1.51 2006/12/07 14:46:49 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -312,10 +312,13 @@ $cookie = & $_COOKIE;
 
 // GET + POST = $vars
 if (empty($_POST)) {
+	$method = 'GET';
 	$vars = & $_GET;  // Major pattern: Read-only access via GET
 } else if (empty($_GET)) {
+	$method = 'POST';
 	$vars = & $_POST; // Minor pattern: Write access via POST etc.
 } else {
+	$method = 'GET and POST';
 	$vars = array_merge($_GET, $_POST); // Considered reliable than $_REQUEST
 }
 

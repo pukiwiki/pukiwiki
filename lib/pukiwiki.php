@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.php,v 1.11 2005/09/11 05:58:33 henoheno Exp $
+// $Id: pukiwiki.php,v 1.12 2006/12/07 14:46:49 henoheno Exp $
 //
 // PukiWiki 1.4.*
 //  Copyright (C) 2002-2005 by PukiWiki Developers Team
@@ -81,23 +81,63 @@ if (isset($vars['cmd'])) {
 } else {
 	$plugin = '';
 }
+
 if ($plugin != '') {
-	if (exist_plugin_action($plugin)) {
-		// Found and exec
+	if (! exist_plugin_action($plugin)) {
+		$msg = 'plugin=' . htmlspecialchars($plugin) . ' is not implemented.';
+		$retvars = array('msg'=>$msg,'body'=>$msg);
+		$base    = & $defaultpage;
+	} else {
+		$page  = isset($vars['page'])  ? $vars['page']  : '';
+		$refer = isset($vars['refer']) ? $vars['refer'] : '';
+
+		if ($spam /* && $method != 'GET' */) {
+			// Adjustment
+			$_spam   = $spam;
+			$_plugin = strtolower($plugin);
+			switch ($_plugin) {
+				//case 'read':
+				//	$_page = & $page;
+				//	$_spam = FALSE;
+				//	break;
+
+				case 'search':
+					$_page = ''; // TODO: track which page or ...
+					$_spam = FALSE;
+				   break;
+
+				case 'edit':
+					$_page = & $page;
+					// Adjustment
+					if (isset($vars['add']) && $vars['add']) {
+						$_spam   = TRUE;
+						$_plugin = 'add';
+					} else {
+						// TODO: Add some metrics to plus (quantitiy, non_uniq, badhost etc)
+						$_spam = FALSE;
+					}
+					break;
+
+				case 'bugtrack': $_page = & $post['base'];  break;
+				case 'tracker':  $_page = & $post['_base']; break;
+
+				//case 'article':  /*FALLTHROUGH*/
+				//case 'comment':  /*FALLTHROUGH*/
+				//case 'insert':   /*FALLTHROUGH*/
+				//case 'lookup':   /*FALLTHROUGH*/
+				//case 'pcomment': /*FALLTHROUGH*/
+				default:         $_page = & $refer; break;
+			}
+			if ($_spam) {
+				require(LIB_DIR . 'spam.php');
+				pkwk_spamfilter($method . ' to #' . $_plugin, $_page, $vars);
+			}
+		}
+
 		$retvars = do_plugin_action($plugin);
 		if ($retvars === FALSE) exit; // Done
 
-		if ($is_cmd) {
-			$base = isset($vars['page'])  ? $vars['page']  : '';
-		} else {
-			$base = isset($vars['refer']) ? $vars['refer'] : '';
-		}
-	} else {
-		// Not found
-		$msg = 'plugin=' . htmlspecialchars($plugin) .
-			' is not implemented.';
-		$retvars = array('msg'=>$msg,'body'=>$msg);
-		$base    = & $defaultpage;
+		$base = $is_cmd ? $page : $refer;
 	}
 }
 
