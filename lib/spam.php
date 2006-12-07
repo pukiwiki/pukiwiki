@@ -1,11 +1,14 @@
 <?php
-// $Id: spam.php,v 1.6 2006/12/03 14:19:50 henoheno Exp $
+// $Id: spam.php,v 1.7 2006/12/07 14:32:50 henoheno Exp $
 // Copyright (C) 2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 
 // Functions for Concept-work of spam-uri metrics
 
 if (! defined('SPAM_INI_FILE')) define('SPAM_INI_FILE', 'spam.ini.php');
+
+// ---------------------
+// URI pickup
 
 // Return an array of URIs in the $string
 // [OK] http://nasty.example.org#nasty_string
@@ -65,7 +68,6 @@ function uri_pickup($string = '', $normalize = TRUE,
 			$_uri['host']  = strtolower($_uri['host']);
 			$_uri['port']  = port_normalize($_uri['port'], $_uri['scheme'], FALSE);
 			$_uri['path']  = path_normalize($_uri['path']);
-			$_uri['query'] = query_normalize($_uri['query']);
 			if ($preserve_rawuri) $_uri['rawuri'] = & $_uri[0];
 
 			// DEBUG
@@ -86,11 +88,97 @@ function uri_pickup($string = '', $normalize = TRUE,
 				$_uri['fragment']
 			);
 		}
+		
+		// Area offset for area_measure()
 		$_uri['area']['offset'] = $offset;
 	}
 
 	return $array;
 }
+
+// Destructive normalize of URI array
+// NOTE: Give me the uri_pickup() result with chunks
+function uri_array_normalize(& $pickups, $preserve = TRUE)
+{
+	if (! is_array($pickups)) return $pickups;
+
+	foreach (array_keys($pickups) as $key) {
+		$_key = & $pickups[$key];
+		$_key['path']     = isset($_key['path']) ? strtolower($_key['path']) : '';
+		$_key['file']     = isset($_key['file']) ? file_normalize($_key['file']) : '';
+		$_key['query']    = isset($_key['query']) ? query_normalize(strtolower($_key['query']), TRUE) : '';
+		$_key['fragment'] = (isset($_key['fragment']) && $preserve) ?
+			strtolower($_key['fragment']) : ''; // Just ignore
+	}
+
+	return $pickups;
+}
+
+// An URI array => An URI (See uri_pickup())
+function uri_array_implode($uri = array())
+{
+	if (empty($uri) || ! is_array($uri)) return NULL;
+
+	$tmp = array();
+	if (isset($uri['scheme']) && $uri['scheme'] !== '') {
+		$tmp[] = & $uri['scheme'];
+		$tmp[] = '://';
+	}
+	if (isset($uri['userinfo']) && $uri['userinfo'] !== '') {
+		$tmp[] = & $uri['userinfo'];
+		$tmp[] = '@';
+	}
+	if (isset($uri['host']) && $uri['host'] !== '') {
+		$tmp[] = & $uri['host'];
+	}
+	if (isset($uri['port']) && $uri['port'] !== '') {
+		$tmp[] = ':';
+		$tmp[] = & $uri['port'];
+	}
+	if (isset($uri['path']) && $uri['path'] !== '') {
+		$tmp[] = & $uri['path'];
+	}
+	if (isset($uri['file']) && $uri['file'] !== '') {
+		$tmp[] = & $uri['file'];
+	}
+	if (isset($uri['query']) && $uri['query'] !== '') {
+		$tmp[] = '?';
+		$tmp[] = & $uri['query'];
+	}
+	if (isset($uri['fragment']) && $uri['fragment'] !== '') {
+		$tmp[] = '#';
+		$tmp[] = & $uri['fragment'];
+	}
+
+	return implode('', $tmp);
+}
+
+// $array['something'] => $array['wanted']
+function array_rename_keys(& $array, $keys = array('from' => 'to'), $force = FALSE, $default = '')
+{
+	if (! is_array($array) || ! is_array($keys)) return FALSE;
+
+	// Nondestructive test
+	if (! $force)
+		foreach(array_keys($keys) as $from)
+			if (! isset($array[$from]))
+				return FALSE;
+
+	foreach($keys as $from => $to) {
+		if ($from === $to) continue;
+		if (! $force || isset($array[$from])) {
+			$array[$to] = & $array[$from];
+			unset($array[$from]);
+		} else  {
+			$array[$to] = $default;
+		}
+	}
+
+	return TRUE;
+}
+
+// ---------------------
+// Spam-uri pickup
 
 // Domain exposure callback (See spam_uri_pickup_preprocess())
 // http://victim.example.org/?foo+site:nasty.example.com+bar
@@ -239,30 +327,6 @@ function spam_uri_pickup($string = '', $area = array())
 	return $array;
 }
 
-// $array['something'] => $array['wanted']
-function array_rename_keys(& $array, $keys = array('from' => 'to'), $force = FALSE, $default = '')
-{
-	if (! is_array($array) || ! is_array($keys)) return FALSE;
-
-	// Nondestructive test
-	if (! $force)
-		foreach(array_keys($keys) as $from)
-			if (! isset($array[$from]))
-				return FALSE;
-
-	foreach($keys as $from => $to) {
-		if ($from === $to) continue;
-		if (! $force || isset($array[$from])) {
-			$array[$to] = & $array[$from];
-			unset($array[$from]);
-		} else  {
-			$array[$to] = $default;
-		}
-	}
-
-	return TRUE;
-}
-
 // If in doubt, it's a little doubtful
 function area_measure($areas, & $array, $belief = -1, $a_key = 'area', $o_key = 'offset')
 {
@@ -285,9 +349,8 @@ function area_measure($areas, & $array, $belief = -1, $a_key = 'area', $o_key = 
 	}
 }
 
-
 // ---------------------
-// Part Two
+// Normalization
 
 // Scheme normalization: Renaming the schemes
 // snntp://example.org =>  nntps://example.org
@@ -377,39 +440,77 @@ function port_normalize($port, $scheme, $scheme_normalize = TRUE)
 // http://example.org/path/../../a/../back => http://example.org/back
 function path_normalize($path = '', $divider = '/', $addroot = TRUE)
 {
-	if (! is_string($path) || $path == '') {
-		$path = $addroot ? $divider : '';
-	} else {
-		$path = trim($path);
-		$last = ($path[strlen($path) - 1] == $divider) ? $divider : '';
-		$array = explode($divider, $path);
+	if (! is_string($path) || $path == '')
+		return $addroot ? $divider : '';
 
-		// Remove paddings
-		foreach(array_keys($array) as $key) {
-			if ($array[$key] == '' || $array[$key] == '.')
-				 unset($array[$key]);
-		}
-		// Back-track
-		$tmp = array();
-		foreach($array as $value) {
-			if ($value == '..') {
-				array_pop($tmp);
-			} else {
-				array_push($tmp, $value);
-			}
-		}
-		$array = & $tmp;
+	$path = trim($path);
+	$last = ($path[strlen($path) - 1] == $divider) ? $divider : '';
+	$array = explode($divider, $path);
 
-		$path = $addroot ? $divider : '';
-		if (! empty($array)) $path .= implode($divider, $array) . $last;
+	// Remove paddings
+	foreach(array_keys($array) as $key) {
+		if ($array[$key] == '' || $array[$key] == '.')
+			 unset($array[$key]);
 	}
+	// Back-track
+	$tmp = array();
+	foreach($array as $value) {
+		if ($value == '..') {
+			array_pop($tmp);
+		} else {
+			array_push($tmp, $value);
+		}
+	}
+	$array = & $tmp;
+
+	$path = $addroot ? $divider : '';
+	if (! empty($array)) $path .= implode($divider, $array) . $last;
 
 	return $path;
 }
 
-// Sort query-strings if possible
+// DirectoryIndex normalize (Destructive and rough)
+function file_normalize($string = 'index.html.en')
+{
+	static $array = array(
+		'index'			=> TRUE,	// Some system can omit the suffix
+		'index.htm'		=> TRUE,
+		'index.html'	=> TRUE,
+		'index.shtml'	=> TRUE,
+		'index.jsp'		=> TRUE,
+		'index.php'		=> TRUE,
+		'index.php3'	=> TRUE,
+		'index.php4'	=> TRUE,
+		//'index.pl'	=> TRUE,
+		//'index.py'	=> TRUE,
+		//'index.rb'	=> TRUE,
+		'index.cgi'		=> TRUE,
+		'default.htm'	=> TRUE,
+		'default.html'	=> TRUE,
+		'default.asp'	=> TRUE,
+		'default.aspx'	=> TRUE,
+	);
+
+	// Content-negothiation filter:
+	// Roughly removing ISO 639 -like
+	// 2-letter suffixes (See RFC3066)
+	$matches = array();
+	if (preg_match('/(.*)\.[a-z][a-z](?:-[a-z][a-z])?$/i', $string, $matches)) {
+		$_string = $matches[1];
+	} else {
+		$_string = & $string;
+	}
+
+	if (isset($array[strtolower($_string)])) {
+		return '';
+	} else {
+		return $string;
+	}
+}
+
+// Sort query-strings if possible (Destructive and rough)
 // [OK] &&&&f=d&b&d&c&a=0dd  =>  a=0dd&b&c&d&f=d
-// [OK] nothing==&eg=dummy&eg=padding&eg=foobar  =>  eg=foobar (destructive)
+// [OK] nothing==&eg=dummy&eg=padding&eg=foobar  =>  eg=foobar
 function query_normalize($string = '', $equal = FALSE, $equal_cutempty = TRUE)
 {
 	$array = explode('&', $string);
@@ -445,45 +546,6 @@ function query_normalize($string = '', $equal = FALSE, $equal_cutempty = TRUE)
 
 	natsort($array);
 	return implode('&', $array);
-}
-
-// An URI array => An URI (See uri_pickup())
-function uri_array_implode($uri = array())
-{
-	if (empty($uri) || ! is_array($uri)) return NULL;
-	
-	$tmp = array();
-	if (isset($uri['scheme']) && $uri['scheme'] !== '') {
-		$tmp[] = & $uri['scheme'];
-		$tmp[] = '://';
-	}
-	if (isset($uri['userinfo']) && $uri['userinfo'] !== '') {
-		$tmp[] = & $uri['userinfo'];
-		$tmp[] = '@';
-	}
-	if (isset($uri['host']) && $uri['host'] !== '') {
-		$tmp[] = & $uri['host'];
-	}
-	if (isset($uri['port']) && $uri['port'] !== '') {
-		$tmp[] = ':';
-		$tmp[] = & $uri['port'];
-	}
-	if (isset($uri['path']) && $uri['path'] !== '') {
-		$tmp[] = & $uri['path'];
-	}
-	if (isset($uri['file']) && $uri['file'] !== '') {
-		$tmp[] = & $uri['file'];
-	}
-	if (isset($uri['query']) && $uri['query'] !== '') {
-		$tmp[] = '?';
-		$tmp[] = & $uri['query'];
-	}
-	if (isset($uri['fragment']) && $uri['fragment'] !== '') {
-		$tmp[] = '#';
-		$tmp[] = & $uri['fragment'];
-	}
-
-	return implode('', $tmp);
 }
 
 // ---------------------
@@ -599,13 +661,14 @@ function check_uri_spam_method($times = 1, $t_area = 0, $rule = TRUE)
 
 	// Areas
 	$area = array(
-		//'total'  => $t_area,	// Allow N areas total, enabled below
-		'anchor'   => $t_area,	// Inside <a href> HTML tag
-		'bbcode'   => $t_area,	// Inside [url] or [link] BBCode
+		//'total' => $t_area,	// Allow N areas total, enabled below
+		'anchor'  => $t_area,	// Inside <a href> HTML tag
+		'bbcode'  => $t_area,	// Inside [url] or [link] BBCode
 	);
 
 	// Rules
 	$rules = array(
+		'uniqhost' => TRUE,	// Show uniq host
 		'badhost'  => TRUE,	// Check badhost
 	);
 
@@ -622,62 +685,54 @@ function check_uri_spam_method($times = 1, $t_area = 0, $rule = TRUE)
 	return $method + $area + $rules;
 }
 
-
-// TODO: Simplify. !empty(['_action']) just means $is_spam
+// TODO: Simplify $progress data structure
+// TODO: Simplify. !empty(['is_spam']) just means $is_spam
 // Simple/fast spam check
 function check_uri_spam($target = '', $method = array(), $asap = TRUE)
 {
 	$is_spam  = FALSE;
-	$progress = array(
-		'quantity'   => 0,
-		'area' => array(
-			'total'  => 0,
-			'anchor' => 0,
-			'bbcode' => 0,
-			),
-		'non_uniq'   => 0,
-		'uniqhost'   => 0,
-		'badhost'    => 0,
-		'_action'    => array(),
-		);
-
 	if (! is_array($method) || empty($method)) {
 		$method = check_uri_spam_method();
 	}
+
+	$progress = array(
+		'sum' =>  array(
+			'quantity'    => 0,
+			'uniqhost'    => 0,
+			'non_uniq'    => 0,
+			'badhost'     => 0,
+			'area_total'  => 0,
+			'area_anchor' => 0,
+			'area_bbcode' => 0,
+			),
+		'is_spam' => array(),
+		'method' => & $method,
+	);
+
 
 	if (is_array($target)) {
 		// Recurse
 		foreach($target as $str) {
 			list($_is_spam, $_progress) = check_uri_spam($str, $method, $asap);
 			$is_spam = $is_spam || $_is_spam;
-			$progress['quantity']       += $_progress['quantity'];
-			$progress['area']['total']  += $_progress['area']['total'];
-			$progress['area']['anchor'] += $_progress['area']['anchor'];
-			$progress['area']['bbcode'] += $_progress['area']['bbcode'];
-			$progress['non_uniq']       += $_progress['non_uniq'];
-			$progress['uniqhost']       += $_progress['uniqhost'];
-			$progress['badhost']        += $_progress['badhost'];
-			foreach($_progress['_action'] as $key => $value) {
-				if (is_array($value)) {
-					foreach(array_keys($value) as $_key) {
-						$progress['_action'][$key][$_key] = TRUE;
-					}
-				} else {
-					$progress['_action'][$key] = TRUE;
-				}
+			foreach (array_keys($_progress['sum']) as $key) {
+				$progress['sum'][$key] += $_progress['sum'][$key];
+			}
+			foreach(array_keys($_progress['is_spam']) as $key) {
+				$progress['is_spam'][$key] = TRUE;
 			}
 			if ($is_spam && $asap) break;
 		}
 	} else {
 		$pickups = spam_uri_pickup($target);
 		if (! empty($pickups)) {
-			$progress['quantity'] += count($pickups);
+			$progress['sum']['quantity'] += count($pickups);
 
 			// URI quantity
 			if ((! $is_spam || ! $asap) && isset($method['quantity']) &&
-				$progress['quantity'] > $method['quantity']) {
+				$progress['sum']['quantity'] > $method['quantity']) {
 				$is_spam = TRUE;
-				$progress['_action']['quantity'] = TRUE;
+				$progress['is_spam']['quantity'] = TRUE;
 			}
 			//var_dump($method['quantity'], $is_spam);
 
@@ -686,18 +741,19 @@ function check_uri_spam($target = '', $method = array(), $asap = TRUE)
 				foreach($pickups as $pickup) {
 					foreach ($pickup['area'] as $key => $value) {
 						if ($key == 'offset') continue;
-						$progress['area']['total'] += $value;
-						$progress['area'][$key]    += $value;
+						$p_key = 'area_' . $key;
+						$progress['sum']['area_total'] += $value;
+						$progress['sum'][$p_key]       += $value;
 						if (isset($method['area']['total']) &&
-								$progress['area']['total'] > $method['area']['total']) {
+								$progress['sum']['area_total'] > $method['area']['total']) {
 							$is_spam = TRUE;
-							$progress['_action']['area']['total'] = TRUE;
+							$progress['is_spam']['area_total'] = TRUE;
 							if ($is_spam && $asap) break;
 						}
 						if(isset($method['area'][$key]) &&
-								$progress['area'][$key] > $method['area'][$key]) {
+								$progress['sum'][$p_key] > $method['area'][$key]) {
 							$is_spam = TRUE;
-							$progress['_action']['area'][$key] = TRUE;
+							$progress['is_spam'][$p_key] = TRUE;
 							if ($is_spam && $asap) break;
 						}
 					}
@@ -706,28 +762,23 @@ function check_uri_spam($target = '', $method = array(), $asap = TRUE)
 			}
 			//var_dump($method['area'], $is_spam);
 
+
 			// URI uniqueness (and removing non-uniques)
 			if ((! $is_spam || ! $asap) && isset($method['non_uniq'])) {
 
 				// Destructive normalize of URIs
-				foreach (array_keys($pickups) as $key) {
-					$pickups[$key]['path']  = strtolower($pickups[$key]['path']);
-					$pickups[$key]['file']  = strtolower($pickups[$key]['file']);
-					$pickups[$key]['query'] =
-						query_normalize(strtolower($pickups[$key]['query']), TRUE);
-					$pickups[$key]['fragment'] = ''; // Just ignore
-				}
+				uri_array_normalize($pickups);
 
 				$uris = array();
 				foreach (array_keys($pickups) as $key) {
 					$uris[$key] = uri_array_implode($pickups[$key]);
  				}
 				$count = count($uris);
-				$uris = array_unique($uris);
-				$progress['non_uniq'] += $count - count($uris);
-				if ($progress['non_uniq'] > $method['non_uniq']) {
+				$uris  = array_unique($uris);
+				$progress['sum']['non_uniq'] += $count - count($uris);
+				if ($progress['sum']['non_uniq'] > $method['non_uniq']) {
 					$is_spam = TRUE;
-					$progress['_action']['non_uniq'] = TRUE;
+					$progress['is_spam']['non_uniq'] = TRUE;
 				}
 				if (! $asap || ! $is_spam) {
 					foreach (array_diff(array_keys($pickups),
@@ -745,15 +796,15 @@ function check_uri_spam($target = '', $method = array(), $asap = TRUE)
 				$hosts[] = & $pickup['host'];
 			}
 			$hosts = array_unique($hosts);
-			$progress['uniqhost'] += count($hosts);
+			$progress['sum']['uniqhost'] += count($hosts);
 			//var_dump($method['uniqhost'], $is_spam);
 
 			// Bad host
 			if ((! $is_spam || ! $asap) && isset($method['badhost'])) {
 				$count = is_badhost($hosts, $asap);
-				$progress['badhost'] += $count;
+				$progress['sum']['badhost'] += $count;
 				if ($count !== 0) {
-					$progress['_action']['badhost'] = TRUE;
+					$progress['is_spam']['badhost'] = TRUE;
 					$is_spam = TRUE;
 				}
 			}
@@ -767,22 +818,25 @@ function check_uri_spam($target = '', $method = array(), $asap = TRUE)
 // ---------------------
 // Reporting
 
-// TODO: Show all
+// TODO: Don't show unused $method!
 // Summarize $progress (blocked only)
-function summarize_check_uri_spam_progress($progress = array(), $shownum = TRUE)
+function summarize_spam_progress($progress = array(), $blockedonly = FALSE)
 {
-	//$list = check_uri_spam_method();
+	$method = $progress['method'];
+	if (isset($method['area'])) {
+		foreach(array_keys($method['area']) as $key) {
+			$method['area_' . $key] = TRUE;
+		}
+	}
 
-	$tmp = array();
-	foreach (array_keys($progress['_action']) as $_action) {
-		if (is_array($progress['_action'][$_action])) {
-			foreach (array_keys($progress['_action'][$_action]) as $_area) {
-				$tmp[] = $_action . '=>' . $_area .
-					($shownum ? '(' . $progress[$_action][$_area] . ')' : '');
+	if ($blockedonly) {
+		$tmp = array_keys($progress['is_spam']);
+	} else {
+		$tmp = array();
+		foreach ($progress['sum'] as $key => $value) {
+			if (isset($method[$key])) {
+				$tmp[] = $key . '(' . $value . ')';
 			}
-		} else {
-			$tmp[] = $_action .
-					($shownum ? '(' . $progress[$_action] . ')' : '');
 		}
 	}
 
@@ -801,8 +855,9 @@ function spam_exit()
 
 
 // ---------------------
-// 
+// Simple filtering
 
+// TODO: Record them
 // Simple/fast spam filter ($target: 'a string' or an array())
 function pkwk_spamfilter($action, $page, $target = array('title' => ''), $method = array(), $asap = FALSE)
 {
@@ -812,7 +867,7 @@ function pkwk_spamfilter($action, $page, $target = array('title' => ''), $method
 
 	if ($is_spam) {
 		// Mail to administrator(s)
-		if ($notify) pkwk_spamnotify($action, $page, $target, $progress);
+		if ($notify) pkwk_spamnotify($action, $page, $target, $progress, $asap);
 		// End
 		spam_exit();
 	}
@@ -822,14 +877,17 @@ function pkwk_spamfilter($action, $page, $target = array('title' => ''), $method
 // PukiWiki original
 
 // Mail to administrator(s)
-function pkwk_spamnotify($action, $page, $target = array('title' => ''), $progress = array())
+function pkwk_spamnotify($action, $page, $target = array('title' => ''), $progress = array(), $asap = FALSE)
 {
 	global $notify_subject;
 
-	$footer['ACTION'] = 'Blocked by: ' . summarize_check_uri_spam_progress($progress);
+	$footer['ACTION']  = 'Blocked by: ' . summarize_spam_progress($progress, TRUE);
+	if (! $asap) {
+		$footer['METRICS'] = summarize_spam_progress($progress);
+	}
 	$footer['COMMENT'] = $action;
-	$footer['PAGE']   = '[blocked] ' . $page;
-	$footer['URI']    = get_script_uri() . '?' . rawurlencode($page);
+	$footer['PAGE']    = '[blocked] ' . $page;
+	$footer['URI']     = get_script_uri() . '?' . rawurlencode($page);
 	$footer['USER_AGENT']  = TRUE;
 	$footer['REMOTE_ADDR'] = TRUE;
 	pkwk_mail_notify($notify_subject,  var_export($target, TRUE), $footer);
