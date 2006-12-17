@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.8 2006/12/17 03:24:35 henoheno Exp $
+// $Id: spam.php,v 1.9 2006/12/17 05:07:44 henoheno Exp $
 // Copyright (C) 2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 
@@ -771,8 +771,10 @@ function check_uri_spam($target = '', $method = array())
 		$_asap = isset($method['asap']) ? array('asap' => TRUE) : array();
 		$result = area_pickup($target, array($key => TRUE) + $_asap);
 		if ($result) {
-			$sum[$key]    += $result[$key];
-			$is_spam[$key] = TRUE;
+			$sum[$key] = $result[$key];
+			if (isset($method[$key]) && $sum[$key] > $method[$key]) {
+				$is_spam[$key] = TRUE;
+			}
 		}
 	}
 
@@ -782,8 +784,10 @@ function check_uri_spam($target = '', $method = array())
 		$_asap = isset($method['asap']) ? array('asap' => TRUE) : array();
 		$result = area_pickup($target, array($key => TRUE) + $_asap);
 		if ($result) {
-			$sum[$key]    += $result[$key];
-			$is_spam[$key] = TRUE;
+			$sum[$key] = $result[$key];
+			if (isset($method[$key]) && $sum[$key] > $method[$key]) {
+				$is_spam[$key] = TRUE;
+			}
 		}
 	}
 
@@ -959,7 +963,7 @@ function pkwk_spamnotify($action, $page, $target = array('title' => ''), $progre
 {
 	global $notify_subject;
 
-	$asap = isset($method['asap']) ? $method['asap'] : TRUE;
+	$asap = isset($method['asap']);
 
 	$footer['ACTION']  = 'Blocked by: ' . summarize_spam_progress($progress, TRUE);
 
