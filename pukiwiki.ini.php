@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.144 2006/12/07 14:47:15 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.145 2006/12/17 15:39:23 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -159,6 +159,37 @@ define('PKWK_ALLOW_JAVASCRIPT', 0);
 // Spam URI insertion filtering
 
 $spam = 1;	// 1 = On
+
+if ($spam) {
+	$spam = array();
+
+	// Threshold and rules for insertion (default)
+	$spam['method']['_default'] = array(
+		'_comment'    => '_default',
+		'quantity'    => 8,
+		'non_uniq'    => 3,
+		'area_anchor' => 0,
+		'area_bbcode' => 0,
+		'uniqhost'    => TRUE,
+		'badhost'     => TRUE,
+		//'asap'        => TRUE,
+	);
+
+	// For editing (default)
+	$spam['method']['_edit'] = array(
+		// Supposed(n) * Edit_form_spec(2) * Margin(2)
+		'_comment'    => '_edit',
+		'quantity'    => 60 * 4,
+		'non_uniq'    =>  5 * 4,
+		'area_anchor' => 30 * 4,
+		'area_bbcode' => 15 * 4,
+		'uniqhost'    => TRUE,
+		'badhost'     => TRUE,
+		//'asap'        => TRUE,
+	);
+
+	//$spam['exitmode'] = 'dump'; // Dump progress
+}
 
 /////////////////////////////////////////////////
 // TrackBack feature
