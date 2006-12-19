@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.php,v 1.14 2006/12/17 15:39:51 henoheno Exp $
+// $Id: pukiwiki.php,v 1.15 2006/12/19 14:33:38 henoheno Exp $
 //
 // PukiWiki 1.4.*
 //  Copyright (C) 2002-2006 by PukiWiki Developers Team
@@ -86,53 +86,33 @@ if (isset($vars['cmd'])) {
 	$plugin = '';
 }
 
-
 // Spam filtering
 if ($spam && $method != 'GET') {
 	// Adjustment
 	$_spam   = ! empty($spam);
 	$_plugin = strtolower($plugin);
 	switch ($_plugin) {
-		//case 'plugin-name':
-		//	$_spam = FALSE; // Don't check, or check later
-		//	break;
-		case 'search':
-			$_page = '';
-			$_spam = FALSE;
-		   break;
+		case 'search': $_spam = FALSE; break;
 		case 'edit':
+			$_page = & $page;
 			if (isset($vars['add']) && $vars['add']) {
 				$_plugin = 'add';
 			}
-			$_page = & $page;
 			break;
 		case 'bugtrack': $_page = & $post['base'];  break;
 		case 'tracker':  $_page = & $post['_base']; break;
-		//case 'article':  /*FALLTHROUGH*/
-		//case 'comment':  /*FALLTHROUGH*/
-		//case 'insert':   /*FALLTHROUGH*/
-		//case 'lookup':   /*FALLTHROUGH*/
-		//case 'pcomment': /*FALLTHROUGH*/
 		default: $_page = & $refer; break;
 	}
-
 	if ($_spam) {
 		require(LIB_DIR . 'spam.php');
-
-		// Specific $method
 		if (isset($spam['method'][$_plugin])) {
 			$_method = & $spam['method'][$_plugin];
-		} else if ($_plugin == 'edit' && isset($spam['method']['_edit'])) {
-			$_method = & $spam['method']['_edit'];
 		} else if (isset($spam['method']['_default'])) {
 			$_method = & $spam['method']['_default'];
 		} else {
-			$_method = array(); // spam.php Default
+			$_method = array();
 		}
-		if (! is_array($_method)) $_method = array();
-
 		$exitmode = isset($spam['exitmode']) ? $spam['exitmode'] : '';
-
 		pkwk_spamfilter($method . ' to #' . $_plugin, $_page, $vars, $_method, $exitmode);
 	}
 }
