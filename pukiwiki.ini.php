@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.145 2006/12/17 15:39:23 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.146 2006/12/19 14:34:54 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -172,20 +172,24 @@ if ($spam) {
 		'area_bbcode' => 0,
 		'uniqhost'    => TRUE,
 		'badhost'     => TRUE,
-		//'asap'        => TRUE,
+		'asap'        => TRUE, // Stop as soon as possible (quick)
 	);
 
-	// For editing (default)
-	$spam['method']['_edit'] = array(
-		// Supposed(n) * Edit_form_spec(2) * Margin(2)
-		'_comment'    => '_edit',
-		'quantity'    => 60 * 4,
-		'non_uniq'    =>  5 * 4,
-		'area_anchor' => 30 * 4,
-		'area_bbcode' => 15 * 4,
+	// For editing
+	// NOTE:
+	// Any thresholds may LOCK your contents by
+	// "posting one URL" many times.
+	// Any rules will lock contents that have NG things already.
+	$spam['method']['edit'] = array(
+		// Supposed_by_you(n) * Edit_form_spec(2) * Margin(1.5)
+		'_comment'    => 'edit',
+		//'quantity'    => 60 * 3,
+		//'non_uniq'    =>  5 * 3,
+		//'area_anchor' => 30 * 3,
+		//'area_bbcode' => 15 * 3,
 		'uniqhost'    => TRUE,
 		'badhost'     => TRUE,
-		//'asap'        => TRUE,
+		'asap'        => TRUE,
 	);
 
 	//$spam['exitmode'] = 'dump'; // Dump progress
