@@ -1,10 +1,11 @@
 <?php
-// $Id: spam.php,v 1.10 2006/12/17 15:30:14 henoheno Exp $
+// $Id: spam.php,v 1.11 2006/12/23 04:36:40 henoheno Exp $
 // Copyright (C) 2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 
 // Functions for Concept-work of spam-uri metrics
-// (PHP 4 >= 4.3.0): preg_match_all()
+// (PHP 4 >= 4.3.0): preg_match_all(PREG_OFFSET_CAPTURE): $method['uri_XXX'] related feature
+// (PHP 4 >= 4.2.0): var_export(): mail-reporting and dump related
 
 if (! defined('SPAM_INI_FILE')) define('SPAM_INI_FILE', 'spam.ini.php');
 
@@ -936,7 +937,7 @@ function spam_exit($mode = '', $data = array())
 		case '':	echo("\n");	break;
 		case 'dump':
 			echo('<pre>' . "\n");
-			var_dump($data);
+			echo htmlspecialchars(var_export($data, TRUE));
 			echo('</pre>' . "\n");
 			break;
 	};
@@ -976,17 +977,16 @@ function pkwk_spamnotify($action, $page, $target = array('title' => ''), $progre
 
 	$asap = isset($method['asap']);
 
-	$footer['ACTION']  = 'Blocked by: ' . summarize_spam_progress($progress, TRUE);
-
+	$summary['ACTION']  = 'Blocked by: ' . summarize_spam_progress($progress, TRUE);
 	if (! $asap) {
-		$footer['METRICS'] = summarize_spam_progress($progress);
+		$summary['METRICS'] = summarize_spam_progress($progress);
 	}
-	$footer['COMMENT'] = $action;
-	$footer['PAGE']    = '[blocked] ' . $page;
-	$footer['URI']     = get_script_uri() . '?' . rawurlencode($page);
-	$footer['USER_AGENT']  = TRUE;
-	$footer['REMOTE_ADDR'] = TRUE;
-	pkwk_mail_notify($notify_subject,  var_export($target, TRUE), $footer);
+	$summary['COMMENT'] = $action;
+	$summary['PAGE']    = '[blocked] ' . (is_pagename($page) ? $page : '');
+	$summary['URI']     = get_script_uri() . '?' . rawurlencode($page);
+	$summary['USER_AGENT']  = TRUE;
+	$summary['REMOTE_ADDR'] = TRUE;
+	pkwk_mail_notify($notify_subject,  var_export($target, TRUE), $summary);
 }
 
 ?>
