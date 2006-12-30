@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.2 2006/12/25 14:00:25 henoheno Exp $
+// $Id: spam.ini.php,v 1.3 2006/12/30 09:26:59 henoheno Exp $
 // Spam-related setting
 
 $blocklist['badhost'] = array(
@@ -18,6 +18,9 @@ $blocklist['badhost'] = array(
 	//     tinyclick.com
 	//       "...stop offering it's free services because
 	//        too many people were taking advantage of it"
+	//
+	// Please notify us about this list with reason:
+	// http://pukiwiki.sourceforge.jp/dev/?BugTrack2/207
 	//
 	'*.0kn.com',		// by shim.net
 	'0rz.tw',
@@ -39,9 +42,15 @@ $blocklist['badhost'] = array(
 	'*.4bb.ru',
 	'*.4mg.com',		// by freeservers.com
 	'*.4x2.net',		// by active.ws
+	'*.4t.com',			// by freeservers.com
 	'5jp.net',
 	'*.6url.com',
+	'*.6x.to',
 	'82m.org',
+	'*.8m.com',			// by freeservers.com
+	'*.8m.net',			// by freeservers.com
+	'*.8k.com',			// by freeservers.com
+	'*.abwb.org',
 	'active.ws',
 	'*.alturl.com',		// by shorturl.com
 	'*.andmuchmore.com',// by webalias.com
@@ -51,13 +60,24 @@ $blocklist['badhost'] = array(
 	'*.better.ws',		// by active.ws
 	'*.bigbig.com',		// by shorturl.com
 	'bingr.com',
+	'*.be.tf',			// by ulimit.com
+	'*.best.cd',		// by ulimit.com
 	'brokenscript.com',
 	'*.browser.to',		// by webalias.com
+	'*.bsd-fan.com',	// by ulimit.com
+	'*.bucksogen.com',
+	'*.bulochka.org',	// by bucksogen.com
+	'*.buzznet.com',
+	'*.c0m.st',			// by ulimit.com
+	'*.ca.tc',			// by ulimit.com
+	'*.clan.st',		// by ulimit.com
 	'clipurl.com',
+	'*.com02.com',		// by ulimit.com
 	'*.coolhere.com',	// by hotredirect.com
 	'*.da.cx',
 	'*.dealtap.com',	// by shorturl.com
 	'dephine.org',
+	'*.discutbb.com',
 	'digbig.com',
 	'*.digipills.com',
 	'doiop.com',
@@ -65,42 +85,71 @@ $blocklist['badhost'] = array(
 	'*.echoz.com',		// by shorturl.com
 	'elfurl.com',
 	'*.emailme.net',	// by vdirect.com
+	'*.en.st',			// by ulimit.com
 	'*.escape.to',		// by webalias.com
+	'*.euro.st',		// by ulimit.com
 	'*.f2b.be',			// by f2b.be
+	'*.faithweb.com',	// by freeservers.com
 	'*.fancyurl.com',
 	'ffwd.to',
 	'*.filetap.com',	// by shorturl.com
 	'flingk.com',
+	'fm7.biz',
 	'*.fornovices.com',	// by webalias.com
+	'*.fr.fm',			// by ulimit.com
+	'*.fr.st',			// by ulimit.com
+	'*.fr.vu',			// by ulimit.com
 	'*.freakz.eu',		// by f2b.be
 	'*.freebiefinders.net',	// by shim.net
 	'*.freegaming.org',	// by shim.net
+	'*.freehosting.net',// by freeservers.com
+	'*.freeservers.com',
+	'*.freewebpages.com',
+	'fype.com',
 	'*.fun.to',			// by webalias.com
 	'*.funurl.com',		// by shorturl.com
+	'galeon.com',		// by hispavista.com
+	'*.galeon.com',		// by hispavista.com
 	'gentleurl.net',
 	'*.getto.net',		// by vdirect.com
+	'goonlink.com',
 	'*.got.to',			// by webalias.com
+	'*.gq.nu',			// by freeservers.com
+	'*.gr.st',			// by ulimit.com
 	'*.headplug.com',	// by shorturl.com
 	'*.here.ws',		// by active.ws
 	'*.hereweb.com',	// by shorturl.com
+	'*.hispavista.com',
 	'*.hitart.com',		// by shorturl.com
 	'*.homepagehere.com',	// by hotredirect.com
 	'*.hothere.com',	// by hotredirect.com
 	'*.hottestpix.com',	// by webalias.com
+	'*.ht.st',			// by ulimit.com
+	'*.htmlplanet.com',	// by freeservers.com
 	'*.hux.de',
 	'*.i89.us',
 	'*.iceglow.com',
 	'igoto.co.uk',
 	'*.imegastores.com',// by webalias.com
 	'*.inetgames.com',	// by vdirect.com
+	'*.int.ms',			// by ulimit.com
 	'*.iscool.net',
 	'*.isfun.net',		// by iscool.net
+	'*.it.st',			// by ulimit.com
+	'*.itgo.com',		// by freeservers.com
+	'*.iwarp.com',		// by freeservers.com
+	'jemurl.com',
+	'*.java-fan.com',	// by ulimit.com
 	'kat.cc',
+	'*.korzhik.org',	// by bucksogen.com
+	'*.kovrizhka.org',	// by bucksogen.com
 	'lame.name',
 	'*.latest-info.com',// by webalias.com
 	'*.learn.to',		// by webalias.com
 	'linkezy.com',
+	'*.linux-fan.com',	// by ulimit.com
 	'lnk.in',
+	'*.mac-fan.com',	// by ulimit.com
 	'makeashorterlink.com',
 	'memurl.com',
 	'minilien.com',		// by digipills.com
@@ -108,6 +157,7 @@ $blocklist['badhost'] = array(
 	'*.mirrorz.com',	// by shorturl.com
 	'mo-v.jp',
 	'*.moviefever.com',	// by webalias.com
+	'*.mp3.ms',			// by ulimit.com
 	'*.mp3-archives.com',	// by webalias.com
 	'*.mustbehere.com',	// by hotredirect.com
 	'*.mypiece.com',	// by active.ws
@@ -119,6 +169,7 @@ $blocklist['badhost'] = array(
 	'*.ne1.net',
 	'*.netbounce.com',	// by vdirect.com
 	'*.netbounce.net',	// by vdirect.com
+	'nlug.org',			// by Nashville Linux Users Group
 	'*.notlong.com',
 	'*.official.ws',	// by active.ws
 	'*.oneaddress.net',	// by vdirect.com
@@ -127,8 +178,12 @@ $blocklist['badhost'] = array(
 	'*.ouch.ws',		// by active.ws
 	'*.pagehere.com',	// by hotredirect.com
 	'*.paulding.net',
+	'*.pirozhok.org',	// by bucksogen.com
+	'*.plushka.org',	// by bucksogen.com
 	'pnope.com',
 	'*.premium.ws',		// by active.ws
+	'*.pryanik.org',	// by bucksogen.com
+	'*.qc.tc',			// by ulimit.com
 	'qrl.jp',
 	'qurl.net',
 	'*.r8.org',			// by ne1.net
@@ -139,7 +194,9 @@ $blocklist['badhost'] = array(
 	'*.rmcinfo.fr',
 	'*.runboard.com',
 	's-url.net',
+	'*.s5.com',			// by freeservers.com
 	'*.sail.to',		// by webalias.com
+	'*.scriptmania.com',// by freeservers.com
 	'*.sg5.info',
 	'*.shim.net',
 	'shorl.com',
@@ -154,16 +211,21 @@ $blocklist['badhost'] = array(
 	'shurl.org',
 	'shurl.net',
 	'simurl.com',
+	'skiltechurl.com',
 	'skocz.pl',
 	'*.snapto.net',		// by vdirect.com
 	'snipurl.com',
+	'*.sp.st',			// by ulimit.com
 	'*.sports-reports.com',	// by webalias.com
 	'*.spyw.com',		// by shorturl.com
 	'*.ssr.be',			// by f2b.be
 	'*.stop.to',		// by webalias.com
+	'*.suisse.st',		// by ulimit.com
 	'*.such.info',		// by active.ws
+	'*.sushka.org',		// by bucksogen.com
 	'*.surfhere.net',	// by hotredirect.com
 	'surl.dk',			// by s-url.dk
+	'*.t2u.com',		// by ulimit.com
 	'*.thrill.to',		// by webalias.com
 	'tighturl.com',
 	'*.tiny.cc',
@@ -177,13 +239,16 @@ $blocklist['badhost'] = array(
 	'*.tophonors.com',	// by webalias.com
 	'*.torontonian.com',
 	'*.true.ws',		// by active.ws
+	'*.tvheaven.com',	// by freeservers.com
 	'*.tux.nu',			// by iscool.net
 	'*.tweaker.eu',		// by f2b.be
 	'*.tz4.com',
 	'*.uncutuncensored.com',	// by webalias.com
+	'*.uni.cc',
+	'*.unixlover.com',	// by ulimit.com
 	'*.up.to',			// by webalias.com
 	'*.uploadr.com',
-	'url.vg',
+	'url.vg',			// by jeremyjohnstone.com
 	'url4.net',
 	'*.url4.net',
 	'urlcut.com',
@@ -213,6 +278,7 @@ $blocklist['badhost'] = array(
 	'z.la',
 	't.z.la',			// by z.la
 	'zapurl.com',
+	'*.zik.mu',			// by ulimit.com
 	'zippedurl.com',
 	'*.zonehere.com',	// by hotredirect.com
 
