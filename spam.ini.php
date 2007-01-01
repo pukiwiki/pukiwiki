@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.4 2007/01/01 14:33:29 henoheno Exp $
+// $Id: spam.ini.php,v 1.5 2007/01/01 14:36:36 henoheno Exp $
 // Spam-related setting
 
 $blocklist['badhost'] = array(
@@ -453,7 +453,7 @@ $blocklist['badhost'] = array(
 	'*.selab.org.ua',
 	'sirlook.com',
 	'*.soft2you.info',
-	'softprof.org'
+	'softprof.org',
 	'*.stormloader.com',
 	'tops.gen.in',		// Hiding google:sites
 	'vasdipv.org',
