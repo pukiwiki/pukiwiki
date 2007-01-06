@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.14 2007/01/06 02:47:12 henoheno Exp $
+// $Id: spam.php,v 1.15 2007/01/06 03:12:34 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 // Functions for Concept-work of spam-uri metrics
@@ -951,19 +951,19 @@ function check_uri_spam($target = '', $method = array())
 
 	// URI: Bad host
 	if ((! $asap || ! $is_spam) && isset($method['badhost'])) {
+		$__remains = array();
 		if ($asap) {
-			$badhost = is_badhost($hosts, $asap);
+			$badhost = is_badhost($hosts, $asap, $__remains);
 		} else {
-			$__remains = array();
 			$badhost = is_badhost($hosts, $asap, $__remains);
 			if ($__remains) {
 				$progress['remains']['badhost'] = array();
 				foreach ($__remains as $value) {
 					$progress['remains']['badhost'][$value] = TRUE;
 				}
-				unset($__remains);
 			}
 		}
+		unset($__remains);
 		if (! empty($badhost)) {
 			$sum['badhost'] += array_count_leaves($badhost);
 			foreach(array_keys($badhost) as $keys) {
