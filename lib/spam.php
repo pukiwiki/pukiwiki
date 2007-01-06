@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.13 2007/01/06 02:06:29 henoheno Exp $
+// $Id: spam.php,v 1.14 2007/01/06 02:47:12 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 // Functions for Concept-work of spam-uri metrics
@@ -697,7 +697,7 @@ function get_blocklist($list = '')
 	}
 }
 
-function is_badhost($hosts = array(), $asap = TRUE, & $remains = array())
+function is_badhost($hosts = array(), $asap = TRUE, & $remains)
 {
 	$result = array();
 	if (! is_array($hosts)) $hosts = array($hosts);
