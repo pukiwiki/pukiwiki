@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.9 2007/01/20 15:47:14 henoheno Exp $
+// $Id: spam.ini.php,v 1.10 2007/01/20 16:59:39 henoheno Exp $
 // Spam-related setting
 
 $blocklist['goodhost'] = array(
@@ -39,6 +39,8 @@ $blocklist['badhost'] = array(
 	'0zed.info',
 	'*.1sta.com',		// by shorturl.com
 	'1url.org',
+	'1url.in',
+	'*.1url.in',
 	'*.24ex.com',		// by shorturl.com
 	'*.2cd.net',		// by shim.net
 	'2ch2.net',
@@ -292,6 +294,7 @@ $blocklist['badhost'] = array(
 	'shrinkthatlink.com',
 	'www.shrinkthatlink.com',
 	'shrinkurl.us',
+	'shrt.org',
 	'shrunkurl.com',
 	'*.shrunkurl.com',
 	'shurl.org',
@@ -338,6 +341,7 @@ $blocklist['badhost'] = array(
 	'*.tophonors.com',	// by webalias.com
 	'*.torontonian.com',
 	'*.true.ws',		// by active.ws
+	'ttu.cc',
 	'*.tvheaven.com',	// by freeservers.com
 	'*.tux.nu',			// by iscool.net
 	'*.tweaker.eu',		// by f2b.be
@@ -431,6 +435,7 @@ $blocklist['badhost'] = array(
 	'*.20six.fr',
 	'*.50megs.com',
 	'*.9999mb.com',
+	'*.9k.com',
 	'*.aimoo.com',
 	'*.alice.it',
 	'*.alkablog.com'.
@@ -440,6 +445,7 @@ $blocklist['badhost'] = array(
 	'*.bloggers.nl',
 	'*.blogspot.com',		// by Google
 	'*.bravenet.com',
+	'*.kokoom.com',
 	'dakrats.net',
 	'*.diaryland.com',
 	'*.dox.hu',
@@ -462,14 +468,20 @@ $blocklist['badhost'] = array(
 	'*.host-page.com',
 	'*.home.pl',			// by info at home.pl
 	'hometown.aol.com',
+	'*.ibelgique.com',		// by ieurop.net
+	'*.iespana.es',			// by ieurop.net
 	'*.ifastnet.com',
-	'*.ifrance.com',
+	'*.ifrance.com',		// by ieurop.net
+	'*.iitalia.com',		// by ieurop.net
+	'*.iquebec.com',		// by ieurop.net
+	'*.isuisse.com',		// by ieurop.net
 	'*.journalscape.com',
 	'ltss.luton.ac.uk',
 	'*.monforum.com',
 	'*.monforum.fr',		// by monforum.com
 	'myblog.de',			// by 20six weblog services
 	'myblog.es',			// by 20six weblog services
+	'myblog.is',
 	'*.myblogvoice.com',
 	'*.netfast.org',
 	'neweconomics.info',
@@ -652,18 +664,24 @@ $blocklist['badhost'] = array(
 	'zhiyehua.net',		// by Kikimas at mail.net, Redirect to nb717.com etc
 	'*.zhiyehua.net',
 	//
-	'43sexx.org',		// by Andrey (vdf at lovespb.com)
+	'43sexx.org',		// by Andrey (vdf at lovespb.com), / was not found
 	'*.43sexx.org',
-	'56porn.org',		// by Andrey (vdf at lovespb.com)
+	'56porn.org',		// by Andrey (vdf at lovespb.com), / was not found
 	'*.56porn.org',
-	'78porn.org',		// by Andrey (vdf at lovespb.com)
+	'6discount.info',	// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
+	'*.6discount.info',
+	'78porn.org',		// by Andrey (vdf at lovespb.com), "UcoZ WEB-SERVICES"
 	'*.78porn.org',
-	'92ssex.org',		// by Andrey (vdf at lovespb.com)
+	'92ssex.org',		// by Andrey (vdf at lovespb.com), "ForumGenerator"
 	'*.92ssex.org',
-	'93adult.org',		// by Andrey (vdf at lovespb.com)
+	'93adult.org',		// by Andrey (vdf at lovespb.com), "ForumGenerator"
 	'*.93adult.org',
 	'buypo.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.buypo.info',
+	'canadausa.info',	// by Andrey (vdf at lovespb.com), "UcoZ WEB-SERVICES"
+	'*.canadausa.info',
+	'eplot.info',		// by Beatrice C. Anderson (Beatrice.C.Anderson at spambob.com), redirect to activefreehost.com
+	'*.eplot.info',
 	'freexz.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.freexz.info',
 	'lovespb.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
@@ -672,12 +690,26 @@ $blocklist['badhost'] = array(
 	'*.oursales.info',
 	'pldk.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.pldk.info',
+	'pornr.info',		// by Andrey (vdf at lovespb.com), "UcoZ WEB-SERVICES"
+	'*.pornr.info',
 	'poz2.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.poz2.info',
 	'saleqw.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.saleqw.info',
+	'sexof.info',		// by Andrey (vdf at lovespb.com), "UcoZ WEB-SERVICES"
+	'*.sexof.info',
+	'sexz18.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
+	'*.sexz18.info',
+	'sexy69a.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
+	'*.sexy69a.info',
+	'spb78.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
+	'*.spb78.info',
 	'usacanadauk.info',	// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.usacanadauk.info',
+	'vny0.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
+	'*.vny0.info',
+	'wifes1.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
+	'*.wifes1.info',
 	//
 	'*.flywebs.com',	// by Andrey Zhurikov (zhu1313 at mail.ru)
 	'*.hostrim.com',	// by Andrey Zhurikov (zhu1313 at mail.ru)
@@ -778,6 +810,7 @@ $blocklist['badhost'] = array(
 
 	// 2. Lonely domains (buddies not found yet)
 	'19cellar.info',	// by Eduardo Guro (boomouse at gmail.com)
+	'*.advancediet.com',// by Shonta Mojica (hostadmin at advancediet.com)
 	'*.areaseo.com',	// by Antony Carpito (xcentr at lycos.com)
 	'*.dlekei.info',	// by Maxima Bucaro (webmaster at tts2f.info)
 	'*.discutbb.com',	// by Perez Thomas (thomas.jsp at libertysurf.fr)
@@ -806,11 +839,11 @@ $blocklist['badhost'] = array(
 	'unctad.net',		// by gfdogfd at lovespb.com
 	'*.webnow.biz',		// by Hsien I Fan (admin at servcomputing.com)
 	'wellcams.biz',		// by Sergey Sergiyenko (studioboss at gmail.com)
+	'*.xpacificpoker.com',// by Hubert Hoffman (support at xpacificpoker.com)
 	'zlocorp.com',		// by tonibcrus at hotpop.com, spammed well with "http ://zlocorp.com/"
 	'*.zlocorp.com',
 	'*.roin.info',		// by Evgenius (roinse at yandex.ru)
-
-
+	
 	// Hosts shown inside the implanted contents
 	// not used via spam, but useful to detect these contents
 	//
