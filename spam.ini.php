@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.10 2007/01/20 16:59:39 henoheno Exp $
+// $Id: spam.ini.php,v 1.11 2007/01/21 14:39:35 henoheno Exp $
 // Spam-related setting
 
 $blocklist['goodhost'] = array(
@@ -12,9 +12,13 @@ $blocklist['goodhost'] = array(
 
 $blocklist['badhost'] = array(
 
-	// Sample setting of:
+
+	// A: Sample setting of
 	// Existing URI redirection or masking services
-	// via HTTP redirection, HTML meta, HTML frame, or JavaScript,
+
+	// A-1: By HTTP redirection, HTML meta, HTML frame, JavaScript,
+	// or DNS subdomains
+	//
 	// as known as cheap URI obscuring services today,
 	// for spammers and affiliate users dazed by money.
 	//
@@ -120,7 +124,9 @@ $blocklist['badhost'] = array(
 	'doiop.com',
 	'dornenboy.de',		// by coolurl.de
 	'dtmurl.com',		// by dreamteammoney.com
+	'durl.us',
 	'*.dvdonly.ru',
+	'*.dynu.ca',
 	'*.ebored.com',		// by shorturl.com
 	'*.echoz.com',		// by shorturl.com
 	'elfurl.com',
@@ -396,13 +402,7 @@ $blocklist['badhost'] = array(
 	'*.zonehere.com',	// by hotredirect.com
 	'zuso.tw',
 
-
-	// Sample setting of: 
-	// Dynamic DNS or Dynamic IP or DNS services
-	//
-	// Please notify us about this list with reason:
-	// http://pukiwiki.sourceforge.jp/dev/?BugTrack2/207
-	//
+	// A-2: Dynamic DNS or Dynamic IP services
 	//
 	//'*.ath.cx',				// by dydns.com
 	//'*.bpa.nu',				// by ddns.ru
@@ -419,12 +419,13 @@ $blocklist['badhost'] = array(
 	//'*.mine.nu',			// by dydns.com
 
 
-	// Sample setting of: Jacked (taken advantage of) and cleaning-less sites
+	// B: Sample setting of:
+	// Jacked (taken advantage of) and cleaning-less sites
 	//
 	// Please notify us about this list with reason:
 	// http://pukiwiki.sourceforge.jp/dev/?BugTrack2%2F208
 
-	// 1. Web-spaces
+	// B-1: Web spaces
 	'*.0catch.com',		// by bluehost.com
 	'*.150m.com',		// by 100 Best, Inc., NS by 0catch.com
 	'20six.nl',			// by 20six weblog services (postmaster at 20six.nl)
@@ -441,8 +442,12 @@ $blocklist['badhost'] = array(
 	'*.alkablog.com'.
 	'*.atfreeforum.com',
 	'*.asphost4free.com',
+	'*.beeplog.com',
+	'*.bloggingmylife.com',
 	'bloggers.nl',
 	'*.bloggers.nl',
+	'*.blogharbor.com',
+	'myblogma.com',
 	'*.blogspot.com',		// by Google
 	'*.bravenet.com',
 	'*.kokoom.com',
@@ -503,9 +508,10 @@ $blocklist['badhost'] = array(
 	'*.wmjblogs.ru',
 	'*.wol.bz',				 // by sbn.bz (rin.ru)
 	'xeboards.com',
+	'blogs.ya.com',
 	'yourfreebb.de',
 
-	// 2. (Seems to be) Jacked contents, something implanted
+	// B-2: Jacked contents, something implanted
 	// (e.g. some sort of blog comments, BBSes, forums, wikis)
 	'*.aamad.org',
 	'anewme.org',
@@ -546,17 +552,21 @@ $blocklist['badhost'] = array(
 	'theedgeblueisland.com',
 	'www.tzaneen.co.za',
 	'urgentclick.com',
+	'wolvas.org.uk',
 	'www.wvup.edu',
 
 
-	// Sample setting of: Exclusive spam domains
-	// seems to have flavor of links, pills, gamble, online-games, erotic,
-	// affiliates, finance, and/or mixed ones
+	// C: Sample setting of:
+	// Exclusive spam domains
+	//
+	// Seems to have flavor of links, pills, gamble, online-games, erotic,
+	// affiliates, finance, sending viruses, malicious attacks to browsers,
+	// and/or mixed ones
 	//
 	// Please notify us about this list with reason:
 	// http://pukiwiki.sourceforge.jp/dev/?BugTrack2/208
 
-	// 1. Domain sets (seems to be) born to spam you
+	// C-1: Domain sets (seems to be) born to spam you
 	'*.lovestoryx.com',	// by Boris (admin at seekforweb.com, bbmfree at yahoo.com)
 	'*.loveaffairx.com',// by Boris (admin at seekforweb.com, bbmfree at yahoo.com)
 	'*.onmore.info',	// by Boris (admin at seekforweb.com, bbmfree at yahoo.com)
@@ -643,13 +653,13 @@ $blocklist['badhost'] = array(
 	'*.ukgamesyahoo.org',	// by Chinu Hua Dzin (graz at rubli.biz)
 	'*.youryahoochat.org',	// by Chinu Hua Dzin (graz at rubli.biz)
 	//
-	'*.casinoqz.com',		// by Berenice Snow
-	'*.dcasinoa.com',		// by August Hawkinson, post with casinoqz.com
-	//
-	'*.kenogo.com',			// by Adriane Bell
+	// Gamble
+	'*.casinoqz.com',			// by Berenice Snow
+	'*.dcasinoa.com',			// by August Hawkinson, post with casinoqz.com
+	'*.kenogo.com',				// by Adriane Bell
 	'*.mycaribbeanpoker.com',	// by Andy Mullis, post with kenogo.com
-	'*.crapsok.com',
-	'*.onbaccarat.com',		// post with crapsok.com
+	'*.crapsok.com',			// by Devon Adair (postmaster at crapsok.com)
+	'*.onbaccarat.com',			// by Kassandra Dunn (admin at onbaccarat.com), post with crapsok.com
 	//
 	'dbsajax.org',		// by Kikimas at mail.net, Redirect to nb717.com etc
 	'*.dbsajax.org',
@@ -808,7 +818,7 @@ $blocklist['badhost'] = array(
 	'*.vviagra.info',	// by Lebedev Sergey (serega555serega555 at yandex.ru)
 
 
-	// 2. Lonely domains (buddies not found yet)
+	// C-2: Lonely domains (buddies not found yet)
 	'19cellar.info',	// by Eduardo Guro (boomouse at gmail.com)
 	'*.advancediet.com',// by Shonta Mojica (hostadmin at advancediet.com)
 	'*.areaseo.com',	// by Antony Carpito (xcentr at lycos.com)
@@ -843,16 +853,30 @@ $blocklist['badhost'] = array(
 	'zlocorp.com',		// by tonibcrus at hotpop.com, spammed well with "http ://zlocorp.com/"
 	'*.zlocorp.com',
 	'*.roin.info',		// by Evgenius (roinse at yandex.ru)
-	
-	// Hosts shown inside the implanted contents
-	// not used via spam, but useful to detect these contents
+
+
+	// C-3: Not classifiable (information wanted)
 	//
-	// RESERVED
-
-
-	// Not classifiable (information wanted)
 	// Something incoming to pukiwiki related sites
 	'mylexus.info',		// by Homer Simpson (simhomer12300 at mail.com), Redirect to Google
 	'up2.co.il',		// inetwork.co.il related
+
+
+	// D: Sample setting of
+	// "third party in good faith"s
+	//
+	// Hosts shown inside of the implanted contents,
+	// not used via spam, but maybe useful to detect these contents
+	//
+	// 'RESERVED',
+
+
+	// Z: Yours
+	//
+	//'',
+	//'',
+	//'',
+
+
 );
 ?>
