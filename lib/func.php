@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.83 2006/10/28 14:35:42 henoheno Exp $
+// $Id: func.php,v 1.84 2007/01/21 14:09:31 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -556,8 +556,8 @@ function get_autolink_pattern(& $pages, $min_len = -1)
 		$auto_pages_a = array_values(preg_grep('/^[A-Z]+$/i', $auto_pages));
 		$auto_pages   = array_values(array_diff($auto_pages,  $auto_pages_a));
 
-		$result   = get_matcher_regex($auto_pages);
-		$result_a = get_matcher_regex($auto_pages_a);
+		$result   = generate_matcher_regex($auto_pages);
+		$result_a = generate_matcher_regex($auto_pages_a);
 	}
 	return array($result, $result_a, $forceignorepages);
 }
@@ -568,7 +568,7 @@ function get_autolink_pattern(& $pages, $min_len = -1)
 // $offset = (int) $array[$offset] is the first value to check
 // $sentry = (int) $array[$sentry - 1] is the last value to check  
 // $pos    = (int) Position of letter to start checking. (0 = the first letter)
-function get_matcher_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
+function generate_matcher_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 {
 	if (empty($array)) return '(?!)'; // Zero
 	if ($sentry === NULL) $sentry = count($array);
@@ -599,7 +599,7 @@ function get_matcher_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 			// Some more keys found
 			// Recurse
 			$regex .= str_replace(' ', '\\ ', preg_quote($char, '/')) .
-				get_matcher_regex($array, $index, $i, $pos + 1);
+				generate_matcher_regex($array, $index, $i, $pos + 1);
 		} else {
 			// Not found
 			$regex .= str_replace(' ', '\\ ',
@@ -616,7 +616,7 @@ function get_matcher_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 // Compat
 function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 {
-	return get_matcher_regex($pages, $start, $end, $pos);
+	return generate_matcher_regex($pages, $start, $end, $pos);
 }
 
 // Load/get setting pairs from AutoAliasName
