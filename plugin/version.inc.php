@@ -1,20 +1,27 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: version.inc.php,v 1.8 2005/01/29 02:07:58 henoheno Exp $
+// $Id: version.inc.php,v 1.9 2007/01/21 14:25:25 henoheno Exp $
+// Copyright (C) 2002-2003, 2005, 2007 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
-// Show PukiWiki version
+// Show PukiWiki version (maybe a sample code)
+
+function plugin_version_value()
+{
+	if (PKWK_SAFE_MODE) {
+		return '';
+	} else {
+		return S_VERSION;
+	}
+}
 
 function plugin_version_convert()
 {
-	if (PKWK_SAFE_MODE) return ''; // Show nothing
-
-	return '<p>' . S_VERSION . '</p>';
+	return '<p>' . plugin_version_value() . '</p>';
 }
 
 function plugin_version_inline()
 {
-	if (PKWK_SAFE_MODE) return ''; // Show nothing
-
-	return S_VERSION;
+	return plugin_version_value();
 }
 ?>
