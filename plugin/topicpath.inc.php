@@ -1,8 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: topicpath.inc.php,v 1.6 2005/01/29 14:31:04 henoheno Exp $
+// $Id: topicpath.inc.php,v 1.7 2007/01/21 14:32:39 henoheno Exp $
+// Copyright (C) 2004-2005 PukiWiki Developers Team
+// License: GPL (any version)
 //
-// 'topicpath' plugin for PukiWiki, available under GPL
+// 'topicpath' plugin
 
 // Show a link to $defaultpage or not
 define('PLUGIN_TOPICPATH_TOP_DISPLAY', 1);

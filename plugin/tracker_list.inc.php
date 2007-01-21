@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker_list.inc.php,v 1.2 2005/01/23 08:30:14 henoheno Exp $
+// $Id: tracker_list.inc.php,v 1.3 2007/01/21 14:29:12 henoheno Exp $
+// Copyright (C) 2003, 2005 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
 // Issue tracker list plugin (a part of tracker plugin)
 
