@@ -1,14 +1,13 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: update_entities.inc.php,v 1.12 2007/01/21 14:09:46 henoheno Exp $
+// $Id: update_entities.inc.php,v 1.13 2007/01/21 14:14:05 henoheno Exp $
+// Copyright (C) 2003-2007 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
-// Update entities plugin - Update XHTML entities from DTD
-// (for admin)
+// Update entities plugin - Update XHTML entities from DTD (for admin)
 
-// DTDの場所
 define('W3C_XHTML_DTD_LOCATION', 'http://www.w3.org/TR/xhtml1/DTD/');
 
-// メッセージ設定
 function plugin_update_entities_init()
 {
 	$messages = array(

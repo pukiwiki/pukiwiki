@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: vote.inc.php,v 1.23 2005/04/02 06:33:39 henoheno Exp $
+// $Id: vote.inc.php,v 1.24 2007/01/21 14:15:30 henoheno Exp $
+// Copyright (C) 2002-2005 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
 // Vote box plugin
 
