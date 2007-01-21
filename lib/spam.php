@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.15 2007/01/06 03:12:34 henoheno Exp $
+// $Id: spam.php,v 1.16 2007/01/21 13:56:27 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 // Functions for Concept-work of spam-uri metrics
@@ -13,7 +13,7 @@ if (! defined('SPAM_INI_FILE')) define('SPAM_INI_FILE', 'spam.ini.php');
 // (PHP 4 >= 4.2.0): var_export(): mail-reporting and dump related
 if (! function_exists('var_export')) {
 	function var_export() {
-		return 'var_export() is not found' . "\n";
+		return 'var_export() is not found on this server' . "\n";
 	}
 }
 
@@ -346,9 +346,17 @@ function spam_uri_pickup_preprocess($string = '')
 	// Domain exposure (See _preg_replace_callback_domain_exposure())
 	$string = preg_replace_callback(
 		array(
-			// Something Google: http://www.google.com/supported_domains
-			'#(http)://([a-z0-9.]+\.google\.[a-z]{2,3}(?:\.[a-z]{2})?)/' .
-			'([a-z0-9?=&.%_+-]+)' .		// ?query=foo+
+			'#(http)://' .
+			'(' .
+				// Something Google: http://www.google.com/supported_domains
+				'(?:[a-z0-9.]+\.)?google\.[a-z]{2,3}(?:\.[a-z]{2})?' .
+				'|' .
+				// AltaVista
+				'(?:[a-z0-9.]+\.)?altavista.com' .
+				
+			')' .
+			'/' .
+			'([a-z0-9?=&.%_/+-]+)' .					// path/?query=foo+bar+
 			'\bsite:([a-z0-9.%_-]+\.[a-z0-9.%_-]+)' .	// site:nasty.example.com
 			//'()' .	// Preserve or remove?
 			'#i',
@@ -356,6 +364,8 @@ function spam_uri_pickup_preprocess($string = '')
 		'_preg_replace_callback_domain_exposure',
 		$string
 	);
+	
+
 
 	// URI exposure (uriuri => uri uri)
 	$string = preg_replace(
