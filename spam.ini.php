@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.13 2007/01/27 11:50:38 henoheno Exp $
+// $Id: spam.ini.php,v 1.14 2007/01/27 23:19:41 henoheno Exp $
 // Spam-related setting
 
 $blocklist['goodhost'] = array(
@@ -465,6 +465,7 @@ $blocklist['badhost'] = array(
 	'*.eblog.com.au',
 	'*.extra.hu',
 	'fingerprintmedia.com',
+	'*.filelan.com',
 	'*.free-25.de',
 	'*.free-bb.com',
 	'*.freeclans.de',
@@ -515,6 +516,7 @@ $blocklist['badhost'] = array(
 	'*.host-page.com',
 	'*.home.pl',			// by info at home.pl
 	'hometown.aol.com',
+	'*.hut2.ru',
 	'*.ibelgique.com',		// by ieurop.net
 	'*.iespana.es',			// by ieurop.net
 	'*.ifastnet.com',
@@ -537,6 +539,7 @@ $blocklist['badhost'] = array(
 	'*.nm.ru',
 	'*.phpbbx.de',
 	'*.quickfreehost.com',
+	'*.pochta.ru',
 	'*.sayt.ws',
 	'*.sbn.bz',				// by rin.ru
 	'*.spazioforum.it',
@@ -581,11 +584,14 @@ $blocklist['badhost'] = array(
 	'www.me4x4.com',
 	'morallaw.org',
 	'www.morerevealed.com',
+	'mamiya.co.uk',
 	'mountainjusticemedia.org',
 	'users.nethit.pl',
 	'njbodybuilding.com',
 	'nlen.org',
 	'omikudzi.ru',
+	'pix4online.co.uk',
+	'www.pix4online.co.uk',
 	'www.privatforum.de',
 	'*.reallifelog.com',
 	'rkphunt.com',
@@ -704,12 +710,14 @@ $blocklist['badhost'] = array(
 	'*.youryahoochat.org',	// by Chinu Hua Dzin (graz at rubli.biz)
 	//
 	// Gamble
+	'*.atroulette.com',			// by Gino Sands (admin at atroulette.com), post with the-craps-100.us
 	'*.casinoqz.com',			// by Berenice Snow
 	'*.dcasinoa.com',			// by August Hawkinson, post with casinoqz.com
 	'*.kenogo.com',				// by Adriane Bell
 	'*.mycaribbeanpoker.com',	// by Andy Mullis, post with kenogo.com
 	'*.crapsok.com',			// by Devon Adair (postmaster at crapsok.com)
 	'*.onbaccarat.com',			// by Kassandra Dunn (admin at onbaccarat.com), post with crapsok.com
+	'*.the-craps-100.us',		// by Lorrine Ripley (postmaster at the-craps-100.us)
 	//
 	'dbsajax.org',		// by Kikimas at mail.net, Redirect to nb717.com etc
 	'*.dbsajax.org',
@@ -870,15 +878,19 @@ $blocklist['badhost'] = array(
 	'*.x09x.info',
 	//
 	'*.bingogoldenpalace.info', // by Lebedev Sergey (serega555serega555 at yandex.ru)
-	'*.isuperdrug.com',	// by Lebedev Sergey (serega555serega555 at yandex.ru)
-	'*.pharmacif.info',	// by Lebedev Sergey (serega555serega555 at yandex.ru)
-	'*.vviagra.info',	// by Lebedev Sergey (serega555serega555 at yandex.ru)
-
+	'*.isuperdrug.com',			// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	'*.pharmacif.info',			// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	'*.pornsexteen.biz',		// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	'*.vviagra.info',			// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	
 	// C-2: Lonely domains (buddies not found yet)
+	'0nline-porno.info',	// by Timyr (timyr at narod.ru)
+	'*.0nline-porno.info',
 	'19cellar.info',	// by Eduardo Guro (boomouse at gmail.com)
 	'*.advancediet.com',// by Shonta Mojica (hostadmin at advancediet.com)
 	'*.areaseo.com',	// by Antony Carpito (xcentr at lycos.com)
 	'bestdiscountpharmacy.biz',	// by John  Brown (john780321 at yahoo.com), 2007-01-27, 61.144.122.45
+	'*.cheapestviagraonline.info',	// by Anatol (anatolsenator at gmail.com)
 	'*.dlekei.info',	// by Maxima Bucaro (webmaster at tts2f.info)
 	'*.discutbb.com',	// by Perez Thomas (thomas.jsp at libertysurf.fr)
 	'dreamteammoney.com',	// dtmurl.com related
