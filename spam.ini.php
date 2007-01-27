@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.12 2007/01/27 04:50:01 henoheno Exp $
+// $Id: spam.ini.php,v 1.13 2007/01/27 11:50:38 henoheno Exp $
 // Spam-related setting
 
 $blocklist['goodhost'] = array(
@@ -332,6 +332,7 @@ $blocklist['badhost'] = array(
 	'*.sushka.org',		// by bucksogen.com
 	'*.surfhere.net',	// by hotredirect.com
 	'surl.dk',			// by s-url.dk
+	'surl.ws',
 	'symy.jp',
 	'*.t2u.com',		// by ulimit.com
 	'*.thrill.to',		// by webalias.com
@@ -455,6 +456,7 @@ $blocklist['badhost'] = array(
 	'myblogma.com',
 	'*.blogspot.com',		// by Google
 	'*.bravenet.com',
+	'blogyaz.com',
 	'*.by.ru',
 	'*.kokoom.com',
 	'dakrats.net',
@@ -465,12 +467,46 @@ $blocklist['badhost'] = array(
 	'fingerprintmedia.com',
 	'*.free-25.de',
 	'*.free-bb.com',
+	'*.freeclans.de',
 	'*.freelinuxhost.com',	// by 100webspace.com
 	'www.freeforum.at',
 	'www.forumprofi.de',
 	'www.forumprofi1.de',	// by forumprofi.de
 	'www.forumprofi2.de',	// by forumprofi.de
 	'www.forumprofi3.de',	// by forumprofi.de
+	'*.forumup.at',			// by forumup
+	'*.forumup.be',			// by forumup
+	'*.forumup.ca',			// by forumup
+	'*.forumup.ch',			// by forumup
+	'*.forumup.co.nz',		// by forumup
+	'*.forumup.co.uk',		// by forumup
+	'*.forumup.co.za',		// by forumup
+	'*.forumup.com',		// by forumup
+	'*.forumup.cn',			// by forumup
+	'*.forumup.cz',			// by forumup
+	'*.forumup.de',			// by forumup
+	'*.forumup.dk',			// by forumup
+	'*.forumup.es',			// by forumup
+	'*.forumup.fr',			// by forumup
+	'*.forumup.gr',			// by forumup
+	'*.forumup.in',			// by forumup
+	'*.forumup.info',		// by forumup
+	'*.forumup.it',			// by forumup
+	'*.forumup.jobs',		// by forumup
+	'*.forumup.jp',			// by forumup
+	'*.forumup.lt',			// by forumup
+	'*.forumup.org',		// by forumup
+	'*.forumup.pl',			// by forumup
+	'*.forumup.name',		// by forumup
+	'*.forumup.net',		// by forumup
+	'*.forumup.nl',			// by forumup
+	'*.forumup.ro',			// by forumup
+	'*.forumup.ru',			// by forumup
+	'*.forumup.se',			// by forumup
+	'*.forumup.sk',			// by forumup
+	'*.forumup.tv',			// by forumup
+	'*.forumup.us',			// by forumup
+	'*.forumup.web.tr',		// by forumup
 	'*.goodboard.de',
 	'docs.google.com',			// by Google
 	'groups-beta.google.com',	// by Google
@@ -487,6 +523,8 @@ $blocklist['badhost'] = array(
 	'*.iquebec.com',		// by ieurop.net
 	'*.isuisse.com',		// by ieurop.net
 	'*.journalscape.com',
+	'limmon.net',
+	'www.limmon.net',
 	'ltss.luton.ac.uk',
 	'*.monforum.com',
 	'*.monforum.fr',		// by monforum.com
@@ -694,6 +732,8 @@ $blocklist['badhost'] = array(
 	'*.6discount.info',
 	'78porn.org',		// by Andrey (vdf at lovespb.com), "UcoZ WEB-SERVICES"
 	'*.78porn.org',
+	'78rus.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
+	'*.78rus.info',
 	'92ssex.org',		// by Andrey (vdf at lovespb.com), "ForumGenerator"
 	'*.92ssex.org',
 	'93adult.org',		// by Andrey (vdf at lovespb.com), "ForumGenerator"
@@ -710,6 +750,8 @@ $blocklist['badhost'] = array(
 	'*.lovespb.info',
 	'oursales.info',	// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.oursales.info',
+	'olala18.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
+	'*.olala18.info',
 	'pldk.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.pldk.info',
 	'pornr.info',		// by Andrey (vdf at lovespb.com), "UcoZ WEB-SERVICES"
@@ -732,6 +774,7 @@ $blocklist['badhost'] = array(
 	'*.vny0.info',
 	'wifes1.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.wifes1.info',
+	'*.yerap.info',		// by Kuzma V Safonov (admin at irtes.ru), redirect to activefreehost.com
 	//
 	'*.flywebs.com',	// by Andrey Zhurikov (zhu1313 at mail.ru)
 	'*.hostrim.com',	// by Andrey Zhurikov (zhu1313 at mail.ru)
@@ -826,9 +869,10 @@ $blocklist['badhost'] = array(
 	'x09x.info',		// by Michael (m.frenzy at yahoo.com)
 	'*.x09x.info',
 	//
+	'*.bingogoldenpalace.info', // by Lebedev Sergey (serega555serega555 at yandex.ru)
 	'*.isuperdrug.com',	// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	'*.pharmacif.info',	// by Lebedev Sergey (serega555serega555 at yandex.ru)
 	'*.vviagra.info',	// by Lebedev Sergey (serega555serega555 at yandex.ru)
-
 
 	// C-2: Lonely domains (buddies not found yet)
 	'19cellar.info',	// by Eduardo Guro (boomouse at gmail.com)
@@ -842,6 +886,7 @@ $blocklist['badhost'] = array(
 	'fastppc.info',		// by peter conor (fastppc at msn.com)
 	'*.fateback.com',	// by LiquidNet Ltd. Redirect to www.japan.jp
 	'*.free-rx.net',	// by Neo-x (neo-xxl at yandex.ru), redirect to activefreehost.com
+	'*.hot4buy.org',	// by Hot Maker (jot at hot4buy.org)
 	'hotscriptonline.info',	// by Psy Search (admin at psysearch.com)
 	'*.hut1.ru',		// by domains at agava.com
 	'investorvillage.com',
