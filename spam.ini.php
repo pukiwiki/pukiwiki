@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.11 2007/01/21 14:39:35 henoheno Exp $
+// $Id: spam.ini.php,v 1.12 2007/01/27 04:50:01 henoheno Exp $
 // Spam-related setting
 
 $blocklist['goodhost'] = array(
@@ -62,6 +62,8 @@ $blocklist['badhost'] = array(
 	'301url.com',
 	'*.321.cn',			// by active.ws
 	'32url.com',
+	'3dg.de',
+	'*.3dg.de',
 	'*.4bb.ru',
 	'*.4mg.com',		// by freeservers.com
 	'*.4x2.net',		// by active.ws
@@ -192,6 +194,7 @@ $blocklist['badhost'] = array(
 	'inetwork.co.il',
 	'*.infogami.com',
 	'*.int.ms',			// by ulimit.com
+	'ipoo.org',
 	'*.iscool.net',
 	'*.isfun.net',		// by iscool.net
 	'*.it.st',			// by ulimit.com
@@ -205,9 +208,11 @@ $blocklist['badhost'] = array(
 	'jemurl.com',
 	'*.java-fan.com',	// by ulimit.com
 	'kat.cc',
+	'kisaweb.com',
 	'*.korzhik.org',	// by bucksogen.com
 	'*.kovrizhka.org',	// by bucksogen.com
 	'krotki.pl',
+	'kuso.cc',
 	'lame.name',
 	'*.latest-info.com',// by webalias.com
 	'*.learn.to',		// by webalias.com
@@ -450,6 +455,7 @@ $blocklist['badhost'] = array(
 	'myblogma.com',
 	'*.blogspot.com',		// by Google
 	'*.bravenet.com',
+	'*.by.ru',
 	'*.kokoom.com',
 	'dakrats.net',
 	'*.diaryland.com',
@@ -549,6 +555,8 @@ $blocklist['badhost'] = array(
 	'selikoff.net',
 	'www.setbb.com',
 	'silver-tears.net',
+	'dir.kzn.ru',			// by Kazan State University
+	'sys.kcn.ru',			// by Kazan State University
 	'theedgeblueisland.com',
 	'www.tzaneen.co.za',
 	'urgentclick.com',
@@ -567,6 +575,10 @@ $blocklist['badhost'] = array(
 	// http://pukiwiki.sourceforge.jp/dev/?BugTrack2/208
 
 	// C-1: Domain sets (seems to be) born to spam you
+	//
+	// All buziness-related spam
+	//'*.biz'
+	//
 	'*.lovestoryx.com',	// by Boris (admin at seekforweb.com, bbmfree at yahoo.com)
 	'*.loveaffairx.com',// by Boris (admin at seekforweb.com, bbmfree at yahoo.com)
 	'*.onmore.info',	// by Boris (admin at seekforweb.com, bbmfree at yahoo.com)
@@ -822,6 +834,7 @@ $blocklist['badhost'] = array(
 	'19cellar.info',	// by Eduardo Guro (boomouse at gmail.com)
 	'*.advancediet.com',// by Shonta Mojica (hostadmin at advancediet.com)
 	'*.areaseo.com',	// by Antony Carpito (xcentr at lycos.com)
+	'bestdiscountpharmacy.biz',	// by John  Brown (john780321 at yahoo.com), 2007-01-27, 61.144.122.45
 	'*.dlekei.info',	// by Maxima Bucaro (webmaster at tts2f.info)
 	'*.discutbb.com',	// by Perez Thomas (thomas.jsp at libertysurf.fr)
 	'dreamteammoney.com',	// dtmurl.com related
@@ -853,7 +866,6 @@ $blocklist['badhost'] = array(
 	'zlocorp.com',		// by tonibcrus at hotpop.com, spammed well with "http ://zlocorp.com/"
 	'*.zlocorp.com',
 	'*.roin.info',		// by Evgenius (roinse at yandex.ru)
-
 
 	// C-3: Not classifiable (information wanted)
 	//
