@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.15 2007/01/29 21:52:45 henoheno Exp $
+// $Id: spam.ini.php,v 1.16 2007/01/29 22:22:22 henoheno Exp $
 // Spam-related setting
 
 $blocklist['goodhost'] = array(
@@ -345,6 +345,7 @@ $blocklist['badhost'] = array(
 	'tiny.pl',
 	'tiny2go.com',
 	'tinylink.com',		// by digipills.com
+	'tinylink.eu',
 	'tinylinkworld.com',
 	'www.tinylinkworld.com',
 	'tinypic.com',
@@ -358,6 +359,7 @@ $blocklist['badhost'] = array(
 	'*.true.ws',		// by active.ws
 	'ttu.cc',
 	'*.tvheaven.com',	// by freeservers.com
+	'turl.jp',
 	'*.tux.nu',			// by iscool.net
 	'*.tweaker.eu',		// by f2b.be
 	'*.tz4.com',
@@ -403,6 +405,7 @@ $blocklist['badhost'] = array(
 	'y11.net',
 	'yatuc.com',
 	'yep.it',
+	'yurel.com',
 	'z.la',
 	't.z.la',			// by z.la
 	'zapurl.com',
@@ -416,6 +419,7 @@ $blocklist['badhost'] = array(
 	//'*.ath.cx',				// by dydns.com
 	//'*.bpa.nu',				// by ddns.ru
 	//'*.dnip.net',
+	//'*.dnsalias.org',			// by dydns.com
 	//'*.dyndns.*',
 		//'*.dyndns.dk',
 		//'*.dyndns.co.za',
@@ -469,6 +473,7 @@ $blocklist['badhost'] = array(
 	'dreipage.de',		// by 2page.de
 	'www.dreipage.de',
 	'*.eblog.com.au',
+	'*.ekiwi.de',
 	'*.extra.hu',
 	'fingerprintmedia.com',
 	'*.filelan.com',
@@ -572,6 +577,7 @@ $blocklist['badhost'] = array(
 	'*.welover.org',
 	'*.weblogmaniacs.com',
 	'weblogmaniacs.com',
+	'*.wikidot.com',
 	'*.wmjblogs.ru',
 	'*.wol.bz',				 // by sbn.bz (rin.ru)
 	'xeboards.com',
@@ -589,6 +595,8 @@ $blocklist['badhost'] = array(
 	'*.iphpbb.com',
 	'board-z.de',
 	'*.board-z.de',
+	'deproduction.org',
+	'www.deproduction.org',
 	'dc503.org',
 	'fhmcsa.org.au',
 	'*.fhmcsa.org.au',
@@ -598,6 +606,7 @@ $blocklist['badhost'] = array(
 	'www.homepage-dienste.com',
 	'*.inventforum.com',
 	'www.funnyclipcentral.com',
+	'huskerink.com',
 	'internetincomeclub.com',
 	'kevindmurray.com',
 	'www.macfaq.net',
@@ -713,6 +722,11 @@ $blocklist['badhost'] = array(
 	'*.svinka.info',			// 'BucksoGen', by Pronin Sergey (buckster at list.ru)
 	'*.svinya.info',			// 'BucksoGen', by Pronin Sergey (buckster at list.ru)
 	'*.zherebyonok.info',		// 'BucksoGen', by Pronin Sergey (buckster at list.ru)
+	'*.adult-chat-sex-cam.info',	// 'CamsGen' by Lee Chang (nebucha at model-x.com)
+	'*.live-chat-cam-sex.info',		// 'CamsGen' by Lee Chang (nebucha at model-x.com)
+	'*.live-nude-cam-chat.info',	// 'CamsGen' by Lee Chang (nebucha at model-x.com)
+	'*.sex-cam-live-chat-web.info',	// 'CamsGen' by Lee Chang (nebucha at model-x.com)
+	'*.sex-chat-live-cam-nude.info',// 'CamsGen' by Lee Chang (nebucha at model-x.com)
 	//
 	'*.trevisos.org',	// by Marcello Italianore (mital at topo20.org)
 	'*.topo20.org',		// by Marcello Italianore (mital at topo20.org)
@@ -753,6 +767,8 @@ $blocklist['badhost'] = array(
 	'zhiyehua.net',		// by Kikimas at mail.net, Redirect to nb717.com etc
 	'*.zhiyehua.net',
 	//
+	'1818u.org',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
+	'*.1818u.org',
 	'43sexx.org',		// by Andrey (vdf at lovespb.com), / was not found
 	'*.43sexx.org',
 	'56porn.org',		// by Andrey (vdf at lovespb.com), / was not found
@@ -898,14 +914,23 @@ $blocklist['badhost'] = array(
 	'*.soft2you.info',
 	'top20health.info',	// by Michael (m.frenzy at yahoo.com)
 	'*.top20health.info',
+	'v09v.info',		// by Michael (m.frenzy at yahoo.com)
+	'*.v09v.info',
 	'x09x.info',		// by Michael (m.frenzy at yahoo.com)
 	'*.x09x.info',
 	//
-	'*.bingogoldenpalace.info', // by Lebedev Sergey (serega555serega555 at yandex.ru)
-	'*.isuperdrug.com',			// by Lebedev Sergey (serega555serega555 at yandex.ru)
-	'*.pharmacif.info',			// by Lebedev Sergey (serega555serega555 at yandex.ru)
-	'*.pornsexteen.biz',		// by Lebedev Sergey (serega555serega555 at yandex.ru)
-	'*.vviagra.info',			// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	'bingogoldenpalace.info', 	// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	'*.bingogoldenpalace.info',
+	'ccarisoprodol.info',		// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	'*.ccarisoprodol.info',
+	'isuperdrug.com',			// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	'*.isuperdrug.com',
+	'pharmacif.info',			// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	'*.pharmacif.info',
+	'pornsexteen.biz',			// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	'*.pornsexteen.biz',
+	'vviagra.info',				// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	'*.vviagra.info',
 	//
 	'*.cheapestviagraonline.info',	// by Anatol (anatolsenator at gmail.com)
 	'*.buyphentermineworld.info',	// by Anatol (anatolsenator at gmail.com)
@@ -924,6 +949,7 @@ $blocklist['badhost'] = array(
 	'fastppc.info',		// by peter conor (fastppc at msn.com)
 	'*.fateback.com',	// by LiquidNet Ltd. Redirect to www.japan.jp
 	'*.free-rx.net',	// by Neo-x (neo-xxl at yandex.ru), redirect to activefreehost.com
+	'*.google-yahoo-msn.org',	// by Equipe Tecnica Ajato (rambap at yandex.ru)
 	'*.hot4buy.org',	// by Hot Maker (jot at hot4buy.org)
 	'hotnetinfo.info',	// by Lisa Edwards (lisaedwards at ledw.th)
 	'hotscriptonline.info',	// by Psy Search (admin at psysearch.com)
@@ -944,6 +970,7 @@ $blocklist['badhost'] = array(
 	'*.prama.info',		// by Juan.Kang at mytrashmail.com
 	'qoclick.net',		// by DMITRIY SOLDATENKO
 	'relurl.com',		// tiny-like. by Grzes Tlalka (grzes1111 at interia.pl)
+	'*.roin.info',		// by Evgenius (roinse at yandex.ru)
 	'sirlook.com',
 	'unctad.net',		// by gfdogfd at lovespb.com
 	'*.webnow.biz',		// by Hsien I Fan (admin at servcomputing.com)
@@ -953,7 +980,6 @@ $blocklist['badhost'] = array(
 	'*.xer-vam.org',
 	'zlocorp.com',		// by tonibcrus at hotpop.com, spammed well with "http ://zlocorp.com/"
 	'*.zlocorp.com',
-	'*.roin.info',		// by Evgenius (roinse at yandex.ru)
 
 	// C-3: Not classifiable (information wanted)
 	//
