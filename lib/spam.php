@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.16 2007/01/21 13:56:27 henoheno Exp $
+// $Id: spam.php,v 1.17 2007/02/01 15:02:45 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 // Functions for Concept-work of spam-uri metrics
@@ -356,7 +356,7 @@ function spam_uri_pickup_preprocess($string = '')
 				
 			')' .
 			'/' .
-			'([a-z0-9?=&.%_/+-]+)' .					// path/?query=foo+bar+
+			'([a-z0-9?=&.%_/\'\\\+-]+)' .				// path/?query=foo+bar+
 			'\bsite:([a-z0-9.%_-]+\.[a-z0-9.%_-]+)' .	// site:nasty.example.com
 			//'()' .	// Preserve or remove?
 			'#i',
@@ -665,43 +665,35 @@ function generate_glob_regex($string = '', $divider = '/')
 
 function get_blocklist($list = '')
 {
-	static $regex;
+	static $regexs;
 
-	if (! isset($regex)) {
-		$regex = array();
-
-		// Sample
-		if (FALSE) {
-			$blocklist['badhost'] = array(
-				//'*',			// Deny all uri
-				//'10.20.*.*',	// 10.20.example.com also matches
-				//'*.blogspot.com',	// Blog services subdomains
-				//array('blogspot.com', '*.blogspot.com')
-			);
-			foreach ($blocklist['badhost'] as $part) {
-				$_part = is_array($part) ? implode('/', $part) : $part;
-				$regex['badhost'][$_part] = '/^' . generate_glob_regex($part) . '$/i';
-			}
-		}
-
-		// Load
+	if (! isset($regexs)) {
+		$regexs = array();
 		if (file_exists(SPAM_INI_FILE)) {
 			$blocklist = array();
 			require(SPAM_INI_FILE);
-			foreach(array('goodhost', 'badhost') as $key) {
-				if (! isset($blocklist[$key])) continue;
-				foreach ($blocklist[$key] as $part) {
-					$_part = is_array($part) ? implode('/', $part) : $part;
-					$regex[$key][$_part] = '/^' . generate_glob_regex($part) . '$/i';
+			//	$blocklist['badhost'] = array(
+			//		'*.blogspot.com',	// Blog services's subdomains (only)
+			//		'IANA-examples' => '#^(?:.*\.)?example\.(?:com|net|org)$#',
+			//	);
+			foreach(array('goodhost', 'badhost') as $_list) {
+				if (! isset($blocklist[$list])) continue;
+				foreach ($blocklist[$_list] as $key => $value) {
+					if (is_string($key)) {
+						$regexs[$_list][$key] = $value;
+					} else {
+						$regexs[$_list][$value] =
+							'/^' . generate_glob_regex($value, '/') . '$/i';
+					}
 				}
 			}
 		}
 	}
 
 	if ($list == '') {
-		return $regex;
-	} else if (isset($regex[$list])) {
-		return $regex[$list];
+		return $regexs;	// ALL
+	} else if (isset($regexs[$list])) {
+		return $regexs[$list];
 	} else {	
 		return array();
 	}
@@ -716,18 +708,18 @@ function is_badhost($hosts = array(), $asap = TRUE, & $remains)
 	}
 	if (empty($hosts)) return $result;
 
-	foreach (get_blocklist('goodhost') as $_regex) {
-		$hosts = preg_grep_invert($_regex, $hosts);
+	foreach (get_blocklist('goodhost') as $regex) {
+		$hosts = preg_grep_invert($regex, $hosts);
 	}
 	if (empty($hosts)) return $result;
 
 	$tmp = array();
-	foreach (get_blocklist('badhost') as $part => $_regex) {
-		$result[$part] = preg_grep($_regex, $hosts);
-		if (empty($result[$part])) {
-			unset($result[$part]);
+	foreach (get_blocklist('badhost') as $label => $regex) {
+		$result[$label] = preg_grep($regex, $hosts);
+		if (empty($result[$label])) {
+			unset($result[$label]);
 		} else {
-			$hosts = array_diff($hosts, $result[$part]);
+			$hosts = array_diff($hosts, $result[$label]);
 			if ($asap) break;
 		}
 	}
