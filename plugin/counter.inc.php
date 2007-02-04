@@ -1,12 +1,12 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: counter.inc.php,v 1.18 2006/05/27 13:31:11 henoheno Exp $
+// $Id: counter.inc.php,v 1.19 2007/02/04 11:14:44 henoheno Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2005, 2007 PukiWiki Developers Team
 //   2002 Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net
 // License: GPL2
 //
-// Counter plugin
+// Counter plugin (per page)
 
 // Counter file's suffix
 define('PLUGIN_COUNTER_SUFFIX', '.count');
@@ -69,19 +69,24 @@ function plugin_counter_get_count($page)
 	$counters[$page] = $default;
 	$modify = FALSE;
 
+	// Open
 	$file = COUNTER_DIR . encode($page) . PLUGIN_COUNTER_SUFFIX;
-	$fp = fopen($file, file_exists($file) ? 'r+' : 'w+')
+	pkwk_touch_file($file);
+	$fp = fopen($file, 'r+')
 		or die('counter.inc.php: Cannot open COUTER_DIR/' . basename($file));
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
-	foreach ($default as $key=>$val) {
+
+	// Read
+	foreach (array_keys($default) as $key) {
 		// Update
 		$counters[$page][$key] = rtrim(fgets($fp, 256));
 		if (feof($fp)) break;
 	}
+
+	// Anothoer day?
 	if ($counters[$page]['date'] != $default['date']) {
-		// New day
 		$modify = TRUE;
 		$is_yesterday = ($counters[$page]['date'] == get_date('Y/m/d', strtotime('yesterday', UTIME)));
 		$counters[$page]['ip']        = $_SERVER['REMOTE_ADDR'];
@@ -89,7 +94,6 @@ function plugin_counter_get_count($page)
 		$counters[$page]['yesterday'] = $is_yesterday ? $counters[$page]['today'] : 0;
 		$counters[$page]['today']     = 1;
 		$counters[$page]['total']++;
-
 	} else if ($counters[$page]['ip'] != $_SERVER['REMOTE_ADDR']) {
 		// Not the same host
 		$modify = TRUE;
@@ -97,6 +101,7 @@ function plugin_counter_get_count($page)
 		$counters[$page]['today']++;
 		$counters[$page]['total']++;
 	}
+
 	// Modify
 	if ($modify && $vars['cmd'] == 'read') {
 		rewind($fp);
@@ -104,6 +109,8 @@ function plugin_counter_get_count($page)
 		foreach (array_keys($default) as $key)
 			fputs($fp, $counters[$page][$key] . "\n");
 	}
+
+	// Close
 	flock($fp, LOCK_UN);
 	fclose($fp);
 
