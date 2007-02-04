@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.17 2007/02/01 15:02:45 henoheno Exp $
+// $Id: spam.php,v 1.18 2007/02/04 10:42:41 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 // Functions for Concept-work of spam-uri metrics
@@ -683,7 +683,7 @@ function get_blocklist($list = '')
 						$regexs[$_list][$key] = $value;
 					} else {
 						$regexs[$_list][$value] =
-							'/^' . generate_glob_regex($value, '/') . '$/i';
+							'/^(?:www\.)?' . generate_glob_regex($value, '/') . '$/i';
 					}
 				}
 			}
