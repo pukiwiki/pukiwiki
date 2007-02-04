@@ -1,7 +1,7 @@
 <?php
-// $Id: online.inc.php,v 1.9 2005/06/25 10:03:20 henoheno Exp $
+// $Id: online.inc.php,v 1.10 2007/02/04 11:42:36 henoheno Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2005, 2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -65,9 +65,7 @@ function plugin_online_itself($type = 0)
 // & $count == Number of online users
 function plugin_online_check_online(& $count, $host = '')
 {
-	if (! file_exists(PLUGIN_ONLINE_USER_LIST) &&
-	    ! @touch(PLUGIN_ONLINE_USER_LIST))
-		return FALSE;
+	if (pkwk_touch_file(PLUGIN_ONLINE_USER_LIST)) return FALSE;
 
 	// Open
 	$fp = @fopen(PLUGIN_ONLINE_USER_LIST, 'r');
