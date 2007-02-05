@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.18 2007/02/04 10:43:28 henoheno Exp $
+// $Id: spam.ini.php,v 1.19 2007/02/05 12:46:41 henoheno Exp $
 // Spam-related setting
 
 $blocklist['goodhost'] = array(
@@ -142,6 +142,7 @@ $blocklist['badhost'] = array(
 	'*.f2b.be',			// by f2b.be
 	'*.faithweb.com',	// by freeservers.com
 	'*.fancyurl.com',
+	'url.fibiger.org',
 	'ffwd.to',
 	'*.filetap.com',	// by shorturl.com
 	'flingk.com',
@@ -363,6 +364,7 @@ $blocklist['badhost'] = array(
 	'urlcut.com',
 	'urlcutter.com',
 	'urlic.com',
+	'urlin.it',
 	'urlsnip.com',
 	'urlzip.de',
 	'urlx.org',
@@ -443,6 +445,7 @@ $blocklist['badhost'] = array(
 	'*.asphost4free.com',
 	'*.beeplog.com',
 	'*.blog.hr',
+	'blogas.lt',
 	'*.bloggingmylife.com',
 	'bloggers.nl',
 	'*.blogharbor.com',
@@ -536,6 +539,7 @@ $blocklist['badhost'] = array(
 	'myblog.es',			// by 20six weblog services
 	'myblog.is',
 	'*.myblogvoice.com',
+	'*.myforum.ro',
 	'*.netfast.org',
 	'neweconomics.info',
 	'*.nm.ru',
@@ -587,7 +591,11 @@ $blocklist['badhost'] = array(
 	'*.inventforum.com',
 	'funnyclipcentral.com',
 	'huskerink.com',
+	'hyba.info',
+	'*.hyba.info',
 	'internetincomeclub.com',
+	'jloo.org',
+	'*.jloo.org',
 	'kevindmurray.com',
 	'macfaq.net',
 	'me4x4.com',
@@ -801,9 +809,14 @@ $blocklist['badhost'] = array(
 	'wifes1.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.wifes1.info',
 	//
-	'*.bequeous.info',	// by David C. Lack (David.C.Lack at dodgeit.com), redirect to activefreehost.com
-	'*.superfreedownload.info',	// by Varsylenko Vladimir (vvm_kz at rambler.ru), redirect to activefreehost.com
-	'*.yerap.info',		// by Kuzma V Safonov (admin at irtes.ru), redirect to activefreehost.com
+	'allsexonline.info',	// by Varsylenko Vladimir (vvm_kz at rambler.ru), redirect to activefreehost.com
+	'*.allsexonline.info',
+	'bequeous.info',	// by David C. Lack (David.C.Lack at dodgeit.com), redirect to activefreehost.com
+	'*.bequeous.info',
+	'superfreedownload.info',	// by Varsylenko Vladimir (vvm_kz at rambler.ru), redirect to activefreehost.com
+	'*.superfreedownload.info',
+	'yerap.info',		// by Kuzma V Safonov (admin at irtes.ru), redirect to activefreehost.com
+	'*.yerap.info',
 	//
 	'*.flywebs.com',	// by Andrey Zhurikov (zhu1313 at mail.ru)
 	'*.hostrim.com',	// by Andrey Zhurikov (zhu1313 at mail.ru)
@@ -904,6 +917,8 @@ $blocklist['badhost'] = array(
 	'*.bingogoldenpalace.info',
 	'ccarisoprodol.info',		// by Lebedev Sergey (serega555serega555 at yandex.ru)
 	'*.ccarisoprodol.info',
+	'ezxcv.info',				// by Lebedev Sergey (serega555serega555 at yandex.ru)
+	'*.ezxcv.info',
 	'isuperdrug.com',			// by Lebedev Sergey (serega555serega555 at yandex.ru)
 	'*.isuperdrug.com',
 	'pharmacif.info',			// by Lebedev Sergey (serega555serega555 at yandex.ru)
@@ -925,6 +940,19 @@ $blocklist['badhost'] = array(
 	'*.xer-vam.org',
 	'vvsa.org', // by Eva Sabina Lopez Castell (aliacsandr85 at yahoo.com)
 	'*.vvsa.org',
+	//
+	'ekafoloz.info',	// by Billing Name:Gray (gray at trafic.name)
+	'*.ekafoloz.info',
+	'gubiwu.info',		// by Billing Name:Gray (gray at trafic.name)
+	'*.gubiwu.info',
+	'jiuuz.info',		// by Billing Name:Gray (gray at trafic.name)
+	'*.jiuuz.info',
+	'oueuidop.info',	// by Billing Name:Gray (gray at trafic.name)
+	'*.oueuidop.info',
+	'oviravy.info',		// by Billing Name:Gray (gray at trafic.name)
+	'*.oviravy.info',
+	'udaxu.info',		// by Billing Name:Gray (gray at trafic.name)
+	'*.udaxu.info',
 
 	// C-2: Lonely domains (buddies not found yet)
 	'0nline-porno.info',	// by Timyr (timyr at narod.ru)
@@ -974,12 +1002,21 @@ $blocklist['badhost'] = array(
 	'zlocorp.com',		// by tonibcrus at hotpop.com, spammed well with "http ://zlocorp.com/"
 	'*.zlocorp.com',
 
+
+	'bloggerblast.com',	// by B. Kadrie (domains at starwhitehosting.com)
+	'carmodelrank.com',	// by Brianna Dunlord (briasmi at yahoo.com)
+	'covertarena.co.uk',	// by Wayne Huxtable
+	'tabsdrugstore.info',	// by Jonn Gardens (admin at SearchHealtAdvCorpGb.com -- no such domain)
+	'*.tabsdrugstore.info',
+
+
 	// C-3: Not classifiable (information wanted)
 	//
 	// Something incoming to pukiwiki related sites
+	'planetnana.co.il',	// nana.co.il related
 	'mylexus.info',		// by Homer Simpson (simhomer12300 at mail.com), Redirect to Google
+	'*.nana.co.il',
 	'up2.co.il',		// inetwork.co.il related
-
 
 	// D: Sample setting of
 	// "third party in good faith"s
