@@ -1,5 +1,5 @@
 <?php
-// $Id: online.inc.php,v 1.9 2005/06/25 10:03:20 henoheno Exp $
+// $Id: online.inc.php,v 1.12 2007/02/10 06:21:53 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -39,7 +39,7 @@ function plugin_online_itself($type = 0)
 		}
 
 		// Try read
-		if (plugin_online_check_online(& $count, $host)) {
+		if (plugin_online_check_online($count, $host)) {
 			$result = TRUE;
 		} else {
 			// Write
