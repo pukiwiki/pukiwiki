@@ -65,7 +65,7 @@ function plugin_online_itself($type = 0)
 // & $count == Number of online users
 function plugin_online_check_online(& $count, $host = '')
 {
-	if (pkwk_touch_file(PLUGIN_ONLINE_USER_LIST)) return FALSE;
+	if (! pkwk_touch_file(PLUGIN_ONLINE_USER_LIST)) return FALSE;
 
 	// Open
 	$fp = @fopen(PLUGIN_ONLINE_USER_LIST, 'r');
