@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.58 2006/10/08 11:24:30 henoheno Exp $
+// $Id: html.php,v 1.59 2007/02/11 05:53:30 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -14,7 +14,7 @@ function catbody($title, $page, $body)
 	global $script, $vars, $arg, $defaultpage, $whatsnew, $help_page, $hr;
 	global $attach_link, $related_link, $cantedit, $function_freeze;
 	global $search_word_color, $_msg_word, $foot_explain, $note_hr, $head_tags;
-	global $trackback, $referer, $javascript, $nofollow;
+	global $javascript, $nofollow;
 	global $_LANG, $_LINK, $_IMAGE;
 
 	global $pkwk_dtd;     // XHTML 1.1, XHTML1.0, HTML 4.01 Transitional...
@@ -47,7 +47,6 @@ function catbody($title, $page, $body)
 	$_LINK['new']      = "$script?plugin=newpage&amp;refer=$r_page";
 	$_LINK['rdf']      = "$script?cmd=rss&amp;ver=1.0";
 	$_LINK['recent']   = "$script?" . rawurlencode($whatsnew);
-	$_LINK['refer']    = "$script?plugin=referer&amp;page=$r_page";
 	$_LINK['reload']   = "$script?$r_page";
 	$_LINK['rename']   = "$script?plugin=rename&amp;refer=$r_page";
 	$_LINK['rss']      = "$script?cmd=rss";
@@ -55,10 +54,6 @@ function catbody($title, $page, $body)
 	$_LINK['rss20']    = "$script?cmd=rss&amp;ver=2.0";
 	$_LINK['search']   = "$script?cmd=search";
 	$_LINK['top']      = "$script?" . rawurlencode($defaultpage);
-	if ($trackback) {
-		$tb_id = tb_get_id($_page);
-		$_LINK['trackback'] = "$script?plugin=tb&amp;__mode=view&amp;tb_id=$tb_id";
-	}
 	$_LINK['unfreeze'] = "$script?cmd=unfreeze&amp;page=$r_page";
 	$_LINK['upload']   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
 
@@ -74,7 +69,7 @@ function catbody($title, $page, $body)
 	$link_whatsnew  = & $_LINK['recent'];
 	$link_backup    = & $_LINK['backup'];
 	$link_help      = & $_LINK['help'];
-	$link_trackback = & $_LINK['trackback'];	// New!
+	$link_trackback = ''; // Removed (compat)
 	$link_rdf       = & $_LINK['rdf'];		// New!
 	$link_rss       = & $_LINK['rss'];
 	$link_rss10     = & $_LINK['rss10'];		// New!
@@ -83,7 +78,7 @@ function catbody($title, $page, $body)
 	$link_unfreeze  = & $_LINK['unfreeze'];
 	$link_upload    = & $_LINK['upload'];
 	$link_template  = & $_LINK['copy'];
-	$link_refer     = & $_LINK['refer'];	// New!
+	$link_refer     = ''; // Removed (compat)
 	$link_rename    = & $_LINK['rename'];
 
 	// Init flags

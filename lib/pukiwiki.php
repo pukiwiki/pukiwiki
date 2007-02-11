@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.php,v 1.16 2007/01/02 06:49:45 henoheno Exp $
+// $Id: pukiwiki.php,v 1.17 2007/02/11 05:53:30 henoheno Exp $
 //
 // PukiWiki 1.4.*
 //  Copyright (C) 2002-2006 by PukiWiki Developers Team
@@ -53,7 +53,7 @@ if (! extension_loaded('mbstring')) {
 }
 
 // Defaults
-$notify = $trackback = $referer = 0;
+$notify = 0;
 
 // Load *.ini.php files and init PukiWiki
 require(LIB_DIR . 'init.php');
@@ -61,11 +61,6 @@ require(LIB_DIR . 'init.php');
 // Load optional libraries
 if ($notify) {
 	require(LIB_DIR . 'mail.php'); // Mail notification
-}
-if ($trackback || $referer) {
-	// Referer functionality uses trackback functions
-	// without functional reason now
-	require(LIB_DIR . 'trackback.php'); // TrackBack
 }
 
 /////////////////////////////////////////////////
@@ -151,9 +146,6 @@ if (isset($retvars['body']) && $retvars['body'] != '') {
 	$vars['page'] = & $base;
 
 	$body  = convert_html(get_source($base));
-
-	if ($trackback) $body .= tb_get_rdf($base); // Add TrackBack-Ping URI
-	if ($referer) ref_save($base);
 }
 
 // Output

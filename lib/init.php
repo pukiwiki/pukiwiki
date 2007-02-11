@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.51 2006/12/07 14:46:49 henoheno Exp $
+// $Id: init.php,v 1.52 2007/02/11 05:53:30 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -348,11 +348,6 @@ if (isset($vars['msg'])) {
 if (isset($get['md5']) && $get['md5'] != '' &&
     ! isset($vars['cmd']) && ! isset($vars['plugin'])) {
 	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'md5';
-}
-
-// TrackBack Ping
-if (isset($vars['tb_id']) && $vars['tb_id'] != '') {
-	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'tb';
 }
 
 // cmdもpluginも指定されていない場合は、QUERY_STRINGをページ名かInterWikiNameであるとみなす

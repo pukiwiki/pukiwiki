@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: ja.lng.php,v 1.14 2006/04/10 17:36:56 teanan Exp $
+// $Id: ja.lng.php,v 1.15 2007/02/11 05:53:29 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -84,10 +84,6 @@ $_msg_auth         = 'PukiWikiAuth';
 $rule_page = 'FormattingRules';	// Formatting rules
 $help_page = 'Help';		// Help
 
-///////////////////////////////////////
-// TrackBack (REMOVED)
-$_tb_date  = 'Y年n月j日 H:i:s';
-
 /////////////////////////////////////////////////
 // 題名が未記入の場合の表記 (article)
 $_no_subject = '無題';
@@ -112,7 +108,6 @@ $_LANG['skin']['list']      = '一覧';	// List of pages
 $_LANG['skin']['new']       = '新規';
 $_LANG['skin']['rdf']       = '最終更新のRDF';	// RDF of RecentChanges
 $_LANG['skin']['recent']    = '最終更新';	// RecentChanges
-$_LANG['skin']['refer']     = 'リンク元';	// Show list of referer
 $_LANG['skin']['reload']    = 'リロード';
 $_LANG['skin']['rename']    = '名前変更';	// Rename a page (and related)
 $_LANG['skin']['rss']       = '最終更新のRSS';	// RSS of RecentChanges
@@ -120,7 +115,6 @@ $_LANG['skin']['rss10']     = & $_LANG['skin']['rss'];
 $_LANG['skin']['rss20']     = & $_LANG['skin']['rss'];
 $_LANG['skin']['search']    = '単語検索';
 $_LANG['skin']['top']       = 'トップ';	// Top page
-$_LANG['skin']['trackback'] = 'Trackback';	// Show list of trackback
 $_LANG['skin']['unfreeze']  = '凍結解除';
 $_LANG['skin']['upload']    = '添付';	// Attach a file
 
@@ -330,19 +324,6 @@ $_popular_plugin_today_frame = '<h5>今日の%d件</h5><div>%s</div>';
 // recent.inc.php
 $_recent_plugin_frame = '<h5>最新の%d件</h5>
 <div>%s</div>';
-
-///////////////////////////////////////
-// referer.inc.php
-$_referer_msg = array(
-	'msg_H0_Refer'       => 'リンク元の表示',
-	'msg_Hed_LastUpdate' => '最終更新日時',
-	'msg_Hed_1stDate'    => '初回登録日時',
-	'msg_Hed_RefCounter' => 'カウンタ',
-	'msg_Hed_Referer'    => 'Referer',
-	'msg_Fmt_Date'       => 'Y年n月j日 H:i',
-	'msg_Chr_uarr'       => '↑',
-	'msg_Chr_darr'       => '↓',
-);
 
 ///////////////////////////////////////
 // rename.inc.php

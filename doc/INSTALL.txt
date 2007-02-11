@@ -1,5 +1,5 @@
 PukiWiki INSTALL
-$Id: INSTALL.txt,v 1.8 2006/10/08 04:30:51 henoheno Exp $
+$Id: INSTALL.txt,v 1.9 2007/02/11 05:53:30 henoheno Exp $
 
 
 インストール
@@ -175,7 +175,6 @@ PukiWikiやWebサーバーが要求するパーミッション
       lib            755	ライブラリ
       plugin         755	プラグイン
       skin           755	スキン、CSS、JavaScirptファイル
-      trackback      777	TrackBackファイル格納ディレクトリ
       wiki           777	データの格納ディレクトリ
 
     ファイル    パーミッション データの種類(参考)
@@ -203,7 +202,7 @@ PukiWikiやWebサーバーが要求するパーミッション
 バックアップとリストア
     ページの最新データを収めているディレクトリ(デフォルトの名前は wiki)以下
     を、また必要に応じて他のデータを収めているディレクトリ以下をバックアップし
-    て下さい。(同 attach, backup, cache, counter, diff, trackback)
+    て下さい。(同 attach, backup, cache, counter, diff)
 
     cacheディレクトリもバックアップすることをお薦めします。
     1. cache/*.rel ファイルと cache/*.ref ファイルは linksプラグイン で再生

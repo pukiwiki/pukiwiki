@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.147 2007/01/02 07:09:21 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.148 2007/02/11 05:53:30 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -76,7 +76,6 @@ define('BACKUP_DIR',    DATA_HOME . 'backup/'   ); // Backups
 define('CACHE_DIR',     DATA_HOME . 'cache/'    ); // Some sort of caches
 define('UPLOAD_DIR',    DATA_HOME . 'attach/'   ); // Attached files and logs
 define('COUNTER_DIR',   DATA_HOME . 'counter/'  ); // Counter plugin's counts
-define('TRACKBACK_DIR', DATA_HOME . 'trackback/'); // TrackBack logs
 define('PLUGIN_DIR',    DATA_HOME . 'plugin/'   ); // Plugin directory
 
 /////////////////////////////////////////////////
@@ -196,16 +195,6 @@ if ($spam) {
 
 	//$spam['exitmode'] = 'dump'; // Dump progress
 }
-
-/////////////////////////////////////////////////
-// TrackBack feature
-
-// Enable Trackback
-$trackback = 0;
-
-/////////////////////////////////////////////////
-// Referer list feature
-$referer = 0;
 
 /////////////////////////////////////////////////
 // _Disable_ WikiName auto-linking
@@ -382,7 +371,7 @@ define('PKWK_UPDATE_EXEC', '');
 //	' -O ' . $output_dir . ' -L ja -c -K ' . $target);
 
 /////////////////////////////////////////////////
-// HTTP proxy setting (for TrackBack etc)
+// HTTP proxy setting
 
 // Use HTTP proxy server to get remote data
 $use_proxy = 0;
