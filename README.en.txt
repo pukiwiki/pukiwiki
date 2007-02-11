@@ -67,7 +67,6 @@ HOW TO MAKE SITE
              image         755               705
              plugin        755               705
              skin          755               705 
-             trackback     777               707
              wiki          777               707
           File
              attach/*      666               606
@@ -78,7 +77,6 @@ HOW TO MAKE SITE
              image/*       644               604
              plugin/*      644               604
              skin/*        644               604
-             trackback/*   666               606
              wiki/*        666               606
              *.php         644               604
              *.lng         644               604
@@ -93,7 +91,7 @@ HOW TO MAKE A BACKUP OF DATA
     The document data is stored in the "wiki" directory. (default setting)
     Please make a backup of your "wiki" directory. 
     And, if necessary, also make backups of the other directories - namely, 
-    "attach" , "backup", "counter", "cache", "diff" and "trackback" with default setting.
+    "attach" , "backup", "counter", "cache", and "diff" with default setting.
 
 HOW TO CREATE PAGE
 

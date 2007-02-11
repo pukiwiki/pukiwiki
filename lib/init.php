@@ -351,11 +351,6 @@ if (isset($get['md5']) && $get['md5'] != '' &&
 	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'md5';
 }
 
-// TrackBack Ping
-if (isset($vars['tb_id']) && $vars['tb_id'] != '') {
-	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'tb';
-}
-
 // cmdもpluginも指定されていない場合は、QUERY_STRINGをページ名かInterWikiNameであるとみなす
 if (! isset($vars['cmd']) && ! isset($vars['plugin'])) {
 

@@ -170,33 +170,6 @@ stationaryプラグインは単純な文字列を表示する以外は何もしません。
 ------------------------------
 * T [#u58dc027]
 
-**tb [#s5056787]
-:種別|
-~コマンド
-:重要度|
-~★☆☆☆☆
-:書式|
-''?plugin=tb''
-&color(blue){&tb_id=TrackBackID};
-&color(blue){&__mode=};
-&color(blue){view};|
-&color(blue){rss};
-:概要|
-~TrackBackの一覧を表示します。
-~POSTされた場合は他サイトからのTrackBackに反応します。
-:引数|
-~&tb_idには表示対象ページのTrackBackIDを指定します。
-~&__modeには一覧表示方法を指定します。
---view − 人間が見やすい形式で表示します。
---rss − RSS形式で表示します。
-:プラグイン内設定|~
---PLUGIN_TB_LANGUAGE　TrackBackのRSSで出力する言語
---PLUGIN_TB_ERROR　エラー時の返り値
---PLUGIN_TB_NOERROR　エラーなし時の返り値
-:備考|
-~pukiwiki.ini.php で、TrackBackを使用する設定($trackback = 1を指定)が行われている必要があります。
-
-
 **template [#j2adfc3d]
 :種別|
 ~コマンド

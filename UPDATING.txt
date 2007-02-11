@@ -1,9 +1,27 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.38 2006/06/11 15:35:52 henoheno Exp $
+$Id: UPDATING.txt,v 1.41 2007/02/11 05:53:29 henoheno Exp $
+
+
+更新履歴
+========
+
+※詳細は公式Webサイトを参照して下さい
+
+http://pukiwiki.sourceforge.jp/?PukiWiki/Download
+
 
 
 リリース間の互換性に関する記述
 ==============================
+
+PukiWiki 1.4.8: PukiWiki 1.4.7 との非互換点
+
+   1. これまでのTrackBack実装は、著作(創作)の手順が不適切である疑いが強くなっ
+      たため、完全に削除されました。同様にこの実装に依存していた referer 機能
+      も削除されました。
+      (See BugTrack2/62)
+
+
 
 PukiWiki 1.4.7: PukiWiki 1.4.6 との非互換点
 

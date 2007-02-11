@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: en.lng.php,v 1.15 2006/04/10 17:36:56 teanan Exp $
+// $Id: en.lng.php,v 1.16 2007/02/11 05:53:29 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -82,10 +82,6 @@ $_msg_auth         = 'PukiWikiAuth';
 $rule_page = 'FormattingRules';	// Formatting rules
 $help_page = 'Help';		// Help
 
-///////////////////////////////////////
-// TrackBack (REMOVED)
-$_tb_date   = 'F j, Y, g:i A';
-
 /////////////////////////////////////////////////
 // No subject (article)
 $_no_subject = 'no subject';
@@ -110,7 +106,6 @@ $_LANG['skin']['list']      = 'List of pages';
 $_LANG['skin']['new']       = 'New';
 $_LANG['skin']['rdf']       = 'RDF of recent changes';
 $_LANG['skin']['recent']    = 'Recent changes';	// RecentChanges
-$_LANG['skin']['refer']     = 'Referer';	// Show list of referer
 $_LANG['skin']['reload']    = 'Reload';
 $_LANG['skin']['rename']    = 'Rename';	// Rename a page (and related)
 $_LANG['skin']['rss']       = 'RSS of recent changes';
@@ -118,7 +113,6 @@ $_LANG['skin']['rss10']     = & $_LANG['skin']['rss'];
 $_LANG['skin']['rss20']     = & $_LANG['skin']['rss'];
 $_LANG['skin']['search']    = 'Search';
 $_LANG['skin']['top']       = 'Front page';	// Top page
-$_LANG['skin']['trackback'] = 'Trackback';	// Show list of trackback
 $_LANG['skin']['unfreeze']  = 'Unfreeze';
 $_LANG['skin']['upload']    = 'Upload';	// Attach a file
 
@@ -328,19 +322,6 @@ $_popular_plugin_today_frame = '<h5>today\'s(%d)</h5><div>%s</div>';
 // recent.inc.php
 $_recent_plugin_frame = '<h5>recent(%d)</h5>
  <div>%s</div>';
-
-///////////////////////////////////////
-// referer.inc.php
-$_referer_msg = array(
-	'msg_H0_Refer'       => 'Referer',
-	'msg_Hed_LastUpdate' => 'LastUpdate',
-	'msg_Hed_1stDate'    => 'First Register',
-	'msg_Hed_RefCounter' => 'RefCounter',
-	'msg_Hed_Referer'    => 'Referer',
-	'msg_Fmt_Date'       => 'F j, Y, g:i A',
-	'msg_Chr_uarr'       => '&uArr;',
-	'msg_Chr_darr'       => '&dArr;',
-);
 
 ///////////////////////////////////////
 // rename.inc.php

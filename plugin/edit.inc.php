@@ -174,7 +174,7 @@ function plugin_edit_inline()
 // Write, add, or insert new comment
 function plugin_edit_write()
 {
-	global $vars, $trackback;
+	global $vars;
 	global $_title_collided, $_msg_collided_auto, $_msg_collided, $_title_deleted;
 	global $notimeupdate, $_msg_invalidpass, $do_update_diff_table;
 
@@ -221,9 +221,6 @@ function plugin_edit_write()
 		page_write($page, $postdata);
 		$retvars['msg' ] = $_title_deleted;
 		$retvars['body'] = str_replace('$1', htmlsc($page), $_title_deleted);
-
-		if ($trackback) tb_delete($page);
-
 		return $retvars;
 	}
 

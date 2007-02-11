@@ -649,13 +649,6 @@ function _navigator($key, $value = '', $javascript = ''){
    <?php _navigator('search') ?>
    <?php _navigator('recent') ?>
    <?php _navigator('help')   ?>
-
-<?php if ($trackback) { ?> &nbsp;
-   <?php _navigator('trackback', $lang['trackback'] . '(' . tb_count($_page) . ')') ?>
-<?php } ?>
-<?php if ($referer)   { ?> &nbsp;
-   <?php _navigator('refer') ?>
-<?php } ?>
 </div></div>
 <?php } else { ?>
 <div id="navigator"></div>

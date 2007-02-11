@@ -62,8 +62,6 @@ function get_filename($page)
 // Put a data(wiki text) into a physical file(diff, backup, text)
 function page_write($page, $postdata, $notimestamp = FALSE)
 {
-	global $trackback;
-
 	if (PKWK_READONLY) return; // Do nothing
 
 	$postdata = make_str_rules($postdata);
@@ -78,14 +76,6 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 
 	// Create wiki text
 	file_write(DATA_DIR, $page, $postdata, $notimestamp);
-
-	if ($trackback) {
-		// TrackBack Ping
-		$_diff = explode("\n", $diffdata);
-		$plus  = join("\n", preg_replace('/^\+/', '', preg_grep('/^\+/', $_diff)));
-		$minus = join("\n", preg_replace('/^-/',  '', preg_grep('/^-/',  $_diff)));
-		tb_send($page, $plus, $minus);
-	}
 
 	links_update($page);
 }

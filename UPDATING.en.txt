@@ -1,9 +1,25 @@
 PukiWiki UPDATING
-$Id: UPDATING.en.txt,v 1.3 2006/06/11 15:24:35 henoheno Exp $
+$Id: UPDATING.en.txt,v 1.6 2007/02/11 05:53:29 henoheno Exp $
+
+
+CHANGES
+=======
+
+See description at PukiWiki-official
+http://pukiwiki.sourceforge.jp/?PukiWiki/Download
+
 
 
 INCOMPATIBILITY INFORMATION BETWEEN RELEASES
 ============================================
+
+PukiWiki 1.4.8: Incompatibility from PukiWiki 1.4.7
+
+   1. TrackBack implimentation had been removed entirely due to extremely
+      strong suspicion of violating copyright. 'referer' function (that use
+      the implimentation), also removed.
+      (See BugTrack2/62)
+
 
 PukiWiki 1.4.7: Incompatibility from PukiWiki 1.4.6
 
