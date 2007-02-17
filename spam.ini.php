@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.20 2007/02/07 14:19:59 henoheno Exp $
+// $Id: spam.ini.php,v 1.21 2007/02/17 13:45:39 henoheno Exp $
 // Spam-related setting
 
 $blocklist['goodhost'] = array(
@@ -257,6 +257,7 @@ $blocklist['badhost'] = array(
 	'*.netbounce.net',	// by vdirect.com
 	'nlug.org',			// by Nashville Linux Users Group
 	'*.notlong.com',
+	'*.nuv.pl',
 	'*.official.ws',	// by active.ws
 	'ofzo.be',
 	'*.oneaddress.net',	// by vdirect.com
@@ -347,6 +348,7 @@ $blocklist['badhost'] = array(
 	'tinyurl.com',
 	'tinyurl.name',		// by comteche.com
 	'tinyurl.us',		// by comteche.com
+	'*.tk',				// 'Tokelau' ccTLD
 	'tnij.org',
 	'*.toolbot.com',
 	'*.tophonors.com',	// by webalias.com
@@ -408,7 +410,7 @@ $blocklist['badhost'] = array(
 	'*.zonehere.com',	// by hotredirect.com
 	'zuso.tw',
 
-	// A-2: Dynamic DNS or Dynamic IP services
+	// A-2: Dynamic DNS, Dynamic IP services, DNS vulnerabilities, or another DNS cases
 	//
 	//'*.ath.cx',				// by dydns.com
 	//'*.bpa.nu',				// by ddns.ru
@@ -424,6 +426,7 @@ $blocklist['badhost'] = array(
 	//'*.nerdcamp.net',
 	//'*.zenno.info',
 	//'*.mine.nu',			// by dydns.com
+	//'*.cm',	// 'Cameroon' ccTLD, sometimes used as typo of '*.com'
 
 
 	// B: Sample setting of:
@@ -433,15 +436,26 @@ $blocklist['badhost'] = array(
 	// http://pukiwiki.sourceforge.jp/dev/?BugTrack2%2F208
 
 	// B-1: Web spaces
+	'*.0-st.com',		// by 100 Best Inc (info at 100best.com)
 	'*.0catch.com',		// by bluehost.com
 	'*.150m.com',		// by 100 Best, Inc., NS by 0catch.com
+	'*.2-hi.com',		// by 100 Best Inc (info at 100best.com)
+	'*.20fr.com',		// by 100 Best Inc (info at 100best.com)
+	'*.20ii.com',		// by 100 Best Inc (info at 100best.com)
+	'*.20is.com',		// by 100 Best Inc (info at 100best.com)
+	'*.20it.com',		// by 100 Best Inc (info at 100best.com)
+	'*.20m.com',		// by jlee at 100bestinc.com
+	'*.20me.com',		// by 100 Best Inc (info at 100best.com)
 	'20six.nl',			// by 20six weblog services (postmaster at 20six.nl)
 	'*.20six.nl',
 	'20six.co.uk',		// by 20six weblog services
 	'*.20six.co.uk',
 	'20six.fr',			// by 20six weblog services
 	'*.20six.fr',
+	'*.20to.com',		// by 100 Best Inc (info at 100best.com)
 	'*.2page.de',
+	'*.2u-2.com',		// by 100 Best Inc (info at 100best.com)
+	'*.3-st.com',		// by 100 Best Inc (info at 100best.com)
 	'*.50megs.com',
 	'*.9999mb.com',
 	'*.9k.com',
@@ -476,6 +490,7 @@ $blocklist['badhost'] = array(
 	'*.freeclans.de',
 	'*.freelinuxhost.com',	// by 100webspace.com
 	'freeforum.at',
+	'*.forum-on.de',
 	'forumprofi.de',
 	'forumprofi1.de',	// by forumprofi.de
 	'forumprofi2.de',	// by forumprofi.de
@@ -519,6 +534,8 @@ $blocklist['badhost'] = array(
 	'forumup.us',		// by forumup
 	'forumup.web.tr',	// by forumup
 	'freepowerboards.com',
+	'*.fws1.com',		// by 100 Best Inc (info at 100best.com)
+	'*.fw-2.com',		// by 100 Best Inc (info at 100best.com)
 	'*.hit.bg',				// by forumup.com ??
 	'*.goodboard.de',
 	'docs.google.com',			// by Google
@@ -533,11 +550,14 @@ $blocklist['badhost'] = array(
 	'*.iespana.es',			// by ieurop.net
 	'*.ifastnet.com',
 	'*.ifrance.com',		// by ieurop.net
+	'*.ihateclowns.net',
 	'*.iitalia.com',		// by ieurop.net
+	'*.inc5.com',			// by 100 Best Inc (info at 100best.com)
 	'*.iquebec.com',		// by ieurop.net
 	'*.isuisse.com',		// by ieurop.net
 	'*.journalscape.com',
 	'*.kokoom.com',
+	'*.ksiegagosci.info',
 	'*.land.ru',			// pochta.ru related
 	'limmon.net',
 	'ltss.luton.ac.uk',
@@ -551,6 +571,7 @@ $blocklist['badhost'] = array(
 	'*.netfast.org',
 	'neweconomics.info',
 	'*.nm.ru',
+	'*.on-4.com',			// by 100 Best Inc (info at 100best.com)
 	'*.parlaris.com',
 	'*.phpbbx.de',
 	'*.quickfreehost.com',
@@ -561,6 +582,8 @@ $blocklist['badhost'] = array(
 	'*.siamforum.com',
 	'*.spazioforum.it',
 	'*.squarespace.com',
+	'*.st-3.com',			// by 100 Best Inc (info at 100best.com)
+	'*.st20.com',			// by 100 Best Inc (info at 100best.com)
 	'stickypond.com',
 	'*.stormloader.com',
 	'*.t35.com',
@@ -568,6 +591,7 @@ $blocklist['badhost'] = array(
 	'telasipforums.com',
 	'thestudentunderground.org',
 	'think.ubc.ca',
+	'*.up-a.com',			// by 100 Best Inc (info at 100best.com)
 	'*.welover.org',
 	'*.web-space.ws',		// by your-websites.com
 	'weblogmaniacs.com',
@@ -583,6 +607,7 @@ $blocklist['badhost'] = array(
 	// B-2: Jacked contents, something implanted
 	// (e.g. some sort of blog comments, BBSes, forums, wikis)
 	'*.aamad.org',
+	'alwanforthearts.org',
 	'anewme.org',
 	'blepharospasm.org',
 	'*.buzznet.com',
@@ -591,6 +616,7 @@ $blocklist['badhost'] = array(
 	'*.iphpbb.com',
 	'board-z.de',
 	'*.board-z.de',
+	'writing.csustan.edu',
 	'deproduction.org',
 	'deproduction.org',
 	'dc503.org',
@@ -601,6 +627,7 @@ $blocklist['badhost'] = array(
 	'*.goodboard.de',
 	'homepage-dienste.com',
 	'*.inventforum.com',
+	'plone4.fnal.gov',
 	'funnyclipcentral.com',
 	'huskerink.com',
 	'hyba.info',
@@ -726,6 +753,7 @@ $blocklist['badhost'] = array(
 	'*.adult-chat-sex-cam.info',	// 'CamsGen' by Lee Chang (nebucha at model-x.com)
 	'*.live-chat-cam-sex.info',		// 'CamsGen' by Lee Chang (nebucha at model-x.com)
 	'*.live-nude-cam-chat.info',	// 'CamsGen' by Lee Chang (nebucha at model-x.com)
+	'*.live-sex-cam-nude-chat.info',// 'CamsGen' by Lee Chang (nebucha at model-x.com)
 	'*.sex-cam-live-chat-web.info',	// 'CamsGen' by Lee Chang (nebucha at model-x.com)
 	'*.sex-chat-live-cam-nude.info',// 'CamsGen' by Lee Chang (nebucha at model-x.com)
 	//
@@ -792,6 +820,8 @@ $blocklist['badhost'] = array(
 	'*.canadausa.info',
 	'eplot.info',		// by Beatrice C. Anderson (Beatrice.C.Anderson at spambob.com), redirect to activefreehost.com
 	'*.eplot.info',
+	'fuck2z.info',		// by Andrey (vdf at lovespb.com), "UcoZ WEB-SERVICES"-like design
+	'*.fuck2z.info',
 	'freexz.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.freexz.info',
 	'lovespb.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
@@ -981,16 +1011,33 @@ $blocklist['badhost'] = array(
 	'*.vubiheq.info',
 	'yvaxat.info',		// by Billing Name:Gray (gray at trafic.name)
 	'*.yvaxat.info',
+	//
+	'carmodelrank.com',	// by Brianna Dunlord (briasmi at yahoo.com)
+	'*.carmodelrank.com',
+	'cutestories.net',	// by Brianna Dunlord (briasmi at yahoo.com)
+	'*.cutestories.net',
+	'sturducs.com',
+	'*.sturducs.com',
+	'bestother.info',	// by Tim Rennei (TimRennei at yahoo.com), redirect to amaena.com (fake-antivirus)
+	'*.bestother.info',
+	'yaahooo.info',		// by Alice T. Horst (Alice.T.Horst at pookmail.com), redirect to activefreehost.com
+	'*.yaahooo.info',
 
 	// C-2: Lonely domains (buddies not found yet)
 	'0nline-porno.info',	// by Timyr (timyr at narod.ru)
 	'*.0nline-porno.info',
+	'1111mb.com',
+	'*.1111mb.com',
 	'19cellar.info',	// by Eduardo Guro (boomouse at gmail.com)
 	'*.advancediet.com',// by Shonta Mojica (hostadmin at advancediet.com)
+	'adultpersonalsclubs.com',	// by Peter (vaspet34 at yahoo.com)
+	'*.adultpersonalsclubs.com',
 	'*.areaseo.com',	// by Antony Carpito (xcentr at lycos.com)
+	'awardspace.com',	// by abuse at awardspace.com, no DirectoryIndex
+	'*.awardspace.com',
+	'*.baurish.info',
 	'bestdiscountpharmacy.biz',	// by John  Brown (john780321 at yahoo.com), 2007-01-27, 61.144.122.45
 	'bloggerblast.com',	// by B. Kadrie (domains at starwhitehosting.com)
-	'carmodelrank.com',	// by Brianna Dunlord (briasmi at yahoo.com)
 	'covertarena.co.uk',// by Wayne Huxtable
 	'd999.info',		// by Peter Vayner (peter.vayner at inbox.ru)
 	'*.d999.info',
@@ -1015,6 +1062,8 @@ $blocklist['badhost'] = array(
 	'*.ls.la',			// by Milton McLellan (McLellanMilton at yahoo.com)
 	'myfgj.info',		// by Filus (softscript at gmail.com)
 	'*.mujiki.com',		// by Mila Contora (ebumsn at ngs.ru)
+	'ngfu2.info',		// by Tara Lagrant (webmaster at ngfu2.info)
+	'*.ngfu2.info',
 	'ornit.info',		// by Victoria C. Frey (Victoria.C.Frey at pookmail.com)
 	'*.ornit.info',
 	'*.pahuist.info',	// by Yura (yuralg2005 at yandex.ru)
@@ -1044,6 +1093,7 @@ $blocklist['badhost'] = array(
 	'mylexus.info',		// by Homer Simpson (simhomer12300 at mail.com), Redirect to Google
 	'*.nana.co.il',
 	'up2.co.il',		// inetwork.co.il related
+	'*.up2.co.il',
 
 	// D: Sample setting of
 	// "third party in good faith"s
