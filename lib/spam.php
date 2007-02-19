@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.18 2007/02/04 10:42:41 henoheno Exp $
+// $Id: spam.php,v 1.19 2007/02/19 15:34:47 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 // Functions for Concept-work of spam-uri metrics
@@ -51,7 +51,7 @@ function uri_pickup($string = '', $normalize = TRUE,
 	preg_match_all(
 		// scheme://userinfo@host:port/path/or/pathinfo/maybefile.and?query=string#fragment
 		// Refer RFC3986 (Regex below is not strict)
-		'#(\b[a-z][a-z0-9.+-]{1,8})://' .	// 1: Scheme
+		'#(\b[a-z][a-z0-9.+-]{1,8}):/+' .	// 1: Scheme
 		'(?:' .
 			'([^\s<>"\'\[\]/\#?@]*)' .		// 2: Userinfo (Username)
 		'@)?' .
@@ -793,7 +793,7 @@ function check_uri_spam($target = '', $method = array())
 	$remains = & $progress['remains'];
 	$asap    = isset($method['asap']);
 
-	// Return if ...
+	// Recurse
 	if (is_array($target)) {
 		foreach($target as $str) {
 			// Recurse
@@ -820,7 +820,11 @@ function check_uri_spam($target = '', $method = array())
 			}
 			foreach ($_remains as $key=>$value) {
 				foreach ($value as $_key=>$_value) {
-					$remains[$key][$_key] = $_value;
+					if (is_int($_key)) {
+						$remains[$key][]      = $_value;
+					} else {
+						$remains[$key][$_key] = $_value;
+					}
 				}
 			}
 			if ($asap && $is_spam) break;
@@ -855,14 +859,14 @@ function check_uri_spam($target = '', $method = array())
 	}
 
 	// Return if ...
-	if ($asap && $is_spam) {
-		return $progress;
-	}
-	// URI Init
+	if ($asap && $is_spam) return $progress;
+
+	// URI: Pickup
 	$pickups = spam_uri_pickup($target, $method);
-	if (empty($pickups)) {
-		return $progress;
-	}
+	//$remains['uri_pickup'] = & $pickups;
+
+	// Return if ...
+	if (empty($pickups)) return $progress;
 
 	// URI: Check quantity
 	$sum['quantity'] += count($pickups);
@@ -930,14 +934,13 @@ function check_uri_spam($target = '', $method = array())
 	}
 
 	// Return if ...
-	if ($asap && $is_spam) {
-		return $progress;
-	}
+	if ($asap && $is_spam) return $progress;
 
 	// Host: Uniqueness (uniq / non-uniq)
 	$hosts = array();
 	foreach ($pickups as $pickup) $hosts[] = & $pickup['host'];
 	$hosts = array_unique($hosts);
+	//$remains['uniqhost'] = & $hosts;
 	$sum['uniqhost'] += count($hosts);
 	if ((! $asap || ! $is_spam) && isset($method['non_uniqhost'])) {
 		$sum['non_uniqhost'] = $sum['quantity'] - $sum['uniqhost'];
@@ -947,9 +950,7 @@ function check_uri_spam($target = '', $method = array())
 	}
 
 	// Return if ...
-	if ($asap && $is_spam) {
-		return $progress;
-	}
+	if ($asap && $is_spam) return $progress;
 
 	// URI: Bad host
 	if ((! $asap || ! $is_spam) && isset($method['badhost'])) {
@@ -959,9 +960,9 @@ function check_uri_spam($target = '', $method = array())
 		} else {
 			$badhost = is_badhost($hosts, $asap, $__remains);
 			if ($__remains) {
-				$progress['remains']['badhost'] = array();
+				$remains['badhost'] = array();
 				foreach ($__remains as $value) {
-					$progress['remains']['badhost'][$value] = TRUE;
+					$remains['badhost'][$value] = TRUE;
 				}
 			}
 		}
@@ -1094,7 +1095,7 @@ function pkwk_spamnotify($action, $page, $target = array('title' => ''), $progre
 	$summary['URI']     = get_script_uri() . '?' . rawurlencode($page);
 	$summary['USER_AGENT']  = TRUE;
 	$summary['REMOTE_ADDR'] = TRUE;
-	pkwk_mail_notify($notify_subject,  var_export($target, TRUE), $summary);
+	pkwk_mail_notify($notify_subject,  var_export($target, TRUE), $summary, TRUE);
 }
 
 ?>
