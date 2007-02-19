@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: mail.php,v 1.9 2007/02/19 15:27:24 henoheno Exp $
+// $Id: mail.php,v 1.10 2007/02/19 15:38:56 henoheno Exp $
 // Copyright (C)
-//   2003-2006 PukiWiki Developers Team
+//   2003-2007 PukiWiki Developers Team
 //   2003      Originally written by upk
 // License: GPL v2 or (at your option) any later version
 //
