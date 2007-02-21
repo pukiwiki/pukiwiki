@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: mail.php,v 1.10 2007/02/19 15:38:56 henoheno Exp $
+// $Id: mail.php,v 1.11 2007/02/21 14:32:35 henoheno Exp $
 // Copyright (C)
 //   2003-2007 PukiWiki Developers Team
 //   2003      Originally written by upk
@@ -56,16 +56,15 @@ function pkwk_mail_notify($subject, $message, $summary = array(), $summary_posit
 		$summary['USER_AGENT']  = '(' . UA_PROFILE . ') ' . UA_NAME . '/' . UA_VERS;
 
 	if (! empty($summary)) {
-		$_separator = ($message != '') ? "\n" . str_repeat('-', 30) . "\n" : '';
+		$_separator = ($message == '') ? '' : "\n" . str_repeat('-', 30) . "\n";
 		foreach($summary as $key => $value) {
-			$summary[$key] = $key . ': ' . $value;
+			$summary[$key] = $key . ': ' . $value . "\n";
 		}
+		// Top or Bottom
 		if ($summary_position) {
-			// Top
-			$message =implode("\n", $summary) . $_separator . $message;
+			$message = implode('', $summary) . $_separator . $message;
 		} else {
-			// Bottom
-			$message = $message  . $_separator . implode("\n", $summary);
+			$message = $message . $_separator . implode('', $summary);
 		}
 		unset($summary);
 	}
