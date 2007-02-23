@@ -1,5 +1,5 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.41 2007/02/11 05:53:29 henoheno Exp $
+$Id: UPDATING.txt,v 1.42 2007/02/23 13:44:05 henoheno Exp $
 
 
 更新履歴
@@ -21,6 +21,16 @@ PukiWiki 1.4.8: PukiWiki 1.4.7 との非互換点
       も削除されました。
       (See BugTrack2/62)
 
+   2. $spam 機能はいくつかの新しい関数を使って実装されています。そのため、現
+      状のところ PHP 4.3.0 以降でなければ動作しません。
+
+      PHP 4.3.0 に依存している preg_match_all(PREG_OFFSET_CAPTURE) に関するコ
+      ード -- method 'uri_anchor' および 'uri_bbcode' のための機構 -- はspam
+      機能に必須の部分ではないため、除去する事は可能ですが、容易ではありませ
+      ん。
+
+      また、PHP 4.2.0 より前の環境では var_export() が存在しないため、この関
+      数を利用している機能(ブロックメール通知の本文)が動作しなくなります。
 
 
 PukiWiki 1.4.7: PukiWiki 1.4.6 との非互換点
