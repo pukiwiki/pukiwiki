@@ -1,6 +1,10 @@
 <?php
-// $Id: spam.ini.php,v 1.23 2007/02/18 03:28:59 henoheno Exp $
+// $Id: spam.ini.php,v 1.24 2007/02/23 13:45:39 henoheno Exp $
 // Spam-related setting
+//
+// Reference:
+//   Spamdexing http://en.wikipedia.org/wiki/Spamdexing
+
 
 $blocklist['goodhost'] = array(
 	'IANA-examples' => '#^(?:.*\.)?example\.(?:com|net|org)$#',
@@ -452,6 +456,17 @@ $blocklist['badhost'] = array(
 	// http://pukiwiki.sourceforge.jp/dev/?BugTrack2%2F208
 
 	// B-1: Web spaces
+	//
+	//   Messages from forerunners:
+	//     activefreehost.com
+	//       "We regret to inform you that ActiveFreeHost
+	//        free hosting service has is now closed (as of
+	//        September 18). We have been online for over
+	//        two and half years, but have recently decided
+	//        to take time for software improvement to fight
+	//        with server abuse, Spam advertisement and
+	//        fraud."
+	//
 	'*.0-st.com',		// by 100 Best Inc (info at 100best.com)
 	'*.0catch.com',		// by bluehost.com
 	'*.0moola.com',
@@ -495,6 +510,7 @@ $blocklist['badhost'] = array(
 	'concepts-mall.com',
 	'*.createmybb.com',
 	'dakrats.net',
+	'*.devil.it',
 	'*.diaryland.com',
 	'*.dox.hu',
 	'dreipage.de',		// by 2page.de
@@ -616,6 +632,7 @@ $blocklist['badhost'] = array(
 	'*.ksiegagosci.info',
 	'*.land.ru',			// pochta.ru related
 	'limmon.net',
+	'*.logme.nl',
 	'ltss.luton.ac.uk',
 	'*.monforum.com',
 	'*.monforum.fr',		// by monforum.com
@@ -649,6 +666,7 @@ $blocklist['badhost'] = array(
 	'thestudentunderground.org',
 	'think.ubc.ca',
 	'*.up-a.com',			// by 100 Best Inc (info at 100best.com)
+	'*.vidiac.com',
 	'*.welover.org',
 	'*.web-space.ws',		// by your-websites.com
 	'weblogmaniacs.com',
@@ -695,6 +713,7 @@ $blocklist['badhost'] = array(
 	'internetincomeclub.com',
 	'jloo.org',
 	'*.jloo.org',
+	'test.kernel.org',
 	'kevindmurray.com',
 	'macfaq.net',
 	'me4x4.com',
@@ -702,6 +721,7 @@ $blocklist['badhost'] = array(
 	'morerevealed.com',
 	'mamiya.co.uk',
 	'mountainjusticemedia.org',
+	'*.mybbland.com',
 	'users.nethit.pl',
 	'njbodybuilding.com',
 	'nlen.org',
@@ -879,12 +899,18 @@ $blocklist['badhost'] = array(
 	'*.buypo.info',
 	'canadausa.info',	// by Andrey (vdf at lovespb.com), "UcoZ WEB-SERVICES"
 	'*.canadausa.info',
+	'cvwifw.info',		// by Andrey (vdf at lovespb.com), redirect to ifree-search.org
+	'*.cvwifw.info',
 	'eplot.info',		// by Beatrice C. Anderson (Beatrice.C.Anderson at spambob.com), redirect to activefreehost.com
 	'*.eplot.info',
 	'fuck2z.info',		// by Andrey (vdf at lovespb.com), "UcoZ WEB-SERVICES"-like design
 	'*.fuck2z.info',
 	'freexz.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.freexz.info',
+	'ifree-search.org',	// by Andrey (vdf at lovespb.com)
+	'*.ifree-search.org',
+	'kra1906.info',		// by Nike Borzoff (nike.borzoff at gmail.com), "UcoZ WEB-SERVICES"
+	'*.kra1906.info',
 	'lovespb.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.lovespb.info',
 	'oursales.info',	// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
@@ -913,6 +939,8 @@ $blocklist['badhost'] = array(
 	'*.vny0.info',
 	'wifes1.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.wifes1.info',
+	'xranvam.info',		// by Andrey (vdf at lovespb.com)
+	'*.xranvam.info',
 	//
 	'allsexonline.info',	// by Varsylenko Vladimir (vvm_kz at rambler.ru), redirect to activefreehost.com
 	'*.allsexonline.info',
@@ -1083,6 +1111,39 @@ $blocklist['badhost'] = array(
 	'*.bestother.info',
 	'yaahooo.info',		// by Alice T. Horst (Alice.T.Horst at pookmail.com), redirect to activefreehost.com
 	'*.yaahooo.info',
+	//
+	'*.freebloghost.org',	// "Free Web Hosting" by Dr. Portillo (aliacsandr85 at yahoo.com)
+	'*.sashawww.info',		// "Free Web Hosting" by Dr. Portillo (aliacsandr85 at yahoo.com)
+	//
+	// Car / Home / Life insurance
+	'0q.org',				// by Shamika Curtin
+	'*.0q.org',
+	'1-bookmark.com',		// by Sonia Snyder
+	'*.1-bookmark.com',
+	'1day-insurance.com',	// by Kelsie Strouse
+	'*.1day-insurance.com',
+	'1upinof.com',			// by Diego Johnson
+	'*.1upinof.com',
+	'18wkcf.com',			// by Lexy Bohannon
+	'*.18wkcf.com',
+	'2001werm.org',			// by Raphael Rayburn
+	'*.2001werm.org',
+	'2004heeparea1.org',	// by Dinorah Andrews
+	'*.2004heeparea1.org',
+	'21nt.net',				// by Jaida Estabrook
+	'*.21nt.net',
+	'8-f22.com',			// by Larraine Evers
+	'*.8-f22.com',
+	'acornwebdesign.co.uk',	// by Uriel Dorian
+	'*.acornwebdesign.co.uk',
+	'boreholes.org',		// by Flora Reed
+	'*.boreholes.org',
+	'mysteryclips.com',		// by Edward Ashford
+	'*.mysteryclips.com',
+	'richcapaldi.com',		// by Kya Haggard
+	'*.richcapaldi.com',
+	'shoes-shop.us',		// by Austen Higginbotham
+	'*.shoes-shop.us',
 
 	// C-2: Lonely domains (buddies not found yet)
 	'0nline-porno.info',	// by Timyr (timyr at narod.ru)
@@ -1106,6 +1167,8 @@ $blocklist['badhost'] = array(
 	'*.dlekei.info',	// by Maxima Bucaro (webmaster at tts2f.info)
 	'*.discutbb.com',	// by Perez Thomas (thomas.jsp at libertysurf.fr)
 	'dreamteammoney.com',	// dtmurl.com related
+	'drugs-usa.info',	// by Edward SanFilippo (Edward.SanFilippo at gmail.com), redirect to activefreehost.com
+	'*.drugs-usa.info',
 	'*.ec51.com',		// by zhenfei chen (szczffhh_sso at 21cn.net)
 	'fastppc.info',		// by peter conor (fastppc at msn.com)
 	'*.fateback.com',	// by LiquidNet Ltd. Redirect to www.japan.jp
