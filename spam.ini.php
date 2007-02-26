@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.26 2007/02/26 13:26:23 henoheno Exp $
+// $Id: spam.ini.php,v 1.27 2007/02/26 14:15:38 henoheno Exp $
 // Spam-related setting
 //
 // Reference:
@@ -455,6 +455,7 @@ $blocklist['badhost'] = array(
 	'*.hitart.com',		// by shorturl.com
 	'*.homepagehere.com',// by hotredirect.com
 	'hort.net',
+	'hotshorturl.com',
 	'*.hothere.com',	// by hotredirect.com
 	'*.hottestpix.com',	// by webalias.com
 	'*.ht.st',			// by ulimit.com
@@ -484,6 +485,7 @@ $blocklist['badhost'] = array(
 	'invisible.at',		// by kickme.to
 	'*.invisible.at',
 	'ipoo.org',
+	'irotator.com',
 	'is-chillin.it',	// by kickme.to
 	'*.is-chillin.it',
 	'is-groovin.it',	// by kickme.to
@@ -872,6 +874,7 @@ $blocklist['badhost'] = array(
 	'titlien.com',
 	'*.tk',				// 'Tokelau' ccTLD
 	'tlurl.com',	
+	'link.toolbot.com',
 	'toplist.at',		// by kickme.to
 	'*.toplist.at',
 	'tnij.org',
@@ -1063,6 +1066,7 @@ $blocklist['badhost'] = array(
 	'*.2page.de',
 	'*.2u-2.com',		// by 100 Best Inc (info at 100best.com)
 	'*.3-st.com',		// by 100 Best Inc (info at 100best.com)
+	'*.3dn.ru',			// UcoZ Web-Services
 	'*.50megs.com',
 	'*.9999mb.com',
 	'*.9k.com',
@@ -1087,6 +1091,7 @@ $blocklist['badhost'] = array(
 	'blogyaz.com',
 	'*.by.ru',
 	'blogs.chueca.com',
+	'*.clan.su',		// UcoZ Web-Services
 	'concepts-mall.com',
 	'*.createmybb.com',
 	'dakrats.net',
@@ -1151,6 +1156,8 @@ $blocklist['badhost'] = array(
 	'*.messageboard.nl',
 	'*.monforum.com',
 	'*.monforum.fr',		// by monforum.com
+	'*.moy.su',			// UcoZ Web-Services
+	'*.my1.ru',			// UcoZ Web-Services
 	'myblog.de',			// by 20six weblog services
 	'myblog.es',			// by 20six weblog services
 	'myblog.is',
@@ -1162,10 +1169,12 @@ $blocklist['badhost'] = array(
 	'neweconomics.info',
 	'*.nm.ru',
 	'*.on-4.com',			// by 100 Best Inc (info at 100best.com)
+	'*.p0.ru',			// UcoZ Web-Services
 	'*.parlaris.com',
 	'*.phorum.pl',
 	'*.phpbbx.de',
 	'*.pochta.ru',
+	'*.pp.net.ua',		// UcoZ Web-Services
 	'proboards' => '#^(?:.*\.)proboards[0-9]*\.com$#',
 	'*.quickfreehost.com',
 	'quizilla.com',
@@ -1187,6 +1196,11 @@ $blocklist['badhost'] = array(
 	'telasipforums.com',
 	'thestudentunderground.org',
 	'think.ubc.ca',
+	'*.ucoz.co.uk',		// UcoZ Web-Services
+	'*.ucoz.com',		// UcoZ Web-Services
+	'*.ucoz.net',		// UcoZ Web-Services
+	'*.ucoz.org',		// UcoZ Web-Services
+	'*.ucoz.ru',		// UcoZ Web-Services
 	'*.up-a.com',			// by 100 Best Inc (info at 100best.com)
 	'*.vidiac.com',
 	'volny.cz',
@@ -1199,6 +1213,7 @@ $blocklist['badhost'] = array(
 	'*.wmjblogs.ru',
 	'*.wol.bz',				 // by sbn.bz (rin.ru)
 	'*.wordpress.com',
+	'*.ws.co.ua',		// UcoZ Web-Services
 	'wsboards.com',
 	'*.wsboards.com',
 	'xeboards.com',
@@ -1268,6 +1283,7 @@ $blocklist['badhost'] = array(
 	'mathbio.truman.edu',
 	'tzaneen.co.za',
 	'urgentclick.com',
+	'vacant.org.uk',
 	'wolvas.org.uk',
 	'wvup.edu',
 	'youthpeer.org',
@@ -1461,9 +1477,11 @@ $blocklist['badhost'] = array(
 	'*.sexy69a.info',
 	'spb78.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.spb78.info',
+	'um20ax09.info',	// by Nike Borzoff (nike.borzoff at gmail.com)
+	'*.um20ax09.info',
 	'usacanadauk.info',	// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.usacanadauk.info',
-	'v782mks.info',		// by Andrey (vdf at lovespb.com)
+	'v782mks.info',		// by Andrey (vdf at lovespb.com), redirect to searchadv.com
 	'*.v782mks.info',
 	'vny0.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.vny0.info',
@@ -1889,7 +1907,10 @@ $blocklist['badhost'] = array(
 	'tabsdrugstore.info',	// by Jonn Gardens (admin at SearchHealtAdvCorpGb.com -- no such domain)
 	'*.tabsdrugstore.info',
 	'*.thetinyurl.com',	// by Beth J. Carter (Beth.J.Carter at thetinyurl.com)
+	'topmeds10.com',
+	'*.topmeds10.com',
 	'unctad.net',		// by gfdogfd at lovespb.com
+	'*.vacant.org.uk',
 	'*.webnow.biz',		// by Hsien I Fan (admin at servcomputing.com)
 	'wellcams.biz',		// by Sergey Sergiyenko (studioboss at gmail.com)
 	'*.xpacificpoker.com',// by Hubert Hoffman (support at xpacificpoker.com)
