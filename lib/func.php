@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.84 2007/01/21 14:09:31 henoheno Exp $
+// $Id: func.php,v 1.85 2007/02/28 16:12:10 henoheno Exp $
 // Copyright (C)
-//   2002-2006 PukiWiki Developers Team
+//   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -556,19 +556,30 @@ function get_autolink_pattern(& $pages, $min_len = -1)
 		$auto_pages_a = array_values(preg_grep('/^[A-Z]+$/i', $auto_pages));
 		$auto_pages   = array_values(array_diff($auto_pages,  $auto_pages_a));
 
-		$result   = generate_matcher_regex($auto_pages);
-		$result_a = generate_matcher_regex($auto_pages_a);
+		$result   = generate_trie_regex($auto_pages);
+		$result_a = generate_trie_regex($auto_pages_a);
 	}
 	return array($result, $result_a, $forceignorepages);
 }
 
-// Generate a regex, that just matches with all $array values
-// NOTE: All array_keys($array) must be continuous integers, like 0 ... N
-//       Also, all $array values must be strings.
-// $offset = (int) $array[$offset] is the first value to check
-// $sentry = (int) $array[$sentry - 1] is the last value to check  
-// $pos    = (int) Position of letter to start checking. (0 = the first letter)
-function generate_matcher_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
+// Generate one compact regex for quick reTRIEval,
+// that just matches with all $array values.
+//
+// USAGE:
+//   sort($array, SORT_STRING); // Keys are replaced, as we had expected
+//   $regex = generate_trie_regex($array);
+// ARGUMENTS:
+//   $array  : (_sorted_ _string_ array)
+//     array_keys($array) MUST BE _continuous integers started with 0_.
+//     All $array values MUST BE strings.
+//     Passing the reference, of the $array here, will save the memories,
+//     from flood of recursive call.
+//   $offset : (int) $array[$offset] is the first value to check
+//   $sentry : (int) $array[$sentry - 1] is the last value to check  
+//   $pos    : (int) Position of the letter to start checking. (0 = the first letter)
+// REFERENCE:
+//   http://en.wikipedia.org/wiki/Trie
+function generate_trie_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 {
 	if (empty($array)) return '(?!)'; // Zero
 	if ($sentry === NULL) $sentry = count($array);
@@ -599,7 +610,7 @@ function generate_matcher_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 			// Some more keys found
 			// Recurse
 			$regex .= str_replace(' ', '\\ ', preg_quote($char, '/')) .
-				generate_matcher_regex($array, $index, $i, $pos + 1);
+				generate_trie_regex($array, $index, $i, $pos + 1);
 		} else {
 			// Not found
 			$regex .= str_replace(' ', '\\ ',
@@ -616,7 +627,7 @@ function generate_matcher_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 // Compat
 function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 {
-	return generate_matcher_regex($pages, $start, $end, $pos);
+	return generate_trie_regex($pages, $start, $end, $pos);
 }
 
 // Load/get setting pairs from AutoAliasName
