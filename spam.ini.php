@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.28 2007/02/28 15:55:18 henoheno Exp $
+// $Id: spam.ini.php,v 1.29 2007/03/03 16:26:09 henoheno Exp $
 // Spam-related setting
 //
 // Reference:
@@ -8,6 +8,13 @@
 
 $blocklist['goodhost'] = array(
 	'IANA-examples' => '#^(?:.*\.)?example\.(?:com|net|org)$#',
+
+	// PukiWiki-official/dev specific
+	//'logue.tk',		// Well-known PukiWiki heavy user, Logue (Paid *.tk user, Expire on 2008-12-01)
+	//'*.logue.tk',
+	//'nyaa.tk',
+	//'*.nyaa.tk',
+	//'ifastnet.com'	// www.isfastnet.com
 
 	// Yours
 	//''
@@ -56,6 +63,7 @@ $blocklist['badhost'] = array(
 	// 1
 	'1024bit.at',		// by kickme.to
 	'*.1024bit.at',
+	'*.110mb.com',
 	'123.que.jp',
 	'128bit.at',		// by kickme.to
 	'*.128bit.at',
@@ -196,6 +204,7 @@ $blocklist['badhost'] = array(
 	'bazooka.at',		// by kickme.to
 	'*.bazooka.at',
 	'*.be.tf',			// by ulimit.com
+	'beermapping.com',
 	'berber.at',		// by kickme.to
 	'*.berber.at',
 	'*.best.cd',		// by ulimit.com
@@ -235,12 +244,13 @@ $blocklist['badhost'] = array(
 	'*.bydl.com',
 
 	// C
+	'*.c0m.st',			// by ulimit.com
 	'c-64.at',			// by kickme.to
 	'*.c-64.at',
 	'*.c-o.cc',			// by c-o.in
 	'*.c-o.in',
 	'c64.ch',
-	'*.c0m.st',			// by ulimit.com
+	'c711.com',
 	'*.ca.tc',			// by ulimit.com
 	'catalonian.at',	// by kickme.to
 	'*.catalonian.at',
@@ -254,6 +264,7 @@ $blocklist['badhost'] = array(
 	'*.chills.it',
 	'chopurl.com',
 	'christiandemocrats.at',// by kickme.to
+	'christopherleestreet.com',
 	'*.christiandemocrats.at',
 	'*.cjb.net',
 	'*.clan.st',		// by ulimit.com
@@ -437,6 +448,7 @@ $blocklist['badhost'] = array(
 	'*.getto.net',		// by vdirect.com
 	'glinki.com',
 	'*.globalredirect.com',
+	'gnu.vu',
 	'*.go.cc',
 	'goonlink.com',
 	'*.got.to',			// by webalias.com
@@ -478,9 +490,11 @@ $blocklist['badhost'] = array(
 	'*.hitart.com',		// by shorturl.com
 	'*.homepagehere.com',// by hotredirect.com
 	'hort.net',
+	'*.hotindex.ru',
 	'hotshorturl.com',
 	'*.hothere.com',	// by hotredirect.com
 	'*.hottestpix.com',	// by webalias.com
+	'hurl.to',
 	'*.ht.st',			// by ulimit.com
 	'htmlpage.at',		// by kickme.to
 	'*.htmlpage.at',
@@ -639,6 +653,7 @@ $blocklist['badhost'] = array(
 	'*.myprivateidaho.com',	// by webalias.com
 	'mytinylink.com',
 	'myurl.in',
+	'myurl.com.tw',
 
 	// N
 	'*.n0.be',			// by f2b.be
@@ -896,6 +911,7 @@ $blocklist['badhost'] = array(
 	// T
 	'*.t2u.com',		// by ulimit.com
 	'tdurl.com',
+	'*.team.st',		// wb.st
 	'techie.at',		// by kickme.to
 	'*.techie.at',
 	'temple.at',		// by kickme.to
@@ -974,6 +990,7 @@ $blocklist['badhost'] = array(
 	'utun.jp',
 
 	// V
+	'*.v27.net',
 	'*.v33.org',		// zeroweb.org
 	'*.v9z.com',		// by shim.net
 	'*.vdirect.com',	// by vdirect.com
@@ -1005,6 +1022,7 @@ $blocklist['badhost'] = array(
 	'*.wannabe.at',
 	'wapurl.co.uk',
 	'*.way.to',			// by webalias.com
+	'*.wb.st',
 	'wbkt.net',
 	'*.web-freebies.com',// by webalias.com
 	'*.webalias.com',
@@ -1027,6 +1045,8 @@ $blocklist['badhost'] = array(
 	'*.wonderful.at',
 
 	// X
+	'*.i50.de',			// x50.us
+	'*.x50.us',
 	'*.xit.pl',			// by Home.pl Sp. J. (info at home.pl)
 	'*.xlc.pl',			// by Home.pl Sp. J. (info at home.pl)
 	'xhref.com',
@@ -1132,6 +1152,7 @@ $blocklist['badhost'] = array(
 	'*.alkablog.com',
 	'home.aol.com',
 	'hometown.aol.com',
+	'hometown.aol.de',
 	'angelfire.com',	// angelfire.lycos.com
 	'm.askfaq.org',
 	'*.atfreeforum.com',
@@ -1144,10 +1165,10 @@ $blocklist['badhost'] = array(
 	'*.bloggingmylife.com',
 	'bloggers.nl',
 	'*.blogharbor.com',
-	'myblogma.com',
+	'blogosfer.com',
 	'*.blogspot.com',		// by Google
-	'*.bravenet.com',
 	'blogyaz.com',
+	'*.bravenet.com',
 	'*.by.ru',
 	'blogs.chueca.com',
 	'*.clan.su',		// UcoZ Web-Services
@@ -1170,6 +1191,7 @@ $blocklist['badhost'] = array(
 	'*.freeclans.de',
 	'*.freelinuxhost.com',	// by 100webspace.com
 	'freeforum.at',
+	'freewebs.com',
 	'foroswebgratis.com',
 	'*.fory.pl',
 	'*.forum-on.de',
@@ -1181,9 +1203,12 @@ $blocklist['badhost'] = array(
 		'cz|de|dk|es|eu|fr|gr|hu|in|info|ir|it|jobs|jp|lt|' .
 		'lv|org|pl|name|net|nl|ro|ru|se|sk|tv|us|web\.tr)$#',
 	'freepowerboards.com',
+	'*.freepowerboards.com',
 	'*.fws1.com',		// by 100 Best Inc (info at 100best.com)
 	'*.fw-2.com',		// by 100 Best Inc (info at 100best.com)
+	'gossiping.net',
 	'*.hit.bg',				// by forumup.com ??
+	'gb-hoster.de',
 	'*.goodboard.de',
 	'docs.google.com',			// by Google
 	'enunblog.com',
@@ -1203,6 +1228,8 @@ $blocklist['badhost'] = array(
 	'*.inc5.com',			// by 100 Best Inc (info at 100best.com)
 	'*.iquebec.com',		// by ieurop.net
 	'*.isuisse.com',		// by ieurop.net
+	'iwannaforum.com',
+	'*.iwannaforum.com',
 	'*.journalscape.com',
 	'*.kokoom.com',
 	'*.ksiegagosci.info',
@@ -1220,6 +1247,7 @@ $blocklist['badhost'] = array(
 	'myblog.de',			// by 20six weblog services
 	'myblog.es',			// by 20six weblog services
 	'myblog.is',
+	'myblogma.com',
 	'*.myblogvoice.com',
 	'*.myforum.ro',
 	'*.myxhost.com',
@@ -1245,6 +1273,8 @@ $blocklist['badhost'] = array(
 	'*.siamforum.com',
 	'*.siteburg.com',
 	'*.spazioforum.it',
+	'*.spicyblogger.com',
+	'*.spotbb.com',
 	'*.squarespace.com',
 	'*.st-3.com',			// by 100 Best Inc (info at 100best.com)
 	'*.st20.com',			// by 100 Best Inc (info at 100best.com)
@@ -1303,6 +1333,7 @@ $blocklist['badhost'] = array(
 	'fhmcsa.org.au',
 	'*.fhmcsa.org.au',
 	'forum.lixium.fr',
+	'hullandhull.com',
 	'funkdoc.com',
 	'*.goodboard.de',
 	'homepage-dienste.com',
@@ -1329,8 +1360,10 @@ $blocklist['badhost'] = array(
 	'users.nethit.pl',
 	'njbodybuilding.com',
 	'nlen.org',
+	'offtextbooks.com',
 	'omikudzi.ru',
 	'pix4online.co.uk',
+	'preform.dk',
 	'privatforum.de',
 	'*.reallifelog.com',
 	'rkphunt.com',
@@ -1461,17 +1494,6 @@ $blocklist['badhost'] = array(
 	'*.ukgamesyahoo.org',	// by Chinu Hua Dzin (graz at rubli.biz)
 	'*.youryahoochat.org',	// by Chinu Hua Dzin (graz at rubli.biz)
 	//
-	// Gamble
-	'*.atroulette.com',			// by Gino Sands (admin at atroulette.com), post with the-craps-100.us
-	'*.casinoqz.com',			// by Berenice Snow
-	'*.dcasinoa.com',			// by August Hawkinson, post with casinoqz.com
-	'*.kenogo.com',				// by Adriane Bell
-	'*.mycaribbeanpoker.com',	// by Andy Mullis, post with kenogo.com
-	'*.crapsok.com',			// by Devon Adair (postmaster at crapsok.com)
-	'*.onbaccarat.com',			// by Kassandra Dunn (admin at onbaccarat.com), post with crapsok.com
-	'*.the-craps-100.us',		// by Lorrine Ripley (postmaster at the-craps-100.us)
-	'*.atonlineroulette.com',	// by Blaise Johns (hostmaster at atonlineroulette.com), post with mycaribbeanpoker.com
-	//
 	'dbsajax.org',		// by Kikimas at mail.net, Redirect to nb717.com etc
 	'*.dbsajax.org',
 	'acgt2005.org',		// by Kikimas at mail.net, Redirect to nb717.com etc
@@ -1513,6 +1535,8 @@ $blocklist['badhost'] = array(
 	'*.eplot.info',
 	'fuck2z.info',		// by Andrey (vdf at lovespb.com), "UcoZ WEB-SERVICES"-like design
 	'*.fuck2z.info',
+	'frees1.info',		// by Andrey (vdf at lovespb.com)
+	'*.frees1.info',
 	'freexz.info',		// by Andrey (vdf at lovespb.com), redirect to activefreehost.com
 	'*.freexz.info',
 	'ifree-search.org',	// by Andrey (vdf at lovespb.com)
@@ -1558,6 +1582,10 @@ $blocklist['badhost'] = array(
 	'*.allsexonline.info',
 	'bequeous.info',	// by David C. Lack (David.C.Lack at dodgeit.com), redirect to activefreehost.com
 	'*.bequeous.info',
+	'goodworksite.info',	// by Varsylenko Vladimir (vvm_kz at rambler.ru), redirect to activefreehost.com
+	'*.goodworksite.info',
+	'rentmysite.info',	// by Varsylenko Vladimir (vvm_kz at rambler.ru), redirect to activefreehost.com
+	'*.rentmysite.info',
 	'sopius.info',		// by kuzmas (admin at irtes.ru), redirect to activefreehost.com
 	'*.sopius.info',
 	'sovidopad.info',	// by kuzmas (admin at irtes.ru), redirect to activefreehost.com
@@ -1602,6 +1630,8 @@ $blocklist['badhost'] = array(
 	'*.conecojp.net',
 	'gamaniaech.com',
 	'*.gamaniaech.com',
+	'game-fc2blog.com',
+	'*.game-fc2blog.com',
 	'game-oekakibbs.com',
 	'*.game-oekakibbs.com',
 	'games-nifty.com',
@@ -1679,8 +1709,12 @@ $blocklist['badhost'] = array(
 	'*.cheapestviagraonline.info',	// by Anatol (anatolsenator at gmail.com)
 	'*.buyphentermineworld.info',	// by Anatol (anatolsenator at gmail.com)
 	//
-	'testviagra.org',	// by Chong Li (chongli at mederotica.com)
 	'listsitepro.com',	// by VO Entertainment Inc (webmaster at mederotica.com)
+	'*.listsitepro.com',
+	'testviagra.org',	// by Chong Li (chongli at mederotica.com)
+	'*.testviagra.org',
+	'viagra-best.org',	// by Chong Li (chongli at mederotica.com)
+	'*/viagra-best.org',
 	//
 	'xer-vam.org',		// by Dr. Portillo (aliacsandr85 at yahoo.com)
 	'*.xer-vam.org',
@@ -1731,6 +1765,8 @@ $blocklist['badhost'] = array(
 	'*.freeprohosting.org',
 	'googlebot-welcome.org',// "Free Web Hosting" by Dr. Portillo (aliacsandr85 at yahoo.com)
 	'*.googlebot-welcome.org',
+	'icesearch.org',		// "Free Web Hosting"
+	'*.icesearch.org',
 	'phpfreehosting.org',	// "Free Web Hosting" by Dr. Portillo (aliacsandr85 at yahoo.com)
 	'*.phpfreehosting.org',
 	'sashawww.info',		// "Free Web Hosting" by Dr. Portillo (aliacsandr85 at yahoo.com)
@@ -1740,109 +1776,180 @@ $blocklist['badhost'] = array(
 	'xxxse.info',			// "Free Web Hosting" by Eva Sabina Lopez Castell (aliacsandr85 at yahoo.com)
 	'*.xxxse.info',
 	//
+	// Gamble: Roulette, Casino, Poker, Keno, Craps, Baccarat
+	'*.atonlineroulette.com',	// by Blaise Johns
+	'*.atroulette.com',			// by Gino Sand
+	'*.betting-123.com',		// by Joana Caceres
+	'*.betting-i.biz',			// by Joaquina Angus
+	'*.casinoqz.com',			// by Berenice Snow
+	'*.crapsok.com',			// by Devon Adair
+	'*.dcasinoa.com',			// by August Hawkinson
+	'*.e-poker-4u.com',			// by Issac Leibowitz
+	'*.free-dvd-player.biz',	// by Rosario Kidd
+	'*.gaming-123.com',			// by Jennifer Byrne
+	'*.kenogo.com',				// by Adriane Bell
+	'*.mycaribbeanpoker.com',	// by Andy Mullis
+	'*.onbaccarat.com',			// by Kassandra Dunn
+	'*.poker-123.com',			// by Mallory Patrick (Mallory_Patrick at marketing-support.info)
+	'*.texasholdem-777.com',	// by Savanna Lederman
+	'*.the-craps-100.us',		// by Lorrine Ripley
+	'*.the-online-game-poker-1185.us',	// by Merna Bey
+	'*.the-rule-texas-hold-em-2496.us',	// by Melvina Stamper
+	'*.the-texas-strategy-holdem-1124.us',	// by Neda Frantz
+	//
 	// Car / Home / Life / Health / Travel insurance, Loan finance, Mortgage refinance
-	'0q.org',				// by Shamika Curtin
+	'0q.org',					// by Shamika Curtin
 	'*.0q.org',
-	'1-bookmark.com',		// by Sonia Snyder
+	'1-bookmark.com',			// by Sonia Snyder
 	'*.1-bookmark.com',
-	'1day-insurance.com',	// by Kelsie Strouse
+	'1day-insurance.com',		// by Kelsie Strouse
 	'*.1day-insurance.com',
-	'1upinof.com',			// by Diego Johnson
+	'1upinof.com',				// by Diego Johnson
 	'*.1upinof.com',
-	'18wkcf.com',			// by Lexy Bohannon
+	'18wkcf.com',				// by Lexy Bohannon
 	'*.18wkcf.com',
-	'2001werm.org',			// by Raphael Rayburn
+	'2001werm.org',				// by Raphael Rayburn
 	'*.2001werm.org',
-	'2004heeparea1.org',	// by Dinorah Andrews
+	'2004heeparea1.org',		// by Dinorah Andrews
 	'*.2004heeparea1.org',
-	'21nt.net',				// by Jaida Estabrook
+	'21nt.net',					// by Jaida Estabrook
 	'*.21nt.net',
-	'3finfo.com',			// by Damian Pearsall
+	'3finfo.com',				// by Damian Pearsall
 	'*.3finfo.com',
-	'3somes.org',			// by Mauro Tillett
+	'3somes.org',				// by Mauro Tillett
 	'*.3somes.org',
-	'453531.com',			// by Kurt Flannery
+	'453531.com',				// by Kurt Flannery
 	'*.453531.com',
-	'4freesay.com',			// by Eloy Jones
+	'4freesay.com',				// by Eloy Jones
 	'*.4freesay.com',
-	'8-f22.com',			// by Larraine Evers
+	'8-f22.com',				// by Larraine Evers
 	'*.8-f22.com',
-	'a40infobahn.com',		// by Amit Nguyen
+	'a40infobahn.com',			// by Amit Nguyen
 	'*.a40infobahn.com',
-	'a4h-squad.com',		// by Ross Locklear
+	'a4h-squad.com',			// by Ross Locklear
 	'*.a4h-squad.com',
-	'aac2000.org',			// by Randi Turner
+	'aac2000.org',				// by Randi Turner
 	'*.aac2000.org',
-	'aaadvertisingjobs.com',// by Luciano Frisbie
+	'aaadvertisingjobs.com',	// by Luciano Frisbie
 	'*.aaadvertisingjobs.com',
 	'aconspiracyofmountains.com',	// by Lovell Gaines
 	'*.aconspiracyofmountains.com',
-	'acornwebdesign.co.uk',	// by Uriel Dorian
+	'acornwebdesign.co.uk',		// by Uriel Dorian
 	'*.acornwebdesign.co.uk',
 	'activel-learning-site.com',	// by Mateo Conn
 	'*.activel-learning-site.com',
-	'ad-makers.com',		// by Shemeka Arsenault
+	'ad-makers.com',			// by Shemeka Arsenault
 	'*.ad-makers.com',
-	'ada-information.org',	// by Josef Osullivan
+	'ada-information.org',		// by Josef Osullivan
 	'*.ada-information.org',
-	'aequityrefinance.com',	// by Jadwiga Duckworth
+	'aequityrefinance.com',		// by Jadwiga Duckworth
 	'*.aequityrefinance.com',
 	'ahomeloanrefinance.com',	// by Leslie Kinser
 	'*.ahomeloanrefinance.com',
+	'affordablerealestate.net',	// by Season Otoole
+	'*.affordablerealestate.net',
 	'ahouserefinance.com',	// by Young Alley
 	'*.ahouserefinance.com',
 	'alderik-production.com',	// by Joan Stiles
 	'*.alderik-production.com',
-	'alltechdata.com',		// by Dom Laporte
+	'alltechdata.com',			// by Dom Laporte
 	'*.alltechdata.com',
-	'angelandcrown.net',	// by Claretta Najera
+	'angelandcrown.net',		// by Claretta Najera
 	'*.angelandcrown.net',
-	'architectionale.com',	// by Wilbur Cornett
+	'architectionale.com',		// by Wilbur Cornett
 	'*.architectionale.com',
-	'arefinancehome.com',	// by Duane Doran
+	'arefinancehome.com',		// by Duane Doran
 	'*.arefinancehome.com',
-	'arefinancinghome.com',	// by Ike Laney
+	'arefinancinghome.com',		// by Ike Laney
 	'*.arefinancinghome.com',
-	'azstudies.org',		// by Bernardina Walden
+	'athletic-shoes-e-shop.info',	// by Romelia Money
+	'*.athletic-shoes-e-shop.info',
+	'auto-buy-rite.com',		// by Asuncion Buie
+	'*.auto-buy-rite.com',
+	'azstudies.org',			// by Bernardina Walden
 	'*.azstudies.org',
-	'babtrek.com',			// by Simonette Mcbrayer
+	'babtrek.com',				// by Simonette Mcbrayer
 	'*.babtrek.com',
-	'babycujo.com',			// by Francisco Akers
+	'babycujo.com',				// by Francisco Akers
 	'*.babycujo.com',
-	'bakeddelights.com',	// by Dave Evenson
+	'bakeddelights.com',		// by Dave Evenson
 	'*.bakeddelights.com',
-	'blursgsu.com',			// by Weston Killian
+	'blursgsu.com',				// by Weston Killian
 	'*.blursgsu.com',
-	'boreholes.org',		// by Flora Reed
+	'boreholes.org',			// by Flora Reed
 	'*.boreholes.org',
 	'breathingassociaiton.org',	// by Alfred Crayton
 	'*.breathingassociaiton.org',
-	'birdingnh.com',		// by Donald Healy
+	'birdingnh.com',			// by Donald Healy
 	'*.birdingnh.com',
-	'bronte-foods.com',		// by Kary Pfeiffer
+	'bisdragons.org',			// by
+	'*.bisdragons.org',
+	'bronte-foods.com',			// by Kary Pfeiffer
 	'*.bronte-foods.com',
 	'buckscountyneighbors.org',	// by Maile Gaffney
 	'*.buckscountyneighbors.org',
-	'buffalofudge.com',		// by Mable Whisenhunt
+	'buffalofudge.com',			// by Mable Whisenhunt
 	'*.buffalofudge.com',
 	'burlisonforcongress.com',	// by Luann King
 	'*.burlisonforcongress.com',
+	'cameras-esite.info',		// by Karlee Frisch
+	'*.cameras-esite.info',
+	'cancerkidsforum.org',		// by 
+	'*.cancerkidsforum.org',
+	'ccchoices.org',			// by 
+	'*.ccchoices.org',
+	'cpusa364-northsacramento.com',	// by Dannette Lejeune
+	'*.cpusa364-northsacramento.com',
+	'diannbomkamp.com',			// by Russel Croteau
+	'*.diannbomkamp.com',
+	'dictionary-spanish.us',	// by Jacki Gilbreath
+	'*.dictionary-spanish.us',
+	'e-digital-camera-esite.info',	// by Romaine Cress
+	'*.e-digital-camera-esite.info',
+	'foreignrealtions.org',		// by 
+	'*.foreignrealtions.org',
+	'gcaaa.com',				// by Vallie Jaworski
+	'*.gcaaa.com',
 	'healthinsuranceem.com',	// by Justin Munson
 	'*.healthinsuranceem.com',
+	'ilruralassistgrp.org',		// by 
+	'*.ilruralassistgrp.org',
 	'ithomemortgage.com',		// by Adelaide Towers
 	'*.ithomemortgage.com',
+	'iyoerg.com',				// by 
+	'*.iyoerg.com',
+	'maryandfrank.org',			// by Theodore Apodaca
+	'*.maryandfrank.org',
+	'mysteryclips.com',			// by Edward Ashford
+	'*.mysteryclips.com',
+	'nysdoed.org',				// by 
+	'*nysdoed.org',
+	'nytech-ir.com',			// by Adrien Beals
+	'*.nytech-ir.com',
+	'online-pills-24x7.biz',	// by Aide Hallock
+	'*.online-pills-24x7.biz',
 	'onlinehomeloanrefinance.com',	// by Chaz Lynch
 	'*.onlinehomeloanrefinance.com',
 	'onlinehomeloanfinancing.com',	// by Humbert Eldridge
 	'*.onlinehomeloanfinancing.com',
 	'onunicarehealthinsurance.com',	// by  Lawerence Paredes
 	'*.onunicarehealthinsurance.com',
-	'mysteryclips.com',		// by Edward Ashford
-	'*.mysteryclips.com',
-	'richcapaldi.com',		// by Kya Haggard
+	'pet-stars.com',			// by Carmon Luevano
+	'*.pet-stars.com',
+	'quicktvr.com',				// by Vernell Crenshaw
+	'*.quicktvr.com',
+	'richcapaldi.com',			// by Kya Haggard
 	'*.richcapaldi.com',
-	'shoes-shop.us',		// by Austen Higginbotham
+	'shoes-shop.us',			// by Austen Higginbotham
 	'*.shoes-shop.us',
+	'top-finance-sites.com',	// by Maryann Doud
+	'*.top-finance-sites.com',
+	//
+	// Drugs / Pills
+	'fn-nato.com',			// by Donny Dunlap
+	'*.fn-nato.com',
+	'fantasticbooks-shop.com',	// by Kermit Ashley
+	'*.fantasticbooks-shop.com',
 	//
 	'dronadaarsujf.info',	// by Cortez Shinn (info at goorkkjsaka.info)
 	'*.dronadaarsujf.info',
@@ -1996,7 +2103,18 @@ $blocklist['badhost'] = array(
 	'*.digitshopping.net',
 	'your-insurance.biz',		// "No application configured at this url." by Jimmy Todessky (seomate at gmail.com)
 	'*.your-insurance.biz',
-
+	//
+	'brutal-forced.com',	// by Henry Ford (wealth777 at gmail.com)
+	'*.brutal-forced.com',
+	'library-bdsm.com',		// by Henry Ford (wealth777 at gmail.com)
+	'*.library-bdsm.com',
+	//
+	'purerotica.com',	// by Croesus International Inc. (olex at okhei.net)
+	'*.purerotica.com',
+	'servik.net',		// by Croesus International Inc. (olex at okhei.net)
+	'*.servik.net',
+	'withsex.com',		// by Croesus International Inc. (olex at okhei.net)
+	'*.withsex.com',
 
 	// C-2: Lonely domains (buddies not found yet)
 	'0nline-porno.info',	// by Timyr (timyr at narod.ru)
@@ -2024,6 +2142,8 @@ $blocklist['badhost'] = array(
 	'*.dlekei.info',	// by Maxima Bucaro (webmaster at tts2f.info)
 	'*.discutbb.com',	// by Perez Thomas (thomas.jsp at libertysurf.fr)
 	'dreamteammoney.com',	// dtmurl.com related
+	'drug-shop.us',		// by Alexandr (matrixpro at mail.ru)
+	'*.drug-shop.us',
 	'drugs-usa.info',	// by Edward SanFilippo (Edward.SanFilippo at gmail.com), redirect to activefreehost.com
 	'*.drugs-usa.info',
 	'*.ec51.com',		// by zhenfei chen (szczffhh_sso at 21cn.net)
@@ -2060,14 +2180,14 @@ $blocklist['badhost'] = array(
 	'*.php0h.com',
 	'portaldiscount.com',	// by Mark Tven (bestsaveup at gmail.com)
 	'*.portaldiscount.com',
-	'purerotica.com',	// by Croesus International Inc. (olex at okhei.net)
-	'*.purerotica.com',
 	'*.prama.info',		// by Juan.Kang at mytrashmail.com
 	'qoclick.net',		// by DMITRIY SOLDATENKO
 	'relurl.com',		// tiny-like. by Grzes Tlalka (grzes1111 at interia.pl)
-	'*.replicaswatch.org', // by
+	'*.replicaswatch.org', // by Replin (admin at furnitureblog.org)
 	'*.roin.info',		// by Evgenius (roinse at yandex.ru)
 	'*.seek-www.com',	// by Adam Smit (pingpong at mail.md)
+	'sexmaniacs.org',	// by Yang Chong (chong at x-india.com)
+	'*.sexmaniacs.org',
 	'sirlook.com',
 	'tabsdrugstore.info',	// by Jonn Gardens (admin at SearchHealtAdvCorpGb.com -- no such domain)
 	'*.tabsdrugstore.info',
