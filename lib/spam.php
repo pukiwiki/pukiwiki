@@ -1,8 +1,10 @@
 <?php
-// $Id: spam.php,v 1.19 2007/02/19 15:34:47 henoheno Exp $
+// $Id: spam.php,v 1.20 2007/03/04 14:11:20 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
+//
 // Functions for Concept-work of spam-uri metrics
+//
 // (PHP 4 >= 4.3.0): preg_match_all(PREG_OFFSET_CAPTURE): $method['uri_XXX'] related feature
 
 if (! defined('SPAM_INI_FILE')) define('SPAM_INI_FILE', 'spam.ini.php');
@@ -337,6 +339,7 @@ function _preg_replace_callback_domain_exposure($matches = array())
 // NOTE: It's maybe danger to var_dump(result). [e.g. 'javascript:']
 // [OK] http://victim.example.org/go?http%3A%2F%2Fnasty.example.org
 // [OK] http://victim.example.org/http://nasty.example.org
+// TODO: link.toolbot.com, urlx.org
 function spam_uri_pickup_preprocess($string = '')
 {
 	if (! is_string($string)) return '';
@@ -364,8 +367,6 @@ function spam_uri_pickup_preprocess($string = '')
 		'_preg_replace_callback_domain_exposure',
 		$string
 	);
-	
-
 
 	// URI exposure (uriuri => uri uri)
 	$string = preg_replace(
@@ -624,6 +625,10 @@ function query_normalize($string = '', $equal = FALSE, $equal_cutempty = TRUE)
 // ---------------------
 // Part One : Checker
 
+// Rough implementation of globbing
+//
+// USAGE: $regex = '/^' . generate_glob_regex('*.txt', '/') . '$/i';
+//
 function generate_glob_regex($string = '', $divider = '/')
 {
 	static $from = array(
@@ -671,7 +676,7 @@ function get_blocklist($list = '')
 		$regexs = array();
 		if (file_exists(SPAM_INI_FILE)) {
 			$blocklist = array();
-			require(SPAM_INI_FILE);
+			include(SPAM_INI_FILE);
 			//	$blocklist['badhost'] = array(
 			//		'*.blogspot.com',	// Blog services's subdomains (only)
 			//		'IANA-examples' => '#^(?:.*\.)?example\.(?:com|net|org)$#',
@@ -679,11 +684,23 @@ function get_blocklist($list = '')
 			foreach(array('goodhost', 'badhost') as $_list) {
 				if (! isset($blocklist[$list])) continue;
 				foreach ($blocklist[$_list] as $key => $value) {
-					if (is_string($key)) {
-						$regexs[$_list][$key] = $value;
+					if (is_array($value)) {
+						$regexs[$_list][$key] = array();
+						foreach($value as $_key => $_value) {
+							if (is_string($_key)) {
+								 $regexs[$_list][$key][$_key] = $_value; // A regex
+							} else {
+								 $regexs[$_list][$key][] =
+									'/^(?:www\.)?' . generate_glob_regex($_value, '/') . '$/i';
+							}
+						}
 					} else {
-						$regexs[$_list][$value] =
-							'/^(?:www\.)?' . generate_glob_regex($value, '/') . '$/i';
+						if (is_string($key)) {
+							$regexs[$_list][$key] = $value; // A regex
+						} else {
+							$regexs[$_list][$value] =
+								'/^(?:www\.)?' . generate_glob_regex($value, '/') . '$/i';
+						}
 					}
 				}
 			}
@@ -715,12 +732,24 @@ function is_badhost($hosts = array(), $asap = TRUE, & $remains)
 
 	$tmp = array();
 	foreach (get_blocklist('badhost') as $label => $regex) {
-		$result[$label] = preg_grep($regex, $hosts);
-		if (empty($result[$label])) {
-			unset($result[$label]);
+		if (is_array($regex)) {
+			$result[$label] = array();
+			foreach($regex as $_label => $_regex) {
+				$_group = preg_grep($_regex, $hosts);
+				if ($_group) {
+					$result[$label][$_label] = $_group;
+					$hosts = array_diff($hosts, $_group);
+					if ($asap) break;
+				}
+			}
+			if (empty($result[$label])) unset($result[$label]);
 		} else {
-			$hosts = array_diff($hosts, $result[$label]);
-			if ($asap) break;
+			$_group = preg_grep($regex, $hosts);
+			if ($_group) {
+				$result[$label] = $_group;
+				$hosts = array_diff($hosts, $result[$label]);
+				if ($asap) break;
+			}
 		}
 	}
 
@@ -955,10 +984,8 @@ function check_uri_spam($target = '', $method = array())
 	// URI: Bad host
 	if ((! $asap || ! $is_spam) && isset($method['badhost'])) {
 		$__remains = array();
-		if ($asap) {
-			$badhost = is_badhost($hosts, $asap, $__remains);
-		} else {
-			$badhost = is_badhost($hosts, $asap, $__remains);
+		$badhost = is_badhost($hosts, $asap, $__remains);
+		if (! $asap) {
 			if ($__remains) {
 				$remains['badhost'] = array();
 				foreach ($__remains as $value) {
