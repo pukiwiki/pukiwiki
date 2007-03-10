@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.20 2007/03/04 14:11:20 henoheno Exp $
+// $Id: spam.php,v 1.21 2007/03/10 01:49:33 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -60,7 +60,7 @@ function uri_pickup($string = '', $normalize = TRUE,
 		'(' .
 			// 3: Host
 			'\[[0-9a-f:.]+\]' . '|' .				// IPv6([colon-hex and dot]): RFC2732
-			'(?:[0-9]{1-3}\.){3}[0-9]{1-3}' . '|' .	// IPv4(dot-decimal): 001.22.3.44
+			'(?:[0-9]{1,3}\.){3}[0-9]{1,3}' . '|' .	// IPv4(dot-decimal): 001.22.3.44
 			'[a-z0-9.-]+' . 						// hostname(FQDN) : foo.example.org
 		')' .
 		'(?::([0-9]*))?' .					// 4: Port
@@ -94,7 +94,7 @@ function uri_pickup($string = '', $normalize = TRUE,
 				unset($array[$uri]);
 				continue;
 			}
-			$_uri['host']  = strtolower($_uri['host']);
+			$_uri['host']  = host_normalize($_uri['host']);
 			$_uri['port']  = port_normalize($_uri['port'], $_uri['scheme'], FALSE);
 			$_uri['path']  = path_normalize($_uri['path']);
 			if ($preserve_rawuri) $_uri['rawuri'] = & $_uri[0];
@@ -461,6 +461,25 @@ function scheme_normalize($scheme = '', $considerd_harmfull = TRUE)
 	return $scheme;
 }
 
+// Hostname normlization
+// www.foo     => www.foo   ('foo' seems TLD)
+// www.foo.bar => foo.bar
+// www.10.20   => www.10.20 (Invalid hostname)
+// NOTE:
+//   'www' is  mostly used as traditional hostname of WWW server.
+//   'www.foo.bar' may be identical with 'foo.bar'.
+function host_normalize($host = '')
+{
+	$host = strtolower($host);
+
+	$matches = array();
+	if (preg_match('/^www\.(.+\.[a-z]+)$/', $host, $matches)) {
+		return $matches[1];
+	} else {
+		return $host;
+	}
+}
+
 // Port normalization: Suppress the (redundant) default port
 // HTTP://example.org:80/ => http://example.org/
 // HTTP://example.org:8080/ => http://example.org:8080/
@@ -650,21 +669,57 @@ function generate_glob_regex($string = '', $divider = '/')
 	//		23 => ']',
 		);
 
-	if (is_array($string)) {
-		// Recurse
-		return '(?:' .
-			implode('|',	// OR
-				array_map('generate_glob_regex',
-					$string,
-					array_pad(array(), count($string), $divider)
-				)
-			) .
-		')';
+	$string = str_replace($from, $mid, $string); // Hide
+	$string = preg_quote($string, $divider);
+	$string = str_replace($mid, $to, $string);   // Unhide
+
+	return $string;
+}
+
+// Rough hostname checker
+// [OK] 192.168.
+// TODO: Strict digit, 0x, CIDR, IPv6
+function is_ip($string = '')
+{
+	if (preg_match('/^' .
+		'(?:[0-9]{1,3}\.){3}[0-9]{1,3}' . '|' .
+		'(?:[0-9]{1,3}\.){1,3}' . '$/',
+		$string)) {
+		return 4;	// Seems IPv4(dot-decimal)
 	} else {
-		$string = str_replace($from, $mid, $string); // Hide
-		$string = preg_quote($string, $divider);
-		$string = str_replace($mid, $to, $string);   // Unhide
-		return $string;
+		return 0;	// Seems not IP
+	}
+}
+
+// Generate host (FQDN, IPv4, ...) regex
+// 'localhost'     : Matches with 'localhost' only
+// 'example.org'   : Matches with 'example.org', and 'www.example.org'
+// '.example.org'  : Matches with ALL FQDN ended with '.example.org'
+// '*.example.org' : Almost the same of '.example.org' except 'www.example.org'
+// '10.20.30.40'   : Matches with IPv4 address '10.20.30.40' only
+// '192168.'       : Matches with all IPv4 hosts started with '192.'
+// TODO: IPv4, CIDR?, IPv6
+function generate_host_regex($string = '', $divider = '/')
+{
+	if (mb_strpos($string, '.') === FALSE)
+		return generate_glob_regex($string, $divider);
+
+	$result = '';
+	if (is_ip($string)) {
+		// IPv4
+		return generate_glob_regex($string, $divider);
+	} else {
+		// FQDN or something
+		$part = explode('.', $string, 2);
+		if ($part[0] == '') {
+			$part[0] = '(?:.*\.)?';	// And all related FQDN
+		} else if ($part[0] == '*') {
+			$part[0] = '.*\.';	// All subdomains/hosts only
+		} else {
+			return generate_glob_regex($string, $divider);
+		}
+		$part[1] = generate_glob_regex($part[1], $divider);
+		return implode('', $part);
 	}
 }
 
@@ -690,8 +745,8 @@ function get_blocklist($list = '')
 							if (is_string($_key)) {
 								 $regexs[$_list][$key][$_key] = $_value; // A regex
 							} else {
-								 $regexs[$_list][$key][] =
-									'/^(?:www\.)?' . generate_glob_regex($_value, '/') . '$/i';
+								 $regexs[$_list][$key][$_value] =
+									'/^' . generate_host_regex($_value, '/') . '$/i';
 							}
 						}
 					} else {
@@ -699,7 +754,7 @@ function get_blocklist($list = '')
 							$regexs[$_list][$key] = $value; // A regex
 						} else {
 							$regexs[$_list][$value] =
-								'/^(?:www\.)?' . generate_glob_regex($value, '/') . '$/i';
+								'/^' . generate_host_regex($value, '/') . '$/i';
 						}
 					}
 				}
@@ -816,10 +871,12 @@ function check_uri_spam($target = '', $method = array())
 		'is_spam' => array(),
 		'method'  => & $method,
 		'remains' => array(),
+		'error'   => array(),
 	);
 	$sum     = & $progress['sum'];
 	$is_spam = & $progress['is_spam'];
 	$remains = & $progress['remains'];
+	$error   = & $progress['error'];
 	$asap    = isset($method['asap']);
 
 	// Recurse
@@ -830,6 +887,7 @@ function check_uri_spam($target = '', $method = array())
 			$_sum      = & $_progress['sum'];
 			$_is_spam  = & $_progress['is_spam'];
 			$_remains  = & $_progress['remains'];
+			$_error    = & $_progress['error'];
 			foreach (array_keys($_sum) as $key) {
 				$sum[$key] += $_sum[$key];
 			}
@@ -856,6 +914,7 @@ function check_uri_spam($target = '', $method = array())
 					}
 				}
 			}
+			if (! empty($_error)) $error += $_error;
 			if ($asap && $is_spam) break;
 		}
 		return $progress;
