@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.34 2007/03/11 04:10:24 henoheno Exp $
+// $Id: spam.ini.php,v 1.35 2007/03/11 06:14:29 henoheno Exp $
 // Spam-related setting
 //
 // Reference:
@@ -1107,7 +1107,6 @@ $blocklist['badhost'] = array(
 	//        with server abuse, Spam advertisement and
 	//        fraud."
 	//
-
 	'*.0catch.com',		// by bluehost.com
 	'100 Best Inc' => array(	// by 100 Best Inc (info at 100best.com)
 		'*.0-st.com',
@@ -1175,7 +1174,10 @@ $blocklist['badhost'] = array(
 	'blogosfer.com',
 	'*.blogspot.com',		// by Google
 	'blogyaz.com',
-	'*.bravenet.com',
+	'bravenet.com' => array(
+		'*.bravenet.com',
+		'*.bravehost.com',
+	),
 	'*.by.ru',				// nthost.ru related?
 	'*.chueca.com',
 	'concepts-mall.com',
@@ -1194,6 +1196,7 @@ $blocklist['badhost'] = array(
 	'*.dcswtech.com',
 	'*.devil.it',
 	'*.diaryland.com',
+	'dotbb.be',
 	'*.dox.hu',				// dns at 1b.hu
 	'*.eblog.com.au',
 	'*.ekiwi.de',
@@ -1208,7 +1211,13 @@ $blocklist['badhost'] = array(
 	'*.freeclans.de',
 	'*.freelinuxhost.com',	// by 100webspace.com
 	'freeforum.at',			// by Sandro Wilhelmy
+	'freewebhostingarea.com' => array(	// or www.freewha.com
+		'*.6te.net',
+		'*.ueuo.com',
+		'*.orgfree.com',
+	),
 	'freewebs.com',
+	'*.freewebspace.net.au',
 	'foroswebgratis.com',
 	'*.fory.pl',
 	'*.forum-on.de',
@@ -1222,6 +1231,11 @@ $blocklist['badhost'] = array(
 	'freepowerboards.com',
 	'*.freepowerboards.com',
 	'*.funpic.de',
+	'geocities.com',
+	'getbetterhosting.com' => array(
+		'*.30mb.com',	// by 30MB Online (63681 at whois.gkg.net), introduced as one alternative of 90megs.com
+		'*.90megs.com',	// by Get Better Hosting (admin at getbetterhosting.com)
+	),
 	'gwebspace.de',
 	'gossiping.net',
 	'*.hit.bg',				// by forumup.com ??
@@ -1247,6 +1261,7 @@ $blocklist['badhost'] = array(
 	'.iwannaforum.com',
 	'*.journalscape.com',
 	'*.kokoom.com',
+	'koolpages.com',
 	'*.ksiegagosci.info',
 	'lide.cz' => array(
 		'*.lide.cz',
@@ -1414,6 +1429,7 @@ $blocklist['badhost'] = array(
 	'nlen.org',
 	'offtextbooks.com',
 	'omikudzi.ru',
+	'pataphysics-lab.com',
 	'perl.org.br',
 	'pix4online.co.uk',
 	'preform.dk',
@@ -1623,6 +1639,7 @@ $blocklist['badhost'] = array(
 	'Varsylenko Vladimir and family' => array(
 		'.allsexonline.info',		// by Varsylenko Vladimir (vvm_kz at rambler.ru)
 		'.bequeous.info',			// by David C. Lack (David.C.Lack at dodgeit.com)
+		'.freeforworld.info',		// by Varsylenko Vladimir (vvm_kz at rambler.ru)
 		'.goodworksite.info',		// by Varsylenko Vladimir (vvm_kz at rambler.ru)
 		'.powersiteonline.info',	// by Varsylenko Vladimir (vvm_kz at rambler.ru)
 		'.rentmysite.info',			// by Varsylenko Vladimir (vvm_kz at rambler.ru)
@@ -1829,6 +1846,7 @@ $blocklist['badhost'] = array(
 		'.xer-vam.org',				// "Ongline Catalog" by Dr.
 		'.xxxse.info',				// "Free Web Hosting" by Eva
 		'.vvsa.org',				// "Free Web Hosting" by Eva
+		'.free-webhosts.com',		// "Free Web Hosting" by Free Webspace
 	),
 	// Gamble: Roulette, Casino, Poker, Keno, Craps, Baccarat
 	'something_gamble' => array(
@@ -1837,29 +1855,38 @@ $blocklist['badhost'] = array(
 		'.betting-123.com',					// by Joana Caceres
 		'.betting-i.biz',					// by Joaquina Angus
 		'.casino-challenge.com',			// by Maren Camara
+		'.casino-gambling-i.biz',			// by Giselle Nations
+		'.casino-italian.com',				// by Holley Yan
 		'.casino123.net',					// by Ta Baines
+		'.casinohammamet.com',				// by Inger Barhorst
 		'.casinoqz.com',					// by Berenice Snow
 		'.casinos-777.net',					// by Iona Ayotte
 		'.crapsok.com',						// by Devon Adair,
 		'.dcasinoa.com',					// by August Hawkinson
 		'.e-poker-4u.com',					// by Issac Leibowitz
 		'.free-dvd-player.biz',				// by Rosario Kidd
+		'.florida-lottery-01.com',			// by Romeo Dillon
 		'.gaming-123.com',					// by Jennifer Byrne
 		'.kenogo.com',						// by Adriane Bell
 		'.mycaribbeanpoker.com',			// by Andy Mullis
 		'.onbaccarat.com',					// by Kassandra Dunn
+		'.online-experts.biz',				// by Liberty Helmick
 		'.onlinepoker-123.com',				// by Andrea Feaster
 		'.playpokeronline-123.com',			// by Don Lenard
 		'.poker-123.com',					// by Mallory Patrick (Mallory_Patrick at marketing-support.info)
+		'.texasholdem123.com',				// by Savion Lasseter
 		'.texasholdem-777.com',				// by Savanna Lederman
+		'.the-casino-directory-1715.us',	// by Thora Oldenburg
 		'.the-craps-100.us',				// by Lorrine Ripley
 		'.the-free-online-game-913.us',		// by Kanesha Clem
 		'.the-free-poker-1798.us',			// by Elaina Witte
+		'.the-las-vegas-gambling-939.us',	// by Jesusita Hageman
 		'.the-online-game-poker-1185.us',	// by Merna Bey
+		'.the-playing-black-jack.com',		// by Kristine Brinker
 		'.the-poker-1082.us',				// by Kristofer Boldt
 		'.the-rule-texas-hold-em-2496.us',	// by Melvina Stamper
 		'.the-texas-strategy-holdem-1124.us',	// by Neda Frantz
-		'.the-las-vegas-gambling-939.us',	// by Jesusita Hageman
+		'.the-video-black-jack.com',		// by Jagger Godin
 	),
 	// Car / Home / Life / Health / Travel insurance, Loan finance, Mortgage refinance
 	'something_insurance' => array(
@@ -1877,19 +1904,24 @@ $blocklist['badhost'] = array(
 		'.3somes.org',					// by Mauro Tillett
 		'.453531.com',					// by Kurt Flannery
 		'.4freesay.com',				// by Eloy Jones
+		'.5ssurvey.com',				// by Annamarie Kowalski
 		'.8-f22.com',					// by Larraine Evers
+		'.9q.org',						// by Ami Boynton
 
 		// A
 		'.a40infobahn.com',				// by Amit Nguyen
 		'.a4h-squad.com',				// by Ross Locklear
 		'.aac2000.org',					// by Randi Turner
 		'.aaadvertisingjobs.com',		// by Luciano Frisbie
+		'.acahost.com',					// by Milton Haberman
 		'.aconspiracyofmountains.com',	// by Lovell Gaines
 		'.acornwebdesign.co.uk',		// by Uriel Dorian
 		'.activel-learning-site.com',	// by Mateo Conn
 		'.ad-makers.com',				// by Shemeka Arsenault
 		'.ada-information.org',			// by Josef Osullivan
+		'.adult-personal-ads-e-site.info',	// by Nery Ainsworth
 		'.aequityrefinance.com',		// by Jadwiga Duckworth
+		'.aerovac-hotpress.com',		// by Trey Marlow
 		'.agfbiosensors.com',			// by Lionel Dempsey
 		'.ahomeloanrefinance.com',		// by Leslie Kinser
 		'.affordablerealestate.net',	// by Season Otoole
@@ -1901,6 +1933,7 @@ $blocklist['badhost'] = array(
 		'.angelandcrown.net',			// by Claretta Najera
 		'.ankoralina.com',				// by Eladia Demers
 		'.antiquegoldmine.com',			// by Keena Marlow
+		'.aquinosotros.com',			// by Nanci Prentice
 		'.architectionale.com',			// by Wilbur Cornett
 		'.arefinancehome.com',			// by Duane Doran
 		'.arefinancinghome.com',		// by Ike Laney
@@ -1924,6 +1957,7 @@ $blocklist['badhost'] = array(
 		'.breathingassociaiton.org',	// by Alfred Crayton
 		'.birdingnh.com',				// by Donald Healy
 		'.bisdragons.org',				// by Lupe Cassity
+		'.blcschools.net',				// by Alycia Jolly
 		'.bronte-foods.com',			// by Kary Pfeiffer
 		'.buckscountyneighbors.org',	// by Maile Gaffney
 		'.buffalofudge.com',			// by Mable Whisenhunt
@@ -1939,23 +1973,27 @@ $blocklist['badhost'] = array(
 		'.ccupca.org',					// by Evonne Serrano
 		'.celebratemehome.com',			// by Soraya Tower
 		'.centerfornourishingthefuture.org',	// by Elisa Wilt
+		'.chelseaartmmuseum.org',		// by Kayla Vanhorn
 		'.choose-shoes.net',			// by Geoffrey Setser
 		'.churla.com',					// by Ollie Wolford
 		'.circuithorns.co.uk',			// by Nathanial Halle
 		'.clanbov.com',					// by Donell Hozier
 		'.cnm-ok.org',					// by Thalia Moye
 		'.coalitioncoalition.org',		// by Ned Macklin
+		'.consoleaddicts.com',			// by Dorla Hoy
 		'.counterclockwise.net',		// by Melynda Hartzell
 		'.codypub.com',					// by Mercedes Coffman
 		'.comedystore.net',				// by Floy Donald
 		'.covsys.co.uk',				// by Abby Jacey
 		'.cpusa364-northsacramento.com',	// by Dannette Lejeune
+		'.craftybidders.com',			// by Dannie Lazo
 		'.credit-card-finder.net',		// by Mellie Deherrera
 		'.ctwine.org',					// by Hailey Knox
 
 		// D
 		'.dazyation.com',				// by Louis Strasser
 		'.deepfoam.org',				// by Ethelyn Southard
+		'.debt-fixing.com',				// by Dagny Rickman
 		'.dgmarketingwebdesign.com',	// by Nubia Lea
 		'.domainadoption.com',			// by Breann Pappas
 		'.diannbomkamp.com',			// by Russel Croteau
@@ -1965,6 +2003,7 @@ $blocklist['badhost'] = array(
 		'.digital-cameras-esite.info',	// by Milan Jolin
 		'.discout-watches-deals.info',	// by Taunya Limon
 		'.dnstechnet.net',				// by Tamera Oman
+		'.drivenbydata.org',			// by Katherine Noyes
 		'.dtmf.net',					// by Micki Slayton
 		'.domainsfound.com',			// by Blossom Lively
 
@@ -1973,12 +2012,15 @@ $blocklist['badhost'] = array(
 		'.e-digital-camera-esite.info',	// by Romaine Cress
 		'.eda-aahperd.org',				// by Kaliyah Hammonds
 		'.eldorabusecenter.org',		// by Annabella Oneal
+		'.emicorporation.com',			// by (Deangelo_Mikayla at marketing-support.info)
 		'.encaponline.com',				// by Patrick Keel
 		'.ez-shopping-online.com',		// by Gail Bartlett
 
 		// F
 		'.faithfulwordcf.com',			// by Bart Weeks
+		'.fammedassoc.com',				// by Joshua Nelson
 		'.federalministryoffinance.net',	// by Jeffry Mcmillan
+		'.f00k.org',					// by Leslie Chapman
 		'.foreignrealtions.org',		// by Krystal Hawley
 		'.fortwebsite.org',				// by Kristina Motley
 		'.fotofirstdigital.com',		// by Tad Whitfield
@@ -1993,9 +2035,11 @@ $blocklist['badhost'] = array(
 		'.gaintrafficfast.com',			// by Lila Meekins
 		'.gaygain.org',					// by Shell Davila
 		'.gcaaa.com',					// by Vallie Jaworski
+		'.generalsysteme.com',			// by Cale Vogel
 		'.generation4games.co.uk',		// by Sonya Graham
 		'.german-dictionary.us',		// by Rex Daniel
 		'.gilmerrec.com',				// by Leighann Guillory
+		'.glenthuntly-athletics.com',	// by Julee Hair
 		'.glorybaskets.com',			// by Lynette Lavelle
 		'.goconstructionloan.com',		// by Willis Monahan
 		'.gohireit.com',				// by Bertha Metzger
@@ -2005,6 +2049,7 @@ $blocklist['badhost'] = array(
 		'.healthinsuranceem.com',		// by Justin Munson
 		'.hearthorizon.info',			// by Kory Session
 		'.hegerindustrial.com',			// by Toni Wesley
+		'.herzequip.com',				// by Princess Dunkle
 		'.hglcms.org',					// by Gladwin Ng
 		'.hipanoempresa.com',			// by Shannon Staub
 		'.hitempfurnaces.com',			// by Rebbeca Jaeger
@@ -2037,6 +2082,7 @@ $blocklist['badhost'] = array(
 		'.liquor-store-cellar.info',	// by Hugh Pearson
 		'.locomojo.net',				// by Marco Harmon
 		'.lodatissimo.com',				// by Adrian Greeson
+		'.lsawc.org',					// by Lara Han
 		'.lycos-test.net',				// by Rigoberto Oakley
 
 		// M
@@ -2047,15 +2093,18 @@ $blocklist['badhost'] = array(
 		'.masterkwonhapkido.com',		// by Misty Graham
 		'.maxrpm-demo.com',				// by Cristal Cho
 		'.mechanomorphic.com',			// by Stanford Crow
+		'.mepublishing.net',			// by Karly Fleenor
 		'.meyerlanguageservices.co.uk',	// by Breana Kennedy
 		'.metwahairports.com',			// by Nan Kitchen
 		'.middle-eastnews.com',			// by Tybalt Altmann
+		'.mikepelchy.com',				// by Sherly Pearson
 		'.milpa.org',					// by Nelly Aguilera
 		'.modayun.com',					// by Camilla Velasco
 		'.moonstoneerp.com',			// by Garret Salmon
 		'.morosozinho.com',				// by Lenore Tovar
 		'.morphadox.com',				// by Hung Zielinski
 		'.moscasenlared.com',			// by Tera Gant
+		'.sdjavasig.com',				// by Gia Swisher
 		'.mpeg-radio.com',				// by Sincere Beebe
 		'.mrg-now-yes.com',				// by Sparkle Gallegos
 		'.mtseniorcenter.org',			// by Frederic Ortega
@@ -2065,11 +2114,15 @@ $blocklist['badhost'] = array(
 		'.naavs.org',					// by Yuridia Gandy
 		'.naval-aviation.org',			// by Roselle Campo
 		'.navigare-ischia.com',			// by Arielle Coons
+		'.ncredc.org',					// by Brenda Nye
 		'.neonmotorsports.com',			// by Giovanna Vue
+		'.nf-ny.com',					// by Yadira Hibbard
+		'.ngfdyqva.com',				// by Emiliano Samples
 		'.nicozone.com',				// by Blaine Shell
 		'.nmbusinessroundtable.org',	// by Chantel Mccourt
 		'.npawny.org',					// by Willard Murphy
 		'.nysdoed.org',					// by Elric Delgadillo
+		'.nyswasteless.org',			// by Shaylee Moskowitz
 		'.nytech-ir.com',				// by Adrien Beals
 
 		// O
@@ -2085,6 +2138,7 @@ $blocklist['badhost'] = array(
 		// P
 		'.painting-technique.us',		// by Bryanna Tooley
 		'.pakamrcongress.com',			// by Bryce Summerville
+		'.patabney.com',				// by Kailyn Slone
 		'.parde.org',					// by Ellie Yates
 		'.participatingprofiles.com',	// by Jaelynn Meacham
 		'.partnershipconference.org',	// by Alla Floyd
@@ -2099,6 +2153,7 @@ $blocklist['badhost'] = array(
 
 		// R
 		'.radicalsolutions.org',		// by Reece Medlin
+		'.randallburgos.com',			// by Bradly Villa
 		'.rcassel.com',					// by Janiah Gallant
 		'.rearchitect.org',				// by Marcus Gaudet
 		'.rent-an-mba.com',				// by Valentina Mcdermott
@@ -2118,12 +2173,14 @@ $blocklist['badhost'] = array(
 		// S
 		'.sagarmathatv.org',			// by Liam Funke
 		'.sakyathubtenling.org',		// by Liane Falgout
-		'.sandiegolawyer.net',			// by Linnie Sommerville
+		'.sandiegolawyer.net',			// by Linnie Sommervill
+		'.sandishaven.com',				// by Lino Soloman
 		'.scienkeen.com',				// by Liza Navarra
 		'.seimenswestinghouse.com',		// by Teresa Benedetto
 		'.severios.com',				// by Isa Steffen
 		'.sexual-hot-girls.com',		// by Viviana Bolton
 		'.shakespearelrc.com',			// by Luciana Weaver
+		'.shashran.org',				// by Adriel Humphries
 		'.shoes-shop.us',				// by Austen Higginbotham
 		'.skagitvalleybassanglers.com',	// by Necole Thiele
 		'.skinsciencesalon.com',		// by Nena Rook
@@ -2161,17 +2218,20 @@ $blocklist['badhost'] = array(
 		'.ultradeepfield.org',			// by Bobby Ragland
 		'.umkclaw.info',				// by Cammy Kern
 		'.unitedsafetycontainer.com',	// by Shreya Heckendora
+		'.usa-wolf.com',				// by Jacklyn Morrill
 		'.usjobfair.com',				// by Lorina Burchette
 
 		// V
 		'.vacancesalouer.com',			// by Loris Bergquist
 		'.valleylibertarians.org',		// by Lena Massengale
+		'.vanderbiltevents.com',		// by Gannon Krueger
 		'.vanwallree.com',				// by Michelina Donahue
 		'.vcertificates.com',			// by Hyun Lamp
 		'.vonormytexas.us',				// by Suzette Waymire
 
 		// W
 		'.washingtondc-areahomes.net',	// by Ailene Broome
+		'.wolsaoh.org',					// by Daniela English
 		'.worldpropertycatalog.com',	// by Aray Baxter
 
 		// Y
@@ -2189,14 +2249,17 @@ $blocklist['badhost'] = array(
 		'.abdelghani-shady.com',	// by Elly Alton
 		'.bangbangfilm.com',		// by Davin Chou
 		'.centroantequera.com',		// by Keon Kwiatkowski
+		'.chix0r.org',				// by Christoper Baird
 		'.fn-nato.com',				// by Donny Dunlap
 		'.fantasticbooks-shop.com',	// by Kermit Ashley
 		'.leftpencey.com',			// by Aileen Ashby
+		'.miamicaribbeancarnival.com',	// by Herminia Barrios
 		'.gqyinran.com',			// by Alejandro Parks
 		'.yukissushi.com',			// by Donell Hozier
 	),
 	'something_others' => array(
 		'.consulting-cu.com',		// by Albina Rauch, 404 not found
+		'.dvd-rentals-top-shop.info',	// by Lashunda Pettway, 404 not found
 	),
 	// by Cortez Shinn (info at goorkkjsaka.info), or Rico Laplant (info at nnjdksfornms.info)
 	'Cortez and family' => array(
@@ -2319,9 +2382,12 @@ $blocklist['badhost'] = array(
 	),
 	// by Ashiksh Wasam (wasam at vangers.net)
 	'wasam at vangers.net' => array(
+		'.blogduet.org',
 		'.carelf.info',
 		'.cspell.org',
 		'.dspark.org',
+		'.dtonic.org',
+		'.mcharm.info',
 		'.mslook.info',
 		'.uzing.org',
 	),
@@ -2339,6 +2405,8 @@ $blocklist['badhost'] = array(
 		'.allersearch.org',
 		'.dynall.org',
 		'.fastopia.org',
+		'.rblast.org',
+		'.rette.org',
 		'.suvlook.org',
 	),
 	// by Kasturba Nagari (kasturba at vangers.net)
@@ -2351,6 +2419,9 @@ $blocklist['badhost'] = array(
 	'bipik at vangers.net' => array(
 		'.e2007.info',
 		'.cmoss.info',
+	),
+	'marion at vangers.net' => array(
+		'.trumber.com',	// by Mariano Ciaramolo (marion at vangers.net)
 	),
 	// by Jonn Gardens (admin at SearchHealtAdvCorpGb.com -- no such domain)
 	'SearchHealtAdvCorpGb.com' => array(
@@ -2426,12 +2497,22 @@ $blocklist['badhost'] = array(
 		'.avtw1068.com',
 		'.djkkk66990.com',
 	),
-
+	// by Perez Thomas (thomas.jsp at libertysurf.fr)
+	'thomas.jsp at libertysurf.fr' => array(
+		'.cmonfofo.com',
+		'.discutbb.com',
+	),
+	// by Dorothy D. Adams (Dorothy.D.Adams at mailinator.com)
+	'Dorothy.D.Adams at mailinator.com' => array(
+		'.preca.info',
+		'.scrianal.info',
+	),
 
 	// C-2: Lonely domains (buddies not found yet)
 	'.0nline-porno.info',	// by Timyr (timyr at narod.ru)
 	'.122mb.com',			// Alexandru Rusnac (alrusnac at hotmail.com)
 	'.19cellar.info',		// by Eduardo Guro (boomouse at gmail.com)
+	'.1gb.cc',				// by Hakan us (hakanus at mail.com)
 	'.6i6.de',
 	'.advancediet.com',		// by Shonta Mojica (hostadmin at advancediet.com)
 	'.adultpersonalsclubs.com',	// by Peter (vaspet34 at yahoo.com)
@@ -2444,7 +2525,6 @@ $blocklist['badhost'] = array(
 	'.covertarena.co.uk',	// by Wayne Huxtable
 	'.d999.info',			// by Peter Vayner (peter.vayner at inbox.ru)
 	'.dlekei.info',			// by Maxima Bucaro (webmaster at tts2f.info)
-	'.discutbb.com',		// by Perez Thomas (thomas.jsp at libertysurf.fr)
 	'.drug-shop.us',			// by Alexandr (matrixpro at mail.ru)
 	'.drugs-usa.info',		// by Edward SanFilippo (Edward.SanFilippo at gmail.com), redirect to activefreehost.com
 	'.easyshopusa.com',		// by riter (riter at nm.ru)
@@ -2496,8 +2576,10 @@ $blocklist['badhost'] = array(
 	'.searchadv.com',		// by Jaan Randolph (searchadv at gmail.com)
 	'.roin.info',			// by Evgenius (roinse at yandex.ru)
 	'.seek-www.com',		// by Adam Smit (pingpong at mail.md)
+	'.sessocities.net',		// by info at secureserver3.com
 	'.sexmaniacs.org',		// by Yang Chong (chong at x-india.com)
 	'.sirlook.com',
+	'.thehostcity.com',		// Domains by Proxy
 	'.thetinyurl.com',		// by Beth J. Carter (Beth.J.Carter at thetinyurl.com)
 	'.topmeds10.com',
 	'.unctad.net',			// by gfdogfd at lovespb.com
