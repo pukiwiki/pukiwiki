@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.38 2007/03/17 06:28:32 henoheno Exp $
+// $Id: spam.ini.php,v 1.39 2007/03/17 14:04:06 henoheno Exp $
 // Spam-related setting
 //
 // Reference:
@@ -236,6 +236,7 @@ $blocklist['badhost'] = array(
 	'fnbi.jp',
 	'*.fnbi.jp',
 	'forgeturl.com',
+	'*.free.bg',
 	'*.freecities.com',
 	'freeservers.com' => array(
 		'*.4mg.com',
@@ -930,6 +931,8 @@ $blocklist['badhost'] = array(
 		'*.firstpage.de',
 		'*.fly.to',
 		'*.flying.to',
+		'*.fortunecity.co.uk',
+		'*.fortunecity.com',
 		'*.forward.to',
 		'*.fullspeed.to',
 		'*.fun.ms',
@@ -1070,6 +1073,7 @@ $blocklist['badhost'] = array(
 		'z.la',
 		't.z.la',
 	),
+	'zaable.com',
 	'zapurl.com',
 	'zarr.co.uk',
 	'zeroweb.org' => array(
@@ -1156,6 +1160,7 @@ $blocklist['badhost'] = array(
 		'myblog.de',
 		'myblog.es',
 	),
+	'*.250free.com',	// by Brian Salisbury (domains at 250host.com)
 	'2page.de' => array(
 		'.dreipage.de',
 		'.2page.de',
@@ -1169,7 +1174,6 @@ $blocklist['badhost'] = array(
 	),
 	'*.50megs.com',		// by hostmaster at northsky.com
 	'*.9999mb.com',		// by allan Jerman (prodigy-airsoft at cox.net)
-	'*.9k.com',			// by domains at netgears.com
 	'aeonity.com',		// by Emocium Solutions (creativenospam at gmail.com)
 	'*.aimoo.com',
 	'*.alkablog.com',
@@ -1281,6 +1285,20 @@ $blocklist['badhost'] = array(
 	'healthcaregroup.com',
 	'*.host-page.com',
 	'*.hut2.ru',
+	'ic.cz' => array(
+		'*.ezin.cz',		// internetcentrum at gmail.com, ns ignum.com, ignum.cz
+		'*.hu.cz',			// internetcentrum at gmail.com
+		'*.hustej.net',		// baz at bluedot.cz, dom-reg-joker at ignum.cz
+		'*.ic.cz',			// internetcentrum at gmail.com
+		'*.kx.cz',			// jan at karabina.cz, info at ignum.cz
+		'*.own.cz',			// internetcentrum at gmail.com
+		'*.phorum.cz',		// internetcentrum at gmail.com
+		'*.tym.cz',			// internetcentrum at gmail.com
+		'*.tym.sk',			// jobot at ignum.cz
+		'*.wu.cz',			// jan at karabina.cz, info at ignum.cz
+		'*.yc.cz',			// ivo at karabina.cz, jan at karabina.cz
+		'*.yw.sk',			// jobot at ignum.cz
+	),
 	'ieurop.net' => array(
 		'*.ibelgique.com',
 		'*.iespana.es',
@@ -1290,6 +1308,7 @@ $blocklist['badhost'] = array(
 		'*.isuisse.com',
 	),
 	'*.ifastnet.com',
+	'*.iphorum.com',
 	'*.ihateclowns.net',
 	'*.blog.ijijiji.com',
 	'.iwannaforum.com',
@@ -1337,6 +1356,13 @@ $blocklist['badhost'] = array(
 	'*.myfreewebs.net',
 	'*.myxhost.com',
 	'*.netfast.org',
+	'netgears.com' => array(	// by domains at netgears.com
+		'*.9k.com',
+		'*.741.com',
+		'*.freewebsitehosting.com',
+		'*.freewebspace.com',
+		'*.freewebpages.org',
+	),
 	'neweconomics.info',
 	'*.nm.ru',
 	'*.w100.okwit.com',	// by chen jinian (dfym at dfym.cn)
@@ -1395,6 +1421,16 @@ $blocklist['badhost'] = array(
 	'*.siteburg.com',
 	'*.sitesfree.com',
 	'*.sitesled.com',
+	'smartrans.com' => array(
+		'.3w.to',
+		'.aim.to',
+		'.djmp.jp',
+		'.nihongourl.nu',
+		'.urljp.com',
+		'.www1.to',
+		'.www2.to',
+		'.www3.to',
+	),
 	'*.spazioforum.it',
 	'*.spicyblogger.com',
 	'*.spotbb.com',
@@ -1627,6 +1663,7 @@ $blocklist['badhost'] = array(
 	'kroegjesroutes.nl',
 	'macfaq.net',
 	'me4x4.com',
+	'minsterscouts.org',
 	'morallaw.org',
 	'morerevealed.com',
 	'mamiya.co.uk',
@@ -1920,6 +1957,7 @@ $blocklist['badhost'] = array(
 	'conto.pl' => array(
 		'.conto.pl',	// by biuro at nazwa.pl
 		'.guu.pl',		// by conto.pl (domena at az.pl)
+		'.xcx.pl',		// domena at az.pl
 	),
 	// Domains by Lin Zhi Qiang (mail at pcinc.cn)
 	// NOTE: pcinc.cn -- by Lin Zhi Qiang (lin80 at 21cn.com)
@@ -1999,6 +2037,7 @@ $blocklist['badhost'] = array(
 	),
 	// by fly bg (nuigiym2 at 163.com)
 	'fly bg' => array(
+		'.linainfo.net',
 		'.lineagalink.com',
 		'.lineagecojp.com',
 		'.ragnarokonlina.com',
@@ -2732,8 +2771,13 @@ $blocklist['badhost'] = array(
 	),
 	// support at 51g.net, iframe www.lovetw.webnow.biz
 	'support at 51g.net' => array(
-		'.jplingood.com',
+		'.ftplin.com',		// by Yongchun Liao
 		'.jplin.com',		// by Yongchun Liao
+		'.jplineage.com',	// by Yongchun Liao
+		'.jplingood.com',
+		'.linenew.com',
+		'.lyftp.com',		// Yongchun Liao (weboy at 51g.net)
+		'.yzlin.com',
 	),
 	// by Betty J. Pelletier (Betty.J.Pelletier at pookmail.com)
 	'Betty.J.Pelletier at pookmail.com' => array(
@@ -2758,8 +2802,10 @@ $blocklist['badhost'] = array(
 		'.453787.com',
 	),
 	'anpaul541000 at 163.com' => array(
+		'.cetname.com',			// by su qiuqing
 		'.jpgamer.net',			// by su qiuqing
 		'.jpplay.net',			// by su qiuqing, iframe www.lovetw.webnow.biz
+		'.lovejptt.com',		// by su qiuqing
 		'.pangzigame.com',		// by qiuqingshan
 		'.playncsoft.net',		// by su qiuqing
 	),
@@ -3034,10 +3080,23 @@ $blocklist['badhost'] = array(
 		'.bebto.com',
 		'.fateback.com',
 	),
+	'agava.com' => array(	// by domains at agava.com
+		'.h18.ru',
+		'.hut1.ru',
+	),
+	'wlmx009 at hotmail.com' => array(
+		'.123lineage.com',
+		'.ff11-info.com',
+		'.lastlineage.com',
+		'.lineage2-ol.com',
+		'.lineage2006.com',
+		'.lineagefirst.com',
+	),
 
 	// C-2: Lonely domains (buddies not found yet)
 	'.0721-4404.com',
 	'.0nline-porno.info',	// by Timyr (timyr at narod.ru)
+	'.1-click-clipart.com',	// by Big Resources, Inc. (hostmaster at bigresources.com)
 	'.122mb.com',			// by Alexandru Rusnac (alrusnac at hotmail.com)
 	'.180haifa.com',		// by Andrey Letov (andreyletov at yahoo.com)
 	'.19cellar.info',		// by Eduardo Guro (boomouse at gmail.com)
@@ -3050,6 +3109,7 @@ $blocklist['badhost'] = array(
 	'.areaseo.com',			// by Antony Carpito (xcentr at lycos.com)
 	'.awardspace.com',		// by abuse at awardspace.com, no DirectoryIndex
 	'.baurish.info',
+	'.bestop.name',
 	'.bloggerblast.com',	// by B. Kadrie (domains at starwhitehosting.com)
 	'.businessplace.biz',	// by Grenchenko Ivan Petrovich (eurogogi at yandex.ru)
 	'.covertarena.co.uk',	// by Wayne Huxtable
@@ -3080,7 +3140,6 @@ $blocklist['badhost'] = array(
 	'.hot4buy.org',			// by Hot Maker (jot at hot4buy.org)
 	'.hotnetinfo.info',		// by Lisa Edwards (lisaedwards at ledw.th)
 	'.hotscriptonline.info',	// by Psy Search (admin at psysearch.com)
-	'.hut1.ru',				// by domains at agava.com
 	'.incbuy.info',			// by Diego T. Murphy (Diego.T.Murphy at incbuy.info)
 	'.infradoc.com',
 	'.investorvillage.com',	// by natalija puchkova (internet at internet.lv)
@@ -3132,6 +3191,7 @@ $blocklist['badhost'] = array(
 	'.unctad.net',			// by gfdogfd at lovespb.com
 	'.vacant.org.uk',
 	'.viagrabuyonline.org',	// by Sipil (kopper1970 at gmail.com)
+	'.virtualsystem.de',
 	'.webnow.biz',			// by Hsien I Fan (admin at servcomputing.com)
 	'.wer3.info',			// by Martin Gundel (Martin at mail.com), 404 not found
 	'.whoop.to',			// RMT
@@ -3140,10 +3200,11 @@ $blocklist['badhost'] = array(
 	'.xphost.org',			// by alex alex (alrusnac at hotmail.com)
 	'.xamorexxx.net',
 	'.xsessox.com',
-	// by Angela (abuse at www.ru), spam domain
-	'www.ru' => array(
+	'.webtools24.net',		// by Michael Helminger (info at ishelminger.de)
+	'www.ru' => array(		// by Angela (abuse at www.ru)
 		'.1fasttimesatnau.info',
 		'.1freecybersex.info',
+		'.1freexxxcomics.info',
 		'.1fuckingmywife.info',
 		'.1pornpreview.info',
 		'www.ru',					// by (service at demos.ru), redirection
