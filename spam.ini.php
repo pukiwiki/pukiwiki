@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.42 2007/03/24 12:37:48 henoheno Exp $
+// $Id: spam.ini.php,v 1.43 2007/03/24 15:07:08 henoheno Exp $
 // Spam-related setting
 //
 // Reference:
@@ -32,8 +32,8 @@ $blocklist['badhost'] = array(
 	// A: Sample setting of
 	// Existing URI redirection or masking services
 
-	// A-1: By HTTP redirection, HTML meta, HTML frame, JavaScript,
-	// or DNS subdomains
+	// A-1: General redirection services -- by HTML meta, HTML frame, JavaScript,
+	// web-based proxy, DNS subdomains, etc
 	// http://en.wikipedia.org/wiki/URL_redirection
 	//
 	// as known as cheap URI obscuring services today,
@@ -919,10 +919,11 @@ $blocklist['badhost'] = array(
 		'tinyurl.co.uk',
 	),
 	'titlien.com',
-	'Tokelau ccTLD' => array('.tk'),
 	'tlurl.com',
 	'link.toolbot.com',
 	'tnij.org',
+	'Tokelau ccTLD' => array('.tk'),
+	'toila.net',
 	'*.toolbot.com',
 	'*.torontonian.com',
 	'trimurl.com',
@@ -1493,6 +1494,11 @@ $blocklist['badhost'] = array(
 	'*.qupis.com',		// by Xisto Corporation (shridhar at xisto.com)
 	'razyboard.com',
 	'realhp.de',
+	'rgbdesign at gmail.com' => array(	// by RB2 (rgbdesign at gmail.com)
+		'*.juicypornhost.com',
+		'*.pornzonehost.com',
+		'*.xhostar.com',
+	),
 	'rin.ru' => array(
 		'*.sbn.bz',
 		'*.wol.bz',
@@ -1549,20 +1555,7 @@ $blocklist['badhost'] = array(
 	'thestudentunderground.org',
 	'think.ubc.ca',
 	'*.tripod.com',
-	'UcoZ Web-Services' => array(
-		'*.3dn.ru',
-		'*.clan.su',
-		'*.moy.su',
-		'*.my1.ru',
-		'*.p0.ru',
-		'*.pp.net.ua',
-		'*.ucoz.co.uk',
-		'*.ucoz.com',
-		'*.ucoz.net',
-		'*.ucoz.org',
-		'*.ucoz.ru',
-		'*.ws.co.ua',
-	),
+	'*.vtost.com',
 	'*.vidiac.com',
 	'volny.cz',
 	'*.welover.org',
@@ -1699,11 +1692,19 @@ $blocklist['badhost'] = array(
 	'*.wordpress.com',
 	'.wsboards.com',		// by Chris Breen (Cbween at gmail.com)
 	'xeboards.com',			// by Brian Shea (bshea at xeservers.com)
-	// by RB2 (rgbdesign at gmail.com)
-	'rgbdesign at gmail.com' => array(
-		'*.juicypornhost.com',
-		'*.pornzonehost.com',
-		'*.xhostar.com',
+	'UcoZ Web-Services' => array(
+		'*.3dn.ru',
+		'*.clan.su',
+		'*.moy.su',
+		'*.my1.ru',
+		'*.p0.ru',
+		'*.pp.net.ua',
+		'*.ucoz.co.uk',
+		'*.ucoz.com',
+		'*.ucoz.net',
+		'*.ucoz.org',
+		'*.ucoz.ru',
+		'*.ws.co.ua',
 	),
 	'ya.com' => array(
 		'geo.ya.com',
@@ -2035,7 +2036,6 @@ $blocklist['badhost'] = array(
 	),
 	// by Nike Borzoff (nike.borzoff at gmail.com), 'vdf at lovespb.com'-related
 	'nike.borzoff at gmail.com' => array(
-		//'.care00.info' is not recorded
 		'.care01.info',
 		'.care02.info',
 		'.care03.info',
@@ -2046,9 +2046,27 @@ $blocklist['badhost'] = array(
 		'.care08.info',
 		'.care09.info',
 		'.care10.info',
-		//'.care11.info' is not recorded
 		'.kra1906.info',	// "UcoZ WEB-SERVICES"
+		'.klastar01.info',
+		'.klastar02.info',
+		'.klastar03.info',
+		'.klastar04.info',
+		'.klastar05.info',
+		'.klastar06.info',
+		'.klastar07.info',
+		'.klastar08.info',
+		'.klastar09.info',
+		'.klastar10.info',
+		'.um20ax01.info',
+		'.um20ax02.info',
+		'.um20ax03.info',
+		'.um20ax04.info',
+		'.um20ax05.info',
+		'.um20ax06.info',
+		'.um20ax07.info',
+		'.um20ax08.info',
 		'.um20ax09.info',
+		'.um20ax10.info',
 	),
 	// by Varsylenko Vladimir (vvm_kz at rambler.ru)
 	// by David C. Lack (David.C.Lack at dodgeit.com)
@@ -2178,6 +2196,7 @@ $blocklist['badhost'] = array(
 		'.rmt-navip.com',
 		'.rmt-ranloki.com',
 		'.ro-bot.net',
+		'.rogamesline.com',
 		'.roprice.com',
 		'.rormb.com',		// by zeng xianming (qqvod at qq.com)
 		'.shoopivdoor.com',
