@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.41 2007/03/24 03:09:41 henoheno Exp $
+// $Id: spam.ini.php,v 1.42 2007/03/24 12:37:48 henoheno Exp $
 // Spam-related setting
 //
 // Reference:
@@ -190,6 +190,93 @@ $blocklist['badhost'] = array(
 	),
 	'*.dmdns.com',
 	'doiop.com',
+	'Ideas para Nuevos Mercados SL' => array(
+		// NOTE: 'i4nm.com' by 'Ideas para Nuevos Mercados SL' (i4nm at i4nm.com)
+		// NOTE: 'dominiosfree.com' by 'Ideas para nuevos mercados,sl' (dominiosfree at i4nm.com)
+		// NOTE: 'red-es.com' by oscar florez (info at i4nm.com)
+		// by edgar bortolin (oscar at i4nm.com)
+		// by Edgar Bortolin  (oscar at i4nm.com)
+		// by oscar florez (oscar at i4nm.com)
+		// by Oscar Florez (oscar at red-es.com)
+		// by covadonga del valle (oscar at i4nm.com)
+		'*.ar.gd',
+		'*.ar.gs',	// ns *.nora.net
+		'*.ar.kz',	// by oscar
+		'*.ar.nu',	// by Edgar
+		'*.ar.tc',	// by oscar
+		'*.ar.vg',	// by oscar
+		'*.bo.kz',	// by oscar
+		'*.bo.nu',	// by covadonga
+		'*.bo.tc',	// by oscar
+		'*.bo.tf',	// by Oscar
+		'*.bo.vg',	// by oscar
+		'*.br.gd',
+		'*.br.gs',	// ns *.nora.net
+		'*.br.nu',	// by edgar
+		'*.br.vg',	// by oscar
+		'*.ca.gs',	// by oscar
+		'*.ca.kz',	// by oscar
+		'*.cl.gd',	// by oscar
+		'*.cl.kz',	// by oscar
+		'*.cl.nu',	// by edgar
+		'*.cl.tc',	// by oscar
+		'*.cl.tf',	// by Oscar
+		'*.cl.vg',	// by oscar
+		'*.col.nu',	// by Edgar
+		'*.cr.gs',	// ns *.nora.net
+		'*.cr.kz',	// by oscar
+		'*.cr.nu',	// by edgar
+		'*.cr.tc',	// by oscar
+		'*.cu.tc',	// by oscar
+		'*.do.kz',	// by oscar
+		'*.do.nu',	// by edgar
+		'*.ec.kz',	// by edgar
+		'*.ec.nu',	// by Edgar
+		'*.ec.tf',	// by Oscar
+		'*.es.kz',	// by oscar
+		'*.eu.kz',	// by oscar
+		'*.gt.gs',	// ns *.nora.net
+		'*.gt.tc',	// by oscar
+		'*.gt.tf',	// by Oscar
+		'*.gt.vg',	// by Oscar
+		'*.hn.gs',	// ns *.nora.net
+		'*.hn.tc',	// by oscar
+		'*.hn.tf',	// by Oscar
+		'*.hn.vg',	// by oscar
+		'*.mx.gd',
+		'*.mx.gs',	// ns *.nora.net
+		'*.mx.kz',	// by oscar
+		'*.mx.vg',	// by oscar
+		'*.ni.kz',	// by oscar
+		'*.pa.kz',	// by oscar
+		'*.pe.kz',	// by oscar
+		'*.pe.nu',	// by Edgar
+		'*.pr.kz',	// by oscar
+		'*.pr.nu',	// by edgar
+		'*.pt.gs',	// ns *.nora.net
+		'*.pt.kz',	// by edgar
+		'*.pt.nu',	// by edgar
+		'*.pt.tc',	// by oscar
+		'*.pt.tf',	// by Oscar
+		'*.py.gs',	// ns *.nora.net
+		'*.py.nu',	// by edgar
+		'*.py.tc',	// by oscar
+		'*.py.tf',	// by Oscar
+		'*.py.vg',	// by oscar
+		'*.sv.tc',	// by oscar
+		'*.usa.gs',	// ns *.nora.net
+		'*.uy.gs',	// ns *.nora.net
+		'*.uy.kz',	// by oscar
+		'*.uy.nu',	// by edgar
+		'*.uy.tc',	// by oscar
+		'*.uy.tf',	// by Oscar
+		'*.uy.vg',	// by oscar
+		'*.ve.gs',	// by oscar
+		'*.ve.tc',	// by oscar
+		'*.ve.tf',	// by Oscar
+		'*.ve.vg',	// by oscar
+		'*.ven.nu',	// by edgar
+	),
 	'drlinky.com',
 	'durl.us',
 	'*.dvdonly.ru',
@@ -1618,7 +1705,10 @@ $blocklist['badhost'] = array(
 		'*.pornzonehost.com',
 		'*.xhostar.com',
 	),
-	'blogs.ya.com',
+	'ya.com' => array(
+		'geo.ya.com',
+		'blogs.ya.com',
+	),
 	'YANDEX, LLC.' => array(
 		'*.narod.ru',		// noc at yandex.net
 		'yandex.ru',		// noc at yandex.net
@@ -1639,8 +1729,9 @@ $blocklist['badhost'] = array(
 	'blepharospasm.org',
 	'nyweb.bowlnfun.dk',
 	'*.buzznet.com',
+	'Case Western Reserve University' => array('case.edu'),
 	'*.colourware.co.uk',
-	'icu.edu.ua',
+	'International Christian University' => array('icu.edu.ua'),
 	'*.iphpbb.com',
 	'board-z.de',
 	'*.board-z.de',
@@ -1648,6 +1739,7 @@ $blocklist['badhost'] = array(
 	'cannon.co.za',
 	'columbosgarden.com',
 	'*.communityhost.de',
+	'connectionone.org',
 	'deforum.org',
 	'delayedreaction.org',
 	'deproduction.org',
@@ -1658,13 +1750,17 @@ $blocklist['badhost'] = array(
 	'.fhmcsa.org.au',
 	'findyourwave.co.uk',
 	'plone4.fnal.gov',
-	'forum.lixium.fr',
 	'freeforen.com',
 	'funkdoc.com',
 	'funnyclipcentral.com',
+	'gearseds.com',
 	'ghettojava.com',
 	'*.goodboard.de',
-	'blogs.law.harvard.edu',
+	'greendayvideo.net' => array(
+		'greendayvideo.net',
+		'espanol.greendayvideo.net',
+	),
+	'Harvard Law School' => array('blogs.law.harvard.edu'),
 	'helpiammoving.com',
 	'homepage-dienste.com',
 	'hullandhull.com',
@@ -1684,6 +1780,7 @@ $blocklist['badhost'] = array(
 	'test.kernel.org',
 	'kevindmurray.com',
 	'kroegjesroutes.nl',
+	'forum.lixium.fr',
 	'macfaq.net',
 	'me4x4.com',
 	'minsterscouts.org',
@@ -1693,11 +1790,16 @@ $blocklist['badhost'] = array(
 	'vcd.mmvcd.com',
 	'mountainjusticemedia.org',
 	'*.mybbland.com',
+	'North Carolina A&T State University' => array(
+		'ncat.edu',
+		'my.ncat.edu',
+		'hlc.ncat.edu',
+	),
 	'users.nethit.pl',
 	'nightclubvip.net',
 	'njbodybuilding.com',
 	'nlen.org',
-	'sacredheartpymble.nsw.edu.au',
+	'Sacred Heart Catholic Primary School' => array('sacredheartpymble.nsw.edu.au'),
 	'offtextbooks.com',
 	'ofimatika.com',
 	'omikudzi.ru',
