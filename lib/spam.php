@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.22 2007/03/25 13:49:09 henoheno Exp $
+// $Id: spam.php,v 1.23 2007/03/25 16:38:32 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -701,14 +701,20 @@ function file_normalize($file = 'index.html.en')
 	if (isset($simple_defaults[$_file])) return '';
 
 
-	// [Apache 2 Content-negotiation (type-map)]
-	// Roughly removing language/character-set/encoding suffixes,
-	// (See Apache 2 document about 'mod_mime' and 'mod_negotiation',
-	//  http://www.iana.org/assignments/character-sets, RFC3066, and ISO 639))
+	// Roughly removing language/character-set/encoding suffixes
+	// References:
+	//  * Apache 2 document about 'Content-negotiaton', 'mod_mime' and 'mod_negotiation'
+	//    http://httpd.apache.org/docs/2.0/content-negotiation.html
+	//    http://httpd.apache.org/docs/2.0/mod/mod_mime.html
+	//    http://httpd.apache.org/docs/2.0/mod/mod_negotiation.html
+	//  * http://www.iana.org/assignments/character-sets
+	//  * RFC3066: Tags for the Identification of Languages
+	//    http://www.ietf.org/rfc/rfc3066.txt
+	//  * ISO 639: codes of 'language names'
 	$suffixes = explode('.', $_file);
 	$body = array_shift($suffixes);
 	if ($suffixes) {
-		// Remove the liast .gz/.z
+		// Remove the last .gz/.z
 		$last_key = end(array_keys($suffixes));
 		if (isset($encoding_suffix[$suffixes[$last_key]])) {
 			unset($suffixes[$last_key]);
@@ -940,6 +946,9 @@ function is_badhost_avail($label = '*.example.org', $regex = '/^.*\.example\.org
 {
 	$group = preg_grep($regex, $hosts);
 	if ($group) {
+
+		// DEBUG var_dump($group); // badhost detail
+
 		$result[$label] = & $group;
 		$hosts = array_diff($hosts, $result[$label]);
 		return TRUE;
@@ -1085,7 +1094,7 @@ function check_uri_spam($target = '', $method = array())
 	if ($asap && $is_spam) return $progress;
 
 	// URI: Pickup
-	$pickups = spam_uri_pickup($target, $method);
+	$pickups = uri_pickup_normalize(spam_uri_pickup($target, $method));
 	//$remains['uri_pickup'] = & $pickups;
 
 	// Return if ...
@@ -1133,8 +1142,6 @@ function check_uri_spam($target = '', $method = array())
 
 	// URI: Uniqueness (and removing non-uniques)
 	if ((! $asap || ! $is_spam) && isset($method['non_uniquri'])) {
-
-		uri_pickup_normalize($pickups);
 
 		$uris = array();
 		foreach (array_keys($pickups) as $key) {
