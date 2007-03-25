@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.21 2007/03/10 01:49:33 henoheno Exp $
+// $Id: spam.php,v 1.22 2007/03/25 13:49:09 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -45,9 +45,10 @@ function preg_grep_invert($pattern = '//', $input = array())
 // [OK] http://nasty.example.org:80/foo/xxx#nasty_string/bar
 // [OK] ftp://nasty.example.org:80/dfsdfs
 // [OK] ftp://cnn.example.com&story=breaking_news@10.0.0.1/top_story.htm (from RFC3986)
-function uri_pickup($string = '', $normalize = TRUE,
-	$preserve_rawuri = FALSE, $preserve_chunk = TRUE)
+function uri_pickup($string = '')
 {
+	if (! is_string($string)) return array();
+
 	// Not available for: IDN(ignored)
 	$array = array();
 	preg_match_all(
@@ -72,7 +73,7 @@ function uri_pickup($string = '', $normalize = TRUE,
 		 $string, $array, PREG_SET_ORDER | PREG_OFFSET_CAPTURE
 	);
 
-	// Shrink $array
+	// Format the $array
 	static $parts = array(
 		1 => 'scheme', 2 => 'userinfo', 3 => 'host', 4 => 'port',
 		5 => 'path', 6 => 'file', 7 => 'query', 8 => 'fragment'
@@ -81,70 +82,64 @@ function uri_pickup($string = '', $normalize = TRUE,
 	foreach(array_keys($array) as $uri) {
 		$_uri = & $array[$uri];
 		array_rename_keys($_uri, $parts, TRUE, $default);
-
-		$offset = $_uri['scheme'][1]; // Scheme's offset
+		$offset = $_uri['scheme'][1]; // Scheme's offset = URI's offset
 		foreach(array_keys($_uri) as $part) {
-			// Remove offsets for each part
-			$_uri[$part] = & $_uri[$part][0];
+			$_uri[$part] = & $_uri[$part][0];	// Remove offsets
 		}
+	}
 
-		if ($normalize) {
-			$_uri['scheme'] = scheme_normalize($_uri['scheme']);
-			if ($_uri['scheme'] === '') {
-				unset($array[$uri]);
-				continue;
-			}
-			$_uri['host']  = host_normalize($_uri['host']);
-			$_uri['port']  = port_normalize($_uri['port'], $_uri['scheme'], FALSE);
-			$_uri['path']  = path_normalize($_uri['path']);
-			if ($preserve_rawuri) $_uri['rawuri'] = & $_uri[0];
-
-			// DEBUG
-			//$_uri['uri'] = uri_array_implode($_uri);
-		} else {
-			$_uri['uri'] = & $_uri[0]; // Raw
+	foreach(array_keys($array) as $uri) {
+		$_uri = & $array[$uri];
+		if ($_uri['scheme'] === '') {
+			unset($array[$uri]);	// Considererd harmless
+			continue;
 		}
 		unset($_uri[0]); // Matched string itself
-		if (! $preserve_chunk) {
-			unset(
-				$_uri['scheme'],
-				$_uri['userinfo'],
-				$_uri['host'],
-				$_uri['port'],
-				$_uri['path'],
-				$_uri['file'],
-				$_uri['query'],
-				$_uri['fragment']
-			);
-		}
-
-		// Area offset for area_measure()
-		$_uri['area']['offset'] = $offset;
+		$_uri['area']['offset'] = $offset;	// Area offset for area_measure()
 	}
 
 	return $array;
 }
 
-// Destructive normalize of URI array
-// NOTE: Give me the uri_pickup() result with chunks
-function uri_array_normalize(& $pickups, $preserve = TRUE)
+// Normalize an array of URI arrays
+// NOTE: Give me the uri_pickup() results
+function uri_pickup_normalize(& $pickups, $destructive = TRUE)
 {
 	if (! is_array($pickups)) return $pickups;
 
-	foreach (array_keys($pickups) as $key) {
-		$_key = & $pickups[$key];
-		$_key['path']     = isset($_key['path']) ? strtolower($_key['path']) : '';
-		$_key['file']     = isset($_key['file']) ? file_normalize($_key['file']) : '';
-		$_key['query']    = isset($_key['query']) ? query_normalize(strtolower($_key['query']), TRUE) : '';
-		$_key['fragment'] = (isset($_key['fragment']) && $preserve) ?
-			strtolower($_key['fragment']) : ''; // Just ignore
+	if ($destructive) {
+		foreach (array_keys($pickups) as $key) {
+			$_key = & $pickups[$key];
+			$_key['scheme'] = isset($_key['scheme']) ? scheme_normalize($_key['scheme']) : '';
+			$_key['host']     = isset($_key['host'])     ? host_normalize($_key['host']) : '';
+			$_key['port']   = isset($_key['port'])       ? port_normalize($_key['port'], $_key['scheme'], FALSE) : '';
+			$_key['path']     = isset($_key['path'])     ? strtolower(path_normalize($_key['path'])) : '';
+			$_key['file']     = isset($_key['file'])     ? file_normalize($_key['file']) : '';
+			$_key['query']    = isset($_key['query'])    ? query_normalize($_key['query']) : '';
+			$_key['fragment'] = isset($_key['fragment']) ? strtolower($_key['fragment']) : '';
+		}
+	} else {
+		foreach (array_keys($pickups) as $key) {
+			$_key = & $pickups[$key];
+			$_key['scheme'] = isset($_key['scheme']) ? scheme_normalize($_key['scheme']) : '';
+			$_key['host']   = isset($_key['host'])   ? strtolower($_key['host']) : '';
+			$_key['port']   = isset($_key['port'])   ? port_normalize($_key['port'], $_key['scheme'], FALSE) : '';
+			$_key['path']   = isset($_key['path'])   ? path_normalize($_key['path']) : '';
+		}
 	}
+
 
 	return $pickups;
 }
 
 // An URI array => An URI (See uri_pickup())
-function uri_array_implode($uri = array())
+// USAGE:
+//	$pickups = uri_pickup('a string include some URIs');
+//	$uris = array();
+//	foreach (array_keys($pickups) as $key) {
+//		$uris[$key] = uri_pickup_implode($pickups[$key]);
+//	}
+function uri_pickup_implode($uri = array())
 {
 	if (empty($uri) || ! is_array($uri)) return NULL;
 
@@ -382,7 +377,8 @@ function spam_uri_pickup_preprocess($string = '')
 	return $string;
 }
 
-// Main function of spam-uri pickup
+// Main function of spam-uri pickup,
+// A wrapper function of uri_pickup()
 function spam_uri_pickup($string = '', $method = array())
 {
 	if (! is_array($method) || empty($method)) {
@@ -429,15 +425,15 @@ function spam_uri_pickup($string = '', $method = array())
 // Scheme normalization: Renaming the schemes
 // snntp://example.org =>  nntps://example.org
 // NOTE: Keep the static lists simple. See also port_normalize().
-function scheme_normalize($scheme = '', $considerd_harmfull = TRUE)
+function scheme_normalize($scheme = '', $abbrevs_harmfull = TRUE)
 {
-	// Abbreviations considerable they don't have link intension
+	// Abbreviations they have no intention of link
 	static $abbrevs = array(
 		'ttp'	=> 'http',
 		'ttps'	=> 'https',
 	);
 
-	// Alias => normalized
+	// Aliases => normalized ones
 	static $aliases = array(
 		'pop'	=> 'pop3',
 		'news'	=> 'nntp',
@@ -448,20 +444,20 @@ function scheme_normalize($scheme = '', $considerd_harmfull = TRUE)
 		'pops'	=> 'pop3s',
 	);
 
-	$scheme = strtolower(trim($scheme));
+	if (! is_string($scheme)) return '';
+
+	$scheme = strtolower($scheme);
 	if (isset($abbrevs[$scheme])) {
-		if ($considerd_harmfull) {
-			$scheme = $abbrevs[$scheme];
-		} else {
-			$scheme = '';
-		}
+		$scheme = $abbrevs_harmfull ? $abbrevs[$scheme] : '';
 	}
-	if (isset($aliases[$scheme])) $scheme = $aliases[$scheme];
+	if (isset($aliases[$scheme])) {
+		$scheme = $aliases[$scheme];
+	}
 
 	return $scheme;
 }
 
-// Hostname normlization
+// Hostname normlization (Destructive)
 // www.foo     => www.foo   ('foo' seems TLD)
 // www.foo.bar => foo.bar
 // www.10.20   => www.10.20 (Invalid hostname)
@@ -470,8 +466,9 @@ function scheme_normalize($scheme = '', $considerd_harmfull = TRUE)
 //   'www.foo.bar' may be identical with 'foo.bar'.
 function host_normalize($host = '')
 {
-	$host = strtolower($host);
+	if (! is_string($host)) return '';
 
+	$host = strtolower($host);
 	$matches = array();
 	if (preg_match('/^www\.(.+\.[a-z]+)$/', $host, $matches)) {
 		return $matches[1];
@@ -484,7 +481,7 @@ function host_normalize($host = '')
 // HTTP://example.org:80/ => http://example.org/
 // HTTP://example.org:8080/ => http://example.org:8080/
 // HTTPS://example.org:443/ => https://example.org/
-function port_normalize($port, $scheme, $scheme_normalize = TRUE)
+function port_normalize($port, $scheme, $scheme_normalize = FALSE)
 {
 	// Schemes that users _maybe_ want to add protocol-handlers
 	// to their web browsers. (and attackers _maybe_ want to use ...)
@@ -516,9 +513,11 @@ function port_normalize($port, $scheme, $scheme_normalize = TRUE)
 		'mysql'   =>  3306,
 	);
 
-	$port = trim($port);
-	if ($port === '') return $port;
+	// intval() converts '0-1' to '0', so preg_match() rejects these invalid ones
+	if (! is_numeric($port) || $port < 0 || preg_match('/[^0-9]/i', $port))
+		return '';
 
+	$port = intval($port);
 	if ($scheme_normalize) $scheme = scheme_normalize($scheme);
 	if (isset($array[$scheme]) && $port == $array[$scheme])
 		$port = ''; // Ignore the defaults
@@ -531,21 +530,33 @@ function port_normalize($port, $scheme, $scheme_normalize = TRUE)
 // http://example.org#hoge => http://example.org/#hoge
 // http://example.org/path/a/b/./c////./d => http://example.org/path/a/b/c/d
 // http://example.org/path/../../a/../back => http://example.org/back
-function path_normalize($path = '', $divider = '/', $addroot = TRUE)
+function path_normalize($path = '', $divider = '/', $add_root = TRUE)
 {
-	if (! is_string($path) || $path == '')
-		return $addroot ? $divider : '';
+	if (! is_string($divider)) return is_string($path) ? $path : '';
 
-	$path = trim($path);
-	$last = ($path[strlen($path) - 1] == $divider) ? $divider : '';
+	if ($add_root) {
+		$first_div = & $divider;
+	} else {
+		$first_div = '';
+	}
+	if (! is_string($path) || $path == '') return $first_div;
+
+	if (strpos($path, $divider, strlen($path) - strlen($divider)) === FALSE) {
+		$last_div = '';
+	} else {
+		$last_div = & $divider;
+	}
+
 	$array = explode($divider, $path);
 
-	// Remove paddings
+	// Remove paddings ('//' and '/./')
 	foreach(array_keys($array) as $key) {
-		if ($array[$key] == '' || $array[$key] == '.')
+		if ($array[$key] == '' || $array[$key] == '.') {
 			 unset($array[$key]);
+		}
 	}
-	// Back-track
+
+	// Remove back-tracks ('/../')
 	$tmp = array();
 	foreach($array as $value) {
 		if ($value == '..') {
@@ -556,56 +567,177 @@ function path_normalize($path = '', $divider = '/', $addroot = TRUE)
 	}
 	$array = & $tmp;
 
-	$path = $addroot ? $divider : '';
-	if (! empty($array)) $path .= implode($divider, $array) . $last;
-
-	return $path;
+	if (empty($array)) {
+		return $first_div;
+	} else {
+		return $first_div . implode($divider, $array) . $last_div;
+	}
 }
 
 // DirectoryIndex normalize (Destructive and rough)
-function file_normalize($string = 'index.html.en')
+// TODO: sample.en.ja.html.gz => sample.html
+function file_normalize($file = 'index.html.en')
 {
-	static $array = array(
-		'index'			=> TRUE,	// Some system can omit the suffix
-		'index.htm'		=> TRUE,
-		'index.html'	=> TRUE,
-		'index.shtml'	=> TRUE,
-		'index.jsp'		=> TRUE,
-		'index.php'		=> TRUE,
-		'index.php3'	=> TRUE,
-		'index.php4'	=> TRUE,
-		//'index.pl'	=> TRUE,
-		//'index.py'	=> TRUE,
-		//'index.rb'	=> TRUE,
-		'index.cgi'		=> TRUE,
+	static $simple_defaults = array(
 		'default.htm'	=> TRUE,
 		'default.html'	=> TRUE,
 		'default.asp'	=> TRUE,
 		'default.aspx'	=> TRUE,
+		'index'			=> TRUE,	// Some system can omit the suffix
 	);
 
-	// Content-negothiation filter:
-	// Roughly removing ISO 639 -like
-	// 2-letter suffixes (See RFC3066)
-	$matches = array();
-	if (preg_match('/(.*)\.[a-z][a-z](?:-[a-z][a-z])?$/i', $string, $matches)) {
-		$_string = $matches[1];
-	} else {
-		$_string = & $string;
-	}
+	static $content_suffix = array(
+		// index.xxx, sample.xxx
+		'htm'	=> TRUE,
+		'html'	=> TRUE,
+		'shtml'	=> TRUE,
+		'jsp'	=> TRUE,
+		'php'	=> TRUE,
+		'php3'	=> TRUE,
+		'php4'	=> TRUE,
+		'pl'	=> TRUE,
+		'py'	=> TRUE,
+		'rb'	=> TRUE,
+		'cgi'	=> TRUE,
+		'xml'	=> TRUE,
+	);
 
-	if (isset($array[strtolower($_string)])) {
-		return '';
-	} else {
-		return $string;
+	static $language_suffix = array(
+		// Reference: Apache 2.0.59 'AddLanguage' default
+		'ca'	=> TRUE,
+		'cs'	=> TRUE,	// cs
+		'cz'	=> TRUE,	// cs
+		'de'	=> TRUE,
+		'dk'	=> TRUE,	// da
+		'el'	=> TRUE,
+		'en'	=> TRUE,
+		'eo'	=> TRUE,
+		'es'	=> TRUE,
+		'et'	=> TRUE,
+		'fr'	=> TRUE,
+		'he'	=> TRUE,
+		'hr'	=> TRUE,
+		'it'	=> TRUE,
+		'ja'	=> TRUE,
+		'ko'	=> TRUE,
+		'ltz'	=> TRUE,
+		'nl'	=> TRUE,
+		'nn'	=> TRUE,
+		'no'	=> TRUE,
+		'po'	=> TRUE,
+		'pt'	=> TRUE,
+		'pt-br'	=> TRUE,
+		'ru'	=> TRUE,
+		'sv'	=> TRUE,
+		'zh-cn'	=> TRUE,
+		'zh-tw'	=> TRUE,
+
+		// Reference: Apache 2.0.59 default 'index.html' variants
+		'ee'	=> TRUE,
+		'lb'	=> TRUE,
+		'var'	=> TRUE,
+	);
+
+	static $charset_suffix = array(
+		// Reference: Apache 2.0.59 'AddCharset' default
+		'iso8859-1'	=> TRUE, // ISO-8859-1
+		'latin1'	=> TRUE, // ISO-8859-1
+		'iso8859-2'	=> TRUE, // ISO-8859-2
+		'latin2'	=> TRUE, // ISO-8859-2
+		'cen'		=> TRUE, // ISO-8859-2
+		'iso8859-3'	=> TRUE, // ISO-8859-3
+		'latin3'	=> TRUE, // ISO-8859-3
+		'iso8859-4'	=> TRUE, // ISO-8859-4
+		'latin4'	=> TRUE, // ISO-8859-4
+		'iso8859-5'	=> TRUE, // ISO-8859-5
+		'latin5'	=> TRUE, // ISO-8859-5
+		'cyr'		=> TRUE, // ISO-8859-5
+		'iso-ru'	=> TRUE, // ISO-8859-5
+		'iso8859-6'	=> TRUE, // ISO-8859-6
+		'latin6'	=> TRUE, // ISO-8859-6
+		'arb'		=> TRUE, // ISO-8859-6
+		'iso8859-7'	=> TRUE, // ISO-8859-7
+		'latin7'	=> TRUE, // ISO-8859-7
+		'grk'		=> TRUE, // ISO-8859-7
+		'iso8859-8'	=> TRUE, // ISO-8859-8
+		'latin8'	=> TRUE, // ISO-8859-8
+		'heb'		=> TRUE, // ISO-8859-8
+		'iso8859-9'	=> TRUE, // ISO-8859-9
+		'latin9'	=> TRUE, // ISO-8859-9
+		'trk'		=> TRUE, // ISO-8859-9
+		'iso2022-jp'=> TRUE, // ISO-2022-JP
+		'jis'		=> TRUE, // ISO-2022-JP
+		'iso2022-kr'=> TRUE, // ISO-2022-KR
+		'kis'		=> TRUE, // ISO-2022-KR
+		'iso2022-cn'=> TRUE, // ISO-2022-CN
+		'cis'		=> TRUE, // ISO-2022-CN
+		'big5'		=> TRUE,
+		'cp-1251'	=> TRUE, // ru, WINDOWS-1251
+		'win-1251'	=> TRUE, // ru, WINDOWS-1251
+		'cp866'		=> TRUE, // ru
+		'koi8-r'	=> TRUE, // ru, KOI8-r
+		'koi8-ru'	=> TRUE, // ru, KOI8-r
+		'koi8-uk'	=> TRUE, // ru, KOI8-ru
+		'ua'		=> TRUE, // ru, KOI8-ru
+		'ucs2'		=> TRUE, // ru, ISO-10646-UCS-2
+		'ucs4'		=> TRUE, // ru, ISO-10646-UCS-4
+		'utf8'		=> TRUE,
+
+		// Reference: Apache 2.0.59 default 'index.html' variants
+		'euc-kr'	=> TRUE,
+		'gb2312'	=> TRUE,
+	);
+
+	// May uncompress by web browsers on the fly
+	// Must be at the last of the filename
+	// Reference: Apache 2.0.59 'AddEncoding'
+	static $encoding_suffix = array(
+		'z'		=> TRUE,
+		'gz'	=> TRUE,
+	);
+
+	if (! is_string($file)) return '';
+	$_file = strtolower($file);
+	if (isset($simple_defaults[$_file])) return '';
+
+
+	// [Apache 2 Content-negotiation (type-map)]
+	// Roughly removing language/character-set/encoding suffixes,
+	// (See Apache 2 document about 'mod_mime' and 'mod_negotiation',
+	//  http://www.iana.org/assignments/character-sets, RFC3066, and ISO 639))
+	$suffixes = explode('.', $_file);
+	$body = array_shift($suffixes);
+	if ($suffixes) {
+		// Remove the liast .gz/.z
+		$last_key = end(array_keys($suffixes));
+		if (isset($encoding_suffix[$suffixes[$last_key]])) {
+			unset($suffixes[$last_key]);
+		}
 	}
+	// Cut language and charset suffixes
+	foreach($suffixes as $key => $value){
+		if (isset($language_suffix[$value]) || isset($charset_suffix[$value])) {
+			unset($suffixes[$key]);
+		}
+	}
+	if (empty($suffixes)) return $body;
+
+	// Index.xxx
+	$count = count($suffixes);
+	reset($suffixes);
+	$current = current($suffixes);
+	if ($body == 'index' && $count == 1 && isset($content_suffix[$current])) return '';
+
+	return $file;
 }
 
 // Sort query-strings if possible (Destructive and rough)
 // [OK] &&&&f=d&b&d&c&a=0dd  =>  a=0dd&b&c&d&f=d
 // [OK] nothing==&eg=dummy&eg=padding&eg=foobar  =>  eg=foobar
-function query_normalize($string = '', $equal = FALSE, $equal_cutempty = TRUE)
+function query_normalize($string = '', $equal = TRUE, $equal_cutempty = TRUE, $stortolower = TRUE)
 {
+	if ($stortolower) $string = strtolower($string);
+
 	$array = explode('&', $string);
 
 	// Remove '&' paddings
@@ -693,11 +825,11 @@ function is_ip($string = '')
 
 // Generate host (FQDN, IPv4, ...) regex
 // 'localhost'     : Matches with 'localhost' only
-// 'example.org'   : Matches with 'example.org', and 'www.example.org'
+// 'example.org'   : Matches with 'example.org' only (See host_normalize() about 'www')
 // '.example.org'  : Matches with ALL FQDN ended with '.example.org'
 // '*.example.org' : Almost the same of '.example.org' except 'www.example.org'
 // '10.20.30.40'   : Matches with IPv4 address '10.20.30.40' only
-// '192168.'       : Matches with all IPv4 hosts started with '192.'
+// [TODO] '192.'   : Matches with all IPv4 hosts started with '192.'
 // TODO: IPv4, CIDR?, IPv6
 function generate_host_regex($string = '', $divider = '/')
 {
@@ -742,20 +874,10 @@ function get_blocklist($list = '')
 					if (is_array($value)) {
 						$regexs[$_list][$key] = array();
 						foreach($value as $_key => $_value) {
-							if (is_string($_key)) {
-								 $regexs[$_list][$key][$_key] = $_value; // A regex
-							} else {
-								 $regexs[$_list][$key][$_value] =
-									'/^' . generate_host_regex($_value, '/') . '$/i';
-							}
+							get_blocklist_add($regexs[$_list][$key], $_key, $_value);
 						}
 					} else {
-						if (is_string($key)) {
-							$regexs[$_list][$key] = $value; // A regex
-						} else {
-							$regexs[$_list][$value] =
-								'/^' . generate_host_regex($value, '/') . '$/i';
-						}
+						get_blocklist_add($regexs[$_list], $key, $value);
 					}
 				}
 			}
@@ -770,6 +892,16 @@ function get_blocklist($list = '')
 		return array();
 	}
 }
+
+// Subroutine of get_blocklist()
+function get_blocklist_add(& $array, $key = 0, $value = '*.example.org')
+{
+	if (is_string($key)) {
+		$array[$key] = & $value; // Treat $value as a regex
+	} else {
+		$array[$value] = '/^' . generate_host_regex($value, '/') . '$/i';
+	}
+} 
 
 function is_badhost($hosts = array(), $asap = TRUE, & $remains)
 {
@@ -790,27 +922,30 @@ function is_badhost($hosts = array(), $asap = TRUE, & $remains)
 		if (is_array($regex)) {
 			$result[$label] = array();
 			foreach($regex as $_label => $_regex) {
-				$_group = preg_grep($_regex, $hosts);
-				if ($_group) {
-					$result[$label][$_label] = $_group;
-					$hosts = array_diff($hosts, $_group);
-					if ($asap) break;
-				}
+				if (is_badhost_avail($_label, $_regex, $hosts, $result[$label]) && $asap) break;
 			}
 			if (empty($result[$label])) unset($result[$label]);
 		} else {
-			$_group = preg_grep($regex, $hosts);
-			if ($_group) {
-				$result[$label] = $_group;
-				$hosts = array_diff($hosts, $result[$label]);
-				if ($asap) break;
-			}
+			if (is_badhost_avail($label, $regex, $hosts, $result) && $asap) break;
 		}
 	}
 
 	$remains = $hosts;
 
 	return $result;
+}
+
+// Subroutine for is_badhost()
+function is_badhost_avail($label = '*.example.org', $regex = '/^.*\.example\.org$/', & $hosts, & $result)
+{
+	$group = preg_grep($regex, $hosts);
+	if ($group) {
+		$result[$label] = & $group;
+		$hosts = array_diff($hosts, $result[$label]);
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
 
 // Default (enabled) methods and thresholds (for content insertion)
@@ -999,12 +1134,11 @@ function check_uri_spam($target = '', $method = array())
 	// URI: Uniqueness (and removing non-uniques)
 	if ((! $asap || ! $is_spam) && isset($method['non_uniquri'])) {
 
-		// Destructive normalize of URIs
-		uri_array_normalize($pickups);
+		uri_pickup_normalize($pickups);
 
 		$uris = array();
 		foreach (array_keys($pickups) as $key) {
-			$uris[$key] = uri_array_implode($pickups[$key]);
+			$uris[$key] = uri_pickup_implode($pickups[$key]);
 		}
 		$count = count($uris);
 		$uris  = array_unique($uris);
@@ -1054,6 +1188,7 @@ function check_uri_spam($target = '', $method = array())
 		}
 		unset($__remains);
 		if (! empty($badhost)) {
+			//var_dump($badhost);	// BADHOST detail
 			$sum['badhost'] += array_count_leaves($badhost);
 			foreach(array_keys($badhost) as $keys) {
 				$is_spam['badhost'][$keys] =
