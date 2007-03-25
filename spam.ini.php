@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.43 2007/03/24 15:07:08 henoheno Exp $
+// $Id: spam.ini.php,v 1.44 2007/03/25 03:01:19 henoheno Exp $
 // Spam-related setting
 //
 // Reference:
@@ -1827,6 +1827,7 @@ $blocklist['badhost'] = array(
 	'theosis.org',
 	'troms-slekt.com',
 	'theedgeblueisland.com',
+	'chat.travlang.com',
 	'Truman State University' => array('mathbio.truman.edu'),
 	'tuathadedannan.org',
 	'txgotg.com',
@@ -2141,6 +2142,8 @@ $blocklist['badhost'] = array(
 		'.6828teacup.com',
 		'.aaa-livedoor.net',
 		'.acyberhome.com',
+		'.ahatena.com',
+		'.asdsdgh-jp.com',
 		'.bbs-qrcode.com',
 		'.biglobe-ne.com',
 		'.blogplaync.com',
@@ -3297,6 +3300,7 @@ $blocklist['badhost'] = array(
 	'.advancediet.com',		// by Shonta Mojica (hostadmin at advancediet.com)
 	'.adultpersonalsclubs.com',	// by Peter (vaspet34 at yahoo.com)
 	'.alfanetwork.info',	// by dante (dantequick at gmail.com)
+	'.allworlddirect.info',	// Forbidden
 	'.amoreitsex.com',
 	'.areaseo.com',			// by Antony Carpito (xcentr at lycos.com)
 	'.awardspace.com',		// by abuse at awardspace.com, no DirectoryIndex
