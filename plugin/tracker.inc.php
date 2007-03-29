@@ -628,7 +628,7 @@ function plugin_tracker_getlist($page,$refer,$config_name,$list,$order='',$limit
 
 	if (!$config->read())
 	{
-		return "<p>config file '".htmlsc($config_name)."' is not exist.";
+		return "<p>config file '".htmlsc($config_name)."' is not exist.</p>";
 	}
 
 	$config->config_name = $config_name;
