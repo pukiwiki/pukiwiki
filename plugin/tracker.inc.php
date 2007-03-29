@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.35 2007/01/21 14:29:12 henoheno Exp $
+// $Id: tracker.inc.php,v 1.36 2007/03/29 15:05:52 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -628,7 +628,7 @@ function plugin_tracker_getlist($page,$refer,$config_name,$list,$order='',$limit
 
 	if (!$config->read())
 	{
-		return "<p>config file '".htmlspecialchars($config_name)."' is not exist.";
+		return "<p>config file '".htmlspecialchars($config_name)."' is not exist.</p>";
 	}
 
 	$config->config_name = $config_name;
