@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.86 2007/04/01 10:59:05 henoheno Exp $
+// $Id: func.php,v 1.87 2007/04/01 11:55:43 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -330,102 +330,114 @@ function strip_bracket($str)
 	}
 }
 
-// Create list of pages
-function page_list($pages, $cmd = 'read', $withfilename = FALSE)
+// Generate sorted "list of pages" XHTML, with page-reading hints
+function page_list($pages = array('pagename.txt' => 'pagename'), $cmd = 'read', $withfilename = FALSE)
 {
-	global $script, $list_index;
-	global $_msg_symbol, $_msg_other;
-	global $pagereading_enable;
+	global $pagereading_enable, $list_index, $_msg_symbol, $_msg_other;
 
-	// ソートキーを決定する。 ' ' < '[a-zA-Z]' < 'zz'という前提。
-	$symbol = ' ';
-	$other = 'zz';
+	// Sentinel: symbolic-chars < alphabetic-chars < another(multibyte)-chars
+	// = ' ' < '[a-zA-Z]' < 'zz'
+	$sentinel_symbol  = ' ';
+	$sentinel_another = 'zz';
 
-	$retval = '';
+	$href = get_script_uri() . '?' . ($cmd == 'read' ? '' : 'cmd=' . rawurlencode($cmd) . '&amp;page=');
+	$array = $matches = array();
 
-	if($pagereading_enable) {
+	if ($pagereading_enable) {
 		mb_regex_encoding(SOURCE_ENCODING);
 		$readings = get_readings($pages);
 	}
-
-	$list = $matches = array();
-
-	// Shrink URI for read
-	if ($cmd == 'read') {
-		$href = $script . '?';
-	} else {
-		$href = $script . '?cmd=' . $cmd . '&amp;page=';
-	}
-
-	foreach($pages as $file=>$page) {
-		$r_page  = rawurlencode($page);
-		$s_page  = htmlspecialchars($page, ENT_QUOTES);
-		$passage = get_pg_passage($page);
-
-		$str = '   <li><a href="' . $href . $r_page . '">' .
-			$s_page . '</a>' . $passage;
-
-		if ($withfilename) {
-			$s_file = htmlspecialchars($file);
-			$str .= "\n" . '    <ul><li>' . $s_file . '</li></ul>' .
-				"\n" . '   ';
-		}
-		$str .= '</li>';
-
-		// WARNING: Japanese code hard-wired
-		if($pagereading_enable) {
+	foreach($pages as $file => $page) {
+		// Get the initial letter of the page name
+		if ($pagereading_enable) {
+			// WARNING: Japanese code hard-wired
 			if(mb_ereg('^([A-Za-z])', mb_convert_kana($page, 'a'), $matches)) {
-				$head = $matches[1];
+				$initial = & $matches[1];
 			} elseif (isset($readings[$page]) && mb_ereg('^([ァ-ヶ])', $readings[$page], $matches)) { // here
-				$head = $matches[1];
+				$initial = & $matches[1];
 			} elseif (mb_ereg('^[ -~]|[^ぁ-ん亜-熙]', $page)) { // and here
-				$head = $symbol;
+				$initial = & $sentinel_symbol;
 			} else {
-				$head = $other;
+				$initial = & $sentinel_another;
 			}
 		} else {
-			$head = (preg_match('/^([A-Za-z])/', $page, $matches)) ? $matches[1] :
-				(preg_match('/^([ -~])/', $page) ? $symbol : $other);
+			if (preg_match('/^([A-Za-z])/', $page, $matches)) {
+				$initial = & $matches[1];
+			} elseif (preg_match('/^([ -~])/', $page)) {
+				$initial = & $sentinel_symbol;
+			} else {
+				$initial = & $sentinel_another;
+			}
 		}
-
-		$list[$head][$page] = $str;
+		$str = '   <li>' .
+			'<a href="' . $href . rawurlencode($page) . '">' .
+			htmlspecialchars($page, ENT_QUOTES) .
+			'</a>' .
+			get_pg_passage($page);
+		if ($withfilename) {
+			$str .= "\n" .
+				'    <ul><li>' . htmlspecialchars($file) . '</li></ul>' . "\n" .
+				'   ';
+		}
+		$str .= '</li>';
+		$array[$initial][$page] = $str;
 	}
-	ksort($list);
+	unset($pages);
+	ksort($array);
 
+	if ($list_index) {
+		$s_msg_symbol  = htmlspecialchars($_msg_symbol);
+		$s_msg_another = htmlspecialchars($_msg_other);
+	}
 	$cnt = 0;
-	$arr_index = array();
-	$retval .= '<ul>' . "\n";
-	foreach ($list as $head=>$pages) {
-		if ($head === $symbol) {
-			$head = $_msg_symbol;
-		} else if ($head === $other) {
-			$head = $_msg_other;
-		}
-
+	$retval = $contents = array();
+	$retval[] = '<ul>';
+	foreach ($array as $_initial => $pages) {
+		ksort($pages);
 		if ($list_index) {
 			++$cnt;
-			$arr_index[] = '<a id="top_' . $cnt .
-				'" href="#head_' . $cnt . '"><strong>' .
-				$head . '</strong></a>';
-			$retval .= ' <li><a id="head_' . $cnt . '" href="#top_' . $cnt .
-				'"><strong>' . $head . '</strong></a>' . "\n" .
-				'  <ul>' . "\n";
-		}
-		ksort($pages);
-		$retval .= join("\n", $pages);
-		if ($list_index)
-			$retval .= "\n  </ul>\n </li>\n";
-	}
-	$retval .= '</ul>' . "\n";
-	if ($list_index && $cnt > 0) {
-		$top = array();
-		while (! empty($arr_index))
-			$top[] = join(' | ' . "\n", array_splice($arr_index, 0, 16)) . "\n";
+			if ($_initial == $sentinel_symbol) {
+				$_initial = & $s_msg_symbol;
+			} else if ($_initial == $sentinel_another) {
+				$_initial = & $s_msg_another;
+			}
+			$retval[] = ' <li><a id="head_' . $cnt .
+				'" href="#top_' . $cnt .
+				'"><strong>' . $_initial . '</strong></a>';
+			$retval[] = '  <ul>';
 
-		$retval = '<div id="top" style="text-align:center">' . "\n" .
-			join('<br />', $top) . '</div>' . "\n" . $retval;
+			$contents[] = '<a id="top_' . $cnt .
+				'" href="#head_' . $cnt . '"><strong>' .
+				$_initial . '</strong></a>';
+		}
+		$retval[] = join("\n", $pages);
+		if ($list_index) {
+			$retval[] = '  </ul>';
+			$retval[] = ' </li>';
+		}
 	}
-	return $retval;
+	$retval[] = '</ul>';
+	unset($array);
+
+	// Insert a table of contents
+	if ($list_index && $cnt) {
+
+		// Breaks in every N characters
+		$N = 16;
+		$tmp = array();
+		while (! empty($contents)) {
+			$tmp[] = join(' | ' . "\n", array_splice($contents, 0, $N));
+		}
+		$contents = & $tmp;
+
+		array_unshift(
+			$retval,
+			'<div id="top" style="text-align:center">',
+			join("\n" . '<br />' . "\n", $contents),
+			'</div>');
+	}
+
+	return implode("\n", $retval) . "\n";
 }
 
 // Show text formatting rules
