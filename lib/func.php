@@ -382,7 +382,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 			}
 		} else {
 			$head = (preg_match('/^([A-Za-z])/', $page, $matches)) ? $matches[1] :
-				(preg_match('/^([ -~])/', $page, $matches) ? $symbol : $other);
+				(preg_match('/^([ -~])/', $page) ? $symbol : $other);
 		}
 
 		$list[$head][$page] = $str;
