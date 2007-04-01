@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.45 2007/03/29 14:19:49 henoheno Exp $
+// $Id: spam.ini.php,v 1.46 2007/04/01 10:52:59 henoheno Exp $
 // Spam-related setting
 //
 // Reference:
@@ -430,6 +430,7 @@ $blocklist['badhost'] = array(
 	'url.grillsportverein.de',
 	'harudake.net' => array('*.hyu.jp'),
 	'Hattinger Linux User Group' => array('short.hatlug.de'),
+	'hexten.net' => array('lyxus.net'),
 	'here.is',
 	'hispavista.com' => array(
 		'*.hispavista.com',
@@ -1387,6 +1388,7 @@ $blocklist['badhost'] = array(
 	'*.diaryland.com',
 	'dotbb.be',
 	'*.dox.hu',				// dns at 1b.hu
+	'*.e-host.ws',		// by dns at jomax.net, ns by 0catch.com
 	'*.eblog.com.au',
 	'*.ekiwi.de',
 	'*.eamped.com',			// Admin by Joe Hayes (joe_h_31028 at yahoo.com)
@@ -1471,7 +1473,6 @@ $blocklist['badhost'] = array(
 		'*.iquebec.com',
 		'*.isuisse.com',
 	),
-	'*.ifastnet.com',
 	'*.ihateclowns.net',
 	'*.iphorum.com',
 	'*.blog.ijijiji.com',
@@ -1554,7 +1555,6 @@ $blocklist['badhost'] = array(
 	'proboards' => '#^(?:.*\.)proboards[0-9]*\.com$#',
 	'*.probook.de',
 	'*.prohosting.com',	// by Nick Wood (admin at dns-solutions.net)
-	'*.prophp.org',		// pro-php.org
 	'*.quickfreehost.com',
 	'quizilla.com',
 	'*.qupis.com',		// by Xisto Corporation (shridhar at xisto.com)
@@ -1594,7 +1594,7 @@ $blocklist['badhost'] = array(
 	'*.shoutpost.com',
 	'*.siamforum.com',
 	'*.siteburg.com',
-	'*.sitesfree.com',
+	'*.sitesfree.com',		// support at livesearching.com
 	'*.sitesled.com',
 	'skinnymoose.com',		// by Steven Remington (admin at outdoorwebhosting.com)
 	'smartrans.com' => array(
@@ -1889,6 +1889,7 @@ $blocklist['badhost'] = array(
 	'serbisyopilipino.org',
 	'setbb.com',
 	'silver-tears.net',
+	'.softpress.com',
 	'southbound-inc.com',	// There is a <html>.gif (img to it168.com) 
 	'tehudar.ru',
 	'Tennessee Tech University' => array('manila.tntech.edu'),
@@ -1913,6 +1914,7 @@ $blocklist['badhost'] = array(
 	'wolvas.org.uk',
 	'wookiewiki.org',
 	'uk.groups.yahoo.com',
+	'University of Nebraska Lincoln' => array('ftp.ianr.unl.edu'),
 	'yasushi.site.ne.jp',	// One of mixedmedia.net'
 	'youthpeer.org',
 	'*.zenburger.com',
@@ -2160,6 +2162,7 @@ $blocklist['badhost'] = array(
 		'.allsexonline.info',		// by Varsylenko
 		'.bequeous.info',			// by Davi
 		'.d1rnow.info',				// by Petrov
+		'.doxer.info',				// by Petrov
 		'.freeforworld.info',		// by Varsylenko
 		'.goodworksite.info',		// by Varsylenko
 		'.onall.info',				// by Varsylenko
@@ -3401,6 +3404,75 @@ $blocklist['badhost'] = array(
 		'.webcam4u.info',
 		'.younghot.info',
 	),
+	'hostorgadmin at googlemail.com' => array(	// Byethost Internet Ltd. (hostorgadmin at googlemail.com)
+		'.1sthost.org',
+		'.22web.net',
+		'.4sql.net',
+		'.php0h.com',
+		'.php1h.com',
+		'.php2h.com',		// by Andrew Millar (asmillar at sir-millar.com), ns also *.byet.org
+		'.phpnet.us',
+		'.prophp.org',		// pro-php.org, 
+		'.byethost.com',
+		//'byethost1.com'
+		'.byethost2.com',
+		'.byethost3.com',
+		'.byethost4.com',
+		'.byethost5.com',
+		'.byethost6.com',
+		'.byethost7.com',
+		'.byethost8.com',
+		'.byethost9.com',
+		'.byethost10.com',
+		'.byethost11.com',
+		'.byethost12.com',
+		'.byethost13.com',
+		'.byethost14.com',
+		'.byethost15.com',
+		'.byethost16.com',
+		'.byethost17.com',
+		'.byethost18.com',
+		//'*.byethost19.com',	// by Wan-Fu China, Ltd. (business at wanfuchina.com)
+		'.ifastnet.com',
+		'.kwikphp.com',
+		'.mega-file.net',
+		'.my-php.net',
+		'.my-place.us',
+		'.my-webs.org',
+		'.netfast.org',
+		'.prohosts.org',
+		'.sprinterweb.net',
+		'.swiftphp.com',
+		'.xlphp.net',
+	),
+	'lemnaru ionut' => array(
+		// by lemnaru ionut (webmaster at bestgirlssex.info), ns *.hostgator.com
+		'.analmoviesite.info',
+		'.bestgirlssex.info',
+		'.boxvagina.info',
+		'.cyberlivegirls.info',
+		'.hotredgirls.info',
+		'.forsexlove.info',
+		'.hotnudezone.info',
+		'.hotredpussy.info',
+		'.lesbians-live.info',
+		'.lesbians-on-cam.info',
+		'.onlinegirlssite.info',
+		'.sexloveonline.info',
+		'.teensexcard.info',
+		'.teensexdirect.info',
+		'.topnudesite.info',
+		'.vaginafree.info',	
+		'.webcam-show.info',
+		'.webcamshow.info',
+		'.youngsexchat.info',
+		'.yourcumshot.info',	
+	),
+	'lustiq at p5com.com' => array(
+		'.wonkalook.com',		// ns *.willywonka.co.in, 85.255.117.226
+		'.willywonka.co.in',	// by Nick Priest (lustiq at p5com.com), 85.255.117.226
+	),
+	
 
 	// C-2: Lonely domains (buddies not found yet)
 	'.0721-4404.com',
@@ -3442,6 +3514,7 @@ $blocklist['badhost'] = array(
 	'.forum24.se',
 	'.free-finding.com',	// by Ny hom (nyhom at yahoo.com)
 	'.free-rx.net',			// by Neo-x (neo-xxl at yandex.ru), redirect to activefreehost.com
+	'.freehostia.com',
 	'.goldcoastonlinetutoring.com',	// by Robert Tanenbaum (buildbt at lycos.com)
 	'.game4enjoy.net',		// by huang jinglong (fenlin231 at sina.com)
 	'.ganecity.com',		// by shao tian (huangjinqiang at sina.com)
@@ -3485,11 +3558,11 @@ $blocklist['badhost'] = array(
 	'.onlin-casino.com',	// by Lomis Konstantinos (businessline3000 at gmx.de)
 	'.onlineviagra.de',
 	'.ornit.info',			// by Victoria C. Frey (Victoria.C.Frey at pookmail.com)
+	'.ozomw.info',
 	'.pahuist.info',		// by Yura (yuralg2005 at yandex.ru)
 	'.pelican-bulletin.info',	// by Elizabeth K. Perry (redmonk at mail.ru)
 	'.perevozka777.ru',		// by witalik at gmail.com
 	'.pharmacy-style.com',	// by Anrey Markov (ernestppc at yahoo.com)
-	'.php0h.com',			// by Byethost Internet Ltd. (hostorgadmin at googlemail.com)
 	'.pills-storage.com',	// by 
 	'.plusintedia.com',		// by g yk (abc00623 at 163.com), seems not used now
 	'popki.ind.in',			// by Aleksandr Krasnik (supermaster at pisem.net)
@@ -3522,10 +3595,12 @@ $blocklist['badhost'] = array(
 	'.unctad.net',			// by gfdogfd at lovespb.com
 	'.vacant.org.uk',
 	'.viagrabuyonline.org',	// by Sipil (kopper1970 at gmail.com)
+	'.vip-pets.info',		// by Mike Slowman (mk_slowman at yahoo.com)
 	'.virtualsystem.de',
 	'.vdxhost.com',
 	'.webnow.biz',			// by Hsien I Fan (admin at servcomputing.com)
 	'.wer3.info',			// by Martin Gundel (Martin at mail.com), 404 not found
+	'.withsex.net',			// by C.W.Jang (jangcw1204 at naver.com)
 	'.whoop.to',			// RMT
 	'.worldinsurance.info',	// by Alexander M. Brown (Alex_Brown at yahoo.com), fake-antivirus
 	'.xpacificpoker.com',	// by Hubert Hoffman (support at xpacificpoker.com)
