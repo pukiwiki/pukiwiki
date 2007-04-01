@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.46 2007/04/01 10:52:59 henoheno Exp $
+// $Id: spam.ini.php,v 1.47 2007/04/01 14:44:49 henoheno Exp $
 // Spam-related setting
 //
 // Reference:
@@ -2226,6 +2226,7 @@ $blocklist['badhost'] = array(
 	// Domains by Lin Zhi Qiang (mail at pcinc.cn)
 	// NOTE: pcinc.cn -- by Lin Zhi Qiang (lin80 at 21cn.com)
 	'Lin Zhi Qiang' => array(
+		'.18girl-av.com',
 		'.6828teacup.com',
 		'.aaa-livedoor.net',
 		'.acyberhome.com',
@@ -2244,6 +2245,7 @@ $blocklist['badhost'] = array(
 		'.game-fc2blog.com',
 		'.game-oekakibbs.com',
 		'.game-mmobbs.com',
+		'.game62chjp.net',
 		'.games-nifty.com',
 		'.gameslin.net',
 		'.gamesragnaroklink.net',
@@ -2257,8 +2259,10 @@ $blocklist['badhost'] = array(
 		'.gogolineage.net',
 		'.goodclup.com',
 		'.grandchasse.com',
+		'.gsisdokf.net',
 		'.homepage3-nifty.com',
 		'.hosetaibei.com',
+		'.imbbs2t4u.com',
 		'.interzq.com',
 		'.jpragnarokonline.com',
 		'.jprmthome.com',
@@ -3472,7 +3476,10 @@ $blocklist['badhost'] = array(
 		'.wonkalook.com',		// ns *.willywonka.co.in, 85.255.117.226
 		'.willywonka.co.in',	// by Nick Priest (lustiq at p5com.com), 85.255.117.226
 	),
-	
+	'web at 6jy.com' => array(
+		'.micro36.com',			// by Teng Zhang (web at 6jy.com), content from lineage.jp, post with 'lineage1bbs.com'
+		'.movie1945.com',		// by Zhang Teng (web at 6jy.com), content from lineage.jp, hidden JavaScript
+	),
 
 	// C-2: Lonely domains (buddies not found yet)
 	'.0721-4404.com',
@@ -3509,6 +3516,7 @@ $blocklist['badhost'] = array(
 	'.extracheapmeds.com',	// "freexxxmovies" by John Smith (89 at bite.to)
 	'.fantasy-handjob-ra.com',	// by Hose Pedro (hosepedro at gmail.com)
 	'.fastppc.info',			// by peter conor (fastppc at msn.com)
+	'.ffxiforums.net',		// by Zhang xiaolong (mail at 33986.com), hidden VBScript
 	'*.filthserver.com',	// sales at onlinemarketingservices.biz
 	'.find-stuff.org',		// by Alice Freedman (admin at ip-labs.ru), / 404 Not Found
 	'.forum24.se',
@@ -3547,7 +3555,6 @@ $blocklist['badhost'] = array(
 	'.library-blogs.net',	// by Peter Scott (pscontent at gmail.com)
 	'.ls.la',				// by Milton McLellan (McLellanMilton at yahoo.com)
 	'.manseekingwomanx.com',	// by Bill Peterson (coccooc at fastmail.fm)
-	'.micro36.com',			// by Teng Zhang (web at 6jy.com), content from lineage.jp, post with 'lineage1bbs.com'
 	'.milfxxxpass.com',		// by Morozov Pavlik (rulets at gmail.com)
 	'.myfgj.info',			// by Filus (softscript at gmail.com)
 	'.mujiki.com',			// by Mila Contora (ebumsn at ngs.ru)
