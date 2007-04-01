@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.85 2007/02/28 16:12:10 henoheno Exp $
+// $Id: func.php,v 1.86 2007/04/01 10:59:05 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -385,7 +385,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 			}
 		} else {
 			$head = (preg_match('/^([A-Za-z])/', $page, $matches)) ? $matches[1] :
-				(preg_match('/^([ -~])/', $page, $matches) ? $symbol : $other);
+				(preg_match('/^([ -~])/', $page) ? $symbol : $other);
 		}
 
 		$list[$head][$page] = $str;
