@@ -31,8 +31,8 @@ function plugin_includesubmenu_convert()
   } else {
     $SubMenuPageName2 = substr($tmppage,0,$LastSlash) . '/SubMenu';
   }
-  //echo "$SubMenuPageName1 <br>";
-  //echo "$SubMenuPageName2 <br>";
+  //echo "$SubMenuPageName1 <br />";
+  //echo "$SubMenuPageName2 <br />";
   //下階層にSubMenuがあるかチェック
   //あれば、それを使用
   if (is_page($SubMenuPageName1)) {
