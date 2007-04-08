@@ -1,13 +1,13 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: img.inc.php,v 1.15 2007/04/08 10:22:18 henoheno Exp $
+// $Id: img.inc.php,v 1.16 2007/04/08 13:13:40 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 // Inline-image plugin (Output inline-image tag from a URI)
 
-define('PLUGIN_IMG_USAGE', '#img(): Usage: (URI-to-image[,right[,clear]])<br />' . "\n");
-define('PLUGIN_IMG_CLEAR', '<div style="clear:both"></div>' . "\n"); // Stop word-wrapping
+define('PLUGIN_IMG_USAGE', '#img(): Usage: (URI-to-image[,right[,clear]])' . '<br />');
+define('PLUGIN_IMG_CLEAR', '<div style="clear:both"></div>'); // Stop word-wrapping
 
 function plugin_img_convert()
 {
@@ -17,29 +17,39 @@ function plugin_img_convert()
 
 	$args = func_get_args();
 
-	// Check the 2nd argument first, for compatibility
-	$arg = isset($args[1]) ? strtoupper($args[1]) : '';
-	if ($arg == '' || $arg == 'L' || $arg == 'LEFT') {
-		$align = 'left';
-	} else if ($arg == 'R' || $arg == 'RIGHT') {
+	// Check the second argument first, for compatibility
+	 = isset($args[1]) ? strtolower($args[1]) : '';
+	if ($align == '' || $align == 'l' || $align == 'left') {
+		$align = 'left';	// Default
+	} else if ($align == 'r' || $align == 'right') {
 		$align = 'right';
 	} else {
-		// Stop word-wrapping only (Ugly but compatible)
-		// Short usage: #img(,clear)
-		return PLUGIN_IMG_CLEAR;
+		$align = '';
 	}
 
+	// Stop word-wrapping only (Ugly but compatible)
+	// Usage: #img(,clear)
+	if (empty($align)) return PLUGIN_IMG_CLEAR;
+
+	// The first
 	$url = isset($args[0]) ? $args[0] : '';
-	if (! is_url($url) || ! preg_match('/\.(jpe?g|gif|png)$/i', $url))
+	if (! is_url($url) || ! preg_match('/\.(jpe?g|gif|png)$/i', $url)) {
 		return PLUGIN_IMG_USAGE;
+	} else {
+		$url = htmlspecialchars($url);
+	}
 
-	$arg = isset($args[2]) ? strtoupper($args[2]) : '';
-	$clear = ($arg == 'C' || $arg == 'CLEAR') ? PLUGIN_IMG_CLEAR : '';
+	// The third
+	$clear = isset($args[2]) ? strtolower($args[2]) : '';
+	if ($clear == 'c' || $clear == 'clear') {
+		$clear = PLUGIN_IMG_CLEAR;
+	} else {
+		$clear = '';
+	}
 
-	return <<<EOD
-<div style="float:$align;padding:.5em 1.5em .5em 1.5em">
- <img src="$url" alt="" />
-</div>$clear
-EOD;
+	return
+		'<div style="float:' . $align . ';padding:.5em 1.5em .5em 1.5em">'. "\n" .
+		' <img src="' . $url . '" alt="" />' . "\n" .
+		'</div>' . $clear;
 }
 ?>
