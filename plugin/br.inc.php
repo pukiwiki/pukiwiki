@@ -1,10 +1,12 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: br.inc.php,v 1.4 2005/03/19 01:26:53 henoheno Exp $
+// $Id: br.inc.php,v 1.5 2007/04/08 10:22:18 henoheno Exp $
+// Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
-// Forcing a line break plugin
+// "Forcing one line-break" plugin
 
-// Escape using <br> in <blockquote> (BugTrack/583)
+// Escape using <br /> in <blockquote> (BugTrack/583)
 define('PLUGIN_BR_ESCAPE_BLOCKQUOTE', 1);
 
 // ----

@@ -1,5 +1,9 @@
 <?php
-// $Id: includesubmenu.inc.php,v 1.5 2004/07/31 03:09:20 henoheno Exp $
+// $Id: includesubmenu.inc.php,v 1.6 2007/04/08 10:22:18 henoheno Exp $
+// Copyright (C) 2002-2004, 2007 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
+//
+// Including submenu 
 
 function plugin_includesubmenu_convert()
 {
@@ -27,8 +31,8 @@ function plugin_includesubmenu_convert()
   } else {
     $SubMenuPageName2 = substr($tmppage,0,$LastSlash) . '/SubMenu';
   }
-  //echo "$SubMenuPageName1 <br>";
-  //echo "$SubMenuPageName2 <br>";
+  //echo "$SubMenuPageName1 <br />";
+  //echo "$SubMenuPageName2 <br />";
   //下階層にSubMenuがあるかチェック
   //あれば、それを使用
   if (is_page($SubMenuPageName1)) {
