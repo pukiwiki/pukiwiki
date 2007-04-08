@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: img.inc.php,v 1.16 2007/04/08 13:13:40 henoheno Exp $
+// $Id: img.inc.php,v 1.17 2007/04/08 13:16:09 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -18,7 +18,7 @@ function plugin_img_convert()
 	$args = func_get_args();
 
 	// Check the second argument first, for compatibility
-	 = isset($args[1]) ? strtolower($args[1]) : '';
+	$align = isset($args[1]) ? strtolower($args[1]) : '';
 	if ($align == '' || $align == 'l' || $align == 'left') {
 		$align = 'left';	// Default
 	} else if ($align == 'r' || $align == 'right') {
