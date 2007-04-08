@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: update_entities.inc.php,v 1.9 2005/06/23 18:00:07 teanan Exp $
+// $Id: update_entities.inc.php,v 1.15 2007/04/08 10:29:24 henoheno Exp $
+// Copyright (C) 2003-2007 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
 // Update entities plugin - Update XHTML entities from DTD
 // (for admin)
@@ -47,7 +49,7 @@ function plugin_update_entities_action()
 		$items = plugin_update_entities_create();
 		$body  = convert_html(sprintf($_entities_messages['msg_usage'], join("\n" . '-', $items)));
 		$body .= <<<EOD
-<form method="POST" action="$script">
+<form method="post" action="$script">
  <div>
   <input type="hidden" name="plugin" value="update_entities" />
   <input type="hidden" name="action" value="update" />
