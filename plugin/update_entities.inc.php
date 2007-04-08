@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: update_entities.inc.php,v 1.14 2007/02/28 16:12:10 henoheno Exp $
+// $Id: update_entities.inc.php,v 1.15 2007/04/08 10:29:24 henoheno Exp $
 // Copyright (C) 2003-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -46,7 +46,7 @@ function plugin_update_entities_action()
 		$items = plugin_update_entities_create();
 		$body  = convert_html(sprintf($_entities_messages['msg_usage'], join("\n" . '-', $items)));
 		$body .= <<<EOD
-<form method="POST" action="$script">
+<form method="post" action="$script">
  <div>
   <input type="hidden" name="plugin" value="update_entities" />
   <input type="hidden" name="action" value="update" />

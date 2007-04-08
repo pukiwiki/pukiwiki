@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: links.inc.php,v 1.23 2005/02/27 09:43:12 henoheno Exp $
+// $Id: links.inc.php,v 1.24 2007/04/08 10:29:24 henoheno Exp $
+// Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
 // Update link cache plugin
 
@@ -42,7 +44,7 @@ function plugin_links_action()
 		$msg   = & $_links_messages['title_update'];
 		$body  = convert_html($_links_messages['msg_usage']);
 		$body .= <<<EOD
-<form method="POST" action="$script">
+<form method="post" action="$script">
  <div>
   <input type="hidden" name="plugin" value="links" />
   <input type="hidden" name="action" value="update" />
