@@ -1,9 +1,9 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.php,v 1.18 2007/04/15 12:29:57 henoheno Exp $
+// $Id: pukiwiki.php,v 1.19 2007/04/15 12:31:02 henoheno Exp $
 //
 // PukiWiki 1.4.*
-//  Copyright (C) 2002-2006 by PukiWiki Developers Team
+//  Copyright (C) 2002-2007 by PukiWiki Developers Team
 //  http://pukiwiki.sourceforge.jp/
 //
 // PukiWiki 1.3.*
@@ -116,7 +116,7 @@ if ($plugin != '') {
 		$retvars = do_plugin_action($plugin);
 		if ($retvars === FALSE) exit; // Done
 
-		// Rescan (Some plugin rewrite $vars['refer'])
+		// Rescan $vars (Some plugins rewrite it)
 		if (isset($vars['cmd'])) {
 			$base = isset($vars['page'])  ? $vars['page']  : '';
 		} else {
