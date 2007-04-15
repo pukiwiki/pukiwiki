@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.php,v 1.17 2007/02/11 05:53:30 henoheno Exp $
+// $Id: pukiwiki.php,v 1.18 2007/04/15 12:29:57 henoheno Exp $
 //
 // PukiWiki 1.4.*
 //  Copyright (C) 2002-2006 by PukiWiki Developers Team
@@ -71,13 +71,10 @@ $page  = isset($vars['page'])  ? $vars['page']  : '';
 $refer = isset($vars['refer']) ? $vars['refer'] : '';
 
 if (isset($vars['cmd'])) {
-	$base   = $page;
 	$plugin = & $vars['cmd'];
 } else if (isset($vars['plugin'])) {
-	$base   =  $refer;
 	$plugin = & $vars['plugin'];
 } else {
-	$base   =  $refer;
 	$plugin = '';
 }
 
@@ -115,13 +112,20 @@ if ($spam && $method != 'GET') {
 
 // Plugin execution
 if ($plugin != '') {
-	if (! exist_plugin_action($plugin)) {
+	if (exist_plugin_action($plugin)) {
+		$retvars = do_plugin_action($plugin);
+		if ($retvars === FALSE) exit; // Done
+
+		// Rescan (Some plugin rewrite $vars['refer'])
+		if (isset($vars['cmd'])) {
+			$base = isset($vars['page'])  ? $vars['page']  : '';
+		} else {
+			$base = isset($vars['refer']) ? $vars['refer'] : '';
+		}
+	} else {
 		$msg = 'plugin=' . htmlspecialchars($plugin) . ' is not implemented.';
 		$retvars = array('msg'=>$msg,'body'=>$msg);
 		$base    = & $defaultpage;
-	} else {
-		$retvars = do_plugin_action($plugin);
-		if ($retvars === FALSE) exit; // Done
 	}
 }
 
