@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: map.inc.php,v 1.15 2007/04/15 14:37:04 henoheno Exp $
+// $Id: map.inc.php,v 1.16 2007/04/15 15:10:42 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -45,7 +45,10 @@ function plugin_map_action()
 	}
 
 	// Node not found: Because of filtererd by $non_list
-	if (! isset($nodes[$refer])) $vars['refer'] = $refer = $defaultpage;
+	if (! isset($nodes[$refer])) {
+		$vars['refer'] = $refer = $defaultpage;
+		$nodes[$refer] = & new MapNode($page, $reverse);
+	}
 
 	if ($reverse) {
 		$keys = array_keys($nodes);
@@ -109,7 +112,6 @@ class MapNode
 	function MapNode($page, $reverse = FALSE)
 	{
 		global $non_list;
-		
 		static $script, $_hide_pattern, $id = 0;
 
 		if (! isset($script)) {
