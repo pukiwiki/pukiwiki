@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.23 2007/03/25 16:38:32 henoheno Exp $
+// $Id: spam.php,v 1.24 2007/04/22 14:02:46 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -110,9 +110,9 @@ function uri_pickup_normalize(& $pickups, $destructive = TRUE)
 	if ($destructive) {
 		foreach (array_keys($pickups) as $key) {
 			$_key = & $pickups[$key];
-			$_key['scheme'] = isset($_key['scheme']) ? scheme_normalize($_key['scheme']) : '';
+			$_key['scheme']   = isset($_key['scheme']) ? scheme_normalize($_key['scheme']) : '';
 			$_key['host']     = isset($_key['host'])     ? host_normalize($_key['host']) : '';
-			$_key['port']   = isset($_key['port'])       ? port_normalize($_key['port'], $_key['scheme'], FALSE) : '';
+			$_key['port']     = isset($_key['port'])       ? port_normalize($_key['port'], $_key['scheme'], FALSE) : '';
 			$_key['path']     = isset($_key['path'])     ? strtolower(path_normalize($_key['path'])) : '';
 			$_key['file']     = isset($_key['file'])     ? file_normalize($_key['file']) : '';
 			$_key['query']    = isset($_key['query'])    ? query_normalize($_key['query']) : '';
@@ -121,13 +121,12 @@ function uri_pickup_normalize(& $pickups, $destructive = TRUE)
 	} else {
 		foreach (array_keys($pickups) as $key) {
 			$_key = & $pickups[$key];
-			$_key['scheme'] = isset($_key['scheme']) ? scheme_normalize($_key['scheme']) : '';
-			$_key['host']   = isset($_key['host'])   ? strtolower($_key['host']) : '';
-			$_key['port']   = isset($_key['port'])   ? port_normalize($_key['port'], $_key['scheme'], FALSE) : '';
-			$_key['path']   = isset($_key['path'])   ? path_normalize($_key['path']) : '';
+			$_key['scheme']   = isset($_key['scheme']) ? scheme_normalize($_key['scheme']) : '';
+			$_key['host']     = isset($_key['host'])   ? strtolower($_key['host']) : '';
+			$_key['port']     = isset($_key['port'])   ? port_normalize($_key['port'], $_key['scheme'], FALSE) : '';
+			$_key['path']     = isset($_key['path'])   ? path_normalize($_key['path']) : '';
 		}
 	}
-
 
 	return $pickups;
 }
@@ -742,6 +741,7 @@ function file_normalize($file = 'index.html.en')
 // [OK] nothing==&eg=dummy&eg=padding&eg=foobar  =>  eg=foobar
 function query_normalize($string = '', $equal = TRUE, $equal_cutempty = TRUE, $stortolower = TRUE)
 {
+	if (! is_string($string)) return '';
 	if ($stortolower) $string = strtolower($string);
 
 	$array = explode('&', $string);
@@ -807,6 +807,8 @@ function generate_glob_regex($string = '', $divider = '/')
 	//		23 => ']',
 		);
 
+	if (! is_string($string)) return '';
+
 	$string = str_replace($from, $mid, $string); // Hide
 	$string = preg_quote($string, $divider);
 	$string = str_replace($mid, $to, $string);   // Unhide
@@ -839,6 +841,8 @@ function is_ip($string = '')
 // TODO: IPv4, CIDR?, IPv6
 function generate_host_regex($string = '', $divider = '/')
 {
+	if (! is_string($string)) return '';
+
 	if (mb_strpos($string, '.') === FALSE)
 		return generate_glob_regex($string, $divider);
 
@@ -874,8 +878,17 @@ function get_blocklist($list = '')
 			//		'*.blogspot.com',	// Blog services's subdomains (only)
 			//		'IANA-examples' => '#^(?:.*\.)?example\.(?:com|net|org)$#',
 			//	);
-			foreach(array('goodhost', 'badhost') as $_list) {
-				if (! isset($blocklist[$list])) continue;
+			if (isset($blocklist['list'])) {
+				$regexs['list'] = & $blocklist['list'];
+			} else {
+				// Default
+				$blocklist['list'] = array(
+					'goodhost' => FALSE,
+					'badhost'  => TRUE,
+				);
+			}
+			foreach(array_keys($blocklist['list']) as $_list) {
+				if (! isset($blocklist[$_list])) continue;
 				foreach ($blocklist[$_list] as $key => $value) {
 					if (is_array($value)) {
 						$regexs[$_list][$key] = array();
@@ -886,6 +899,7 @@ function get_blocklist($list = '')
 						get_blocklist_add($regexs[$_list], $key, $value);
 					}
 				}
+				unset($blocklist[$_list]);
 			}
 		}
 	}
@@ -907,37 +921,45 @@ function get_blocklist_add(& $array, $key = 0, $value = '*.example.org')
 	} else {
 		$array[$value] = '/^' . generate_host_regex($value, '/') . '$/i';
 	}
-} 
+}
 
 function is_badhost($hosts = array(), $asap = TRUE, & $remains)
 {
 	$result = array();
 	if (! is_array($hosts)) $hosts = array($hosts);
 	foreach(array_keys($hosts) as $key) {
-		if (! is_string($hosts[$key])) unset($hosts[$key]);
+		if (! is_string($hosts[$key])) {
+			unset($hosts[$key]);
+		}
 	}
 	if (empty($hosts)) return $result;
 
-	foreach (get_blocklist('goodhost') as $regex) {
-		$hosts = preg_grep_invert($regex, $hosts);
-	}
-	if (empty($hosts)) return $result;
-
-	$tmp = array();
-	foreach (get_blocklist('badhost') as $label => $regex) {
-		if (is_array($regex)) {
-			$result[$label] = array();
-			foreach($regex as $_label => $_regex) {
-				if (is_badhost_avail($_label, $_regex, $hosts, $result[$label]) && $asap) break;
+	foreach(get_blocklist('list') as $key=>$value){
+		if ($value) {
+			foreach (get_blocklist($key) as $label => $regex) {
+				if (is_array($regex)) {
+					$result[$label] = array();
+					foreach($regex as $_label => $_regex) {
+						if (is_badhost_avail($_label, $_regex, $hosts, $result[$label]) && $asap) {
+							break;
+						}
+					}
+					if (empty($result[$label])) unset($result[$label]);
+				} else {
+					if (is_badhost_avail($label, $regex, $hosts, $result) && $asap) {
+						break;
+					}
+				}
 			}
-			if (empty($result[$label])) unset($result[$label]);
 		} else {
-			if (is_badhost_avail($label, $regex, $hosts, $result) && $asap) break;
+			foreach (get_blocklist($key) as $regex) {
+				$hosts = preg_grep_invert($regex, $hosts);
+			}
+			if (empty($hosts)) return $result;
 		}
 	}
 
 	$remains = $hosts;
-
 	return $result;
 }
 

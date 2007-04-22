@@ -1,14 +1,30 @@
 <?php
-// $Id: spam.ini.php,v 1.48 2007/04/08 05:48:33 henoheno Exp $
+// $Id: spam.ini.php,v 1.49 2007/04/22 14:03:01 henoheno Exp $
 // Spam-related setting
 //
 // Reference:
 //   Spamdexing http://en.wikipedia.org/wiki/Spamdexing
 
-// NOTE for goodhost and badhost:
+// NOTE:
 //  'example.org' prohibits both 'example.org' AND 'www.example.org'.
 //  '*.example.org' prohibits all subdomains and hosts EXCEPT 'www.example.org'.
 //  '.example.org' prohibits ALL FQDN related 'example.org'.
+
+// NOTE for badhost (only):
+//  'unique_name' = array('a.example.org', 'b.example.org') is treated as a group 'unique_name'.
+
+
+// List of the lists
+$blocklist['list'] = array(
+	'goodhost'		=> FALSE,
+	'badhost A-1'	=> TRUE,
+	'badhost A-2'	=> TRUE,
+	'badhost B-1'	=> TRUE,
+	'badhost B-2'	=> TRUE,
+	'badhost C'		=> TRUE,
+	'badhost'		=> TRUE,
+);
+
 
 $blocklist['goodhost'] = array(
 	'IANA-examples' => '#^(?:.*\.)?example\.(?:com|net|org)$#',
@@ -25,12 +41,10 @@ $blocklist['goodhost'] = array(
 
 );
 
-// NOTE for badhost (only):
-//  'unique_name' = array('a.example.org', 'b.example.org') is treated as a group 'unique_name'.
-$blocklist['badhost'] = array(
+// A: Sample setting of
+// Existing URI redirection or masking services
 
-	// A: Sample setting of
-	// Existing URI redirection or masking services
+$blocklist['badhost A-1'] = array(
 
 	// A-1: General redirection services -- by HTML meta, HTML frame, JavaScript,
 	// web-based proxy, DNS subdomains, etc
@@ -1212,6 +1226,9 @@ $blocklist['badhost'] = array(
 	'*.zu5.net',
 	'zuso.tw',
 	'*.zwap.to',
+);
+
+$blocklist['badhost A-2'] = array(
 
 	// A-2: Dynamic DNS, Dynamic IP services, DNS vulnerabilities, or another DNS cases
 	//
@@ -1234,13 +1251,16 @@ $blocklist['badhost'] = array(
 	//'*.zenno.info',
 	//'.cm',	// 'Cameroon' ccTLD, sometimes used as typo of '.com'
 				// and all non-recorded domains redirect to 'agoga.com' now
+);
 
 
-	// B: Sample setting of:
-	// Jacked (taken advantage of) and cleaning-less sites
-	//
-	// Please notify us about this list with reason:
-	// http://pukiwiki.sourceforge.jp/dev/?BugTrack2%2F208
+// B: Sample setting of:
+// Jacked (taken advantage of) and cleaning-less sites
+//
+// Please notify us about this list with reason:
+// http://pukiwiki.sourceforge.jp/dev/?BugTrack2%2F208
+
+$blocklist['badhost B-1'] = array(
 
 	// B-1: Web spaces
 	//
@@ -1506,6 +1526,7 @@ $blocklist['badhost'] = array(
 	'ltss.luton.ac.uk',
 	'*.lycos.it',
 	'angelfire.lycos.com',
+	'mbga.jp',				// by DeNA Co.,Ltd. (barshige at hq.bidders.co.jp, torigoe at hq.bidders.co.jp)
 	'*.messageboard.nl',
 	'mokono GmbH' => array(
 		'*.blog.com.es',
@@ -1796,6 +1817,10 @@ $blocklist['badhost'] = array(
 		'*.your-websites.net',
 		'*.web-space.ws',
 	),
+);
+
+
+$blocklist['badhost B-2'] = array(
 
 	// B-2: Jacked contents, something implanted
 	// (e.g. some sort of blog comments, BBSes, forums, wikis)
@@ -1947,7 +1972,10 @@ $blocklist['badhost'] = array(
 	'yasushi.site.ne.jp',	// One of mixedmedia.net'
 	'youthpeer.org',
 	'*.zenburger.com',
+);
 
+
+$blocklist['badhost C'] = array(
 
 	// C: Sample setting of:
 	// Exclusive spam domains
@@ -2309,7 +2337,9 @@ $blocklist['badhost'] = array(
 		'.lineagejp-game.com',
 		'.linkcetou.com',
 		'.linrmb.com',		// by zeng xianming (qqvod at qq.com)
+		'.livedoor-game.com',
 		'.lovejpjp.com',
+		'm-phage.com',
 		'.maplestorfy.com',
 		'.mbspro6uic.com',
 		'.netgamelivedoor.com',
@@ -2333,6 +2363,7 @@ $blocklist['badhost'] = array(
 		'.wikiwiki-game.com',
 		'.yahoo-gamebbs.com',
 		'.ywdgigkb-jp.com',
+		'.yy14-kakiko.com',
 	),
 	'caddd at 126.com' => array(
 		'.chengzhibing.com',	// by chen gzhibing (caddd at 126.com)
@@ -3567,7 +3598,6 @@ $blocklist['badhost'] = array(
 	),
 
 
-
 	// C-2: Lonely domains (buddies not found yet)
 	'.0721-4404.com',
 	'.0nline-porno.info',	// by Timyr (timyr at narod.ru)
@@ -3575,6 +3605,7 @@ $blocklist['badhost'] = array(
 	'.122mb.com',			// by Alexandru Rusnac (alrusnac at hotmail.com)
 	'.180haifa.com',		// by Andrey Letov (andreyletov at yahoo.com)
 	'.19cellar.info',		// by Eduardo Guro (boomouse at gmail.com)
+	'.1gangmu.com',			// by gangmutangyaoju (wlmx009 at hotmail.com), Seems physing site for ff11-jp.com
 	'.1gb.cc',				// by Hakan us (hakanus at mail.com)
 	'.1gb.in',				// by Sergius Mixman (lancelot.denis at gmail.com)
 	'.0annie.info',
@@ -3640,6 +3671,7 @@ $blocklist['badhost'] = array(
 	'.jimka-mmsa.com',		// by Alex Covax (c0vax at mail.ru), seems not used yet
 	'.joynu.com',			// by lei wang (93065 at qq.com), hidden JavaScript
 	'.kingtools.de',
+	'.kiski.net.in',		// by Aleksandr Krasnik (supermaster at pisem.net), ns *.msn-dns.com
 	'.library-blogs.net',	// by Peter Scott (pscontent at gmail.com)
 	'.lingage.com',			// by huan bing (qbbs at xinoffice.com)
 	'.ls.la',				// by Milton McLellan (McLellanMilton at yahoo.com)
@@ -3681,6 +3713,7 @@ $blocklist['badhost'] = array(
 	'.sexforit.com',
 	'.sexmaniacs.org',		// by Yang Chong (chong at x-india.com)
 	'.sirlook.com',
+	'.so-net.ws',			// by Todaynic.com Inc, seems a physing site for so-net.jp
 	'.sticy.info',			// by Richard D. Mccall (richardmccall at yahoo.com)
 	'.superrwm.info',		// by Dark Dux (duxdark at yahoo.com)
 	'.thehostcity.com',		// Domains by Proxy
@@ -3706,6 +3739,7 @@ $blocklist['badhost'] = array(
 	'.xamorexxx.net',
 	'.xsessox.com',
 	'.webtools24.net',		// by Michael Helminger (info at ishelminger.de)
+	'.wefas.ru',			// by Andrey M Somov (snmaster at yandex.ru). / not found
 	'.womasia.info',		// by Mark Fidele (markfidele at yahoo.com)
 	'.zlocorp.com',			// by tonibcrus at hotpop.com, spammed well with "http ://zlocorp.com/"
 	'.zyguo.info',			// ns globoxhost.net
@@ -3718,7 +3752,10 @@ $blocklist['badhost'] = array(
 		'.nana.co.il',
 	),
 	'.mylexus.info',		// by Homer Simpson (simhomer12300 at mail.com), Redirect to Google
+);
 
+
+$blocklist['badhost'] = array(
 	// D: Sample setting of
 	// "third party in good faith"s
 	//
