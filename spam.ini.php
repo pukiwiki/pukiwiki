@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.51 2007/04/23 15:00:32 henoheno Exp $
+// $Id: spam.ini.php,v 1.52 2007/04/26 14:01:33 henoheno Exp $
 // Spam-related setting
 //
 // Reference:
@@ -75,7 +75,7 @@ $blocklist['badhost A-1'] = array(
 	'0rz.tw',
 	'0url.com',
 	'0zed.info',
-	'*.110mb.com',
+	'*.110mb.com',	// by Speed Success, Inc. (110mb.server at gmail.com)
 	'123.que.jp',
 	'12url.org',
 	'*.15h.com',
@@ -1534,6 +1534,10 @@ $blocklist['badhost B-1'] = array(
 		'*.sblog.cz',
 	),
 	'limmon.net',
+	'Livedoor Co., Ltd.' => array(
+		'blog.livedoor.jp',
+		'*.blog.livedoor.com',	// redirection
+	),
 	'*.livejournal.com',
 	'*.logme.nl',
 	'ltss.luton.ac.uk',
@@ -2319,6 +2323,7 @@ $blocklist['badhost C'] = array(
 		'.6828teacup.com',
 		'.aaa-livedoor.net',
 		'.acyberhome.com',
+		'.a-hatena.com',
 		'.ahatena.com',
 		'.aehatena-jp.com',
 		'.asdsdgh-jp.com',
@@ -2331,9 +2336,12 @@ $blocklist['badhost C'] = array(
 		'.cityblog-fc2web.com',
 		'.cityhokkai.com',
 		'.conecojp.net',
+		'.d-jamesinfo.com',
+		'.deco030-cscblog.com',
 		'.din-or.com',
 		'.dtg-gamania.com',
 		'.ezbbsy.com',
+		'.extd-web.com',
 		'.fanavier.net',
 		'.fcty-net.com',
 		'.gamaniaech.com',
@@ -2344,6 +2352,7 @@ $blocklist['badhost C'] = array(
 		'.gamegohi.com',
 		'.games-nifty.com',
 		'.gameslin.net',
+		'.gamesmusic-realcgi.net',
 		'.gamesragnaroklink.net',
 		'.gamesroro.com',
 		'.gemnnammobbs.com',
@@ -2357,10 +2366,14 @@ $blocklist['badhost C'] = array(
 		'.goodclup.com',
 		'.grandchasse.com',
 		'.gsisdokf.net',
+		'.homepage-nifty.com',
 		'.homepage3-nifty.com',
 		'.hosetaibei.com',
+		'.ie6xp.com',
 		'.imbbs2t4u.com',
 		'.interzq.com',
+		'.irisdti-jp.com',
+		'.jklomo-jp.com',
 		'.jpragnarokonline.com',
 		'.jprmthome.com',
 		'.jpxpie6-7net.com',
@@ -2378,16 +2391,18 @@ $blocklist['badhost C'] = array(
 		'.linrmb.com',		// by zeng xianming (qqvod at qq.com)
 		'.livedoor-game.com',
 		'.lovejpjp.com',
-		'm-phage.com',
+		'.m-phage.com',
 		'.maplestorfy.com',
 		'.mbspro6uic.com',
 		'.netgamelivedoor.com',
 		'.nothing-wiki.com',
 		'.playsese.com',
 		'.ptxk.com',		// by zeng xianming (zxmdiy at gmail.com)
+		'.plusd-itmedia.com',
 		'.ragnarok-bbs.com',
 		'.ragnarok-game.com',
 		'.ragnarok-sara.com',
+		'.ragnarok-search.com',
 		'.ragnaroklink.com',
 		'.rmt-lineagecanopus.com',
 		'.rmt-navip.com',
@@ -2396,6 +2411,7 @@ $blocklist['badhost C'] = array(
 		'.rogamesline.com',
 		'.roprice.com',
 		'.rormb.com',		// by zeng xianming (qqvod at qq.com)
+		'.runbal-fc2web.com',
 		'.shoopivdoor.com',
 		'.slower-qth.com',
 		'.watcheimpress.com',
@@ -3873,18 +3889,19 @@ $blocklist['badhost C'] = array(
 	'.virtualsystem.de',
 	'.vdxhost.com',
 	'.webnow.biz',			// by Hsien I Fan (admin at servcomputing.com)
+	'.webtools24.net',		// by Michael Helminger (info at ishelminger.de)
+	'.wefas.ru',			// by Andrey M Somov (snmaster at yandex.ru). / not found
 	'.wer3.info',			// by Martin Gundel (Martin at mail.com), 404 not found
 	'.withsex.net',			// by C.W.Jang (jangcw1204 at naver.com)
 	'.whoop.to',			// RMT
+	'.womasia.info',		// by Mark Fidele (markfidele at yahoo.com)
 	'.worldinsurance.info',	// by Alexander M. Brown (Alex_Brown at yahoo.com), fake-antivirus
 	'.wwwna.info',			// / 404 Not Found
 	'.xpacificpoker.com',	// by Hubert Hoffman (support at xpacificpoker.com)
 	'.xphost.org',			// by alex alex (alrusnac at hotmail.com)
 	'.xamorexxx.net',
 	'.xsessox.com',
-	'.webtools24.net',		// by Michael Helminger (info at ishelminger.de)
-	'.wefas.ru',			// by Andrey M Somov (snmaster at yandex.ru). / not found
-	'.womasia.info',		// by Mark Fidele (markfidele at yahoo.com)
+	'.yoi4.net',			// by Ryouhei Nakamura (888 at sympathys.com), tell me why so many blogs with popular issues and _diverted design from blog.livedoor.jp_ around here.
 	'.zlocorp.com',			// by tonibcrus at hotpop.com, spammed well with "http ://zlocorp.com/"
 	'.zyguo.info',			// ns globoxhost.net
 
