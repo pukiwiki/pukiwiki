@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.52 2007/04/26 14:01:33 henoheno Exp $
+// $Id: spam.ini.php,v 1.53 2007/04/26 15:19:31 henoheno Exp $
 // Spam-related setting
 //
 // Reference:
@@ -104,7 +104,7 @@ $blocklist['badhost A-1'] = array(
 	'abbrv.co.uk',
 	'*.abwb.org',
 	'acnw.de',
-	'active.ws' => array(
+	'Active.ws' => array(
 		'*.321.cn',
 		'*.4x2.net',
 		'active.ws',
@@ -122,7 +122,7 @@ $blocklist['badhost A-1'] = array(
 	'aifam.com',
 	'amoo.org',
 	// "(c) 2007 www.arzy.net", by urladmin at zvxr.com, DNS arzy.net
-	'arzy.net' => array(
+	'Arzy.net' => array(
 		'jmp2.net',
 		'2me.tw',
 	),
@@ -137,10 +137,19 @@ $blocklist['badhost A-1'] = array(
 	'bittyurl.com',
 	'*.bizz.cc',
 	'*.blo.pl',
-	'fanznet.jp' => array('blue11.jp'),
+	'Fanznet.jp' => array(
+		// by takahashi nakaba (nakaba.takahashi at gmail.com)
+		'blue11.jp',
+		'fanznet.com',
+		'katou.in',
+		'mymap.in',
+		'saitou.in',
+		'satou.in',
+		'susan.in',
+	),
 	'briefurl.com',
 	'brokenscript.com',
-	'bucksogen.com' => array(
+	'BucksoGen.com' => array(
 		'*.bucksogen.com',
 		'*.bulochka.org',
 		'*.korzhik.org',
@@ -153,7 +162,7 @@ $blocklist['badhost A-1'] = array(
 	'budgethosts.org',
 	'*.buzznet.com',
 	'*.bydl.com',
-	'c-o.in' => array(
+	'C-O.IN' => array(
 		'*.c-o.cc',
 		'*.c-o.in',
 		'*.coz.in',
@@ -169,17 +178,17 @@ $blocklist['badhost A-1'] = array(
 	'*.cjb.net',
 	'clipurl.com',
 	'*.co.nr',
-	'comteche.com' => array(
+	'Comtech Enterprises ' => array(	// comteche.com
 		'tinyurl.name',
 		'tinyurl.us',
 	),
-	'cool168.com' => array(
+	'Cool168.com' => array(
 		'*.cool158.com',
 		'*.cool168.com',
 		'*.ko168.com',
 		'*.ko188.com',
 	),
-	'coolurl.de' => array(
+	'Coolurl.de' => array(
 		'coolurl.de',
 		'dornenboy.de',
 		'eyeqweb.com',
@@ -194,13 +203,13 @@ $blocklist['badhost A-1'] = array(
 	'desiurl.com',
 	'dhurl.com',
 	'digbig.com',
-	'digipills.com' => array(
+	'Digipills.com' => array(
 		'*.digipills.com',
 		'minilien.com',
 		'tinylink.com',
 	),
 	'*.discutbb.com',
-	'dl.am' => array(
+	'DL.AM' => array(
 		'*.cx.la',
 		'*.dl.am',
 	),
@@ -309,7 +318,7 @@ $blocklist['badhost A-1'] = array(
 		'.topsecretlive.com',
 	),
 	'*.eu.org',
-	'f2b.be' => array(
+	'F2B.be' => array(
 		'*.f2b.be',
 		'*.freakz.eu',
 		'*.n0.be',
@@ -319,7 +328,7 @@ $blocklist['badhost A-1'] = array(
 		'*.tweaker.eu',
 	),
 	'*.fancyurl.com',
-	'fanznet.com' => array(
+	'Fanznet.com' => array(
 		'fanznet.com',
 		'katou.in',
 		'mymap.in',
@@ -330,7 +339,7 @@ $blocklist['badhost A-1'] = array(
 	'.fe.pl',			// Redirection and subdomain
 	'ffwd.to',
 	'url.fibiger.org',
-	'fireme.to' => array(
+	'FireMe.to' => array(
 		'fireme.to',
 		'nextdoor.to',
 		'ontheway.to',
@@ -342,7 +351,7 @@ $blocklist['badhost A-1'] = array(
 	'forgeturl.com',
 	'*.free.bg',
 	'*.freecities.com',
-	'freeservers.com' => array(
+	'Freeservers.com' => array(	// United Online Web Services, Inc.
 		'*.4mg.com',
 		'*.4t.com',
 		'*.8m.com',
@@ -360,7 +369,7 @@ $blocklist['badhost A-1'] = array(
 		'*.tvheaven.com',
 	),
 	'*.freewebpages.com',
-	'freewebservices.net' => array(	// Host Department LLC
+	'FreeWebServices.net' => array(	// Host Department LLC
 		'*.about.gs',	// Dead?
 		'*.about.tc',
 		'*.about.vg',
@@ -427,7 +436,7 @@ $blocklist['badhost A-1'] = array(
 	'fype.com',
 	'*.fx.to',
 	'gentleurl.net',
-	'get2.us' => array(
+	'Get2.us' => array(
 		'*.get2.us',
 		'*.hasballs.com',
 		'*.ismyidol.com',
@@ -444,16 +453,16 @@ $blocklist['badhost A-1'] = array(
 	'.greatitem.com',
 	'gzurl.com',
 	'url.grillsportverein.de',
-	'harudake.net' => array('*.hyu.jp'),
+	'Harudake.net' => array('*.hyu.jp'),
 	'Hattinger Linux User Group' => array('short.hatlug.de'),
-	'hexten.net' => array('lyxus.net'),
+	'Hexten.net' => array('lyxus.net'),
 	'here.is',
-	'hispavista.com' => array(
+	'HispaVista.com' => array(
 		'*.hispavista.com',
 		'.galeon.com',
 	),
 	// by Home.pl Sp. J. (info at home.pl), redirections and forums
-	'home.pl' => array(
+	'Home.pl' => array(
 		'*.8l.pl',
 		'*.blg.pl',
 		'*.czytajto.pl',
@@ -466,7 +475,7 @@ $blocklist['badhost A-1'] = array(
 	),
 	'hort.net',
 	'*.hotindex.ru',
-	'hotredirect.com' => array(
+	'HotRedirect.com' => array(
 		'*.coolhere.com',
 		'*.homepagehere.com',
 		'*.hothere.com',
@@ -484,14 +493,14 @@ $blocklist['badhost A-1'] = array(
 	'ie.to',
 	'igoto.co.uk',
 	'ilook.tw',
-	'inetwork.co.il' => array(
+	'iNetwork.co.il' => array(
 		'inetwork.co.il',	// by NiL HeMo (exe at bezeqint.net)
 		'.up2.co.il',		// inetwork.co.il related, not classifiable, by roey blumshtein (roeyb76 at 017.net.il)
 		'.dcn.co.il,',		// up2.co.il related, not classifiable, by daniel chechik (ns_daniel0 at bezeqint.net)
 	),
 	'*.infogami.com',
 	'ipoo.org',
-	'ir.pl' => array(
+	'IR.pl' => array(
 		'*.aj.pl',
 		'*.aliasy.org',
 		'*.gu.pl',
@@ -506,20 +515,20 @@ $blocklist['badhost A-1'] = array(
 		'*.zj.pl',
 	),
 	'irotator.com',
-	'iscool.net' => array(
+	'.iwebtool.com',
+	'jeeee.net',
+	'Jaze Redirect Services' => array(
 		'*.arecool.net',
 		'*.iscool.net',
 		'*.isfun.net',
 		'*.tux.nu',
 	),
-	'.iwebtool.com',
-	'jeeee.net',
-	'jeremyjohnstone.com' => array('url.vg'),
+	'JeremyJohnstone.com' => array('url.vg'),
 	'jemurl.com',
 	'jggj.net',
 	'jpan.jp',
 	'kat.cc',
-	'kickme.to' => array(
+	'Kickme.to' => array(
 		'.1024bit.at',
 		'.128bit.at',
 		'.16bit.at',
@@ -761,9 +770,9 @@ $blocklist['badhost A-1'] = array(
 	'makeashorterlink.com',
 	'mcturl.com',
 	'memurl.com',
-	'metamark.net' => array('xrl.us'),
+	'Metamark.net' => array('xrl.us'),
 	'midgeturl.com',
-	'minilink.org' => array('lnk.nu'),
+	'Minilink.org' => array('lnk.nu'),
 	'miniurl.org',
 	'miniurl.pl',
 	'mixi.bz',
@@ -776,7 +785,7 @@ $blocklist['badhost A-1'] = array(
 	'myurl.in',
 	'myurl.com.tw',
 	'nanoref.com',
-	'ne1.net' => array(
+	'Ne1.net' => array(
 		'*.ne1.net',
 		'*.r8.org',
 	),
@@ -794,7 +803,7 @@ $blocklist['badhost A-1'] = array(
 	'phpfaber.org',
 	'pnope.com',
 	'prettylink.com',
-	'proxid.net' => array(	// also xrelay.net
+	'PROXID.net' => array(	// also xRelay.net
 		'*.asso.ws',
 		'*.corp.st',
 		'*.euro.tm',
@@ -802,11 +811,11 @@ $blocklist['badhost A-1'] = array(
 		'*.site.tc',
 		'*.societe.st',
 	),
-		'qrl.jp',
+	'qrl.jp',
 	'qurl.net',
 	'qwer.org',
 	'radiobase.net',
-	'redirectfree.com' => array(
+	'RedirectFree.com' => array(
 		'*.red.tc',
 		'*.redirectfree.com',
 		'*.sky.tc',
@@ -822,11 +831,11 @@ $blocklist['badhost A-1'] = array(
 	'*.runboard.com',
 	'runurl.com',
 	's-url.net',
-	'sg5.co.uk' => array(
+	'SG5.co.uk' => array(
 		'*.sg5.co.uk',
 		'*.sg5.info',
 	),
-	'shim.net' => array(
+	'Shim.net' => array(
 		'*.0kn.com',
 		'*.2cd.net',
 		'*.freebiefinders.net',
@@ -841,12 +850,12 @@ $blocklist['badhost A-1'] = array(
 	'shortlinks.co.uk',
 	'shorttext.com',
 	'shorturl-accessanalyzer.com',
-	'shortify.com' => array(
+	'Shortify.com' => array(
 		'74678439.com',
 		'shortify.com',
 	),
 	'shortlink.co.uk',
-	'shorturl.com' => array(
+	'ShortURL.com' => array(
 		'*.1sta.com',
 		'*.24ex.com',
 		'*.2fear.com',
@@ -882,7 +891,7 @@ $blocklist['badhost A-1'] = array(
 	'shurl.net',
 	'sid.to',
 	'simurl.com',
-	'sitelutions.com' => array(
+	'Sitelutions.com' => array(
 		'*.assexy.as',
 		'*.athersite.com',
 		'*.athissite.com',
@@ -915,11 +924,11 @@ $blocklist['badhost A-1'] = array(
 	'splashblog.com',
 	'spod.cx',
 	'*.spydar.com',
-	'subdomain.gr' => array(
+	'Subdomain.gr' => array(
 		'*.p2p.gr',
 		'*.subdomain.gr',
 	),
-	's-url.dk' => array('surl.dk'),
+	'SURL.DK' => array('surl.dk'),	// main page is: s-url.dk
 	'surl.ws',
 	'symy.jp',
 	'tdurl.com',
@@ -932,7 +941,7 @@ $blocklist['badhost A-1'] = array(
 	'tinylinkworld.com',
 	'tinypic.com',
 	'tinyr.us',
-	'tinyurl.com' => array(
+	'TinyURL.com' => array(
 		'tinyurl.com',
 		'preview.tinyurl.com',
 		'tinyurl.co.uk',
@@ -949,7 +958,7 @@ $blocklist['badhost A-1'] = array(
 	'ttu.cc',
 	'turl.jp',
 	'*.tz4.com',
-	'u.to' => array(	// ns *.1004web.com, 1004web.com is owned by Moon Jae Bark (utomaster@gmail.com) = u.to master
+	'U.TO' => array(	// ns *.1004web.com, 1004web.com is owned by Moon Jae Bark (utomaster@gmail.com) = u.to master
 		'*.1.to',
 		'*.4.to',
 		'*.5.to',
@@ -979,7 +988,7 @@ $blocklist['badhost A-1'] = array(
 		'*.mini.to',
 	),
 	'uchinoko.in',
-	'ulimit.com' => array(
+	'Ulimit.com' => array(
 		'*.be.tf',
 		'*.best.cd',
 		'*.bsd-fan.com',
@@ -1008,7 +1017,7 @@ $blocklist['badhost A-1'] = array(
 		'*.zik.mu',
 	),
 	'*.uni.cc',
-	'unonic.com' => array(
+	'UNONIC.com' => array(
 		'*.at.tf',	// AlpenNIC
 		'*.bg.tf',
 		'*.ca.tf',
@@ -1042,7 +1051,7 @@ $blocklist['badhost A-1'] = array(
 	'useurl.us',		// by Edward Beauchamp (mail at ebvk.com)
 	'utun.jp',
 	'*.v27.net',
-	'v3.com by fortunecity.com' => array(
+	'V3.com by FortuneCity.com' => array(
 		// http://www.v3.com/sub-domain-list.shtml
 		'*.all.at',
 		'*.back.to',
@@ -1140,7 +1149,7 @@ $blocklist['badhost A-1'] = array(
 		'*.zap.to',
 		'*.zip.to',
 	),
-	'vdirect.com' => array(
+	'VDirect.com' => array(
 		'*.emailme.net',
 		'*.getto.net',
 		'*.inetgames.com',
@@ -1155,12 +1164,12 @@ $blocklist['badhost A-1'] = array(
 	'vgo2.com',
 	'w3t.org',
 	'wapurl.co.uk',
-	'wb.st' => array(
+	'Wb.st' => array(
 		'*.team.st',
 		'*.wb.st',
 	),
 	'wbkt.net',
-	'webalias.com' => array(
+	'WebAlias.com' => array(
 		'*.andmuchmore.com',
 		'*.browser.to',
 		'*.escape.to',
@@ -1195,12 +1204,12 @@ $blocklist['badhost A-1'] = array(
 	'webmasterwise.com',
 	'wittylink.com',
 	'wiz.sc',			// tiny.cc related
-	'x50.us' => array(
+	'X50.us' => array(
 		'*.i50.de',
 		'*.x50.us',
 	),
 	'xhref.com',
-	'xn6.net' => array(
+	'Xn6.net' => array(
 		'*.9ax.net',
 		'*.xn6.net',
 	),
@@ -1209,14 +1218,14 @@ $blocklist['badhost A-1'] = array(
 	'yep.it',
 	'yumlum.com',
 	'yurel.com',
-	'z.la' => array(
+	'Z.la' => array(
 		'z.la',
 		't.z.la',
 	),
 	'zaable.com',
 	'zapurl.com',
 	'zarr.co.uk',
-	'zeroweb.org' => array(
+	'ZeroWeb.org' => array(
 		'*.80t.com',
 		'*.firez.org',
 		'*.fizz.nu',
@@ -1241,7 +1250,7 @@ $blocklist['badhost A-2'] = array(
 		//'*.dyndns.dk',
 		//'*.dyndns.co.za',
 		//'*.dyndns.nemox.net',
-	//'dydns.com' => array(
+	//'DyDNS.com' => array(
 	//	'*.ath.cx',
 	//	'*.dnsalias.org',
 	//	'*.dyndns.org',
@@ -1299,7 +1308,7 @@ $blocklist['badhost B-1'] = array(
 		'*.st20.com',
 		'*.up-a.com',
 	),
-	'20six weblog services' => array(
+	'20six Weblog Services' => array(
 		'.20six.nl',			// by 20six weblog services (postmaster at 20six.nl)
 		'.20six.co.uk',
 		'.20six.fr',
@@ -1307,11 +1316,11 @@ $blocklist['badhost B-1'] = array(
 		'myblog.es',
 	),
 	'*.250free.com',	// by Brian Salisbury (domains at 250host.com)
-	'2page.de' => array(
+	'2Page.de' => array(
 		'.dreipage.de',
 		'.2page.de',
 	),
-	'c2k.jp' => array(
+	'C2k.jp' => array(
 		'.081.in',		// by Makoto Okuse (webmaster at 2style.net)
 		'.2st.jp',		// by 2style, ns *.click2k.net, *.2style.net
 		'.2style.in',	// by Makoto Okuse (webmaster at 2style.net)
@@ -1369,7 +1378,7 @@ $blocklist['badhost B-1'] = array(
 	'*.bb-fr.com',
 	'*.beeplog.com',
 	'bestfreeforums.com',
-	'bizcn.com' => '/.*\.w[0-9]+\.bizcn\.com$/', // XiaMen BizCn Computer & Network CO.,LTD
+	'Bizcn.com' => '/.*\.w[0-9]+\.bizcn\.com$/', // XiaMen BizCn Computer & Network CO.,LTD
 	'*.blog.com',
 	'*.blog.com.es',
 	'*.blog.hr',
@@ -1389,7 +1398,7 @@ $blocklist['badhost B-1'] = array(
 	'*.blogstream.com',
 	'blogyaz.com',
 	'*.boardhost.com',
-	'bravenet.com' => array(
+	'Bravenet.com' => array(
 		'*.bravenet.com',
 		'*.bravehost.com',
 	),
@@ -1399,14 +1408,17 @@ $blocklist['badhost B-1'] = array(
 	'*.conforums.com',		// by Roger Sutton (rogersutton at cox.net)
 	'counterhit.de',
 	'*.creatuforo.com',		// by Desafio Internet S.L. (david at soluwol.com)
-	'createforum.us' => array(
-		'*.createforum.us',
-		'*.forumportal.us',
-		'*.freeportal.us',
-		'*.phpbb2.us',
+	'Phpbb24.com' => array(
+		// by Daniel Eriksson
+		'*.createforum.us',	// registry at webbland.se
+		'*.forumportal.us',	// registry at webbland.se
+		'*.freeportal.us',	// registry at network24.se
+		'*.phpbb2.us',		// daniel at danielos.com
+		'*.phpbb24.com',	// daniel at danielos.com
+		'*.myforumportal.com',	// daniel at webbland.se
 	),
 	'*.createmybb.com',
-	'cwcity.de' => array(
+	'CwCity.de' => array(
 		'.cwcity.de',
 		'.cwsurf.de',
 	),
@@ -1438,7 +1450,7 @@ $blocklist['badhost B-1'] = array(
 	'*.free-bb.com',
 	'free-guestbook.net',
 	'*.free-site-host.com',	// by CGM-Electronics (chris at cgm-electronics.com)
-	'free-blog-hosting.com' => array(
+	'Free-Blog-Hosting.com' => array(
 		'free-blog-hosting.com',	// by Robert Vigil (ridgecrestdomains at yahoo.com), ns *.phpwebhosting.com
 		'cheap-web-hosting-411.com',	// by Robert Vigil, ns *.thisismyserver.net
 		'blog-tonite.com',			// ns *.phpwebhosting.com
@@ -1451,7 +1463,7 @@ $blocklist['badhost B-1'] = array(
 	'*.freelinuxhost.com',	// by 100webspace.com
 	'freeforum.at',			// by Sandro Wilhelmy
 	'*.freeforums.org',		// by 1&1 Internet, Inc. - 1and1.com
-	'freewebhostingarea.com' => array(	// or www.freewha.com
+	'FreeWebHostingArea.com' => array(	// or www.freewha.com
 		'*.6te.net',
 		'*.ueuo.com',
 		'*.orgfree.com',
@@ -1466,8 +1478,8 @@ $blocklist['badhost B-1'] = array(
 	'forumbolt.com',
 	'forumnow.com.br',
 	'*.forumppl.com',
-	'forumprofi.de' => '#^(?:.*\.)?forumprofi[0-9]*\.de$#',
-	'forumup' => '#^^(?:.*\.)?forumup\.' .
+	'Forumprofi.de' => '#^(?:.*\.)?forumprofi[0-9]*\.de$#',
+	'ForumUp' => '#^^(?:.*\.)?forumup\.' .
 		'(?:at|be|ca|ch|co\.nz|co\.uk|co\.za|com|com\.au|com\.mx|cn|' .
 		'cz|de|dk|es|eu|fr|gr|hu|in|info|ir|it|jobs|jp|lt|' .
 		'lv|org|pl|name|net|nl|ro|ru|se|sk|tv|us|web\.tr)$#',
@@ -1476,7 +1488,7 @@ $blocklist['badhost B-1'] = array(
 	'*.freepowerboards.com',
 	'*.funpic.de',
 	'geocities.com',
-	'getbetterhosting.com' => array(
+	'GetBetterHosting.com' => array(
 		'*.30mb.com',	// by 30MB Online (63681 at whois.gkg.net), introduced as one alternative of 90megs.com
 		'*.90megs.com',	// by Get Better Hosting (admin at getbetterhosting.com)
 	),
@@ -1495,7 +1507,7 @@ $blocklist['badhost B-1'] = array(
 	'*.host-page.com',
 	'*.hostingclub.de',
 	'*.hut2.ru',
-	'ic.cz' => array(
+	'IC.cz' => array(
 		'*.ezin.cz',		// internetcentrum at gmail.com, ns ignum.com, ignum.cz
 		'*.hu.cz',			// internetcentrum at gmail.com
 		'*.hustej.net',		// baz at bluedot.cz, dom-reg-joker at ignum.cz
@@ -1509,7 +1521,7 @@ $blocklist['badhost B-1'] = array(
 		'*.yc.cz',			// ivo at karabina.cz, jan at karabina.cz
 		'*.yw.sk',			// jobot at ignum.cz
 	),
-	'ieurop.net' => array(
+	'iEUROP.net' => array(
 		'*.ibelgique.com',
 		'*.iespana.es',
 		'*.ifrance.com',
@@ -1529,12 +1541,12 @@ $blocklist['badhost B-1'] = array(
 	'*.kokoom.com',
 	'koolpages.com',
 	'*.ksiegagosci.info',
-	'lide.cz' => array(
+	'Lide.cz' => array(
 		'*.lide.cz',
 		'*.sblog.cz',
 	),
 	'limmon.net',
-	'Livedoor Co., Ltd.' => array(
+	'livedoor Co., Ltd.' => array(
 		'blog.livedoor.jp',
 		'*.blog.livedoor.com',	// redirection
 	),
@@ -1574,7 +1586,7 @@ $blocklist['badhost B-1'] = array(
 		'*.weblogs.cz',
 		'*.weblogs.hu',
 	),
-	'monforum.com' => array(
+	'MonForum.com' => array(
 		'*.monforum.com',
 		'*.monforum.fr',
 	),
@@ -1588,7 +1600,7 @@ $blocklist['badhost B-1'] = array(
 	'*.mysite.com',
 	'*.myxhost.com',
 	'*.netfast.org',
-	'netgears.com' => array(	// by domains at netgears.com
+	'NetGears.com' => array(	// by domains at netgears.com
 		'*.9k.com',
 		'*.741.com',
 		'*.freewebsitehosting.com',
@@ -1600,7 +1612,7 @@ $blocklist['badhost B-1'] = array(
 	'*.w100.okwit.com',		// by chen jinian (dfym at dfym.cn)
 	'onlyfree.de',
 	'*.ooblez.com',			// by John Nolande (ooblez at hotmail.com)
-	'osemka.pl' => array(	// by Osemka Internet Media (biuro at nazwa.pl)
+	'Osemka.pl' => array(	// by Osemka Internet Media (biuro at nazwa.pl)
 		'.friko.pl',
 		'.jak.pl',
 		'.nazwa.pl',
@@ -1616,7 +1628,7 @@ $blocklist['badhost B-1'] = array(
 	'*.pochta.ru',
 	'*.portbb.com',
 	'powerwebmaster.de',
-	'proboards' => '#^(?:.*\.)proboards[0-9]*\.com$#',
+	'ProBoards' => '#^(?:.*\.)proboards[0-9]*\.com$#',
 	'*.probook.de',
 	'*.prohosting.com',	// by Nick Wood (admin at dns-solutions.net)
 	'*.quickfreehost.com',
@@ -1629,7 +1641,7 @@ $blocklist['badhost B-1'] = array(
 		'*.pornzonehost.com',
 		'*.xhostar.com',
 	),
-	'rin.ru' => array(
+	'RIN.ru' => array(
 		'*.sbn.bz',
 		'*.wol.bz',
 	),
@@ -1661,7 +1673,7 @@ $blocklist['badhost B-1'] = array(
 	'*.sitesfree.com',		// support at livesearching.com
 	'*.sitesled.com',
 	'skinnymoose.com',		// by Steven Remington (admin at outdoorwebhosting.com)
-	'smartrans.com' => array(
+	'SmarTrans.com' => array(
 		'.3w.to',
 		'.aim.to',
 		'.djmp.jp',
@@ -1691,7 +1703,7 @@ $blocklist['badhost B-1'] = array(
 	'*.vidiac.com',
 	'volny.cz',
 	'*.welover.org',
-	'web1000.com' => array(
+	'Web1000.com' => array(
 		// http://www.web1000.com/register_new2.php
 		'*.fasthost.tv',
 		'*.hothost.tv',
@@ -1814,7 +1826,7 @@ $blocklist['badhost B-1'] = array(
 	'weblogmaniacs.com',
 	'*.webnow.biz',			// by Hsien I Fan (admin at servcomputing.com), ServComputing Inc. 
 	'websitetoolbox.com',
-	'welnet.de' => array(
+	'Welnet.de' => array(
 		'welnet.de',
 		'welnet4u.de',
 	),
@@ -1845,7 +1857,7 @@ $blocklist['badhost B-1'] = array(
 		'yandex.ru',		// noc at yandex.net
 	),
 	'yourfreebb.de',
-	'your-websites.com' => array(
+	'Your-Websites.com' => array(
 		'*.your-websites.net',
 		'*.web-space.ws',
 	),
@@ -1905,7 +1917,7 @@ $blocklist['badhost B-2'] = array(
 	'ghettojava.com',
 	'gnacademy.org',
 	'*.goodboard.de',
-	'greendayvideo.net' => array(
+	'GreenDayVideo.net' => array(
 		'greendayvideo.net',
 		'espanol.greendayvideo.net',
 	),
