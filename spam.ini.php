@@ -1,38 +1,54 @@
 <?php
-// $Id: spam.ini.php,v 1.54 2007/04/28 01:46:21 henoheno Exp $
+// $Id: spam.ini.php,v 1.55 2007/04/29 09:02:23 henoheno Exp $
 // Spam-related setting
+
+// NOTE FOR ADMINISTRATORS:
 //
-// Reference:
-//   Spamdexing http://en.wikipedia.org/wiki/Spamdexing
+// Host selection:
+//   [1] '.example.org'  prohibits ALL "example.org"-related FQDN
+//   [2] '*.example.org' prohibits ONLY subdomains and hosts, EXCEPT "www.example.org"
+//   [3] 'example.org'   prohibits BOTH "example.org" and "www.example.org"
+//   (Now you know, [1] = [2] + [3])
+//
+// How to write multiple hosts as an group:
+//  'Group Name' => array('a.example.org', 'b.example.com', 'c.example.net'),
+//
+// How to write regular expression:
+//  'Group Name' => '#^(?:.*\.)?what-you-want\.com$#',
+//
+// Guideline to keep group names unique:
+//   - Using capitalized letters, spaces, commas (etc) may suggest you
+//     that probably be a group.
+//   - Unique word examples:
+//     [1] FQDN
+//     [2] Mail address of the domain-name owner
+//     [3] IP address, if these hosts have the same ones
+//     [4] Something unique idea of you
+//
+// Reference: Spamdexing http://en.wikipedia.org/wiki/Spamdexing
 
-// NOTE:
-//  [1] "example.org" prohibits both "example.org" AND "www.example.org"
-//  [2] "*.example.org" prohibits subdomains and hosts EXCEPT "www.example.org"
-//  [3] ".example.org" prohibits ALL "example.org"-related FQDN
-//  (You know, [1] + [2] = [3])
 
-// NOTE for badhost (only):
-//  'unique_name' = array('a.example.org', 'b.example.org') is treated as a group 'unique_name'.
-
-// Guideline to keep group names unique
-//  [1] FQDN with capitalized letter(s)
-//  [2] Mail address (with FQDN) of the domain-name owner
-//  [3] Unique name with capitalized letter(s) or spaces, commas, etc
-
-
-// List of the lists
 $blocklist['list'] = array(
-	'goodhost'		=> FALSE,
-	'badhost A-1'	=> TRUE,
-	'badhost A-2'	=> TRUE,
-	'badhost B-1'	=> TRUE,
-	'badhost B-2'	=> TRUE,
-	'badhost C'		=> TRUE,
-	'badhost'		=> TRUE,
+	// List of the lists
+
+	//  FALSE	= ignore them
+	//  TRUE	= catch them
+	//  Commented out of the line = do nothing about it
+
+	'goodhost'	=> FALSE,
+	'A-1'		=> TRUE,
+	'A-2'		=> TRUE,
+	'B-1'		=> TRUE,
+	'B-2'		=> TRUE,
+	'C'			=> TRUE,
+	//'D'		=> TRUE,
+	'Z'			=> TRUE,
 );
 
 
 $blocklist['goodhost'] = array(
+	// Sample setting of ignorance list
+
 	'IANA-examples' => '#^(?:.*\.)?example\.(?:com|net|org)$#',
 
 	// PukiWiki-official/dev specific
@@ -50,7 +66,7 @@ $blocklist['goodhost'] = array(
 // A: Sample setting of
 // Existing URI redirection or masking services
 
-$blocklist['badhost A-1'] = array(
+$blocklist['A-1'] = array(
 
 	// A-1: General redirection services -- by HTML meta, HTML frame, JavaScript,
 	// web-based proxy, DNS subdomains, etc
@@ -1245,7 +1261,7 @@ $blocklist['badhost A-1'] = array(
 	'*.zwap.to',
 );
 
-$blocklist['badhost A-2'] = array(
+$blocklist['A-2'] = array(
 
 	// A-2: Dynamic DNS, Dynamic IP services, DNS vulnerabilities, or another DNS cases
 	//
@@ -1277,7 +1293,7 @@ $blocklist['badhost A-2'] = array(
 // Please notify us about this list with reason:
 // http://pukiwiki.sourceforge.jp/dev/?BugTrack2%2F208
 
-$blocklist['badhost B-1'] = array(
+$blocklist['B-1'] = array(
 
 	// B-1: Web spaces
 	//
@@ -1388,6 +1404,7 @@ $blocklist['badhost B-1'] = array(
 	'*.blog.com.es',
 	'*.blog.hr',
 	'*.blog-fx.com',
+	'blogfreely.com',
 	'blogas.lt',
 	'*.blogdrive.com',
 	'*.blogg.de',
@@ -1467,6 +1484,7 @@ $blocklist['badhost B-1'] = array(
 	'*.freeclans.de',
 	'*.freelinuxhost.com',	// by 100webspace.com
 	'freeforum.at',			// by Sandro Wilhelmy
+	'freeforumshosting.com',	// by Adam Roberts (admin at skaidon.co.uk)
 	'*.freeforums.org',		// by 1&1 Internet, Inc. - 1and1.com
 	'FreeWebHostingArea.com' => array(	// or www.freewha.com
 		'*.6te.net',
@@ -1489,6 +1507,7 @@ $blocklist['badhost B-1'] = array(
 		'cz|de|dk|es|eu|fr|gr|hu|in|info|ir|it|jobs|jp|lt|' .
 		'lv|org|pl|name|net|nl|ro|ru|se|sk|tv|us|web\.tr)$#',
 	'*.fory.pl',
+	'*.freemyforum.com',	// by messahost at gmail.com
 	'freepowerboards.com',
 	'*.freepowerboards.com',
 	'*.funpic.de',
@@ -1560,8 +1579,16 @@ $blocklist['badhost B-1'] = array(
 	'ltss.luton.ac.uk',
 	'Lycos' => array(
 		'angelfire.com',	// angelfire.lycos.com
+
 		'*.jubii.dk',	// search., medlem.
+		'*..jubiiblog.co.uk',
 		'*.jubiiblog.com.es',	// by Lycos Europe GmbH
+		'*.jubiiblog.de',
+		'*.jubiiblog.dk',
+		'*.jubiiblog.fr',
+		'*.jubiiblog.it',
+		'*.jubiiblog.nl',
+
 		'*.lycos.at',
 		'*.lycos.ch',
 		'*.lycos.co.uk',
@@ -1571,7 +1598,10 @@ $blocklist['badhost B-1'] = array(
 		'*.lycos.fr',
 		'*.lycos.it',		// by Lycos Europe GmbH
 		'*.lycos.nl',
+
 		'*.spray.se',
+		'*.sprayblog.se'.
+
 		'*.tripod.com',
 	),
 	'mbga.jp',				// by DeNA Co.,Ltd. (barshige at hq.bidders.co.jp, torigoe at hq.bidders.co.jp)
@@ -1708,8 +1738,7 @@ $blocklist['badhost B-1'] = array(
 	'*.vidiac.com',
 	'volny.cz',
 	'*.welover.org',
-	'Web1000.com' => array(
-		// http://www.web1000.com/register_new2.php
+	'Web1000.com' => array(	// http://www.web1000.com/register_new2.php
 		'*.fasthost.tv',
 		'*.hothost.tv',
 		'*.isgreat.tv',
@@ -1869,7 +1898,7 @@ $blocklist['badhost B-1'] = array(
 );
 
 
-$blocklist['badhost B-2'] = array(
+$blocklist['B-2'] = array(
 
 	// B-2: Jacked contents, something implanted
 	// (e.g. some sort of blog comments, BBSes, forums, wikis)
@@ -1949,9 +1978,11 @@ $blocklist['badhost B-2'] = array(
 	'forum.lixium.fr',
 	'macfaq.net',
 	'me4x4.com',
+	'microbial-ecology.net',
 	'minsterscouts.org',
 	'morallaw.org',
 	'morerevealed.com',
+	'macronet.org',
 	'mamiya.co.uk',
 	'vcd.mmvcd.com',
 	'Monmouth College' => array('department.monm.edu'),
@@ -2015,6 +2046,7 @@ $blocklist['badhost B-2'] = array(
 	'vacant.org.uk',
 	'Villa Julie College' => array('www4.vjc.edu'),
 	'warping.to',		// Seems (a redirection site, but now) taken advantage of
+	'webarch.com',		// by WebArchitects (webarch at insync.net)
 	'West Virginia University Parkersburg' => array('wvup.edu'),
 	'williamsburgrentals.com',
 	'wolvas.org.uk',
@@ -2027,7 +2059,7 @@ $blocklist['badhost B-2'] = array(
 );
 
 
-$blocklist['badhost C'] = array(
+$blocklist['C'] = array(
 
 	// C: Sample setting of:
 	// Exclusive spam domains
@@ -2483,7 +2515,9 @@ $blocklist['badhost C'] = array(
 		'.ekafoloz.info',
 		'.exidiqe.info',
 		'.gubiwu.info',
+		'.ijizauax.info',	// by ysauuz2341 at iname.com, Billing Email:gray at trafic.name
 		'.jiuuz.info',
+		'.nipud.info',		// by bohox9872 at mindless.com, Billing Email:gray at trafic.name
 		'.olasep.info',
 		'.oueuidop.info',
 		'.oviravy.info',
@@ -2492,7 +2526,7 @@ $blocklist['badhost C'] = array(
 		'.vubiheq.info',
 		'.yvaxat.info',
 	),
-	'carmodelrank.com etc' => array(
+	'Carmodelrank.com etc' => array(
 		'.carmodelrank.com',// by Brianna Dunlord (briasmi at yahoo.com)
 		'.cutestories.net',	// by Brianna Dunlord (briasmi at yahoo.com)
 		'.sturducs.com',
@@ -3721,6 +3755,22 @@ $blocklist['badhost C'] = array(
 		'.free-blog-host.info',
 		'.sucking-boobs.info',
 	),
+	'chub at seznam.cz' => array(	// "CamsGen 1.0" by Lee Chen Ho
+		'.camerascams.info',
+		'.camerasera.info',
+		'.girlcamsworld.info',
+		'.hiddenlimocams.info',
+		'.redlivecams.info',
+		'.spycamsgear.info',
+		'.spycamssite.info',
+		'.supercamsusa.info',
+		'.thecamsnow.info',
+	),
+	'208.70.75.153' => array(
+		'.cerca-no.info',
+		'.cerca-on.info',
+		'.cerca-sv.info',
+	),
 
 	// C-2: Lonely domains (buddies not found yet)
 	'.0721-4404.com',
@@ -3764,6 +3814,7 @@ $blocklist['badhost C'] = array(
 	'*.filthserver.com',	// sales at onlinemarketingservices.biz
 	'.find-stuff.org',		// by Alice Freedman (admin at ip-labs.ru), / 404 Not Found
 	'.forum24.se',
+	'.forumhosting.org',
 	'.free-finding.com',	// by Ny hom (nyhom at yahoo.com)
 	'.free-rx.net',			// by Neo-x (neo-xxl at yandex.ru), redirect to activefreehost.com
 	'.freeblog.ru',			// by Kondrashov Evgeniy Aleksandrovich (evkon at rol.ru), login form only, ns *.nthost.ru
@@ -3772,6 +3823,7 @@ $blocklist['badhost C'] = array(
 	'.game4enjoy.net',		// by huang jinglong (fenlin231 at sina.com)
 	'.ganecity.com',		// by shao tian (huangjinqiang at sina.com)
 	'.gm-exchange.jp',		// RMT
+	'.goamoto.ru',			// by Dmitry E Kotchnev (z2archive at gmail.com)
 	'.good1688.com',		// by Wen Chien Lunz (wzk1219 at yahoo.com.tw), one of them frame to , and whoop.to
 	'.google-pharmacy.com',		// by alex (mdisign1997 at yahoo.com), hiding with urlx.org etc
 	'.google-yahoo-msn.org',	// by Equipe Tecnica Ajato (rambap at yandex.ru)
@@ -3820,6 +3872,7 @@ $blocklist['badhost C'] = array(
 	'.pelican-bulletin.info',	// by Elizabeth K. Perry (redmonk at mail.ru)
 	'.perevozka777.ru',		// by witalik at gmail.com
 	'.pharmacy-style.com',	// by Anrey Markov (ernestppc at yahoo.com)
+	'.pharmacy2online.com',	// by Mike Hiliok (bbong80 at yahoo.com)
 	'.pills-storage.com',	// by 
 	'.plusintedia.com',		// by g yk (abc00623 at 163.com), seems not used now
 	'.popki.ind.in',			// by Aleksandr Krasnik (supermaster at pisem.net)
@@ -3832,8 +3885,8 @@ $blocklist['badhost C'] = array(
 	'.qoclick.net',			// by DMITRIY SOLDATENKO
 	'.relurl.com',			// tiny-like. by Grzes Tlalka (grzes1111 at interia.pl)
 	'.replicaswatch.org',	// by Replin (admin at furnitureblog.org)
-	'.searchadv.com',		// by Jaan Randolph (searchadv at gmail.com)
 	'.roin.info',			// by Evgenius (roinse at yandex.ru)
+	'.searchadv.com',		// by Jaan Randolph (searchadv at gmail.com)
 	'.seek-www.com',		// by Adam Smit (pingpong at mail.md)
 	'.sessocities.net',		// by info at secureserver3.com
 	'.sexamoreit.com',
@@ -3847,7 +3900,9 @@ $blocklist['badhost C'] = array(
 	'.thehostcity.com',		// Domains by Proxy
 	'.thephentermineonline.info',	// by Kipola (smesh1155 at gmail.com)
 	'.thetinyurl.com',		// by Beth J. Carter (Beth.J.Carter at thetinyurl.com)
+	'.thetrendy.info',		// by Harold (Harold.J.Craft at pookmail.com), / is blank
 	'.topmeds10.com',
+	'.tourismworldsite.info',	// by Sipiki (sidor2 at gmail.com)
 	'*.tv-reklama.info',	// by Kozlov Maxim (m_koz at mail.ru)
 	'.twabout.com',			// by qiu wenbing (qiuwenbing at 126.com), content from l2mpt.net
 	'.uaro.info',			// by Neru Pioner (neru at smtp.ru)
@@ -3883,7 +3938,7 @@ $blocklist['badhost C'] = array(
 );
 
 
-$blocklist['badhost'] = array(
+$blocklist['D'] = array(
 	// D: Sample setting of
 	// "third party in good faith"s
 	//
@@ -3891,7 +3946,10 @@ $blocklist['badhost'] = array(
 	// not used via spam, but maybe useful to detect these contents
 	//
 	// 'RESERVED',
+);
 
+
+$blocklist['Z'] = array(
 	// Z: Yours
 	//
 	//'',
