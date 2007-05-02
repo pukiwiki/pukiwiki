@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.56 2007/04/30 16:06:47 henoheno Exp $
+// $Id: spam.ini.php,v 1.57 2007/05/02 01:55:06 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -847,6 +847,7 @@ $blocklist['A-1'] = array(
 	'relic.net',
 	'rezma.info',
 	'rio.st',
+	'rlink.org',
 	'*.rmcinfo.fr',
 	'rubyurl.com',
 	'*.runboard.com',
@@ -1341,45 +1342,7 @@ $blocklist['B-1'] = array(
 		'.dreipage.de',
 		'.2page.de',
 	),
-	'C2k.jp' => array(
-		'.081.in',		// by Makoto Okuse (webmaster at 2style.net)
-		'.2st.jp',		// by 2style, ns *.click2k.net, *.2style.net
-		'.2style.in',	// by Makoto Okuse (webmaster at 2style.net)
-		'.2style.jp',	// by click2k, ns *.2style.jp, *.2style.net
-		'.2style.net',	// by makoto okuse (webmaster at 2style.net), ns *.click2k.net, *.2style.jp, *.2style.net
-		'.betty.jp',	// by 2style, ns *.click2k.net, *.2style.net
-		'.bian.in',		// by Makoto Okuse (webmaster at 2style.net)
-		'.cabin.jp',	// by 2style, ns *.click2k.net, *.2style.net
-		'.click2k.net',	// by makoto okuse (webmaster at 2style.net), ns *.click2k.net, *.2style.net
-		'.cult.jp',		// by 2style, ns *.click2k.net, *.2style.net
-		'.curl.in',		// by Makoto Okuse (webmaster at 2style.net)
-		'.cute.cd',		// by Yuya Fukuda (count at kit.hi-ho.ne.jp), ns *.2style.jp, *.2style.net
-		'.ennui.in',	// by Makoto Okuse (webmaster at 2style.net)
-		'.houka5.com',	// by makoto okuse (webmaster at 2style.net), ns *.click2k.net, *.2style.net
-		'.jinx.in',		// by Makoto Okuse (webmaster at 2style.net)
-		'.loose.in',	// by Makoto Okuse (webmaster at 2style.net)
-		'.mippi.jp',	// by 2style, ns *.click2k.net, *.2style.net
-		'.mist.in',		// by Makoto Okuse (webmaster at 2style.net)
-		'.muu.in',		// by Makoto Okuse (webmaster at 2style.net)
-		'.naive.in',	// by Makoto Okuse (webmaster at 2style.net)
-		'.panic.in',	// by Makoto Okuse (webmaster at 2style.net)
-		'.psyco.jp',	// by click2k, ns *.click2k.net, *.2style.net
-		'.purety.jp',	// by 2style, ns *.click2k.net, *.2style.net
-		'.rapa.jp',		// by 2style, ns *.click2k.net, *.2style.net
-		'.side-b.jp',	// by 2style, ns *.click2k.net, *.2style.net
-		'.slum.in',		// by Makoto Okuse (webmaster at 2style.net)
-		'.sweety.jp',	// by click2k, ns *.click2k.net, *.2style.net
-		'.web-box.jp',	// by 2style, ns *.click2k.net, *.2style.net
-		'.yea.jp',		// by 2style, ns *.click2k.net, *.2style.net
-	),
 	'*.30mb.com',		// by 30MB Online (63681 at whois.gkg.net)
-	'icedesigns at gmail.com' => array(	// by Boling Jiang (icedesigns at gmail.com)
-		'*.0moola.com',
-		'*.3000mb.com',
-		'.501megs.com',
-		'*.teracities.com',
-		'*.xoompages.com',
-	),
 	'*.50megs.com',		// by hostmaster at northsky.com
 	'*.5gbfree.com',
 	'*.9999mb.com',		// by allan Jerman (prodigy-airsoft at cox.net)
@@ -1419,12 +1382,44 @@ $blocklist['B-1'] = array(
 	'*.blogsome.com',		// by Roger Galligan (roger.galligan at browseireland.com)
 	'*.blogstream.com',
 	'blogyaz.com',
+	'board-4you.de',
 	'*.boardhost.com',
 	'Bravenet.com' => array(
 		'*.bravenet.com',
 		'*.bravehost.com',
 	),
 	'*.by.ru',				// nthost.ru related?
+	'C2k.jp' => array(
+		'.081.in',		// by Makoto Okuse (webmaster at 2style.net)
+		'.2st.jp',		// by 2style, ns *.click2k.net, *.2style.net
+		'.2style.in',	// by Makoto Okuse (webmaster at 2style.net)
+		'.2style.jp',	// by click2k, ns *.2style.jp, *.2style.net
+		'.2style.net',	// by makoto okuse (webmaster at 2style.net), ns *.click2k.net, *.2style.jp, *.2style.net
+		'.betty.jp',	// by 2style, ns *.click2k.net, *.2style.net
+		'.bian.in',		// by Makoto Okuse (webmaster at 2style.net)
+		'.cabin.jp',	// by 2style, ns *.click2k.net, *.2style.net
+		'.click2k.net',	// by makoto okuse (webmaster at 2style.net), ns *.click2k.net, *.2style.net
+		'.cult.jp',		// by 2style, ns *.click2k.net, *.2style.net
+		'.curl.in',		// by Makoto Okuse (webmaster at 2style.net)
+		'.cute.cd',		// by Yuya Fukuda (count at kit.hi-ho.ne.jp), ns *.2style.jp, *.2style.net
+		'.ennui.in',	// by Makoto Okuse (webmaster at 2style.net)
+		'.houka5.com',	// by makoto okuse (webmaster at 2style.net), ns *.click2k.net, *.2style.net
+		'.jinx.in',		// by Makoto Okuse (webmaster at 2style.net)
+		'.loose.in',	// by Makoto Okuse (webmaster at 2style.net)
+		'.mippi.jp',	// by 2style, ns *.click2k.net, *.2style.net
+		'.mist.in',		// by Makoto Okuse (webmaster at 2style.net)
+		'.muu.in',		// by Makoto Okuse (webmaster at 2style.net)
+		'.naive.in',	// by Makoto Okuse (webmaster at 2style.net)
+		'.panic.in',	// by Makoto Okuse (webmaster at 2style.net)
+		'.psyco.jp',	// by click2k, ns *.click2k.net, *.2style.net
+		'.purety.jp',	// by 2style, ns *.click2k.net, *.2style.net
+		'.rapa.jp',		// by 2style, ns *.click2k.net, *.2style.net
+		'.side-b.jp',	// by 2style, ns *.click2k.net, *.2style.net
+		'.slum.in',		// by Makoto Okuse (webmaster at 2style.net)
+		'.sweety.jp',	// by click2k, ns *.click2k.net, *.2style.net
+		'.web-box.jp',	// by 2style, ns *.click2k.net, *.2style.net
+		'.yea.jp',		// by 2style, ns *.click2k.net, *.2style.net
+	),
 	'*.chueca.com',
 	'concepts-mall.com',
 	'*.conforums.com',		// by Roger Sutton (rogersutton at cox.net)
@@ -1544,6 +1539,13 @@ $blocklist['B-1'] = array(
 		'*.wu.cz',			// jan at karabina.cz, info at ignum.cz
 		'*.yc.cz',			// ivo at karabina.cz, jan at karabina.cz
 		'*.yw.sk',			// jobot at ignum.cz
+	),
+	'icedesigns at gmail.com' => array(	// by Boling Jiang (icedesigns at gmail.com)
+		'*.0moola.com',
+		'*.3000mb.com',
+		'.501megs.com',
+		'*.teracities.com',
+		'*.xoompages.com',
 	),
 	'iEUROP.net' => array(
 		'*.ibelgique.com',
@@ -1907,6 +1909,7 @@ $blocklist['B-2'] = array(
 	'3gmicro.com',			// by Dean Anderson (dean at nobullcomputing.com)
 	'aac.com',
 	'*.aamad.org',
+	'ad-pecjak.si',
 	'agnt.org',
 	'alwanforthearts.org',
 	'*.anchor.net.au',
@@ -1968,6 +1971,7 @@ $blocklist['B-2'] = array(
 	'ipwso.org',
 	'ironmind.com',
 	'skkustp.itgozone.com',	// hidden JavaScript
+	'jazz2online.com',
 	'.jloo.org',
 	'Kazan State University' => array(
 		'dir.kzn.ru',
@@ -2005,6 +2009,7 @@ $blocklist['B-2'] = array(
 	'omikudzi.ru',
 	'openchemist.net',
 	'pataphysics-lab.com',
+	'paullima.com',
 	'perl.org.br',
 	'pix4online.co.uk',
 	'plone.dk',
@@ -2046,6 +2051,7 @@ $blocklist['B-2'] = array(
 	'urgentclick.com',
 	'vacant.org.uk',
 	'Villa Julie College' => array('www4.vjc.edu'),
+	'wabson.org',
 	'warping.to',		// Seems (a redirection site, but now) taken advantage of
 	'webarch.com',		// by WebArchitects (webarch at insync.net)
 	'West Virginia University Parkersburg' => array('wvup.edu'),
@@ -2057,6 +2063,7 @@ $blocklist['B-2'] = array(
 	'yasushi.site.ne.jp',	// One of mixedmedia.net'
 	'youthpeer.org',
 	'*.zenburger.com',
+	'Zope/Python Users Group of Washington, DC' => array('zpugdc.org'),
 );
 
 
@@ -2512,22 +2519,32 @@ $blocklist['C'] = array(
 		'.viagra-best.org',		// by Chong Li (chongli at mederotica.com)
 		'.viagra-kaufen.org',	// by Chong Li (chongli at mederotica.com)
 	),
-	'gray at trafic.name' => array(	// by Billing Name:Gray
-		'.axeboxew.info',
-		'.boluzuhy.info',
-		'.ekafoloz.info',
-		'.exidiqe.info',
-		'.gubiwu.info',
-		'.ijizauax.info',	// by ysauuz2341 at iname.com, Billing Email:gray at trafic.name
-		'.jiuuz.info',
-		'.nipud.info',		// by bohox9872 at mindless.com, Billing Email:gray at trafic.name
-		'.olasep.info',
-		'.oueuidop.info',
-		'.oviravy.info',
-		'.ragibe.info',
-		'.udaxu.info',
-		'.vubiheq.info',
-		'.yvaxat.info',
+	'gray at trafic.name' => array(	// by Billing Name:Gray, Billing Email:gray at trafic.name
+		'.axeboxew.info',	// by zygeu220 at writeme.com
+		'.boluzuhy.info',	// by pikico5419 at post.com
+		'.ekafoloz.info',	// by nuzunyly8401 at techie.com
+		'.ejixyzeh.info',	// by vubulyma5163 at consultant.com
+		'.emyfyr.info',		// by osiqabu9669 at writeme.com
+		'.exidiqe.info',	// by kufyca5475 at mail.com
+		'.gerucovo.info',	// by apegityk7224 at writeme.com
+		'.gubiwu.info',		// by lywunef6532 at iname.com
+		'.ijizauax.info',	// by ysauuz2341 at iname.com
+		'.ixahagi.info',	// by famevi9827 at email.com
+		'.jiuuz.info',		// by meqil6549 at mail.com
+		'.nudetar.info',	// by vohepafi3536 at techie.com
+		'.nipud.info',		// by bohox9872 at mindless.com
+		'.mejymik.info',	// by fiqiji3529 at cheerful.com
+		'.mylexus.info',	// Billing Email is simhomer12300 at mail.com, but posted at the same time, and ns *.grayreseller.com
+		'.olasep.info',		// by lizon8506 at mail.com
+		'.oueuidop.info',	// by arytyb6913 at europe.com
+		'.oviravy.info',	// by amyuu3883 at london.com
+		'.ovuri.info',		// by exumaxyt1371 at consultant.com
+		'.ragibe.info',		// by ehome4458 at myself.com
+		'.ucazib.info',		// by gorare7222 at consultant.com
+		'.udaxu.info',		// by gubima4007 at usa.com
+		'.vubiheq.info',	// by uisujih5849 at hotmail.com
+		'.yvaxat.info',		// by koqun9660 at mindless.com
+		'.yxyzauiq.info',	// by robemuq8455 at cheerful.com
 	),
 	'Carmodelrank.com etc' => array(
 		'.carmodelrank.com',// by Brianna Dunlord (briasmi at yahoo.com)
@@ -3626,7 +3643,9 @@ $blocklist['C'] = array(
 	'mk_slowman at yahoo.com' => array(	// by Mike Slowman (mk_slowman at yahoo.com)
 		'.generic-pharm.info',
 		'.pharm-directory.info',
+		'.popular-people.info',
 		'.safe-health.info',
+		'.vip-furniture.info',
 		'.vip-pets.info',
 	),
 	'Leading Edge Marketing Inc.' => array(
@@ -3733,6 +3752,7 @@ $blocklist['C'] = array(
 		'.cerca-no.info',
 		'.cerca-on.info',
 		'.cerca-sv.info',
+		'.cerca-tr.info',
 	),
 	'87.242.116.81' => array(
 		'.bilbidon.ru',		// by Ilya S Vorobiyov (reginamedom at yandex.ru)
@@ -3906,7 +3926,6 @@ $blocklist['C'] = array(
 		'.planetnana.co.il',
 		'.nana.co.il',
 	),
-	'.mylexus.info',		// by Homer Simpson (simhomer12300 at mail.com), Redirect to Google
 );
 
 
