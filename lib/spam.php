@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.24 2007/04/22 14:02:46 henoheno Exp $
+// $Id: spam.php,v 1.25 2007/05/06 14:33:35 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -36,6 +36,123 @@ function preg_grep_invert($pattern = '//', $input = array())
 		}
 	}
 }
+
+// ----
+
+// Very roughly, shrink the lines of var_export()
+// NOTE: If the same data exists, it must be corrupted.
+function var_export_shrink($expression, $return = FALSE, $ignore_numeric_keys = FALSE)
+{
+	$result =preg_replace(
+		// Remove a newline and spaces
+		'# => \n *array \(#', ' => array (',
+		var_export($expression, TRUE)
+	);
+
+	if ($ignore_numeric_keys) {
+		$result =preg_replace(
+			// Remove numeric keys
+			'#^( *)[0-9]+ => #m', '$1',
+			$result
+		);
+	}
+
+	if ($return) {
+		return $result;
+	} else {
+		echo   $result;
+		return NULL;
+	}
+}
+
+// Remove redundant values from array()
+function array_unique_recursive($array = array())
+{
+	if (! is_array($array)) return $array;
+
+	$tmp = array();
+	foreach($array as $key => $value){
+		if (is_array($value)) {
+			$array[$key] = array_unique_recursive($value);
+		} else {
+			if (isset($tmp[$value])) {
+				unset($array[$key]);
+			} else {
+				$tmp[$value] = TRUE;
+			}
+		}
+	}
+
+	return $array;
+}
+
+// Renumber all numeric keys from 0
+function array_renumber_numeric_keys(& $array)
+{
+	if (! is_array($array)) return $array;
+
+	$count = -1;
+	$tmp = array();
+	foreach($array as $key => $value){
+		if (is_array($value)) array_renumber_numeric_keys($array[$key]);	// Recurse
+		if (is_numeric($key)) $tmp[$key] = ++$count;
+	}
+	array_rename_keys($array, $tmp);
+
+	return $array;
+}
+
+// Roughly strings(1) using PCRE
+// This function is useful to:
+//   * Reduce the size of data, from removing unprintable binary data
+//   * Detect _bare_strings_ from binary data
+// References:
+//   http://www.freebsd.org/cgi/man.cgi?query=strings (Man-page of GNU strings)
+//   http://www.pcre.org/pcre.txt
+function strings($binary = '', $min_len = 4, $ignore_space = FALSE)
+{
+	if ($ignore_space) {
+		$binary = preg_replace(
+			array(
+				'/(?:[^[:graph:] \t\n]|[\r])+/s',
+				'/[ \t]{2,}/',
+				'/^[ \t]/m',
+				'/[ \t]$/m',
+			),
+			array(
+				"\n",
+				' ',
+				'',
+				''
+			),
+			 $binary);
+	} else {
+		$binary = preg_replace('/(?:[^[:graph:][:space:]]|[\r])+/s', "\n", $binary);
+	}
+
+	if ($min_len > 1) {
+		$min_len = min(1024, intval($min_len));
+		$binary = 
+			implode("\n",
+				preg_grep('/^.{' . $min_len . ',}/S',
+					explode("\n", $binary)
+				)
+			);
+	}
+
+	return $binary;
+}
+
+// Reverse $string with specified delimiter
+function delimiter_reverse($string = 'foo.bar.example.com', $from_delim = '.', $to_delim = '.')
+{
+	if (! is_string($string) || ! is_string($from_delim) || ! is_string($to_delim))
+		return $string;
+
+	// com.example.bar.foo
+	return implode($to_delim, array_reverse(explode($from_delim, $string)));
+}
+
 
 // ---------------------
 // URI pickup
@@ -216,7 +333,7 @@ function area_pickup($string = '', $method = array())
 	// [OK] <a href="http://nasty.example.com">visit http://nasty.example.com/</a>
 	// [OK] <a href=\'http://nasty.example.com/\' >discount foobar</a> 
 	// [NG] <a href="http://ng.example.com">visit http://ng.example.com _not_ended_
-	$regex = '#<a\b[^>]*\bhref\b[^>]*>.*?</a\b[^>]*(>)#i';
+	$regex = '#<a\b[^>]*\bhref\b[^>]*>.*?</a\b[^>]*(>)#is';
 	if (isset($method['area_anchor'])) {
 		$areas = array();
 		$count = isset($method['asap']) ?
@@ -242,7 +359,7 @@ function area_pickup($string = '', $method = array())
 	// [OK] [link]http://nasty.example.com/[/link]
 	// [OK] [url=http://nasty.example.com]visit http://nasty.example.com/[/url]
 	// [OK] [link http://nasty.example.com/]buy something[/link]
-	$regex = '#\[(url|link)\b[^\]]*\].*?\[/\1\b[^\]]*(\])#i';
+	$regex = '#\[(url|link)\b[^\]]*\].*?\[/\1\b[^\]]*(\])#is';
 	if (isset($method['area_bbcode'])) {
 		$areas = array();
 		$count = isset($method['asap']) ?
@@ -331,14 +448,48 @@ function _preg_replace_callback_domain_exposure($matches = array())
 // Preprocess: rawurldecode() and adding space(s) and something
 // to detect/count some URIs _if possible_
 // NOTE: It's maybe danger to var_dump(result). [e.g. 'javascript:']
+// [OK] http://victim.example.org/?site:nasty.example.org
+// [OK] http://victim.example.org/nasty.example.org
 // [OK] http://victim.example.org/go?http%3A%2F%2Fnasty.example.org
 // [OK] http://victim.example.org/http://nasty.example.org
-// TODO: link.toolbot.com, urlx.org
 function spam_uri_pickup_preprocess($string = '')
 {
 	if (! is_string($string)) return '';
 
 	$string = rawurldecode($string);
+
+	// Domain exposure (simple)
+	// http://victim.example.org/nasty.example.org/path#frag
+	// => http://nasty.example.org/?refer=victim.example.org and original
+	$string = preg_replace(
+		'#h?ttp://' .
+		'(' .
+			'ime\.nu' . '|' .	// 2ch.net
+			'ime\.st' . '|' .	// 2ch.net
+			'link\.toolbot\.com' . '|' .
+			'urlx\.org' .
+		')' .
+		'/([a-z0-9.%_-]+\.[a-z0-9.%_-]+)#i',	// nasty.example.org
+		'http://$2/?refer=$1 $0',				// Preserve $0 or remove?
+		$string
+	);
+
+	// Domain exposure (gate-big5)
+	// http://victim.example.org/gate/big5/nasty.example.org/path
+	// => http://nasty.example.org/?refer=victim.example.org and original
+	$string = preg_replace(
+		'#h?ttp://' .
+		'(' .
+			'big5.51job.com'	 . '|' .
+			'big5.china.com'	 . '|' .
+			'big5.xinhuanet.com' . '|' .
+		')' .
+		'/gate/big5' .
+		'/([a-z0-9.%_-]+\.[a-z0-9.%_-]+)' .
+		 '#i',	// nasty.example.org
+		'http://$2/?refer=$1 $0',				// Preserve $0 or remove?
+		$string
+	);
 
 	// Domain exposure (See _preg_replace_callback_domain_exposure())
 	$string = preg_replace_callback(
@@ -923,60 +1074,50 @@ function get_blocklist_add(& $array, $key = 0, $value = '*.example.org')
 	}
 }
 
-function is_badhost($hosts = array(), $asap = TRUE, & $remains)
+// Blocklist metrics: Separate $host, to $blocked and not blocked
+function blocklist_distiller(& $hosts, $keys = array('goodhost', 'badhost'), $asap = FALSE)
 {
-	$result = array();
 	if (! is_array($hosts)) $hosts = array($hosts);
-	foreach(array_keys($hosts) as $key) {
-		if (! is_string($hosts[$key])) {
-			unset($hosts[$key]);
-		}
-	}
-	if (empty($hosts)) return $result;
+	if (! is_array($keys))  $keys  = array($keys);
 
-	foreach(get_blocklist('list') as $key=>$value){
-		if ($value) {
-			foreach (get_blocklist($key) as $label => $regex) {
-				if (is_array($regex)) {
-					$result[$label] = array();
-					foreach($regex as $_label => $_regex) {
-						if (is_badhost_avail($_label, $_regex, $hosts, $result[$label]) && $asap) {
-							break;
-						}
-					}
-					if (empty($result[$label])) unset($result[$label]);
-				} else {
-					if (is_badhost_avail($label, $regex, $hosts, $result) && $asap) {
-						break;
+	$list = get_blocklist('list');
+	$blocked = array();
+
+	foreach($keys as $key){
+		foreach (get_blocklist($key) as $label => $regex) {
+			if (is_array($regex)) {
+				foreach($regex as $_label => $_regex) {
+					$group = preg_grep($_regex, $hosts);
+					if ($group) {
+						$hosts = array_diff($hosts, $group);
+						$blocked[$key][$label][$_label] = $group;
+						if ($asap && $list[$key]) break;
 					}
 				}
+			} else {
+				$group = preg_grep($regex, $hosts);
+				if ($group) {
+					$hosts = array_diff($hosts, $group);
+					$blocked[$key][$label] = $group;
+					if ($asap && $list[$key]) break;
+				}
 			}
-		} else {
-			foreach (get_blocklist($key) as $regex) {
-				$hosts = preg_grep_invert($regex, $hosts);
-			}
-			if (empty($hosts)) return $result;
 		}
 	}
 
-	$remains = $hosts;
-	return $result;
+	return $blocked;
 }
 
-// Subroutine for is_badhost()
-function is_badhost_avail($label = '*.example.org', $regex = '/^.*\.example\.org$/', & $hosts, & $result)
+// Simple example for badhost (not used now)
+function is_badhost($hosts = array(), $asap = TRUE, $bool = TRUE)
 {
-	$group = preg_grep($regex, $hosts);
-	if ($group) {
-
-		// DEBUG var_dump($group); // badhost detail
-
-		$result[$label] = & $group;
-		$hosts = array_diff($hosts, $result[$label]);
-		return TRUE;
-	} else {
-		return FALSE;
+	$list = get_blocklist('list');
+	$blocked = blocklist_distiller($hosts, array_keys($list), $asap);
+	foreach($list as $key=>$type){
+		if (! $type) unset($blocked[$key]); // Ignore goodhost etc
 	}
+
+	return $bool ? ! empty($blocked) : $blocked;
 }
 
 // Default (enabled) methods and thresholds (for content insertion)
@@ -1019,70 +1160,95 @@ function check_uri_spam_method($times = 1, $t_area = 0, $rule = TRUE)
 // Simple/fast spam check
 function check_uri_spam($target = '', $method = array())
 {
+	// Return value
+	$progress = array(
+		'method'  => array(
+			// Theme to do  => Dummy, optional value, or optional array()
+			//'quantity'    => 8,
+			//'uniqhost'    => TRUE,
+			//'non_uniqhost'=> 3,
+			//'non_uniquri' => 3,
+			//'badhost'     => TRUE,
+			//'area_anchor' => 0,
+			//'area_bbcode' => 0,
+			//'uri_anchor'  => 0,
+			//'uri_bbcode'  => 0,
+		),
+		'sum' => array(
+			// Theme        => Volume found (int)
+		),
+		'is_spam' => array(
+			// Flag. If someting defined here,
+			// one or more spam will be included
+			// in this report
+		),
+		'blocked' => array(
+			// Hosts blocked
+			//'category' => array(
+			//	'host',
+			//)
+		),
+		'hosts' => array(
+			// Hosts not blocked
+		),
+	);
+
+	// Aliases
+	$sum     = & $progress['sum'];
+	$is_spam = & $progress['is_spam'];
+	$progress['method'] = & $method;	// Argument
+	$blocked = & $progress['blocked'];
+	$hosts   = & $progress['hosts'];
+	$asap    = isset($method['asap']);
+
+	// Init
 	if (! is_array($method) || empty($method)) {
 		$method = check_uri_spam_method();
 	}
-	$progress = array(
-		'sum' => array(
-			'quantity'    => 0,
-			'uniqhost'    => 0,
-			'non_uniqhost'=> 0,
-			'non_uniquri' => 0,
-			'badhost'     => 0,
-			'area_anchor' => 0,
-			'area_bbcode' => 0,
-			'uri_anchor'  => 0,
-			'uri_bbcode'  => 0,
-		),
-		'is_spam' => array(),
-		'method'  => & $method,
-		'remains' => array(),
-		'error'   => array(),
-	);
-	$sum     = & $progress['sum'];
-	$is_spam = & $progress['is_spam'];
-	$remains = & $progress['remains'];
-	$error   = & $progress['error'];
-	$asap    = isset($method['asap']);
+	foreach(array_keys($method) as $key) {
+		if (! isset($sum[$key])) $sum[$key] = 0;
+	}
 
-	// Recurse
 	if (is_array($target)) {
 		foreach($target as $str) {
-			// Recurse
-			$_progress = check_uri_spam($str, $method);
-			$_sum      = & $_progress['sum'];
-			$_is_spam  = & $_progress['is_spam'];
-			$_remains  = & $_progress['remains'];
-			$_error    = & $_progress['error'];
+			if (! is_string($str)) continue;
+
+			$_progress = check_uri_spam($str, $method);	// Recurse
+
+			// Merge $sum
+			$_sum = & $_progress['sum'];
 			foreach (array_keys($_sum) as $key) {
-				$sum[$key] += $_sum[$key];
-			}
-			foreach (array_keys($_is_spam) as $key) {
-				if (is_array($_is_spam[$key])) {
-					// Marge keys (badhost)
-					foreach(array_keys($_is_spam[$key]) as $_key) {
-						if (! isset($is_spam[$key][$_key])) {
-							$is_spam[$key][$_key] =  $_is_spam[$key][$_key];
-						} else {
-							$is_spam[$key][$_key] += $_is_spam[$key][$_key];
-						}
-					}
+				if (! isset($sum[$key])) {
+					$sum[$key] = & $_sum[$key];
 				} else {
-					$is_spam[$key] = TRUE;
+					$sum[$key] += $_sum[$key];
 				}
 			}
-			foreach ($_remains as $key=>$value) {
-				foreach ($value as $_key=>$_value) {
-					if (is_int($_key)) {
-						$remains[$key][]      = $_value;
-					} else {
-						$remains[$key][$_key] = $_value;
-					}
-				}
+
+			// Merge $is_spam
+			$_is_spam = & $_progress['is_spam'];
+			foreach (array_keys($_is_spam) as $key) {
+				$is_spam[$key] = TRUE;
+				if ($asap) break;
 			}
-			if (! empty($_error)) $error += $_error;
 			if ($asap && $is_spam) break;
+
+			// Merge only
+			$blocked = array_merge_leaves($blocked, $_progress['blocked'], FALSE, FALSE);
+			$hosts   = array_merge_leaves($hosts,   $_progress['hosts'],   FALSE, FALSE);
 		}
+
+		// Unique values
+		$blocked = array_unique_recursive($blocked);
+		$hosts   = array_unique_recursive($hosts);
+
+		// Renumber numeric keys
+		array_renumber_numeric_keys($blocked);
+		array_renumber_numeric_keys($hosts);
+
+		// Recount $sum['badhost']
+		$sum['badhost'] = array_count_leaves($blocked);
+
 		return $progress;
 	}
 
@@ -1117,7 +1283,6 @@ function check_uri_spam($target = '', $method = array())
 
 	// URI: Pickup
 	$pickups = uri_pickup_normalize(spam_uri_pickup($target, $method));
-	//$remains['uri_pickup'] = & $pickups;
 
 	// Return if ...
 	if (empty($pickups)) return $progress;
@@ -1188,10 +1353,8 @@ function check_uri_spam($target = '', $method = array())
 	if ($asap && $is_spam) return $progress;
 
 	// Host: Uniqueness (uniq / non-uniq)
-	$hosts = array();
 	foreach ($pickups as $pickup) $hosts[] = & $pickup['host'];
 	$hosts = array_unique($hosts);
-	//$remains['uniqhost'] = & $hosts;
 	$sum['uniqhost'] += count($hosts);
 	if ((! $asap || ! $is_spam) && isset($method['non_uniqhost'])) {
 		$sum['non_uniqhost'] = $sum['quantity'] - $sum['uniqhost'];
@@ -1203,45 +1366,68 @@ function check_uri_spam($target = '', $method = array())
 	// Return if ...
 	if ($asap && $is_spam) return $progress;
 
-	// URI: Bad host
+	// URI: Bad host (Separate good/bad hosts from $hosts)
 	if ((! $asap || ! $is_spam) && isset($method['badhost'])) {
-		$__remains = array();
-		$badhost = is_badhost($hosts, $asap, $__remains);
-		if (! $asap) {
-			if ($__remains) {
-				$remains['badhost'] = array();
-				foreach ($__remains as $value) {
-					$remains['badhost'][$value] = TRUE;
-				}
-			}
+
+		// is_badhost()
+		$list = get_blocklist('list');
+		$blocked = blocklist_distiller($hosts, array_keys($list), $asap);
+		foreach($list as $key=>$type){
+			if (! $type) unset($blocked[$key]); // Ignore goodhost etc
 		}
-		unset($__remains);
-		if (! empty($badhost)) {
-			//var_dump($badhost);	// BADHOST detail
-			$sum['badhost'] += array_count_leaves($badhost);
-			foreach(array_keys($badhost) as $keys) {
-				$is_spam['badhost'][$keys] =
-					array_count_leaves($badhost[$keys]);
-			}
-			unset($badhost);
-		}
+		unset($list);
+
+		if (! empty($blocked)) $is_spam['badhost'] = TRUE;
 	}
 
 	return $progress;
 }
 
-// Count leaves
-function array_count_leaves($array = array(), $count_empty_array = FALSE)
+// Count leaves (A leaf = value that is not an array, or an empty array)
+function array_count_leaves($array = array(), $count_empty = FALSE)
 {
-	if (! is_array($array) || (empty($array) && $count_empty_array))
-		return 1;
+	if (! is_array($array) || (empty($array) && $count_empty)) return 1;
 
 	// Recurse
-	$result = 0;
+	$count = 0;
 	foreach ($array as $part) {
-		$result += array_count_leaves($part, $count_empty_array);
+		$count += array_count_leaves($part, $count_empty);
 	}
-	return $result;
+	return $count;
+}
+
+// Merge two leaves' value
+function array_merge_leaves(& $array1, & $array2, $unique_values = TRUE, $renumber_numeric = TRUE)
+{
+	$array = array_merge_recursive($array1, $array2);
+
+	// Redundant values (and keys) are vanished
+	if ($unique_values) $array = array_unique_recursive($array);
+
+	// All NUMERIC keys are always renumbered from 0
+	if ($renumber_numeric) array_renumber_numeric_keys($array);
+
+	return $array;
+}
+
+// An array-leaves to a flat array
+function array_flat_leaves($array, $unique = TRUE)
+{
+	if (! is_array($array)) return $array;
+
+	$tmp = array();
+	foreach(array_keys($array) as $key) {
+		if (is_array($array[$key])) {
+			// Recurse
+			foreach(array_flat_leaves($array[$key]) as $_value) {
+				$tmp[] = $_value;
+			}
+		} else {
+			$tmp[] = & $array[$key];
+		}
+	}
+
+	return $unique ? array_values(array_unique($tmp)) : $tmp;
 }
 
 // ---------------------
@@ -1258,7 +1444,7 @@ function summarize_spam_progress($progress = array(), $blockedonly = FALSE)
 		$method = & $progress['method'];
 		if (isset($progress['sum'])) {
 			foreach ($progress['sum'] as $key => $value) {
-				if (isset($method[$key])) {
+				if (isset($method[$key]) && $value) {
 					$tmp[] = $key . '(' . $value . ')';
 				}
 			}
@@ -1267,6 +1453,54 @@ function summarize_spam_progress($progress = array(), $blockedonly = FALSE)
 
 	return implode(', ', $tmp);
 }
+
+function summarize_detail_badhost($progress = array())
+{
+	if (! isset($progress['blocked']) || empty($progress['blocked'])) return '';
+
+	// Flat per group
+	$blocked = array();
+	foreach($progress['blocked'] as $list => $lvalue) {
+		foreach($lvalue as $group => $gvalue) {
+			$flat = implode(', ', array_flat_leaves($gvalue));
+			if ($flat == $group) {
+				$blocked[$list][]       = $flat;
+			} else {
+				$blocked[$list][$group] = $flat;
+			}
+		}
+	}
+
+	// Shrink per list
+	// From: 'A-1' => array('ie.to')
+	// To:   'A-1' => 'ie.to'
+	foreach($blocked as $list => $lvalue) {
+		if (is_array($lvalue) &&
+		   count($lvalue) == 1 &&
+		   is_numeric(key($lvalue))) {
+		    $blocked[$list] = current($lvalue);
+		}
+	}
+
+	return var_export_shrink($blocked, TRUE, TRUE);
+}
+
+function summarize_detail_newtral($progress = array())
+{
+	if (! isset($progress['hosts'])    ||
+	    ! is_array($progress['hosts']) ||
+	    empty($progress['hosts'])) return '';
+
+	// Sort by domain
+	$tmp = array();
+	foreach($progress['hosts'] as $value) {
+		$tmp[delimiter_reverse($value)] = $value;
+	}
+	ksort($tmp);
+
+	return count($tmp) . ' (' .implode(', ', $tmp) . ')';
+}
+
 
 // ---------------------
 // Exit
@@ -1323,23 +1557,13 @@ function pkwk_spamnotify($action, $page, $target = array('title' => ''), $progre
 	if (! $asap) {
 		$summary['METRICS'] = summarize_spam_progress($progress);
 	}
-	if (isset($progress['is_spam']['badhost'])) {
-		$badhost = array();
-		foreach($progress['is_spam']['badhost'] as $glob=>$number) {
-			$badhost[] = $glob . '(' . $number . ')';
-		}
-		$summary['DETAIL_BADHOST'] = implode(', ', $badhost);
-	}
-	if (! $asap && $progress['remains']['badhost']) {
-		$count = count($progress['remains']['badhost']);
-		$summary['DETAIL_NEUTRAL_HOST'] = $count .
-			' (' .
-				preg_replace(
-					'/[^, a-z0-9.-]/i', '',
-					implode(', ', array_keys($progress['remains']['badhost']))
-				) .
-			')';
-	}
+
+	$tmp = summarize_detail_badhost($progress);
+	if ($tmp != '') $summary['DETAIL_BADHOST'] = $tmp;
+
+	$tmp = summarize_detail_newtral($progress);
+	if (! $asap && $tmp != '') $summary['DETAIL_NEUTRAL_HOST'] = $tmp;
+
 	$summary['COMMENT'] = $action;
 	$summary['PAGE']    = '[blocked] ' . (is_pagename($page) ? $page : '');
 	$summary['URI']     = get_script_uri() . '?' . rawurlencode($page);
