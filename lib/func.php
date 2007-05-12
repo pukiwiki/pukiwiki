@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.88 2007/05/12 07:44:39 henoheno Exp $
+// $Id: func.php,v 1.89 2007/05/12 08:00:50 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -267,7 +267,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 	if (empty($pages))
 		return str_replace('$1', $s_word, $_msg_notfoundresult);
 
-	ksort($pages);
+	ksort($pages, SORT_STRING);
 
 	$retval = '<ul>' . "\n";
 	foreach (array_keys($pages) as $page) {
