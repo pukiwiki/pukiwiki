@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.87 2007/04/01 11:55:43 henoheno Exp $
+// $Id: func.php,v 1.88 2007/05/12 07:44:39 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -297,17 +297,18 @@ function arg_check($str)
 }
 
 // Encode page-name
-function encode($key)
+function encode($str)
 {
-	return ($key == '') ? '' : strtoupper(bin2hex($key));
+	$str = strval($str);
+	return ($str == '') ? '' : strtoupper(bin2hex($str));
 	// Equal to strtoupper(join('', unpack('H*0', $key)));
 	// But PHP 4.3.10 says 'Warning: unpack(): Type H: outside of string in ...'
 }
 
 // Decode page name
-function decode($key)
+function decode($str)
 {
-	return hex2bin($key);
+	return hex2bin($str);
 }
 
 // Inversion of bin2hex()
