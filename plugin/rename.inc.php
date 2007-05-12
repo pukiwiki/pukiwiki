@@ -166,7 +166,7 @@ $msg
 EOD;
 	if (! empty($related)) {
 		$ret['body'] .= '<hr /><p>' . $_rename_messages['msg_related'] . '</p><ul>';
-		sort($related);
+		sort($related, SORT_STRING);
 		foreach ($related as $name)
 			$ret['body'] .= '<li>' . make_pagelink($name) . '</li>';
 		$ret['body'] .= '</ul>';

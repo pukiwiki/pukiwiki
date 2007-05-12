@@ -654,7 +654,7 @@ function get_readings()
 
 		if($unknownPage || $deletedPage) {
 
-			asort($readings); // Sort by pronouncing(alphabetical/reading) order
+			asort($readings, SORT_STRING); // Sort by pronouncing(alphabetical/reading) order
 			$body = '';
 			foreach ($readings as $page => $reading)
 				$body .= '-[[' . $page . ']] ' . $reading . "\n";

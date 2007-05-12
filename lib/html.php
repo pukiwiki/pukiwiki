@@ -276,9 +276,9 @@ function make_related($page, $tag = '')
 	$links = links_get_related($page);
 
 	if ($tag) {
-		ksort($links, SORT_STRING);
+		ksort($links, SORT_STRING);		// Page name, alphabetical order
 	} else {
-		arsort($links);
+		arsort($links, SORT_NUMERIC);	// Last modified date, newer
 	}
 
 	$_links = array();

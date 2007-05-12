@@ -53,7 +53,7 @@ function plugin_map_action()
 
 	if ($reverse) {
 		$keys = array_keys($nodes);
-		sort($keys);
+		sort($keys, SORT_STRING);
 		$alone = array();
 		$retval['body'] .= '<ul>' . "\n";
 		foreach ($keys as $page) {
@@ -78,7 +78,7 @@ function plugin_map_action()
 		$retval['body'] .= '<hr />' . "\n" .
 			'<p>Not related from ' . htmlsc($refer) . '</p>' . "\n";
 		$keys = array_keys($nodes);
-		sort($keys);
+		sort($keys, SORT_STRING);
 		$retval['body'] .= '<ul>' . "\n";
 		foreach ($keys as $page) {
 			if (! $nodes[$page]->done) {
@@ -142,7 +142,7 @@ class MapNode
 				$refs[] = $ref[0];
 			}
 			$this->hide($refs);
-			sort($refs);
+			sort($refs, SORT_STRING);
 		}
 		return $refs;
 	}
@@ -155,7 +155,7 @@ class MapNode
 			$data = file($file);
 			$rels = explode("\t", trim($data[0]));
 			$this->hide($rels);
-			sort($rels);
+			sort($rels, SORT_STRING);
 		}
 		return $rels;
 	}

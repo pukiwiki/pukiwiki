@@ -149,9 +149,9 @@ function plugin_calendar_viewer_convert()
 	closedir($dir);
 
 	if ($mode == 'past') {
-		rsort($pagelist);	// New => Old
+		rsort($pagelist, SORT_STRING);	// New => Old
 	} else {
-		sort($pagelist);	// Old => New
+		sort($pagelist, SORT_STRING);	// Old => New
 	}
 
 	// Include start

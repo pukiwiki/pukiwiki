@@ -1,5 +1,5 @@
 <?php
-// $Id: dump.inc.php,v 1.37 2006/01/12 01:01:35 teanan Exp $
+// $Id: dump.inc.php,v 1.38 2007/05/12 09:17:14 henoheno Exp $
 //
 // Remote dump / restore plugin
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
@@ -393,7 +393,7 @@ class tarlib
 		}
 		closedir($dp);
 		
-		sort($files);
+		sort($files, SORT_STRING);
 
 		$matches = array();
 		foreach($files as $name)

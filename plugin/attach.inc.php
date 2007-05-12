@@ -755,7 +755,7 @@ class AttachFiles
 
 		$ret = '';
 		$files = array_keys($this->files);
-		sort($files);
+		sort($files, SORT_STRING);
 
 		foreach ($files as $file) {
 			$_files = array();
