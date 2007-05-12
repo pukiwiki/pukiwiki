@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: related.inc.php,v 1.7 2005/12/18 15:28:55 henoheno Exp $
+// $Id: related.inc.php,v 1.8 2007/05/12 08:37:38 henoheno Exp $
 //
 // Related plugin: Show Backlinks for the page
 
@@ -40,7 +40,7 @@ function plugin_related_action()
 		$retval .= '<ul><li>No related pages found.</li></ul>' . "\n";	
 	} else {
 		// Show count($data)?
-		ksort($data);
+		ksort($data, SORT_STRING);
 		$retval .= '<ul>' . "\n";
 		foreach ($data as $page=>$time) {
 			$r_page  = rawurlencode($page);

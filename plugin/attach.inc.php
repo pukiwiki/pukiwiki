@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.82 2006/04/14 23:51:12 teanan Exp $
+// $Id: attach.inc.php,v 1.83 2007/05/12 08:37:38 henoheno Exp $
 // Copyright (C)
 //   2003-2006 PukiWiki Developers Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
@@ -27,7 +27,7 @@ define('PLUGIN_ATTACH_DELETE_ADMIN_ONLY', TRUE); // FALSE or TRUE
 
 // 管理者が添付ファイルを削除するときは、バックアップを作らない
 // PLUGIN_ATTACH_DELETE_ADMIN_ONLY=TRUEのとき有効
-define('PLUGIN_ATTACH_DELETE_ADMIN_NOBACKUP', TRUE); // FALSE or TRUE
+define('PLUGIN_ATTACH_DELETE_ADMIN_NOBACKUP', FALSE); // FALSE or TRUE
 
 // アップロード/削除時にパスワードを要求する(ADMIN_ONLYが優先)
 define('PLUGIN_ATTACH_PASSWORD_REQUIRE', FALSE); // FALSE or TRUE
@@ -765,7 +765,7 @@ class AttachFiles
 			if (! isset($_files[0])) {
 				$_files[0] = htmlspecialchars($file);
 			}
-			ksort($_files);
+			ksort($_files, SORT_NUMERIC);
 			$_file = $_files[0];
 			unset($_files[0]);
 			$ret .= " <li>$_file\n";
@@ -840,7 +840,7 @@ class AttachPages
 		$ret = '';
 
 		$pages = array_keys($this->pages);
-		sort($pages);
+		sort($pages, SORT_STRING);
 
 		foreach ($pages as $page) {
 			if (check_non_list($page)) continue;

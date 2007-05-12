@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: versionlist.inc.php,v 1.16 2007/01/21 14:18:52 henoheno Exp $
+// $Id: versionlist.inc.php,v 1.17 2007/05/12 08:37:38 henoheno Exp $
 // Copyright (C)
 //	 2002-2006 PukiWiki Developers Team
 //	 2002      S.YOSHIMURA GPL2 yosimura@excellence.ac.jp
@@ -60,7 +60,7 @@ function plugin_versionlist_convert()
 	{
 		return '';
 	}
-	ksort($comments);
+	ksort($comments, SORT_STRING);
 	$retval = '';
 	foreach ($comments as $comment)
 	{

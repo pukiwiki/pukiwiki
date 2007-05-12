@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.59 2007/02/11 05:53:30 henoheno Exp $
+// $Id: html.php,v 1.60 2007/05/12 08:37:35 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -187,7 +187,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 			$pages[$_page] = '   <option value="' . $s_page . '">' .
 				$s_page . '</option>';
 		}
-		ksort($pages);
+		ksort($pages, SORT_STRING);
 		$s_pages  = join("\n", $pages);
 		$template = <<<EOD
   <select name="template_page">
@@ -276,7 +276,7 @@ function make_related($page, $tag = '')
 	$links = links_get_related($page);
 
 	if ($tag) {
-		ksort($links);
+		ksort($links, SORT_STRING);
 	} else {
 		arsort($links);
 	}

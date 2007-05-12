@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.89 2007/05/12 08:00:50 henoheno Exp $
+// $Id: func.php,v 1.90 2007/05/12 08:37:35 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -384,7 +384,7 @@ function page_list($pages = array('pagename.txt' => 'pagename'), $cmd = 'read', 
 		$array[$initial][$page] = $str;
 	}
 	unset($pages);
-	ksort($array);
+	ksort($array, SORT_STRING);
 
 	if ($list_index) {
 		$s_msg_symbol  = htmlspecialchars($_msg_symbol);
@@ -394,7 +394,7 @@ function page_list($pages = array('pagename.txt' => 'pagename'), $cmd = 'read', 
 	$retval = $contents = array();
 	$retval[] = '<ul>';
 	foreach ($array as $_initial => $pages) {
-		ksort($pages);
+		ksort($pages, SORT_STRING);
 		if ($list_index) {
 			++$cnt;
 			if ($_initial == $sentinel_symbol) {
