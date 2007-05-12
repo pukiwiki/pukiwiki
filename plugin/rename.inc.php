@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.29 2007/05/12 09:17:14 henoheno Exp $
+// $Id: rename.inc.php,v 1.30 2007/05/12 14:24:52 henoheno Exp $
+// Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
 // Rename plugin: Rename page-name and related data
 //

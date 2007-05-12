@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: related.inc.php,v 1.8 2007/05/12 08:37:38 henoheno Exp $
+// $Id: related.inc.php,v 1.9 2007/05/12 14:24:52 henoheno Exp $
+// Copyright (C) 2005, 2007 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
 // Related plugin: Show Backlinks for the page
 

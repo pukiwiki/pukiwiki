@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.84 2007/05/12 09:17:14 henoheno Exp $
+// $Id: attach.inc.php,v 1.85 2007/05/12 14:24:52 henoheno Exp $
 // Copyright (C)
-//   2003-2006 PukiWiki Developers Team
+//   2003-2007 PukiWiki Developers Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
 //   2002      Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
 //   2001-2002 Originally written by yu-ji

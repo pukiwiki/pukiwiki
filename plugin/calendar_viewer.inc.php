@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: calendar_viewer.inc.php,v 1.35 2007/05/12 09:17:14 henoheno Exp $
+// $Id: calendar_viewer.inc.php,v 1.36 2007/05/12 14:24:52 henoheno Exp $
+// Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
 // Calendar viewer plugin - List pages that calendar/calnedar2 plugin created
 // (Based on calendar and recent plugin)
