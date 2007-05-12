@@ -42,7 +42,7 @@ function plugin_related_action()
 		$retval .= '<ul><li>No related pages found.</li></ul>' . "\n";	
 	} else {
 		// Show count($data)?
-		ksort($data);
+		ksort($data, SORT_STRING);
 		$retval .= '<ul>' . "\n";
 		foreach ($data as $page=>$time) {
 			$r_page  = rawurlencode($page);

@@ -1,11 +1,12 @@
 <?php
-// $Id: versionlist.inc.php,v 1.15 2005/01/29 02:12:52 henoheno Exp $
-/*
- * PukiWiki versionlist plugin
- *
- * CopyRight 2002 S.YOSHIMURA GPL2
- * http://masui.net/pukiwiki/ yosimura@excellence.ac.jp
- */
+// PukiWiki - Yet another WikiWikiWeb clone
+// $Id: versionlist.inc.php,v 1.17 2007/05/12 08:37:38 henoheno Exp $
+// Copyright (C)
+//	 2002-2006 PukiWiki Developers Team
+//	 2002      S.YOSHIMURA GPL2 yosimura@excellence.ac.jp
+// License: GPL v2
+//
+// Listing cvs revisions of files
 
 function plugin_versionlist_action()
 {
@@ -59,7 +60,7 @@ function plugin_versionlist_convert()
 	{
 		return '';
 	}
-	ksort($comments);
+	ksort($comments, SORT_STRING);
 	$retval = '';
 	foreach ($comments as $comment)
 	{

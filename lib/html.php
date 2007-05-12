@@ -187,7 +187,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 			$pages[$_page] = '   <option value="' . $s_page . '">' .
 				$s_page . '</option>';
 		}
-		ksort($pages);
+		ksort($pages, SORT_STRING);
 		$s_pages  = join("\n", $pages);
 		$template = <<<EOD
   <select name="template_page">
@@ -276,7 +276,7 @@ function make_related($page, $tag = '')
 	$links = links_get_related($page);
 
 	if ($tag) {
-		ksort($links);
+		ksort($links, SORT_STRING);
 	} else {
 		arsort($links);
 	}

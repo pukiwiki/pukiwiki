@@ -388,7 +388,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 
 		$list[$head][$page] = $str;
 	}
-	ksort($list);
+	ksort($list, SORT_STRING);
 
 	$cnt = 0;
 	$arr_index = array();
@@ -409,7 +409,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 				'"><strong>' . $head . '</strong></a>' . "\n" .
 				'  <ul>' . "\n";
 		}
-		ksort($pages);
+		ksort($pages, SORT_STRING);
 		$retval .= join("\n", $pages);
 		if ($list_index)
 			$retval .= "\n  </ul>\n </li>\n";

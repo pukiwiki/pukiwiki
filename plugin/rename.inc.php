@@ -286,7 +286,7 @@ function plugin_rename_phase3($pages)
 <p>{$_rename_messages['msg_confirm']}</p>
 EOD;
 
-	ksort($pages);
+	ksort($pages, SORT_STRING);
 	$ret['body'] .= '<ul>' . "\n";
 	foreach ($pages as $old=>$new)
 		$ret['body'] .= '<li>' .  make_pagelink(decode($old)) .
@@ -413,7 +413,7 @@ function plugin_rename_getselecttag($page)
 		$pages[$_page] = '<option value="' . $s_page . '"' . $selected . '>' .
 			$s_page . '</option>';
 	}
-	ksort($pages);
+	ksort($pages, SORT_STRING);
 	$list = join("\n" . ' ', $pages);
 
 	return <<<EOD
