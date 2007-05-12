@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.60 2007/05/12 08:37:35 henoheno Exp $
+// $Id: html.php,v 1.61 2007/05/12 09:17:11 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -276,9 +276,9 @@ function make_related($page, $tag = '')
 	$links = links_get_related($page);
 
 	if ($tag) {
-		ksort($links, SORT_STRING);
+		ksort($links, SORT_STRING);		// Page name, alphabetical order
 	} else {
-		arsort($links);
+		arsort($links, SORT_NUMERIC);	// Last modified date, newer
 	}
 
 	$_links = array();

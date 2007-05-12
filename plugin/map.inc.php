@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: map.inc.php,v 1.16 2007/04/15 15:10:42 henoheno Exp $
+// $Id: map.inc.php,v 1.17 2007/05/12 09:17:14 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -52,7 +52,7 @@ function plugin_map_action()
 
 	if ($reverse) {
 		$keys = array_keys($nodes);
-		sort($keys);
+		sort($keys, SORT_STRING);
 		$alone = array();
 		$body[] = '<ul>';
 		foreach ($keys as $page) {
@@ -79,7 +79,7 @@ function plugin_map_action()
 		$body[] = '<hr />';
 		$body[] = '<p>Not related from ' . htmlspecialchars($refer) . '</p>';
 		$keys = array_keys($nodes);
-		sort($keys);
+		sort($keys, SORT_STRING);
 		$body[] = '<ul>';
 		foreach ($keys as $page) {
 			if (! $nodes[$page]->done) {
@@ -152,7 +152,7 @@ class MapNode
 				$refs[] = $ref[0];
 			}
 			$this->hide($refs);
-			sort($refs);
+			sort($refs, SORT_STRING);
 		}
 		return $refs;
 	}
@@ -165,7 +165,7 @@ class MapNode
 			$data = file($file);
 			$rels = explode("\t", trim($data[0]));
 			$this->hide($rels);
-			sort($rels);
+			sort($rels, SORT_STRING);
 		}
 		return $rels;
 	}

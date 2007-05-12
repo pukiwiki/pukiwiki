@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.28 2007/05/12 08:37:38 henoheno Exp $
+// $Id: rename.inc.php,v 1.29 2007/05/12 09:17:14 henoheno Exp $
 //
 // Rename plugin: Rename page-name and related data
 //
@@ -164,7 +164,7 @@ $msg
 EOD;
 	if (! empty($related)) {
 		$ret['body'] .= '<hr /><p>' . $_rename_messages['msg_related'] . '</p><ul>';
-		sort($related);
+		sort($related, SORT_STRING);
 		foreach ($related as $name)
 			$ret['body'] .= '<li>' . make_pagelink($name) . '</li>';
 		$ret['body'] .= '</ul>';

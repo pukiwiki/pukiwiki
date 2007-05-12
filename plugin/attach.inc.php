@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.83 2007/05/12 08:37:38 henoheno Exp $
+// $Id: attach.inc.php,v 1.84 2007/05/12 09:17:14 henoheno Exp $
 // Copyright (C)
 //   2003-2006 PukiWiki Developers Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
@@ -755,7 +755,7 @@ class AttachFiles
 
 		$ret = '';
 		$files = array_keys($this->files);
-		sort($files);
+		sort($files, SORT_STRING);
 
 		foreach ($files as $file) {
 			$_files = array();
