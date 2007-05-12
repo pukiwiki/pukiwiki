@@ -267,7 +267,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 	if (empty($pages))
 		return str_replace('$1', $s_word, $_msg_notfoundresult);
 
-	ksort($pages);
+	ksort($pages, SORT_STRING);
 
 	$retval = '<ul>' . "\n";
 	foreach (array_keys($pages) as $page) {
