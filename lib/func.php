@@ -294,17 +294,18 @@ function arg_check($str)
 }
 
 // Encode page-name
-function encode($key)
+function encode($str)
 {
-	return ($key == '') ? '' : strtoupper(bin2hex($key));
+	$str = strval($str);
+	return ($str == '') ? '' : strtoupper(bin2hex($str));
 	// Equal to strtoupper(join('', unpack('H*0', $key)));
 	// But PHP 4.3.10 says 'Warning: unpack(): Type H: outside of string in ...'
 }
 
 // Decode page name
-function decode($key)
+function decode($str)
 {
-	return pkwk_hex2bin($key);
+	return pkwk_hex2bin($str);
 }
 
 // Inversion of bin2hex()
