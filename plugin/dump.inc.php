@@ -1,9 +1,9 @@
 <?php
-// $Id: dump.inc.php,v 1.39 2007/05/12 14:24:52 henoheno Exp $
+// $Id: dump.inc.php,v 1.40 2007/05/13 22:11:23 teanan Exp $
 // Copyright (C)
 //   2004-2007 PukiWiki Developers Team
 //   2004      teanan / Interfair Laboratory
-// License: [I'd like to make sure of it, by your commit or something]
+// License: GPL v2 or (at your option) any later version
 //
 // Remote dump / restore plugin
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
