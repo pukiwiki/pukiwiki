@@ -1,7 +1,7 @@
 <?php
-// $Id: recent.inc.php,v 1.24 2006/09/30 02:18:23 henoheno Exp $
+// $Id: recent.inc.php,v 1.25 2007/05/17 13:35:49 henoheno Exp $
 // Copyright (C)
-//   2002-2006 PukiWiki Developers Team
+//   2002-2007 PukiWiki Developers Team
 //   2002      Y.MASUI http://masui.net/pukiwiki/ masui@masui.net
 // License: GPL version 2
 //
@@ -68,7 +68,8 @@ function plugin_recent_convert()
 		}
 
 		$s_page = htmlspecialchars($page);
-		if($page == $vars['page']) {
+
+		if ($page === $vars['page']) {
 			// No need to link to the page you just read, or notify where you just read
 			$items .= ' <li>' . $s_page . '</li>' . "\n";
 		} else {
