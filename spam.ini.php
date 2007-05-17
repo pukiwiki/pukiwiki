@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.60 2007/05/15 12:47:36 henoheno Exp $
+// $Id: spam.ini.php,v 1.61 2007/05/17 15:24:33 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -157,6 +157,7 @@ $blocklist['A-1'] = array(
 	),
 	'ataja.es',
 	'atk.jp',
+	'clearp.ath.cx',
 	'athomebiz.com',
 	'aukcje1.pl',
 	'beam.to',
@@ -247,93 +248,6 @@ $blocklist['A-1'] = array(
 	'*.dl.pl',
 	'*.dmdns.com',
 	'doiop.com',
-	'Ideas para Nuevos Mercados SL' => array(
-		// NOTE: 'i4nm.com' by 'Ideas para Nuevos Mercados SL' (i4nm at i4nm.com)
-		// NOTE: 'dominiosfree.com' by 'Ideas para nuevos mercados,sl' (dominiosfree at i4nm.com)
-		// NOTE: 'red-es.com' by oscar florez (info at i4nm.com)
-		// by edgar bortolin (oscar at i4nm.com)
-		// by Edgar Bortolin  (oscar at i4nm.com)
-		// by oscar florez (oscar at i4nm.com)
-		// by Oscar Florez (oscar at red-es.com)
-		// by covadonga del valle (oscar at i4nm.com)
-		'*.ar.gd',
-		'*.ar.gs',	// ns *.nora.net
-		'*.ar.kz',	// by oscar
-		'*.ar.nu',	// by Edgar
-		'*.ar.tc',	// by oscar
-		'*.ar.vg',	// by oscar
-		'*.bo.kz',	// by oscar
-		'*.bo.nu',	// by covadonga
-		'*.bo.tc',	// by oscar
-		'*.bo.tf',	// by Oscar
-		'*.bo.vg',	// by oscar
-		'*.br.gd',
-		'*.br.gs',	// ns *.nora.net
-		'*.br.nu',	// by edgar
-		'*.br.vg',	// by oscar
-		'*.ca.gs',	// by oscar
-		'*.ca.kz',	// by oscar
-		'*.cl.gd',	// by oscar
-		'*.cl.kz',	// by oscar
-		'*.cl.nu',	// by edgar
-		'*.cl.tc',	// by oscar
-		'*.cl.tf',	// by Oscar
-		'*.cl.vg',	// by oscar
-		'*.col.nu',	// by Edgar
-		'*.cr.gs',	// ns *.nora.net
-		'*.cr.kz',	// by oscar
-		'*.cr.nu',	// by edgar
-		'*.cr.tc',	// by oscar
-		'*.cu.tc',	// by oscar
-		'*.do.kz',	// by oscar
-		'*.do.nu',	// by edgar
-		'*.ec.kz',	// by edgar
-		'*.ec.nu',	// by Edgar
-		'*.ec.tf',	// by Oscar
-		'*.es.kz',	// by oscar
-		'*.eu.kz',	// by oscar
-		'*.gt.gs',	// ns *.nora.net
-		'*.gt.tc',	// by oscar
-		'*.gt.tf',	// by Oscar
-		'*.gt.vg',	// by Oscar
-		'*.hn.gs',	// ns *.nora.net
-		'*.hn.tc',	// by oscar
-		'*.hn.tf',	// by Oscar
-		'*.hn.vg',	// by oscar
-		'*.mx.gd',
-		'*.mx.gs',	// ns *.nora.net
-		'*.mx.kz',	// by oscar
-		'*.mx.vg',	// by oscar
-		'*.ni.kz',	// by oscar
-		'*.pa.kz',	// by oscar
-		'*.pe.kz',	// by oscar
-		'*.pe.nu',	// by Edgar
-		'*.pr.kz',	// by oscar
-		'*.pr.nu',	// by edgar
-		'*.pt.gs',	// ns *.nora.net
-		'*.pt.kz',	// by edgar
-		'*.pt.nu',	// by edgar
-		'*.pt.tc',	// by oscar
-		'*.pt.tf',	// by Oscar
-		'*.py.gs',	// ns *.nora.net
-		'*.py.nu',	// by edgar
-		'*.py.tc',	// by oscar
-		'*.py.tf',	// by Oscar
-		'*.py.vg',	// by oscar
-		'*.sv.tc',	// by oscar
-		'*.usa.gs',	// ns *.nora.net
-		'*.uy.gs',	// ns *.nora.net
-		'*.uy.kz',	// by oscar
-		'*.uy.nu',	// by edgar
-		'*.uy.tc',	// by oscar
-		'*.uy.tf',	// by Oscar
-		'*.uy.vg',	// by oscar
-		'*.ve.gs',	// by oscar
-		'*.ve.tc',	// by oscar
-		'*.ve.tf',	// by Oscar
-		'*.ve.vg',	// by oscar
-		'*.ven.nu',	// by edgar
-	),
 	'drlinky.com',
 	'durl.us',
 	'*.dvdonly.ru',
@@ -484,6 +398,7 @@ $blocklist['A-1'] = array(
 	'goonlink.com',
 	'.gourl.org',
 	'.greatitem.com',
+	'*.greatnow.com',	// by Per Olof Sandholm (peo at peakspace.com)
 	'gzurl.com',
 	'url.grillsportverein.de',
 	'Harudake.net' => array('*.hyu.jp'),
@@ -507,6 +422,7 @@ $blocklist['A-1'] = array(
 		'*.of.pl',
 	),
 	'hort.net',
+	'free4.hostrocket.com',
 	'*.hotindex.ru',
 	'HotRedirect.com' => array(
 		'*.coolhere.com',
@@ -523,6 +439,93 @@ $blocklist['A-1'] = array(
 	'*.hux.de',
 	'*.i89.us',
 	'*.iceglow.com',
+	'Ideas para Nuevos Mercados SL' => array(
+		// NOTE: 'i4nm.com' by 'Ideas para Nuevos Mercados SL' (i4nm at i4nm.com)
+		// NOTE: 'dominiosfree.com' by 'Ideas para nuevos mercados,sl' (dominiosfree at i4nm.com)
+		// NOTE: 'red-es.com' by oscar florez (info at i4nm.com)
+		// by edgar bortolin (oscar at i4nm.com)
+		// by Edgar Bortolin  (oscar at i4nm.com)
+		// by oscar florez (oscar at i4nm.com)
+		// by Oscar Florez (oscar at red-es.com)
+		// by covadonga del valle (oscar at i4nm.com)
+		'*.ar.gd',
+		'*.ar.gs',	// ns *.nora.net
+		'*.ar.kz',	// by oscar
+		'*.ar.nu',	// by Edgar
+		'*.ar.tc',	// by oscar
+		'*.ar.vg',	// by oscar
+		'*.bo.kz',	// by oscar
+		'*.bo.nu',	// by covadonga
+		'*.bo.tc',	// by oscar
+		'*.bo.tf',	// by Oscar
+		'*.bo.vg',	// by oscar
+		'*.br.gd',
+		'*.br.gs',	// ns *.nora.net
+		'*.br.nu',	// by edgar
+		'*.br.vg',	// by oscar
+		'*.ca.gs',	// by oscar
+		'*.ca.kz',	// by oscar
+		'*.cl.gd',	// by oscar
+		'*.cl.kz',	// by oscar
+		'*.cl.nu',	// by edgar
+		'*.cl.tc',	// by oscar
+		'*.cl.tf',	// by Oscar
+		'*.cl.vg',	// by oscar
+		'*.col.nu',	// by Edgar
+		'*.cr.gs',	// ns *.nora.net
+		'*.cr.kz',	// by oscar
+		'*.cr.nu',	// by edgar
+		'*.cr.tc',	// by oscar
+		'*.cu.tc',	// by oscar
+		'*.do.kz',	// by oscar
+		'*.do.nu',	// by edgar
+		'*.ec.kz',	// by edgar
+		'*.ec.nu',	// by Edgar
+		'*.ec.tf',	// by Oscar
+		'*.es.kz',	// by oscar
+		'*.eu.kz',	// by oscar
+		'*.gt.gs',	// ns *.nora.net
+		'*.gt.tc',	// by oscar
+		'*.gt.tf',	// by Oscar
+		'*.gt.vg',	// by Oscar
+		'*.hn.gs',	// ns *.nora.net
+		'*.hn.tc',	// by oscar
+		'*.hn.tf',	// by Oscar
+		'*.hn.vg',	// by oscar
+		'*.mx.gd',
+		'*.mx.gs',	// ns *.nora.net
+		'*.mx.kz',	// by oscar
+		'*.mx.vg',	// by oscar
+		'*.ni.kz',	// by oscar
+		'*.pa.kz',	// by oscar
+		'*.pe.kz',	// by oscar
+		'*.pe.nu',	// by Edgar
+		'*.pr.kz',	// by oscar
+		'*.pr.nu',	// by edgar
+		'*.pt.gs',	// ns *.nora.net
+		'*.pt.kz',	// by edgar
+		'*.pt.nu',	// by edgar
+		'*.pt.tc',	// by oscar
+		'*.pt.tf',	// by Oscar
+		'*.py.gs',	// ns *.nora.net
+		'*.py.nu',	// by edgar
+		'*.py.tc',	// by oscar
+		'*.py.tf',	// by Oscar
+		'*.py.vg',	// by oscar
+		'*.sv.tc',	// by oscar
+		'*.usa.gs',	// ns *.nora.net
+		'*.uy.gs',	// ns *.nora.net
+		'*.uy.kz',	// by oscar
+		'*.uy.nu',	// by edgar
+		'*.uy.tc',	// by oscar
+		'*.uy.tf',	// by Oscar
+		'*.uy.vg',	// by oscar
+		'*.ve.gs',	// by oscar
+		'*.ve.tc',	// by oscar
+		'*.ve.tf',	// by Oscar
+		'*.ve.vg',	// by oscar
+		'*.ven.nu',	// by edgar
+	),
 	'ie.to',
 	'igoto.co.uk',
 	'ilook.tw',
@@ -1407,10 +1410,11 @@ $blocklist['B-1'] = array(
 	'*.blog-fx.com',
 	'blogas.lt',
 	'blogbud.com',
-	'blogcu.com',			// by info at nokta.com
+	'*.blogcu.com',			// by info at nokta.com
 	'blogfreely.com',
 	'*.blogdrive.com',
 	'*.blogg.de',
+	'bloggercrab.com',
 	'*.bloggingmylife.com',
 	'*.bloggles.info',
 	'bloggers.nl',
@@ -1520,7 +1524,10 @@ $blocklist['B-1'] = array(
 		'*.orgfree.com',
 	),
 	'*.freewebpage.org',
-	'freewebs.com',
+	'Freewebs.com' => array(	// by inquiries at freewebs.com
+		'freewebs.com',
+		'freewebsfarms.com',
+	),
 	'*.freewebspace.net.au',
 	'*.foren-city.de',
 	'foren-gratis.de',
@@ -1770,6 +1777,7 @@ $blocklist['B-1'] = array(
 		'.www3.to',
 	),
 	'*.spazioforum.it',
+	'forums.speedguide.net',
 	'*.spicyblogger.com',
 	'*.spotbb.com',
 	'*.squarespace.com',
@@ -1936,6 +1944,7 @@ $blocklist['B-1'] = array(
 		'*.ws.co.ua',
 	),
 	'*.vdforum.ru',
+	'.freeblogs.xp.tl',
 	'*.ya.com',				// 'geo.ya.com', 'blogs.ya.com', 'humano.ya.com', 'audio.ya.com'...
 	'YANDEX, LLC.' => array(
 		'*.narod.ru',		// noc at yandex.net
@@ -2015,6 +2024,7 @@ $blocklist['B-2'] = array(
 	'huskerink.com',
 	'.hyba.info',
 	'inda.org',
+	'*.indymedia.org',	// by abdecom at riseup.net
 	'internetincomeclub.com',
 	'*.inventforum.com',
 	'ipwso.org',
@@ -2566,6 +2576,7 @@ $blocklist['C'] = array(
 	),
 	'm.frenzy at yahoo.com' => array(	// by Michael
 		'.p5v.org',
+		'.j111.net',
 		'.soft2you.info',
 		'.top20health.info',
 		'.top20ringtones.info',
@@ -3210,13 +3221,20 @@ $blocklist['C'] = array(
 	),
 	'wasam at vangers.net' => array(	// by Ashiksh Wasam
 		'.blogduet.org',
+		'.bossierpainted.org',
 		'.carelf.info',
 		'.cspell.org',
 		'.dspark.org',
 		'.dtonic.org',
+		'.gradetelemundo.info',
+		'.indicadorestmj.info',
 		'.mcharm.info',
 		'.mslook.info',
+		'.phpdinnerware.info',
+		'.pipnickname.info',
+		'.rnation.org',
 		'.uzing.org',
+		'.yeareola.info',
 	),
 	'tvaals at vangers.net' => array(	// by Thomas Vaals
 		'.cheapns.org',
@@ -3229,13 +3247,18 @@ $blocklist['C'] = array(
 		'.allbar.info',
 		'.allersearch.org',
 		'.dynall.org',
+		'.educativaanale.info',
 		'.fastopia.org',
+		'.opalbusy.info',
 		'.rblast.org',
 		'.rette.org',
+		'.salthjc.info',
 		'.suvlook.org',
 	),
 	'kasturba at vangers.net' => array(	// by Kasturba Nagari
 		'.finddesk.org',
+		'.gsfind.org',
+		'.my-top.org',
 		'.rcatalog.org',
 		'.sbitzone.org',
 	),
@@ -3575,9 +3598,10 @@ $blocklist['C'] = array(
 		'.npous.info',
 		'.obgju.info',
 	),
-	'fateback.com' => array(	// by LiquidNet Ltd. Redirect to www.japan.jp
+	'FateBack.com' => array(	// by LiquidNet Ltd. (president at fateback.com), redirect to www.japan.jp
 		'.bebto.com',
 		'.fateback.com',
+		'.undonet.com',
 	),
 	'domains at agava.com' => array(
 		'.h18.ru',
@@ -3731,12 +3755,14 @@ $blocklist['C'] = array(
 		'.movie1945.com',		// by Zhang Teng, content from lineage.jp, hidden JavaScript
 	),
 	'mk_slowman at yahoo.com' => array(	// by Mike Slowman (mk_slowman at yahoo.com)
+		'.fast-marketing.info',
 		'.from-usa.info',
 		'.generic-pharm.info',
 		'.pharm-directory.info',
 		'.popular-people.info',
 		'.safe-health.info',
 		'.star-celebrities.info',
+		'.super-home-biz.info',
 		'.top5-auto.info',
 		'.top5-cars.info',
 		'.vip-furniture.info',
@@ -3841,23 +3867,28 @@ $blocklist['C'] = array(
 		'.sanartuk.ru',		// by Vladimir I Noskov (hoskv2003 at gmail.ru)
 	),
 	'orgitaly2 at ya.ru' => array(	// by Orgitaly2 (orgitaly2 at ya.ru), encoded JavaScript
-		'.cerca-sx.org',
-		'.ricerca-one.org',
-		'.ricerca-te.org',
-		'.ricerca-sv.org',
-		'.ricerca-sx.org',
+		'.cerc-on.info',		// 208.70.75.153, ns *.italydns.info
+		'.cerc-te.info',		// by Ru Lee (cerca-tree at ya.ru), 208.70.75.153, ns *.italydns.info
 
-		'.cerca-tr.org',		// orgitaly1 at ya.ru
-		'.ricerca-fiv.org',		// orgitaly1 at ya.ru
-		'.ricerca-tw.org',		// orgitaly1 at ya.ru
-
-		'.ricerca-fo.info',		// 208.70.75.153, equals to ricerca-one.org
 		'.cerca-fo.info',		// 208.70.75.153
 		'.cerca-no.info',		// 208.70.75.153
 		'.cerca-on.info',		// 208.70.75.153
 		'.cerca-sv.info',		// 208.70.75.153
 		'.cerca-te.info',		// 208.70.75.153
 		'.cerca-tr.info',		// 208.70.75.153
+
+		'.cerc-fi.org',			// by Kon Bi (cerca-two at ya.ru), 208.70.75.153, ns *.italydns.info
+		'.cerca-sx.org',
+		'.cerca-tr.org',		// orgitaly1 at ya.ru
+
+		'.ricerca-fiv.org',		// orgitaly1 at ya.ru
+		'.ricerca-fo.info',		// 208.70.75.153, equals to ricerca-one.org
+		'.ricerca-one.org',
+		'.ricerca-sv.org',
+		'.ricerca-sx.org',
+		'.ricerca-te.org',
+		'.ricerca-tw.org',		// orgitaly1 at ya.ru
+
 		'.subit01.org',			// 208.70.75.153, ns *.italydns.info
 		'.subit02.org',			// 208.70.75.153, ns *.italydns.info
 		'.subit03.org',			// 208.70.75.153, ns *.italydns.info
@@ -3893,6 +3924,7 @@ $blocklist['C'] = array(
 	),
 	'supermaster at pisem.net' => array(	// by Aleksandr Krasnik (supermaster at pisem.net), ns *.msn-dns.com
 		'.kiski.net.in',
+		'.pipki.org.in',
 		'.siski.co.in',
 	),
 	'tiptronikmike at mail.com' => array(
@@ -3946,6 +3978,14 @@ $blocklist['C'] = array(
 		'.gamanir.com',		// by yangjianhe (upload888 at 126.com), malicious file
 		'.twurbbs.com',		// by mingzhong ni (ggyydiy at 163.com)
 	),
+	'81.0.195.148' => array(
+		'.abobrinha.org',
+		'.seriedelcaribe2006.org',
+	),
+	'skip_20022 at yahoo.com' => array(
+		'.besthealth06.org',	// by yakon, "Free Web Hosting Services" but "BestHealth"
+		'.besthentai06.org',
+	),
 
 
 	// C-2: Lonely domains (buddies not found yet)
@@ -3972,7 +4012,6 @@ $blocklist['C'] = array(
 	'.auto-car-cheap.org',
 	'.banep.info',			// by Mihailov Dmitriy (marokogadro at yahoo.com), iframe to this site
 	'.baurish.info',
-	'.besthealth06.org',	// by yakon (skip_20022 at yahoo.com), "Free Web Hosting Services" but "BestHealth"
 	'.bestop.name',
 	'.bestrademark.info',	// by victoria (niko16d at yahoo.com), redirect to majordomo.ru
 	'.bestshopfinder.info',
@@ -4038,6 +4077,7 @@ $blocklist['C'] = array(
 	'.jimka-mmsa.com',		// by Alex Covax (c0vax at mail.ru), seems not used yet
 	'.joynu.com',			// by lei wang (93065 at qq.com), hidden JavaScript
 	'.kingtools.de',
+	'.kymon.org',			// by Albert Poire (isupport at yahoo.com), / Forbidden, 70.87.62.252
 	'.leucainfo.com',
 	'.library-blogs.net',	// by Peter Scott (pscontent at gmail.com)
 	'.lingage.com',			// by huan bing (qbbs at xinoffice.com)
