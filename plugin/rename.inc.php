@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.32 2007/05/20 14:40:55 henoheno Exp $
+// $Id: rename.inc.php,v 1.33 2007/05/20 14:59:44 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -32,6 +32,7 @@ function plugin_rename_action()
 			if (! is_pagename($page))
 				return plugin_rename_phase1('notvalid');
 
+		// Phase one or three
 		return plugin_rename_regex($arr0, $arr1);
 
 	} else {
@@ -55,6 +56,7 @@ function plugin_rename_action()
 			return plugin_rename_phase2('notvalid');
 
 		} else {
+			// Phase three
 			return plugin_rename_refer();
 		}
 	}
@@ -173,7 +175,7 @@ EOD;
 	return $ret;
 }
 
-// Listing specified page and related pages
+// Before phase three:Listing specified page and related pages
 function plugin_rename_refer()
 {
 	$page  = plugin_rename_getvar('page');
@@ -189,7 +191,7 @@ function plugin_rename_refer()
 	return plugin_rename_phase3($pages);
 }
 
-// Replace specified page and related pages' name
+// Before phase one or three: Replace specified page and related pages' name
 function plugin_rename_regex($arr_from, $arr_to)
 {
 	$exists = array();
@@ -207,7 +209,7 @@ function plugin_rename_regex($arr_from, $arr_to)
 	}
 }
 
-// Phase three
+// Phase three: Confirmation
 function plugin_rename_phase3($pages)
 {
 	global $script, $_rename_messages;
@@ -223,7 +225,7 @@ function plugin_rename_phase3($pages)
 
 	$pass = plugin_rename_getvar('pass');
 	if ($pass != '' && pkwk_login($pass)) {
-		return plugin_rename_proceed($pages, $files, $exists);
+		return plugin_rename_phase4($pages, $files, $exists);
 	} else if ($pass != '') {
 		$msg = plugin_rename_err('adminpass');
 	}
@@ -233,18 +235,18 @@ function plugin_rename_phase3($pages)
 		$s_src = htmlspecialchars(plugin_rename_getvar('src'));
 		$s_dst = htmlspecialchars(plugin_rename_getvar('dst'));
 		$msg   .= $_rename_messages['msg_regex'] . '<br />';
-		$input .= '<input type="hidden" name="method" value="regex" />';
-		$input .= '<input type="hidden" name="src"    value="' . $s_src . '" />';
-		$input .= '<input type="hidden" name="dst"    value="' . $s_dst . '" />';
+		$input .= '<input type="hidden" name="method" value="regex" />' . "\n";
+		$input .= '<input type="hidden" name="src"    value="' . $s_src . '" />' . "\n";
+		$input .= '<input type="hidden" name="dst"    value="' . $s_dst . '" />' . "\n";
 	} else {
 		$s_refer   = htmlspecialchars(plugin_rename_getvar('refer'));
 		$s_page    = htmlspecialchars(plugin_rename_getvar('page'));
 		$s_related = htmlspecialchars(plugin_rename_getvar('related'));
 		$msg   .= $_rename_messages['msg_page'] . '<br />';
-		$input .= '<input type="hidden" name="method"  value="page" />';
-		$input .= '<input type="hidden" name="refer"   value="' . $s_refer   . '" />';
-		$input .= '<input type="hidden" name="page"    value="' . $s_page    . '" />';
-		$input .= '<input type="hidden" name="related" value="' . $s_related . '" />';
+		$input .= '<input type="hidden" name="method"  value="page" />' . "\n";
+		$input .= '<input type="hidden" name="refer"   value="' . $s_refer   . '" />' . "\n";
+		$input .= '<input type="hidden" name="page"    value="' . $s_page    . '" />' . "\n";
+		$input .= '<input type="hidden" name="related" value="' . $s_related . '" />' . "\n";
 	}
 
 	if (! empty($exists)) {
@@ -265,9 +267,9 @@ function plugin_rename_phase3($pages)
 		$msg .= '</ul><hr />' . "\n";
 
 		$input .= '<input type="radio" name="exist" value="0" checked="checked" />' .
-			$_rename_messages['msg_exist_none'] . '<br />';
+			$_rename_messages['msg_exist_none'] . '<br />' . "\n";
 		$input .= '<input type="radio" name="exist" value="1" />' .
-			$_rename_messages['msg_exist_overwrite'] . '<br />';
+			$_rename_messages['msg_exist_overwrite'] . '<br />' . "\n";
 	}
 
 	$ret = array();
@@ -325,7 +327,8 @@ function plugin_rename_get_files($pages)
 	return $files;
 }
 
-function plugin_rename_proceed($pages, $files, $exists)
+// Phase four: Rename them, Log them, Redirect
+function plugin_rename_phase4($pages, $files, $exists)
 {
 	global $now, $_rename_messages;
 
@@ -374,7 +377,7 @@ function plugin_rename_proceed($pages, $files, $exists)
 		$postdata[] = '-' . decode($old) .
 			$_rename_messages['msg_arrow'] . decode($new) . "\n";
 
-	// At this time, collision detection is not implimented
+	// At this time, collision detection is not implemented
 
 	page_write(PLUGIN_RENAME_LOGPAGE, join('', $postdata));
 
