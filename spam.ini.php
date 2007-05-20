@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.61 2007/05/17 15:24:33 henoheno Exp $
+// $Id: spam.ini.php,v 1.62 2007/05/20 13:22:11 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -201,6 +201,7 @@ $blocklist['A-1'] = array(
 	'c64.ch',
 	'c711.com',
 	'checkasite.net',
+	'url.chefhost.com',
 	'*.chicappa.jp',
 	'chilicity.com',
 	'big5.china.com',
@@ -2115,9 +2116,18 @@ $blocklist['B-2'] = array(
 		'ez.asn.und.edu',
 	),
 	'The University of Alabama' => array('bama.ua.edu'),
+	'unisonscotlandlaw.co.uk',
+	'University of Nebraska Lincoln' => array('ftp.ianr.unl.edu'),
+	'University of Northern Colorado' => array('unco.edu'),
+	'University of Toronto' => array(
+		'environment.utoronto.ca',
+		'grail.oise.utoronto.ca',
+		'utsc.utoronto.ca',
+	),
 	'urgentclick.com',
 	'vacant.org.uk',
 	'Villa Julie College' => array('www4.vjc.edu'),
+	'Vail Valley Foundation' => array('.vvf.org'),
 	'wabson.org',
 	'warping.to',		// Seems (a redirection site, but now) taken advantage of
 	'webarch.com',		// by WebArchitects (webarch at insync.net)
@@ -2126,9 +2136,6 @@ $blocklist['B-2'] = array(
 	'williamsburgrentals.com',
 	'wolvas.org.uk',
 	'wookiewiki.org',
-	'unisonscotlandlaw.co.uk',
-	'University of Nebraska Lincoln' => array('ftp.ianr.unl.edu'),
-	'University of Northern Colorado' => array('unco.edu'),
 	'xsgaming.com',			// Jacked
 	'.xthost.info',			// by Michael Renz (dhost at mykuhl.de)
 	'Yahoo.com' => array(
@@ -2443,112 +2450,156 @@ $blocklist['C'] = array(
 	),
 	'mail at pcinc.cn' => array(
 		// Domains by Lin Zhi Qiang
-		// NOTE: pcinc.cn -- by Lin Zhi Qiang (lin80 at 21cn.com)
-		'.18girl-av.com',
-		'.23styles.com',
-		'.6828teacup.com',
-		'.aaa-livedoor.net',
-		'.acyberhome.com',
-		'.a-hatena.com',
+		// NOTE: pcinc.cn -- 125.65.112.13 by Lin Zhi Qiang (lin80 at 21cn.com)
+
+		// 125.65.112.11
+		// The same IP: web001.cdnhost.cn, *.w19.cdnhost.cn
+		'shoopivdoor.w19.cdnhost.cn',	// web001.cdnhost.cn
+		'.shoopivdoor.com',
+
+		// 125.65.112.12
+		// The same IP: web003.cdnhost.cn, *.w16.cdnhost.cn
+		'.hosetaibei.com',
+		'.playsese.com',
+
+		// 125.65.112.13
+		// The same IP: web006.cdnhost.cn, *.w9.cdnhost.cn
 		'.ahatena.com',
-		'.aehatena-jp.com',
 		'.asdsdgh-jp.com',
-		'.aurasoul-visjp.com',
-		'.bbs-qrcode.com',
-		'.biglobe-ne.com',
-		'.blog-ekndesign.com',
-		'.blog-livedoor.net',
-		'.blogplaync.com',
-		'.cityblog-fc2web.com',
-		'.cityhokkai.com',
 		'.conecojp.net',
-		'.d-jamesinfo.com',
-		'.deco030-cscblog.com',
+		'.game-oekakibbs.com',
+		'.geocitygame.com',
+		'.gsisdokf.net',
+		'.korunowish.com',
+		'.netgamelivedoor.com',
+		'.soultakerbbs.net',
+		'.yahoo-gamebbs.com',
+		'.ywdgigkb-jp.com',
+
+		// 125.65.112.14
+		// The same IP: web007.cdnhost.cn, *.w12.cdnhost.cn
+		'.acyberhome.com',
+		'.bbs-qrcode.com',
+		'.gamesroro.com',
+		'.gameyoou.com',
+		'.gangnu.com',
+		'.goodclup.com',
+		'.lineage321.com',
+		'.linkcetou.com',
+		'.ragnarok-bbs.com',
+		'.ragnarok-game.com',
+		'.rmt-navip.com',
+		'.watcheimpress.com',
+
+		// 125.65.112.15
+		// The same IP: web008.cdnhost.cn, *.w11.cdnhost.cn
+		'.18girl-av.com',
+		'.aurasoul-visjp.com',
+		'.gamaniaech.com',
+		'.game-mmobbs.com',
+		'.gameslin.net',
+		'.gemnnammobbs.com',
+		'.gogolineage.net',
+		'.grandchasse.com',
+		'.jpragnarokonline.com',
+		'.jprmthome.com',
+		'.maplestorfy.com',
+		'.nothing-wiki.com',
+		'.ragnarok-sara.com',
+		'.rmt-lineagecanopus.com',
+		'.rmt-ranloki.com',
+		'.rogamesline.com',
+		'.roprice.com',
+
+		// The same IP: web013.cdnhost.cn
+		'.ragnaroklink.com',	// 125.65.112.22
+
+		// The same IP: web016.cdnhost.cn
+		'.twyaooplay.com',		// 125.65.112.31
+
+		// 125.65.112.32
+		// The same IP: web037.cdnhost.cn
+		'.raginfoy.com',
+		'.ragnarokgvg.com',
+		'.rentalbbs-livedoor.com',
+		'.samples112xrea.com',
+
+		// 125.65.112.88
+		// The same IP: web015.cdnhost.cn
+		'.a-hatena.com',
+		'.biglobe-ne.com',
+		'.blogplaync.com',
 		'.din-or.com',
 		'.dtg-gamania.com',
+		'.fcty-net.com',
+		'.game-fc2blog.com',
+		'.gameurdr.com',
+		'.getamped-garm.com',
+		'.interzq.com',
+		'.linbbs.com', 			// by zeng xianming (qqvod at qq.com). www.linbbs.com is the same ip of www.game-fc2blog.com(222.77.185.101) at 2007/03/11
+		'.ragnarok-search.com',
+		'.rinku-livedoor.com',
+
+		// 125.65.112.91
+		// The same IP: web004.cdnhost.cn
+		'.6828teacup.com',
+		'.blog-livedoor.net',
+		'.cityblog-fc2web.com',
+		'.deco030-cscblog.com',
+		'.imbbs2t4u.com',
+		'.k5dionne.com',
+		'.lineagejp-game.com',
+		'.mbspro6uic.com',
+		'.slower-qth.com',
+		'.wikiwiki-game.com',
+
+		// 125.65.112.93
+		// The same IP: web022.cdnhost.cn
+		'.aaa-livedoor.net',
+		'.cityhokkai.com',		// web022.cdnhost.cn
+		'.fanavier.net',
+		'.geocitylinks.com',	// web022.cdnhost.cn
+		'.kuronowish.net',		// web022.cdnhost.cn
+		'.ro-bot.net',
+
+		// 125.65.112.95
+		// The same IP: web035.cdnhost.cn, web039.cdnhost.cn
+		'.23styles.com',
+		'.aehatena-jp.com',
+		'.blog-ekndesign.com',
+		'.d-jamesinfo.com',
 		'.editco-jp.com',
 		'.ezbbsy.com',
 		'.extd-web.com',
-		'.fanavier.net',
-		'.fcty-net.com',
-		'.gamaniaech.com',
-		'.game-fc2blog.com',
-		'.game-oekakibbs.com',
-		'.game-mmobbs.com',
 		'.game62chjp.net',
 		'.gamegohi.com',
-		'.games-nifty.com',
-		'.gameslin.net',
 		'.gamesmusic-realcgi.net',
 		'.gamesragnaroklink.net',
-		'.gamesroro.com',
-		'.gemnnammobbs.com',
-		'.gameurdr.com',
-		'.gameyoou.com',
-		'.gangnu.com',
-		'.geocitygame.com',
-		'.geocitylinks.com',
-		'.getamped-garm.com',
-		'.gogolineage.net',
-		'.goodclup.com',
-		'.grandchasse.com',
-		'.gsisdokf.net',
 		'.homepage-nifty.com',
-		'.homepage3-nifty.com',
-		'.hosetaibei.com',
 		'.ie6xp.com',
-		'.imbbs2t4u.com',
-		'.interzq.com',
 		'.irisdti-jp.com',
 		'.jklomo-jp.com',
-		'.jpragnarokonline.com',
-		'.jprmthome.com',
 		'.jpxpie6-7net.com',
-		'.kaukoo.com',		// by zeng xianming (expshell at 163.com)
-		'.k5dionne.com',
-		'.korunowish.com',
-		'.kuronowish.net',
 		'.lian-game.com',
-		'.linbbs.com', 		// by zeng xianming (qqvod at qq.com). www.linbbs.com is the same ip of www.game-fc2blog.com(222.77.185.101) at 2007/03/11
 		'.lineage-bbs.com',
 		'.lineage1bbs.com',
-		'.lineage321.com',
-		'.lineagejp-game.com',
-		'.linkcetou.com',
-		'.linrmb.com',		// by zeng xianming (qqvod at qq.com)
 		'.livedoor-game.com',
 		'.lovejpjp.com',
 		'.m-phage.com',
-		'.maplestorfy.com',
-		'.mbspro6uic.com',
-		'.netgamelivedoor.com',
-		'.nothing-wiki.com',
-		'.playsese.com',
-		'.ptxk.com',		// by zeng xianming (zxmdiy at gmail.com)
 		'.plusd-itmedia.com',
-		'.ragnarok-bbs.com',
-		'.ragnarok-game.com',
-		'.ragnarok-sara.com',
-		'.ragnarok-search.com',
-		'.ragnaroklink.com',
-		'.rinku-livedoor.com',
-		'.rmt-lineagecanopus.com',
-		'.rmt-navip.com',
-		'.rmt-ranloki.com',
-		'.ro-bot.net',
-		'.rogamesline.com',
-		'.roprice.com',
-		'.rormb.com',		// by zeng xianming (qqvod at qq.com)
 		'.runbal-fc2web.com',
-		'.shoopivdoor.com',
-		'.slower-qth.com',
-		'.soultakerbbs.net',
 		'.toriningena.net',
-		'.watcheimpress.com',
-		'.wikiwiki-game.com',
-		'.yahoo-gamebbs.com',
-		'.ywdgigkb-jp.com',
 		'.yy14-kakiko.com',
+
+		// 228.14.153.219.broad.cq.cq.dynamic.163data.com.cn
+		'.kaukoo.com',			// 219.153.14.228, by zeng xianming (expshell at 163.com)
+		'.linrmb.com',			// 219.153.14.228, by zeng xianming (qqvod at qq.com)
+
+		'.ptxk.com',			// 222.73.236.239, by zeng xianming (zxmdiy at gmail.com)
+		'.rormb.com',			// 222.73.236.239, by zeng xianming (qqvod at qq.com)
+
+		'.games-nifty.com',		// 255.255.255.255 now
+		'.homepage3-nifty.com',	// 255.255.255.255 now
 	),
 	'caddd at 126.com' => array(
 		'.chengzhibing.com',	// by chen gzhibing
@@ -2560,10 +2611,10 @@ $blocklist['C'] = array(
 		'.twmsn-ga.com',		// by guo zhi wei, iframe to grandchasse.com
 	),
 	'nuigiym2 at 163.com' => array(	// by fly bg
-		'.linainfo.net',
-		'.lineagalink.com',
-		'.lineagecojp.com',
-		'.ragnarokonlina.com',
+		'.linainfo.net',		// Seems IP not allocated now
+		'.lineagalink.com',		// 220.247.157.99
+		'.lineagecojp.com',		// 61.139.126.10
+		'.ragnarokonlina.com',	// 220.247.158.99
 	),
 	'aakin at yandex.ru' => array(	// by Baer
 		'.entirestar.com',
@@ -3301,13 +3352,13 @@ $blocklist['C'] = array(
 		'.vvvw.info',
 	),
 	'support at 51g.net' => array(	// iframe www.lovetw.webnow.biz
-		'.ftplin.com',		// by Yongchun Liao
-		'.jplin.com',		// by Yongchun Liao
-		'.jplineage.com',	// by Yongchun Liao
-		'.jplingood.com',
-		'.linenew.com',
-		'.lyftp.com',		// Yongchun Liao (weboy at 51g.net)
-		'.yzlin.com',
+		'.ftplin.com',		// 125.65.112.15, by Yongchun Liao
+		'.jplin.com',		// 125.65.112.15, by Yongchun Liao
+		'.jplineage.com',	// 221.238.195.113, by Yongchun Liao
+		'.jplingood.com',	// 125.65.112.15
+		'.linenew.com',		// 203.191.148.96
+		'.lyftp.com',		// 218.5.77.17,   by Yongchun Liao (weboy at 51g.net)
+		'.yzlin.com',		// 220.162.244.36
 	),
 	'Betty.J.Pelletier at pookmail.com' => array(	// by Betty J. Pelletier
 		'.1111mb.com',
@@ -3331,18 +3382,18 @@ $blocklist['C'] = array(
 		'.453787.com',
 	),
 	'anpaul541000 at 163.com' => array(	// by su qiuqing
-		'.cetname.com',
-		'.jpgamer.net',
-		'.jpplay.net',			// iframe www.lovetw.webnow.biz
-		'.lovejptt.com',
-		'.pangzigame.com',		// by qiuqingshan
-		'.playncsoft.net',
+		'.cetname.com',			// 222.77.185.87
+		'.jpgamer.net',			// 220.247.157.106
+		'.jpplay.net',			// 222.77.185.87, iframe www.lovetw.webnow.biz
+		'.lovejptt.com',		// 222.77.185.87
+		'.pangzigame.com',		// 220.247.134.136, by qiuqingshan
+		'.playncsoft.net',		// 220.247.157.106
 	),
 	'abc00613 at 163.com' => array(	// by guo yong
-		'.avtw1068.com',
-		'.dj5566.org',			// by yongchao li
-		'.djkkk66990.com',
-		'.lingamesjp.com',		// by guo jinlong
+		'.avtw1068.com',		// 64.74.223.11
+		'.dj5566.org',			// Seems IP not allocated now, by yongchao li
+		'.djkkk66990.com',		// 68.178.232.99
+		'.lingamesjp.com',		// 219.153.13.23(8.myadmin.cn),  by guo jinlong
 	),
 	'thomas.jsp at libertysurf.fr' => array(	// by Perez Thomas
 		'.cmonfofo.com',
@@ -3355,9 +3406,9 @@ $blocklist['C'] = array(
 		'.tageom.info',
 	),
 	'Inpros.net' => array(	// by Hayato Hikari (hikari at t-dm.co.jp)
-		'.inpros.biz',			// redirect to inpros.net
-		'.inpros.net',
-		'.gametradeonline.jp',	// by Hayato Hikari, RMT
+		'.inpros.biz',			// 38.99.91.137, redirect to inpros.net
+		'.inpros.net',			// 202.181.98.79
+		'.gametradeonline.jp',	// 210.188.204.233, by Hayato Hikari, RMT
 	),
 	'szczffhh_sso at 21cn.net' => array(	// by zhenfei chen
 		'.ec51.com',
@@ -3755,6 +3806,7 @@ $blocklist['C'] = array(
 		'.movie1945.com',		// by Zhang Teng, content from lineage.jp, hidden JavaScript
 	),
 	'mk_slowman at yahoo.com' => array(	// by Mike Slowman (mk_slowman at yahoo.com)
+		'.auto-fgen.info',
 		'.fast-marketing.info',
 		'.from-usa.info',
 		'.generic-pharm.info',
@@ -3866,41 +3918,63 @@ $blocklist['C'] = array(
 		'.kalisto.ru',		// by Vladimir I Sokolov (azimut at gmail.ru)
 		'.sanartuk.ru',		// by Vladimir I Noskov (hoskv2003 at gmail.ru)
 	),
-	'orgitaly2 at ya.ru' => array(	// by Orgitaly2 (orgitaly2 at ya.ru), encoded JavaScript
-		'.cerc-on.info',		// 208.70.75.153, ns *.italydns.info
-		'.cerc-te.info',		// by Ru Lee (cerca-tree at ya.ru), 208.70.75.153, ns *.italydns.info
+	'208.70.75.153' => array(
+		'.cerc-fi.info',		// by Kon Bi (cerca-two at ya.ru), 208.70.75.153
+		'.cerc-fo.info',		// by Kon Bi (cerca-two at ya.ru), 208.70.75.153
+		'.cerc-no.info',		// by Ru Lee (cerca-tree at ya.ru), 208.70.75.153
+		'.cerc-on.info',		// 208.70.75.153
+		'.cerc-sv.info',		// by Ru Lee (cerca-tree at ya.ru)
+		'.cerc-sx.org',			// by Kon Bi (cerca-two at ya.ru), 208.70.75.153
+		'.cerc-te.info',		// by Ru Lee (cerca-tree at ya.ru), 208.70.75.153
+		'.cerc-tr.info',		// 208.70.75.153
+		'.cerc-tw.info',		// 208.70.75.153
 
+		'.cerc-fi.org',			// by Kon Bi (cerca-two at ya.ru), 208.70.75.153
+		'.cerc-fo.org',			// by Kon Bi (cerca-two at ya.ru), 208.70.75.153
+		'.cerc-no.org',			// by Ru Lee (cerca-tree at ya.ru), 208.70.75.153
+		'.cerc-on.org',			// by cerca-one at ya.ru, 208.70.75.153
+		'.cerc-sv.org',			// by Ru Lee (cerca-tree at ya.ru), 208.70.75.153
+		'.cerc-sx.org',			// by Kon Bi (cerca-two at ya.ru), 208.70.75.153
+		'.cerc-te.org',			// by Ru Lee (cerca-tree at ya.ru), 208.70.75.153
+		'.cerc-tr.org',			// by cerca-one at ya.ru, 208.70.75.153
+		'.cerc-tw.org',			// by cerca-one at ya.ru, 208.70.75.153
+
+		'.cerca-fi.org',		// by orgitaly1 at ya.ru, 208.70.75.153
 		'.cerca-fo.info',		// 208.70.75.153
 		'.cerca-no.info',		// 208.70.75.153
 		'.cerca-on.info',		// 208.70.75.153
 		'.cerca-sv.info',		// 208.70.75.153
+		'.cerca-sx.org',		// by orgitaly2 at ya.ru, 208.70.75.153
 		'.cerca-te.info',		// 208.70.75.153
 		'.cerca-tr.info',		// 208.70.75.153
 
-		'.cerc-fi.org',			// by Kon Bi (cerca-two at ya.ru), 208.70.75.153, ns *.italydns.info
 		'.cerca-sx.org',
 		'.cerca-tr.org',		// orgitaly1 at ya.ru
 
 		'.ricerca-fiv.org',		// orgitaly1 at ya.ru
-		'.ricerca-fo.info',		// 208.70.75.153, equals to ricerca-one.org
-		'.ricerca-one.org',
+
+		'.ricerca-fo.info',		// 208.70.75.153
+
+		'.ricerca-one.org',		// 208.70.75.153
+
 		'.ricerca-sv.org',
 		'.ricerca-sx.org',
 		'.ricerca-te.org',
 		'.ricerca-tw.org',		// orgitaly1 at ya.ru
 
-		'.subit01.org',			// 208.70.75.153, ns *.italydns.info
-		'.subit02.org',			// 208.70.75.153, ns *.italydns.info
-		'.subit03.org',			// 208.70.75.153, ns *.italydns.info
-		'.subit04.org',			// 208.70.75.153, ns *.italydns.info
-		'.subit05.org',			// 208.70.75.153, ns *.italydns.info
-		'.subit06.org',			// 208.70.75.153, ns *.italydns.info
-		'.subit01.info',		// 208.70.75.153, ns *.italydns.info
-		'.subit02.info',		// 208.70.75.153, ns *.italydns.info
-		'.subit03.info',		// 208.70.75.153, ns *.italydns.info
-		'.subit04.info',		// 208.70.75.153, ns *.italydns.info
-		'.subit05.info',		// 208.70.75.153, ns *.italydns.info
-		'.subit06.info',		// 208.70.75.153, ns *.italydns.info
+		'.subit01.org',			// 208.70.75.153
+		'.subit02.org',			// 208.70.75.153
+		'.subit03.org',			// 208.70.75.153
+		'.subit04.org',			// 208.70.75.153
+		'.subit05.org',			// 208.70.75.153
+		'.subit06.org',			// 208.70.75.153
+
+		'.subit01.info',		// 208.70.75.153
+		'.subit02.info',		// 208.70.75.153
+		'.subit03.info',		// 208.70.75.153
+		'.subit04.info',		// 208.70.75.153
+		'.subit05.info',		// 208.70.75.153
+		'.subit06.info',		// 208.70.75.153
 	),
 	'ernestppc at yahoo.com' => array(	// by Anrey Markov (ernestppc at yahoo.com)
 		'.5-base.com',
@@ -3978,9 +4052,10 @@ $blocklist['C'] = array(
 		'.gamanir.com',		// by yangjianhe (upload888 at 126.com), malicious file
 		'.twurbbs.com',		// by mingzhong ni (ggyydiy at 163.com)
 	),
-	'81.0.195.148' => array(
+	'81.0.195.148' => array(	// Says: "GOOGLE LOVES ME!!!", I don't think so.
 		'.abobrinha.org',
 		'.seriedelcaribe2006.org',
+		'.refugeeyouthinamerica.com',
 	),
 	'skip_20022 at yahoo.com' => array(
 		'.besthealth06.org',	// by yakon, "Free Web Hosting Services" but "BestHealth"
