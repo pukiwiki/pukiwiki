@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.31 2007/05/20 14:14:44 henoheno Exp $
+// $Id: rename.inc.php,v 1.32 2007/05/20 14:40:55 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -60,14 +60,13 @@ function plugin_rename_action()
 	}
 }
 
-// 変数を取得する
 function plugin_rename_getvar($key)
 {
 	global $vars;
 	return isset($vars[$key]) ? $vars[$key] : '';
 }
 
-// エラーメッセージを作る
+// Generating error messages
 function plugin_rename_err($err, $page = '')
 {
 	global $_rename_messages;
@@ -86,7 +85,7 @@ function plugin_rename_err($err, $page = '')
 	return $msg;
 }
 
-//第一段階:ページ名または正規表現の入力
+// Phase one: Specifying page name or regex
 function plugin_rename_phase1($err = '', $page = '')
 {
 	global $script, $_rename_messages;
@@ -128,7 +127,7 @@ EOD;
 	return $ret;
 }
 
-//第二段階:新しい名前の入力
+// Phase two: Specify new page name
 function plugin_rename_phase2($err = '')
 {
 	global $script, $_rename_messages;
@@ -174,7 +173,7 @@ EOD;
 	return $ret;
 }
 
-//ページ名と関連するページを列挙し、phase3へ
+// Listing specified page and related pages
 function plugin_rename_refer()
 {
 	$page  = plugin_rename_getvar('page');
@@ -190,7 +189,7 @@ function plugin_rename_refer()
 	return plugin_rename_phase3($pages);
 }
 
-//正規表現でページを置換
+// Replace specified page and related pages' name
 function plugin_rename_regex($arr_from, $arr_to)
 {
 	$exists = array();
@@ -208,6 +207,7 @@ function plugin_rename_regex($arr_from, $arr_to)
 	}
 }
 
+// Phase three
 function plugin_rename_phase3($pages)
 {
 	global $script, $_rename_messages;
@@ -340,7 +340,7 @@ function plugin_rename_proceed($pages, $files, $exists)
 				unlink($new);
 			rename($old, $new);
 
-			// linkデータベースを更新する BugTrack/327 arino
+			// Update link database (BugTrack/327) arino
 			links_update($old);
 			links_update($new);
 		}
@@ -374,15 +374,14 @@ function plugin_rename_proceed($pages, $files, $exists)
 		$postdata[] = '-' . decode($old) .
 			$_rename_messages['msg_arrow'] . decode($new) . "\n";
 
-	// 更新の衝突はチェックしない。
+	// At this time, collision detection is not implimented
 
-	// ファイルの書き込み
 	page_write(PLUGIN_RENAME_LOGPAGE, join('', $postdata));
 
-	//リダイレクト
 	$page = plugin_rename_getvar('page');
 	if ($page == '') $page = PLUGIN_RENAME_LOGPAGE;
 
+	// Redirection
 	pkwk_headers_sent();
 	header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
 	exit;
