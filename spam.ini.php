@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.62 2007/05/20 13:22:11 henoheno Exp $
+// $Id: spam.ini.php,v 1.63 2007/05/21 13:30:36 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -4061,7 +4061,14 @@ $blocklist['C'] = array(
 		'.besthealth06.org',	// by yakon, "Free Web Hosting Services" but "BestHealth"
 		'.besthentai06.org',
 	),
-
+	'USFINE.com' => array(
+		'.usfine.com',			// 74.52.201.108 by Tang zaiping (tzpsky at gmail.com)
+		'.usfine.net',			// 74.52.201.109 by zaiping tang (zppsky at gmail.com)
+	),
+	'68.178.211.57' => array(
+		'.igsstar.com',				// 68.178.211.57 by igsstar at hotmail.com, PARK31.SECURESERVER.NET, pl
+		'.powerleveling-wow.com',	// 68.178.211.57 by zhang jun (zpq689 at 163.com)
+	),
 
 	// C-2: Lonely domains (buddies not found yet)
 	'.0721-4404.com',
@@ -4079,6 +4086,7 @@ $blocklist['C'] = array(
 	'.6i6.de',
 	'.advancediet.com',		// by Shonta Mojica (hostadmin at advancediet.com)
 	'.adultpersonalsclubs.com',	// by Peter (vaspet34 at yahoo.com)
+	'.akgame.com',			// 72.32.79.100 by Howard Ke (gmtbank at gmail.com), rmt & pl
 	'.alfanetwork.info',	// by dante (dantequick at gmail.com)
 	'.allworlddirect.info',	// Forbidden
 	'.amoreitsex.com',
@@ -4088,6 +4096,7 @@ $blocklist['C'] = array(
 	'.banep.info',			// by Mihailov Dmitriy (marokogadro at yahoo.com), iframe to this site
 	'.baurish.info',
 	'.bestop.name',
+	'.betmmo.com',			// 63.223.98.182 by Huang Qiang (liuxing-wushi at hotmail.com), pl
 	'.bestrademark.info',	// by victoria (niko16d at yahoo.com), redirect to majordomo.ru
 	'.bestshopfinder.info',
 	'.bloggerblast.com',	// by B. Kadrie (domains at starwhitehosting.com)
@@ -4097,6 +4106,9 @@ $blocklist['C'] = array(
 	'.constitutionpartyofwa.org',	// "UcoZ WEB-SERVICES"
 	'.covertarena.co.uk',	// by Wayne Huxtable
 	'.d999.info',			// by Peter Vayner (peter.vayner at inbox.ru)
+	'.dinmo.cn',				// 218.30.96.149 by dinso at 163.com, seo etc.
+	//'.wow-gold.dinmo.cn',		// 125.65.76.59, pl
+	'.dinmoseo.com',			// 210.51.168.102(winp2-web-g02.xinnetdns.com) by jianmin911 at 126.com, NS *.xinnetdns.com, seo
 	'.dlekei.info',			// by Maxima Bucaro (webmaster at tts2f.info)
 	'.dollar4u.info',		// by Carla (Carla.J.Merritt at mytrashmail.com), / is blank
 	'.drug-shop.us',			// by Alexandr (matrixpro at mail.ru)
@@ -4186,6 +4198,7 @@ $blocklist['C'] = array(
 	'.porno-babe.info',		// by Peter (asdas at mail.ru), redirect to Google
 	'.pornesc.com',			// by Xpeople (suppij atmail.ru)
 	'.portaldiscount.com',	// by Mark Tven (bestsaveup at gmail.com)
+	'.powerlevelingweb.com',	// 68.178.211.9 by jun zhang (huanbing at 126.com), pl
 	'.prama.info',			// by Juan.Kang at mytrashmail.com
 	',pulsar.net',			// by TheBuzz Int. (theboss at tfcclion.com)
 	'.qoclick.net',			// by DMITRIY SOLDATENKO
@@ -4225,6 +4238,8 @@ $blocklist['C'] = array(
 	'.whoop.to',			// RMT
 	'.womasia.info',		// by Mark Fidele (markfidele at yahoo.com)
 	'.worldinsurance.info',	// by Alexander M. Brown (Alex_Brown at yahoo.com), fake-antivirus
+	'.wow-powerleveling-wow.com',	// 63.223.77.112 by dingmengxl at 126.com, pl
+	'.wowgoldweb.com',		// by lei chen (dreamice at yeah.net), rmt & pl
 	'.wwwna.info',			// / 404 Not Found
 	'.xpacificpoker.com',	// by Hubert Hoffman (support at xpacificpoker.com)
 	'.xphost.org',			// by alex alex (alrusnac at hotmail.com)
