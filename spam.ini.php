@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.63 2007/05/21 13:30:36 henoheno Exp $
+// $Id: spam.ini.php,v 1.64 2007/05/27 02:01:13 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -1495,6 +1495,14 @@ $blocklist['B-1'] = array(
 	'*.ebloggy.com',
 	'enunblog.com',
 	'*.epinoy.com',
+	'FC2.com' => array(
+		'.blog*.fc2.com',
+			// Many traps available:
+			// bqdr.blog98.fc2.com,       iframe
+			// csfir.blog87.fc2.com,      iframe
+			// pppgamesk.blog100.fc2.com, iframe, broken Japanese
+			// sippou2006.blog60.fc2.com, iframe
+	),
 	'forum.ezedia.net',
 	'*.extra.hu',			// angelo at jasmin.hu
 	'*.fanforum.cc',
@@ -2522,7 +2530,10 @@ $blocklist['C'] = array(
 		'.raginfoy.com',
 		'.ragnarokgvg.com',
 		'.rentalbbs-livedoor.com',
+		'.romaker.com',
+		'.sagewikoo.com',
 		'.samples112xrea.com',
+		'.wiki-house.com',
 
 		// 125.65.112.88
 		// The same IP: web015.cdnhost.cn
@@ -4124,6 +4135,7 @@ $blocklist['C'] = array(
 	'.ffxiforums.net',		// by Zhang xiaolong (mail at 33986.com), hidden VBScript
 	'*.filthserver.com',	// sales at onlinemarketingservices.biz
 	'.find-stuff.org',		// by Alice Freedman (admin at ip-labs.ru), / 404 Not Found
+	'.findcraft.info',		// by Mihelich (mkiyle at gmail.com)
 	'.firstdrugstorezone.info',	// by Goose (boris208 at yandex.ru)
 	'.forum24.se',
 	'.forumhosting.org',
