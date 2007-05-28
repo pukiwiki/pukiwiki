@@ -1,12 +1,12 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.33 2007/05/20 14:59:44 henoheno Exp $
+// $Id: rename.inc.php,v 1.34 2007/05/28 16:17:16 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 // Rename plugin: Rename page-name and related data
 //
-// Usage: http://path/to/pukiwikiphp?plugin=rename[&refer=page_name]
+// Usage: http://path/to/index.php?plugin=rename[&refer=page_name]
 
 define('PLUGIN_RENAME_LOGPAGE', ':RenameLog');
 
