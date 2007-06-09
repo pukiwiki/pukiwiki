@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.65 2007/05/28 13:00:19 henoheno Exp $
+// $Id: spam.ini.php,v 1.66 2007/06/09 02:20:52 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -145,7 +145,6 @@ $blocklist['A-1'] = array(
 		'*.true.ws',
 		'*.visit.ws',
 	),
-	'Adobe.com' => array('store.adobe.com'),	// Stop it
 	'aifam.com',
 	'All4WebMasters.pl' => array(
 		'*.ovp.pl',
@@ -169,15 +168,6 @@ $blocklist['A-1'] = array(
 	'bittyurl.com',
 	'*.bizz.cc',
 	'*.blo.pl',
-	'Fanznet.jp' => array(	// by takahashi nakaba (nakaba.takahashi at gmail.com)
-		'blue11.jp',
-		'fanznet.com',
-		'katou.in',
-		'mymap.in',
-		'saitou.in',
-		'satou.in',
-		'susan.in',
-	),
 	'briefurl.com',
 	'brokenscript.com',
 	'BucksoGen.com' => array(
@@ -201,6 +191,7 @@ $blocklist['A-1'] = array(
 	),
 	'c64.ch',
 	'c711.com',
+	'*.cej.pl',
 	'checkasite.net',
 	'url.chefhost.com',
 	'*.chicappa.jp',
@@ -277,7 +268,8 @@ $blocklist['A-1'] = array(
 		'*.tweaker.eu',
 	),
 	'*.fancyurl.com',
-	'Fanznet.com' => array(
+	'Fanznet.jp' => array(	// by takahashi nakaba (nakaba.takahashi at gmail.com)
+		'blue11.jp',
 		'fanznet.com',
 		'katou.in',
 		'mymap.in',
@@ -294,6 +286,7 @@ $blocklist['A-1'] = array(
 		'ontheway.to',
 	),
 	'flingk.com',
+	'flog.jp',			// careless redirector and bbs
 	'fm7.biz',
 	'fnbi.jp',
 	'*.fnbi.jp',
@@ -408,11 +401,11 @@ $blocklist['A-1'] = array(
 	'Hexten.net' => array('lyxus.net'),
 	'here.is',
 	'HispaVista.com' => array(
+		'*.blogdiario.com',
 		'*.hispavista.com',
 		'.galeon.com',
 	),
-	// by Home.pl Sp. J. (info at home.pl), redirections and forums
-	'Home.pl' => array(
+	'Home.pl' => array(	// by Home.pl Sp. J. (info at home.pl), redirections and forums
 		'*.8l.pl',
 		'*.blg.pl',
 		'*.czytajto.pl',
@@ -537,6 +530,7 @@ $blocklist['A-1'] = array(
 		'.dcn.co.il,',		// up2.co.il related, not classifiable, by daniel chechik (ns_daniel0 at bezeqint.net)
 	),
 	'*.infogami.com',
+	'infotop.jp',
 	'ipoo.org',
 	'IR.pl' => array(
 		'*.aj.pl',
@@ -1123,8 +1117,7 @@ $blocklist['A-1'] = array(
 	'utun.jp',
 	'uxxy.com',
 	'*.v27.net',
-	'V3.com by FortuneCity.com' => array(
-		// http://www.v3.com/sub-domain-list.shtml
+	'V3.com by FortuneCity.com' => array(	// http://www.v3.com/sub-domain-list.shtml
 		'*.all.at',
 		'*.back.to',
 		'*.beam.at',
@@ -1335,6 +1328,7 @@ $blocklist['A-2'] = array(
 	//	'*.dnsalias.org',
 	//	'*.dyndns.org',
 	//	'*.homeip.net',
+	//	'*.homelinux.net',
 	//	'*.mine.nu',
 	//	'*.shacknet.nu',
 	//),
@@ -1534,11 +1528,23 @@ $blocklist['B-1'] = array(
 	'*.fanforum.cc',
 	'fingerprintmedia.com',
 	'*.filelan.com',
+	'*.foren-city.de',
+	'foren-gratis.de',
+	'foroswebgratis.com',
+	'*.forum-on.de',
 	'*.forum5.com',			// by Harry S (hsg944 at gmail.com)
+	'forumbolt.com',
+	'*.forumlivre.com',
+	'forumnow.com.br',
+	'*.forumppl.com',
+	'Forumprofi.de' => '#^(?:.*\.)?forumprofi[0-9]*\.de$#',
+	'ForumUp' => '#^^(?:.*\.)?forumup\.' .
+		'(?:at|be|ca|ch|co\.nz|co\.uk|co\.za|com|com\.au|com\.mx|cn|' .
+		'cz|de|dk|es|eu|fr|gr|hu|in|info|ir|it|jobs|jp|lt|' .
+		'lv|org|pl|name|net|nl|ro|ru|se|sk|tv|us|web\.tr)$#',
+	'*.fory.pl',
 	'*.free-25.de',
 	'*.free-bb.com',
-	'free-guestbook.net',
-	'*.free-site-host.com',	// by CGM-Electronics (chris at cgm-electronics.com)
 	'Free-Blog-Hosting.com' => array(
 		'free-blog-hosting.com',	// by Robert Vigil (ridgecrestdomains at yahoo.com), ns *.phpwebhosting.com
 		'cheap-web-hosting-411.com',	// by Robert Vigil, ns *.thisismyserver.net
@@ -1547,6 +1553,8 @@ $blocklist['B-1'] = array(
 		'myblogstreet.com',			// by Robert Vigil, ns *.phpwebhosting.com
 		'blogbeam.com',				// by Robert Vigil, ns *.phpwebhosting.com
 	),
+	'free-guestbook.net',
+	'*.free-site-host.com',	// by CGM-Electronics (chris at cgm-electronics.com)
 	'freebb.nl',
 	'*.freeclans.de',
 	'*.freelinuxhost.com',	// by 100webspace.com
@@ -1564,23 +1572,10 @@ $blocklist['B-1'] = array(
 		'freewebsfarms.com',
 	),
 	'*.freewebspace.net.au',
-	'*.foren-city.de',
-	'foren-gratis.de',
-	'foroswebgratis.com',
-	'*.forum-on.de',
-	'forumbolt.com',
-	'*.forumlivre.com',
-	'forumnow.com.br',
-	'*.forumppl.com',
-	'Forumprofi.de' => '#^(?:.*\.)?forumprofi[0-9]*\.de$#',
-	'ForumUp' => '#^^(?:.*\.)?forumup\.' .
-		'(?:at|be|ca|ch|co\.nz|co\.uk|co\.za|com|com\.au|com\.mx|cn|' .
-		'cz|de|dk|es|eu|fr|gr|hu|in|info|ir|it|jobs|jp|lt|' .
-		'lv|org|pl|name|net|nl|ro|ru|se|sk|tv|us|web\.tr)$#',
-	'*.fory.pl',
 	'*.freemyforum.com',	// by messahost at gmail.com
 	'freepowerboards.com',
 	'*.freepowerboards.com',
+	'*.fsphost.com',		// by Michael Renz (michael at fsphost.com)
 	'*.funpic.de',
 	'geocities.com',
 	'GetBetterHosting.com' => array(
@@ -1601,6 +1596,7 @@ $blocklist['B-1'] = array(
 	'*.hit.bg',				// by forumup.com ??
 	'*.host-page.com',
 	'*.hostingclub.de',
+	'forums.hspn.com',
 	'*.hut2.ru',
 	'IC.cz' => array(
 		'*.ezin.cz',		// internetcentrum at gmail.com, ns ignum.com, ignum.cz
@@ -1736,6 +1732,7 @@ $blocklist['B-1'] = array(
 		'.friko.pl',
 		'.jak.pl',
 		'.nazwa.pl',
+		'*.prv.pl',			// by NetArt (biuro at nazwa.pl)
 		'.w8w.pl',
 		'.za.pl',
 		'.skysquad.net',	// by Dorota Brzezinska (info at nazwa.pl)
@@ -1829,7 +1826,10 @@ $blocklist['B-1'] = array(
 	'telasipforums.com',
 	'thestudentunderground.org',
 	'think.ubc.ca',
-	'topix.com',
+	'Topix.com' => array(
+		'topix.com',
+		'topix.net',
+	),
 	'*.vtost.com',
 	'*.vidiac.com',
 	'volny.cz',
@@ -1962,6 +1962,7 @@ $blocklist['B-1'] = array(
 	),
 	'wh-gb.de',
 	'*.wikidot.com',
+	'*.wizhoo.com',			// by Comp U Door (sales at comp-u-door.com)
 	'*.wmjblogs.ru',
 	'*.wordpress.com',
 	'.wsboards.com',		// by Chris Breen (Cbween at gmail.com)
@@ -1983,10 +1984,12 @@ $blocklist['B-1'] = array(
 	'*.vdforum.ru',
 	'.freeblogs.xp.tl',
 	'*.ya.com',				// 'geo.ya.com', 'blogs.ya.com', 'humano.ya.com', 'audio.ya.com'...
-	'YANDEX, LLC.' => array(
-		'*.narod.ru',		// noc at yandex.net
-		'yandex.ru',		// noc at yandex.net
+	'YANDEX, LLC.' => array(	// noc at yandex.net
+		'*.narod.ru',
+		'ya.ru',
+		'yandex.ru',
 	),
+	'*.yeahost.com',
 	'yourfreebb.de',
 	'Your-Websites.com' => array(
 		'*.your-websites.net',
@@ -2091,6 +2094,7 @@ $blocklist['B-2'] = array(
 	'Monmouth College' => array('department.monm.edu'),
 	'mountainjusticemedia.org',
 	'*.mybbland.com',
+	'mydlstore.com',
 	'North Carolina A&T State University' => array(
 		'ncat.edu',
 		'my.ncat.edu',
@@ -2572,6 +2576,9 @@ $blocklist['C'] = array(
 		'.sagewikoo.com',
 		'.samples112xrea.com',
 		'.wiki-house.com',
+
+		// 125.65.112.49
+		'.chaosx0.com',
 
 		// 125.65.112.88
 		// The same IP: web015.cdnhost.cn
@@ -3716,6 +3723,7 @@ $blocklist['C'] = array(
 		'.bebto.com',
 		'.fateback.com',
 		'.undonet.com',
+		'.yoll.net',
 	),
 	'domains at agava.com' => array(
 		'.h18.ru',
@@ -3749,17 +3757,24 @@ $blocklist['C'] = array(
 		'.43fert.info',
 		'.belis.info',
 		'.bonu.info',
+		'.chparael.info',
 		'.cool9f.info',
 		'.dada2.info',
 		'.dorplanete.info',
 		'.dormonde.info',
 		'.dorprojet.info',
 		'.faciledor.info',
+		'.fastsearchgroup.info',
 		'.gerta0.info',
 		'.getse.info',
+		'.gopvl.info',
 		'.knopki.info',
 		'.propidor.info',
+		'.quicksearchnet.info',
 		'.ret5.info',
+		'.slimfastsearch.info',
+		'.virtualpvl.info',
+		'.vpvla.info',
 		'.xjdor.info',
 		'.zhopki.info',
 	),
@@ -3913,19 +3928,33 @@ $blocklist['C'] = array(
 		'.wbstnewsletter.com',
 	),
 	'clickx at bk.ru' => array(	// by Alexey Enrertov
+		'.coolget*.info' =>
+			'#^(?:.*\.)?' . 'coolget' .
+			'(?:bus|find|news|php|place|post|srch)' .
+			'\.info$#',
+		'.coolgirl*.info' =>
+			'#^(?:.*\.)?' . 'coolgirl' .
+			'(?:apple|fish|search)' .
+			'\.info$#',
+		'.coolmeet*.info' =>
+			'#^(?:.*\.)?' . 'coolmeet' .
+			'(?:apple|click|find|fish|news|php|place|post|srch|search)' .
+			'\.info$#',
+		'.cool**.info' =>
+			'#^(?:.*\.)?' . 'cool' . '(?:strong|the)' .
+			'(?:apple|bus|click|find|fish|news|php|place|post|srch|search)' .
+			'\.info$#',
+		'.freseasy*.info' =>
+			'#^(?:.*\.)?' . 'freseasy' .
+			'(?:apple|click|find|fish|post|search)' .
+			'\.info$#',
 		'.fres**.info' =>
 			'#^(?:.*\.)?' .
-			'fres' .
-			'(?:adult|boy|easy|get|girl|meet|new|real|strong|the)' .
+			'fres' . '(?:adult|boy|get|girl|meet|new|real|strong|the)' .
 			'(?:apple|bus|click|find|fish|news|php|place|post|srch|search)' .
 			'\.info$#',
 			// These are not found yet:
 			// fresgirlsrch.info
-			// freseasybus.info
-			// freseasynews.info
-			// freseasyphp.info
-			// freseasyplace.info
-			// freseasysrch.info
 			// fresadultapple.info
 			// fresadultclick.info
 			// frestheplace.info
@@ -4141,6 +4170,22 @@ $blocklist['C'] = array(
 		'.google-yahoo-msn.org',
 		'.expedia-travel.org',
 	),
+	'admin at newestsearch.com' => array(	// by Gibrel Sitce
+		'.emr5ce.org',
+		'.wfe7nv.org',
+	),
+	'203.171.230.39' => array(	// registrar bizcn.com, iframe + cursor
+		'.playonlinenc.com',
+		'.playboss-jp.com',
+	),
+	'DigiRock Inc.' => array(
+		'.rom776.com',
+		// owner-organization: DIGIROCK, INC.
+		// owner-email: domain-contact at digi-rock.com
+		// with an external ad-and-JavaScript,
+		// says "This site introduces rom776."(Note: Actual rom776 is the another site, http://776.netgamers.jp/ro/ , says s/he don't own rom776.com)
+		// "Actually, this site has been motivated by a desire to researching search-engine-rank of this site, and researching how the people place this site.".
+	),
 
 	// C-2: Lonely domains (buddies not found yet)
 	'.0721-4404.com',
@@ -4199,12 +4244,14 @@ $blocklist['C'] = array(
 	'.findcraft.info',		// by Mihelich (mkiyle at gmail.com)
 	'.firstdrugstorezone.info',	// by Goose (boris208 at yandex.ru)
 	'.forum24.se',
+	'.forumcommunity.net',
 	'.forumhosting.org',
 	'.free-finding.com',	// by Ny hom (nyhom at yahoo.com)
 	'.free-rx.net',			// by Neo-x (neo-xxl at yandex.ru), redirect to activefreehost.com
 	'.free-sex-movie-net.info',	// by vitas61 at yahoo.com
 	'.freeblog.ru',			// by Kondrashov Evgeniy Aleksandrovich (evkon at rol.ru), login form only, ns *.nthost.ru
 	'.freehostia.com',
+	'.freehostingz.com',	// by Marx Lomas (marvellousmarx at hotmail.com), no dns reply
 	'.freeliveringtones.com',	// by Silan (lippe1988 at gmail.com)
 	'.freemobilephonesworld.info',	// by andresid (andresid1 at yandex.ru)
 	'.game4enjoy.net',		// by huang jinglong (fenlin231 at sina.com)
@@ -4252,6 +4299,7 @@ $blocklist['C'] = array(
 	'.myfgj.info',			// by Filus (softscript at gmail.com)
 	'.mujiki.com',			// by Mila Contora (ebumsn at ngs.ru)
 	'.mxsupportmailer.com',
+	'.next-moneylife.com',	// RMT
 	'.newalandirect.com',	// by Alnoor Hirji, ns *.sablehost.com
 	'.ngfu2.info',			// by Tara Lagrant (webmaster at ngfu2.info)
 	'.ok10000.com',			// by zipeng hu (ldcs350003 at hotmail.com)
@@ -4265,6 +4313,7 @@ $blocklist['C'] = array(
 	'.pelican-bulletin.info',	// by Elizabeth K. Perry (redmonk at mail.ru)
 	'.perevozka777.ru',		// by witalik at gmail.com
 	'.pharmacy2online.com',	// by Mike Hiliok (bbong80 at yahoo.com)
+	'.pharmacyonlinenet.com',	// Mark Williams (sania at zmail.ru), hidden JavaScript
 	'.pills-storage.com',	// by 
 	'.plusintedia.com',		// by g yk (abc00623 at 163.com), seems not used now
 	'.popki.ind.in',			// by Aleksandr Krasnik (supermaster at pisem.net)
