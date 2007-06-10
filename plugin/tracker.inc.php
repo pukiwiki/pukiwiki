@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.36 2007/03/29 15:05:52 henoheno Exp $
-// Copyright (C) 2003-2005 PukiWiki Developers Team
+// $Id: tracker.inc.php,v 1.37 2007/06/10 13:04:11 henoheno Exp $
+// Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 // Issue tracker plugin (See Also bugtrack plugin)
@@ -86,7 +86,7 @@ function plugin_tracker_action()
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
-	$config_name = array_key_exists('_config',$post) ? $post['_config'] : '';
+	$config_name = isset($post['_config']) ? $post['_config'] : '';
 
 	$config = new Config('plugin/tracker/'.$config_name);
 	if (!$config->read())
@@ -96,7 +96,7 @@ function plugin_tracker_action()
 	$config->config_name = $config_name;
 	$source = $config->page.'/page';
 
-	$refer = array_key_exists('_refer',$post) ? $post['_refer'] : $post['_base'];
+	$refer = isset($post['_refer']) ? $post['_refer'] : $post['_base'];
 
 	if (!is_pagename($refer))
 	{
@@ -115,8 +115,8 @@ function plugin_tracker_action()
 	// ページ名を決定
 	$base = $post['_base'];
 	$num = 0;
-	$name = (array_key_exists('_name',$post)) ? $post['_name'] : '';
-	if (array_key_exists('_page',$post))
+	$name = isset($post['_name']) ? $post['_name'] : '';
+	if (isset($post['_page']))
 	{
 		$page = $real = $post['_page'];
 	}
@@ -149,11 +149,11 @@ function plugin_tracker_action()
 	$fields = plugin_tracker_get_fields($page,$refer,$config);
 
 	// Creating an empty page, before attaching files
-	touch(get_filename($page));
+	pkwk_touch_file(get_filename($page));
 
 	foreach (array_keys($fields) as $key)
 	{
-		$value = array_key_exists($key,$_post) ?
+		$value = isset($_post[$key]) ?
 			$fields[$key]->format_value($_post[$key]) : '';
 
 		foreach (array_keys($postdata) as $num)
@@ -164,7 +164,7 @@ function plugin_tracker_action()
 			}
 			$postdata[$num] = str_replace(
 				"[$key]",
-				($postdata[$num]{0} == '|' or $postdata[$num]{0} == ':') ?
+				($postdata[$num]{0} == '|' || $postdata[$num]{0} == ':') ?
 					str_replace('|','&#x7c;',$value) : $value,
 				$postdata[$num]
 			);
@@ -174,10 +174,8 @@ function plugin_tracker_action()
 	// Writing page data, without touch
 	page_write($page, join('', $postdata));
 
-	$r_page = rawurlencode($page);
-
 	pkwk_headers_sent();
-	header('Location: ' . get_script_uri() . '?' . $r_page);
+	header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
 	exit;
 }
 /*
@@ -273,7 +271,7 @@ class Tracker_field
 		$this->page = $page;
 		$this->refer = $refer;
 		$this->config = &$config;
-		$this->data = array_key_exists($this->name,$post) ? $post[$this->name] : '';
+		$this->data = isset($post[$this->name]) ? $post[$this->name] : '';
 	}
 	function get_tag()
 	{
@@ -352,7 +350,7 @@ class Tracker_field_textarea extends Tracker_field
 	function format_cell($str)
 	{
 		$str = preg_replace('/[\r\n]+/','',$str);
-		if (!empty($this->values[2]) and strlen($str) > ($this->values[2] + 3))
+		if (! empty($this->values[2]) && strlen($str) > ($this->values[2] + 3))
 		{
 			$str = mb_substr($str,0,$this->values[2]).'...';
 		}
@@ -400,12 +398,12 @@ class Tracker_field_format extends Tracker_field
 			return join(', ',array_map(array($this,'format_value'),$str));
 		}
 		$key = $this->get_key($str);
-		return array_key_exists($key,$this->formats) ? str_replace('%s',$str,$this->formats[$key]) : $str;
+		return isset($this->formats[$key]) ? str_replace('%s',$str,$this->formats[$key]) : $str;
 	}
 	function get_style($str)
 	{
 		$key = $this->get_key($str);
-		return array_key_exists($key,$this->styles) ? $this->styles[$key] : '%s';
+		return isset($this->styles[$key]) ? $this->styles[$key] : '%s';
 	}
 }
 class Tracker_field_file extends Tracker_field_format
@@ -420,7 +418,7 @@ class Tracker_field_file extends Tracker_field_format
 	}
 	function format_value($str)
 	{
-		if (array_key_exists($this->name,$_FILES))
+		if (isset($_FILES[$this->name]))
 		{
 			require_once(PLUGIN_DIR.'attach.inc.php');
 			$result = attach_upload($_FILES[$this->name],$this->page);
@@ -462,11 +460,11 @@ class Tracker_field_radio extends Tracker_field_format
 	function get_value($value)
 	{
 		static $options = array();
-		if (!array_key_exists($this->name,$options))
+		if (! isset($options[$this->name]))
 		{
 			$options[$this->name] = array_flip(array_map(create_function('$arr','return $arr[0];'),$this->config->get($this->name)));
 		}
-		return array_key_exists($value,$options[$this->name]) ? $options[$this->name][$value] : $value;
+		return isset($options[$this->name][$value]) ? $options[$this->name][$value] : $value;
 	}
 }
 class Tracker_field_select extends Tracker_field_radio
@@ -476,9 +474,9 @@ class Tracker_field_select extends Tracker_field_radio
 	function get_tag($empty=FALSE)
 	{
 		$s_name = htmlspecialchars($this->name);
-		$s_size = (array_key_exists(0,$this->values) and is_numeric($this->values[0])) ?
+		$s_size = (isset($this->values[0]) && is_numeric($this->values[0])) ?
 			' size="'.htmlspecialchars($this->values[0]).'"' : '';
-		$s_multiple = (array_key_exists(1,$this->values) and strtolower($this->values[1]) == 'multiple') ?
+		$s_multiple = (isset($this->values[1]) && strtolower($this->values[1]) == 'multiple') ?
 			' multiple="multiple"' : '';
 		$retval = "<select name=\"{$s_name}[]\"$s_size$s_multiple>\n";
 		if ($empty)
@@ -489,7 +487,7 @@ class Tracker_field_select extends Tracker_field_radio
 		foreach ($this->config->get($this->name) as $option)
 		{
 			$s_option = htmlspecialchars($option[0]);
-			$selected = array_key_exists(trim($option[0]),$defaults) ? ' selected="selected"' : '';
+			$selected = isset($defaults[trim($option[0])]) ? ' selected="selected"' : '';
 			$retval .= " <option value=\"$s_option\"$selected>$s_option</option>\n";
 		}
 		$retval .= "</select>";
@@ -510,7 +508,7 @@ class Tracker_field_checkbox extends Tracker_field_radio
 		foreach ($this->config->get($this->name) as $option)
 		{
 			$s_option = htmlspecialchars($option[0]);
-			$checked = array_key_exists(trim($option[0]),$defaults) ?
+			$checked = isset($defaults[trim($option[0])]) ?
 				' checked="checked"' : '';
 			++$id;
 			$s_id = '_p_tracker_' . $s_name . '_' . $this->id . '_' . $id;
@@ -539,9 +537,9 @@ class Tracker_field_submit extends Tracker_field
 {
 	function get_tag()
 	{
-		$s_title = htmlspecialchars($this->title);
-		$s_page = htmlspecialchars($this->page);
-		$s_refer = htmlspecialchars($this->refer);
+		$s_title  = htmlspecialchars($this->title);
+		$s_page   = htmlspecialchars($this->page);
+		$s_refer  = htmlspecialchars($this->refer);
 		$s_config = htmlspecialchars($this->config->config_name);
 
 		return <<<EOD
@@ -610,11 +608,11 @@ function plugin_tracker_list_action()
 {
 	global $script,$vars,$_tracker_messages;
 
-	$page = $refer = $vars['refer'];
+	$page   = $refer = $vars['refer'];
 	$s_page = make_pagelink($page);
 	$config = $vars['config'];
-	$list = array_key_exists('list',$vars) ? $vars['list'] : 'list';
-	$order = array_key_exists('order',$vars) ? $vars['order'] : '_real:SORT_DESC';
+	$list   = isset($vars['list'])  ? $vars['list']  : 'list';
+	$order  = isset($vars['order']) ? $vars['order'] : '_real:SORT_DESC';
 
 	return array(
 		'msg' => $_tracker_messages['msg_list'],
@@ -657,33 +655,36 @@ class Tracker_list
 
 	function Tracker_list($page,$refer,&$config,$list)
 	{
-		$this->page = $page;
-		$this->config = &$config;
-		$this->list = $list;
-		$this->fields = plugin_tracker_get_fields($page,$refer,$config);
+		$this->page    = $page;
+		$this->config  = &$config;
+		$this->list    = $list;
+		$this->fields  = plugin_tracker_get_fields($page,$refer,$config);
+		$this->pattern = '';
+		$this->pattern_fields = array();
+		$this->rows    = array();
+		$this->order   = array();
 
 		$pattern = join('',plugin_tracker_get_source($config->page.'/page'));
+
 		// ブロックプラグインをフィールドに置換
 		// #commentなどで前後に文字列の増減があった場合に、[_block_xxx]に吸い込ませるようにする
 		$pattern = preg_replace('/^\#([^\(\s]+)(?:\((.*)\))?\s*$/m','[_block_$1]',$pattern);
 
 		// パターンを生成
-		$this->pattern = '';
-		$this->pattern_fields = array();
 		$pattern = preg_split('/\\\\\[(\w+)\\\\\]/',preg_quote($pattern,'/'),-1,PREG_SPLIT_DELIM_CAPTURE);
-		while (count($pattern))
+		while (! empty($pattern))
 		{
 			$this->pattern .= preg_replace('/\s+/','\\s*','(?>\\s*'.trim(array_shift($pattern)).'\\s*)');
-			if (count($pattern))
+			if (! empty($pattern))
 			{
 				$field = array_shift($pattern);
 				$this->pattern_fields[] = $field;
 				$this->pattern .= '(.*)';
 			}
 		}
+
 		// ページの列挙と取り込み
-		$this->rows = array();
-		$pattern = "$page/";
+		$pattern = $page . '/';
 		$pattern_len = strlen($pattern);
 		foreach (get_existpages() as $_page)
 		{
@@ -700,36 +701,44 @@ class Tracker_list
 	}
 	function add($page,$name)
 	{
-		static $moved = array();
+		static $done = array();
 
-		// 無限ループ防止
-		if (array_key_exists($name,$this->rows))
-		{
-			return;
-		}
+		if (isset($done[$page])) return;
 
-		$source = plugin_tracker_get_source($page);
+		$source  = plugin_tracker_get_source($page);
+
+		// Compat: 'move to [[page]]' (bugtrack plugin)
+		$matches = array();
 		if (preg_match('/move\sto\s(.+)/',$source[0],$matches))
 		{
-			$page = strip_bracket(trim($matches[1]));
-			if (array_key_exists($page,$moved) or !is_page($page))
-			{
-				return;
+			$to_page = strip_bracket(trim($matches[1]));
+			if (! is_page($to_page)) {
+				return;	// Invalid
+			} else {
+				$done[$page] = TRUE;
+				return $this->add($to_page,$name);	// Rescan
 			}
-			$moved[$page] = TRUE;
-			return $this->add($page,$name);
 		}
-		$source = join('',preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/','$1$2',$source));
 
-		// デフォルト値
+		$done[$page] = TRUE;
+
+		// Default
 		$this->rows[$name] = array(
-			'_page'  => "[[$page]]",
-			'_refer' => $this->page,
-			'_real'  => $name,
-			'_update'=> get_filetime($page),
-			'_past'  => get_filetime($page)
+			'_page'   => '[[' . $page . ']]',
+			'_refer'  => $this->page,
+			'_real'   => $name,
+			'_update' => get_filetime($page),
+			'_past'   => get_filetime($page),
+			'_match'  => FALSE,
 		);
-		if ($this->rows[$name]['_match'] = preg_match("/{$this->pattern}/s",$source,$matches))
+
+		// Redefine
+		$matches = array();
+		$this->rows[$name]['_match'] =
+			preg_match('/' . $this->pattern . '/s',implode('', $source),$matches);
+		unset($source);
+
+		if ($this->rows[$name]['_match'])
 		{
 			array_shift($matches);
 			foreach ($this->pattern_fields as $key=>$field)
@@ -749,7 +758,7 @@ class Tracker_list
 		foreach (explode(';',$order) as $item)
 		{
 			list($key,$dir) = array_pad(explode(':',$item),1,'ASC');
-			if (!array_key_exists($key,$names))
+			if (! isset($names[$key]))
 			{
 				continue;
 			}
@@ -774,7 +783,7 @@ class Tracker_list
 		$params = array();
 		foreach ($this->order as $field=>$order)
 		{
-			if (!array_key_exists($field,$names))
+			if (! isset($names[$field]))
 			{
 				continue;
 			}
@@ -799,10 +808,10 @@ class Tracker_list
 		{
 			$str = '';
 		}
-		else if (array_key_exists($name,$this->items))
+		else if (isset($this->items[$name]))
 		{
 			$str = $this->items[$name];
-			if (array_key_exists($name,$this->fields))
+			if (isset($this->fields[$name]))
 			{
 				$str = $this->fields[$name]->format_cell($str);
 			}
@@ -811,9 +820,8 @@ class Tracker_list
 		{
 			return $this->pipe ? str_replace('|','&#x7c;',$arr[0]) : $arr[0];
 		}
-		$style = count($params) ? $params[0] : $name;
-		if (array_key_exists($style,$this->items)
-			and array_key_exists($style,$this->fields))
+		$style = empty($params) ? $name : $params[0];
+		if (isset($this->items[$style]) && isset($this->fields[$style]))
 		{
 			$str = sprintf($this->fields[$style]->get_style($this->items[$style]),$str);
 		}
@@ -824,29 +832,29 @@ class Tracker_list
 		global $script;
 
 		$field = $sort = $arr[1];
-		if ($sort == '_name' or $sort == '_page')
+		if ($sort == '_name' || $sort == '_page')
 		{
 			$sort = '_real';
 		}
-		if (!array_key_exists($field,$this->fields))
+		if (! isset($this->fields[$field]))
 		{
 			return $arr[0];
 		}
 		$dir = SORT_ASC;
 		$arrow = '';
-		$order = $this->order;
 
+		$order = $this->order;
 		if (is_array($order) && isset($order[$sort]))
 		{
 			// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
 			$order_keys = array_keys($order); // with array_shift();
 
-			$index = array_flip($order_keys);
-			$pos = 1 + $index[$sort];
-			$b_end = ($sort == array_shift($order_keys));
+			$index   = array_flip($order_keys);
+			$pos     = 1 + $index[$sort];
+			$b_end   = ($sort == array_shift($order_keys));
 			$b_order = ($order[$sort] == SORT_ASC);
-			$dir = ($b_end xor $b_order) ? SORT_ASC : SORT_DESC;
-			$arrow = '&br;'.($b_order ? '&uarr;' : '&darr;')."($pos)";
+			$dir     = ($b_end xor $b_order) ? SORT_ASC : SORT_DESC;
+			$arrow   = '&br;' . ($b_order ? '&uarr;' : '&darr;') . '(' . $pos . ')';
 
 			unset($order[$sort], $order_keys);
 		}
@@ -854,30 +862,37 @@ class Tracker_list
 		$r_page = rawurlencode($this->page);
 		$r_config = rawurlencode($this->config->config_name);
 		$r_list = rawurlencode($this->list);
-		$_order = array("$sort:$dir");
-		if (is_array($order))
-			foreach ($order as $key=>$value)
-				$_order[] = "$key:$value";
+		$_order = array($sort . ':' . $dir);
+		if (is_array($order)) {
+			foreach ($order as $key => $value) {
+				$_order[] = $key . ':' . $value;
+			}
+		}
 		$r_order = rawurlencode(join(';',$_order));
 
-		return "[[$title$arrow>$script?plugin=tracker_list&refer=$r_page&config=$r_config&list=$r_list&order=$r_order]]";
+		return '[[' . $title . $arrow . '>' .
+				$script . '?plugin=tracker_list&refer=' . $r_page .
+				'&config=' . $r_config .
+				'&list=' . $r_list . '&order=' . $r_order . ']]';
 	}
+
 	function toString($limit=NULL)
 	{
 		global $_tracker_messages;
 
-		$source = '';
+		$source = array();
 		$body = array();
 
-		if ($limit !== NULL and count($this->rows) > $limit)
+		$count = count($this->rows);
+		if ($limit !== NULL && $count > $limit)
 		{
-			$source = str_replace(
-				array('$1','$2'),
-				array(count($this->rows),$limit),
-				$_tracker_messages['msg_limit'])."\n";
+			$source[] = str_replace(
+				array('$1',  '$2'),
+				array($count,$limit),
+				$_tracker_messages['msg_limit']) . "\n";
 			$this->rows = array_splice($this->rows,0,$limit);
 		}
-		if (count($this->rows) == 0)
+		if (empty($this->rows))
 		{
 			return '';
 		}
@@ -885,39 +900,41 @@ class Tracker_list
 		{
 			if (preg_match('/^\|(.+)\|[hHfFcC]$/',$line))
 			{
-				$source .= preg_replace_callback('/\[([^\[\]]+)\]/',array(&$this,'replace_title'),$line);
+				$source[] = preg_replace_callback('/\[([^\[\]]+)\]/',array(&$this,'replace_title'),$line);
 			}
 			else
 			{
 				$body[] = $line;
 			}
 		}
-		foreach ($this->rows as $key=>$row)
+		foreach ($this->rows as $row)
 		{
-			if (!TRACKER_LIST_SHOW_ERROR_PAGE and !$row['_match'])
+			if (! TRACKER_LIST_SHOW_ERROR_PAGE && ! $row['_match'])
 			{
 				continue;
 			}
 			$this->items = $row;
 			foreach ($body as $line)
 			{
-				if (trim($line) == '')
+				if (ltrim($line) == '')
 				{
-					$source .= $line;
-					continue;
+					$source[] = $line;
+				} else {
+					$this->pipe = ($line{0} == '|' || $line{0} == ':');
+					$source[] = preg_replace_callback('/\[([^\[\]]+)\]/',array(&$this,'replace_item'),$line);
 				}
-				$this->pipe = ($line{0} == '|' or $line{0} == ':');
-				$source .= preg_replace_callback('/\[([^\[\]]+)\]/',array(&$this,'replace_item'),$line);
 			}
 		}
-		return convert_html($source);
+		return convert_html(implode('', $source));
 	}
 }
 function plugin_tracker_get_source($page)
 {
 	$source = get_source($page);
+
 	// 見出しの固有ID部を削除
 	$source = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m','$1$2',$source);
+
 	// #freezeを削除
 	return preg_replace('/^#freeze\s*$/im', '', $source);
 }
