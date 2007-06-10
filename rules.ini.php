@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: rules.ini.php,v 1.9 2005/10/04 13:41:03 henoheno Exp $
+// $Id: rules.ini.php,v 1.10 2007/06/10 02:08:40 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -30,9 +30,12 @@ $datetime_rules = array(
 $page_array = explode('/', $vars['page']); // with array_pop()
 
 $str_rules = array(
-	'now\?' 	=> format_date(UTIME),
-	'date\?'	=> get_date($date_format),
-	'time\?'	=> get_date($time_format),
+
+	// Compat 1.3.x
+	//'now\?' 	=> format_date(UTIME),
+	//'date\?'	=> get_date($date_format),
+	//'time\?'	=> get_date($time_format),
+
 	'&now;' 	=> format_date(UTIME),
 	'&date;'	=> get_date($date_format),
 	'&time;'	=> get_date($time_format),
