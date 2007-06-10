@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.37 2007/06/10 13:04:11 henoheno Exp $
+// $Id: tracker.inc.php,v 1.38 2007/06/10 14:17:01 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -705,6 +705,8 @@ class Tracker_list
 
 		if (isset($done[$page])) return;
 
+		$done[$page] = TRUE;
+
 		$source  = plugin_tracker_get_source($page);
 
 		// Compat: 'move to [[page]]' (bugtrack plugin)
@@ -715,12 +717,9 @@ class Tracker_list
 			if (! is_page($to_page)) {
 				return;	// Invalid
 			} else {
-				$done[$page] = TRUE;
 				return $this->add($to_page,$name);	// Rescan
 			}
 		}
-
-		$done[$page] = TRUE;
 
 		// Default
 		$this->rows[$name] = array(
