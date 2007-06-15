@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.15 2005/07/03 14:16:23 henoheno Exp $
+// $Id: plugin.php,v 1.16 2007/06/15 13:48:19 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -72,14 +72,15 @@ function do_plugin_init($name)
 {
 	static $checked = array();
 
-	if (isset($checked[$name])) return $checked[$name];
+	// TRUE or FALSE or NULL (Return nothing / Not exists)
+	if (array_key_exists($name, $checked)) return $checked[$name];
 
 	$func = 'plugin_' . $name . '_init';
 	if (function_exists($func)) {
-		// TRUE or FALSE or NULL (return nothing)
-		$checked[$name] = call_user_func($func);
+		$result = call_user_func($func);
+		$checked[$name] = ($result === NULL) ? NULL : (bool)$result;
 	} else {
-		$checked[$name] = NULL; // Not exist
+		$checked[$name] = NULL;
 	}
 
 	return $checked[$name];
