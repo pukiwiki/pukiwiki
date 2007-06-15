@@ -72,14 +72,15 @@ function do_plugin_init($name)
 {
 	static $checked = array();
 
-	if (isset($checked[$name])) return $checked[$name];
+	// TRUE or FALSE or NULL (Return nothing / Not exists)
+	if (array_key_exists($name, $checked)) return $checked[$name];
 
 	$func = 'plugin_' . $name . '_init';
 	if (function_exists($func)) {
-		// TRUE or FALSE or NULL (return nothing)
-		$checked[$name] = call_user_func($func);
+		$result = call_user_func($func);
+		$checked[$name] = ($result === NULL) ? NULL : (bool)$result;
 	} else {
-		$checked[$name] = NULL; // Not exist
+		$checked[$name] = NULL;
 	}
 
 	return $checked[$name];
