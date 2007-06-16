@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.25 2007/05/06 14:33:35 henoheno Exp $
+// $Id: spam.php,v 1.26 2007/06/16 05:38:09 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -43,10 +43,12 @@ function preg_grep_invert($pattern = '//', $input = array())
 // NOTE: If the same data exists, it must be corrupted.
 function var_export_shrink($expression, $return = FALSE, $ignore_numeric_keys = FALSE)
 {
-	$result =preg_replace(
+	$result = var_export($expression, TRUE);
+
+	$result = preg_replace(
 		// Remove a newline and spaces
 		'# => \n *array \(#', ' => array (',
-		var_export($expression, TRUE)
+		$result
 	);
 
 	if ($ignore_numeric_keys) {
@@ -109,35 +111,43 @@ function array_renumber_numeric_keys(& $array)
 // References:
 //   http://www.freebsd.org/cgi/man.cgi?query=strings (Man-page of GNU strings)
 //   http://www.pcre.org/pcre.txt
-function strings($binary = '', $min_len = 4, $ignore_space = FALSE)
+// Note: mb_ereg_replace() is one of mbstring extension's functions
+//   and need to init its encoding.
+function strings($binary = '', $min_len = 4, $ignore_space = FALSE, $multibyte = FALSE)
 {
+	// String only
+	$binary = (is_array($binary) || $binary === TRUE) ? '' : strval($binary);
+
+	$regex = $ignore_space ?
+		'[^[:graph:] \t\n]+' :		// Remove "\0" etc, and readable spaces
+		'[^[:graph:][:space:]]+';	// Preserve readable spaces if possible
+
+	$binary = $multibyte ?
+		mb_ereg_replace($regex,           "\n",  $binary) :
+		preg_replace('/' . $regex . '/s', "\n",  $binary);
+
 	if ($ignore_space) {
 		$binary = preg_replace(
 			array(
-				'/(?:[^[:graph:] \t\n]|[\r])+/s',
 				'/[ \t]{2,}/',
 				'/^[ \t]/m',
 				'/[ \t]$/m',
 			),
 			array(
-				"\n",
 				' ',
 				'',
 				''
 			),
 			 $binary);
-	} else {
-		$binary = preg_replace('/(?:[^[:graph:][:space:]]|[\r])+/s', "\n", $binary);
 	}
 
 	if ($min_len > 1) {
+		// The last character seems "\n" or not
+		$br = (! empty($binary) && $binary[strlen($binary) - 1] == "\n") ? "\n" : '';
+
 		$min_len = min(1024, intval($min_len));
-		$binary = 
-			implode("\n",
-				preg_grep('/^.{' . $min_len . ',}/S',
-					explode("\n", $binary)
-				)
-			);
+		$regex = '/^.{' . $min_len . ',}/S';
+		$binary = implode("\n", preg_grep($regex, explode("\n", $binary))) . $br;
 	}
 
 	return $binary;
@@ -171,7 +181,7 @@ function uri_pickup($string = '')
 	preg_match_all(
 		// scheme://userinfo@host:port/path/or/pathinfo/maybefile.and?query=string#fragment
 		// Refer RFC3986 (Regex below is not strict)
-		'#(\b[a-z][a-z0-9.+-]{1,8}):/+' .	// 1: Scheme
+		'#(\b[a-z][a-z0-9.+-]{1,8}):[/\\\]+' .	// 1: Scheme
 		'(?:' .
 			'([^\s<>"\'\[\]/\#?@]*)' .		// 2: Userinfo (Username)
 		'@)?' .
@@ -179,7 +189,7 @@ function uri_pickup($string = '')
 			// 3: Host
 			'\[[0-9a-f:.]+\]' . '|' .				// IPv6([colon-hex and dot]): RFC2732
 			'(?:[0-9]{1,3}\.){3}[0-9]{1,3}' . '|' .	// IPv4(dot-decimal): 001.22.3.44
-			'[a-z0-9.-]+' . 						// hostname(FQDN) : foo.example.org
+			'[a-z0-9][a-z0-9.-]+[a-z0-9]' . 		// hostname(FQDN) : foo.example.org
 		')' .
 		'(?::([0-9]*))?' .					// 4: Port
 		'((?:/+[^\s<>"\'\[\]/\#]+)*/+)?' .	// 5: Directory path or path-info
@@ -445,6 +455,27 @@ function _preg_replace_callback_domain_exposure($matches = array())
 	return $result;
 }
 
+// Preprocess: Removing uninterest part for URI detection
+function spam_uri_removing_hocus_pocus($binary = '', $method = array())
+{
+	$length = 4 ; // 'http'(1) and '://'(2) and 'fqdn'(1)
+	if (is_array($method)) {
+		// '<a'(2) or 'href='(5) or '>'(1) or '</a>'(4)
+		// '[uri'(4) or ']'(1) or '[/uri]'(6) 
+		if (isset($method['area_anchor']) || isset($method['uri_anchor']) ||
+		    isset($method['area_bbcode']) || isset($method['uri_bbcode']))
+				$length = 1;	// Seems not effective
+	}
+
+ 	// Removing sequential spaces and too short lines
+	$binary = strings($binary, $length, TRUE, FALSE); // Multibyte NOT needed
+
+	// Remove words (has no '<>[]:') between spaces
+	$binary = preg_replace('/[ \t][\w.,()\ \t]+[ \t]/', ' ', $binary);
+
+	return $binary;
+}
+
 // Preprocess: rawurldecode() and adding space(s) and something
 // to detect/count some URIs _if possible_
 // NOTE: It's maybe danger to var_dump(result). [e.g. 'javascript:']
@@ -452,11 +483,12 @@ function _preg_replace_callback_domain_exposure($matches = array())
 // [OK] http://victim.example.org/nasty.example.org
 // [OK] http://victim.example.org/go?http%3A%2F%2Fnasty.example.org
 // [OK] http://victim.example.org/http://nasty.example.org
-function spam_uri_pickup_preprocess($string = '')
+function spam_uri_pickup_preprocess($string = '', $method = array())
 {
 	if (! is_string($string)) return '';
 
-	$string = rawurldecode($string);
+	$string = spam_uri_removing_hocus_pocus(rawurldecode($string), $method);
+	//var_dump(htmlspecialchars($string));
 
 	// Domain exposure (simple)
 	// http://victim.example.org/nasty.example.org/path#frag
@@ -535,7 +567,7 @@ function spam_uri_pickup($string = '', $method = array())
 		$method = check_uri_spam_method();
 	}
 
-	$string = spam_uri_pickup_preprocess($string);
+	$string = spam_uri_pickup_preprocess($string, $method);
 
 	$array  = uri_pickup($string);
 
@@ -1018,10 +1050,15 @@ function generate_host_regex($string = '', $divider = '/')
 
 function get_blocklist($list = '')
 {
-	static $regexs;
+	static $regexes;
 
-	if (! isset($regexs)) {
-		$regexs = array();
+	if ($list === NULL) {
+		$regexes = NULL;	// Unset
+		return array();
+	}
+
+	if (! isset($regexes)) {
+		$regexes = array();
 		if (file_exists(SPAM_INI_FILE)) {
 			$blocklist = array();
 			include(SPAM_INI_FILE);
@@ -1030,7 +1067,7 @@ function get_blocklist($list = '')
 			//		'IANA-examples' => '#^(?:.*\.)?example\.(?:com|net|org)$#',
 			//	);
 			if (isset($blocklist['list'])) {
-				$regexs['list'] = & $blocklist['list'];
+				$regexes['list'] = & $blocklist['list'];
 			} else {
 				// Default
 				$blocklist['list'] = array(
@@ -1042,12 +1079,12 @@ function get_blocklist($list = '')
 				if (! isset($blocklist[$_list])) continue;
 				foreach ($blocklist[$_list] as $key => $value) {
 					if (is_array($value)) {
-						$regexs[$_list][$key] = array();
+						$regexes[$_list][$key] = array();
 						foreach($value as $_key => $_value) {
-							get_blocklist_add($regexs[$_list][$key], $_key, $_value);
+							get_blocklist_add($regexes[$_list][$key], $_key, $_value);
 						}
 					} else {
-						get_blocklist_add($regexs[$_list], $key, $value);
+						get_blocklist_add($regexes[$_list], $key, $value);
 					}
 				}
 				unset($blocklist[$_list]);
@@ -1055,11 +1092,11 @@ function get_blocklist($list = '')
 		}
 	}
 
-	if ($list == '') {
-		return $regexs;	// ALL
-	} else if (isset($regexs[$list])) {
-		return $regexs[$list];
-	} else {	
+	if ($list === '') {
+		return $regexes;	// ALL
+	} else if (isset($regexes[$list])) {
+		return $regexes[$list];
+	} else {
 		return array();
 	}
 }
@@ -1106,18 +1143,6 @@ function blocklist_distiller(& $hosts, $keys = array('goodhost', 'badhost'), $as
 	}
 
 	return $blocked;
-}
-
-// Simple example for badhost (not used now)
-function is_badhost($hosts = array(), $asap = TRUE, $bool = TRUE)
-{
-	$list = get_blocklist('list');
-	$blocked = blocklist_distiller($hosts, array_keys($list), $asap);
-	foreach($list as $key=>$type){
-		if (! $type) unset($blocked[$key]); // Ignore goodhost etc
-	}
-
-	return $bool ? ! empty($blocked) : $blocked;
 }
 
 // Default (enabled) methods and thresholds (for content insertion)
@@ -1208,6 +1233,7 @@ function check_uri_spam($target = '', $method = array())
 	foreach(array_keys($method) as $key) {
 		if (! isset($sum[$key])) $sum[$key] = 0;
 	}
+	if (! isset($sum['quantity'])) $sum['quantity'] = 0;
 
 	if (is_array($target)) {
 		foreach($target as $str) {
@@ -1234,17 +1260,13 @@ function check_uri_spam($target = '', $method = array())
 			if ($asap && $is_spam) break;
 
 			// Merge only
-			$blocked = array_merge_leaves($blocked, $_progress['blocked'], FALSE, FALSE);
-			$hosts   = array_merge_leaves($hosts,   $_progress['hosts'],   FALSE, FALSE);
+			$blocked = array_merge_recursive($blocked, $_progress['blocked']);
+			$hosts   = array_merge_recursive($hosts,   $_progress['hosts']);
 		}
 
 		// Unique values
 		$blocked = array_unique_recursive($blocked);
 		$hosts   = array_unique_recursive($hosts);
-
-		// Renumber numeric keys
-		array_renumber_numeric_keys($blocked);
-		array_renumber_numeric_keys($hosts);
 
 		// Recount $sum['badhost']
 		$sum['badhost'] = array_count_leaves($blocked);
@@ -1396,20 +1418,6 @@ function array_count_leaves($array = array(), $count_empty = FALSE)
 	return $count;
 }
 
-// Merge two leaves' value
-function array_merge_leaves(& $array1, & $array2, $unique_values = TRUE, $renumber_numeric = TRUE)
-{
-	$array = array_merge_recursive($array1, $array2);
-
-	// Redundant values (and keys) are vanished
-	if ($unique_values) $array = array_unique_recursive($array);
-
-	// All NUMERIC keys are always renumbered from 0
-	if ($renumber_numeric) array_renumber_numeric_keys($array);
-
-	return $array;
-}
-
 // An array-leaves to a flat array
 function array_flat_leaves($array, $unique = TRUE)
 {
@@ -1430,10 +1438,32 @@ function array_flat_leaves($array, $unique = TRUE)
 	return $unique ? array_values(array_unique($tmp)) : $tmp;
 }
 
+// An array() to an array leaf
+function array_leaf($array = array('A', 'B', 'C.D'), $stem = FALSE, $edge = TRUE)
+{
+	if (! is_array($array)) return $array;
+
+	$leaf = array();
+	$tmp  = & $leaf;
+	foreach($array as $arg) {
+		if (! is_string($arg) && ! is_int($arg)) continue;
+		$tmp[$arg] = array();
+		$parent    = & $tmp;
+		$tmp       = & $tmp[$arg];
+	}
+	if ($stem) {
+		$parent[key($parent)] = & $edge;
+	} else {
+		$parent = key($parent);
+	}
+
+	return $leaf;	// array('A' => array('B' => 'C.D'))
+}
+
+
 // ---------------------
 // Reporting
 
-// TODO: Don't show unused $method!
 // Summarize $progress (blocked only)
 function summarize_spam_progress($progress = array(), $blockedonly = FALSE)
 {
@@ -1463,7 +1493,7 @@ function summarize_detail_badhost($progress = array())
 	foreach($progress['blocked'] as $list => $lvalue) {
 		foreach($lvalue as $group => $gvalue) {
 			$flat = implode(', ', array_flat_leaves($gvalue));
-			if ($flat == $group) {
+			if ($flat === $group) {
 				$blocked[$list][]       = $flat;
 			} else {
 				$blocked[$list][$group] = $flat;
@@ -1491,26 +1521,544 @@ function summarize_detail_newtral($progress = array())
 	    ! is_array($progress['hosts']) ||
 	    empty($progress['hosts'])) return '';
 
-	// Sort by domain
-	$tmp = array();
-	foreach($progress['hosts'] as $value) {
-		$tmp[delimiter_reverse($value)] = $value;
-	}
-	ksort($tmp);
+	$result = '';
 
-	return count($tmp) . ' (' .implode(', ', $tmp) . ')';
+	// Generate a $trie
+	$trie = array();
+	foreach($progress['hosts'] as $value) {
+
+		// Try to shorten (pre) -- array('example.com', 'bar', 'foo')
+		$resp = whois_responsibility($value);	// 'example.com'
+		$rest = rtrim(substr($value, 0, - strlen($resp)), '.');	// 'foo.bar'
+		if ($rest) {
+			$parts = explode('.', delimiter_reverse('.' . $rest));
+			array_unshift($parts, $resp);
+		} else {
+			$parts = array($resp, $rest);
+		}
+
+		$trie = array_merge_recursive(
+			$trie,
+			array_leaf($parts, TRUE, $value)
+		);
+	}
+
+	// Try to shorten (post, non-recursive) -- 'foo.bar.example.com'
+	array_joinbranch_leaf($trie, '.', 0, TRUE, '');
+
+	// Sort and flatten -- 'A.foo.bar.example.com, B.foo.bar.example.com'
+	foreach(array_keys($trie) as $key) {
+		if (is_array($trie[$key])) {
+			ksort_by_domain($trie[$key]);
+			$trie[$key] = implode(', ', array_flat_leaves($trie[$key]));
+		}
+	}
+
+	ksort_by_domain($trie);
+
+	// Format: From array('foobar' => 'foobar') to 'foobar'
+	$tmp = array();
+	foreach($trie as $key => $value) {
+		$tmp[] = '  \'' .
+			(($trie[$key] == $key) ? $key : $key . '\' => \'' . $trie[$key])
+			. '\',';
+		unset($trie[$key]);
+	}
+
+	return 'array (' . "\n" . implode("\n", $tmp) . "\n" . ')';
+}
+
+// ksort() by domain
+function ksort_by_domain(& $array)
+{
+	$sort = array();
+	foreach(array_keys($array) as $key) {
+		$sort[delimiter_reverse($key)] = $key;
+	}
+	ksort($sort, SORT_STRING);
+	$result = array();
+	foreach($sort as $key) {
+		$result[$key] = & $array[$key];
+	}
+	$array = $result;
+}
+
+// array('F' => array('B' => array('C' => array('d' => array('' => 'foobar')))))
+// to
+// array('F.B.C.d.' => 'foobar')
+function array_joinbranch_leaf(& $array, $delim = '.', $limit = 0, $reverse = FALSE, $stopword = NULL)
+{
+	$result = array();
+	if (! is_array($array)) return $result;	// Nothing to do
+
+	$limit  = max(0, intval($limit));
+	$cstack = array();
+
+	foreach(array_keys($array) as $key) {
+		$kstack = array();
+		$k      = -1;
+
+		$single = array($key => & $array[$key]);	// Keep it single
+		$cursor = & $single;
+		while(is_array($cursor) && count($cursor) == 1) {	// Once
+			++$k;
+			if (key($cursor) === $stopword)    break;
+			$kstack[] = key($cursor);
+			$cursor   = & $cursor[$kstack[$k]];
+			if ($limit != 0 && $k == $limit) break;
+		}
+
+		// Relink
+		if ($k != 0) {
+			if ($reverse) $kstack = array_reverse($kstack);
+			$joinkey = implode($delim, $kstack);
+
+			unset($array[$key]);
+			$array[$joinkey]  = & $cursor;
+			$result[$joinkey] = $k + 1;	// Key seems not an single array => joined length
+		}
+	}
+
+	return $result;
+}
+
+
+// Check responsibility-root of the FQDN
+// 'foo.bar.example.com'        => 'example.com'        (.com        has the last whois for it)
+// 'foo.bar.example.au'         => 'example.au'         (.au         has the last whois for it)
+// 'foo.bar.example.edu.au'     => 'example.edu.au'     (.edu.au     has the last whois for it)
+// 'foo.bar.example.act.edu.au' => 'example.act.edu.au' (.act.edu.au has the last whois for it)
+function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $implicit = TRUE)
+{
+	// Domains who have 2nd and/or 3rd level domains
+	static $domain = array(
+
+		// ccTLD: Australia
+		// http://www.auda.org.au/
+		// NIC  : http://www.aunic.net/
+		// Whois: http://www.ausregistry.com.au/
+		'au' => array(
+			// .au Second Level Domains
+			// http://www.auda.org.au/domains/
+			'asn'   => TRUE,
+			'com'   => TRUE,
+			'conf'  => TRUE,
+			'csiro' => TRUE,
+			'edu'   => array(	// http://www.domainname.edu.au/
+				// Geographic
+				'act' => TRUE,
+				'nt'  => TRUE,
+				'nsw' => TRUE,
+				'qld' => TRUE,
+				'sa'  => TRUE,
+				'tas' => TRUE,
+				'vic' => TRUE,
+				'wa'  => TRUE,
+			),
+			'gov'   => array(
+				// Geographic
+				'act' => TRUE,	// Australian Capital Territory
+				'nt'  => TRUE,	// Northern Territory
+				'nsw' => TRUE,	// New South Wales
+				'qld' => TRUE,	// Queensland
+				'sa'  => TRUE,	// South Australia
+				'tas' => TRUE,	// Tasmania
+				'vic' => TRUE,	// Victoria
+				'wa'  => TRUE,	// Western Australia
+			),
+			'id'    => TRUE,
+			'net'   => TRUE,
+			'org'   => TRUE,
+			'info'  => TRUE,
+		),
+
+		// ccTLD: China
+		// NIC  : http://www.cnnic.net.cn/en/index/
+		// Whois: http://ewhois.cnnic.cn/
+		'cn' => array(
+			// Provisional Administrative Rules for Registration of Domain Names in China
+			// http://www.cnnic.net.cn/html/Dir/2003/11/27/1520.htm
+
+			// Organizational
+			'ac'  => TRUE,
+			'com' => TRUE,
+			'edu' => TRUE,
+			'gov' => TRUE,
+			'net' => TRUE,
+			'org' => TRUE,
+
+			// Geographic
+			'ah' => TRUE,
+			'bj' => TRUE,
+			'cq' => TRUE,
+			'fj' => TRUE,
+			'gd' => TRUE,
+			'gs' => TRUE,
+			'gx' => TRUE,
+			'gz' => TRUE,
+			'ha' => TRUE,
+			'hb' => TRUE,
+			'he' => TRUE,
+			'hi' => TRUE,
+			'hk' => TRUE,
+			'hl' => TRUE,
+			'hn' => TRUE,
+			'jl' => TRUE,
+			'js' => TRUE,
+			'jx' => TRUE,
+			'ln' => TRUE,
+			'mo' => TRUE,
+			'nm' => TRUE,
+			'nx' => TRUE,
+			'qh' => TRUE,
+			'sc' => TRUE,
+			'sd' => TRUE,
+			'sh' => TRUE,
+			'sn' => TRUE,
+			'sx' => TRUE,
+			'tj' => TRUE,
+			'tw' => TRUE,
+			'xj' => TRUE,
+			'xz' => TRUE,
+			'yn' => TRUE,
+			'zj' => TRUE,
+		),
+
+		// ccTLD: South Korea
+		// NIC  : http://www.nic.or.kr/english/
+		// Whois: http://whois.nida.or.kr/english/
+		'kr' => array(
+			// .kr domain policy [appendix 1] : Qualifications for Second Level Domains
+			// http://domain.nida.or.kr/eng/policy.jsp
+
+			// Organizational
+			'co'  => TRUE,
+			'ne ' => TRUE,
+			'or ' => TRUE,
+			're ' => TRUE,
+			'pe'  => TRUE,
+			'go ' => TRUE,
+			'mil' => TRUE,
+			'ac'  => TRUE,
+			'hs'  => TRUE,
+			'ms'  => TRUE,
+			'es'  => TRUE,
+			'sc'  => TRUE,
+			'kg'  => TRUE,
+
+			// Geographic
+			'seoul'     => TRUE,
+			'busan'     => TRUE,
+			'daegu'     => TRUE,
+			'incheon'   => TRUE,
+			'gwangju'   => TRUE,
+			'daejeon'   => TRUE,
+			'ulsan'     => TRUE,
+			'gyeonggi'  => TRUE,
+			'gangwon'   => TRUE,
+			'chungbuk'  => TRUE,
+			'chungnam'  => TRUE,
+			'jeonbuk'   => TRUE,
+			'jeonnam'   => TRUE,
+			'gyeongbuk' => TRUE,
+			'gyeongnam' => TRUE,
+			'jeju'      => TRUE,
+		),
+
+		// ccTLD: Japan
+		// NIC  : http://jprs.co.jp/en/
+		// Whois: http://whois.jprs.jp/en/
+		'jp' => array(
+			// Guide to JP Domain Name
+			// http://jprs.co.jp/en/jpdomain.html
+
+			// Organizational
+			'ac' => TRUE,
+			'ad' => TRUE,
+			'co' => TRUE,
+			'go' => TRUE,
+			'gr' => TRUE,
+			'lg' => TRUE,
+			'ne' => TRUE,
+			'or' => TRUE,
+
+			// Geographic
+			//
+			// Examples for 3rd level domains
+			//'kumamoto'  => array(
+			//	// http://www.pref.kumamoto.jp/link/list.asp#4
+			//	'amakusa'   => TRUE,
+			//	'hitoyoshi' => TRUE,
+			//	'jonan'     => TRUE,
+			//	'kumamoto'  => TRUE,
+			//	...
+			//),
+			'aichi'     => TRUE,
+			'akita'     => TRUE,
+			'aomori'    => TRUE,
+			'chiba'     => TRUE,
+			'ehime'     => TRUE,
+			'fukui'     => TRUE,
+			'fukuoka'   => TRUE,
+			'fukushima' => TRUE,
+			'gifu'      => TRUE,
+			'gunma'     => TRUE,
+			'hiroshima' => TRUE,
+			'hokkaido'  => TRUE,
+			'hyogo'     => TRUE,
+			'ibaraki'   => TRUE,
+			'ishikawa'  => TRUE,
+			'iwate'     => TRUE,
+			'kagawa'    => TRUE,
+			'kagoshima' => TRUE,
+			'kanagawa'  => TRUE,
+			'kawasaki'  => TRUE,
+			'kitakyushu'=> TRUE,
+			'kobe'      => TRUE,
+			'kochi'     => TRUE,
+			'kumamoto'  => TRUE,
+			'kyoto'     => TRUE,
+			'mie'       => TRUE,
+			'miyagi'    => TRUE,
+			'miyazaki'  => TRUE,
+			'nagano'    => TRUE,
+			'nagasaki'  => TRUE,
+			'nagoya'    => TRUE,
+			'nara'      => TRUE,
+			'niigata'   => TRUE,
+			'oita'      => TRUE,
+			'okayama'   => TRUE,
+			'okinawa'   => TRUE,
+			'osaka'     => TRUE,
+			'saga'      => TRUE,
+			'saitama'   => TRUE,
+			'sapporo'   => TRUE,
+			'sendai'    => TRUE,
+			'shiga'     => TRUE,
+			'shimane'   => TRUE,
+			'shizuoka'  => TRUE,
+			'tochigi'   => TRUE,
+			'tokushima' => TRUE,
+			'tokyo'     => TRUE,
+			'tottori'   => TRUE,
+			'toyama'    => TRUE,
+			'wakayama'  => TRUE,
+			'yamagata'  => TRUE,
+			'yamaguchi' => TRUE,
+			'yamanashi' => TRUE,
+			'yokohama'  => TRUE,
+		),
+
+		// ccTLD: Ukraine
+		// NIC  : http://www.nic.net.ua/
+		// Whois: http://whois.com.ua/
+		'ua' => array(
+			// policy for alternative 2nd level domain names (a2ld)
+			// http://www.nic.net.ua/doc/a2ld
+			// http://whois.com.ua/
+			'cherkassy'  => TRUE,
+			'chernigov'  => TRUE,
+			'chernovtsy' => TRUE,
+			'ck'         => TRUE,
+			'cn'         => TRUE,
+			'com'        => TRUE,
+			'crimea'     => TRUE,
+			'cv'         => TRUE,
+			'dn'         => TRUE,
+			'dnepropetrovsk' => TRUE,
+			'donetsk'    => TRUE,
+			'dp'         => TRUE,
+			'edu'        => TRUE,
+			'gov'        => TRUE,
+			'if'         => TRUE,
+			'ivano-frankivsk' => TRUE,
+			'kh'         => TRUE,
+			'kharkov'    => TRUE,
+			'kherson'    => TRUE,
+			'kiev'       => TRUE,
+			'kirovograd' => TRUE,
+			'km'         => TRUE,
+			'kr'         => TRUE,
+			'ks'         => TRUE,
+			'lg'         => TRUE,
+			'lugansk'    => TRUE,
+			'lutsk'      => TRUE,
+			'lviv'       => TRUE,
+			'mk'         => TRUE,
+			'net'        => TRUE,
+			'nikolaev'   => TRUE,
+			'od'         => TRUE,
+			'odessa'     => TRUE,
+			'org'        => TRUE,
+			'pl'         => TRUE,
+			'poltava'    => TRUE,
+			'rovno'      => TRUE,
+			'rv'         => TRUE,
+			'sebastopol' => TRUE,
+			'sumy'       => TRUE,
+			'te'         => TRUE,
+			'ternopil'   => TRUE,
+			'uz'         => TRUE,
+			'uzhgorod'   => TRUE,
+			'vinnica'    => TRUE,
+			'vn'         => TRUE,
+			'zaporizhzhe' => TRUE,
+			'zhitomir'   => TRUE,
+			'zp'         => TRUE,
+			'zt'         => TRUE,
+		),
+
+		// ccTLD: United Kingdom
+		// NIC  : http://www.nic.uk/
+		'uk' => array(
+			// Second Level Domains
+			// http://www.nic.uk/registrants/aboutdomainnames/sld/
+			'co'     => TRUE,
+			'ltd'    => TRUE,
+			'me'     => TRUE,
+			'net'    => TRUE,
+			'nic'    => TRUE,
+			'org'    => TRUE,
+			'plc'    => TRUE,
+			'sch'    => TRUE,
+			
+			// Delegated Second Level Domains
+			// http://www.nic.uk/registrants/aboutdomainnames/sld/delegated/
+			'ac'     => TRUE,
+			'gov'    => TRUE,
+			'mil'    => TRUE,
+			'mod'    => TRUE,
+			'nhs'    => TRUE,
+			'police' => TRUE,
+		),
+
+		// ccTLD: United States of America
+		// NIC  : http://nic.us/
+		// Whois: http://whois.us/
+		'us' => array(
+			// See RFC1480
+
+			// Organizational
+			'dni',
+			'fed',
+			'isa',
+			'kids',
+			'nsn',
+
+			// Geographical
+			// United States Postal Service: State abbreviations (for postal codes)
+			// http://www.usps.com/ncsc/lookups/abbreviations.html
+			'ak' => TRUE, // Alaska
+			'al' => TRUE, // Alabama
+			'ar' => TRUE, // Arkansas
+			'as' => TRUE, // American samoa
+			'az' => TRUE, // Arizona
+			'ca' => TRUE, // California
+			'co' => TRUE, // Colorado
+			'ct' => TRUE, // Connecticut
+			'dc' => TRUE, // District of Columbia
+			'de' => TRUE, // Delaware
+			'fl' => TRUE, // Florida
+			'fm' => TRUE, // Federated states of Micronesia
+			'ga' => TRUE, // Georgia
+			'gu' => TRUE, // Guam
+			'hi' => TRUE, // Hawaii
+			'ia' => TRUE, // Iowa
+			'id' => TRUE, // Idaho
+			'il' => TRUE, // Illinois
+			'in' => TRUE, // Indiana
+			'ks' => TRUE, // Kansas
+			'ky' => TRUE, // Kentucky
+			'la' => TRUE, // Louisiana
+			'ma' => TRUE, // Massachusetts
+			'md' => TRUE, // Maryland
+			'me' => TRUE, // Maine
+			'mh' => TRUE, // Marshall Islands
+			'mi' => TRUE, // Michigan
+			'mn' => TRUE, // Minnesota
+			'mo' => TRUE, // Missouri
+			'mp' => TRUE, // Northern mariana islands
+			'ms' => TRUE, // Mississippi
+			'mt' => TRUE, // Montana
+			'nc' => TRUE, // North Carolina
+			'nd' => TRUE, // North Dakota
+			'ne' => TRUE, // Nebraska
+			'nh' => TRUE, // New Hampshire
+			'nj' => TRUE, // New Jersey
+			'nm' => TRUE, // New Mexico
+			'nv' => TRUE, // Nevada
+			'ny' => TRUE, // New York
+			'oh' => TRUE, // Ohio
+			'ok' => TRUE, // Oklahoma
+			'or' => TRUE, // Oregon
+			'pa' => TRUE, // Pennsylvania
+			'pr' => TRUE, // Puerto Rico
+			'pw' => TRUE, // Palau
+			'ri' => TRUE, // Rhode Island
+			'sc' => TRUE, // South Carolina
+			'sd' => TRUE, // South Dakota
+			'tn' => TRUE, // Tennessee
+			'tx' => TRUE, // Texas
+			'ut' => TRUE, // Utah
+			'va' => TRUE, // Virginia
+			'vi' => TRUE, // Virgin Islands
+			'vt' => TRUE, // Vermont
+			'wa' => TRUE, // Washington
+			'wi' => TRUE, // Wisconsin
+			'wv' => TRUE, // West Virginia
+			'wy' => TRUE, // Wyoming
+		),
+	);
+
+	if (! is_string($fqdn)) return '';
+
+	$result  = array();
+	$dcursor = & $domain;
+	$array   = array_reverse(explode('.', $fqdn));
+	$i = 0;
+	while(TRUE) {
+		$acursor = $array[$i];
+		if (is_array($dcursor) && isset($dcursor[$acursor])) {
+			$result[] = & $array[$i];
+			$dcursor  = & $dcursor[$acursor];
+		} else {
+			if (! $parent && isset($acursor)) {
+				$result[] = & $array[$i];	// Whois servers must know this subdomain
+			}
+			break;
+		}
+		++$i;
+	}
+
+	// Implicit responsibility: Top-Level-Domains must not be yours
+	// 'bar.foo.something' => 'foo.something'
+	if ($implicit && count($result) == 1 && count($array) > 1) {
+		$result[] = & $array[1];
+	}
+
+	return $result ? implode('.', array_reverse($result)) : '';
 }
 
 
 // ---------------------
 // Exit
 
+// Freeing memories
+function spam_dispose()
+{
+	get_blocklist(NULL);
+}
+
 // Common bahavior for blocking
 // NOTE: Call this function from various blocking feature, to disgueise the reason 'why blocked'
 function spam_exit($mode = '', $data = array())
 {
+
+	$exit = TRUE;
 	switch ($mode) {
-		case '':	echo("\n");	break;
+		case '':
+			echo("\n");
+			break;
 		case 'dump':
 			echo('<pre>' . "\n");
 			echo htmlspecialchars(var_export($data, TRUE));
@@ -1518,8 +2066,7 @@ function spam_exit($mode = '', $data = array())
 			break;
 	};
 
-	// Force exit
-	exit;
+	if ($exit) exit;	// Force exit
 }
 
 
@@ -1532,11 +2079,18 @@ function pkwk_spamfilter($action, $page, $target = array('title' => ''), $method
 {
 	$progress = check_uri_spam($target, $method);
 
-	if (! empty($progress['is_spam'])) {
-		// Mail to administrator(s)
-		pkwk_spamnotify($action, $page, $target, $progress, $method);
+	if (empty($progress['is_spam'])) {
+		spam_dispose();
+	} else {
 
-		// Exit
+// TODO: detect encoding from $target for mbstring functions
+//		$tmp = array();
+//		foreach(array_keys($target) as $key) {
+//			$tmp[strings($key, 0, FALSE, TRUE)] = strings($target[$key], 0, FALSE, TRUE);	// Removing "\0" etc
+//		}
+//		$target = & $tmp;
+
+		pkwk_spamnotify($action, $page, $target, $progress, $method);
 		spam_exit($exitmode, $progress);
 	}
 }
