@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.16 2007/06/15 13:48:19 henoheno Exp $
+// $Id: plugin.php,v 1.17 2007/06/17 14:33:44 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -68,19 +68,14 @@ function exist_plugin_inline($name) {
 }
 
 // Do init the plugin
+// NOTE: Returning FALSE from $func, means "an erorr occurerd"
 function do_plugin_init($name)
 {
 	static $checked = array();
 
-	// TRUE or FALSE or NULL (Return nothing / Not exists)
-	if (array_key_exists($name, $checked)) return $checked[$name];
-
-	$func = 'plugin_' . $name . '_init';
-	if (function_exists($func)) {
-		$result = call_user_func($func);
-		$checked[$name] = ($result === NULL) ? NULL : (bool)$result;
-	} else {
-		$checked[$name] = NULL;
+	if (! isset($checked[$name])) {
+		$func = 'plugin_' . $name . '_init';
+		$checked[$name] = (! function_exists($func) || call_user_func($func) !== FALSE);
 	}
 
 	return $checked[$name];
@@ -91,8 +86,9 @@ function do_plugin_action($name)
 {
 	if (! exist_plugin_action($name)) return array();
 
-	if(do_plugin_init($name) === FALSE)
-		die_message('Plugin init failed: ' . $name);
+	if (do_plugin_init($name) === FALSE) {
+		die_message('Plugin init failed: ' . htmlspecialchars($name));
+	}
 
 	$retvar = call_user_func('plugin_' . $name . '_action');
 
@@ -110,8 +106,9 @@ function do_plugin_convert($name, $args = '')
 {
 	global $digest;
 
-	if(do_plugin_init($name) === FALSE)
-		return '[Plugin init failed: ' . $name . ']';
+	if (do_plugin_init($name) === FALSE) {
+		return '[Plugin init failed: ' . htmlspecialchars($name) . ']';
+	}
 
 	if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK) {
 		// Multiline plugin?
@@ -153,13 +150,14 @@ function do_plugin_inline($name, $args, & $body)
 {
 	global $digest;
 
-	if(do_plugin_init($name) === FALSE)
-		return '[Plugin init failed: ' . $name . ']';
+	if (do_plugin_init($name) === FALSE) {
+		return '[Plugin init failed: ' . htmlspecialchars($name) . ']';
+	}
 
-	if ($args !== '') {
-		$aryargs = csv_explode(',', $args);
-	} else {
+	if ($args === '') {
 		$aryargs = array();
+	} else {
+		$aryargs = csv_explode(',', $args);
 	}
 
 	// NOTE: A reference of $body is always the last argument
