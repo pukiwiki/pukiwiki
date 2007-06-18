@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.17 2007/06/17 14:33:44 henoheno Exp $
+// $Id: plugin.php,v 1.18 2007/06/18 14:32:49 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -67,18 +67,18 @@ function exist_plugin_inline($name) {
 		function_exists('plugin_' . $name . '_inline') : FALSE;
 }
 
-// Do init the plugin
-// NOTE: Returning FALSE from $func, means "an erorr occurerd"
+// Call 'init' function for the plugin
+// NOTE: Returning FALSE means "An erorr occurerd"
 function do_plugin_init($name)
 {
-	static $checked = array();
+	static $done = array();
 
-	if (! isset($checked[$name])) {
+	if (! isset($done[$name])) {
 		$func = 'plugin_' . $name . '_init';
-		$checked[$name] = (! function_exists($func) || call_user_func($func) !== FALSE);
+		$done[$name] = (! function_exists($func) || call_user_func($func) !== FALSE);
 	}
 
-	return $checked[$name];
+	return $done[$name];
 }
 
 // Call API 'action' of the plugin
