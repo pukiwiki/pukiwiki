@@ -67,18 +67,18 @@ function exist_plugin_inline($name) {
 		function_exists('plugin_' . $name . '_inline') : FALSE;
 }
 
-// Do init the plugin
-// NOTE: Returning FALSE from $func, means "an erorr occurerd"
+// Call 'init' function for the plugin
+// NOTE: Returning FALSE means "An erorr occurerd"
 function do_plugin_init($name)
 {
-	static $checked = array();
+	static $done = array();
 
-	if (! isset($checked[$name])) {
+	if (! isset($done[$name])) {
 		$func = 'plugin_' . $name . '_init';
-		$checked[$name] = (! function_exists($func) || call_user_func($func) !== FALSE);
+		$done[$name] = (! function_exists($func) || call_user_func($func) !== FALSE);
 	}
 
-	return $checked[$name];
+	return $done[$name];
 }
 
 // Call API 'action' of the plugin
