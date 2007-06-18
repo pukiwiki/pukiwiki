@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.26 2007/06/16 05:38:09 henoheno Exp $
+// $Id: spam.php,v 1.27 2007/06/18 14:27:11 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -1521,51 +1521,41 @@ function summarize_detail_newtral($progress = array())
 	    ! is_array($progress['hosts']) ||
 	    empty($progress['hosts'])) return '';
 
-	$result = '';
-
-	// Generate a $trie
+	// Generate a responsible $trie
 	$trie = array();
 	foreach($progress['hosts'] as $value) {
-
-		// Try to shorten (pre) -- array('example.com', 'bar', 'foo')
+		// 'A.foo.bar.example.com'
 		$resp = whois_responsibility($value);	// 'example.com'
-		$rest = rtrim(substr($value, 0, - strlen($resp)), '.');	// 'foo.bar'
-		if ($rest) {
-			$parts = explode('.', delimiter_reverse('.' . $rest));
-			array_unshift($parts, $resp);
-		} else {
-			$parts = array($resp, $rest);
-		}
-
-		$trie = array_merge_recursive(
-			$trie,
-			array_leaf($parts, TRUE, $value)
-		);
+		$rest = rtrim(substr($value, 0, - strlen($resp)), '.');	// 'A.foo.bar'
+		$trie = array_merge_recursive($trie, array($resp => array($rest => NULL)));
 	}
 
-	// Try to shorten (post, non-recursive) -- 'foo.bar.example.com'
-	array_joinbranch_leaf($trie, '.', 0, TRUE, '');
-
-	// Sort and flatten -- 'A.foo.bar.example.com, B.foo.bar.example.com'
-	foreach(array_keys($trie) as $key) {
-		if (is_array($trie[$key])) {
-			ksort_by_domain($trie[$key]);
-			$trie[$key] = implode(', ', array_flat_leaves($trie[$key]));
-		}
-	}
-
+	// Format: var_export_shrink() -like output
+	$result = array();
 	ksort_by_domain($trie);
-
-	// Format: From array('foobar' => 'foobar') to 'foobar'
-	$tmp = array();
-	foreach($trie as $key => $value) {
-		$tmp[] = '  \'' .
-			(($trie[$key] == $key) ? $key : $key . '\' => \'' . $trie[$key])
-			. '\',';
+	foreach(array_keys($trie) as $key) {
+		ksort_by_domain($trie[$key]);
+		if (count($trie[$key]) == 1 && key($trie[$key]) == '') {
+			// Just one 'responsibility.example.com'
+			$result[] = '  \'' . $key . '\',';
+		} else {
+			// One subdomain-or-host, or several ones
+			$subs = array();
+			foreach(array_keys($trie[$key]) as $sub) {
+				if ($sub == '') {
+					$subs[] = $key;
+				} else {
+					$subs[] = $sub . '.' . $key;
+				}
+			}
+			$result[] = '  \'' . $key . '\' => \'' . implode(', ', $subs) . '\',';
+		}
 		unset($trie[$key]);
 	}
-
-	return 'array (' . "\n" . implode("\n", $tmp) . "\n" . ')';
+	return
+		'array (' . "\n" .
+			implode("\n", $result) . "\n" .
+		')';
 }
 
 // ksort() by domain
@@ -1582,46 +1572,6 @@ function ksort_by_domain(& $array)
 	}
 	$array = $result;
 }
-
-// array('F' => array('B' => array('C' => array('d' => array('' => 'foobar')))))
-// to
-// array('F.B.C.d.' => 'foobar')
-function array_joinbranch_leaf(& $array, $delim = '.', $limit = 0, $reverse = FALSE, $stopword = NULL)
-{
-	$result = array();
-	if (! is_array($array)) return $result;	// Nothing to do
-
-	$limit  = max(0, intval($limit));
-	$cstack = array();
-
-	foreach(array_keys($array) as $key) {
-		$kstack = array();
-		$k      = -1;
-
-		$single = array($key => & $array[$key]);	// Keep it single
-		$cursor = & $single;
-		while(is_array($cursor) && count($cursor) == 1) {	// Once
-			++$k;
-			if (key($cursor) === $stopword)    break;
-			$kstack[] = key($cursor);
-			$cursor   = & $cursor[$kstack[$k]];
-			if ($limit != 0 && $k == $limit) break;
-		}
-
-		// Relink
-		if ($k != 0) {
-			if ($reverse) $kstack = array_reverse($kstack);
-			$joinkey = implode($delim, $kstack);
-
-			unset($array[$key]);
-			$array[$joinkey]  = & $cursor;
-			$result[$joinkey] = $k + 1;	// Key seems not an single array => joined length
-		}
-	}
-
-	return $result;
-}
-
 
 // Check responsibility-root of the FQDN
 // 'foo.bar.example.com'        => 'example.com'        (.com        has the last whois for it)
@@ -1670,6 +1620,17 @@ function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $i
 			'net'   => TRUE,
 			'org'   => TRUE,
 			'info'  => TRUE,
+		),
+
+		// ccTLD: Bahrain
+		// NIC  : http://www.inet.com.bh/ (.bh policies not found)
+		// Whois: (Not available) http://www.inet.com.bh/
+		'bh' => array(
+			// Observed
+			'com' => TRUE,
+			'edu' => TRUE,
+			'gov' => TRUE,
+			'org' => TRUE,
 		),
 
 		// ccTLD: China
@@ -1724,6 +1685,25 @@ function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $i
 			'zj' => TRUE,
 		),
 
+		// ccTLD: India
+		// NIC  : http://www.inregistry.in/
+		// Whois: http://www.inregistry.in/whois_search/
+		'in' => array(
+			// Policies http://www.inregistry.in/policies/
+			'ac'   => TRUE,
+			'co'   => TRUE,
+			'firm' => TRUE,
+			'gen'  => TRUE,
+			'gov'  => TRUE,
+			'ind'  => TRUE,
+			'mil'  => TRUE,
+			'net'  => TRUE,
+			'org'  => TRUE,
+			'res'  => TRUE,
+			// Reserved Names by the government (for the 2nd level)
+			// http://www.inregistry.in/policies/reserved_names
+		),
+
 		// ccTLD: South Korea
 		// NIC  : http://www.nic.or.kr/english/
 		// Whois: http://whois.nida.or.kr/english/
@@ -1776,6 +1756,7 @@ function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $i
 			'ac' => TRUE,
 			'ad' => TRUE,
 			'co' => TRUE,
+			'ed' => TRUE,
 			'go' => TRUE,
 			'gr' => TRUE,
 			'lg' => TRUE,
@@ -1847,6 +1828,53 @@ function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $i
 			'yamaguchi' => TRUE,
 			'yamanashi' => TRUE,
 			'yokohama'  => TRUE,
+		),
+
+		// ccTLD: Mexico
+		// NIC  : http://www.nic.mx/
+		// Whois: http://www.nic.mx/es/Busqueda.Who_Is
+		'mx' => array(
+			// Politicas Generales de Nombres de Dominio
+			// http://www.nic.mx/es/Politicas?CATEGORY=INDICE
+			'com'  => TRUE,
+			'edu'  => TRUE,
+			'gob'  => TRUE,
+			'net'  => TRUE,
+			'org'  => TRUE,
+		),
+
+		// ccTLD: Seychelles
+		// NIC  : http://www.nic.sc/
+		// Whois: (Not available)
+		'sc' => array(
+			// http://www.nic.sc/policies.html
+			'com' => TRUE,
+			'edu' => TRUE,
+			'gov' => TRUE,
+			'net' => TRUE,
+			'org' => TRUE,
+		),
+
+		// ccTLD: Taiwan
+		// NIC  : http://www.twnic.net.tw/
+		// Whois: http://www.twnic.net.tw/
+		'tw' => array(
+			// Guidelines for Administration of Domain Name Registration
+			// http://www.twnic.net.tw/english/dn/dn_02.htm
+			// II. Types of TWNIC Domain Names and Application Requirements
+			// http://www.twnic.net.tw/english/dn/dn_02_b.htm
+			'club' => TRUE,
+			'com'  => TRUE,
+			'ebiz' => TRUE,
+			'edu'  => TRUE,
+			'game' => TRUE,
+			'gov'  => TRUE,
+			'idv'  => TRUE,
+			'mil'  => TRUE,
+			'net'  => TRUE,
+			'org'  => TRUE,
+			// Reserved words for the 2nd level
+			// http://mydn.twnic.net.tw/en/dn02/INDEX.htm
 		),
 
 		// ccTLD: Ukraine
@@ -2010,7 +2038,7 @@ function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $i
 		),
 	);
 
-	if (! is_string($fqdn)) return '';
+	if (is_ip($fqdn) || ! is_string($fqdn)) return $fqdn;
 
 	$result  = array();
 	$dcursor = & $domain;
@@ -2053,8 +2081,8 @@ function spam_dispose()
 // NOTE: Call this function from various blocking feature, to disgueise the reason 'why blocked'
 function spam_exit($mode = '', $data = array())
 {
-
 	$exit = TRUE;
+
 	switch ($mode) {
 		case '':
 			echo("\n");
