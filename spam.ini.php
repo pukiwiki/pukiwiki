@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.67 2007/06/23 14:14:20 henoheno Exp $
+// $Id: spam.ini.php,v 1.68 2007/06/23 15:22:55 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -105,6 +105,11 @@ $blocklist['A-1'] = array(
 	'12url.org',
 	'*.15h.com',
 	'*.1dr.biz',
+	'1K.pl' => array(
+		'*.1k.pl',
+		'*.5g.pl',
+		'*.orq.pl',
+	),
 	'1nk.us',
 	'1url.org',
 	'1url.in',
@@ -441,6 +446,7 @@ $blocklist['A-1'] = array(
 	'hurl.to',
 	'*.hux.de',
 	'*.i89.us',
+	'iat.net',		// 74.208.58.130 by Tony Carter
 	'*.iceglow.com',
 	'Ideas para Nuevos Mercados SL' => array(
 		// NOTE: 'i4nm.com' by 'Ideas para Nuevos Mercados SL' (i4nm at i4nm.com)
@@ -1116,7 +1122,10 @@ $blocklist['A-1'] = array(
 	'urlcutter.com',
 	'urlic.com',
 	'urlin.it',
-	'*.urllogs.com',	// by Javier Keeth (abuzant at gmail.com)
+	'URLLogs.com' => array(
+		'*.urllogs.com',	// 67.15.219.253 by Javier Keeth (abuzant at gmail.com), ns *.pengs.com, 'Hosted by: Gossimer'
+		'.12w.net',			// 67.15.219.253 by Marvin Dreyer (marvin.dreyer at pengs.com), ns *.gossimer.com
+	),
 	'*.urlproxy.com',
 	'urlser.com',
 	'urlsnip.com',
@@ -1502,6 +1511,7 @@ $blocklist['B-1'] = array(
 	'*.blogstream.com',
 	'blogyaz.com',
 	'board-4you.de',
+	'boboard.com',			// 66.29.54.116 by Excelsoft (shabiba at e4t.net)
 	'*.boardhost.com',
 	'Bravenet.com' => array(
 		'*.bravenet.com',
@@ -2147,6 +2157,7 @@ $blocklist['B-2'] = array(
 	'kevindmurray.com',
 	'kroegjesroutes.nl',
 	'.legion.org',
+	'Loyola Marymount University' => array('lmu.edu'),
 	'forum.lixium.fr',
 	'macfaq.net',
 	'me4x4.com',
@@ -2762,6 +2773,7 @@ $blocklist['C'] = array(
 	'm.frenzy at yahoo.com' => array(	// by Michael
 		'.p5v.org',
 		'.j111.net',
+		'.searchhunter.info',
 		'.soft2you.info',
 		'.top20health.info',
 		'.top20ringtones.info',
@@ -4285,11 +4297,20 @@ $blocklist['C'] = array(
 	'kiler81 at yandex.ru' => array(	// by Vasiliy (kiler81 at yandex.ru)
 		'.kliktop.biz',
 		'.kliktop.org',
+		'.pharmatop.us',
 		'.supertop.us',
 	),
 	'infomed2004 at mail.ru' => array(	// by Andrey Ushakov (infomed2004 at mail.ru)
 		'.freeamateursexx.info',	// 81.0.195.228
 		'.freeanalsexx.info',		// 217.11.233.97
+	),
+	'support at dns4me.biz' => array(	// 89.149.228.237 by John Black (support at dns4me.biz)
+		'.gayblogguide.biz',
+		'.thebdsmday.info',
+	),
+	'dzheker at yandex.ru' => array(	// by dzheker at yandex.ru
+		'.factyri.info',
+		'.jorge1.info',
 	),
 
 	// C-2: Lonely domains (buddies not found yet)
@@ -4360,6 +4381,7 @@ $blocklist['C'] = array(
 	'.free-sex-movie-net.info',	// by vitas61 at yahoo.com
 	'.freeblog.ru',			// by Kondrashov Evgeniy Aleksandrovich (evkon at rol.ru), login form only, ns *.nthost.ru
 	'.freehost5.com',		// 75.126.32.184
+	'.freehostpro.com',		// 64.22.112.226
 	'.freehostia.com',
 	'.freehostingz.com',	// by Marx Lomas (marvellousmarx at hotmail.com), no dns reply
 	'.freeliveringtones.com',	// by Silan (lippe1988 at gmail.com)
@@ -4369,7 +4391,6 @@ $blocklist['C'] = array(
 	'.goldcoastonlinetutoring.com',	// by Robert Tanenbaum (buildbt at lycos.com)
 	'.gomeodc.com',			// by wang meili (gannipo at yahoo.com.cn), iframe to vviccd520.com
 	'.ganecity.com',		// by shao tian (huangjinqiang at sina.com)
-	'.gayblogguide.biz',	// 89.149.228.237 by John Black (support at dns4me.biz)
 	'.gm-exchange.jp',		// RMT
 	'.goamoto.ru',			// by Dmitry E Kotchnev (z2archive at gmail.com)
 	'.good1688.com',		// by Wen Chien Lunz (wzk1219 at yahoo.com.tw), one of them frame to , and whoop.to
