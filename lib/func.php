@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.90 2007/05/12 08:37:35 henoheno Exp $
+// $Id: func.php,v 1.91 2007/06/24 13:59:46 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -489,6 +489,14 @@ function getmicrotime()
 {
 	list($usec, $sec) = explode(' ', microtime());
 	return ((float)$sec + (float)$usec);
+}
+
+// Elapsed time by second
+//define('MUTIME', getmicrotime());
+function elapsedtime()
+{
+	$at_the_microtime = MUTIME;
+	return sprintf('%01.03f', getmicrotime() - $at_the_microtime);
 }
 
 // Get the date

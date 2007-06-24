@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.62 2007/05/12 14:24:42 henoheno Exp $
+// $Id: html.php,v 1.63 2007/06/24 13:59:46 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -146,8 +146,8 @@ function catbody($title, $page, $body)
 		}
 	}
 
-	$longtaketime = getmicrotime() - MUTIME;
-	$taketime     = sprintf('%01.03f', $longtaketime);
+	// Compat: 'HTML convert time' without time about MenuBar and skin
+	$taketime = elapsedtime();
 
 	require(SKIN_FILE);
 }
