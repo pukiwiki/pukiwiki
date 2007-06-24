@@ -146,8 +146,8 @@ function catbody($title, $page, $body)
 		}
 	}
 
-	$longtaketime = getmicrotime() - MUTIME;
-	$taketime     = sprintf('%01.03f', $longtaketime);
+	// Compat: 'HTML convert time' without time about MenuBar and skin
+	$taketime = elapsedtime();
 
 	require(SKIN_FILE);
 }

@@ -476,6 +476,14 @@ function getmicrotime()
 	return ((float)$sec + (float)$usec);
 }
 
+// Elapsed time by second
+//define('MUTIME', getmicrotime());
+function elapsedtime()
+{
+	$at_the_microtime = MUTIME;
+	return sprintf('%01.03f', getmicrotime() - $at_the_microtime);
+}
+
 // Get the date
 function get_date($format, $timestamp = NULL)
 {
