@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.27 2007/06/18 14:27:11 henoheno Exp $
+// $Id: spam.php,v 1.28 2007/06/24 15:25:06 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -189,7 +189,7 @@ function uri_pickup($string = '')
 			// 3: Host
 			'\[[0-9a-f:.]+\]' . '|' .				// IPv6([colon-hex and dot]): RFC2732
 			'(?:[0-9]{1,3}\.){3}[0-9]{1,3}' . '|' .	// IPv4(dot-decimal): 001.22.3.44
-			'[a-z0-9][a-z0-9.-]+[a-z0-9]' . 		// hostname(FQDN) : foo.example.org
+			'[a-z0-9_-][a-z0-9_.-]+[a-z0-9_-]' . 		// hostname(FQDN) : foo.example.org
 		')' .
 		'(?::([0-9]*))?' .					// 4: Port
 		'((?:/+[^\s<>"\'\[\]/\#]+)*/+)?' .	// 5: Directory path or path-info
@@ -1526,7 +1526,13 @@ function summarize_detail_newtral($progress = array())
 	foreach($progress['hosts'] as $value) {
 		// 'A.foo.bar.example.com'
 		$resp = whois_responsibility($value);	// 'example.com'
-		$rest = rtrim(substr($value, 0, - strlen($resp)), '.');	// 'A.foo.bar'
+		if (empty($resp)) {
+			// One or more test, or do nothing here
+			$resp = strval($value);
+			$rest = '';
+		} else {
+			$rest = rtrim(substr($value, 0, - strlen($resp)), '.');	// 'A.foo.bar'
+		}
 		$trie = array_merge_recursive($trie, array($resp => array($rest => NULL)));
 	}
 
@@ -1843,6 +1849,151 @@ function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $i
 			'org'  => TRUE,
 		),
 
+		// ccTLD: Russia
+		// NIC  : http://www.cctld.ru/en/
+		// Whois: http://www.ripn.net:8080/nic/whois/en/
+		'ru' => array(
+			// List of Reserved second-level Domain Names
+			// http://www.cctld.ru/en/doc/detail.php?id21=20&i21=2
+
+			// Organizational
+			'ac'   => TRUE,
+			'com'  => TRUE,
+			'edu'  => TRUE,
+			'gov'  => TRUE,
+			'int'  => TRUE,
+			'mil'  => TRUE,
+			'net'  => TRUE,
+			'org'  => TRUE,
+			'pp'   => TRUE,
+			//'test' => TRUE,
+
+			// Geographic
+			'adygeya'     => TRUE,
+			'altai'       => TRUE,
+			'amur'        => TRUE,
+			'amursk'      => TRUE,
+			'arkhangelsk' => TRUE,
+			'astrakhan'   => TRUE,
+			'baikal'      => TRUE,
+			'bashkiria'   => TRUE,
+			'belgorod'    => TRUE,
+			'bir'         => TRUE,
+			'bryansk'     => TRUE,
+			'buryatia'    => TRUE,
+			'cbg'         => TRUE,
+			'chel'        => TRUE,
+			'chelyabinsk' => TRUE,
+			'chita'       => TRUE,
+			'chukotka'    => TRUE,
+			'chuvashia'   => TRUE,
+			'cmw'         => TRUE,
+			'dagestan'    => TRUE,
+			'dudinka'     => TRUE,
+			'e-burg'      => TRUE,
+			'fareast'     => TRUE,
+			'grozny'      => TRUE,
+			'irkutsk'     => TRUE,
+			'ivanovo'     => TRUE,
+			'izhevsk'     => TRUE,
+			'jamal'       => TRUE,
+			'jar'         => TRUE,
+			'joshkar-ola' => TRUE,
+			'k-uralsk'    => TRUE,
+			'kalmykia'    => TRUE,
+			'kaluga'      => TRUE,
+			'kamchatka'   => TRUE,
+			'karelia'     => TRUE,
+			'kazan'       => TRUE,
+			'kchr'        => TRUE,
+			'kemerovo'    => TRUE,
+			'khabarovsk'  => TRUE,
+			'khakassia'   => TRUE,
+			'khv'         => TRUE,
+			'kirov'       => TRUE,
+			'kms'         => TRUE,
+			'koenig'      => TRUE,
+			'komi'        => TRUE,
+			'kostroma'    => TRUE,
+			'krasnoyarsk' => TRUE,
+			'kuban'       => TRUE,
+			'kurgan'      => TRUE,
+			'kursk'       => TRUE,
+			'kustanai'    => TRUE,
+			'kuzbass'     => TRUE,
+			'lipetsk'     => TRUE,
+			'magadan'     => TRUE,
+			'magnitka'    => TRUE,
+			'mari-el'     => TRUE,
+			'mari'        => TRUE,
+			'marine'      => TRUE,
+			'mordovia'    => TRUE,
+			'mosreg'      => TRUE,
+			'msk'         => TRUE,
+			'murmansk'    => TRUE,
+			'mytis'       => TRUE,
+			'nakhodka'    => TRUE,
+			'nalchik'     => TRUE,
+			'nkz'         => TRUE,
+			'nnov'        => TRUE,
+			'norilsk'     => TRUE,
+			'nov'         => TRUE,
+			'novosibirsk' => TRUE,
+			'nsk'         => TRUE,
+			'omsk'        => TRUE,
+			'orenburg'    => TRUE,
+			'oryol'       => TRUE,
+			'oskol'       => TRUE,
+			'palana'      => TRUE,
+			'penza'       => TRUE,
+			'perm'        => TRUE,
+			'pskov'       => TRUE,
+			'ptz'         => TRUE,
+			'pyatigorsk'  => TRUE,
+			'rnd'         => TRUE,
+			'rubtsovsk'   => TRUE,
+			'ryazan'      => TRUE,
+			'sakhalin'    => TRUE,
+			'samara'      => TRUE,
+			'saratov'     => TRUE,
+			'simbirsk'    => TRUE,
+			'smolensk'    => TRUE,
+			'snz'         => TRUE,
+			'spb'         => TRUE,
+			'stavropol'   => TRUE,
+			'stv'         => TRUE,
+			'surgut'      => TRUE,
+			'syzran'      => TRUE,
+			'tambov'      => TRUE,
+			'tatarstan'   => TRUE,
+			'tom'         => TRUE,
+			'tomsk'       => TRUE,
+			'tsaritsyn'   => TRUE,
+			'tsk'         => TRUE,
+			'tula'        => TRUE,
+			'tuva'        => TRUE,
+			'tver'        => TRUE,
+			'tyumen'      => TRUE,
+			'udm'         => TRUE,
+			'udmurtia'    => TRUE,
+			'ulan-ude'    => TRUE,
+			'vdonsk'      => TRUE,
+			'vladikavkaz' => TRUE,
+			'vladimir'    => TRUE,
+			'vladivostok' => TRUE,
+			'volgograd'   => TRUE,
+			'vologda'     => TRUE,
+			'voronezh'    => TRUE,
+			'vrn'         => TRUE,
+			'vyatka'      => TRUE,
+			'yakutia'     => TRUE,
+			'yamal'       => TRUE,
+			'yaroslavl'   => TRUE,
+			'yekaterinburg'     => TRUE,
+			'yuzhno-sakhalinsk' => TRUE,
+			'zgrad'       => TRUE,
+		),
+
 		// ccTLD: Seychelles
 		// NIC  : http://www.nic.sc/
 		// Whois: (Not available)
@@ -1875,6 +2026,19 @@ function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $i
 			'org'  => TRUE,
 			// Reserved words for the 2nd level
 			// http://mydn.twnic.net.tw/en/dn02/INDEX.htm
+		),
+
+		// ccTLD: Tanzania
+		// NIC  : http://www.psg.com/dns/tz/
+		// Whois: (Not available)
+		'tz' => array(
+			//  TZ DOMAIN NAMING STRUCTURE
+			// http://www.psg.com/dns/tz/tz.txt
+			'ac' => TRUE,
+			'co' => TRUE,
+			'go' => TRUE,
+			'ne' => TRUE,
+			'or' => TRUE,
 		),
 
 		// ccTLD: Ukraine
@@ -2036,15 +2200,51 @@ function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $i
 			'wv' => TRUE, // West Virginia
 			'wy' => TRUE, // Wyoming
 		),
+
+		// ccTLD: South Africa
+		// NIC  : http://www.zadna.org.za/
+		// Whois: 
+		//   ac.za  http://www.tenet.ac.za/cgi/cgi_domainquery.exe
+		//   co.za  http://co.za/whois.shtml
+		//   gov.za http://dnsadmin.gov.za/
+		//   org.za http://www.org.za/
+		'za' => array(
+			// Second-level subdomains of .ZA
+			// http://www.zadna.org.za/slds.html
+			'ac'   => TRUE,
+			'city' => TRUE,
+			'co'   => TRUE,
+			'edu'  => TRUE,
+			'gov'  => TRUE,
+			'law'  => TRUE,
+			'mil'  => TRUE,
+			'nom'  => TRUE,
+			'org'  => TRUE,
+			'school' => array(
+				// Provincial Domains
+				// http://www.esn.org.za/dns/
+				'ecape' => TRUE,
+				'fs.'   => TRUE,
+				'gp'    => TRUE,
+				'kzn'   => TRUE,
+				'lp'    => TRUE,
+				'mpm'   => TRUE,
+				'ncape' => TRUE,
+				'nw'    => TRUE,
+				'wcape' => TRUE,
+			),
+		),
 	);
 
-	if (is_ip($fqdn) || ! is_string($fqdn)) return $fqdn;
+	if (! is_string($fqdn)) return '';
+	if (is_ip($fqdn))       return $fqdn;
 
 	$result  = array();
 	$dcursor = & $domain;
 	$array   = array_reverse(explode('.', $fqdn));
 	$i = 0;
 	while(TRUE) {
+		if (! isset($array[$i])) break;
 		$acursor = $array[$i];
 		if (is_array($dcursor) && isset($dcursor[$acursor])) {
 			$result[] = & $array[$i];
