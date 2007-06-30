@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: versionlist.inc.php,v 1.19 2007/06/30 03:04:42 henoheno Exp $
+// $Id: versionlist.inc.php,v 1.20 2007/06/30 03:25:08 henoheno Exp $
 // Copyright (C)
 //	 2002-2007 PukiWiki Developers Team
 //	 2002      S.YOSHIMURA GPL2 yosimura@excellence.ac.jp
@@ -42,7 +42,7 @@ function plugin_versionlist_convert()
 			$data       = join('', file($path));
 
 			// RCS '$Id'
-			if (preg_match('/\$Id: versionlist.inc.php,v 1.19 2007/06/30 03:04:42 henoheno Exp $/', $data, $matches)) {
+			if (preg_match('#\$' . 'Id: .+ (\d+(?:\.\d+)*) (\d{4}[/-]\d{2}[/-]\d{2} \d{2}:\d{2}:\d{2}[^ ]*) .+ \$#', $data, $matches)) {
 				$row[$path]['rev']  = $matches[1];	// 1, 1.23, 1.23.45.6
 				$row[$path]['date'] = $matches[2];
 			}
