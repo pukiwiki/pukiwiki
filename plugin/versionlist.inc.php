@@ -1,12 +1,12 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: versionlist.inc.php,v 1.20 2007/06/30 03:25:08 henoheno Exp $
+// $Id: versionlist.inc.php,v 1.21 2007/06/30 04:19:25 henoheno Exp $
 // Copyright (C)
 //	 2002-2007 PukiWiki Developers Team
 //	 2002      S.YOSHIMURA GPL2 yosimura@excellence.ac.jp
 // License: GPL v2
 //
-// Listing CVS/RCS/SVN revisions of files from 'Id' keyword
+// Listing files, with CVS/RCS/SVN revisions and commit-dates from '$Id' keywords
 
 
 function plugin_versionlist_action()
@@ -36,14 +36,12 @@ function plugin_versionlist_convert()
 		if (! $dir = @dir($sdir)) continue;
 		if ($sdir == '.') $sdir = '';
 		while(FALSE !== ($file = $dir->read())) {
-			if (! preg_match('/\.(?:php|lng|css|js)$/i', $file)) continue;
+			if (! preg_match('/\.(?:php|css|js)$/i', $file)) continue;
 			$path       = $sdir . $file;
 			$row[$path] = array();
 			$data       = join('', file($path));
-
-			// RCS '$Id'
 			if (preg_match('#\$' . 'Id: .+ (\d+(?:\.\d+)*) (\d{4}[/-]\d{2}[/-]\d{2} \d{2}:\d{2}:\d{2}[^ ]*) .+ \$#', $data, $matches)) {
-				$row[$path]['rev']  = $matches[1];	// 1, 1.23, 1.23.45.6
+				$row[$path]['rev']  = $matches[1];	// "1", "1.23" or "1.23.45.6"
 				$row[$path]['date'] = $matches[2];
 			}
 		}
