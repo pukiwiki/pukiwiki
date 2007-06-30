@@ -1,5 +1,5 @@
 PukiWiki SETTING
-$Id: SETTING.txt,v 1.20 2007/02/28 15:56:50 henoheno Exp $
+$Id: SETTING.txt,v 1.21 2007/06/30 15:28:44 henoheno Exp $
 
 
 設定の調整とカスタマイズ
@@ -452,12 +452,29 @@ PHP言語について
         外部URLへのリンクを装飾する機能を有効にします。
 
 
-設定の修正
+設定の修正: 管理者パスワード
     PukiWikiの管理者パスワードは、pukiwiki.ini.php にある変数 $adminpass
     です。簡単に試すだけであるならば、以下のような内容で充分でしょう。
-     ('YourPassWord' の部分を、あなただけのキーワードで置き換えて下さい)
 
-        $adminpass = '{x-php-md5}' . md5('YourPassWord');
+        $adminpass = 'YourPassWord';
+        ('YourPassWord' の部分を、何らかの言葉で置き換えて下さい)
+
+    何らかの方法で pukiwiki.ini.php を閲覧できる者にパスワードを知られない
+    ようにするために、8種類の方法でパスワードを保存することができます。
+    これらの新しい保存形式は md5 プラグインで生成する事ができます。
+    (詳細:BugTrack/709)
+
+    推奨されるのは(十分にランダムなsaltが与えられた)SSHAか(同)SMD5です。
+    (SSHAは環境により使用できないことがあります)
+
+        $adminpass = '{SSHA}I3cHSs6Ypgyq+UnMtcPkmxfXMnwdfyj35DFS';
+        $adminpass = '{SMD5}6OsAW7lc2pLc6LSUpyH0o8dffasdfyj35DFS';
+
+    ※PukiWiki 1.4.5 以前 のバージョンのパスワード文字列を使用する場合、そ
+      の文字列の前に '{x-php-md5}' という語句を追加する必要があります
+
+        $adminpass = '{x-php-md5}7e65a61d08ab4aa7e54c55f92eafaa33';
+
 
 スキンの変更または調整
     スキン(外見の骨組み)に関する設定項目は skin/スキン名.skin.php の先頭にあ
