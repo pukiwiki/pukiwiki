@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.28 2007/06/24 15:25:06 henoheno Exp $
+// $Id: spam.php,v 1.29 2007/07/03 14:47:20 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -7,7 +7,10 @@
 //
 // (PHP 4 >= 4.3.0): preg_match_all(PREG_OFFSET_CAPTURE): $method['uri_XXX'] related feature
 
-if (! defined('SPAM_INI_FILE')) define('SPAM_INI_FILE', 'spam.ini.php');
+require_once('spam_pickup.php');
+
+if (! defined('SPAM_INI_FILE'))   define('SPAM_INI_FILE',   'spam.ini.php');
+if (! defined('DOMAIN_INI_FILE')) define('DOMAIN_INI_FILE', 'domain.ini.php');
 
 // ---------------------
 // Compat etc
@@ -37,7 +40,9 @@ function preg_grep_invert($pattern = '//', $input = array())
 	}
 }
 
-// ----
+
+// ---------------------
+// Utilities
 
 // Very roughly, shrink the lines of var_export()
 // NOTE: If the same data exists, it must be corrupted.
@@ -67,41 +72,29 @@ function var_export_shrink($expression, $return = FALSE, $ignore_numeric_keys = 
 	}
 }
 
-// Remove redundant values from array()
-function array_unique_recursive($array = array())
+// Reverse $string with specified delimiter
+function delimiter_reverse($string = 'foo.bar.example.com', $from_delim = '.', $to_delim = '.')
 {
-	if (! is_array($array)) return $array;
+	if (! is_string($string) || ! is_string($from_delim) || ! is_string($to_delim))
+		return $string;
 
-	$tmp = array();
-	foreach($array as $key => $value){
-		if (is_array($value)) {
-			$array[$key] = array_unique_recursive($value);
-		} else {
-			if (isset($tmp[$value])) {
-				unset($array[$key]);
-			} else {
-				$tmp[$value] = TRUE;
-			}
-		}
-	}
-
-	return $array;
+	// com.example.bar.foo
+	return implode($to_delim, array_reverse(explode($from_delim, $string)));
 }
 
-// Renumber all numeric keys from 0
-function array_renumber_numeric_keys(& $array)
+// ksort() by domain
+function ksort_by_domain(& $array)
 {
-	if (! is_array($array)) return $array;
-
-	$count = -1;
-	$tmp = array();
-	foreach($array as $key => $value){
-		if (is_array($value)) array_renumber_numeric_keys($array[$key]);	// Recurse
-		if (is_numeric($key)) $tmp[$key] = ++$count;
+	$sort = array();
+	foreach(array_keys($array) as $key) {
+		$sort[delimiter_reverse($key)] = $key;
 	}
-	array_rename_keys($array, $tmp);
-
-	return $array;
+	ksort($sort, SORT_STRING);
+	$result = array();
+	foreach($sort as $key) {
+		$result[$key] = & $array[$key];
+	}
+	$array = $result;
 }
 
 // Roughly strings(1) using PCRE
@@ -153,154 +146,41 @@ function strings($binary = '', $min_len = 4, $ignore_space = FALSE, $multibyte =
 	return $binary;
 }
 
-// Reverse $string with specified delimiter
-function delimiter_reverse($string = 'foo.bar.example.com', $from_delim = '.', $to_delim = '.')
-{
-	if (! is_string($string) || ! is_string($from_delim) || ! is_string($to_delim))
-		return $string;
-
-	// com.example.bar.foo
-	return implode($to_delim, array_reverse(explode($from_delim, $string)));
-}
-
 
 // ---------------------
-// URI pickup
+// Utilities: Arrays
 
-// Return an array of URIs in the $string
-// [OK] http://nasty.example.org#nasty_string
-// [OK] http://nasty.example.org:80/foo/xxx#nasty_string/bar
-// [OK] ftp://nasty.example.org:80/dfsdfs
-// [OK] ftp://cnn.example.com&story=breaking_news@10.0.0.1/top_story.htm (from RFC3986)
-function uri_pickup($string = '')
+// Count leaves (A leaf = value that is not an array, or an empty array)
+function array_count_leaves($array = array(), $count_empty = FALSE)
 {
-	if (! is_string($string)) return array();
+	if (! is_array($array) || (empty($array) && $count_empty)) return 1;
 
-	// Not available for: IDN(ignored)
-	$array = array();
-	preg_match_all(
-		// scheme://userinfo@host:port/path/or/pathinfo/maybefile.and?query=string#fragment
-		// Refer RFC3986 (Regex below is not strict)
-		'#(\b[a-z][a-z0-9.+-]{1,8}):[/\\\]+' .	// 1: Scheme
-		'(?:' .
-			'([^\s<>"\'\[\]/\#?@]*)' .		// 2: Userinfo (Username)
-		'@)?' .
-		'(' .
-			// 3: Host
-			'\[[0-9a-f:.]+\]' . '|' .				// IPv6([colon-hex and dot]): RFC2732
-			'(?:[0-9]{1,3}\.){3}[0-9]{1,3}' . '|' .	// IPv4(dot-decimal): 001.22.3.44
-			'[a-z0-9_-][a-z0-9_.-]+[a-z0-9_-]' . 		// hostname(FQDN) : foo.example.org
-		')' .
-		'(?::([0-9]*))?' .					// 4: Port
-		'((?:/+[^\s<>"\'\[\]/\#]+)*/+)?' .	// 5: Directory path or path-info
-		'([^\s<>"\'\[\]\#?]+)?' .			// 6: File?
-		'(?:\?([^\s<>"\'\[\]\#]+))?' .		// 7: Query string
-		'(?:\#([a-z0-9._~%!$&\'()*+,;=:@-]*))?' .	// 8: Fragment
-		'#i',
-		 $string, $array, PREG_SET_ORDER | PREG_OFFSET_CAPTURE
-	);
-
-	// Format the $array
-	static $parts = array(
-		1 => 'scheme', 2 => 'userinfo', 3 => 'host', 4 => 'port',
-		5 => 'path', 6 => 'file', 7 => 'query', 8 => 'fragment'
-	);
-	$default = array('');
-	foreach(array_keys($array) as $uri) {
-		$_uri = & $array[$uri];
-		array_rename_keys($_uri, $parts, TRUE, $default);
-		$offset = $_uri['scheme'][1]; // Scheme's offset = URI's offset
-		foreach(array_keys($_uri) as $part) {
-			$_uri[$part] = & $_uri[$part][0];	// Remove offsets
-		}
+	// Recurse
+	$count = 0;
+	foreach ($array as $part) {
+		$count += array_count_leaves($part, $count_empty);
 	}
-
-	foreach(array_keys($array) as $uri) {
-		$_uri = & $array[$uri];
-		if ($_uri['scheme'] === '') {
-			unset($array[$uri]);	// Considererd harmless
-			continue;
-		}
-		unset($_uri[0]); // Matched string itself
-		$_uri['area']['offset'] = $offset;	// Area offset for area_measure()
-	}
-
-	return $array;
+	return $count;
 }
 
-// Normalize an array of URI arrays
-// NOTE: Give me the uri_pickup() results
-function uri_pickup_normalize(& $pickups, $destructive = TRUE)
+// An array-leaves to a flat array
+function array_flat_leaves($array, $unique = TRUE)
 {
-	if (! is_array($pickups)) return $pickups;
-
-	if ($destructive) {
-		foreach (array_keys($pickups) as $key) {
-			$_key = & $pickups[$key];
-			$_key['scheme']   = isset($_key['scheme']) ? scheme_normalize($_key['scheme']) : '';
-			$_key['host']     = isset($_key['host'])     ? host_normalize($_key['host']) : '';
-			$_key['port']     = isset($_key['port'])       ? port_normalize($_key['port'], $_key['scheme'], FALSE) : '';
-			$_key['path']     = isset($_key['path'])     ? strtolower(path_normalize($_key['path'])) : '';
-			$_key['file']     = isset($_key['file'])     ? file_normalize($_key['file']) : '';
-			$_key['query']    = isset($_key['query'])    ? query_normalize($_key['query']) : '';
-			$_key['fragment'] = isset($_key['fragment']) ? strtolower($_key['fragment']) : '';
-		}
-	} else {
-		foreach (array_keys($pickups) as $key) {
-			$_key = & $pickups[$key];
-			$_key['scheme']   = isset($_key['scheme']) ? scheme_normalize($_key['scheme']) : '';
-			$_key['host']     = isset($_key['host'])   ? strtolower($_key['host']) : '';
-			$_key['port']     = isset($_key['port'])   ? port_normalize($_key['port'], $_key['scheme'], FALSE) : '';
-			$_key['path']     = isset($_key['path'])   ? path_normalize($_key['path']) : '';
-		}
-	}
-
-	return $pickups;
-}
-
-// An URI array => An URI (See uri_pickup())
-// USAGE:
-//	$pickups = uri_pickup('a string include some URIs');
-//	$uris = array();
-//	foreach (array_keys($pickups) as $key) {
-//		$uris[$key] = uri_pickup_implode($pickups[$key]);
-//	}
-function uri_pickup_implode($uri = array())
-{
-	if (empty($uri) || ! is_array($uri)) return NULL;
+	if (! is_array($array)) return $array;
 
 	$tmp = array();
-	if (isset($uri['scheme']) && $uri['scheme'] !== '') {
-		$tmp[] = & $uri['scheme'];
-		$tmp[] = '://';
-	}
-	if (isset($uri['userinfo']) && $uri['userinfo'] !== '') {
-		$tmp[] = & $uri['userinfo'];
-		$tmp[] = '@';
-	}
-	if (isset($uri['host']) && $uri['host'] !== '') {
-		$tmp[] = & $uri['host'];
-	}
-	if (isset($uri['port']) && $uri['port'] !== '') {
-		$tmp[] = ':';
-		$tmp[] = & $uri['port'];
-	}
-	if (isset($uri['path']) && $uri['path'] !== '') {
-		$tmp[] = & $uri['path'];
-	}
-	if (isset($uri['file']) && $uri['file'] !== '') {
-		$tmp[] = & $uri['file'];
-	}
-	if (isset($uri['query']) && $uri['query'] !== '') {
-		$tmp[] = '?';
-		$tmp[] = & $uri['query'];
-	}
-	if (isset($uri['fragment']) && $uri['fragment'] !== '') {
-		$tmp[] = '#';
-		$tmp[] = & $uri['fragment'];
+	foreach(array_keys($array) as $key) {
+		if (is_array($array[$key])) {
+			// Recurse
+			foreach(array_flat_leaves($array[$key]) as $_value) {
+				$tmp[] = $_value;
+			}
+		} else {
+			$tmp[] = & $array[$key];
+		}
 	}
 
-	return implode('', $tmp);
+	return $unique ? array_values(array_unique($tmp)) : $tmp;
 }
 
 // $array['something'] => $array['wanted']
@@ -327,640 +207,27 @@ function array_rename_keys(& $array, $keys = array('from' => 'to'), $force = FAL
 	return TRUE;
 }
 
-// ---------------------
-// Area pickup
-
-// Pickup all of markup areas
-function area_pickup($string = '', $method = array())
+// Remove redundant values from array()
+function array_unique_recursive($array = array())
 {
-	$area = array();
-	if (empty($method)) return $area;
+	if (! is_array($array)) return $array;
 
-	// Anchor tag pair by preg_match and preg_match_all()
-	// [OK] <a href></a>
-	// [OK] <a href=  >Good site!</a>
-	// [OK] <a href= "#" >test</a>
-	// [OK] <a href="http://nasty.example.com">visit http://nasty.example.com/</a>
-	// [OK] <a href=\'http://nasty.example.com/\' >discount foobar</a> 
-	// [NG] <a href="http://ng.example.com">visit http://ng.example.com _not_ended_
-	$regex = '#<a\b[^>]*\bhref\b[^>]*>.*?</a\b[^>]*(>)#is';
-	if (isset($method['area_anchor'])) {
-		$areas = array();
-		$count = isset($method['asap']) ?
-			preg_match($regex, $string) :
-			preg_match_all($regex, $string, $areas);
-		if (! empty($count)) $area['area_anchor'] = $count;
-	}
-	if (isset($method['uri_anchor'])) {
-		$areas = array();
-		preg_match_all($regex, $string, $areas, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
-		foreach(array_keys($areas) as $_area) {
-			$areas[$_area] =  array(
-				$areas[$_area][0][1], // Area start (<a href>)
-				$areas[$_area][1][1], // Area end   (</a>)
-			);
-		}
-		if (! empty($areas)) $area['uri_anchor'] = $areas;
-	}
-
-	// phpBB's "BBCode" pair by preg_match and preg_match_all()
-	// [OK] [url][/url]
-	// [OK] [url]http://nasty.example.com/[/url]
-	// [OK] [link]http://nasty.example.com/[/link]
-	// [OK] [url=http://nasty.example.com]visit http://nasty.example.com/[/url]
-	// [OK] [link http://nasty.example.com/]buy something[/link]
-	$regex = '#\[(url|link)\b[^\]]*\].*?\[/\1\b[^\]]*(\])#is';
-	if (isset($method['area_bbcode'])) {
-		$areas = array();
-		$count = isset($method['asap']) ?
-			preg_match($regex, $string) :
-			preg_match_all($regex, $string, $areas, PREG_SET_ORDER);
-		if (! empty($count)) $area['area_bbcode'] = $count;
-	}
-	if (isset($method['uri_bbcode'])) {
-		$areas = array();
-		preg_match_all($regex, $string, $areas, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
-		foreach(array_keys($areas) as $_area) {
-			$areas[$_area] = array(
-				$areas[$_area][0][1], // Area start ([url])
-				$areas[$_area][2][1], // Area end   ([/url])
-			);
-		}
-		if (! empty($areas)) $area['uri_bbcode'] = $areas;
-	}
-
-	// Various Wiki syntax
-	// [text_or_uri>text_or_uri]
-	// [text_or_uri:text_or_uri]
-	// [text_or_uri|text_or_uri]
-	// [text_or_uri->text_or_uri]
-	// [text_or_uri text_or_uri] // MediaWiki
-	// MediaWiki: [http://nasty.example.com/ visit http://nasty.example.com/]
-
-	return $area;
-}
-
-// If in doubt, it's a little doubtful
-// if (Area => inside <= Area) $brief += -1
-function area_measure($areas, & $array, $belief = -1, $a_key = 'area', $o_key = 'offset')
-{
-	if (! is_array($areas) || ! is_array($array)) return;
-
-	$areas_keys = array_keys($areas);
-	foreach(array_keys($array) as $u_index) {
-		$offset = isset($array[$u_index][$o_key]) ?
-			intval($array[$u_index][$o_key]) : 0;
-		foreach($areas_keys as $a_index) {
-			if (isset($array[$u_index][$a_key])) {
-				$offset_s = intval($areas[$a_index][0]);
-				$offset_e = intval($areas[$a_index][1]);
-				// [Area => inside <= Area]
-				if ($offset_s < $offset && $offset < $offset_e) {
-					$array[$u_index][$a_key] += $belief;
-				}
+	$tmp = array();
+	foreach($array as $key => $value){
+		if (is_array($value)) {
+			$array[$key] = array_unique_recursive($value);
+		} else {
+			if (isset($tmp[$value])) {
+				unset($array[$key]);
+			} else {
+				$tmp[$value] = TRUE;
 			}
 		}
 	}
-}
-
-// ---------------------
-// Spam-uri pickup
-
-// Domain exposure callback (See spam_uri_pickup_preprocess())
-// http://victim.example.org/?foo+site:nasty.example.com+bar
-// => http://nasty.example.com/?refer=victim.example.org
-// NOTE: 'refer=' is not so good for (at this time).
-// Consider about using IP address of the victim, try to avoid that.
-function _preg_replace_callback_domain_exposure($matches = array())
-{
-	$result = '';
-
-	// Preserve the victim URI as a complicity or ...
-	if (isset($matches[5])) {
-		$result =
-			$matches[1] . '://' .	// scheme
-			$matches[2] . '/' .		// victim.example.org
-			$matches[3];			// The rest of all (before victim)
-	}
-
-	// Flipped URI
-	if (isset($matches[4])) {
-		$result = 
-			$matches[1] . '://' .	// scheme
-			$matches[4] .			// nasty.example.com
-			'/?refer=' . strtolower($matches[2]) .	// victim.example.org
-			' ' . $result;
-	}
-
-	return $result;
-}
-
-// Preprocess: Removing uninterest part for URI detection
-function spam_uri_removing_hocus_pocus($binary = '', $method = array())
-{
-	$length = 4 ; // 'http'(1) and '://'(2) and 'fqdn'(1)
-	if (is_array($method)) {
-		// '<a'(2) or 'href='(5) or '>'(1) or '</a>'(4)
-		// '[uri'(4) or ']'(1) or '[/uri]'(6) 
-		if (isset($method['area_anchor']) || isset($method['uri_anchor']) ||
-		    isset($method['area_bbcode']) || isset($method['uri_bbcode']))
-				$length = 1;	// Seems not effective
-	}
-
- 	// Removing sequential spaces and too short lines
-	$binary = strings($binary, $length, TRUE, FALSE); // Multibyte NOT needed
-
-	// Remove words (has no '<>[]:') between spaces
-	$binary = preg_replace('/[ \t][\w.,()\ \t]+[ \t]/', ' ', $binary);
-
-	return $binary;
-}
-
-// Preprocess: rawurldecode() and adding space(s) and something
-// to detect/count some URIs _if possible_
-// NOTE: It's maybe danger to var_dump(result). [e.g. 'javascript:']
-// [OK] http://victim.example.org/?site:nasty.example.org
-// [OK] http://victim.example.org/nasty.example.org
-// [OK] http://victim.example.org/go?http%3A%2F%2Fnasty.example.org
-// [OK] http://victim.example.org/http://nasty.example.org
-function spam_uri_pickup_preprocess($string = '', $method = array())
-{
-	if (! is_string($string)) return '';
-
-	$string = spam_uri_removing_hocus_pocus(rawurldecode($string), $method);
-	//var_dump(htmlspecialchars($string));
-
-	// Domain exposure (simple)
-	// http://victim.example.org/nasty.example.org/path#frag
-	// => http://nasty.example.org/?refer=victim.example.org and original
-	$string = preg_replace(
-		'#h?ttp://' .
-		'(' .
-			'ime\.nu' . '|' .	// 2ch.net
-			'ime\.st' . '|' .	// 2ch.net
-			'link\.toolbot\.com' . '|' .
-			'urlx\.org' .
-		')' .
-		'/([a-z0-9.%_-]+\.[a-z0-9.%_-]+)#i',	// nasty.example.org
-		'http://$2/?refer=$1 $0',				// Preserve $0 or remove?
-		$string
-	);
-
-	// Domain exposure (gate-big5)
-	// http://victim.example.org/gate/big5/nasty.example.org/path
-	// => http://nasty.example.org/?refer=victim.example.org and original
-	$string = preg_replace(
-		'#h?ttp://' .
-		'(' .
-			'big5.51job.com'	 . '|' .
-			'big5.china.com'	 . '|' .
-			'big5.xinhuanet.com' . '|' .
-		')' .
-		'/gate/big5' .
-		'/([a-z0-9.%_-]+\.[a-z0-9.%_-]+)' .
-		 '#i',	// nasty.example.org
-		'http://$2/?refer=$1 $0',				// Preserve $0 or remove?
-		$string
-	);
-
-	// Domain exposure (See _preg_replace_callback_domain_exposure())
-	$string = preg_replace_callback(
-		array(
-			'#(http)://' .
-			'(' .
-				// Something Google: http://www.google.com/supported_domains
-				'(?:[a-z0-9.]+\.)?google\.[a-z]{2,3}(?:\.[a-z]{2})?' .
-				'|' .
-				// AltaVista
-				'(?:[a-z0-9.]+\.)?altavista.com' .
-				
-			')' .
-			'/' .
-			'([a-z0-9?=&.%_/\'\\\+-]+)' .				// path/?query=foo+bar+
-			'\bsite:([a-z0-9.%_-]+\.[a-z0-9.%_-]+)' .	// site:nasty.example.com
-			//'()' .	// Preserve or remove?
-			'#i',
-		),
-		'_preg_replace_callback_domain_exposure',
-		$string
-	);
-
-	// URI exposure (uriuri => uri uri)
-	$string = preg_replace(
-		array(
-			'#(?<! )(?:https?|ftp):/#i',
-		//	'#[a-z][a-z0-9.+-]{1,8}://#i',
-		//	'#[a-z][a-z0-9.+-]{1,8}://#i'
-		),
-		' $0',
-		$string
-	);
-
-	return $string;
-}
-
-// Main function of spam-uri pickup,
-// A wrapper function of uri_pickup()
-function spam_uri_pickup($string = '', $method = array())
-{
-	if (! is_array($method) || empty($method)) {
-		$method = check_uri_spam_method();
-	}
-
-	$string = spam_uri_pickup_preprocess($string, $method);
-
-	$array  = uri_pickup($string);
-
-	// Area elevation of URIs, for '(especially external)link' intension
-	if (! empty($array)) {
-		$_method = array();
-		if (isset($method['uri_anchor'])) $_method['uri_anchor'] = & $method['uri_anchor'];
-		if (isset($method['uri_bbcode'])) $_method['uri_bbcode'] = & $method['uri_bbcode'];
-		$areas = area_pickup($string, $_method, TRUE);
-		if (! empty($areas)) {
-			$area_shadow = array();
-			foreach (array_keys($array) as $key) {
-				$area_shadow[$key] = & $array[$key]['area'];
-				foreach (array_keys($_method) as $_key) {
-					$area_shadow[$key][$_key] = 0;
-				}
-			}
-			foreach (array_keys($_method) as $_key) {
-				if (isset($areas[$_key])) {
-					area_measure($areas[$_key], $area_shadow, 1, $_key);
-				}
-			}
-		}
-	}
-
-	// Remove 'offset's for area_measure()
-	foreach(array_keys($array) as $key)
-		unset($array[$key]['area']['offset']);
 
 	return $array;
 }
 
-
-// ---------------------
-// Normalization
-
-// Scheme normalization: Renaming the schemes
-// snntp://example.org =>  nntps://example.org
-// NOTE: Keep the static lists simple. See also port_normalize().
-function scheme_normalize($scheme = '', $abbrevs_harmfull = TRUE)
-{
-	// Abbreviations they have no intention of link
-	static $abbrevs = array(
-		'ttp'	=> 'http',
-		'ttps'	=> 'https',
-	);
-
-	// Aliases => normalized ones
-	static $aliases = array(
-		'pop'	=> 'pop3',
-		'news'	=> 'nntp',
-		'imap4'	=> 'imap',
-		'snntp'	=> 'nntps',
-		'snews'	=> 'nntps',
-		'spop3'	=> 'pop3s',
-		'pops'	=> 'pop3s',
-	);
-
-	if (! is_string($scheme)) return '';
-
-	$scheme = strtolower($scheme);
-	if (isset($abbrevs[$scheme])) {
-		$scheme = $abbrevs_harmfull ? $abbrevs[$scheme] : '';
-	}
-	if (isset($aliases[$scheme])) {
-		$scheme = $aliases[$scheme];
-	}
-
-	return $scheme;
-}
-
-// Hostname normlization (Destructive)
-// www.foo     => www.foo   ('foo' seems TLD)
-// www.foo.bar => foo.bar
-// www.10.20   => www.10.20 (Invalid hostname)
-// NOTE:
-//   'www' is  mostly used as traditional hostname of WWW server.
-//   'www.foo.bar' may be identical with 'foo.bar'.
-function host_normalize($host = '')
-{
-	if (! is_string($host)) return '';
-
-	$host = strtolower($host);
-	$matches = array();
-	if (preg_match('/^www\.(.+\.[a-z]+)$/', $host, $matches)) {
-		return $matches[1];
-	} else {
-		return $host;
-	}
-}
-
-// Port normalization: Suppress the (redundant) default port
-// HTTP://example.org:80/ => http://example.org/
-// HTTP://example.org:8080/ => http://example.org:8080/
-// HTTPS://example.org:443/ => https://example.org/
-function port_normalize($port, $scheme, $scheme_normalize = FALSE)
-{
-	// Schemes that users _maybe_ want to add protocol-handlers
-	// to their web browsers. (and attackers _maybe_ want to use ...)
-	// Reference: http://www.iana.org/assignments/port-numbers
-	static $array = array(
-		// scheme => default port
-		'ftp'     =>    21,
-		'ssh'     =>    22,
-		'telnet'  =>    23,
-		'smtp'    =>    25,
-		'tftp'    =>    69,
-		'gopher'  =>    70,
-		'finger'  =>    79,
-		'http'    =>    80,
-		'pop3'    =>   110,
-		'sftp'    =>   115,
-		'nntp'    =>   119,
-		'imap'    =>   143,
-		'irc'     =>   194,
-		'wais'    =>   210,
-		'https'   =>   443,
-		'nntps'   =>   563,
-		'rsync'   =>   873,
-		'ftps'    =>   990,
-		'telnets' =>   992,
-		'imaps'   =>   993,
-		'ircs'    =>   994,
-		'pop3s'   =>   995,
-		'mysql'   =>  3306,
-	);
-
-	// intval() converts '0-1' to '0', so preg_match() rejects these invalid ones
-	if (! is_numeric($port) || $port < 0 || preg_match('/[^0-9]/i', $port))
-		return '';
-
-	$port = intval($port);
-	if ($scheme_normalize) $scheme = scheme_normalize($scheme);
-	if (isset($array[$scheme]) && $port == $array[$scheme])
-		$port = ''; // Ignore the defaults
-
-	return $port;
-}
-
-// Path normalization
-// http://example.org => http://example.org/
-// http://example.org#hoge => http://example.org/#hoge
-// http://example.org/path/a/b/./c////./d => http://example.org/path/a/b/c/d
-// http://example.org/path/../../a/../back => http://example.org/back
-function path_normalize($path = '', $divider = '/', $add_root = TRUE)
-{
-	if (! is_string($divider)) return is_string($path) ? $path : '';
-
-	if ($add_root) {
-		$first_div = & $divider;
-	} else {
-		$first_div = '';
-	}
-	if (! is_string($path) || $path == '') return $first_div;
-
-	if (strpos($path, $divider, strlen($path) - strlen($divider)) === FALSE) {
-		$last_div = '';
-	} else {
-		$last_div = & $divider;
-	}
-
-	$array = explode($divider, $path);
-
-	// Remove paddings ('//' and '/./')
-	foreach(array_keys($array) as $key) {
-		if ($array[$key] == '' || $array[$key] == '.') {
-			 unset($array[$key]);
-		}
-	}
-
-	// Remove back-tracks ('/../')
-	$tmp = array();
-	foreach($array as $value) {
-		if ($value == '..') {
-			array_pop($tmp);
-		} else {
-			array_push($tmp, $value);
-		}
-	}
-	$array = & $tmp;
-
-	if (empty($array)) {
-		return $first_div;
-	} else {
-		return $first_div . implode($divider, $array) . $last_div;
-	}
-}
-
-// DirectoryIndex normalize (Destructive and rough)
-// TODO: sample.en.ja.html.gz => sample.html
-function file_normalize($file = 'index.html.en')
-{
-	static $simple_defaults = array(
-		'default.htm'	=> TRUE,
-		'default.html'	=> TRUE,
-		'default.asp'	=> TRUE,
-		'default.aspx'	=> TRUE,
-		'index'			=> TRUE,	// Some system can omit the suffix
-	);
-
-	static $content_suffix = array(
-		// index.xxx, sample.xxx
-		'htm'	=> TRUE,
-		'html'	=> TRUE,
-		'shtml'	=> TRUE,
-		'jsp'	=> TRUE,
-		'php'	=> TRUE,
-		'php3'	=> TRUE,
-		'php4'	=> TRUE,
-		'pl'	=> TRUE,
-		'py'	=> TRUE,
-		'rb'	=> TRUE,
-		'cgi'	=> TRUE,
-		'xml'	=> TRUE,
-	);
-
-	static $language_suffix = array(
-		// Reference: Apache 2.0.59 'AddLanguage' default
-		'ca'	=> TRUE,
-		'cs'	=> TRUE,	// cs
-		'cz'	=> TRUE,	// cs
-		'de'	=> TRUE,
-		'dk'	=> TRUE,	// da
-		'el'	=> TRUE,
-		'en'	=> TRUE,
-		'eo'	=> TRUE,
-		'es'	=> TRUE,
-		'et'	=> TRUE,
-		'fr'	=> TRUE,
-		'he'	=> TRUE,
-		'hr'	=> TRUE,
-		'it'	=> TRUE,
-		'ja'	=> TRUE,
-		'ko'	=> TRUE,
-		'ltz'	=> TRUE,
-		'nl'	=> TRUE,
-		'nn'	=> TRUE,
-		'no'	=> TRUE,
-		'po'	=> TRUE,
-		'pt'	=> TRUE,
-		'pt-br'	=> TRUE,
-		'ru'	=> TRUE,
-		'sv'	=> TRUE,
-		'zh-cn'	=> TRUE,
-		'zh-tw'	=> TRUE,
-
-		// Reference: Apache 2.0.59 default 'index.html' variants
-		'ee'	=> TRUE,
-		'lb'	=> TRUE,
-		'var'	=> TRUE,
-	);
-
-	static $charset_suffix = array(
-		// Reference: Apache 2.0.59 'AddCharset' default
-		'iso8859-1'	=> TRUE, // ISO-8859-1
-		'latin1'	=> TRUE, // ISO-8859-1
-		'iso8859-2'	=> TRUE, // ISO-8859-2
-		'latin2'	=> TRUE, // ISO-8859-2
-		'cen'		=> TRUE, // ISO-8859-2
-		'iso8859-3'	=> TRUE, // ISO-8859-3
-		'latin3'	=> TRUE, // ISO-8859-3
-		'iso8859-4'	=> TRUE, // ISO-8859-4
-		'latin4'	=> TRUE, // ISO-8859-4
-		'iso8859-5'	=> TRUE, // ISO-8859-5
-		'latin5'	=> TRUE, // ISO-8859-5
-		'cyr'		=> TRUE, // ISO-8859-5
-		'iso-ru'	=> TRUE, // ISO-8859-5
-		'iso8859-6'	=> TRUE, // ISO-8859-6
-		'latin6'	=> TRUE, // ISO-8859-6
-		'arb'		=> TRUE, // ISO-8859-6
-		'iso8859-7'	=> TRUE, // ISO-8859-7
-		'latin7'	=> TRUE, // ISO-8859-7
-		'grk'		=> TRUE, // ISO-8859-7
-		'iso8859-8'	=> TRUE, // ISO-8859-8
-		'latin8'	=> TRUE, // ISO-8859-8
-		'heb'		=> TRUE, // ISO-8859-8
-		'iso8859-9'	=> TRUE, // ISO-8859-9
-		'latin9'	=> TRUE, // ISO-8859-9
-		'trk'		=> TRUE, // ISO-8859-9
-		'iso2022-jp'=> TRUE, // ISO-2022-JP
-		'jis'		=> TRUE, // ISO-2022-JP
-		'iso2022-kr'=> TRUE, // ISO-2022-KR
-		'kis'		=> TRUE, // ISO-2022-KR
-		'iso2022-cn'=> TRUE, // ISO-2022-CN
-		'cis'		=> TRUE, // ISO-2022-CN
-		'big5'		=> TRUE,
-		'cp-1251'	=> TRUE, // ru, WINDOWS-1251
-		'win-1251'	=> TRUE, // ru, WINDOWS-1251
-		'cp866'		=> TRUE, // ru
-		'koi8-r'	=> TRUE, // ru, KOI8-r
-		'koi8-ru'	=> TRUE, // ru, KOI8-r
-		'koi8-uk'	=> TRUE, // ru, KOI8-ru
-		'ua'		=> TRUE, // ru, KOI8-ru
-		'ucs2'		=> TRUE, // ru, ISO-10646-UCS-2
-		'ucs4'		=> TRUE, // ru, ISO-10646-UCS-4
-		'utf8'		=> TRUE,
-
-		// Reference: Apache 2.0.59 default 'index.html' variants
-		'euc-kr'	=> TRUE,
-		'gb2312'	=> TRUE,
-	);
-
-	// May uncompress by web browsers on the fly
-	// Must be at the last of the filename
-	// Reference: Apache 2.0.59 'AddEncoding'
-	static $encoding_suffix = array(
-		'z'		=> TRUE,
-		'gz'	=> TRUE,
-	);
-
-	if (! is_string($file)) return '';
-	$_file = strtolower($file);
-	if (isset($simple_defaults[$_file])) return '';
-
-
-	// Roughly removing language/character-set/encoding suffixes
-	// References:
-	//  * Apache 2 document about 'Content-negotiaton', 'mod_mime' and 'mod_negotiation'
-	//    http://httpd.apache.org/docs/2.0/content-negotiation.html
-	//    http://httpd.apache.org/docs/2.0/mod/mod_mime.html
-	//    http://httpd.apache.org/docs/2.0/mod/mod_negotiation.html
-	//  * http://www.iana.org/assignments/character-sets
-	//  * RFC3066: Tags for the Identification of Languages
-	//    http://www.ietf.org/rfc/rfc3066.txt
-	//  * ISO 639: codes of 'language names'
-	$suffixes = explode('.', $_file);
-	$body = array_shift($suffixes);
-	if ($suffixes) {
-		// Remove the last .gz/.z
-		$last_key = end(array_keys($suffixes));
-		if (isset($encoding_suffix[$suffixes[$last_key]])) {
-			unset($suffixes[$last_key]);
-		}
-	}
-	// Cut language and charset suffixes
-	foreach($suffixes as $key => $value){
-		if (isset($language_suffix[$value]) || isset($charset_suffix[$value])) {
-			unset($suffixes[$key]);
-		}
-	}
-	if (empty($suffixes)) return $body;
-
-	// Index.xxx
-	$count = count($suffixes);
-	reset($suffixes);
-	$current = current($suffixes);
-	if ($body == 'index' && $count == 1 && isset($content_suffix[$current])) return '';
-
-	return $file;
-}
-
-// Sort query-strings if possible (Destructive and rough)
-// [OK] &&&&f=d&b&d&c&a=0dd  =>  a=0dd&b&c&d&f=d
-// [OK] nothing==&eg=dummy&eg=padding&eg=foobar  =>  eg=foobar
-function query_normalize($string = '', $equal = TRUE, $equal_cutempty = TRUE, $stortolower = TRUE)
-{
-	if (! is_string($string)) return '';
-	if ($stortolower) $string = strtolower($string);
-
-	$array = explode('&', $string);
-
-	// Remove '&' paddings
-	foreach(array_keys($array) as $key) {
-		if ($array[$key] == '') {
-			 unset($array[$key]);
-		}
-	}
-
-	// Consider '='-sepalated input and paddings
-	if ($equal) {
-		$equals = $not_equals = array();
-		foreach ($array as $part) {
-			if (strpos($part, '=') === FALSE) {
-				 $not_equals[] = $part;
-			} else {
-				list($key, $value) = explode('=', $part, 2);
-				$value = ltrim($value, '=');
-				if (! $equal_cutempty || $value != '') {
-					$equals[$key] = $value;
-				}
-			}
-		}
-
-		$array = & $not_equals;
-		foreach ($equals as $key => $value) {
-			$array[] = $key . '=' . $value;
-		}
-		unset($equals);
-	}
-
-	natsort($array);
-	return implode('&', $array);
-}
 
 // ---------------------
 // Part One : Checker
@@ -999,21 +266,6 @@ function generate_glob_regex($string = '', $divider = '/')
 	return $string;
 }
 
-// Rough hostname checker
-// [OK] 192.168.
-// TODO: Strict digit, 0x, CIDR, IPv6
-function is_ip($string = '')
-{
-	if (preg_match('/^' .
-		'(?:[0-9]{1,3}\.){3}[0-9]{1,3}' . '|' .
-		'(?:[0-9]{1,3}\.){1,3}' . '$/',
-		$string)) {
-		return 4;	// Seems IPv4(dot-decimal)
-	} else {
-		return 0;	// Seems not IP
-	}
-}
-
 // Generate host (FQDN, IPv4, ...) regex
 // 'localhost'     : Matches with 'localhost' only
 // 'example.org'   : Matches with 'example.org' only (See host_normalize() about 'www')
@@ -1045,6 +297,21 @@ function generate_host_regex($string = '', $divider = '/')
 		}
 		$part[1] = generate_glob_regex($part[1], $divider);
 		return implode('', $part);
+	}
+}
+
+// Rough hostname checker
+// [OK] 192.168.
+// TODO: Strict digit, 0x, CIDR, IPv6
+function is_ip($string = '')
+{
+	if (preg_match('/^' .
+		'(?:[0-9]{1,3}\.){3}[0-9]{1,3}' . '|' .
+		'(?:[0-9]{1,3}\.){1,3}' . '$/',
+		$string)) {
+		return 4;	// Seems IPv4(dot-decimal)
+	} else {
+		return 0;	// Seems not IP
 	}
 }
 
@@ -1144,6 +411,10 @@ function blocklist_distiller(& $hosts, $keys = array('goodhost', 'badhost'), $as
 
 	return $blocked;
 }
+
+
+// ---------------------
+
 
 // Default (enabled) methods and thresholds (for content insertion)
 function check_uri_spam_method($times = 1, $t_area = 0, $rule = TRUE)
@@ -1405,62 +676,6 @@ function check_uri_spam($target = '', $method = array())
 	return $progress;
 }
 
-// Count leaves (A leaf = value that is not an array, or an empty array)
-function array_count_leaves($array = array(), $count_empty = FALSE)
-{
-	if (! is_array($array) || (empty($array) && $count_empty)) return 1;
-
-	// Recurse
-	$count = 0;
-	foreach ($array as $part) {
-		$count += array_count_leaves($part, $count_empty);
-	}
-	return $count;
-}
-
-// An array-leaves to a flat array
-function array_flat_leaves($array, $unique = TRUE)
-{
-	if (! is_array($array)) return $array;
-
-	$tmp = array();
-	foreach(array_keys($array) as $key) {
-		if (is_array($array[$key])) {
-			// Recurse
-			foreach(array_flat_leaves($array[$key]) as $_value) {
-				$tmp[] = $_value;
-			}
-		} else {
-			$tmp[] = & $array[$key];
-		}
-	}
-
-	return $unique ? array_values(array_unique($tmp)) : $tmp;
-}
-
-// An array() to an array leaf
-function array_leaf($array = array('A', 'B', 'C.D'), $stem = FALSE, $edge = TRUE)
-{
-	if (! is_array($array)) return $array;
-
-	$leaf = array();
-	$tmp  = & $leaf;
-	foreach($array as $arg) {
-		if (! is_string($arg) && ! is_int($arg)) continue;
-		$tmp[$arg] = array();
-		$parent    = & $tmp;
-		$tmp       = & $tmp[$arg];
-	}
-	if ($stem) {
-		$parent[key($parent)] = & $edge;
-	} else {
-		$parent = key($parent);
-	}
-
-	return $leaf;	// array('A' => array('B' => 'C.D'))
-}
-
-
 // ---------------------
 // Reporting
 
@@ -1564,20 +779,6 @@ function summarize_detail_newtral($progress = array())
 		')';
 }
 
-// ksort() by domain
-function ksort_by_domain(& $array)
-{
-	$sort = array();
-	foreach(array_keys($array) as $key) {
-		$sort[delimiter_reverse($key)] = $key;
-	}
-	ksort($sort, SORT_STRING);
-	$result = array();
-	foreach($sort as $key) {
-		$result[$key] = & $array[$key];
-	}
-	$array = $result;
-}
 
 // Check responsibility-root of the FQDN
 // 'foo.bar.example.com'        => 'example.com'        (.com        has the last whois for it)
@@ -1586,658 +787,22 @@ function ksort_by_domain(& $array)
 // 'foo.bar.example.act.edu.au' => 'example.act.edu.au' (.act.edu.au has the last whois for it)
 function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $implicit = TRUE)
 {
-	// Domains who have 2nd and/or 3rd level domains
-	static $domain = array(
+	static $domain;
 
-		// ccTLD: Australia
-		// http://www.auda.org.au/
-		// NIC  : http://www.aunic.net/
-		// Whois: http://www.ausregistry.com.au/
-		'au' => array(
-			// .au Second Level Domains
-			// http://www.auda.org.au/domains/
-			'asn'   => TRUE,
-			'com'   => TRUE,
-			'conf'  => TRUE,
-			'csiro' => TRUE,
-			'edu'   => array(	// http://www.domainname.edu.au/
-				// Geographic
-				'act' => TRUE,
-				'nt'  => TRUE,
-				'nsw' => TRUE,
-				'qld' => TRUE,
-				'sa'  => TRUE,
-				'tas' => TRUE,
-				'vic' => TRUE,
-				'wa'  => TRUE,
-			),
-			'gov'   => array(
-				// Geographic
-				'act' => TRUE,	// Australian Capital Territory
-				'nt'  => TRUE,	// Northern Territory
-				'nsw' => TRUE,	// New South Wales
-				'qld' => TRUE,	// Queensland
-				'sa'  => TRUE,	// South Australia
-				'tas' => TRUE,	// Tasmania
-				'vic' => TRUE,	// Victoria
-				'wa'  => TRUE,	// Western Australia
-			),
-			'id'    => TRUE,
-			'net'   => TRUE,
-			'org'   => TRUE,
-			'info'  => TRUE,
-		),
-
-		// ccTLD: Bahrain
-		// NIC  : http://www.inet.com.bh/ (.bh policies not found)
-		// Whois: (Not available) http://www.inet.com.bh/
-		'bh' => array(
-			// Observed
-			'com' => TRUE,
-			'edu' => TRUE,
-			'gov' => TRUE,
-			'org' => TRUE,
-		),
-
-		// ccTLD: China
-		// NIC  : http://www.cnnic.net.cn/en/index/
-		// Whois: http://ewhois.cnnic.cn/
-		'cn' => array(
-			// Provisional Administrative Rules for Registration of Domain Names in China
-			// http://www.cnnic.net.cn/html/Dir/2003/11/27/1520.htm
-
-			// Organizational
-			'ac'  => TRUE,
-			'com' => TRUE,
-			'edu' => TRUE,
-			'gov' => TRUE,
-			'net' => TRUE,
-			'org' => TRUE,
-
-			// Geographic
-			'ah' => TRUE,
-			'bj' => TRUE,
-			'cq' => TRUE,
-			'fj' => TRUE,
-			'gd' => TRUE,
-			'gs' => TRUE,
-			'gx' => TRUE,
-			'gz' => TRUE,
-			'ha' => TRUE,
-			'hb' => TRUE,
-			'he' => TRUE,
-			'hi' => TRUE,
-			'hk' => TRUE,
-			'hl' => TRUE,
-			'hn' => TRUE,
-			'jl' => TRUE,
-			'js' => TRUE,
-			'jx' => TRUE,
-			'ln' => TRUE,
-			'mo' => TRUE,
-			'nm' => TRUE,
-			'nx' => TRUE,
-			'qh' => TRUE,
-			'sc' => TRUE,
-			'sd' => TRUE,
-			'sh' => TRUE,
-			'sn' => TRUE,
-			'sx' => TRUE,
-			'tj' => TRUE,
-			'tw' => TRUE,
-			'xj' => TRUE,
-			'xz' => TRUE,
-			'yn' => TRUE,
-			'zj' => TRUE,
-		),
-
-		// ccTLD: India
-		// NIC  : http://www.inregistry.in/
-		// Whois: http://www.inregistry.in/whois_search/
-		'in' => array(
-			// Policies http://www.inregistry.in/policies/
-			'ac'   => TRUE,
-			'co'   => TRUE,
-			'firm' => TRUE,
-			'gen'  => TRUE,
-			'gov'  => TRUE,
-			'ind'  => TRUE,
-			'mil'  => TRUE,
-			'net'  => TRUE,
-			'org'  => TRUE,
-			'res'  => TRUE,
-			// Reserved Names by the government (for the 2nd level)
-			// http://www.inregistry.in/policies/reserved_names
-		),
-
-		// ccTLD: South Korea
-		// NIC  : http://www.nic.or.kr/english/
-		// Whois: http://whois.nida.or.kr/english/
-		'kr' => array(
-			// .kr domain policy [appendix 1] : Qualifications for Second Level Domains
-			// http://domain.nida.or.kr/eng/policy.jsp
-
-			// Organizational
-			'co'  => TRUE,
-			'ne ' => TRUE,
-			'or ' => TRUE,
-			're ' => TRUE,
-			'pe'  => TRUE,
-			'go ' => TRUE,
-			'mil' => TRUE,
-			'ac'  => TRUE,
-			'hs'  => TRUE,
-			'ms'  => TRUE,
-			'es'  => TRUE,
-			'sc'  => TRUE,
-			'kg'  => TRUE,
-
-			// Geographic
-			'seoul'     => TRUE,
-			'busan'     => TRUE,
-			'daegu'     => TRUE,
-			'incheon'   => TRUE,
-			'gwangju'   => TRUE,
-			'daejeon'   => TRUE,
-			'ulsan'     => TRUE,
-			'gyeonggi'  => TRUE,
-			'gangwon'   => TRUE,
-			'chungbuk'  => TRUE,
-			'chungnam'  => TRUE,
-			'jeonbuk'   => TRUE,
-			'jeonnam'   => TRUE,
-			'gyeongbuk' => TRUE,
-			'gyeongnam' => TRUE,
-			'jeju'      => TRUE,
-		),
-
-		// ccTLD: Japan
-		// NIC  : http://jprs.co.jp/en/
-		// Whois: http://whois.jprs.jp/en/
-		'jp' => array(
-			// Guide to JP Domain Name
-			// http://jprs.co.jp/en/jpdomain.html
-
-			// Organizational
-			'ac' => TRUE,
-			'ad' => TRUE,
-			'co' => TRUE,
-			'ed' => TRUE,
-			'go' => TRUE,
-			'gr' => TRUE,
-			'lg' => TRUE,
-			'ne' => TRUE,
-			'or' => TRUE,
-
-			// Geographic
-			//
-			// Examples for 3rd level domains
-			//'kumamoto'  => array(
-			//	// http://www.pref.kumamoto.jp/link/list.asp#4
-			//	'amakusa'   => TRUE,
-			//	'hitoyoshi' => TRUE,
-			//	'jonan'     => TRUE,
-			//	'kumamoto'  => TRUE,
-			//	...
-			//),
-			'aichi'     => TRUE,
-			'akita'     => TRUE,
-			'aomori'    => TRUE,
-			'chiba'     => TRUE,
-			'ehime'     => TRUE,
-			'fukui'     => TRUE,
-			'fukuoka'   => TRUE,
-			'fukushima' => TRUE,
-			'gifu'      => TRUE,
-			'gunma'     => TRUE,
-			'hiroshima' => TRUE,
-			'hokkaido'  => TRUE,
-			'hyogo'     => TRUE,
-			'ibaraki'   => TRUE,
-			'ishikawa'  => TRUE,
-			'iwate'     => TRUE,
-			'kagawa'    => TRUE,
-			'kagoshima' => TRUE,
-			'kanagawa'  => TRUE,
-			'kawasaki'  => TRUE,
-			'kitakyushu'=> TRUE,
-			'kobe'      => TRUE,
-			'kochi'     => TRUE,
-			'kumamoto'  => TRUE,
-			'kyoto'     => TRUE,
-			'mie'       => TRUE,
-			'miyagi'    => TRUE,
-			'miyazaki'  => TRUE,
-			'nagano'    => TRUE,
-			'nagasaki'  => TRUE,
-			'nagoya'    => TRUE,
-			'nara'      => TRUE,
-			'niigata'   => TRUE,
-			'oita'      => TRUE,
-			'okayama'   => TRUE,
-			'okinawa'   => TRUE,
-			'osaka'     => TRUE,
-			'saga'      => TRUE,
-			'saitama'   => TRUE,
-			'sapporo'   => TRUE,
-			'sendai'    => TRUE,
-			'shiga'     => TRUE,
-			'shimane'   => TRUE,
-			'shizuoka'  => TRUE,
-			'tochigi'   => TRUE,
-			'tokushima' => TRUE,
-			'tokyo'     => TRUE,
-			'tottori'   => TRUE,
-			'toyama'    => TRUE,
-			'wakayama'  => TRUE,
-			'yamagata'  => TRUE,
-			'yamaguchi' => TRUE,
-			'yamanashi' => TRUE,
-			'yokohama'  => TRUE,
-		),
-
-		// ccTLD: Mexico
-		// NIC  : http://www.nic.mx/
-		// Whois: http://www.nic.mx/es/Busqueda.Who_Is
-		'mx' => array(
-			// Politicas Generales de Nombres de Dominio
-			// http://www.nic.mx/es/Politicas?CATEGORY=INDICE
-			'com'  => TRUE,
-			'edu'  => TRUE,
-			'gob'  => TRUE,
-			'net'  => TRUE,
-			'org'  => TRUE,
-		),
-
-		// ccTLD: Russia
-		// NIC  : http://www.cctld.ru/en/
-		// Whois: http://www.ripn.net:8080/nic/whois/en/
-		'ru' => array(
-			// List of Reserved second-level Domain Names
-			// http://www.cctld.ru/en/doc/detail.php?id21=20&i21=2
-
-			// Organizational
-			'ac'   => TRUE,
-			'com'  => TRUE,
-			'edu'  => TRUE,
-			'gov'  => TRUE,
-			'int'  => TRUE,
-			'mil'  => TRUE,
-			'net'  => TRUE,
-			'org'  => TRUE,
-			'pp'   => TRUE,
-			//'test' => TRUE,
-
-			// Geographic
-			'adygeya'     => TRUE,
-			'altai'       => TRUE,
-			'amur'        => TRUE,
-			'amursk'      => TRUE,
-			'arkhangelsk' => TRUE,
-			'astrakhan'   => TRUE,
-			'baikal'      => TRUE,
-			'bashkiria'   => TRUE,
-			'belgorod'    => TRUE,
-			'bir'         => TRUE,
-			'bryansk'     => TRUE,
-			'buryatia'    => TRUE,
-			'cbg'         => TRUE,
-			'chel'        => TRUE,
-			'chelyabinsk' => TRUE,
-			'chita'       => TRUE,
-			'chukotka'    => TRUE,
-			'chuvashia'   => TRUE,
-			'cmw'         => TRUE,
-			'dagestan'    => TRUE,
-			'dudinka'     => TRUE,
-			'e-burg'      => TRUE,
-			'fareast'     => TRUE,
-			'grozny'      => TRUE,
-			'irkutsk'     => TRUE,
-			'ivanovo'     => TRUE,
-			'izhevsk'     => TRUE,
-			'jamal'       => TRUE,
-			'jar'         => TRUE,
-			'joshkar-ola' => TRUE,
-			'k-uralsk'    => TRUE,
-			'kalmykia'    => TRUE,
-			'kaluga'      => TRUE,
-			'kamchatka'   => TRUE,
-			'karelia'     => TRUE,
-			'kazan'       => TRUE,
-			'kchr'        => TRUE,
-			'kemerovo'    => TRUE,
-			'khabarovsk'  => TRUE,
-			'khakassia'   => TRUE,
-			'khv'         => TRUE,
-			'kirov'       => TRUE,
-			'kms'         => TRUE,
-			'koenig'      => TRUE,
-			'komi'        => TRUE,
-			'kostroma'    => TRUE,
-			'krasnoyarsk' => TRUE,
-			'kuban'       => TRUE,
-			'kurgan'      => TRUE,
-			'kursk'       => TRUE,
-			'kustanai'    => TRUE,
-			'kuzbass'     => TRUE,
-			'lipetsk'     => TRUE,
-			'magadan'     => TRUE,
-			'magnitka'    => TRUE,
-			'mari-el'     => TRUE,
-			'mari'        => TRUE,
-			'marine'      => TRUE,
-			'mordovia'    => TRUE,
-			'mosreg'      => TRUE,
-			'msk'         => TRUE,
-			'murmansk'    => TRUE,
-			'mytis'       => TRUE,
-			'nakhodka'    => TRUE,
-			'nalchik'     => TRUE,
-			'nkz'         => TRUE,
-			'nnov'        => TRUE,
-			'norilsk'     => TRUE,
-			'nov'         => TRUE,
-			'novosibirsk' => TRUE,
-			'nsk'         => TRUE,
-			'omsk'        => TRUE,
-			'orenburg'    => TRUE,
-			'oryol'       => TRUE,
-			'oskol'       => TRUE,
-			'palana'      => TRUE,
-			'penza'       => TRUE,
-			'perm'        => TRUE,
-			'pskov'       => TRUE,
-			'ptz'         => TRUE,
-			'pyatigorsk'  => TRUE,
-			'rnd'         => TRUE,
-			'rubtsovsk'   => TRUE,
-			'ryazan'      => TRUE,
-			'sakhalin'    => TRUE,
-			'samara'      => TRUE,
-			'saratov'     => TRUE,
-			'simbirsk'    => TRUE,
-			'smolensk'    => TRUE,
-			'snz'         => TRUE,
-			'spb'         => TRUE,
-			'stavropol'   => TRUE,
-			'stv'         => TRUE,
-			'surgut'      => TRUE,
-			'syzran'      => TRUE,
-			'tambov'      => TRUE,
-			'tatarstan'   => TRUE,
-			'tom'         => TRUE,
-			'tomsk'       => TRUE,
-			'tsaritsyn'   => TRUE,
-			'tsk'         => TRUE,
-			'tula'        => TRUE,
-			'tuva'        => TRUE,
-			'tver'        => TRUE,
-			'tyumen'      => TRUE,
-			'udm'         => TRUE,
-			'udmurtia'    => TRUE,
-			'ulan-ude'    => TRUE,
-			'vdonsk'      => TRUE,
-			'vladikavkaz' => TRUE,
-			'vladimir'    => TRUE,
-			'vladivostok' => TRUE,
-			'volgograd'   => TRUE,
-			'vologda'     => TRUE,
-			'voronezh'    => TRUE,
-			'vrn'         => TRUE,
-			'vyatka'      => TRUE,
-			'yakutia'     => TRUE,
-			'yamal'       => TRUE,
-			'yaroslavl'   => TRUE,
-			'yekaterinburg'     => TRUE,
-			'yuzhno-sakhalinsk' => TRUE,
-			'zgrad'       => TRUE,
-		),
-
-		// ccTLD: Seychelles
-		// NIC  : http://www.nic.sc/
-		// Whois: (Not available)
-		'sc' => array(
-			// http://www.nic.sc/policies.html
-			'com' => TRUE,
-			'edu' => TRUE,
-			'gov' => TRUE,
-			'net' => TRUE,
-			'org' => TRUE,
-		),
-
-		// ccTLD: Taiwan
-		// NIC  : http://www.twnic.net.tw/
-		// Whois: http://www.twnic.net.tw/
-		'tw' => array(
-			// Guidelines for Administration of Domain Name Registration
-			// http://www.twnic.net.tw/english/dn/dn_02.htm
-			// II. Types of TWNIC Domain Names and Application Requirements
-			// http://www.twnic.net.tw/english/dn/dn_02_b.htm
-			'club' => TRUE,
-			'com'  => TRUE,
-			'ebiz' => TRUE,
-			'edu'  => TRUE,
-			'game' => TRUE,
-			'gov'  => TRUE,
-			'idv'  => TRUE,
-			'mil'  => TRUE,
-			'net'  => TRUE,
-			'org'  => TRUE,
-			// Reserved words for the 2nd level
-			// http://mydn.twnic.net.tw/en/dn02/INDEX.htm
-		),
-
-		// ccTLD: Tanzania
-		// NIC  : http://www.psg.com/dns/tz/
-		// Whois: (Not available)
-		'tz' => array(
-			//  TZ DOMAIN NAMING STRUCTURE
-			// http://www.psg.com/dns/tz/tz.txt
-			'ac' => TRUE,
-			'co' => TRUE,
-			'go' => TRUE,
-			'ne' => TRUE,
-			'or' => TRUE,
-		),
-
-		// ccTLD: Ukraine
-		// NIC  : http://www.nic.net.ua/
-		// Whois: http://whois.com.ua/
-		'ua' => array(
-			// policy for alternative 2nd level domain names (a2ld)
-			// http://www.nic.net.ua/doc/a2ld
-			// http://whois.com.ua/
-			'cherkassy'  => TRUE,
-			'chernigov'  => TRUE,
-			'chernovtsy' => TRUE,
-			'ck'         => TRUE,
-			'cn'         => TRUE,
-			'com'        => TRUE,
-			'crimea'     => TRUE,
-			'cv'         => TRUE,
-			'dn'         => TRUE,
-			'dnepropetrovsk' => TRUE,
-			'donetsk'    => TRUE,
-			'dp'         => TRUE,
-			'edu'        => TRUE,
-			'gov'        => TRUE,
-			'if'         => TRUE,
-			'ivano-frankivsk' => TRUE,
-			'kh'         => TRUE,
-			'kharkov'    => TRUE,
-			'kherson'    => TRUE,
-			'kiev'       => TRUE,
-			'kirovograd' => TRUE,
-			'km'         => TRUE,
-			'kr'         => TRUE,
-			'ks'         => TRUE,
-			'lg'         => TRUE,
-			'lugansk'    => TRUE,
-			'lutsk'      => TRUE,
-			'lviv'       => TRUE,
-			'mk'         => TRUE,
-			'net'        => TRUE,
-			'nikolaev'   => TRUE,
-			'od'         => TRUE,
-			'odessa'     => TRUE,
-			'org'        => TRUE,
-			'pl'         => TRUE,
-			'poltava'    => TRUE,
-			'rovno'      => TRUE,
-			'rv'         => TRUE,
-			'sebastopol' => TRUE,
-			'sumy'       => TRUE,
-			'te'         => TRUE,
-			'ternopil'   => TRUE,
-			'uz'         => TRUE,
-			'uzhgorod'   => TRUE,
-			'vinnica'    => TRUE,
-			'vn'         => TRUE,
-			'zaporizhzhe' => TRUE,
-			'zhitomir'   => TRUE,
-			'zp'         => TRUE,
-			'zt'         => TRUE,
-		),
-
-		// ccTLD: United Kingdom
-		// NIC  : http://www.nic.uk/
-		'uk' => array(
-			// Second Level Domains
-			// http://www.nic.uk/registrants/aboutdomainnames/sld/
-			'co'     => TRUE,
-			'ltd'    => TRUE,
-			'me'     => TRUE,
-			'net'    => TRUE,
-			'nic'    => TRUE,
-			'org'    => TRUE,
-			'plc'    => TRUE,
-			'sch'    => TRUE,
-			
-			// Delegated Second Level Domains
-			// http://www.nic.uk/registrants/aboutdomainnames/sld/delegated/
-			'ac'     => TRUE,
-			'gov'    => TRUE,
-			'mil'    => TRUE,
-			'mod'    => TRUE,
-			'nhs'    => TRUE,
-			'police' => TRUE,
-		),
-
-		// ccTLD: United States of America
-		// NIC  : http://nic.us/
-		// Whois: http://whois.us/
-		'us' => array(
-			// See RFC1480
-
-			// Organizational
-			'dni',
-			'fed',
-			'isa',
-			'kids',
-			'nsn',
-
-			// Geographical
-			// United States Postal Service: State abbreviations (for postal codes)
-			// http://www.usps.com/ncsc/lookups/abbreviations.html
-			'ak' => TRUE, // Alaska
-			'al' => TRUE, // Alabama
-			'ar' => TRUE, // Arkansas
-			'as' => TRUE, // American samoa
-			'az' => TRUE, // Arizona
-			'ca' => TRUE, // California
-			'co' => TRUE, // Colorado
-			'ct' => TRUE, // Connecticut
-			'dc' => TRUE, // District of Columbia
-			'de' => TRUE, // Delaware
-			'fl' => TRUE, // Florida
-			'fm' => TRUE, // Federated states of Micronesia
-			'ga' => TRUE, // Georgia
-			'gu' => TRUE, // Guam
-			'hi' => TRUE, // Hawaii
-			'ia' => TRUE, // Iowa
-			'id' => TRUE, // Idaho
-			'il' => TRUE, // Illinois
-			'in' => TRUE, // Indiana
-			'ks' => TRUE, // Kansas
-			'ky' => TRUE, // Kentucky
-			'la' => TRUE, // Louisiana
-			'ma' => TRUE, // Massachusetts
-			'md' => TRUE, // Maryland
-			'me' => TRUE, // Maine
-			'mh' => TRUE, // Marshall Islands
-			'mi' => TRUE, // Michigan
-			'mn' => TRUE, // Minnesota
-			'mo' => TRUE, // Missouri
-			'mp' => TRUE, // Northern mariana islands
-			'ms' => TRUE, // Mississippi
-			'mt' => TRUE, // Montana
-			'nc' => TRUE, // North Carolina
-			'nd' => TRUE, // North Dakota
-			'ne' => TRUE, // Nebraska
-			'nh' => TRUE, // New Hampshire
-			'nj' => TRUE, // New Jersey
-			'nm' => TRUE, // New Mexico
-			'nv' => TRUE, // Nevada
-			'ny' => TRUE, // New York
-			'oh' => TRUE, // Ohio
-			'ok' => TRUE, // Oklahoma
-			'or' => TRUE, // Oregon
-			'pa' => TRUE, // Pennsylvania
-			'pr' => TRUE, // Puerto Rico
-			'pw' => TRUE, // Palau
-			'ri' => TRUE, // Rhode Island
-			'sc' => TRUE, // South Carolina
-			'sd' => TRUE, // South Dakota
-			'tn' => TRUE, // Tennessee
-			'tx' => TRUE, // Texas
-			'ut' => TRUE, // Utah
-			'va' => TRUE, // Virginia
-			'vi' => TRUE, // Virgin Islands
-			'vt' => TRUE, // Vermont
-			'wa' => TRUE, // Washington
-			'wi' => TRUE, // Wisconsin
-			'wv' => TRUE, // West Virginia
-			'wy' => TRUE, // Wyoming
-		),
-
-		// ccTLD: South Africa
-		// NIC  : http://www.zadna.org.za/
-		// Whois: 
-		//   ac.za  http://www.tenet.ac.za/cgi/cgi_domainquery.exe
-		//   co.za  http://co.za/whois.shtml
-		//   gov.za http://dnsadmin.gov.za/
-		//   org.za http://www.org.za/
-		'za' => array(
-			// Second-level subdomains of .ZA
-			// http://www.zadna.org.za/slds.html
-			'ac'   => TRUE,
-			'city' => TRUE,
-			'co'   => TRUE,
-			'edu'  => TRUE,
-			'gov'  => TRUE,
-			'law'  => TRUE,
-			'mil'  => TRUE,
-			'nom'  => TRUE,
-			'org'  => TRUE,
-			'school' => array(
-				// Provincial Domains
-				// http://www.esn.org.za/dns/
-				'ecape' => TRUE,
-				'fs.'   => TRUE,
-				'gp'    => TRUE,
-				'kzn'   => TRUE,
-				'lp'    => TRUE,
-				'mpm'   => TRUE,
-				'ncape' => TRUE,
-				'nw'    => TRUE,
-				'wcape' => TRUE,
-			),
-		),
-	);
-
+	if ($fqdn === NULL) {
+		$domain = NULL;	// Unset
+		return '';
+	}
 	if (! is_string($fqdn)) return '';
-	if (is_ip($fqdn))       return $fqdn;
+
+	if (is_ip($fqdn)) return $fqdn;
+
+ 	if (! isset($domain)) {
+		$domain = array();
+ 		if (file_exists(DOMAIN_INI_FILE)) {
+			include(DOMAIN_INI_FILE);	// Set
+		}
+	}
 
 	$result  = array();
 	$dcursor = & $domain;
@@ -2275,6 +840,7 @@ function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $i
 function spam_dispose()
 {
 	get_blocklist(NULL);
+	whois_responsibility(NULL);
 }
 
 // Common bahavior for blocking
