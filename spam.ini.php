@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.69 2007/07/03 14:47:04 henoheno Exp $
+// $Id: spam.ini.php,v 1.70 2007/07/15 15:25:36 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -44,6 +44,7 @@ $blocklist['list'] = array(
 	'B-2'		=> TRUE,
 	'C'			=> TRUE,
 	//'D'		=> TRUE,
+	'E'			=> TRUE,
 	'Z'			=> TRUE,
 );
 
@@ -184,6 +185,7 @@ $blocklist['A-1'] = array(
 	'bittyurl.com',
 	'*.bizz.cc',
 	'*.blo.pl',
+	'*.bo.pl',
 	'briefurl.com',
 	'brokenscript.com',
 	'BucksoGen.com' => array(
@@ -452,7 +454,8 @@ $blocklist['A-1'] = array(
 	'hurl.to',
 	'*.hux.de',
 	'*.i89.us',
-	'iat.net',		// 74.208.58.130 by Tony Carter
+	'iat.net',			// 74.208.58.130 by Tony Carter
+	'ibm.com',			// Correct the /links
 	'*.iceglow.com',
 	'go.id-tv.info',	// 77.232.68.138(77-232-68-138.static.servage.net) by Max Million (max at id-tv.info)
 	'Ideas para Nuevos Mercados SL' => array(
@@ -958,6 +961,7 @@ $blocklist['A-1'] = array(
 	'shurl.net',
 	'sid.to',
 	'simurl.com',
+	'sitefwd.com',
 	'Sitelutions.com' => array(
 		'*.assexy.as',
 		'*.athersite.com',
@@ -996,6 +1000,7 @@ $blocklist['A-1'] = array(
 		'*.subdomain.gr',
 	),
 	'SURL.DK' => array('surl.dk'),	// main page is: s-url.dk
+	'surl.se',
 	'surl.ws',
 	'symy.jp',
 	'tdurl.com',
@@ -1014,6 +1019,7 @@ $blocklist['A-1'] = array(
 		'tinyurl.co.uk',
 	),
 	'titlien.com',
+	'*.tlg.pl',
 	'tlurl.com',
 	'link.toolbot.com',
 	'tnij.org',
@@ -1131,6 +1137,7 @@ $blocklist['A-1'] = array(
 	'urlcutter.com',
 	'urlic.com',
 	'urlin.it',
+	'urlkick.com',
 	'URLLogs.com' => array(
 		'*.urllogs.com',	// 67.15.219.253 by Javier Keeth (abuzant at gmail.com), ns *.pengs.com, 'Hosted by: Gossimer'
 		'.12w.net',			// 67.15.219.253 by Marvin Dreyer (marvin.dreyer at pengs.com), ns *.gossimer.com
@@ -1342,6 +1349,8 @@ $blocklist['A-1'] = array(
 	),
 	'zhukcity.ru',
 	'zippedurl.com',
+	'zr5.us',
+	'*.zs.pl',
 	'*.zu5.net',
 	'zuso.tw',
 	'*.zwap.to',
@@ -1375,6 +1384,7 @@ $blocklist['A-2'] = array(
 	),
 	'*.dtdns.net',			// by jscott at sceiron.com
 	'*.dynu.com',
+	'*.fdns.net',
 	'J-Speed.net' => array(
 		'*.bne.jp',
 		'*.ii2.cc',
@@ -1500,7 +1510,10 @@ $blocklist['B-1'] = array(
 	'*.beeplog.com',
 	'bestfreeforums.com',
 	'Bizcn.com' => '/.*\.w[0-9]+\.bizcn\.com$/', // XiaMen BizCn Computer & Network CO.,LTD
-	'*.blog.com',
+	'Blog.com' => array(
+		'*.blog.com',
+		'*.blogandorra.com',	// by admin.domains at co.blog.com
+	),
 	'*.blog.com.es',
 	'*.blog.hr',
 	'*.blog-fx.com',
@@ -1611,10 +1624,12 @@ $blocklist['B-1'] = array(
 	'*.filelan.com',
 	'*.foren-city.de',
 	'foren-gratis.de',
+	'*.foros.tv',
 	'foroswebgratis.com',
 	'*.forum-on.de',
 	'*.forum5.com',			// by Harry S (hsg944 at gmail.com)
-	'*.forum66.com',
+	'.forum66.com',
+	'*.forums.com',
 	'forumbolt.com',
 	'phpbb.forumgratis.com',
 	'*.forumlivre.com',
@@ -1641,6 +1656,7 @@ $blocklist['B-1'] = array(
 	'freebb.nl',
 	'*.freeclans.de',
 	'*.freelinuxhost.com',	// by 100webspace.com
+	'*.nofeehost.com',
 	'*.freehyperspace.com',
 	'freeforum.at',			// by Sandro Wilhelmy
 	'freeforumshosting.com',	// by Adam Roberts (admin at skaidon.co.uk)
@@ -1677,6 +1693,7 @@ $blocklist['B-1'] = array(
 	'*.gratis-server.de',
 	'groups-beta.google.com',	// by Google
 	'healthcaregroup.com',
+	'*.heliohost.org',
 	'*.hit.bg',				// by forumup.com ??
 	'*.host-page.com',
 	'*.hostingclub.de',
@@ -1790,6 +1807,7 @@ $blocklist['B-1'] = array(
 		'*.monforum.fr',
 	),
 	'*.multiforum.nl',		// by Ron Warris (info at phpbbhost.nl)
+	'*.my10gb.com',
 	'myblog.is',
 	'myblogma.com',
 	'*.myblogvoice.com',
@@ -1807,6 +1825,7 @@ $blocklist['B-1'] = array(
 		'*.freewebpages.org',
 	),
 	'Netscape.com' => array('mywebpage.netscape.com'),
+	'users.newblog.com',
 	'neweconomics.info',
 	'*.nm.ru',
 	'*.obm.cn',				// by xiaobak at yahoo.com.cn
@@ -1825,7 +1844,7 @@ $blocklist['B-1'] = array(
 	),
 	'*.parlaris.com',
 	'*.pathfinder.gr',
-	'*.foros.tv',
+	'*.persianblog.com',
 	'*.phorum.pl',
 	'Phpbb24.com' => array(	// by Daniel Eriksson
 		'*.createforum.us',	// registry at webbland.se
@@ -1845,6 +1864,7 @@ $blocklist['B-1'] = array(
 	'*.prohosting.com',	// by Nick Wood (admin at dns-solutions.net)
 	'*.quickfreehost.com',
 	'quizilla.com',
+	'*.quotaless.com',
 	'*.qupis.com',		// by Xisto Corporation (shridhar at xisto.com)
 	'razyboard.com',
 	'realhp.de',
@@ -1921,6 +1941,22 @@ $blocklist['B-1'] = array(
 		'topix.com',
 		'topix.net',
 	),
+	'UcoZ Web-Services' => array(
+		'*.3dn.ru',
+		'*.clan.su',
+		'*.moy.su',
+		'*.my1.ru',
+		'*.p0.ru',
+		'*.pp.net.ua',
+		'*.ucoz.co.uk',
+		'*.ucoz.com',
+		'*.ucoz.net',
+		'*.ucoz.org',
+		'*.ucoz.ru',
+		'*.ws.co.ua',
+	),
+	'*.unforo.net',
+	'*.vdforum.ru',
 	'*.vtost.com',
 	'*.vidiac.com',
 	'volny.cz',
@@ -2058,21 +2094,7 @@ $blocklist['B-1'] = array(
 	'*.wordpress.com',
 	'.wsboards.com',		// by Chris Breen (Cbween at gmail.com)
 	'xeboards.com',			// by Brian Shea (bshea at xeservers.com)
-	'UcoZ Web-Services' => array(
-		'*.3dn.ru',
-		'*.clan.su',
-		'*.moy.su',
-		'*.my1.ru',
-		'*.p0.ru',
-		'*.pp.net.ua',
-		'*.ucoz.co.uk',
-		'*.ucoz.com',
-		'*.ucoz.net',
-		'*.ucoz.org',
-		'*.ucoz.ru',
-		'*.ws.co.ua',
-	),
-	'*.vdforum.ru',
+	'xfreeforum.com',
 	'.freeblogs.xp.tl',
 	'*.ya.com',				// 'geo.ya.com', 'blogs.ya.com', 'humano.ya.com', 'audio.ya.com'...
 	'YANDEX, LLC.' => array(	// noc at yandex.net
@@ -2139,6 +2161,7 @@ $blocklist['B-2'] = array(
 	'exclusivehotels.com',
 	'info.ems-rfid.com',
 	'farrowhosting.com',	// by Paul Farrow (postmaster at farrowcomputing.com)
+	'fbwloc.com',
 	'.fhmcsa.org.au',
 	'findyourwave.co.uk',
 	'plone4.fnal.gov',
@@ -2202,6 +2225,7 @@ $blocklist['B-2'] = array(
 		'my.ncat.edu',
 		'hlc.ncat.edu',
 	),
+	'placetobe.org',
 	'users.nethit.pl',
 	'nightclubvip.net',
 	'njbodybuilding.com',
@@ -2843,7 +2867,7 @@ $blocklist['C'] = array(
 		'.gerucovo.info',	// by apegityk7224 at writeme.com
 		'.gubiwu.info',		// by lywunef6532 at iname.com
 		'.ijizauax.info',	// by ysauuz2341 at iname.com
-		'.ixahagi.info',	// by famevi9827 at email.com
+		'.ixahagi.info',	// 70.47.89.60 by famevi9827 at email.com
 		'.jiuuz.info',		// by meqil6549 at mail.com
 		'.nudetar.info',	// by vohepafi3536 at techie.com
 		'.nipud.info',		// by bohox9872 at mindless.com
@@ -2858,6 +2882,7 @@ $blocklist['C'] = array(
 		'.udaxu.info',		// by gubima4007 at usa.com
 		'.ulycigop.info',	// by unodyqil6241 at mindless.com
 		'.vubiheq.info',	// by uisujih5849 at hotmail.com
+		'.xyloq.info',		// 70.47.89.60 by yuunehi8586 at myself.com
 		'.yvaxat.info',		// by koqun9660 at mindless.com
 		'.yxyzauiq.info',	// by robemuq8455 at cheerful.com
 	),
@@ -3456,21 +3481,45 @@ $blocklist['C'] = array(
 		'.antivirus2.info',
 	),
 	'wasam at vangers.net' => array(	// by Ashiksh Wasam
+		'.290cabeza.org',	// 69.31.91.226(colo-69-31-91-226.pilosoft.com)
 		'.blogduet.org',
 		'.bossierpainted.org',
 		'.carelf.info',
+		'.cmagic.org',
 		'.cspell.org',
 		'.dspark.org',
 		'.dtonic.org',
 		'.gradetelemundo.info',
 		'.indicadorestmj.info',
+		'.keeleykincaid.org',
 		'.mcharm.info',
 		'.mslook.info',
 		'.phpdinnerware.info',
 		'.pipnickname.info',
+		'.pacolily.org',
+		'.redeemtrabalho.info',
 		'.rnation.org',
+		'.titanmessina.info',
+		'.tragratuit.org',
 		'.uzing.org',
 		'.yeareola.info',
+	),
+	'kadilk at vangers.net' => array(	//  by Kadil Kasekwam
+		'.allbar.info',		// 69.31.91.226
+		'.allersearch.org',
+		'.dynall.org',
+		'.educativaanale.info',
+		'.fastopia.org',
+		'.guildstuscan.org',
+		'.isfelons.org',
+		'.solarissean.org',
+		'.opalbusy.info',
+		'.rblast.org',
+		'.rette.org',
+		'.salthjc.info',
+		'.suvlook.org',
+		'.tarzanyearly.org',
+		'.tulabnsf.org',
 	),
 	'tvaals at vangers.net' => array(	// by Thomas Vaals
 		'.cheapns.org',
@@ -3478,18 +3527,6 @@ $blocklist['C'] = array(
 		'.sfind.net',
 		'.sspot.net',
 		'.suvfind.info',
-	),
-	'kadilk at vangers.net' => array(	// by Kadil Kasekwam
-		'.allbar.info',
-		'.allersearch.org',
-		'.dynall.org',
-		'.educativaanale.info',
-		'.fastopia.org',
-		'.opalbusy.info',
-		'.rblast.org',
-		'.rette.org',
-		'.salthjc.info',
-		'.suvlook.org',
 	),
 	'kasturba at vangers.net' => array(	// by Kasturba Nagari
 		'.finddesk.org',
@@ -4105,6 +4142,7 @@ $blocklist['C'] = array(
 		'.goodlifesearch.info',
 		'.hotnetinfo.info',
 		'.hotpornmovies.org',
+		'.infopilot.info',
 	),
 	'iisuse at gmail.com' => array(	// by vladislav morozov (iisuse at gmail.com). / is spam
 		'.bang-bro.org',
@@ -4355,117 +4393,47 @@ $blocklist['C'] = array(
 		'.sex-beauty.net',
 	),
 	'84.252.148.140' => array(	// 84.252.148.140(kratos.mchost.ru)
+		'.tomdir.info',
+		'.tomdirdirect.info',
+		'.tomdirworld.info',
+		'.treton.info',
+		'.trefas.info',
+		'.tretonmondo.info',
 		'.unefout.info',
+		'.unefoutprojet.info',
 		'.unitfree.info',
+		'.vilret.info',
+		'.vilttown.info',
 		'.votrefout.info',
+		'.warmfind.info',
+		'.warptop.info',
+		'.wildtram.info',
+		'.xofind.info',
+		'.xopdiscover.info',
+		'.xopfind.info',
+		'.xoplocate.info',
+		'.xopseek.info',
+		'.xpfirst.info',
+		'.xphighest.info',
+		'.xptop.info',
+	),
+	'84.252.148.80' => array(	//  84.252.148.80(heimdall.mchost.ru)
+		'.fotonow.info',
+		'.opakit.info',
+		'.opanow.info',
 	),
 	'info at thecanadianmeds.com' => array(	// by Andrey Smirnov (info at thecanadianmeds.com)
 		'.myviagrasite.com',	// 80.74.153.2
 		'.thecanadianmeds.com',	// 80.74.153.17
 	),
-
-	// C-2: Affiliates, Hypes, Catalog retailers, Multi-level marketings, Resellers
-	'15-Mail.com related' => array(
-		'.15-mail.com',				// 202.218.109.45(*.netassist.jp) by yukiyo yamamoto (sunkusu5268 at m4.ktplan.ne.jp)
-		'.1bloglog.com',			// 210.253.115.159 by Yukiyo Yamamoto (info at 15-mail.com)
-		'.investment-school.com',	// 210.253.115.159 by Yukiyo Yamamoto (info at 15-mail.com)
-		'.breakjuku.com',			// 210.253.115.159 (service provider bet.co.jp = xserver.jp)
-		'.nambara.biz',				// by Yukiyo Yamamoto (info at 15-mail.com)
+	'sania at zmail.ru' => array(	// by Mark Williams (sania at zmail.ru)
+		'.bigemot.com',				// 217.11.233.34, / not found
+		'.espharmacy.com',			// 217.11.233.34
+		'.pharmacyonlinenet.com',	// 216.195.51.59, hidden JavaScript
+		'.ringtonecooler.com',		// 217.11.233.34
 	),
-	'.all-affiliater.com',	// 202.222.30.18(sv125.lolipop.jp), ns *.lolipop.jp
-	'E-brainers.com related' => array(
-		// 202.212.14.101
-		'.cyoto-morketing-club.com',	// by Fujio Iwasaki (domain at sppd.co.jp)
-		'.e-brainers.com',				// by Fujio Iwasaki (domain at sppd.co.jp)
-		'.my-tune.jp',					// by brainers Inc.
-		'.technical-support-center.com',// by Fujio Iwasaki (domain at sppd.co.jp)
-		'.weekle.jp',					// by brainers Inc.
 
-		// 210.136.111.56 by Masatoshi Kobayashi (domain at e-brainers.com)
-		// 210.136.111.56 by Fujio Iwasaki (domain at sppd.co.jp)
-		'.3minutes-marketing-club.com',	// by Fujio
-		'.affiliate-vampire.com',		// by Masatoshi
-		'.article-site-power-package.com',	// by Masatoshi
-		'.audio-marketing-club.com',	// by Fujio
-		'.brainers-task-manager.com',	// by Masatoshi
-		'.brainers-troubleshooter-generator.com',	// by Masatoshi
-		'.brainersbuzz.com',			// by Masatoshi
-		'.den4renz-marketing-club.com',	// by Fujio
-		'.english-contents-club.com',	// by Masatoshi
-		'.fly-in-ads-japan.com',		// by Fujio
-		'.free-resalerights-giveaway.com',	// by Fujio
-		'.freegiveawaysecret.com',		// by Masatoshi
-		'.guaranteedvisitorpro.com',	// by Masatoshi
-		'.havads-japan.com',			// by Masatoshi
-		'.info-business123.com',		// by Fujio
-		'.instant-marketing-club.com',	// by Fujio
-		'.marketing-force-japan.com',	// by Fujio
-		'.masatoshikobayashi.com',		// by Fujio
-		'.profitsinstigator.com',		// by Masatoshi Kobayashi (akada@e-brainers.com)
-		'.replytomatt.com',				// by Fujio
-		'.santa-deal.com',				// by Fujio
-		'.santa-deal-summer.com',		// by Fujio
-		'.scratch-card-factory.com',	// by Masatoshi
-		'.script4you-japan.com',		// by Fujio
-		'.sell1000000dollarinjapan.com',// by Fujio
-		'.squeeze-page-secret.com',		// by Masatoshi
-		'.viral-blog-square.com',		// by Fujio
-		'.viralarticle.com',			// by Fujio
-		'.wowhoken.com',				// by Fujio
-
-		// 202.212.14.104 by Fujio Iwasaki  (domain@sppd.co.jp)
-		'.brainerstelevision.com',
-		'.demosite4you.com',
-		'.keywordcatcherpro.com',
-		'.script-marketing-club.com',
-
-		// 202.228.204.140(server.ultimate-marketing-weapon.com) by Masatoshi Kobayashi (akada at e-brainers.com)
-		// 202.228.204.140 by Masatoshi Kobayashi (domain at e-brainers.com)
-		'.brainers.ws',	// 202.228.204.140 by info at key-systems.net, ns *.ultimate-marketing-weapon.com
-		'.brainerscode.com',	// by akada
-		'.brainerslive.com',	// by domain
-		'.brainersreview.com',	// by domain
-		'.brainerstest.com',	// by akada
-		'.otosecret.com',		// by domain
-		'.ultimate-marketing-weapon.com',	// by akada
-		'.planet-club.net',		// 202.228.204.141(server.ultimate-marketing-weapon.com)
-		'.terk.jp',				// by Tsuyoshi Tsukada, QHM
-
-		'.samuraiautoresponder.com',	// 211.125.179.75(bq1.mm22.jp) by Masatoshi Kobayashi (kobayashi at wowhoken.com)
-		'.sppd.co.jp',		// 210.136.106.122 by Studio Map Ltd., ns *.sppd.ne.jp, spam
-	),
-	'.e2996.com',			// 202.181.105.241(sv261.lolipop.jp)
-	'.fx4rich.com',			// 219.94.128.161(www921.sakura.ne.jp) by Yuji Nakano (info at will76.com)
-	'info at kobeweb.jp' => array(
-		'.soholife.jp',		// 211.125.65.203 by Takashige Tabuchi (info at kobeweb.jp)
-		'.kobeweb.jp',		// 59.106.13.51(www421.sakura.ne.jp)
-		'.sloters.tv',		// 211.125.65.203 by Takashige Tabuchi (t-2 at white.interq.or.jp)
-	),
-	'.info-affiliate.net',	// 219.94.148.8(sv41.chicappa.jp)
-	'.infostore.jp',		// 216.255.235.45, ns *.estore.co.jp
-	'JunSuzuki.com' => array(	// e-brainers.com related
-		'.junsuzuki.com',		// 218.216.67.43(s92.xrea.com) by Jun Suzuki (jun_suzuki at compus.net)
-		'.globalswing.biz',		// 210.188.217.109(sv27.xserverzero.net)
-	),
-	'Point-park.com' => array(	// Tadahiro Ogawa (domain at wide.ne.jp)
-		'.11kanji.com',		// 211.10.131.88
-		'.mlmsupport.jp',	// 211.10.131.108 by info at point-park.com
-		'.point-park.com',	// 211.10.131.88
-		'.point-park.jp',	// 43.244.140.160(160.140.244.43.ap.yournet.ne.jp)
-	),
-	'.potitto.info',		// 219.94.132.89(sv450.lolipop.jp)
-	'.sedori-data.com',		// 
-	'.tool4success.com',	// 210.188.201.31(sv70.xserver.jp) by Yukihiro Akada (ml at original-ehon.com)
-	'tera at kirinn.com' => array(	// 59.139.29.234(s240.xrea.com) by Naohsi Terada (tera at kirinn.com)
-		'.e123.info',
-		'.ialchemist.net',
-		'.j012.net',
-		'.xn--yckc2auxd4b6564dogvcf7g.biz',
-	),
-	'.zakkuzaku.com',		// 210.188.201.44(sv83.xserver.jp)
-
-
-	// C-3: Lonely domains (buddies not found yet)
+	// C-2: Lonely domains (buddies not found yet)
 	'.0721-4404.com',
 	'.0nline-porno.info',	// by Timyr (timyr at narod.ru)
 	'.1-click-clipart.com',	// by Big Resources, Inc. (hostmaster at bigresources.com)
@@ -4599,7 +4567,6 @@ $blocklist['C'] = array(
 	'.pelican-bulletin.info',	// by Elizabeth K. Perry (redmonk at mail.ru)
 	'.perevozka777.ru',		// by witalik at gmail.com
 	'.pharmacy2online.com',	// by Mike Hiliok (bbong80 at yahoo.com)
-	'.pharmacyonlinenet.com',	// Mark Williams (sania at zmail.ru), hidden JavaScript
 	'.pills-storage.com',	// by 
 	'.plusintedia.com',		// by g yk (abc00623 at 163.com), seems not used now
 	'.popki.ind.in',			// by Aleksandr Krasnik (supermaster at pisem.net)
@@ -4636,6 +4603,7 @@ $blocklist['C'] = array(
 	'.thetinyurl.com',		// by Beth J. Carter (Beth.J.Carter at thetinyurl.com)
 	'.thetrendy.info',		// by Harold (Harold.J.Craft at pookmail.com), / is blank
 	'.theusapills.com',		// by Dr. Zarman (contactus at theusapills.com)
+	'.tingstock.info',		// 209.160.73.65(delta.xocmep.info) "nice day, commander ;)" by Andrey Konkin (konkinnews55 at yahoo.com)
 	'.topmeds10.com',
 	'*.tv-reklama.info',	// by Kozlov Maxim (m_koz at mail.ru)
 	'.twabout.com',			// by qiu wenbing (qiuwenbing at 126.com), content from l2mpt.net
@@ -4667,7 +4635,12 @@ $blocklist['C'] = array(
 	'.zyguo.info',			// ns globoxhost.net
 	'.zhuyiw.com',			// by zhou yuntao (whzyt0122 at sohu.com)
 
-	// C-4: Not classifiable (information wanted)
+	'.guesttext.info',		// 81.0.195.134 by Grace.D.Kibby pookmail.com, / seems null
+	'.moremu.com',			// 205.134.190.12(amateurlog.com) by Magaly Plumley (domains ay moremu.com)
+	'.tingstock.info',		// 209.160.73.65(delta.xocmep.info) "nice day, commander ;)" by Andrey Konkin (konkinnews55 at yahoo.com)
+	'.truststorepills.com',	// 89.188.113.64(allworldteam.com) by Alexey (admin at myweblogs.net)
+
+	// C-3: Not classifiable (information wanted)
 	//
 	// Something incoming to pukiwiki related sites
 	'nana.co.il related' => array(
@@ -4685,6 +4658,113 @@ $blocklist['D'] = array(
 	//
 	// 'RESERVED',
 );
+
+
+$blocklist['E'] = array(
+	// E: Sample setting of
+	// Affiliates, Hypes, Catalog retailers, Multi-level marketings, Resellers, Ads
+
+	'15-Mail.com related' => array(
+		'.15-mail.com',				// 202.218.109.45(*.netassist.jp) by yukiyo yamamoto (sunkusu5268 at m4.ktplan.ne.jp)
+		'.1bloglog.com',			// 210.253.115.159 by Yukiyo Yamamoto (info at 15-mail.com)
+		'.investment-school.com',	// 210.253.115.159 by Yukiyo Yamamoto (info at 15-mail.com)
+		'.breakjuku.com',			// 210.253.115.159 (service provider bet.co.jp = xserver.jp)
+		'.nambara.biz',				// by Yukiyo Yamamoto (info at 15-mail.com)
+	),
+	'.all-affiliater.com',			// 202.222.30.18(sv125.lolipop.jp), ns *.lolipop.jp
+	'.chachai.com',					// 210.188.205.161(sv339.lolipop.jp) by tetsuo ihira (chachai at hida-kawai.jp)
+	'E-brainers.com related' => array(
+		// 202.212.14.101
+		'.cyoto-morketing-club.com',	// by Fujio Iwasaki (domain at sppd.co.jp)
+		'.e-brainers.com',				// by Fujio Iwasaki (domain at sppd.co.jp)
+		'.my-tune.jp',					// by brainers Inc.
+		'.technical-support-center.com',// by Fujio Iwasaki (domain at sppd.co.jp)
+		'.weekle.jp',					// by brainers Inc.
+
+		// 210.136.111.56 by Masatoshi Kobayashi (domain at e-brainers.com)
+		// 210.136.111.56 by Fujio Iwasaki (domain at sppd.co.jp)
+		'.3minutes-marketing-club.com',	// by Fujio
+		'.affiliate-vampire.com',		// by Masatoshi
+		'.article-site-power-package.com',	// by Masatoshi
+		'.audio-marketing-club.com',	// by Fujio
+		'.brainers-task-manager.com',	// by Masatoshi
+		'.brainers-troubleshooter-generator.com',	// by Masatoshi
+		'.brainersbuzz.com',			// by Masatoshi
+		'.den4renz-marketing-club.com',	// by Fujio
+		'.english-contents-club.com',	// by Masatoshi
+		'.fly-in-ads-japan.com',		// by Fujio
+		'.free-resalerights-giveaway.com',	// by Fujio
+		'.freegiveawaysecret.com',		// by Masatoshi
+		'.guaranteedvisitorpro.com',	// by Masatoshi
+		'.havads-japan.com',			// by Masatoshi
+		'.info-business123.com',		// by Fujio
+		'.instant-marketing-club.com',	// by Fujio
+		'.marketing-force-japan.com',	// by Fujio
+		'.masatoshikobayashi.com',		// by Fujio
+		'.profitsinstigator.com',		// by Masatoshi Kobayashi (akada@e-brainers.com)
+		'.replytomatt.com',				// by Fujio
+		'.santa-deal.com',				// by Fujio
+		'.santa-deal-summer.com',		// by Fujio
+		'.scratch-card-factory.com',	// by Masatoshi
+		'.script4you-japan.com',		// by Fujio
+		'.sell1000000dollarinjapan.com',// by Fujio
+		'.squeeze-page-secret.com',		// by Masatoshi
+		'.viral-blog-square.com',		// by Fujio
+		'.viralarticle.com',			// by Fujio
+		'.wowhoken.com',				// by Fujio
+
+		// 202.212.14.104 by Fujio Iwasaki  (domain@sppd.co.jp)
+		'.brainerstelevision.com',
+		'.demosite4you.com',
+		'.keywordcatcherpro.com',
+		'.script-marketing-club.com',
+
+		// 202.228.204.140(server.ultimate-marketing-weapon.com) by Masatoshi Kobayashi (akada at e-brainers.com)
+		// 202.228.204.140 by Masatoshi Kobayashi (domain at e-brainers.com)
+		'.brainers.ws',	// 202.228.204.140 by info at key-systems.net, ns *.ultimate-marketing-weapon.com
+		'.brainerscode.com',	// by akada
+		'.brainerslive.com',	// by domain
+		'.brainersreview.com',	// by domain
+		'.brainerstest.com',	// by akada
+		'.otosecret.com',		// by domain
+		'.ultimate-marketing-weapon.com',	// by akada
+		'.planet-club.net',		// 202.228.204.141(server.ultimate-marketing-weapon.com)
+		'.terk.jp',				// by Tsuyoshi Tsukada, QHM
+
+		'.samuraiautoresponder.com',	// 211.125.179.75(bq1.mm22.jp) by Masatoshi Kobayashi (kobayashi at wowhoken.com)
+		'.sppd.co.jp',		// 210.136.106.122 by Studio Map Ltd., ns *.sppd.ne.jp, spam
+	),
+	'.e2996.com',			// 202.181.105.241(sv261.lolipop.jp)
+	'.fx4rich.com',			// 219.94.128.161(www921.sakura.ne.jp) by Yuji Nakano (info at will76.com)
+	'info at kobeweb.jp' => array(
+		'.soholife.jp',		// 211.125.65.203 by Takashige Tabuchi (info at kobeweb.jp)
+		'.kobeweb.jp',		// 59.106.13.51(www421.sakura.ne.jp)
+		'.sloters.tv',		// 211.125.65.203 by Takashige Tabuchi (t-2 at white.interq.or.jp)
+	),
+	'.info-affiliate.net',	// 219.94.148.8(sv41.chicappa.jp)
+	'.infostore.jp',		// 216.255.235.45, ns *.estore.co.jp
+	'JunSuzuki.com' => array(	// e-brainers.com related
+		'.junsuzuki.com',		// 218.216.67.43(s92.xrea.com) by Jun Suzuki (jun_suzuki at compus.net)
+		'.globalswing.biz',		// 210.188.217.109(sv27.xserverzero.net)
+	),
+	'Point-park.com' => array(	// Tadahiro Ogawa (domain at wide.ne.jp)
+		'.11kanji.com',		// 211.10.131.88
+		'.mlmsupport.jp',	// 211.10.131.108 by info at point-park.com
+		'.point-park.com',	// 211.10.131.88
+		'.point-park.jp',	// 43.244.140.160(160.140.244.43.ap.yournet.ne.jp)
+	),
+	'.potitto.info',		// 219.94.132.89(sv450.lolipop.jp)
+	'.sedori-data.com',		// 
+	'.tool4success.com',	// 210.188.201.31(sv70.xserver.jp) by Yukihiro Akada (ml at original-ehon.com)
+	'tera at kirinn.com' => array(	// 59.139.29.234(s240.xrea.com) by Naohsi Terada (tera at kirinn.com)
+		'.e123.info',
+		'.ialchemist.net',
+		'.j012.net',
+		'.xn--yckc2auxd4b6564dogvcf7g.biz',
+	),
+	'.zakkuzaku.com',		// 210.188.201.44(sv83.xserver.jp)
+);
+
 
 
 $blocklist['Z'] = array(
