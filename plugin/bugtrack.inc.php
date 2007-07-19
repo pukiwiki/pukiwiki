@@ -1,11 +1,11 @@
 <?php
-// $Id: bugtrack.inc.php,v 1.25 2005/04/03 03:33:47 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: bugtrack.inc.php,v 1.26 2007/07/19 14:07:31 henoheno Exp $
+// Copyright (C)
+//   2002-2005, 2007 PukiWiki Developers Team
+//   2002 Y.MASUI GPL2  http://masui.net/pukiwiki/ masui@masui.net
 //
-// PukiWiki BugTrack plugin
-//
-// Copyright:
-// 2002-2005 PukiWiki Developers Team
-// 2002 Y.MASUI GPL2  http://masui.net/pukiwiki/ masui@masui.net
+// BugTrack plugin
 
 // Numbering format
 define('PLUGIN_BUGTRACK_NUMBER_FORMAT', '%d'); // Like 'page/1'
@@ -236,7 +236,7 @@ function plugin_bugtrack_template($base, $summary, $name, $priority, $state, $ca
 - ${_plugin_bugtrack['priority']}: $priority
 - ${_plugin_bugtrack['state'   ]}: $state
 - ${_plugin_bugtrack['category']}: $category
-- ${_plugin_bugtrack['date'    ]}: now?
+- ${_plugin_bugtrack['date'    ]}: &now;
 - ${_plugin_bugtrack['version' ]}: $version
 
 ** ${_plugin_bugtrack['body']}
