@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.53 2007/06/24 13:59:50 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.55 2007/07/23 14:26:06 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -49,6 +49,9 @@ $css_charset = 'iso-8859-1';
 switch(UI_LANG){
 	case 'ja': $css_charset = 'Shift_JIS'; break;
 }
+
+// MenuBar
+$menu = arg_check('read') && exist_plugin_convert('menu') ? do_plugin_convert('menu') : FALSE;
 
 // ------------------------------------------------------------
 // Output
@@ -156,11 +159,11 @@ function _navigator($key, $value = '', $javascript = ''){
 
 <?php echo $hr ?>
 
-<?php if (arg_check('read') && exist_plugin_convert('menu')) { ?>
+<?php if ($menu) { ?>
 <table border="0" style="width:100%">
  <tr>
   <td class="menubar">
-   <div id="menubar"><?php echo do_plugin_convert('menu') ?></div>
+   <div id="menubar"><?php echo $menu ?></div>
   </td>
   <td valign="top">
    <div id="body"><?php echo $body ?></div>
