@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.55 2007/07/23 14:26:06 henoheno Exp $
+// $Id: pukiwiki.skin.php,v 1.56 2007/07/26 00:57:00 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -159,7 +159,7 @@ function _navigator($key, $value = '', $javascript = ''){
 
 <?php echo $hr ?>
 
-<?php if ($menu) { ?>
+<?php if ($menu !== FALSE) { ?>
 <table border="0" style="width:100%">
  <tr>
   <td class="menubar">
