@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: link.php,v 1.14 2006/09/18 05:23:12 henoheno Exp $
+// $Id: link.php,v 1.15 2007/07/28 13:50:09 henoheno Exp $
 // Copyright (C) 2003-2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -135,8 +135,6 @@ function links_update($page)
 // Init link cache (Called from link plugin)
 function links_init()
 {
-	global $whatsnew;
-
 	if (PKWK_READONLY) return; // Do nothing
 
 	if (ini_get('safe_mode') == '0') set_time_limit(0);
@@ -149,7 +147,7 @@ function links_init()
 
 	$ref   = array(); // 参照元
 	foreach (get_existpages() as $page) {
-		if ($page == $whatsnew) continue;
+		if (is_cantedit($page)) continue;
 
 		$rel   = array(); // 参照先
 		$links = links_get_objects($page);

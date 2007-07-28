@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.63 2007/06/24 13:59:46 henoheno Exp $
+// $Id: html.php,v 1.64 2007/07/28 13:50:09 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -12,7 +12,7 @@
 function catbody($title, $page, $body)
 {
 	global $script, $vars, $arg, $defaultpage, $whatsnew, $help_page, $hr;
-	global $attach_link, $related_link, $cantedit, $function_freeze;
+	global $attach_link, $related_link, $function_freeze;
 	global $search_word_color, $_msg_word, $foot_explain, $note_hr, $head_tags;
 	global $javascript, $nofollow;
 	global $_LANG, $_LINK, $_IMAGE;
@@ -82,7 +82,7 @@ function catbody($title, $page, $body)
 	$link_rename    = & $_LINK['rename'];
 
 	// Init flags
-	$is_page = (is_pagename($_page) && ! arg_check('backup') && $_page != $whatsnew);
+	$is_page = (is_pagename($_page) && ! arg_check('backup') && ! is_cantedit($_page));
 	$is_read = (arg_check('read') && is_page($_page));
 	$is_freeze = is_freeze($_page);
 
@@ -157,7 +157,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 {
 	global $script, $vars, $rows, $cols, $hr, $function_freeze;
 	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel, $_msg_help;
-	global $whatsnew, $_btn_template, $_btn_load, $load_template_func;
+	global $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
 
 	// Newly generate $digest or not
@@ -181,7 +181,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 	if($load_template_func && $b_template) {
 		$pages  = array();
 		foreach(get_existpages() as $_page) {
-			if ($_page == $whatsnew || check_non_list($_page))
+			if (is_cantedit($_page) || check_non_list($_page))
 				continue;
 			$s_page = htmlspecialchars($_page);
 			$pages[$_page] = '   <option value="' . $s_page . '">' .
