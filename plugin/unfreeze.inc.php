@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: unfreeze.inc.php,v 1.12 2007/07/28 13:56:44 henoheno Exp $
-// Copyright (C) 2003-2004 PukiWiki Developers Team
+// $Id: unfreeze.inc.php,v 1.13 2007/07/28 17:13:05 henoheno Exp $
+// Copyright (C) 2003-2004, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 // Unfreeze(Unlock) plugin

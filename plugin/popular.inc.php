@@ -1,14 +1,15 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: popular.inc.php,v 1.17 2007/07/28 14:14:54 henoheno Exp $
+// $Id: popular.inc.php,v 1.18 2007/07/28 17:12:42 henoheno Exp $
+// Copyright (C)
+//   2003-2005, 2007 PukiWiki Developers Team
+//   2002 Kazunori Mizushima <kazunori@uc.netyou.jp>
+// License: WHERE IS THE RECORD?
 //
 // Popular pages plugin: Show an access ranking of this wiki
 // -- like recent plugin, using counter plugin's count --
 
 /*
- * (C) 2003-2005 PukiWiki Developers Team
- * (C) 2002 Kazunori Mizushima <kazunori@uc.netyou.jp>
- *
  * 通算および今日に別けて一覧を作ることができます。
  *
  * [Usage]

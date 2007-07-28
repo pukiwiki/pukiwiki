@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: link.php,v 1.15 2007/07/28 13:50:09 henoheno Exp $
-// Copyright (C) 2003-2006 PukiWiki Developers Team
+// $Id: link.php,v 1.16 2007/07/28 17:13:30 henoheno Exp $
+// Copyright (C) 2003-2006, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 // Backlinks / AutoLinks related functions
