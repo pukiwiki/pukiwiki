@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.34 2007/05/28 16:17:16 henoheno Exp $
+// $Id: rename.inc.php,v 1.35 2007/07/28 14:02:48 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -12,8 +12,6 @@ define('PLUGIN_RENAME_LOGPAGE', ':RenameLog');
 
 function plugin_rename_action()
 {
-	global $whatsnew;
-
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits this');
 
 	$method = plugin_rename_getvar('method');
@@ -28,9 +26,11 @@ function plugin_rename_action()
 
 		$dst = plugin_rename_getvar('dst');
 		$arr1 = preg_replace($src_pattern, $dst, $arr0);
-		foreach ($arr1 as $page)
-			if (! is_pagename($page))
+		foreach ($arr1 as $page) {
+			if (! is_pagename($page)) {
 				return plugin_rename_phase1('notvalid');
+			}
+		}
 
 		// Phase one or three
 		return plugin_rename_regex($arr0, $arr1);
@@ -46,7 +46,7 @@ function plugin_rename_action()
 		} else if (! is_page($refer)) {
 			return plugin_rename_phase1('notpage', $refer);
 
-		} else if ($refer === $whatsnew) {
+		} else if (is_cantedit($refer)) {
 			return plugin_rename_phase1('norename', $refer);
 
 		} else if ($page === '' || $page === $refer) {
@@ -181,13 +181,19 @@ function plugin_rename_refer()
 	$page  = plugin_rename_getvar('page');
 	$refer = plugin_rename_getvar('refer');
 
+	if (is_cantedit($page)) {
+		return plugin_rename_phase2('notvalid');
+	}
+
 	$pages[encode($refer)] = encode($page);
 	if (plugin_rename_getvar('related') != '') {
 		$from = strip_bracket($refer);
 		$to   = strip_bracket($page);
-		foreach (plugin_rename_getrelated($refer) as $_page)
+		foreach (plugin_rename_getrelated($refer) as $_page) {
 			$pages[encode($_page)] = encode(str_replace($from, $to, $_page));
+		}
 	}
+
 	return plugin_rename_phase3($pages);
 }
 
@@ -195,18 +201,20 @@ function plugin_rename_refer()
 function plugin_rename_regex($arr_from, $arr_to)
 {
 	$exists = array();
-	foreach ($arr_to as $page)
-		if (is_page($page))
+	foreach ($arr_to as $page) {
+		if (is_page($page)) {
 			$exists[] = $page;
-
-	if (! empty($exists)) {
-		return plugin_rename_phase1('already', $exists);
-	} else {
-		$pages = array();
-		foreach ($arr_from as $refer)
-			$pages[encode($refer)] = encode(array_shift($arr_to));
-		return plugin_rename_phase3($pages);
+		}
 	}
+	if (! empty($exists)) return plugin_rename_phase1('already', $exists);
+
+	$pages = array();
+	foreach ($arr_from as $refer) {
+		$pages[encode($refer)] = encode(array_shift($arr_to));
+	}
+
+	return plugin_rename_phase3($pages);
+
 }
 
 // Phase three: Confirmation
@@ -404,11 +412,9 @@ function plugin_rename_getrelated($page)
 
 function plugin_rename_getselecttag($page)
 {
-	global $whatsnew;
-
 	$pages = array();
 	foreach (get_existpages() as $_page) {
-		if ($_page === $whatsnew) continue;
+		if (is_cantedit($_page)) continue;
 
 		$selected = ($_page === $page) ? ' selected' : '';
 		$s_page = htmlspecialchars($_page);
