@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: freeze.inc.php,v 1.10 2007/07/28 13:56:44 henoheno Exp $
+// $Id: freeze.inc.php,v 1.11 2007/07/29 09:45:51 henoheno Exp $
+// Copyright: 2003-2004, 2007 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
 // Freeze(Lock) plugin
 
@@ -14,7 +16,7 @@ function plugin_freeze_action()
 	global $_msg_invalidpass, $_msg_freezing, $_btn_freeze;
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
-	if (! $function_freeze  || is_cantedit($page) || ! is_page($page))
+	if (! $function_freeze || is_cantedit($page) || ! is_page($page))
 		return array('msg' => '', 'body' => '');
 
 	$pass = isset($vars['pass']) ? $vars['pass'] : NULL;
