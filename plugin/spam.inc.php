@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: spam.inc.php,v 1.5 2007/07/29 14:03:54 henoheno Exp $
+// $Id: spam.inc.php,v 1.6 2007/07/29 14:25:39 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -76,10 +76,15 @@ EOD;
 		$pages = get_existpages();
 		sort($pages, SORT_STRING);
 
+		$ob    = ob_get_level();
 		$count = 0;
 		foreach($pages as $pagename)
 		{
 			++$count;
+			if ($count % 50 == 0) {
+				flush();
+				if ($ob) @ob_flush();
+			}
 			if ($start !== '') {
 				if ($start == $pagename) {
 					$start = '';
