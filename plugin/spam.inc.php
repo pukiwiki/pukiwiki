@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: spam.inc.php,v 1.1 2007/07/29 13:06:05 henoheno Exp $
+// $Id: spam.inc.php,v 1.2 2007/07/29 13:07:43 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -36,8 +36,8 @@ function plugin_spam_action()
 // mode=pages: Check existing pages
 function plugin_spam_pages()
 {
-	require(LIB_DIR . 'spam.php');
-	require(LIB_DIR . 'spam_pickup.php');
+	require_once(LIB_DIR . 'spam.php');
+	require_once(LIB_DIR . 'spam_pickup.php');
 
 	global $vars, $post, $_msg_invalidpass;
 
