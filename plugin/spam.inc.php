@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: spam.inc.php,v 1.6 2007/07/29 14:25:39 henoheno Exp $
+// $Id: spam.inc.php,v 1.7 2007/07/29 14:31:24 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -41,6 +41,7 @@ function plugin_spam_pages()
 
 	global $vars, $post, $_msg_invalidpass;
 
+	$ob      = ob_get_level();
 	$script  = get_script_uri() . '?plugin=spam&mode=pages';
 	$start   = isset($post['start']) ? $post['start'] : NULL;
 	$s_start = ($start === NULL) ? '' : htmlspecialchars($start);
@@ -72,25 +73,28 @@ EOD;
 		);
 
 		echo $form;
+		flush();
+		if ($ob) @ob_flush();
 
 		$pages = get_existpages();
 		sort($pages, SORT_STRING);
 
-		$ob    = ob_get_level();
-		$count = 0;
+		$count  = 0;
+		$search = 0;
 		foreach($pages as $pagename)
 		{
 			++$count;
-			if ($count % 50 == 0) {
-				flush();
-				if ($ob) @ob_flush();
-			}
 			if ($start !== '') {
 				if ($start == $pagename) {
 					$start = '';
 				} else {
 					continue;
 				}
+			}
+			++$search;
+			if ($search % 50 == 0) {
+				flush();
+				if ($ob) @ob_flush();
 			}
 
 			$progress = check_uri_spam(get_source($pagename, TRUE, TRUE), $method);
@@ -109,7 +113,7 @@ EOD;
 		}
 		echo '<br/>' . "\n";
 		echo '----' . '<br/>' . "\n";
-		echo $count . ' pages';
+		echo $search . '/' . $count . ' pages';
 
 		exit;
 	}
