@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: spam.inc.php,v 1.2 2007/07/29 13:07:43 henoheno Exp $
+// $Id: spam.inc.php,v 1.3 2007/07/29 13:36:35 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -41,12 +41,15 @@ function plugin_spam_pages()
 
 	global $vars, $post, $_msg_invalidpass;
 
-	$script = get_script_uri() . '?plugin=spam&mode=pages';
-	$form   = <<<EOD
+	$script  = get_script_uri() . '?plugin=spam&mode=pages';
+	$start   = isset($post['start']) ? $post['start'] : NULL;
+	$s_start = ($start === NULL) ? '' : htmlspecialchars($start);
+	$form    = <<<EOD
 <p>Checking existing pages (badhost only)</p>
 <form action="$script" method="post">
  <div>
-  <input type="password" name="pass" size="12" />
+  Start from: <input type="start" name="start" size="40" value="$s_start" /><br/>
+  Pass: <input type="password" name="pass"  size="12" /><br/>
   <input type="submit"   name="ok"   value="check" />
  </div>
 </form>
@@ -71,6 +74,14 @@ EOD;
 		echo $form;
 		foreach(get_existpages() as $file => $pagename)
 		{
+			if ($start !== NULL) {
+				if ($start == $pagename) {
+					$start = NULL;
+				} else {
+					continue;
+				}
+			}
+
 			$progress = check_uri_spam(get_source($pagename, TRUE, TRUE), $method);
 			if (empty($progress['is_spam'])) {
 				echo $pagename;
