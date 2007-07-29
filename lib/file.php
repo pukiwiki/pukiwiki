@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.81 2007/07/28 14:41:56 henoheno Exp $
+// $Id: file.php,v 1.82 2007/07/29 12:18:08 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -38,7 +38,12 @@ function get_source($page = NULL, $lock = TRUE, $join = FALSE)
 
 		if ($join) {
 			// Returns a value
-			$result = str_replace("\r", '', fread($fp, filesize($path)));
+			$size = filesize($path);
+			if ($size > 0) {
+				$result = str_replace("\r", '', fread($fp, filesize($path)));
+			} else {
+				$result = '';
+			}
 		} else {
 			// Returns an array
 			// Removing line-feeds: Because file() doesn't remove them.
