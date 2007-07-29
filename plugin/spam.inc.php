@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: spam.inc.php,v 1.4 2007/07/29 14:00:35 henoheno Exp $
+// $Id: spam.inc.php,v 1.5 2007/07/29 14:03:54 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -90,10 +90,10 @@ EOD;
 
 			$progress = check_uri_spam(get_source($pagename, TRUE, TRUE), $method);
 			if (empty($progress['is_spam'])) {
-				echo $pagename;
+				echo htmlspecialchars($pagename);
 				echo '<br/>' . "\n";
 			} else {
-				echo '<font color="red"><strong>' . $pagename . '</strong></font>';
+				echo '<font color="red"><strong>' . htmlspecialchars($pagename) . '</strong></font>';
 				echo ':<br/>' . "\n";
 				$tmp = summarize_detail_badhost($progress);
 				if ($tmp != '') {
