@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: spam.inc.php,v 1.7 2007/07/29 14:31:24 henoheno Exp $
+// $Id: spam.inc.php,v 1.8 2007/07/29 14:36:35 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -92,7 +92,7 @@ EOD;
 				}
 			}
 			++$search;
-			if ($search % 50 == 0) {
+			if ($search % 100 == 0) {
 				flush();
 				if ($ob) @ob_flush();
 			}
