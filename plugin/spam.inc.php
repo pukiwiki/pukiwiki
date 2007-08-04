@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: spam.inc.php,v 1.8 2007/07/29 14:36:35 henoheno Exp $
+// $Id: spam.inc.php,v 1.9 2007/08/04 14:20:49 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -43,20 +43,26 @@ function plugin_spam_pages()
 
 	$ob      = ob_get_level();
 	$script  = get_script_uri() . '?plugin=spam&mode=pages';
+
 	$start   = isset($post['start']) ? $post['start'] : NULL;
 	$s_start = ($start === NULL) ? '' : htmlspecialchars($start);
+	$pass    = isset($post['pass']) ? $post['pass'] : NULL;
+	$sort    = isset($post['sort']);
+	$s_sort  = $sort ? ' checked' : '';
+	$per     = 100;
+
 	$form    = <<<EOD
-<p>Checking existing pages (badhost only)</p>
+<p>Pages: Check existing pages (badhost only at this time)</p>
 <form action="$script" method="post">
  <div>
   Start from: <input type="start" name="start" size="40" value="$s_start" /><br/>
+  <input type="checkbox" name="sort" value="on"$s_sort />Sort (heavy)<br/>
   Pass: <input type="password" name="pass"  size="12" /><br/>
-  <input type="submit"   name="ok"   value="check" />
+  <input type="submit" name="check" value="check" />
  </div>
 </form>
 EOD;
 
-	$pass = isset($post['pass']) ? $post['pass'] : NULL;
 	if ($pass !== NULL && pkwk_login($pass)) {
 		// Check and report
 
@@ -77,10 +83,9 @@ EOD;
 		if ($ob) @ob_flush();
 
 		$pages = get_existpages();
-		sort($pages, SORT_STRING);
+		if ($sort) sort($pages, SORT_STRING);
 
-		$count  = 0;
-		$search = 0;
+		$count = $search = $hit = 0;
 		foreach($pages as $pagename)
 		{
 			++$count;
@@ -92,7 +97,7 @@ EOD;
 				}
 			}
 			++$search;
-			if ($search % 100 == 0) {
+			if ($search % $per == 0) {
 				flush();
 				if ($ob) @ob_flush();
 			}
@@ -102,7 +107,8 @@ EOD;
 				echo htmlspecialchars($pagename);
 				echo '<br/>' . "\n";
 			} else {
-				echo '<font color="red"><strong>' . htmlspecialchars($pagename) . '</strong></font>';
+				++$hit;
+				echo '<font color="red"><strong>FOUND at "' . htmlspecialchars($pagename) . '"</strong></font>';
 				echo ':<br/>' . "\n";
 				$tmp = summarize_detail_badhost($progress);
 				if ($tmp != '') {
@@ -113,13 +119,13 @@ EOD;
 		}
 		echo '<br/>' . "\n";
 		echo '----' . '<br/>' . "\n";
-		echo $search . '/' . $count . ' pages';
+		echo 'Pages: ' . $hit . ' hit / ' . $search . ' checked / ' . $count . ' all';
 
 		exit;
 	}
 
 	$msg   = 'Spam tools: Pages';
-	$body  = ($pass === NULL) ? '' : "<p><strong>$_msg_invalidpass</strong></p>\n";
+	$body  = ($pass === NULL) ? '' : '<p><strong>' . $_msg_invalidpass . '</strong></p>' . "\n";
 	$body .= $form;
 	return array('msg'=>$msg, 'body'=>$body);
 }
