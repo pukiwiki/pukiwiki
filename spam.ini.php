@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.73 2007/08/04 13:54:15 henoheno Exp $
+// $Id: spam.ini.php,v 1.74 2007/08/05 15:05:39 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -1426,6 +1426,7 @@ $blocklist['A-2'] = array(
 			'*.zapto.org',
 	),
 	'*.zenno.info',
+	'*.opendns.be',
 	'.cm',	// 'Cameroon' ccTLD, sometimes used as typo of '.com',
 			// and all non-recorded domains redirect to 'agoga.com' now
 			// http://money.cnn.com/magazines/business2/business2_archive/2007/06/01/100050989/index.htm
@@ -2607,13 +2608,14 @@ $blocklist['C'] = array(
 		'.freeforworld.info',		// by Varsylenko
 		'.gitsite.info',			// by Petrov
 		'.goodworksite.info',		// by Varsylenko
-		'.michost.info',			// by LAURI FUNK
+		'.michost.info',			// by LAURI
 		'.onall.info',				// by Varsylenko
 		'.organiq.info',			// by Petrov
-		'.parther.info',			// by LAURI FUNK
+		'.parther.info',			// by LAURI
 		'.powersiteonline.info',	// by Varsylenko
 		'.rentmysite.info',			// by Varsylenko
 		'.levines.info',			// by Petrov
+		'.modacha.info',			// by LAURI
 		'.mp3vault.info',			// by Petrov
 		'.sernost.info',			// by Petrov
 		'.sexdrink.info',			// by Petrov
@@ -3613,6 +3615,7 @@ $blocklist['C'] = array(
 	'john780321 at yahoo.com' => array(	// by John  Brown
 		'.bestdiscountpharmacy.biz',	// 2007-01-27, 61.144.122.45
 		'.drugs4all.us',				// 2007-03-09, 202.67.150.250
+		'.online-pharmacy-no-prescription.org',	// 69.56.135.222(de.87.3845.static.theplanet.com)
 	),
 	'tremagl.freet at gmail.com' => array(	// by Treman Eagles, redirect to searchadv.com
 		'.bertela.info',
@@ -4213,6 +4216,14 @@ $blocklist['C'] = array(
 		'.oilkeys.com',
 		'.thekeyse.com',
 	),
+	'nijeoi at hotmai.com' => array(
+		//by  66.232.126.74 Nicol Makerson, the same approach and timing of clickx at bk.ru
+		'.qicad.com',
+		'.qubyd.com',
+		'.mocyq.com',
+		'.zeliw.com',
+		'.zimev.com',
+	),
 	'porychik at hot.ee' => array(	// by Igor
 		'.tedstate.info',	// "Free Web Hosting"
 		'.giftsee.com',
@@ -4609,15 +4620,34 @@ $blocklist['C'] = array(
 			'.sqrrt.cn',
 			'.ywtmd.cn',
 	),
-	'ganzer3' => array(	// by Roman Shteynshlyuger (ganzer3 at gmail.com)
-		'.bruised-cridet.info',		// 69.64.82.78(*.dedicated.abac.net)
-		'.bruised-criedit.info',	// 69.64.82.76(*.dedicated.abac.net)
-		'.bruised-drecit.info',		// 69.64.82.78(*.dedicated.abac.net)
-		'.bruised-reditcards.info',	// 69.64.82.78(*.dedicated.abac.net)
-		'.cleaningupcedirt.info',	// 69.64.82.77(*.dedicated.abac.net)
-		'.cleaningupcrecit.info',	// 69.64.82.79(*.dedicated.abac.net)
-	),
+	'ganzer3 at gmail.com' => array(	// by Roman Shteynshlyuger (ganzer3 at gmail.com)
 
+		// 69.64.82.76(*.dedicated.abac.net)
+		'.bruised-criedit.info',
+		'.bruised-crtedit.info',
+		'.bruised-czrd.info',
+		'.bruisedcreitd.info',
+
+		// 69.64.82.77(*.dedicated.abac.net)
+		'.bruised-credtid.info',
+		'.bruisedcriet.info',
+		'.bruisedredit.info',
+		'.cleaningupccreditcards.info',
+		'.cleaningupcedirt.info',
+		'.cleaningupcreait.info',
+
+		// 69.64.82.78(*.dedicated.abac.net)
+		'.bruised-cridet.info',
+		'.bruised-drecit.info',
+		'.bruised-reditcards.info',
+		'.bruisedcredtid.info',
+		'.cleanup-criet.info',
+
+		// 69.64.82.79(*.dedicated.abac.net)
+		'.bruised-creid.info',
+		'.cleaningup-ceridt.info',
+		'.cleaningupcrecit.info',
+	),
 	// C-2: Lonely domains (buddies not found yet)
 	'.0721-4404.com',
 	'.0nline-porno.info',	// by Timyr (timyr at narod.ru)
@@ -4692,6 +4722,7 @@ $blocklist['C'] = array(
 	'.google-pharmacy.com',	// by alex (mdisign1997 at yahoo.com), hiding with urlx.org etc
 	'.greatbestwestern.org',// by gao.wungao at gmail.com
 	'.greatsexdate.com',	// by Andreas Crablo (crablo at hotmail.com)
+	'.guesttext.info',		// 81.0.195.134 by Grace.D.Kibby pookmail.com, / seems null
 	'.guild-wars-online.com',	// by Fuzhou Tianmeng Touzi Zixun Co.,Ltd (welkin at skyunion.com)
 	'.happyhost.org',		// by Paul Zamnov (paul at zamnov.be)
 	'.hloris.com',			// by Wilshi Jamil (ixisus at front.ru)
@@ -4721,9 +4752,11 @@ $blocklist['C'] = array(
 	'.ls.la',				// by Milton McLellan (McLellanMilton at yahoo.com)
 	'.mamaha.info',			// by Alex Klimovsky (paganec at gmail.com), seems now constructiong
 	'.manseekingwomanx.com',// by Bill Peterson (coccooc at fastmail.fm)
+	'.medicineonlinestore.com',	// Alexander Korovin (domains at molddata.md)
 	'.medpharmaworldguide.com',	// by Nick Ivchenkov (signmark at gmail.com), / not found
 	'.megvideochatlive.info',	// Bad seo
 	'.milfxxxpass.com',		// by Morozov Pavlik (rulets at gmail.com)
+	'.moremu.com',			// 205.134.190.12(amateurlog.com) by Magaly Plumley (domains ay moremu.com)
 	'.myfgj.info',			// by Filus (softscript at gmail.com)
 	'.mujiki.com',			// by Mila Contora (ebumsn at ngs.ru)
 	'.mxsupportmailer.com',
@@ -4774,12 +4807,14 @@ $blocklist['C'] = array(
 	'.sslcp.com',			// by shufang zhou (info at 6come.com), dns *.hichina.com
 	'.sticy.info',			// by Richard D. Mccall (richardmccall at yahoo.com)
 	'.superrwm.info',		// by Dark Dux (duxdark at yahoo.com)
+	'.superverizonringtones.com',	// by joshua at list.ru
 	'.thehostcity.com',		// Domains by Proxy
 	'.thetinyurl.com',		// by Beth J. Carter (Beth.J.Carter at thetinyurl.com), / is blank
 	'.thetrendy.info',		// by Harold (Harold.J.Craft at pookmail.com), / is blank
 	'.theusapills.com',		// by Dr. Zarman (contactus at theusapills.com)
 	'.tingstock.info',		// 209.160.73.65(delta.xocmep.info) "nice day, commander ;)" by Andrey Konkin (konkinnews55 at yahoo.com)
 	'.topmeds10.com',
+	'.truststorepills.com',	// 89.188.113.64(allworldteam.com) by Alexey (admin at myweblogs.net)
 	'.twabout.com',			// by qiu wenbing (qiuwenbing at 126.com), content from l2mpt.net
 	'.uaro.info',			// by Neru Pioner (neru at smtp.ru)
 	'.unctad.net',			// by gfdogfd at lovespb.com
@@ -4807,12 +4842,6 @@ $blocklist['C'] = array(
 	'.zlocorp.com',			// by tonibcrus at hotpop.com, spammed well with "http ://zlocorp.com/"
 	'.zyguo.info',			// ns globoxhost.net
 	'.zhuyiw.com',			// by zhou yuntao (whzyt0122 at sohu.com)
-
-	'.guesttext.info',		// 81.0.195.134 by Grace.D.Kibby pookmail.com, / seems null
-	'.medicineonlinestore.com',	// Alexander Korovin (domains at molddata.md)
-	'.moremu.com',			// 205.134.190.12(amateurlog.com) by Magaly Plumley (domains ay moremu.com)
-	'.tingstock.info',		// 209.160.73.65(delta.xocmep.info) "nice day, commander ;)" by Andrey Konkin (konkinnews55 at yahoo.com)
-	'.truststorepills.com',	// 89.188.113.64(allworldteam.com) by Alexey (admin at myweblogs.net)
 
 	// C-3: Not classifiable (information wanted)
 	//
