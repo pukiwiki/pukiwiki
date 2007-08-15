@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.140 2006/06/11 14:35:39 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.140.2.1 2007/08/15 15:28:57 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -153,6 +153,48 @@ $nofollow = 0; // 1 = Try hiding from search engines
 
 // PKWK_ALLOW_JAVASCRIPT - Allow / Prohibit using JavaScript
 define('PKWK_ALLOW_JAVASCRIPT', 0);
+
+/////////////////////////////////////////////////
+// Spam URI insertion filtering
+
+$spam = 0;	// 1 = On
+
+if ($spam) {
+	$spam = array();
+
+	// Threshold and rules for insertion (default)
+	$spam['method']['_default'] = array(
+		'_comment'     => '_default',
+		'quantity'     =>  8,
+		//'non_uniquri'  =>  3,
+		'non_uniqhost' =>  3,
+		'area_anchor'  =>  0,
+		'area_bbcode'  =>  0,
+		'uniqhost'     => TRUE,
+		'badhost'      => TRUE,
+		'asap'         => TRUE, // Stop as soon as possible (quick but less-info)
+	);
+
+	// For editing
+	// NOTE:
+	// Any thresholds may LOCK your contents by
+	// "posting one URL" many times.
+	// Any rules will lock contents that have NG things already.
+	$spam['method']['edit'] = array(
+		// Supposed_by_you(n) * Edit_form_spec(2) * Margin(1.5)
+		'_comment'     => 'edit',
+		//'quantity'     => 60 * 3,
+		//'non_uniquri'  =>  5 * 3,
+		//'non_uniqhost' => 50 * 3,
+		//'area_anchor'  => 30 * 3,
+		//'area_bbcode'  => 15 * 3,
+		'uniqhost'     => TRUE,
+		'badhost'      => TRUE,
+		'asap'         => TRUE,
+	);
+
+	//$spam['exitmode'] = 'dump'; // Dump progress
+}
 
 /////////////////////////////////////////////////
 // TrackBack feature

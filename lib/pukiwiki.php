@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.php,v 1.11 2005/09/11 05:58:33 henoheno Exp $
+// $Id: pukiwiki.php,v 1.11.2.1 2007/08/15 15:28:32 henoheno Exp $
 //
 // PukiWiki 1.4.*
 //  Copyright (C) 2002-2005 by PukiWiki Developers Team
@@ -81,6 +81,41 @@ if (isset($vars['cmd'])) {
 } else {
 	$plugin = '';
 }
+
+// Spam filtering
+if ($spam && $method != 'GET') {
+	// Adjustment
+	$_spam   = ! empty($spam);
+	$_plugin = strtolower($plugin);
+	switch ($_plugin) {
+		case 'search': $_spam = FALSE; break;
+		case 'edit':
+			$_page = & $page;
+			if (isset($vars['add']) && $vars['add']) {
+				$_plugin = 'add';
+			}
+			break;
+		case 'bugtrack': $_page = & $vars['base'];  break;
+		case 'tracker':  $_page = & $vars['_base']; break;
+		case 'read':     $_page = & $page;  break;
+		default: $_page = & $refer; break;
+	}
+	if ($_spam) {
+		require(LIB_DIR . 'spam.php');
+		require(LIB_DIR . 'spam_pickup.php');
+		if (isset($spam['method'][$_plugin])) {
+			$_method = & $spam['method'][$_plugin];
+		} else if (isset($spam['method']['_default'])) {
+			$_method = & $spam['method']['_default'];
+		} else {
+			$_method = array();
+		}
+		$exitmode = isset($spam['exitmode']) ? $spam['exitmode'] : '';
+		pkwk_spamfilter($method . ' to #' . $_plugin, $_page, $vars, $_method, $exitmode);
+	}
+}
+
+// Plugin execution
 if ($plugin != '') {
 	if (exist_plugin_action($plugin)) {
 		// Found and exec
@@ -101,6 +136,7 @@ if ($plugin != '') {
 	}
 }
 
+// Page output
 $title = htmlspecialchars(strip_bracket($base));
 $page  = make_search($base);
 if (isset($retvars['msg']) && $retvars['msg'] != '') {
