@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.75 2007/08/12 14:26:37 henoheno Exp $
+// $Id: spam.ini.php,v 1.75.2.1 2007/08/15 15:27:07 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
