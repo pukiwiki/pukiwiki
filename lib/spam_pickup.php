@@ -1,5 +1,5 @@
 <?php
-// $Id: spam_pickup.php,v 1.1 2007/07/03 14:47:20 henoheno Exp $
+// $Id: spam_pickup.php,v 1.1.2.1 2007/08/15 15:26:08 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
