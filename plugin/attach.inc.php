@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.82 2006/04/14 23:51:12 teanan Exp $
+// $Id: attach.inc.php,v 1.82.2.1 2007/08/15 15:34:43 henoheno Exp $
 // Copyright (C)
 //   2003-2006 PukiWiki Developers Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
@@ -449,7 +449,11 @@ class AttachFile
 		$this->logname  = $this->basename . '.log';
 		$this->exist    = file_exists($this->filename);
 		$this->time     = $this->exist ? filemtime($this->filename) - LOCALZONE : 0;
-		$this->md5hash  = $this->exist ? md5_file($this->filename) : '';
+	}
+
+	function gethash()
+	{
+		return $this->exist ? md5_file($this->filename) : '';
 	}
 
 	// ファイル情報取得
@@ -563,6 +567,7 @@ class AttachFile
 			}
 		}
 		$info = $this->toString(TRUE, FALSE);
+		$hash = $this->gethash();
 
 		$retval = array('msg'=>sprintf($_attach_messages['msg_info'], htmlspecialchars($this->file)));
 		$retval['body'] = <<< EOD
@@ -574,7 +579,7 @@ class AttachFile
  <dt>$info</dt>
  <dd>{$_attach_messages['msg_page']}:$s_page</dd>
  <dd>{$_attach_messages['msg_filename']}:{$this->filename}</dd>
- <dd>{$_attach_messages['msg_md5hash']}:{$this->md5hash}</dd>
+ <dd>{$_attach_messages['msg_md5hash']}:$hash</dd>
  <dd>{$_attach_messages['msg_filesize']}:{$this->size_str} ({$this->size} bytes)</dd>
  <dd>Content-type:{$this->type}</dd>
  <dd>{$_attach_messages['msg_date']}:{$this->time_str}</dd>
