@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.31 2007/07/29 13:05:15 henoheno Exp $
+// $Id: spam.php,v 1.31.2.1 2007/08/15 15:26:51 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
