@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.42 2007/08/19 12:38:25 henoheno Exp $
-// Copyright (C) 2001-2006 PukiWiki Developers Team
+// $Id: edit.inc.php,v 1.43 2007/08/19 12:43:01 henoheno Exp $
+// Copyright (C) 2001-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 // Edit plugin (cmd=edit)
