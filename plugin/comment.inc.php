@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: comment.inc.php,v 1.36 2006/01/28 14:54:51 teanan Exp $
+// $Id: comment.inc.php,v 1.37 2007/08/19 13:55:04 henoheno Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2005, 2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -68,7 +68,7 @@ function plugin_comment_action()
 
 	$title = $_title_updated;
 	$body = '';
-	if (md5(@join('', get_source($vars['refer']))) != $vars['digest']) {
+	if (md5(get_source($vars['refer'], TRUE, TRUE)) != $vars['digest']) {
 		$title = $_title_comment_collided;
 		$body  = $_msg_comment_collided . make_pagelink($vars['refer']);
 	}

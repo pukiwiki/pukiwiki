@@ -1,7 +1,7 @@
 <?php
-// $Id: article.inc.php,v 1.25 2005/09/24 01:12:29 henoheno Exp $
+// $Id: article.inc.php,v 1.26 2007/08/19 13:55:04 henoheno Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2005, 2007 PukiWiki Developers Team
 //   2002      Originally written by OKAWARA,Satoshi <kawara@dml.co.jp>
 //             http://www.dml.co.jp/~kawara/pukiwiki/pukiwiki.php
 //
@@ -88,7 +88,7 @@ function plugin_article_action()
 	$postdata_input = $article . "\n";
 	$body = '';
 
-	if (md5(@join('', get_source($post['refer']))) != $post['digest']) {
+	if (md5(get_source($post['refer'], TRUE, TRUE)) != $post['digest']) {
 		$title = $_title_collided;
 
 		$body = $_msg_collided . "\n";

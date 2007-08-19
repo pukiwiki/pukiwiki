@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.64 2007/07/28 13:50:09 henoheno Exp $
+// $Id: html.php,v 1.65 2007/08/19 13:59:07 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -161,7 +161,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 	global $notimeupdate;
 
 	// Newly generate $digest or not
-	if ($digest === FALSE) $digest = md5(join('', get_source($page)));
+	if ($digest === FALSE) $digest = md5(get_source($page, TRUE, TRUE));
 
 	$refer = $template = '';
  

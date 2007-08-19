@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.92 2007/07/28 13:50:09 henoheno Exp $
+// $Id: func.php,v 1.93 2007/08/19 13:59:07 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -135,7 +135,7 @@ function auto_template($page)
 		$template_page = preg_replace($rule_pattrn, $template, $page);
 		if (! is_page($template_page)) continue;
 
-		$body = join('', get_source($template_page));
+		$body = get_source($template_page, TRUE, TRUE);
 
 		// Remove fixed-heading anchors
 		$body = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $body);
@@ -679,7 +679,7 @@ function get_autoaliases($word = '')
 ((?:(?!\]\]).)+)    # (2) alias link
 \]\]                # close bracket
 EOD;
-		$postdata = join('', get_source($aliaspage));
+		$postdata = get_source($aliaspage, TRUE, TRUE);
 		$matches  = array();
 		$count = 0;
 		$max   = max($autoalias_max_words, 0);

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.82 2007/07/29 12:18:08 henoheno Exp $
+// $Id: file.php,v 1.83 2007/08/19 13:59:07 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -81,7 +81,7 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	$postdata = make_str_rules($postdata);
 
 	// Create and write diff
-	$oldpostdata = is_page($page) ? join('', get_source($page)) : '';
+	$oldpostdata = is_page($page) ? get_source($page, TRUE, TRUE) : '';
 	$diffdata    = do_diff($oldpostdata, $postdata);
 	file_write(DIFF_DIR, $page, $diffdata);
 
@@ -292,9 +292,11 @@ function add_recent($page, $recentpage, $subject = '', $limit = 0)
 
 	// Load
 	$lines = $matches = array();
-	foreach (get_source($recentpage) as $line)
-		if (preg_match('/^-(.+) - (\[\[.+\]\])$/', $line, $matches))
+	foreach (get_source($recentpage) as $line) {
+		if (preg_match('/^-(.+) - (\[\[.+\]\])$/', $line, $matches)) {
 			$lines[$matches[2]] = $line;
+		}
+	}
 
 	$_page = '[[' . $page . ']]';
 

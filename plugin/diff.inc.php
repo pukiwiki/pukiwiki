@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: diff.inc.php,v 1.18 2005/12/10 12:48:02 henoheno Exp $
+// $Id: diff.inc.php,v 1.19 2007/08/19 13:55:04 henoheno Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2005, 2007 PukiWiki Developers Team
 //   2002      Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -53,7 +53,7 @@ function plugin_diff_view($page)
 		}
 		$msg = '<pre>' . diff_style_to_css(htmlspecialchars(join('', file($filename)))) . '</pre>' . "\n";
 	} else if ($is_page) {
-		$diffdata = trim(htmlspecialchars(join('', get_source($page))));
+		$diffdata = trim(htmlspecialchars(get_source($page, TRUE, TRUE)));
 		$msg = '<pre><span class="diff_added">' . $diffdata . '</span></pre>' . "\n";
 	} else {
 		return array('msg'=>$_title_diff, 'body'=>$_msg_notfound);

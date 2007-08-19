@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.43 2007/08/19 12:43:01 henoheno Exp $
+// $Id: edit.inc.php,v 1.44 2007/08/19 13:55:04 henoheno Exp $
 // Copyright (C) 2001-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -27,7 +27,7 @@ function plugin_edit_action()
 		return plugin_edit_cancel();
 	}
 
-	$postdata = @join('', get_source($page));
+	$postdata = get_source($page, TRUE, TRUE);
 	if ($postdata == '') $postdata = auto_template($page);
 
 	return array('msg'=>$_title_edit, 'body'=>edit_form($page, $postdata));
@@ -43,7 +43,7 @@ function plugin_edit_preview()
 	// Loading template
 	if (isset($post['template_page']) && is_page($post['template_page'])) {
 
-		$post['msg'] = join('', get_source($post['template_page']));
+		$post['msg'] = get_source($post['template_page'], TRUE, TRUE);
 
 		// Cut fixed anchors
 		$post['msg'] = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $post['msg']);
@@ -55,9 +55,9 @@ function plugin_edit_preview()
 	// Compat: add plugin and adding contents
 	if (isset($vars['add']) && $vars['add']) {
 		if (isset($post['add_top']) && $post['add_top']) {
-			$postdata  = $postdata . "\n\n" . @join('', get_source($page));
+			$postdata  = $postdata . "\n\n" . get_source($page, TRUE, TRUE);
 		} else {
-			$postdata  = @join('', get_source($page)) . "\n\n" . $postdata;
+			$postdata  = get_source($page, TRUE, TRUE) . "\n\n" . $postdata;
 		}
 	}
 
@@ -188,7 +188,7 @@ function plugin_edit_write()
 	$retvars = array();
 
 	// Collision Detection
-	$oldpagesrc = join('', get_source($page));
+	$oldpagesrc = get_source($page, TRUE, TRUE);
 	$oldpagemd5 = md5($oldpagesrc);
 	if ($digest != $oldpagemd5) {
 		$post['digest'] = $oldpagemd5; // Reset
@@ -207,9 +207,9 @@ function plugin_edit_write()
 	if ($add) {
 		// Compat: add plugin and adding contents
 		if (isset($post['add_top']) && $post['add_top']) {
-			$postdata  = $msg . "\n\n" . @join('', get_source($page));
+			$postdata  = $msg . "\n\n" . get_source($page, TRUE, TRUE);
 		} else {
-			$postdata  = @join('', get_source($page)) . "\n\n" . $msg;
+			$postdata  = get_source($page, TRUE, TRUE) . "\n\n" . $msg;
 		}
 	} else {
 		// Edit or Remove

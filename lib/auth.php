@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: auth.php,v 1.20 2007/07/28 14:39:09 henoheno Exp $
+// $Id: auth.php,v 1.21 2007/08/19 13:59:07 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -176,7 +176,7 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 	if ($auth_method_type == 'pagename') {
 		$target_str = $page; // Page name
 	} else if ($auth_method_type == 'contents') {
-		$target_str = join('', get_source($page)); // Its contents
+		$target_str = get_source($page, TRUE, TRUE); // Its contents
 	}
 
 	$user_list = array();
