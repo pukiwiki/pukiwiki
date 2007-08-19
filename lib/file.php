@@ -30,7 +30,7 @@ function get_source($page = NULL, $lock = TRUE, $join = FALSE)
 
 		if ($lock) {
 			$fp = @fopen($path, 'r');
-			if ($fp == FALSE) return FALSE;
+			if ($fp === FALSE) return FALSE;
 			flock($fp, LOCK_SH);
 		}
 
