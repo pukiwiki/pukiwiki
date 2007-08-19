@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.84 2007/08/19 14:08:47 henoheno Exp $
+// $Id: file.php,v 1.85 2007/08/19 14:10:15 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -37,7 +37,7 @@ function get_source($page = NULL, $lock = TRUE, $join = FALSE)
 
 		if ($lock) {
 			$fp = @fopen($path, 'r');
-			if ($fp == FALSE) return FALSE;
+			if ($fp === FALSE) return FALSE;
 			flock($fp, LOCK_SH);
 		}
 
