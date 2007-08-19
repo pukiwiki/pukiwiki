@@ -47,7 +47,7 @@ function plugin_vote_action()
 		$postdata      .= $vote_str;
 	}
 
-	if (md5(@join('', get_source($vars['refer']))) != $vars['digest']) {
+	if (md5(get_source($vars['refer'], TRUE, TRUE)) !== $vars['digest']) {
 		$title = $_title_collided;
 
 		$s_refer          = htmlsc($vars['refer']);

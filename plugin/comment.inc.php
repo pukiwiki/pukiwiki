@@ -68,7 +68,7 @@ function plugin_comment_action()
 
 	$title = $_title_updated;
 	$body = '';
-	if (md5(@join('', get_source($vars['refer']))) != $vars['digest']) {
+	if (md5(get_source($vars['refer'], TRUE, TRUE)) !== $vars['digest']) {
 		$title = $_title_comment_collided;
 		$body  = $_msg_comment_collided . make_pagelink($vars['refer']);
 	}

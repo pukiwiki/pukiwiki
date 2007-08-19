@@ -36,7 +36,7 @@ function plugin_insert_action()
 	$postdata_input = $insert . "\n";
 
 	$body = '';
-	if (md5(@join('', get_source($vars['refer']))) != $vars['digest']) {
+	if (md5(get_source($vars['refer'], TRUE, TRUE)) !== $vars['digest']) {
 		$title = $_title_collided;
 		$body  = $_msg_collided . "\n";
 

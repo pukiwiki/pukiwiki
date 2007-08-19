@@ -88,7 +88,7 @@ function plugin_article_action()
 	$postdata_input = $article . "\n";
 	$body = '';
 
-	if (md5(@join('', get_source($post['refer']))) != $post['digest']) {
+	if (md5(get_source($post['refer'], TRUE, TRUE)) !== $post['digest']) {
 		$title = $_title_collided;
 
 		$body = $_msg_collided . "\n";

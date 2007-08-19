@@ -190,7 +190,7 @@ function plugin_edit_write()
 	// Collision Detection
 	$oldpagesrc = join('', get_source($page));
 	$oldpagemd5 = md5($oldpagesrc);
-	if ($digest != $oldpagemd5) {
+	if ($digest !== $oldpagemd5) {
 		$vars['digest'] = $oldpagemd5; // Reset
 
 		$original = isset($vars['original']) ? $vars['original'] : '';

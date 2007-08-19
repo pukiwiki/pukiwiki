@@ -209,7 +209,7 @@ function plugin_pcomment_insert()
 		$count    = count($postdata);
 
 		$digest = isset($vars['digest']) ? $vars['digest'] : '';
-		if (md5(join('', $postdata)) != $digest) {
+		if (md5(join('', $postdata)) !== $digest) {
 			$ret['msg']  = $_pcmt_messages['title_collided'];
 			$ret['body'] = $_pcmt_messages['msg_collided'];
 		}
