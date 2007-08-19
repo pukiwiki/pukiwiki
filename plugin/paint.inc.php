@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 //
-// $Id: paint.inc.php,v 1.18 2005/01/29 02:49:41 henoheno Exp $
+// $Id: paint.inc.php,v 1.19 2007/08/19 14:20:58 henoheno Exp $
 //
 // Paint plugin
 
@@ -256,7 +256,7 @@ function paint_insert_ref($filename)
 	}
 
 	// 更新の衝突を検出
-	if (md5(join('',$postdata_old)) != $vars['digest'])
+	if (md5(join('',$postdata_old)) !== $vars['digest'])
 	{
 		$ret['msg'] = $_paint_messages['msg_title_collided'];
 		$ret['body'] = $_paint_messages['msg_collided'];

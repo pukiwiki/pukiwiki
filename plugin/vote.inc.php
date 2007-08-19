@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: vote.inc.php,v 1.25 2007/08/19 13:55:04 henoheno Exp $
+// $Id: vote.inc.php,v 1.26 2007/08/19 14:20:58 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -47,7 +47,7 @@ function plugin_vote_action()
 		$postdata      .= $vote_str;
 	}
 
-	if (md5(get_source($vars['refer'], TRUE, TRUE)) != $vars['digest']) {
+	if (md5(get_source($vars['refer'], TRUE, TRUE)) !== $vars['digest']) {
 		$title = $_title_collided;
 
 		$s_refer          = htmlspecialchars($vars['refer']);

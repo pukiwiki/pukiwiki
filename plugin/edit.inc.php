@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.44 2007/08/19 13:55:04 henoheno Exp $
+// $Id: edit.inc.php,v 1.45 2007/08/19 14:20:58 henoheno Exp $
 // Copyright (C) 2001-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -190,7 +190,7 @@ function plugin_edit_write()
 	// Collision Detection
 	$oldpagesrc = get_source($page, TRUE, TRUE);
 	$oldpagemd5 = md5($oldpagesrc);
-	if ($digest != $oldpagemd5) {
+	if ($digest !== $oldpagemd5) {
 		$post['digest'] = $oldpagemd5; // Reset
 
 		$original = isset($post['original']) ? $post['original'] : '';

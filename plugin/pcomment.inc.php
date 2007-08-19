@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pcomment.inc.php,v 1.44 2006/10/03 14:16:31 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.45 2007/08/19 14:20:58 henoheno Exp $
 //
 // pcomment plugin - Show/Insert comments into specified (another) page
 //
@@ -208,7 +208,7 @@ function plugin_pcomment_insert()
 		$count    = count($postdata);
 
 		$digest = isset($vars['digest']) ? $vars['digest'] : '';
-		if (md5(join('', $postdata)) != $digest) {
+		if (md5(join('', $postdata)) !== $digest) {
 			$ret['msg']  = $_pcmt_messages['title_collided'];
 			$ret['body'] = $_pcmt_messages['msg_collided'];
 		}
