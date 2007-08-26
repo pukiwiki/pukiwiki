@@ -1,5 +1,5 @@
 <?php
-// $Id: spam_pickup.php,v 1.2 2007/08/18 14:47:13 henoheno Exp $
+// $Id: spam_pickup.php,v 1.3 2007/08/26 14:27:02 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -23,7 +23,7 @@ function uri_pickup($string = '')
 	preg_match_all(
 		// scheme://userinfo@host:port/path/or/pathinfo/maybefile.and?query=string#fragment
 		// Refer RFC3986 (Regex below is not strict)
-		'#(\b[a-z][a-z0-9.+-]{1,8}):[/\\\]+' .	// 1: Scheme
+		'#(\b[a-z][a-z0-9.+-]{1,8}):[/\\\]+' .		// 1: Scheme
 		'(?:' .
 			'([^\s<>"\'\[\]/\#?@]*)' .		// 2: Userinfo (Username)
 		'@)?' .
@@ -31,7 +31,7 @@ function uri_pickup($string = '')
 			// 3: Host
 			'\[[0-9a-f:.]+\]' . '|' .				// IPv6([colon-hex and dot]): RFC2732
 			'(?:[0-9]{1,3}\.){3}[0-9]{1,3}' . '|' .	// IPv4(dot-decimal): 001.22.3.44
-			'[a-z0-9_-][a-z0-9_.-]+[a-z0-9_-]' . 		// hostname(FQDN) : foo.example.org
+			'[a-z0-9_-][a-z0-9_.-]+[a-z0-9_-]' . 	// hostname(FQDN) : foo.example.org
 		')' .
 		'(?::([0-9]*))?' .					// 4: Port
 		'((?:/+[^\s<>"\'\[\]/\#]+)*/+)?' .	// 5: Directory path or path-info
@@ -114,7 +114,6 @@ function uri_pickup_implode($uri = array())
 
 	return implode('', $tmp);
 }
-
 
 // ---------------------
 // URI normalization
@@ -656,7 +655,7 @@ function _preg_replace_callback_domain_exposure($matches = array())
 	return $result;
 }
 
-// Preprocess: rawurldecode() and adding space(s) and something
+// Preprocess: minor-rawurldecode() and adding space(s) and something
 // to detect/count some URIs _if possible_
 // NOTE: It's maybe danger to var_dump(result). [e.g. 'javascript:']
 // [OK] http://victim.example.org/?site:nasty.example.org
@@ -667,7 +666,20 @@ function spam_uri_pickup_preprocess($string = '', $method = array())
 {
 	if (! is_string($string)) return '';
 
-	$string = spam_uri_removing_hocus_pocus(rawurldecode($string), $method);
+	// rawurldecode(), just to catch encoded 'http://path/to/file', not to change '%20' to ' '
+	$string = strtr(
+		$string,
+		array(
+			'%3A' => ':',
+			'%3a' => ':',
+			'%2F' => '/',
+			'%2f' => '/',
+			'%5C' => '\\',
+			'%5c' => '\\',
+		)
+	);
+
+	$string = spam_uri_removing_hocus_pocus($string, $method);
 	//var_dump(htmlspecialchars($string));
 
 	// Domain exposure (simple)
@@ -676,15 +688,16 @@ function spam_uri_pickup_preprocess($string = '', $method = array())
 	$string = preg_replace(
 		'#h?ttp://' .
 		'(' .
-			'ime\.nu/' . '|' .	// 2ch.net
-			'ime\.st/' . '|' .	// 2ch.net
+			'ime\.(?:nu|st)/' . '|' .	// 2ch.net
 			'link\.toolbot\.com/' . '|' .
 			'urlx\.org/' . '|' .
 			'big5.51job.com/gate/big5/'	 . '|' .
 			'big5.china.com/gate/big5/'	 . '|' .
+			'big5.shippingchina.com:8080/' . '|' .
 			'big5.xinhuanet.com/gate/big5/' . '|' .
 			'bhomiyo.com/en.xliterate/' . '|' .
-			'google.com/translate_c\?u=(?:http://)?' .
+			'google.com/translate_c\?u=(?:http://)?' . '|' .
+			'web.archive.org/web/2[^/]*/(?:http://)?' .
 		')' .
 		'([a-z0-9.%_-]+\.[a-z0-9.%_-]+)' .	// nasty.example.org
 		'#i',
@@ -711,7 +724,7 @@ function spam_uri_pickup_preprocess($string = '', $method = array())
 			')' .
 			'/' .
 			'([a-z0-9?=&.%_/\'\\\+-]+)' .				// 3:path/?query=foo+bar+
-			'\bsite:([a-z0-9.%_-]+\.[a-z0-9.%_-]+)' .	// 4:site:nasty.example.com
+			'(?:\b|%20)site:([a-z0-9.%_-]+\.[a-z0-9.%_-]+)' .	// 4:site:nasty.example.com
 			'()' .										// 5:Preserve or remove?
 			'#i',
 		),
