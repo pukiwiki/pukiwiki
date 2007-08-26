@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.148 2007/02/11 05:53:30 henoheno Exp $
+// $Id: pukiwiki.ini.php,v 1.149 2007/08/26 15:19:48 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -181,13 +181,13 @@ if ($spam) {
 	// "posting one URL" many times.
 	// Any rules will lock contents that have NG things already.
 	$spam['method']['edit'] = array(
-		// Supposed_by_you(n) * Edit_form_spec(2) * Margin(1.5)
+		// Supposed_by_you(n) * Margin(1.5)
 		'_comment'     => 'edit',
-		//'quantity'     => 60 * 3,
-		//'non_uniquri'  =>  5 * 3,
-		//'non_uniqhost' => 50 * 3,
-		//'area_anchor'  => 30 * 3,
-		//'area_bbcode'  => 15 * 3,
+		//'quantity'     => 60 * 1.5,
+		//'non_uniquri'  =>  5 * 1.5,
+		//'non_uniqhost' => 50 * 1.5,
+		//'area_anchor'  => 30 * 1.5,
+		//'area_bbcode'  => 15 * 1.5,
 		'uniqhost'     => TRUE,
 		'badhost'      => TRUE,
 		'asap'         => TRUE,
