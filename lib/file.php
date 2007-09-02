@@ -39,6 +39,8 @@ function get_source($page = NULL, $lock = TRUE, $join = FALSE)
 			$size = filesize($path);
 			if ($size === FALSE) {
 				$result = FALSE;
+			} else if ($size == 0) {
+				$result = '';
 			} else {
 				$result = fread($fp, $size);
 				if ($result !== FALSE) {
