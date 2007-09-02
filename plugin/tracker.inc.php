@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.39 2007/08/05 09:57:23 henoheno Exp $
+// $Id: tracker.inc.php,v 1.40 2007/09/02 14:43:26 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -76,23 +76,15 @@ $hiddens
 EOD;
 }
 
+// Add new page
 function plugin_tracker_action()
 {
 	global $post, $vars, $now;
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
-	$config_name = isset($post['_config']) ? $post['_config'] : '';
-
-	$config = new Config('plugin/tracker/' . $config_name);
-	if (! $config->read()) {
-		return '<p>config file \'' . htmlspecialchars($config_name) . '\' not found.</p>';
-	}
-
-	$config->config_name = $config_name;
-	$source              = $config->page . '/page';
-	$refer               = isset($post['_refer']) ? $post['_refer'] : $post['_base'];
-
+	$base  = isset($post['_base'])   ? $post['_base']  : '';
+	$refer = isset($post['_refer'])  ? $post['_refer'] : $base;
 	if (! is_pagename($refer)) {
 		return array(
 			'msg'  => 'cannot write',
@@ -100,17 +92,9 @@ function plugin_tracker_action()
 		);
 	}
 
-	if (! is_page($source)) {
-		return array(
-			'msg'  => 'cannot write',
-			'body' => 'page template (' . htmlspecialchars($source) . ') is not exist.'
-		);
-	}
-
-	// Page name will be decided here
-	$base = $post['_base'];
-	$num  = 0;
+	// $page name to add will be decided here
 	$name = isset($post['_name']) ? $post['_name'] : '';
+	$num  = 0;
 	if (isset($post['_page'])) {
 		$page = $real = $post['_page'];
 	} else {
@@ -118,13 +102,25 @@ function plugin_tracker_action()
 		$page = get_fullname('./' . $real, $base);
 	}
 	if (! is_pagename($page)) $page = $base;
-
 	while (is_page($page)) {
 		$real = ++$num;
 		$page = $base . '/' . $real;
 	}
 
-	$postdata = plugin_tracker_get_source($source);
+	// Loading configuration
+	$config_name = isset($post['_config']) ? $post['_config'] : '';
+	$config = new Config('plugin/tracker/' . $config_name);
+	if (! $config->read()) {
+		return '<p>config file \'' . htmlspecialchars($config_name) . '\' not found.</p>';
+	}
+	$config->config_name = $config_name;
+	$template_page = $config->page . '/page';
+	if (! is_page($template_page)) {
+		return array(
+			'msg'  => 'cannot write',
+			'body' => 'page template (' . htmlspecialchars($template_page) . ') is not exist.'
+		);
+	}
 
 	// Default
 	$_post = array_merge($post, $_FILES);
@@ -134,29 +130,54 @@ function plugin_tracker_action()
 	$_post['_real'] = $real;
 	// $_post['_refer'] = $_post['refer'];
 
-	$fields = plugin_tracker_get_fields($page, $refer, $config);
-
 	// Creating an empty page, before attaching files
 	pkwk_touch_file(get_filename($page));
 
-	foreach (array_keys($fields) as $key) {
-		$value = isset($_post[$key]) ?
-			$fields[$key]->format_value($_post[$key]) : '';
+	// Load $fields
+	$fields = plugin_tracker_get_fields($page, $refer, $config);
+	$from = $to = array();
+	foreach (array_keys($fields) as $field) {
+		$from[] = '[' . $field . ']';
+		$to[]   = isset($_post[$field]) ? $fields[$field]->format_value($_post[$field]) : '';
+	}
+	unset($fields);
 
-		foreach (array_keys($postdata) as $num) {
-			if (trim($postdata[$num]) == '') continue;
+	// Load $template
+	$template = plugin_tracker_get_source($template_page);
 
-			$postdata[$num] = str_replace(
-				'[' . $key . ']',
-				($postdata[$num]{0} == '|' || $postdata[$num]{0} == ':') ?
-					str_replace('|', '&#x7c;', $value) : $value,
-				$postdata[$num]
-			);
+	// Repalace every [$field]s to real values in the $template
+	$replace = $replace_e = array();
+	foreach (array_keys($template) as $num) {
+		if (trim($template[$num]) == '') continue;
+		$letter = $template[$num]{0};
+		if ($letter == '|' || $letter == ':') {
+			// Escape for some TextFormattingRules: <table> and <dr>
+			$replace_e[$num] = $template[$num];
+		} else {
+			$replace[$num]   = $template[$num];
+		}
+	}
+	foreach (str_replace($from,   $to,   $replace  ) as $num => $line) {
+		$template[$num] = $line;
+	}
+	// Escape for some TextFormattingRules: <table> and <dr>
+	if ($replace_e) {
+		$to_e = array();
+		foreach($to as $value) {
+			if (strpos($value, '|') !== FALSE) {
+				// Escape for some TextFormattingRules: <table> and <dr>
+				$to_e[] = str_replace('|', '&#x7c;', $value);
+			} else{
+				$to_e[] = $value;	
+			}
+		}
+		foreach (str_replace($from, $to_e, $replace_e) as $num => $line) {
+			$template[$num] = $line;
 		}
 	}
 
-	// Writing page data, without touch
-	page_write($page, join('', $postdata));
+	// Write $template, without touch
+	page_write($page, join('', $template));
 
 	pkwk_headers_sent();
 	header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
@@ -681,7 +702,7 @@ class Tracker_list
 		$this->rows    = array();
 		$this->order   = array();
 
-		$pattern = join('', plugin_tracker_get_source($config->page . '/page'));
+		$pattern = plugin_tracker_get_source($config->page . '/page', TRUE);
 
 		// Convert block-plugins to fields
 		// Incleasing and decreasing around #comment etc, will be covererd with [_block_xxx]
@@ -722,7 +743,7 @@ class Tracker_list
 
 		// Compat: 'move to [[page]]' (bugtrack plugin)
 		$matches = array();
-		if (preg_match('/move\sto\s(.+)/', $source[0], $matches)) {
+		if (! empty($source) && preg_match('/move\sto\s(.+)/', $source[0], $matches)) {
 			$to_page = strip_bracket(trim($matches[1]));
 			if (! is_page($to_page)) {
 				return;	// Invalid
@@ -910,9 +931,9 @@ class Tracker_list
 	}
 }
 
-function plugin_tracker_get_source($page)
+function plugin_tracker_get_source($page, $join = FALSE)
 {
-	$source = get_source($page);
+	$source = get_source($page, TRUE, $join);
 
 	// Remove fixed-heading anchors
 	$source = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $source);
