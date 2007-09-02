@@ -195,7 +195,7 @@ function attach_upload($file, $page, $pass = NULL)
 		chmod($obj->filename, PLUGIN_ATTACH_FILE_MODE);
 
 	if (is_page($page))
-		touch(get_filename($page));
+		pkwk_touch_file(get_filename($page));
 
 	$obj->getstatus();
 	$obj->status['pass'] = ($pass !== TRUE && $pass !== NULL) ? md5($pass) : '';
