@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.87 2007/07/30 14:30:14 henoheno Exp $
+// $Id: attach.inc.php,v 1.88 2007/09/02 12:35:00 henoheno Exp $
 // Copyright (C)
 //   2003-2007 PukiWiki Developers Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
@@ -195,7 +195,7 @@ function attach_upload($file, $page, $pass = NULL)
 		chmod($obj->filename, PLUGIN_ATTACH_FILE_MODE);
 
 	if (is_page($page))
-		touch(get_filename($page));
+		pkwk_touch_file(get_filename($page));
 
 	$obj->getstatus();
 	$obj->status['pass'] = ($pass !== TRUE && $pass !== NULL) ? md5($pass) : '';
