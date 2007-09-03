@@ -1,10 +1,15 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.40 2007/09/02 14:43:26 henoheno Exp $
+// $Id: tracker.inc.php,v 1.41 2007/09/03 15:31:48 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 // Issue tracker plugin (See Also bugtrack plugin)
+
+define('PLUGIN_TRACKER_USAGE', '#tracker([config[/form][,basepage]])');
+
+define('PLUGIN_TRACKER_DEFAULT_CONFIG', 'default');
+define('PLUGIN_TRACKER_DEFAULT_FORM',   'form');
 
 // #tracker_list: Excluding pattern
 define('PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN','#^SubMenu$|/#');	// 'SubMenu' and using '/'
@@ -13,50 +18,49 @@ define('PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN','#^SubMenu$|/#');	// 'SubMenu' and 
 // #tracker_list: Show error rows (can't capture columns properly)
 define('PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE', 1);
 
+
+// Show a form
 function plugin_tracker_convert()
 {
 	global $script, $vars;
 
 	if (PKWK_READONLY) return ''; // Show nothing
 
-	$base = $refer = $vars['page'];
+	$base = $refer = isset($vars['page']) ? $vars['page'] : '';
+	$config_name = PLUGIN_TRACKER_DEFAULT_CONFIG;
+	$form        = PLUGIN_TRACKER_DEFAULT_FORM;
 
-	$config_name = 'default';
-	$form = 'form';
-	$options = array();
-	if (func_num_args()) {
-		$args = func_get_args();
-		switch (count($args))
-		{
-			case 3:
-				$options = array_splice($args, 2);
-			case 2:
-				$args[1] = get_fullname($args[1], $base);
-				$base    = is_pagename($args[1]) ? $args[1] : $base;
-			case 1:
-				$config_name = ($args[0] != '') ? $args[0] : $config_name;
-				list($config_name, $form) = array_pad(explode('/', $config_name, 2), 2, $form);
+	$args = func_get_args();
+	$argc = count($args);
+	if ($argc > 2) {
+		return '<p>' . PLUGIN_TRACKER_USAGE . '</p>';
+	} else {
+		if ($argc > 1) {
+			// Base page name
+			$arg = get_fullname($args[1], $base);
+			if (is_pagename($arg)) $base = $arg;
+		}
+		if ($argc > 0 && $args[0] != '') {
+			// Configuration name AND form name
+			$arg = explode('/', $args[0], 2);
+			$config_name = ($arg[0] != '') ? $arg[0] : PLUGIN_TRACKER_DEFAULT_CONFIG;
+			$form        = (count($arg) > 1) ? $arg[1] : PLUGIN_TRACKER_DEFAULT_FORM;
 		}
 	}
 
 	$config = new Config('plugin/tracker/' . $config_name);
-
 	if (! $config->read()) {
-		return '<p>config file \'' . htmlspecialchars($config_name) . '\' not found.</p>';
+		return '<p>#tracker: Config \'' . htmlspecialchars($config_name) . '\' not found</p>';
 	}
-
 	$config->config_name = $config_name;
-
-	$fields = plugin_tracker_get_fields($base, $refer, $config);
-
 	$form = $config->page . '/' . $form;
 	if (! is_page($form)) {
-		return '<p>config file \'' . make_pagelink($form) . '\' not found.</p>';
+		return '<p>#tracker: Form \'' . make_pagelink($form) . '\' not found</p>';
 	}
 
 	$retval  = convert_html(plugin_tracker_get_source($form));
 	$hiddens = '';
-
+	$fields = plugin_tracker_get_fields($base, $refer, $config);
 	foreach (array_keys($fields) as $name) {
 		$replace = $fields[$name]->get_tag();
 		if (is_a($fields[$name], 'Tracker_field_hidden')) {
@@ -619,7 +623,7 @@ function plugin_tracker_list_convert()
 {
 	global $vars;
 
-	$config = 'default';
+	$config = PLUGIN_TRACKER_DEFAULT_CONFIG;
 	$page   = $refer = $vars['page'];
 	$field  = '_page';
 	$order  = '';
