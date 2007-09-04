@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.41 2007/09/03 15:31:48 henoheno Exp $
+// $Id: tracker.inc.php,v 1.42 2007/09/04 14:09:43 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -22,7 +22,7 @@ define('PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE', 1);
 // Show a form
 function plugin_tracker_convert()
 {
-	global $script, $vars;
+	global $vars;
 
 	if (PKWK_READONLY) return ''; // Show nothing
 
@@ -33,7 +33,7 @@ function plugin_tracker_convert()
 	$args = func_get_args();
 	$argc = count($args);
 	if ($argc > 2) {
-		return '<p>' . PLUGIN_TRACKER_USAGE . '</p>';
+		return PLUGIN_TRACKER_USAGE . '<br />';
 	} else {
 		if ($argc > 1) {
 			// Base page name
@@ -43,38 +43,42 @@ function plugin_tracker_convert()
 		if ($argc > 0 && $args[0] != '') {
 			// Configuration name AND form name
 			$arg = explode('/', $args[0], 2);
-			$config_name = ($arg[0] != '') ? $arg[0] : PLUGIN_TRACKER_DEFAULT_CONFIG;
+			$config_name = ($arg[0] != '')   ? $arg[0] : PLUGIN_TRACKER_DEFAULT_CONFIG;
 			$form        = (count($arg) > 1) ? $arg[1] : PLUGIN_TRACKER_DEFAULT_FORM;
 		}
 	}
 
 	$config = new Config('plugin/tracker/' . $config_name);
 	if (! $config->read()) {
-		return '<p>#tracker: Config \'' . htmlspecialchars($config_name) . '\' not found</p>';
+		return '#tracker: Config \'' . htmlspecialchars($config_name) . '\' not found<br />';
 	}
 	$config->config_name = $config_name;
 	$form = $config->page . '/' . $form;
 	if (! is_page($form)) {
-		return '<p>#tracker: Form \'' . make_pagelink($form) . '\' not found</p>';
+		return '#tracker: Form \'' . make_pagelink($form) . '\' not found<br />';
 	}
 
-	$retval  = convert_html(plugin_tracker_get_source($form));
-	$hiddens = '';
+	$from   = $to = $hidden = array();
 	$fields = plugin_tracker_get_fields($base, $refer, $config);
-	foreach (array_keys($fields) as $name) {
-		$replace = $fields[$name]->get_tag();
-		if (is_a($fields[$name], 'Tracker_field_hidden')) {
-			$hiddens .= $replace;
-			$replace  = '';
+	foreach (array_keys($fields) as $field) {
+		$from[] = '[' . $field . ']';
+		$_to    = $fields[$field]->get_tag();
+		if (is_a($fields[$field], 'Tracker_field_hidden')) {
+			$hidden[] = $_to;
+			$to[]     = '';
+		} else {
+			$to[]     = $_to;
 		}
-		$retval = str_replace('[' . $name . ']', $replace, $retval);
 	}
 
+	$script = get_script_uri();
+	$retval = str_replace($from, $to, convert_html(plugin_tracker_get_source($form)));
+	$hidden = implode('<br />' . "\n", $hidden);
 	return <<<EOD
 <form enctype="multipart/form-data" action="$script" method="post">
 <div>
 $retval
-$hiddens
+$hidden
 </div>
 </form>
 EOD;
@@ -87,8 +91,8 @@ function plugin_tracker_action()
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
-	$base  = isset($post['_base'])   ? $post['_base']  : '';
-	$refer = isset($post['_refer'])  ? $post['_refer'] : $base;
+	$base  = isset($post['_base'])  ? $post['_base']  : '';
+	$refer = isset($post['_refer']) ? $post['_refer'] : $base;
 	if (! is_pagename($refer)) {
 		return array(
 			'msg'  => 'cannot write',
@@ -150,22 +154,22 @@ function plugin_tracker_action()
 	$template = plugin_tracker_get_source($template_page);
 
 	// Repalace every [$field]s to real values in the $template
-	$replace = $replace_e = array();
+	$subject = $subject_e = array();
 	foreach (array_keys($template) as $num) {
 		if (trim($template[$num]) == '') continue;
 		$letter = $template[$num]{0};
 		if ($letter == '|' || $letter == ':') {
 			// Escape for some TextFormattingRules: <table> and <dr>
-			$replace_e[$num] = $template[$num];
+			$subject_e[$num] = $template[$num];
 		} else {
-			$replace[$num]   = $template[$num];
+			$subject[$num]   = $template[$num];
 		}
 	}
-	foreach (str_replace($from,   $to,   $replace  ) as $num => $line) {
+	foreach (str_replace($from,   $to,   $subject  ) as $num => $line) {
 		$template[$num] = $line;
 	}
 	// Escape for some TextFormattingRules: <table> and <dr>
-	if ($replace_e) {
+	if ($subject_e) {
 		$to_e = array();
 		foreach($to as $value) {
 			if (strpos($value, '|') !== FALSE) {
@@ -175,7 +179,7 @@ function plugin_tracker_action()
 				$to_e[] = $value;	
 			}
 		}
-		foreach (str_replace($from, $to_e, $replace_e) as $num => $line) {
+		foreach (str_replace($from, $to_e, $subject_e) as $num => $line) {
 			$template[$num] = $line;
 		}
 	}
@@ -188,78 +192,50 @@ function plugin_tracker_action()
 	exit;
 }
 
-/*
-function plugin_tracker_inline()
-{
-	global $vars;
-
-	if (PKWK_READONLY) return ''; // Show nothing
-
-	$args = func_get_args();
-	if (count($args) < 3) return FALSE;
-
-	$body = array_pop($args);
-	list($config_name, $field) = $args;
-
-	$config = new Config('plugin/tracker/' . $config_name);
-
-	if (! $config->read()) {
-		return 'config file \'' . htmlspecialchars($config_name) . '\' not found.';
-	}
-
-	$config->config_name           = $config_name;
-	$fields                        = plugin_tracker_get_fields($vars['page'], $vars['page'], $config);
-	$fields[$field]->default_value = $body;
-
-	return $fields[$field]->get_tag();
-}
-*/
-
-// Construct field objects
+// Construct $fields (an array of Tracker_field objects)
 function plugin_tracker_get_fields($base, $refer, & $config)
 {
 	global $now, $_tracker_messages;
 
 	$fields = array();
 
-	foreach (
-		array(
-			// Reserved words
-			'_date'  =>'text',	// Post date
-			'_update'=>'date',	// Last modified date
-			'_past'  =>'past',	// Elapsed time (passage)
-			'_page'  =>'page',	// Page name
-			'_name'  =>'text',	// Page name specified by poster
-			'_real'  =>'real',	// Page name (Real)
-			'_refer' =>'page',	// Page name refer from this (Page who has forms)
-			'_base'  =>'page',
-			'_submit'=>'submit'
-		) as $field => $class)
-	{
-		$class = 'Tracker_field_' . $class;
-		$fields[$field] = & new $class(
-			array($field, $_tracker_messages['btn' . $field], '', '20', ''),
-			$base,
-			$refer,
-			$config
-		);
-	}
-
 	foreach ($config->get('fields') as $field) {
 		// $field[0]: Field name
 		// $field[1]: Field name (for display)
 		// $field[2]: Field type
-		// $field[3]: Option
+		// $field[3]: Option ("size", "cols", "rows", etc)
 		// $field[4]: Default value
-		$class = 'Tracker_field_' . $field[2];
+		$class     = 'Tracker_field_' . $field[2];
 		if (! class_exists($class)) {
 			// Default
-			$class    = 'Tracker_field_text';
 			$field[2] = 'text';
+			$class    = 'Tracker_field_' . $field[2];
 			$field[3] = '20';
 		}
-		$fields[$field[0]] = & new $class($field, $base, $refer, $config);
+		$fieldname = $field[0];
+		$fields[$fieldname] = & new $class($field, $base, $refer, $config);
 	}
+
+	foreach (
+		array(
+			// Reserved ones
+			'_date'   => 'text',	// Post date
+			'_update' => 'date',	// Last modified date
+			'_past'   => 'past',	// Elapsed time (passage)
+			'_page'   => 'page',	// Page name
+			'_name'   => 'text',	// Page name specified by poster
+			'_real'   => 'real',	// Page name (Real)
+			'_refer'  => 'page',	// Page name refer from this (Page who has forms)
+			'_base'   => 'page',
+			'_submit' => 'submit'
+		) as $fieldname => $type)
+	{
+		if (isset($fields[$fieldname])) continue;
+		$field = array($fieldname, $_tracker_messages['btn' . $fieldname], '', '20', '');
+		$class = 'Tracker_field_' . $type;
+		$fields[$fieldname] = & new $class($field, $base, $refer, $config);
+	}
+
 	return $fields;
 }
 
@@ -295,6 +271,7 @@ class Tracker_field
 
 	function get_tag()
 	{
+		return '';
 	}
 
 	function get_style($str)
