@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.42 2007/09/04 14:09:43 henoheno Exp $
+// $Id: tracker.inc.php,v 1.43 2007/09/05 15:14:44 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -43,8 +43,8 @@ function plugin_tracker_convert()
 		if ($argc > 0 && $args[0] != '') {
 			// Configuration name AND form name
 			$arg = explode('/', $args[0], 2);
-			$config_name = ($arg[0] != '')   ? $arg[0] : PLUGIN_TRACKER_DEFAULT_CONFIG;
-			$form        = (count($arg) > 1) ? $arg[1] : PLUGIN_TRACKER_DEFAULT_FORM;
+			if ($arg[0] != '' ) $config_name = $arg[0];
+			if (isset($arg[1])) $form        = $arg[1];
 		}
 	}
 
@@ -95,16 +95,16 @@ function plugin_tracker_action()
 	$refer = isset($post['_refer']) ? $post['_refer'] : $base;
 	if (! is_pagename($refer)) {
 		return array(
-			'msg'  => 'cannot write',
-			'body' => 'page name (' . htmlspecialchars($refer) . ') is not valid.'
+			'msg'  => 'Cannot write',
+			'body' => 'Page name (' . htmlspecialchars($refer) . ') invalid'
 		);
 	}
 
 	// $page name to add will be decided here
-	$name = isset($post['_name']) ? $post['_name'] : '';
 	$num  = 0;
+	$name = isset($post['_name']) ? $post['_name'] : '';
 	if (isset($post['_page'])) {
-		$page = $real = $post['_page'];
+		$real = $page = $post['_page'];
 	} else {
 		$real = is_pagename($name) ? $name : ++$num;
 		$page = get_fullname('./' . $real, $base);
@@ -125,8 +125,8 @@ function plugin_tracker_action()
 	$template_page = $config->page . '/page';
 	if (! is_page($template_page)) {
 		return array(
-			'msg'  => 'cannot write',
-			'body' => 'page template (' . htmlspecialchars($template_page) . ') is not exist.'
+			'msg'  => 'Cannot write',
+			'body' => 'Page template (' . htmlspecialchars($template_page) . ') not exists'
 		);
 	}
 
@@ -472,7 +472,12 @@ class Tracker_field_radio extends Tracker_field_format
 	{
 		static $options = array();
 		if (! isset($options[$this->name])) {
-			$options[$this->name] = array_flip(array_map(create_function('$arr', 'return $arr[0];'), $this->config->get($this->name)));
+			$options[$this->name] =
+				array_flip(
+					array_map(create_function('$arr', 'return $arr[0];'),
+					$this->config->get($this->name)
+				)
+			);
 		}
 		return isset($options[$this->name][$value]) ? $options[$this->name][$value] : $value;
 	}
@@ -595,17 +600,20 @@ class Tracker_field_past extends Tracker_field
 }
 
 ///////////////////////////////////////////////////////////////////////////
+// tracker_list plugin
 
 function plugin_tracker_list_convert()
 {
 	global $vars;
 
 	$config = PLUGIN_TRACKER_DEFAULT_CONFIG;
-	$page   = $refer = $vars['page'];
+	$page   = $refer = isset($vars['page']) ? $vars['page'] : '';
 	$field  = '_page';
 	$order  = '';
 	$list   = 'list';
 	$limit  = NULL;
+
+	// TODO: SHOW USAGE OR ERROR CLEARLY
 	if (func_num_args()) {
 		$args = func_get_args();
 		switch (count($args)) {
@@ -621,42 +629,39 @@ function plugin_tracker_list_convert()
 			list($config, $list) = array_pad(explode('/', $config, 2), 2, $list);
 		}
 	}
-	return plugin_tracker_getlist($page, $refer, $config, $list, $order, $limit);
+	return plugin_tracker_list_render($page, $refer, $config, $list, $order, $limit);
 }
 
 function plugin_tracker_list_action()
 {
 	global $script, $vars, $_tracker_messages;
 
-	$page   = $refer = $vars['refer'];
-	$s_page = make_pagelink($page);
-	$config = $vars['config'];
-	$list   = isset($vars['list'])  ? $vars['list']  : 'list';
-	$order  = isset($vars['order']) ? $vars['order'] : '_real:SORT_DESC';
+	$page   = $refer = isset($vars['refer']) ? $vars['refer'] : '';
+	$config = isset($vars['config']) ? $vars['config'] : '';
+	$list   = isset($vars['list'])   ? $vars['list']   : 'list';
+	$order  = isset($vars['order'])  ? $vars['order']  : '_real:SORT_DESC';
 
+	$s_page = make_pagelink($page);
 	return array(
 		'msg' => $_tracker_messages['msg_list'],
-		'body'=> str_replace('$1', $s_page, $_tracker_messages['msg_back']).
-			plugin_tracker_getlist($page, $refer, $config, $list, $order)
+		'body'=> str_replace('$1', $s_page, $_tracker_messages['msg_back']) .
+			plugin_tracker_list_render($page, $refer, $config, $list, $order)
 	);
 }
 
-function plugin_tracker_getlist($page, $refer, $config_name, $list, $order = '', $limit = NULL)
+function plugin_tracker_list_render($page, $refer, $config_name, $list, $order_commands = '', $limit = NULL)
 {
 	$config = new Config('plugin/tracker/' . $config_name);
-
 	if (! $config->read()) {
-		return '<p>config file \'' . htmlspecialchars($config_name) . '\' is not exist.</p>';
+		return '#tracker_list: Config \'' . htmlspecialchars($config_name) . '\' not found<br />';
 	}
-
 	$config->config_name = $config_name;
-
 	if (! is_page($config->page . '/' . $list)) {
-		return '<p>config file \'' . make_pagelink($config->page . '/' . $list) . '\' not found.</p>';
+		return '#tracker_list: List \'' . make_pagelink($config->page . '/' . $list) . '\' not found<br />';
 	}
 
 	$list = & new Tracker_list($page, $refer, $config, $list);
-	$list->sort($order);
+	$list->sort($order_commands);
 	return $list->toString($limit);
 }
 
@@ -684,6 +689,7 @@ class Tracker_list
 		$this->order   = array();
 
 		$pattern = plugin_tracker_get_source($config->page . '/page', TRUE);
+		// TODO: if (is FALSE) OR file_exists()
 
 		// Convert block-plugins to fields
 		// Incleasing and decreasing around #comment etc, will be covererd with [_block_xxx]
@@ -757,50 +763,66 @@ class Tracker_list
 		}
 	}
 
-	function sort($order)
+	// Sort $this->rows with $order_commands
+	function sort($order_commands = '')
 	{
-		if ($order == '') return;
+		if ($order_commands == '') {
+			$this->order = array();
+			return TRUE;
+		}
 
-		$names       = array_flip(array_keys($this->fields));
-		$this->order = array();
+		$orders = array();
+		$params = array();	// Arguments for array_multisort()
+		$names  = array_flip(array_keys($this->fields));
 
-		foreach (explode(';', $order) as $item) {
-			list($key, $dir) = array_pad(explode(':', $item), 1, 'ASC');
-			if (! isset($names[$key])) continue;
+		foreach (explode(';', $order_commands) as $command) {
+			// TODO: ???
+			list($fieldname, $order) = array_pad(explode(':', $command), 1, 'SORT_ASC');
+			$fieldname = trim($fieldname);
 
-			switch (strtoupper($dir)) {
+			if (! isset($names[$fieldname])) {
+				// TODO: SHOW INVALID FIELDNAME CLEARLY
+				return FALSE;
+			}
+
+			// TODO: SHOULD NOT TO USE DEFINES AT THIS string WORLD
+			switch (strtoupper(trim($order))) {
+			case SORT_ASC:
 			case 'SORT_ASC':
 			case 'ASC':
-			case SORT_ASC:
-				$dir = SORT_ASC;
+				$order = SORT_ASC;
 				break;
+			case SORT_DESC:
 			case 'SORT_DESC':
 			case 'DESC':
-			case SORT_DESC:
-				$dir = SORT_DESC;
+				$order = SORT_DESC;
 				break;
 			default:
 				continue;
 			}
-			$this->order[$key] = $dir;
-		}
-		$keys   = array();
-		$params = array();
-		foreach ($this->order as $field => $order) {
-			if (! isset($names[$field])) continue;
 
+			$orders[$fieldname] = $order;
+		}
+		// TODO: LIMIT (count($order) < N < count(fields)) TO LIMIT array_multisort()
+
+		foreach ($orders as $fieldname => $order) {
+			// One column set (one-dimensional array(), sort type, and order-by)
+			$array = array();
 			foreach ($this->rows as $row) {
-				$keys[$field][] = isset($row[$field])?
-					$this->fields[$field]->get_value($row[$field]) :
+				$array[] = isset($row[$fieldname]) ?
+					$this->fields[$fieldname]->get_value($row[$fieldname]) :
 					'';
 			}
-			$params[] = $keys[$field];
-			$params[] = $this->fields[$field]->sort_type;
+			$params[] = $array;
+			$params[] = $this->fields[$fieldname]->sort_type;
 			$params[] = $order;
 		}
 		$params[] = & $this->rows;
 
 		call_user_func_array('array_multisort', $params);
+		$this->order = $orders;
+
+		return TRUE;
 	}
 
 	// Used with preg_replace_callback()  at toString()
