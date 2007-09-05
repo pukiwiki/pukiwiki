@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.43 2007/09/05 15:14:44 henoheno Exp $
+// $Id: tracker.inc.php,v 1.44 2007/09/05 15:17:39 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -803,7 +803,7 @@ class Tracker_list
 
 			$orders[$fieldname] = $order;
 		}
-		// TODO: LIMIT (count($order) < N < count(fields)) TO LIMIT array_multisort()
+		// TODO: LIMIT (count($orders) < N < count(fields)) TO LIMIT array_multisort()
 
 		foreach ($orders as $fieldname => $order) {
 			// One column set (one-dimensional array(), sort type, and order-by)
