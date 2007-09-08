@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.45 2007/09/08 16:30:25 henoheno Exp $
+// $Id: tracker.inc.php,v 1.46 2007/09/08 16:37:16 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -243,6 +243,7 @@ function plugin_tracker_get_fields($base, $refer, & $config)
 }
 
 // Field classes
+// TODO: Not to use static variables (except $id)
 class Tracker_field
 {
 	var $name;
@@ -693,6 +694,7 @@ function plugin_tracker_list_render($page, $refer, $config_name, $list, $order_c
 }
 
 // Listing class
+// TODO: Not to use static variable
 class Tracker_list
 {
 	var $page;
