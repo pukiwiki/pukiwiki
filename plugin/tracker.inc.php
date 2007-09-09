@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.48 2007/09/09 01:49:00 henoheno Exp $
+// $Id: tracker.inc.php,v 1.49 2007/09/09 13:41:52 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -686,39 +686,48 @@ class Tracker_list
 	var $fields;
 	var $pattern;
 	var $pattern_fields;
-	var $rows;
-	var $order;
-	var $_added;
+
+	var $rows   = array();
+	var $order  = array();
+	var $_added = array();
 
 	function Tracker_list($page, $refer, & $config, $list)
 	{
-		$this->page    = $page;
-		$this->config  = & $config;
-		$this->list    = $list;
-		$this->fields  = plugin_tracker_get_fields($page, $refer, $config);
-		$this->pattern = '';
-		$this->pattern_fields = array();
-		$this->rows    = array();
-		$this->order   = array();
-		$this->_added  = array();
+		$this->page     = $page;
+		$this->config   = & $config;
+		$this->list     = $list;
 
-		$pattern = plugin_tracker_get_source($config->page . '/page', TRUE);
+		$fields         = plugin_tracker_get_fields($page, $refer, $config);
+		$pattern        = array();
+		$pattern_fields = array();
+
+		// Generate regexes:
+
 		// TODO: if (is FALSE) OR file_exists()
+		$source = plugin_tracker_get_source($config->page . '/page', TRUE);
+		// Block-plugins to pseudo fields (#convert => [_block_convert])
+		$source = preg_replace('/^\#([^\(\s]+)(?:\((.*)\))?\s*$/m', '[_block_$1]', $source);
 
-		// Convert block-plugins to fields
-		// Incleasing and decreasing around #comment etc, will be covererd with [_block_xxx]
-		$pattern = preg_replace('/^\#([^\(\s]+)(?:\((.*)\))?\s*$/m', '[_block_$1]', $pattern);
+		// Now, $source = array('*someting*', 'fieldname', '*someting*', 'fieldname', ...)
+		$source = preg_split('/\\\\\[(\w+)\\\\\]/', preg_quote($source, '/'), -1, PREG_SPLIT_DELIM_CAPTURE);
 
-		// Generate regexes
-		$pattern = preg_split('/\\\\\[(\w+)\\\\\]/', preg_quote($pattern, '/'), -1, PREG_SPLIT_DELIM_CAPTURE);
-		while (! empty($pattern)) {
-			$this->pattern .= preg_replace('/\s+/', '\\s*', '(?>\\s*' . trim(array_shift($pattern)) . '\\s*)');
-			if (! empty($pattern)) {
-				$field = array_shift($pattern);
-				$this->pattern_fields[] = $field;
-				$this->pattern         .= '(.*)';
+		while (! empty($source)) {
+			// Just ignore these _fixed_ data
+			// NOTE: if a page has garbages between fields, it will fail to be load
+			$pattern[] = preg_replace('/\s+/', '\\s*', '(?>\\s*' . trim(array_shift($source)) . '\\s*)');
+			if (! empty($source)) {
+				$fieldname = array_shift($source);
+				if (isset($fields[$fieldname])) {
+					$pattern[]        = '(.*)';		// Just capture it
+					$pattern_fields[] = $fieldname;	// Capture it as this $filedname
+				} else {
+					$pattern[]        = '.*';		// Just ignore pseudo fields
+				}
 			}
 		}
+		$this->fields         = $fields;
+		$this->pattern        = implode('', $pattern);
+		$this->pattern_fields = $pattern_fields;
 
 		// Listing
 		$pattern     = $page . '/';
@@ -734,12 +743,10 @@ class Tracker_list
 
 	function add($page, $name)
 	{
-
 		if (isset($this->_added[$page])) return;
-
 		$this->_added[$page] = TRUE;
 
-		$source  = plugin_tracker_get_source($page);
+		$source = plugin_tracker_get_source($page);
 
 		// Compat: 'move to [[page]]' (bugtrack plugin)
 		$matches = array();
@@ -754,9 +761,10 @@ class Tracker_list
 			}
 		}
 
-		// Default
+		// Default column
 		$filetime = get_filetime($page);
 		$row = array(
+			// column => default data of the cell
 			'_page'   => '[[' . $page . ']]',
 			'_refer'  => $this->page,
 			'_real'   => $name,
@@ -765,12 +773,12 @@ class Tracker_list
 			'_match'  => FALSE,
 		);
 
-		// Redefine
+		// Load / Redefine cell
 		$matches = array();
 		$row['_match'] = preg_match('/' . $this->pattern . '/s', implode('', $source), $matches);
 		unset($source);
 		if ($row['_match']) {
-			array_shift($matches);
+			array_shift($matches);	// $matches[0] = all of the captured string
 			foreach ($this->pattern_fields as $key => $field) {
 				$row[$field] = trim($matches[$key]);
 			}
