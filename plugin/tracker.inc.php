@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.46 2007/09/08 16:37:16 henoheno Exp $
+// $Id: tracker.inc.php,v 1.47 2007/09/09 00:57:57 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -70,7 +70,6 @@ function plugin_tracker_convert()
 		} else {
 			$to[]     = $_to;
 		}
-		$fields[$field]->dispose();
 		unset($fields[$field]);
 	}
 
@@ -149,7 +148,6 @@ function plugin_tracker_action()
 	foreach (array_keys($fields) as $field) {
 		$from[] = '[' . $field . ']';
 		$to[]   = isset($_post[$field]) ? $fields[$field]->format_value($_post[$field]) : '';
-		$fields[$field]->dispose();
 		unset($fields[$field]);
 	}
 
@@ -299,11 +297,6 @@ class Tracker_field
 	{
 		return $value;	// Default: $value itself
 	}
-
-	// Release the resources
-	function dispose()
-	{
-	}
 }
 
 class Tracker_field_text extends Tracker_field
@@ -450,6 +443,7 @@ class Tracker_field_file extends Tracker_field_format
 class Tracker_field_radio extends Tracker_field_format
 {
 	var $sort_type = SORT_NUMERIC;
+	var $_options  = array();
 
 	function get_tag()
 	{
@@ -481,29 +475,18 @@ class Tracker_field_radio extends Tracker_field_format
 
 	function get_value($value)
 	{
-		static $options = array();
+		$options = & $this->_options;
+		$name    = $this->name;
 
-		if ($value === NULL) {
-			$options = array();
-			return NULL;
-		}
-
-		if (! isset($options[$this->name])) {
-			$options[$this->name] = array_flip(
-				array_map(
-					create_function('$arr', 'return $arr[0];'),
-					$this->config->get($this->name)
-				)
+		if (! isset($options[$name])) {
+			$values = array_map(
+				create_function('$array', 'return $array[0];'),
+				$this->config->get($name)
 			);
+			$options[$name] = array_flip($values);	// array('value0' => 0, 'value1' => 1, ...)
 		}
 
-		// Int or $value
-		return isset($options[$this->name][$value]) ? $options[$this->name][$value] : $value;
-	}
-	
-	function dispose()
-	{
-		$this->get_value(NULL);
+		return isset($options[$name][$value]) ? $options[$name][$value] : $value;
 	}
 }
 
@@ -632,7 +615,7 @@ function plugin_tracker_list_convert()
 	$page   = $refer = isset($vars['page']) ? $vars['page'] : '';
 	$order  = '';
 	$list   = 'list';
-	$limit  = NULL;
+	$limit  = 0;
 
 	// TODO: SHOW USAGE OR ERROR CLEARLY
 	if (func_num_args()) {
@@ -662,16 +645,17 @@ function plugin_tracker_list_action()
 	$config = isset($vars['config']) ? $vars['config'] : '';
 	$list   = isset($vars['list'])   ? $vars['list']   : 'list';
 	$order  = isset($vars['order'])  ? $vars['order']  : '_real:SORT_DESC';
+	$limit  = isset($vars['limit'])  ? intval($vars['limit']) : 0;
 
 	$s_page = make_pagelink($page);
 	return array(
 		'msg' => plugin_tracker_message('msg_list'),
 		'body'=> str_replace('$1', $s_page, plugin_tracker_message('msg_back')) .
-			plugin_tracker_list_render($page, $refer, $config, $list, $order)
+			plugin_tracker_list_render($page, $refer, $config, $list, $order, $limit)
 	);
 }
 
-function plugin_tracker_list_render($page, $refer, $config_name, $list, $order_commands = '', $limit = NULL)
+function plugin_tracker_list_render($page, $refer, $config_name, $list, $order_commands = '', $limit = 0)
 {
 	$config = new Config('plugin/tracker/' . $config_name);
 	if (! $config->read()) {
@@ -688,7 +672,6 @@ function plugin_tracker_list_render($page, $refer, $config_name, $list, $order_c
 	if ($result == FALSE) {
 		$result = '#tracker_list: Pages under \'' . htmlspecialchars($page) . '/\' not found' . '<br />';
 	}
-	$list->dispose();
 
 	return $result;
 }
@@ -705,6 +688,7 @@ class Tracker_list
 	var $pattern_fields;
 	var $rows;
 	var $order;
+	var $_added;
 
 	function Tracker_list($page, $refer, & $config, $list)
 	{
@@ -716,6 +700,7 @@ class Tracker_list
 		$this->pattern_fields = array();
 		$this->rows    = array();
 		$this->order   = array();
+		$this->_added  = array();
 
 		$pattern = plugin_tracker_get_source($config->page . '/page', TRUE);
 		// TODO: if (is FALSE) OR file_exists()
@@ -749,16 +734,10 @@ class Tracker_list
 
 	function add($page, $name)
 	{
-		static $done = array();
 
-		if (isset($done[$page])) return;
+		if (isset($this->_added[$page])) return;
 
-		if ($page === NULL) {
-			$done = array();
-			return;
-		}
-
-		$done[$page] = TRUE;
+		$this->_added[$page] = TRUE;
 
 		$source  = plugin_tracker_get_source($page);
 
@@ -929,18 +908,22 @@ class Tracker_list
 				'&list=' . $r_list . '&order=' . $r_order . ']]';
 	}
 
-	function toString($limit = 10)
+	function toString($limit = 0)
 	{
 		if (empty($this->rows)) return FALSE;
 
-		$limit = max(1, intval($limit));
-
 		$count = $_count = count($this->rows);
-		if ($limit != 0 && $count > $limit) {
-			$rows   = array_slice($this->rows, 0, $limit);
-			$_count = count($rows);
+
+		if ($limit != 0) {
+			$limit = max(1, intval($limit));
+			if ($count > $limit) {
+				$rows   = array_slice($this->rows, 0, $limit);
+				$_count = count($rows);
+			} else {
+				$rows = $this->rows;
+			}
 		} else {
-			$rows   = $this->rows;
+			$rows = $this->rows;
 		}
 
 		$source = array();
@@ -978,12 +961,6 @@ class Tracker_list
 		}
 
 		return convert_html(implode('', $source));
-	}
-
-	function dispose()
-	{
-		$this->add(NULL, NULL);
-		return;
 	}
 }
 
