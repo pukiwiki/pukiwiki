@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.47 2007/09/09 00:57:57 henoheno Exp $
+// $Id: tracker.inc.php,v 1.48 2007/09/09 01:49:00 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -803,21 +803,22 @@ class Tracker_list
 
 			// TODO: SHOULD NOT TO USE DEFINES AT THIS string WORLD
 			switch (strtoupper(trim($order))) {
+			case '':
+				break;
 			case SORT_ASC:
 			case 'SORT_ASC':
 			case 'ASC':
-				$order = SORT_ASC;
+				$orders[$fieldname] = SORT_ASC;
 				break;
 			case SORT_DESC:
 			case 'SORT_DESC':
 			case 'DESC':
-				$order = SORT_DESC;
+				$orders[$fieldname] = SORT_DESC;
 				break;
 			default:
-				continue;
+				// TODO: SHOW INVALID SORTKEY CLEARLY
+				break;
 			}
-
-			$orders[$fieldname] = $order;
 		}
 		// TODO: LIMIT (count($orders) < N < count(fields)) TO LIMIT array_multisort()
 
