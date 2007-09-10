@@ -654,46 +654,61 @@ class Table extends Element
 	}
 }
 
-// , title1 , title2 , title3
-// , cell1  , cell2  , cell3
-// , cell4  , cell5  , cell6
+// , cell1  , cell2  ,  cell3 
+// , cell4  , cell5  ,  cell6 
+// , cell7  ,        right,==
+// ,left          ,==,  cell8
 class YTable extends Element
 {
-	var $col;
+	var $col;	// Number of columns
 
-	function YTable($_value)
+	// TODO: Seems unable to show literal '==' without tricks.
+	//       But it will be imcompatible.
+	// TODO: Why toString() or toXHTML() here
+	function YTable($row = array('cell1 ', ' cell2 ', ' cell3'))
 	{
 		parent::Element();
 
-		$align = $value = $matches = array();
-		foreach($_value as $val) {
-			if (preg_match('/^(\s+)?(.+?)(\s+)?$/', $val, $matches)) {
-				$align[] =($matches[1] != '') ?
-					((isset($matches[3]) && $matches[3] != '') ?
-						' style="text-align:center"' :
-						' style="text-align:right"'
-					) : '';
-				$value[] = $matches[2];
+		$str = array();
+		$col = count($row);
+
+		$matches = $_value = $_align = array();
+		foreach($row as $cell) {
+			if (preg_match('/^(\s+)?(.+?)(\s+)?$/', $cell, $matches)) {
+				if ($matches[2] == '==') {
+					// Colspan
+					$_value[] = FALSE;
+					$_align[] = FALSE;
+				} else {
+					$_value[] = $matches[2];
+					if ($matches[1] == '') {
+						$_align[] = '';	// left
+					} else if (isset($matches[3])) {
+						$_align[] = 'center';
+					} else {
+						$_align[] = 'right';
+					}
+				}
 			} else {
-				$align[] = '';
-				$value[] = $val;
+				$_value[] = $cell;
+				$_align[] = '';
 			}
 		}
-		$this->col = count($value);
-		$colspan = array();
-		foreach ($value as $val)
-			$colspan[] = ($val == '==') ? 0 : 1;
-		$str = '';
-		$count = count($value);
-		for ($i = 0; $i < $count; $i++) {
-			if ($colspan[$i]) {
-				while ($i + $colspan[$i] < $count && $value[$i + $colspan[$i]] == '==')
-					$colspan[$i]++;
-				$colspan[$i] = ($colspan[$i] > 1) ? ' colspan="' . $colspan[$i] . '"' : '';
-				$str .= '<td class="style_td"' . $align[$i] . $colspan[$i] . '>' . make_link($value[$i]) . '</td>';
-			}
+
+		for ($i = 0; $i < $col; $i++) {
+			if ($_value[$i] === FALSE) continue;
+			$colspan = 1;
+			while (isset($_value[$i + $colspan]) && $_value[$i + $colspan] === FALSE) ++$colspan;
+			$colspan = ($colspan > 1) ? ' colspan="' . $colspan . '"' : '';
+			$align = $_align[$i] ? ' style="text-align:' . $_align[$i] . '"' : '';
+			$str[] = '<td class="style_td"' . $align . $colspan . '>';
+			$str[] = make_link($_value[$i]);
+			$str[] = '</td>';
+			unset($_value[$i], $_align[$i]);
 		}
-		$this->elements[] = $str;
+
+		$this->col        = $col;
+		$this->elements[] = implode('', $str);
 	}
 
 	function canContain(& $obj)
@@ -710,8 +725,9 @@ class YTable extends Element
 	function toString()
 	{
 		$rows = '';
-		foreach ($this->elements as $str)
+		foreach ($this->elements as $str) {
 			$rows .= "\n" . '<tr class="style_tr">' . $str . '</tr>' . "\n";
+		}
 		$rows = $this->wrap($rows, 'table', ' class="style_table" cellspacing="1" border="0"');
 		return $this->wrap($rows, 'div', ' class="ie5"');
 	}
