@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.49 2007/09/09 13:41:52 henoheno Exp $
+// $Id: tracker.inc.php,v 1.50 2007/09/10 16:07:21 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -241,21 +241,20 @@ function plugin_tracker_get_fields($base, $refer, & $config)
 }
 
 // Field classes
-// TODO: Not to use static variables (except $id)
 class Tracker_field
 {
 	var $name;
 	var $title;
 	var $values;
 	var $default_value;
-	var $page;
+	var $base;
 	var $refer;
 	var $config;
 	var $data;
 	var $sort_type = SORT_REGULAR;
 	var $id        = 0;
 
-	function Tracker_field($field, $page, $refer, & $config)
+	function Tracker_field($field, $base, $refer, & $config)
 	{
 		global $post;
 		static $id = 0;	// Unique id per instance
@@ -265,7 +264,7 @@ class Tracker_field
 		$this->title  = $field[1];
 		$this->values = explode(',', $field[3]);
 		$this->default_value = $field[4];
-		$this->page   = $page;
+		$this->base   = $base;
 		$this->refer  = $refer;
 		$this->config = & $config;
 		$this->data   = isset($post[$this->name]) ? $post[$this->name] : '';
@@ -370,9 +369,9 @@ class Tracker_field_format extends Tracker_field
 	var $styles    = array();
 	var $formats   = array();
 
-	function Tracker_field_format($field, $page, $refer, & $config)
+	function Tracker_field_format($field, $base, $refer, & $config)
 	{
-		parent::Tracker_field($field, $page, $refer, $config);
+		parent::Tracker_field($field, $base, $refer, $config);
 
 		foreach ($this->config->get($this->name) as $option) {
 			list($key, $style, $format) =
@@ -428,10 +427,10 @@ class Tracker_field_file extends Tracker_field_format
 
 			require_once(PLUGIN_DIR . 'attach.inc.php');
 
-			$result = attach_upload($_FILES[$this->name], $this->page);
-			if ($result['result']) {
+			$result = attach_upload($_FILES[$this->name], $this->base);
+			if (isset($result['result']) && $result['result']) {
 				// Upload success
-				return parent::format_value($this->page . '/' . $_FILES[$this->name]['name']);
+				return parent::format_value($this->base . '/' . $_FILES[$this->name]['name']);
 			}
 		}
 
@@ -565,15 +564,15 @@ class Tracker_field_submit extends Tracker_field
 	function get_tag()
 	{
 		$s_title  = htmlspecialchars($this->title);
-		$s_page   = htmlspecialchars($this->page);
+		$s_base   = htmlspecialchars($this->base);
 		$s_refer  = htmlspecialchars($this->refer);
 		$s_config = htmlspecialchars($this->config->config_name);
 
 		return <<<EOD
 <input type="submit" value="$s_title" />
-<input type="hidden" name="plugin" value="tracker" />
-<input type="hidden" name="_refer" value="$s_refer" />
-<input type="hidden" name="_base" value="$s_page" />
+<input type="hidden" name="plugin"  value="tracker" />
+<input type="hidden" name="_refer"  value="$s_refer" />
+<input type="hidden" name="_base"   value="$s_base" />
 <input type="hidden" name="_config" value="$s_config" />
 EOD;
 	}
@@ -612,7 +611,7 @@ function plugin_tracker_list_convert()
 	global $vars;
 
 	$config = PLUGIN_TRACKER_DEFAULT_CONFIG;
-	$page   = $refer = isset($vars['page']) ? $vars['page'] : '';
+	$base   = $refer = isset($vars['page']) ? $vars['page'] : '';
 	$order  = '';
 	$list   = 'list';
 	$limit  = 0;
@@ -621,42 +620,57 @@ function plugin_tracker_list_convert()
 	if (func_num_args()) {
 		$args = func_get_args();
 		switch (count($args)) {
-		case 4:
-			if (! is_numeric($args[3])) return PLUGIN_TRACKER_LIST_USAGE . '<br />';
-			$limit = intval($args[3]);
-		case 3:
-			$order = $args[2];
-		case 2:
-			$arg = get_fullname($args[1], $page);
-			if (is_pagename($arg)) $page = $arg;
+		case 4: $limit = $args[3];	/*FALLTHROUGH*/
+		case 3: $order = $args[2];	/*FALLTHROUGH*/
+		case 2:						/*FALLTHROUGH*/
+			$arg = get_fullname($args[1], $base);
+			if (is_pagename($arg)) $base = $arg;
 		case 1:
 			if ($args[0] != '') $config = $args[0];
 			list($config, $list) = array_pad(explode('/', $config, 2), 2, $list);
 		}
 	}
-	return plugin_tracker_list_render($page, $refer, $config, $list, $order, $limit);
+
+	return plugin_tracker_list_render($base, $refer, $config, $list, $order, $limit);
 }
 
 function plugin_tracker_list_action()
 {
 	global $vars;
 
-	$page   = $refer = isset($vars['refer']) ? $vars['refer'] : '';
+	$base   = isset($vars['base'])   ? $vars['base'] : '';
 	$config = isset($vars['config']) ? $vars['config'] : '';
 	$list   = isset($vars['list'])   ? $vars['list']   : 'list';
 	$order  = isset($vars['order'])  ? $vars['order']  : '_real:SORT_DESC';
-	$limit  = isset($vars['limit'])  ? intval($vars['limit']) : 0;
+	$limit  = isset($vars['limit'])  ? $vars['limit']  : 0;
 
-	$s_page = make_pagelink($page);
+	$s_base = make_pagelink(trim($base));
 	return array(
 		'msg' => plugin_tracker_message('msg_list'),
-		'body'=> str_replace('$1', $s_page, plugin_tracker_message('msg_back')) .
-			plugin_tracker_list_render($page, $refer, $config, $list, $order, $limit)
+		'body'=> str_replace('$1', $s_base, plugin_tracker_message('msg_back')) .
+			plugin_tracker_list_render($base, $base, $config, $list, $order, $limit)
 	);
 }
 
-function plugin_tracker_list_render($page, $refer, $config_name, $list, $order_commands = '', $limit = 0)
+function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_commands = '', $limit = 0)
 {
+	$base  = trim($base);
+	$refer = trim($refer);
+	$list  = trim($list);
+	$config_name    = trim($config_name);
+	$order_commands = trim($order_commands);
+
+	if ($base == '') {
+		return '#tracker_list: Base not specified' . '<br />';
+	}
+	if (! is_numeric($limit)) {
+		return PLUGIN_TRACKER_LIST_USAGE . '<br />';
+	}
+	$limit = intval($limit);
+
+	if ($config_name == '') {
+		return '#tracker_list: Config not specified<br />';
+	}
 	$config = new Config('plugin/tracker/' . $config_name);
 	if (! $config->read()) {
 		return '#tracker_list: Config \'' . htmlspecialchars($config_name) . '\' not found<br />';
@@ -666,21 +680,20 @@ function plugin_tracker_list_render($page, $refer, $config_name, $list, $order_c
 		return '#tracker_list: List \'' . make_pagelink($config->page . '/' . $list) . '\' not found<br />';
 	}
 
-	$list = & new Tracker_list($page, $refer, $config, $list);
+	$list = & new Tracker_list($base, $refer, $config, $list);
 	$list->sort($order_commands);
 	$result = $list->toString($limit);
 	if ($result == FALSE) {
-		$result = '#tracker_list: Pages under \'' . htmlspecialchars($page) . '/\' not found' . '<br />';
+		$result = '#tracker_list: Pages under \'' . htmlspecialchars($base) . '/\' not found' . '<br />';
 	}
 
 	return $result;
 }
 
 // Listing class
-// TODO: Not to use static variable
 class Tracker_list
 {
-	var $page;
+	var $base;
 	var $config;
 	var $list;
 	var $fields;
@@ -691,13 +704,14 @@ class Tracker_list
 	var $order  = array();
 	var $_added = array();
 
-	function Tracker_list($page, $refer, & $config, $list)
+	// TODO: Why list here
+	function Tracker_list($base, $refer, & $config, $list)
 	{
-		$this->page     = $page;
+		$this->base     = $base;
 		$this->config   = & $config;
 		$this->list     = $list;
 
-		$fields         = plugin_tracker_get_fields($page, $refer, $config);
+		$fields         = plugin_tracker_get_fields($base, $refer, $config);
 		$pattern        = array();
 		$pattern_fields = array();
 
@@ -730,7 +744,7 @@ class Tracker_list
 		$this->pattern_fields = $pattern_fields;
 
 		// Listing
-		$pattern     = $page . '/';
+		$pattern     = $base . '/';
 		$pattern_len = strlen($pattern);
 		foreach (get_existpages() as $_page) {
 			if (strpos($_page, $pattern) === 0) {
@@ -766,7 +780,6 @@ class Tracker_list
 		$row = array(
 			// column => default data of the cell
 			'_page'   => '[[' . $page . ']]',
-			'_refer'  => $this->page,
 			'_real'   => $name,
 			'_update' => $filetime,
 			'_past'   => $filetime,
@@ -813,13 +826,13 @@ class Tracker_list
 			switch (strtoupper(trim($order))) {
 			case '':
 				break;
-			case SORT_ASC:
-			case 'SORT_ASC':
+			case SORT_ASC:		/*FALLTHROUGH*/
+			case 'SORT_ASC':	/*FALLTHROUGH*/
 			case 'ASC':
 				$orders[$fieldname] = SORT_ASC;
 				break;
-			case SORT_DESC:
-			case 'SORT_DESC':
+			case SORT_DESC:		/*FALLTHROUGH*/
+			case 'SORT_DESC':	/*FALLTHROUGH*/
 			case 'DESC':
 				$orders[$fieldname] = SORT_DESC;
 				break;
@@ -899,7 +912,7 @@ class Tracker_list
 			unset($order[$sort], $order_keys);
 		}
 		$title  = $this->fields[$field]->title;
-		$r_page = rawurlencode($this->page);
+		$r_base = rawurlencode($this->base);
 		$r_config = rawurlencode($this->config->config_name);
 		$r_list = rawurlencode($this->list);
 		$_order = array($sort . ':' . $dir);
@@ -912,7 +925,7 @@ class Tracker_list
 
 		$script = get_script_uri();
 		return '[[' . $title . $arrow . '>' .
-				$script . '?plugin=tracker_list&refer=' . $r_page .
+				$script . '?plugin=tracker_list&base=' . $r_base .
 				'&config=' . $r_config .
 				'&list=' . $r_list . '&order=' . $r_order . ']]';
 	}
@@ -946,7 +959,7 @@ class Tracker_list
 			) . "\n";
 		}
 
-		$body   = array();
+		$body = array();
 		foreach (plugin_tracker_get_source($this->config->page . '/' . $this->list) as $line) {
 			if (preg_match('/^\|(.+)\|[hfc]$/i', $line)) {
 				// Table decolations
