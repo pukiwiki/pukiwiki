@@ -1,16 +1,19 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.50 2007/09/10 16:07:21 henoheno Exp $
+// $Id: tracker.inc.php,v 1.51 2007/09/11 13:43:56 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 // Issue tracker plugin (See Also bugtrack plugin)
 
 define('PLUGIN_TRACKER_USAGE',      '#tracker([config[/form][,basepage]])');
-define('PLUGIN_TRACKER_LIST_USAGE', '#tracker_list([config][[,base][,field:sort[;field:sort ...][,limit]]])');
+define('PLUGIN_TRACKER_LIST_USAGE', '#tracker_list([config[/list]][[,base][,field:sort[;field:sort ...][,limit]]])');
 
 define('PLUGIN_TRACKER_DEFAULT_CONFIG', 'default');
 define('PLUGIN_TRACKER_DEFAULT_FORM',   'form');
+define('PLUGIN_TRACKER_DEFAULT_LIST',   'list');
+define('PLUGIN_TRACKER_DEFAULT_LIMIT',  0);	// 0 = Unlimited
+define('PLUGIN_TRACKER_DEFAULT_ORDER',  '_real:SORT_DESC');
 
 // #tracker_list: Excluding pattern
 define('PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN','#^SubMenu$|/#');	// 'SubMenu' and using '/'
@@ -35,19 +38,21 @@ function plugin_tracker_convert()
 	$argc = count($args);
 	if ($argc > 2) {
 		return PLUGIN_TRACKER_USAGE . '<br />';
-	} else {
-		if ($argc > 1) {
-			// Base page name
-			$arg = get_fullname($args[1], $base);
-			if (is_pagename($arg)) $base = $arg;
-		}
-		if ($argc > 0 && $args[0] != '') {
-			// Configuration name AND form name
+	}
+	switch ($argc) {
+	case 2:
+		$arg = get_fullname($args[1], $base);
+		if (is_pagename($arg)) $base = $arg;
+		/*FALLTHROUGH*/
+	case 1:
+		// Config/form
+		if ($args[0] != '') {
 			$arg = explode('/', $args[0], 2);
 			if ($arg[0] != '' ) $config_name = $arg[0];
 			if (isset($arg[1])) $form        = $arg[1];
 		}
 	}
+	unset($args, $argc, $arg);
 
 	$config = new Config('plugin/tracker/' . $config_name);
 	if (! $config->read()) {
@@ -610,39 +615,50 @@ function plugin_tracker_list_convert()
 {
 	global $vars;
 
-	$config = PLUGIN_TRACKER_DEFAULT_CONFIG;
-	$base   = $refer = isset($vars['page']) ? $vars['page'] : '';
-	$order  = '';
-	$list   = 'list';
-	$limit  = 0;
+	$base = $refer = isset($vars['page']) ? $vars['page'] : '';
+	$config_name = PLUGIN_TRACKER_DEFAULT_CONFIG;
+	$list        = PLUGIN_TRACKER_DEFAULT_LIST;
+	$limit       = PLUGIN_TRACKER_DEFAULT_LIMIT;
+	$order       = PLUGIN_TRACKER_DEFAULT_ORDER;
 
-	// TODO: SHOW USAGE OR ERROR CLEARLY
-	if (func_num_args()) {
-		$args = func_get_args();
-		switch (count($args)) {
-		case 4: $limit = $args[3];	/*FALLTHROUGH*/
-		case 3: $order = $args[2];	/*FALLTHROUGH*/
-		case 2:						/*FALLTHROUGH*/
-			$arg = get_fullname($args[1], $base);
-			if (is_pagename($arg)) $base = $arg;
-		case 1:
-			if ($args[0] != '') $config = $args[0];
-			list($config, $list) = array_pad(explode('/', $config, 2), 2, $list);
+	$args = func_get_args();
+	$argc = count($args);
+	if ($argc > 4) {
+		return PLUGIN_TRACKER_LIST_USAGE . '<br />';
+	}
+	switch ($argc) {
+	case 4: $limit = $args[3];	/*FALLTHROUGH*/
+	case 3: $order = $args[2];	/*FALLTHROUGH*/
+	case 2:
+		$arg = get_fullname($args[1], $base);
+		if (is_pagename($arg)) $base = $arg;
+		/*FALLTHROUGH*/
+	case 1:
+		// Config/list
+		if ($args[0] != '') {
+			$arg = explode('/', $args[0], 2);
+			if ($arg[0] != '' ) $config_name = $arg[0];
+			if (isset($arg[1])) $list        = $arg[1];
 		}
 	}
+	unset($args, $argc, $arg);
 
-	return plugin_tracker_list_render($base, $refer, $config, $list, $order, $limit);
+	return plugin_tracker_list_render($base, $refer, $config_name, $list, $order, $limit);
 }
 
 function plugin_tracker_list_action()
 {
-	global $vars;
+	global $get, $vars;
 
-	$base   = isset($vars['base'])   ? $vars['base'] : '';
-	$config = isset($vars['config']) ? $vars['config'] : '';
-	$list   = isset($vars['list'])   ? $vars['list']   : 'list';
-	$order  = isset($vars['order'])  ? $vars['order']  : '_real:SORT_DESC';
-	$limit  = isset($vars['limit'])  ? $vars['limit']  : 0;
+	$base   = isset($get['base'])   ? $get['base']   : '';
+	$config = isset($get['config']) ? $get['config'] : '';
+	$list   = isset($get['list'])   ? $get['list']   : 'list';
+
+	$order  = isset($vars['order']) ? $vars['order'] : PLUGIN_TRACKER_DEFAULT_ORDER;
+	$limit  = isset($vars['limit']) ? $vars['limit'] : 0;
+
+	// Compat before 1.4.8
+	if ($base == '') $base = isset($get['refer']) ? $get['refer'] : '';
 
 	$s_base = make_pagelink(trim($base));
 	return array(
@@ -655,36 +671,37 @@ function plugin_tracker_list_action()
 function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_commands = '', $limit = 0)
 {
 	$base  = trim($base);
-	$refer = trim($refer);
-	$list  = trim($list);
-	$config_name    = trim($config_name);
-	$order_commands = trim($order_commands);
+	if ($base == '') return '#tracker_list: Base not specified' . '<br />';
 
-	if ($base == '') {
-		return '#tracker_list: Base not specified' . '<br />';
-	}
-	if (! is_numeric($limit)) {
-		return PLUGIN_TRACKER_LIST_USAGE . '<br />';
-	}
+	$refer = trim($refer);
+
+	$config_name = trim($config_name);
+	if ($config_name == '') return '#tracker_list: Config not specified<br />';
+
+	$list  = trim($list);
+	if (! is_numeric($limit)) return PLUGIN_TRACKER_LIST_USAGE . '<br />';
 	$limit = intval($limit);
 
-	if ($config_name == '') {
-		return '#tracker_list: Config not specified<br />';
-	}
+
 	$config = new Config('plugin/tracker/' . $config_name);
 	if (! $config->read()) {
-		return '#tracker_list: Config \'' . htmlspecialchars($config_name) . '\' not found<br />';
+		return '#tracker_list: Config not found: ' . htmlspecialchars($config_name) . '<br />';
 	}
 	$config->config_name = $config_name;
 	if (! is_page($config->page . '/' . $list)) {
-		return '#tracker_list: List \'' . make_pagelink($config->page . '/' . $list) . '\' not found<br />';
+		return '#tracker_list: List not found: ' . make_pagelink($config->page . '/' . $list) . '<br />';
 	}
 
 	$list = & new Tracker_list($base, $refer, $config, $list);
-	$list->sort($order_commands);
+
+	$order_commands = trim($order_commands);
+	if ($list->sort($order_commands) === FALSE) {
+		return '#tracker_list: ' . htmlspecialchars($list->error) . '<br />';
+	}
+
 	$result = $list->toString($limit);
-	if ($result == FALSE) {
-		$result = '#tracker_list: Pages under \'' . htmlspecialchars($base) . '/\' not found' . '<br />';
+	if ($result === FALSE) {
+		return '#tracker_list: ' . htmlspecialchars($list->error) . '<br />';
 	}
 
 	return $result;
@@ -703,6 +720,8 @@ class Tracker_list
 	var $rows   = array();
 	var $order  = array();
 	var $_added = array();
+
+	var $error  = '';	// Error message
 
 	// TODO: Why list here
 	function Tracker_list($base, $refer, & $config, $list)
@@ -818,12 +837,13 @@ class Tracker_list
 			$fieldname = trim($fieldname);
 
 			if (! isset($names[$fieldname])) {
-				// TODO: SHOW INVALID FIELDNAME CLEARLY
+				$this->error =  'No such field: ' . $fieldname;
 				return FALSE;
 			}
 
 			// TODO: SHOULD NOT TO USE DEFINES AT THIS string WORLD
-			switch (strtoupper(trim($order))) {
+			$order = trim($order);
+			switch (strtoupper($order)) {
 			case '':
 				break;
 			case SORT_ASC:		/*FALLTHROUGH*/
@@ -837,8 +857,8 @@ class Tracker_list
 				$orders[$fieldname] = SORT_DESC;
 				break;
 			default:
-				// TODO: SHOW INVALID SORTKEY CLEARLY
-				break;
+				$this->error =  'Invalid sort key: ' . $order;
+				return FALSE;
 			}
 		}
 		// TODO: LIMIT (count($orders) < N < count(fields)) TO LIMIT array_multisort()
@@ -932,7 +952,10 @@ class Tracker_list
 
 	function toString($limit = 0)
 	{
-		if (empty($this->rows)) return FALSE;
+		if (empty($this->rows)) {
+			$this->error = 'Pages not found under: ' . $this->base . '/';
+			return FALSE;
+		}
 
 		$count = $_count = count($this->rows);
 
