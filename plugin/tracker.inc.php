@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.51 2007/09/11 13:43:56 henoheno Exp $
+// $Id: tracker.inc.php,v 1.52 2007/09/15 16:50:23 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -13,15 +13,18 @@ define('PLUGIN_TRACKER_DEFAULT_CONFIG', 'default');
 define('PLUGIN_TRACKER_DEFAULT_FORM',   'form');
 define('PLUGIN_TRACKER_DEFAULT_LIST',   'list');
 define('PLUGIN_TRACKER_DEFAULT_LIMIT',  0);	// 0 = Unlimited
-define('PLUGIN_TRACKER_DEFAULT_ORDER',  '_real:SORT_DESC');
+define('PLUGIN_TRACKER_DEFAULT_ORDER',  '_real:SORT_ASC');
 
-// #tracker_list: Excluding pattern
+// Excluding pattern
 define('PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN','#^SubMenu$|/#');	// 'SubMenu' and using '/'
 //define('PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN','#(?!)#');		// Nothing excluded
 
-// #tracker_list: Show error rows (can't capture columns properly)
+// Show error rows (can't capture columns properly)
 define('PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE', 1);
 
+// Sort options
+define('PLUGIN_TRACKER_LIST_SORT_DESC',    3);
+define('PLUGIN_TRACKER_LIST_SORT_ASC',     4);
 
 // Show a form
 function plugin_tracker_convert()
@@ -841,25 +844,9 @@ class Tracker_list
 				return FALSE;
 			}
 
-			// TODO: SHOULD NOT TO USE DEFINES AT THIS string WORLD
-			$order = trim($order);
-			switch (strtoupper($order)) {
-			case '':
-				break;
-			case SORT_ASC:		/*FALLTHROUGH*/
-			case 'SORT_ASC':	/*FALLTHROUGH*/
-			case 'ASC':
-				$orders[$fieldname] = SORT_ASC;
-				break;
-			case SORT_DESC:		/*FALLTHROUGH*/
-			case 'SORT_DESC':	/*FALLTHROUGH*/
-			case 'DESC':
-				$orders[$fieldname] = SORT_DESC;
-				break;
-			default:
-				$this->error =  'Invalid sort key: ' . $order;
-				return FALSE;
-			}
+			$order = $this->_sortkey_string2define($order);
+			if ($order === FALSE) return FALSE;
+			if ($order !== NULL) $orders[$fieldname] = $order;
 		}
 		// TODO: LIMIT (count($orders) < N < count(fields)) TO LIMIT array_multisort()
 
@@ -883,8 +870,42 @@ class Tracker_list
 		return TRUE; 
 	}
 
-	// Used with preg_replace_callback() at toString()
-	function replace_item($arr)
+	// toString(): Sort key: Define to string (internal var => string)
+	function _sortkey_define2string($sortkey)
+	{
+		switch ($sortkey) {
+		case PLUGIN_TRACKER_LIST_SORT_ASC:  $sortkey = 'SORT_ASC';  break;
+		case PLUGIN_TRACKER_LIST_SORT_DESC: $sortkey = 'SORT_DESC'; break;
+		default:
+			$this->error =  'No such define: ' . $sortkey;
+			$sortkey = FALSE;
+		}
+		return $sortkey;
+	}
+
+	// toString(): Sort key: String to define (string => internal var)
+	function _sortkey_string2define($sortkey)
+	{
+		switch (strtoupper(trim($sortkey))) {
+		case '':          $sortkey = NULL; break;
+
+		case SORT_ASC:    /*FALLTHROUGH*/ // Compat, will be removed at 1.4.9 or later
+		case 'SORT_ASC':  /*FALLTHROUGH*/
+		case 'ASC':       $sortkey = PLUGIN_TRACKER_LIST_SORT_ASC; break;
+
+		case SORT_DESC:   /*FALLTHROUGH*/ // Compat, will be removed at 1.4.9 or later
+ 		case 'SORT_DESC': /*FALLTHROUGH*/
+		case 'DESC':      $sortkey = PLUGIN_TRACKER_LIST_SORT_DESC; break;
+
+		default:
+			$this->error =  'Invalid sort key: ' . $sortkey;
+			$sortkey = FALSE;
+		}
+		return $sortkey;
+	}
+
+	// toString(): Used with preg_replace_callback()
+	function _replace_item($arr)
 	{
 		$params = explode(',', $arr[1]);
 		$name   = array_shift($params);
@@ -907,47 +928,54 @@ class Tracker_list
 		return $this->pipe ? str_replace('|', '&#x7c;', $str) : $str;
 	}
 
-	// Used with preg_replace_callback() at toString()
-	function replace_title($arr)
+	// toString(): Used with preg_replace_callback()
+	function _replace_title($arr)
 	{
-		$field = $sort = $arr[1];
+		$field = $arr[1];
 		if (! isset($this->fields[$field])) return $arr[0];
 
+		$sort = $field;
 		if ($sort == '_name' || $sort == '_page') $sort = '_real';
 
-		$dir   = SORT_ASC;
 		$arrow = '';
-		$order = $this->order;
-		if (is_array($order) && isset($order[$sort])) {
+		$order = PLUGIN_TRACKER_LIST_SORT_ASC;
+
+		$orders = $this->order;
+
+		if (isset($orders[$sort])) {
 			// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
-			$order_keys = array_keys($order); // with array_shift();
+			$order_keys = array_keys($orders); // with array_shift();
 
 			$index   = array_flip($order_keys);
 			$pos     = 1 + $index[$sort];
 			$b_end   = ($sort == array_shift($order_keys));
-			$b_order = ($order[$sort] == SORT_ASC);
-			$dir     = ($b_end xor $b_order) ? SORT_ASC : SORT_DESC;
+			$b_order = ($orders[$sort] == PLUGIN_TRACKER_LIST_SORT_ASC);
+			$order   = ($b_end xor $b_order)
+				? PLUGIN_TRACKER_LIST_SORT_ASC
+				: PLUGIN_TRACKER_LIST_SORT_DESC;
 			$arrow   = '&br;' . ($b_order ? '&uarr;' : '&darr;') . '(' . $pos . ')';
 
-			unset($order[$sort], $order_keys);
+			unset($order_keys);
 		}
 		$title  = $this->fields[$field]->title;
 		$r_base = rawurlencode($this->base);
 		$r_config = rawurlencode($this->config->config_name);
 		$r_list = rawurlencode($this->list);
-		$_order = array($sort . ':' . $dir);
-		if (is_array($order)) {
-			foreach ($order as $key => $value) {
-				$_order[] = $key . ':' . $value;
-			}
+
+		$_order = array($sort . ':' . $order);
+		foreach ($orders as $key => $value) {
+			$_order[] = $key . ':' . $this->_sortkey_define2string($value);
 		}
-		$r_order = rawurlencode(join(';', $_order));
 
 		$script = get_script_uri();
-		return '[[' . $title . $arrow . '>' .
+		return '[[' .
+				$title . $arrow .
+				'>' .
 				$script . '?plugin=tracker_list&base=' . $r_base .
 				'&config=' . $r_config .
-				'&list=' . $r_list . '&order=' . $r_order . ']]';
+				'&list=' . $r_list .
+				'&order=' . rawurlencode(join(';', $_order)) .
+				']]';
 	}
 
 	function toString($limit = 0)
@@ -986,7 +1014,7 @@ class Tracker_list
 		foreach (plugin_tracker_get_source($this->config->page . '/' . $this->list) as $line) {
 			if (preg_match('/^\|(.+)\|[hfc]$/i', $line)) {
 				// Table decolations
-				$source[] = preg_replace_callback('/\[([^\[\]]+)\]/', array(& $this, 'replace_title'), $line);
+				$source[] = preg_replace_callback('/\[([^\[\]]+)\]/', array(& $this, '_replace_title'), $line);
 			} else {
 				$body[] = $line;
 			}
@@ -1000,7 +1028,7 @@ class Tracker_list
 					$source[] = $line;
 				} else {
 					$this->pipe = ($line{0} == '|' || $line{0} == ':');
-					$source[] = preg_replace_callback('/\[([^\[\]]+)\]/', array(& $this, 'replace_item'), $line);
+					$source[] = preg_replace_callback('/\[([^\[\]]+)\]/', array(& $this, '_replace_item'), $line);
 				}
 			}
 		}
