@@ -1,5 +1,5 @@
 <?php
-// $Id: spam_pickup.php,v 1.3 2007/08/26 14:27:02 henoheno Exp $
+// $Id: spam_pickup.php,v 1.4 2007/09/15 16:16:12 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -547,7 +547,7 @@ function area_pickup($string = '', $method = array())
 	// [OK] [link]http://nasty.example.com/[/link]
 	// [OK] [url=http://nasty.example.com]visit http://nasty.example.com/[/url]
 	// [OK] [link http://nasty.example.com/]buy something[/link]
-	$regex = '#\[(url|link)\b[^\]]*\].*?\[/\1\b[^\]]*(\])#is';
+	$regex = '#\[(url|link|img|email)\b[^\]]*\].*?\[/\1\b[^\]]*(\])#is';
 	if (isset($method['area_bbcode'])) {
 		$areas = array();
 		$count = isset($method['asap']) ?
@@ -605,9 +605,12 @@ function area_measure($areas, & $array, $belief = -1, $a_key = 'area', $o_key = 
 // ---------------------
 // Spam-uri pickup
 
-// Preprocess: Removing uninterest part for URI detection
+// Preprocess: Removing/Modifying uninterest part for URI detection
 function spam_uri_removing_hocus_pocus($binary = '', $method = array())
 {
+	$from = $to = array();
+
+ 	// Remove sequential spaces and too short lines
 	$length = 4 ; // 'http'(1) and '://'(2) and 'fqdn'(1)
 	if (is_array($method)) {
 		// '<a'(2) or 'href='(5) or '>'(1) or '</a>'(4)
@@ -616,14 +619,17 @@ function spam_uri_removing_hocus_pocus($binary = '', $method = array())
 		    isset($method['area_bbcode']) || isset($method['uri_bbcode']))
 				$length = 1;	// Seems not effective
 	}
-
- 	// Removing sequential spaces and too short lines
 	$binary = strings($binary, $length, TRUE, FALSE); // Multibyte NOT needed
 
-	// Remove words (has no '<>[]:') between spaces
-	$binary = preg_replace('/[ \t][\w.,()\ \t]+[ \t]/', ' ', $binary);
+	// Remove/Replace quoted-spaces within tags
+	$from[] = '#(<\w+ [^<>]*?\w ?= ?")([^"<>]*? [^"<>]*)("[^<>]*?>)#ie';
+	$to[]   = "'$1' . str_replace(' ' , '%20' , trim('$2')) . '$3'";
 
-	return $binary;
+	// Remove words (has no '<>[]:') between spaces
+	$from[] = '/[ \t][\w.,()\ \t]+[ \t]/';
+	$to[]   = ' ';
+
+	return preg_replace($from, $to, $binary);
 }
 
 // Preprocess: Domain exposure callback (See spam_uri_pickup_preprocess())
@@ -680,7 +686,6 @@ function spam_uri_pickup_preprocess($string = '', $method = array())
 	);
 
 	$string = spam_uri_removing_hocus_pocus($string, $method);
-	//var_dump(htmlspecialchars($string));
 
 	// Domain exposure (simple)
 	// http://victim.example.org/nasty.example.org/path#frag
@@ -697,7 +702,8 @@ function spam_uri_pickup_preprocess($string = '', $method = array())
 			'big5.xinhuanet.com/gate/big5/' . '|' .
 			'bhomiyo.com/en.xliterate/' . '|' .
 			'google.com/translate_c\?u=(?:http://)?' . '|' .
-			'web.archive.org/web/2[^/]*/(?:http://)?' .
+			'web.archive.org/web/2[^/]*/(?:http://)?' . '|' .
+			'technorati.com/blogs/' .
 		')' .
 		'([a-z0-9.%_-]+\.[a-z0-9.%_-]+)' .	// nasty.example.org
 		'#i',
