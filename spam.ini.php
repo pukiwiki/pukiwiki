@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.78 2007/08/26 14:23:31 henoheno Exp $
+// $Id: spam.ini.php,v 1.79 2007/09/15 16:12:24 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -64,6 +64,8 @@ $blocklist['goodhost'] = array(
 	'IANA-examples' => '#^(?:.*\.)?example\.(?:com|net|org)$#',
 
 	// PukiWiki-official/dev specific
+	//'pukiwiki.sourceforge.jp',
+	//'pukiwiki.org',	// Temporary
 	//'.logue.tk',	// Well-known PukiWiki heavy user, Logue (Paid *.tk domain, Expire on 2008-12-01)
 	//'.nyaa.tk',	// (Paid *.tk domain, Expire on 2008-05-19)
 	//'.wanwan.tk',	// (Paid *.tk domain, Expire on 2008-04-21) by nyaa.tk
@@ -1577,7 +1579,6 @@ $blocklist['B-1'] = array(
 		'*.20me.com',
 	),
 	'*.100foros.com',
-	'*.1234mb.com',		// 74.86.20.227(layeredpanel.com -> 195.242.99.195 -> s195.softwarelibre.nl) by tycho at e-lab.nl
 	'*.12gbfree.com',	// 75.126.176.194 by ashphama at yahoo.com
 	'20six Weblog Services' => array(
 		'.20six.nl',			// by 20six weblog services (postmaster at 20six.nl)
@@ -1598,6 +1599,10 @@ $blocklist['B-1'] = array(
 	'*.8000web.com',	// 75.126.189.45
 	'*.9999mb.com',		// 75.126.214.232 by allan Jerman (prodigy-airsoft at cox.net)
 	'aeonity.com',		// by Emocium Solutions (creativenospam at gmail.com)
+	'Ai.NET' => array(
+		'*.100free.com',	// 205.134.188.54(development54.ai.net -> Non-existent) by support at ai.net
+		'*.ai.net',			// 205.134.163.4(aries.ai.net) by support at ai.net
+	),
 	'*.aimoo.com',
 	'*.alkablog.com',
 	'*.alluwant.de',
@@ -1621,6 +1626,7 @@ $blocklist['B-1'] = array(
 	'.bbfast.com',				// 72.52.135.174 by blogmaster2003 at gmail.com
 	'*.beeplog.com',
 	'bestfreeforums.com',
+	'bestvotexxx.com',
 	'Bizcn.com' => '/.*\.w[0-9]+\.bizcn\.com$/', // XiaMen BizCn Computer & Network CO.,LTD
 	'Blog.com' => array(
 		'*.blog.com',
@@ -1652,6 +1658,7 @@ $blocklist['B-1'] = array(
 	'*.blogsome.com',		// by Roger Galligan (roger.galligan at browseireland.com)
 	'*.blogstream.com',
 	'blogyaz.com',
+	'bloodee.com',
 	'board-4you.de',
 	'boboard.com',			// 66.29.54.116 by Excelsoft (shabiba at e4t.net)
 	'*.boardhost.com',
@@ -1699,6 +1706,7 @@ $blocklist['B-1'] = array(
 		'.2style.jp',	// by click2k, ns *.2style.jp, *.2style.net
 		'.cute.cd',		// by Yuya Fukuda (count at kit.hi-ho.ne.jp), ns *.2style.jp, *.2style.net
 	),
+	'*.canalblog.com',		// 195.137.184.103 by dns-admin at pinacolaweb.com
 	'*.chueca.com',
 	'city-forum.com',
 	'concepts-mall.com',
@@ -1761,7 +1769,640 @@ $blocklist['B-1'] = array(
 	'*.forum24.se',
 	'*.forum5.com',			// by Harry S (hsg944 at gmail.com)
 	'.forum66.com',
+	'Forumotion.com' => array(
+		'*.forumotion.com',	// 75.126.156.15(s00.darkbb.com)
+		'*.forumactif.com',	// 91.121.41.79
+		'*.editboard.com',	// 75.126.156.15
+		'*.sosblog.com',	// 74.86.25.140
+
+		// 75.126.156.15 Used: forumotion.com, forumactif.com, editboard.com
+		'*.0forum.biz',
+		'*.1forum.biz',
+		'*.1fr1.net',
+		'*.1talk.net',
+		'*.2forum.biz',
+		'*.3forum.biz',
+		'*.4forum.biz',
+		'*.4rumer.com',
+		'*.4rumer.net',
+		'*.4umer.com',
+		'*.4umer.net',
+		'*.5forum.biz',
+		'*.5forum.info',
+		'*.5forum.net',
+		'*.6forum.biz',
+		'*.6forum.info',
+		'*.77forum.com',
+		'*.7forum.biz',
+		'*.7forum.info',
+		'*.7forum.net',
+		'*.8forum.biz',
+		'*.8forum.info',
+		'*.8forum.net',
+		'*.9forum.biz',
+		'*.9forum.info',
+		'*.activebb.net',
+		'*.aforumfree.com',
+		'*.all-forum.net',
+		'*.all-up.com',
+		'*.alldiscussion.net',
+		'*.allgoo.net',
+		'*.allgoo.us',
+		'*.american-forum.net',
+		'*.americantalk.net',
+		'*.annuaire-forums.com',
+		'*.asiafreeforum.com',
+		'*.asianfreeforum.com',
+		'*.azureforum.com',
+		'*.azurforum.com',
+		'*.bestcheapforum.com',
+		'*.bestdiscussion.net',
+		'*.bestgoo.com',
+		'*.bestofforum.com',
+		'*.bestofforum.net',
+		'*.bestoforum.net',
+		'*.bforum.biz',
+		'*.big-forum.net',
+		'*.board-poster.com',
+		'*.board-realtors.com',
+		'*.boardonly.com',
+		'*.boardrealtors.net',
+		'*.boardsmessage.com',
+		'*.briceboard.com',
+		'*.bubblelol.com',
+		'*.buy-forum.com',
+		'*.buy-talk.com',
+		'*.buyforum.net',
+		'*.buygoo.net',
+		'*.buygoo.us',
+		'*.camelscrew.com',
+		'*.cheap-forum.com',
+		'*.cheapforum.net',
+		'*.chocoforum.com',
+		'*.chocoforum.net',
+		'*.clic-topic.com',
+		'*.clicboard.com',
+		'*.clictopic.com',
+		'*.clictopic.net',
+		'*.clictopics.com',
+		'*.clubdiscussion.net',
+		'*.coolbb.net',
+		'*.crazy4us.com',
+		'*.crazyfruits.net',
+		'*.createmyboard.com',
+		'*.crewcamel.com',
+		'*.cyberfreeforum.com',
+		'*.discutforum.com',
+		'*.discutfree.com',
+		'*.do-forum.com',
+		'*.do-goo.com',
+		'*.do-goo.net',
+		'*.do-talk.com',
+		'*.dodiscussion.com',
+		'*.dogoo.us',
+		'*.easydiscussion.net',
+		'*.easyforumlive.com',
+		'*.englishboard.net',
+		'*.englishboards.com',
+		'*.ephpbb.com',
+		'*.eraseboard.net',
+		'*.eraseboards.net',
+		'*.euro-talk.net',
+		'*.eurodiscussion.net',
+		'*.eurogoo.com',
+		'*.exchangesboard.com',
+		'*.exprimetoi.net',
+		'*.fairtopic.com',
+		'*.fforum.biz',
+		'*.fforumfree.com',
+		'*.first-forum.com',
+		'*.firstgoo.com',
+		'*.fororama.com',
+		'*.forum-2007.com',
+		'*.forum-actif.net',
+		'*.forum-free.biz',
+		'*.forum-free.org',
+		'*.forum-motion.com',
+		'*.forum0.biz',
+		'*.forum0.info',
+		'*.forum0.net',
+		'*.forum2.biz',
+		'*.forum3.biz',
+		'*.forum3.info',
+		'*.forum5.info',
+		'*.forum6.biz',
+		'*.forum6.info',
+		'*.forum7.biz',
+		'*.forum777.com',
+		'*.forum8.biz',
+		'*.forum9.biz',
+		'*.foruma.biz',
+		'*.forumactif.biz',
+		'*.forumactif.info',
+		'*.forumactif.name',
+		'*.forumactif.ws',
+		'*.forumaction.net',
+		'*.forumakers.com',
+		'*.forumandco.com',
+		'*.forumb.biz',
+		'*.forumc.biz',
+		'*.forumd.biz',
+		'*.forumdediscussions.com',
+		'*.forumdediscussions.net',
+		'*.forume.biz',
+		'*.forumeast.com',
+		'*.forumf.biz',
+		'*.forumfreek.com',
+		'*.forumfreez.com',
+		'*.forumg.biz',
+		'*.forumh.biz',
+		'*.forumh.net',
+		'*.forumhope.com',
+		'*.forumi.biz',
+		'*.forumice.net',
+		'*.foruminute.com',
+		'*.forumj.biz',
+		'*.forumj.net',
+		'*.forumjonction.com',
+		'*.forumk.biz',
+		'*.foruml.biz',
+		'*.forumm.biz',
+		'*.forummotion.com',
+		'*.forummotions.com',
+		'*.forumn.biz',
+		'*.forumn.net',
+		'*.forumo.biz',
+		'*.forumonline.biz',
+		'*.forumotions.com',
+		'*.forump.biz',
+		'*.forump.info',
+		'*.forumperso.com',
+		'*.forumpersos.com',
+		'*.forumplatinum.com',
+		'*.forumpro.fr',
+		'*.forumq.biz',
+		'*.forumr.biz',
+		'*.forumr.net',
+		'*.forumrama.com',
+		'*.forums-actifs.com',
+		'*.forums-actifs.net',
+		'*.forums1.net',
+		'*.forumsactifs.com',
+		'*.forumsactifs.net',
+		'*.forumsfree.org',
+		'*.forumsline.com',
+		'*.forumsmakers.com',
+		'*.forumsmotion.com',
+		'*.forumsmotions.com',
+		'*.forumt.biz',
+		'*.forumv.biz',
+		'*.forumvalue.com',
+		'*.forumw.biz',
+		'*.forumy.biz',
+		'*.free-boards.net',
+		'*.freediscussion.net',
+		'*.freediscussions.net',
+		'*.freeforum.me.uk',
+		'*.freeforumboard.net',
+		'*.freeforumfree.com',
+		'*.freevideotalk.com',
+		'*.frenchboard.com',
+		'*.fruitsandco.com',
+		'*.fullboards.com',
+		'*.fullsubject.com',
+		'*.fullsubject.net',
+		'*.get-forum.net',
+		'*.getdiscussion.com',
+		'*.getgoo.net',
+		'*.getgoo.us',
+		'*.gettalk.net',
+		'*.go-board.com',
+		'*.go-board.net',
+		'*.go-forum.net',
+		'*.go-ogler.com',
+		'*.gofreeforum.com',
+		'*.gogoo.us',
+		'*.goo-board.com',
+		'*.goo-boys.com',
+		'*.goo-dart.com',
+		'*.goo-dole.com',
+		'*.goo-done.com',
+		'*.gooboards.com',
+		'*.goodbb.net',
+		'*.goodearths.com',
+		'*.goodforum.net',
+		'*.goodoles.com',
+		'*.goodoolz.com',
+		'*.gooforum.com',
+		'*.gooforums.com',
+		'*.googoolz.com',
+		'*.great-forum.com',
+		'*.heavenforum.com',
+		'*.hforum.biz',
+		'*.high-forums.com',
+		'*.highbb.com',
+		'*.highforum.net',
+		'*.hightoxic.com',
+		'*.homediscussion.net',
+		'*.homegoo.com',
+		'*.hooxs.com',
+		'*.hot-me.com',
+		'*.hot4um.com',
+		'*.hotdiscussion.net',
+		'*.hotgoo.net',
+		'*.in-goo.com',
+		'*.in-goo.net',
+		'*.infodiscussion.net',
+		'*.ingoo.us',
+		'*.iowoi.com',
+		'*.jforum.biz',
+		'*.just-forum.net',
+		'*.justboard.net',
+		'*.justdiscussion.com',
+		'*.justforum.net',
+		'*.justgoo.com',
+		'*.keuf.net',
+		'*.lforum.biz',
+		'*.lifediscussion.net',
+		'*.lifeme.net',
+		'*.lightbb.com',
+		'*.logu2.com',
+		'*.longdomaine.com',
+		'*.lovediscussion.net',
+		'*.lowcostforum.com',
+		'*.make-free-forum.com',
+		'*.makeforumfree.com',
+		'*.makefreeforum.com',
+		'*.mam9.com',
+		'*.manageboard.com',
+		'*.max2forum.com',
+		'*.meabout.com',
+		'*.megabb.com',
+		'*.moncontact.com',
+		'*.moninter.net',
+		'*.motion-forum.net',
+		'*.motionforum.net',
+		'*.motionsforum.com',
+		'*.mrforum.net',
+		'*.msnboard.net',
+		'*.msnyou.com',
+		'*.my-free-board.com',
+		'*.my-free-boards.com',
+		'*.my-free-forum.com',
+		'*.my-free-forums.com',
+		'*.my-goo.com',
+		'*.my-goo.net',
+		'*.mydiscussionboard.com',
+		'*.myfreeboard.net',
+		'*.mygoo.org',
+		'*.myrealboard.com',
+		'*.netboarder.com',
+		'*.netdiscussion.net',
+		'*.netgoo.org',
+		'*.new-forum.net',
+		'*.newdiscussion.net',
+		'*.newgoo.net',
+		'*.nforum.biz',
+		'*.nice-album.com',
+		'*.nice-board.biz',
+		'*.nice-board.com',
+		'*.nice-board.net',
+		'*.nice-boards.com',
+		'*.nice-boards.net',
+		'*.nice-forum.com',
+		'*.nice-forum.net',
+		'*.nice-forums.com',
+		'*.nice-forums.net',
+		'*.nice-gallery.net',
+		'*.nice-subject.com',
+		'*.nice-subjects.com',
+		'*.nice-theme.com',
+		'*.nice-topic.com',
+		'*.nice-topics.com',
+		'*.nicealbums.com',
+		'*.niceboard.biz',
+		'*.niceboard.net',
+		'*.niceboards.net',
+		'*.nicegalleries.net',
+		'*.nicesubject.com',
+		'*.nicesubjects.com',
+		'*.nicetopic.net',
+		'*.nicetopics.com',
+		'*.nightforum.net',
+		'*.nocost-forum.com',
+		'*.nofeeforum.com',
+		'*.one-forum.net',
+		'*.onediscussion.net',
+		'*.onegoo.us',
+		'*.onlinegoo.com',
+		'*.onlyquery.com',
+		'*.open-board.com',
+		'*.openu2.com',
+		'*.othersboards.com',
+		'*.own0.com',
+		'*.pforum.biz',
+		'*.phpbb9.com',
+		'*.phpbbtest.com',
+		'*.positifforum.com',
+		'*.postalboard.com',
+		'*.prodiscussion.net',
+		'*.progoo.us',
+		'*.pureforum.net',
+		'*.qforum.biz',
+		'*.quickbb.net',
+		'*.realbb.net',
+		'*.realfreeforum.com',
+		'*.realmsn.com',
+		'*.rforum.biz',
+		'*.road2us.com',
+		'*.roomforum.com',
+		'*.saveboard.com',
+		'*.screwcamel.com',
+		'*.screwcamels.com',
+		'*.sendboard.com',
+		'*.sephorum.com',
+		'*.sforum.biz',
+		'*.shootboard.com',
+		'*.shop-forum.net',
+		'*.shopsubject.com',
+		'*.simpleboard.net',
+		'*.site-forums.com',
+		'*.smileyforum.net',
+		'*.sos-forum.net',
+		'*.sos4um.com',
+		'*.sos4um.net',
+		'*.sosforum.net',
+		'*.speedyforum.com',
+		'*.stationforum.com',
+		'*.subject-expert.com',
+		'*.subject-line.com',
+		'*.subject-tracer.com',
+		'*.subjectchange.com',
+		'*.subjectdeals.com',
+		'*.subjectdebate.com',
+		'*.subjectdone.com',
+		'*.subjectonline.com',
+		'*.subjectschange.com',
+		'*.subjectsecrets.com',
+		'*.super-forum.net',
+		'*.talk-forums.com',
+		'*.team-forum.net',
+		'*.team-talk.net',
+		'*.teamconvention.com',
+		'*.teamgoo.net',
+		'*.teensboards.com',
+		'*.the-talk.net',
+		'*.the-up.com',
+		'*.thegoo.us',
+		'*.thinksubject.com',
+		'*.top-board.com',
+		'*.top-forum.net',
+		'*.top-me.com',
+		'*.top-talk.net',
+		'*.topdiscussion.com',
+		'*.topgoo.net',
+		'*.topic-board.com',
+		'*.topic-board.net',
+		'*.topic-debate.com',
+		'*.topic-ideas.com',
+		'*.topic-mail.com',
+		'*.topic-zone.com',
+		'*.topicboard.net',
+		'*.topicboards.com',
+		'*.topicmanager.com',
+		'*.topicsolutions.net',
+		'*.toxicfarm.com',
+		'*.unlimitboard.com',
+		'*.unlimitedboard.com',
+		'*.unlimitedforum.com',
+		'*.up-with.com',
+		'*.up-your.com',
+		'*.urealboard.com',
+		'*.user-board.net',
+		'*.userboard.net',
+		'*.users-board.com',
+		'*.users-board.net',
+		'*.usersboard.com',
+		'*.usersboard.net',
+		'*.webgoo.us',
+		'*.withboards.com',
+		'*.withme.us',
+		'*.worldgoo.com',
+		'*.yahooboard.net',
+		'*.yforum.biz',
+		'*.yoo7.com',
+		'*.youneed.us',
+		'*.your-board.com',
+		'*.your-talk.com',
+		'*.yourme.net',
+		'*.zforum.biz',
+
+		// 75.126.156.15 redirect to forumactif.com
+		'*.actifforum.com',
+		'*.fr-bb.com',
+		'*.superforum.fr',
+		
+		// 75.126.156.15 redirect to editboard.com
+		'*.bbfr.net',
+		'*.bbgraf.com',
+		'*.cinebb.com',
+		'*.darkbb.com',
+		'*.dynamicbb.com',
+		'*.zikforum.com',
+
+		// 74.86.25.140 Used: sosblog.com
+		'*.0-up.com',
+		'*.0-yo.com',
+		'*.04live.com',
+		'*.06fr.com',
+		'*.0fra.com',
+		'*.0jet.com',
+		'*.0yoo.com',
+		'*.1toxic.com',
+		'*.2k00.com',
+		'*.2xik.com',
+		'*.blog-2007.com',
+		'*.blog-2008.com',
+		'*.blog-2009.com',
+		'*.blog-2010.com',
+		'*.blog-actif.net',
+		'*.blog-marley.com',
+		'*.blog-talker.com',
+		'*.blog2009.com',
+		'*.blogactif.net',
+		'*.blogalbums.com',
+		'*.blogalerie.com',
+		'*.blogaleries.com',
+		'*.blogallerys.com',
+		'*.blogandme.com',
+		'*.blogandyou.com',
+		'*.blogbubble.net',
+		'*.blogdollz.com',
+		'*.bloggeuse.net',
+		'*.bloggeuses.com',
+		'*.bloginstinct.com',
+		'*.bloginternet.net',
+		'*.blogmakers.net',
+		'*.blogmarley.net',
+		'*.blogminister.net',
+		'*.blogmorane.com',
+		'*.blognboard.com',
+		'*.blogotek.net',
+		'*.blogpas.com',
+		'*.blogpublisher.net',
+		'*.blogsalbum.com',
+		'*.blogsalbums.com',
+		'*.blogsfan.net',
+		'*.blogsgallerys.com',
+		'*.blogsitephp.com',
+		'*.blogsland.net',
+		'*.blogsmaker.com',
+		'*.blogsmakers.com',
+		'*.blogspeed.net',
+		'*.blogsup.net',
+		'*.blogsutil.com',
+		'*.blogsutils.com',
+		'*.blogsystem.net',
+		'*.blogtalker.net',
+		'*.blogtheque.net',
+		'*.blogutil.com',
+		'*.blogvsboard.com',
+		'*.briceblog.com',
+		'*.cibleblog.com',
+		'*.cristalblog.com',
+		'*.crystalblog.net',
+		'*.dad-blog.com',
+		'*.daddy-blog.com',
+		'*.defaultblog.com',
+		'*.discussionsblog.com',
+		'*.dollzblog.com',
+		'*.dtoxic.com',
+		'*.easiestblog.net',
+		'*.espaceblog.net',
+		'*.exitblog.net',
+		'*.expensiveblog.com',
+		'*.extra-blog.net',
+		'*.extrablog.net',
+		'*.facileblog.com',
+		'*.forblogger.com',
+		'*.forumsblogs.com',
+		'*.freephpblog.com',
+		'*.fresh-blog.net',
+		'*.galleryblog.net',
+		'*.galleryblogs.net',
+		'*.gallerysblog.com',
+		'*.gallerysblogs.com',
+		'*.hyper-blog.net',
+		'*.hyper-blogger.com',
+		'*.hyper-blogger.net',
+		'*.hyperblogger.net',
+		'*.instinctblog.com',
+		'*.jeunblog.com',
+		'*.jeuneblog.com',
+		'*.judblog.com',
+		'*.makeblog.net',
+		'*.man-blog.net',
+		'*.man-blogs.com',
+		'*.man-blogs.net',
+		'*.manblog.net',
+		'*.manblog.org',
+		'*.manblog.us',
+		'*.manblogs.net',
+		'*.mansblog.net',
+		'*.mansblogs.com',
+		'*.mansblogs.net',
+		'*.meetingsblogs.com',
+		'*.men-blog.net',
+		'*.men-blogs.com',
+		'*.men-blogs.net',
+		'*.menblog.us',
+		'*.menblogs.net',
+		'*.mensblogs.net',
+		'*.messaginblog.com',
+		'*.monblogger.com',
+		'*.mum-blog.com',
+		'*.mummy-blog.com',
+		'*.mummyblog.com',
+		'*.myareablog.com',
+		'*.myblog-online.net',
+		'*.mybloginternet.com',
+		'*.myblogland.com',
+		'*.myblogmag.com',
+		'*.myfreshblog.com',
+		'*.myinternetblog.net',
+		'*.myoverblog.com',
+		'*.myoverblog.net',
+		'*.mysharedblog.com',
+		'*.nice-albums.com',
+		'*.nice-galleries.com',
+		'*.nicealbum.net',
+		'*.nicegallery.net',
+		'*.notreblogger.com',
+		'*.outilblog.com',
+		'*.over-blogger.com',
+		'*.overblogger.com',
+		'*.pasblog.com',
+		'*.pasblog.net',
+		'*.perfect-blog.net',
+		'*.perfectblog.net',
+		'*.phpblogsite.com',
+		'*.phpmyblog.net',
+		'*.plateformeblog.com',
+		'*.playblogger.com',
+		'*.publishmyblog.com',
+		'*.pulseblog.net',
+		'*.pulseblogs.com',
+		'*.puretoxic.com',
+		'*.reservedblog.com',
+		'*.shareblog.net',
+		'*.shareblogs.net',
+		'*.shared-blogs.com',
+		'*.sharedblog.net',
+		'*.sharedblogs.net',
+		'*.solideblog.com',
+		'*.systemeblog.com',
+		'*.talkmeblog.com',
+		'*.toolsblog.net',
+		'*.toxicplace.com',
+		'*.ufreeblog.com',
+		'*.uliveblog.com',
+		'*.ultratoxic.com',
+		'*.utilblog.com',
+		'*.utilblogs.com',
+		'*.utilsblog.com',
+		'*.utilsblogs.com',
+		'*.various-blog.com',
+		'*.various-blog.net',
+		'*.various-blogs.com',
+		'*.various-blogs.net',
+		'*.variusblog.com',
+		'*.versusblog.com',
+		'*.vieuxblog.com',
+		'*.web-day.net',
+		'*.whatsblog.net',
+		'*.woman-blog.net',
+		'*.woman-blogs.com',
+		'*.woman-blogs.net',
+		'*.womanblog.com',
+		'*.womanblog.org',
+		'*.womanblog.us',
+		'*.womanblogs.net',
+		'*.womansblogs.com',
+		'*.womansblogs.net',
+		'*.women-blog.net',
+		'*.women-blogs.com',
+		'*.women-blogs.net',
+		'*.womenblog.us',
+		'*.womenblogs.net',
+		'*.womensblog.net',
+		'*.womensblogs.net',
+		'*.youblog.net',
+		'*.yourliveblog.com',
+		'*.yourweblog.net',
+	),
 	'*.forumcommunity.net',
+	'*.forumer.com',
+	'*.forumfree.net',
 	'forumhosting.org',
 	'*.forums.com',
 	'forumbolt.com',
@@ -1775,6 +2416,8 @@ $blocklist['B-1'] = array(
 		'cz|de|dk|es|eu|fr|gr|hu|in|info|ir|it|jobs|jp|lt|' .
 		'lv|org|pl|name|net|nl|ro|ru|se|sk|tv|us|web\.tr)$#',
 	'*.fory.pl',
+	'fotolog.com',
+	'*.fr33webhost.com',
 	'*.free-25.de',
 	'*.free-bb.com',
 	'Free-Blog-Hosting.com' => array(
@@ -1861,6 +2504,7 @@ $blocklist['B-1'] = array(
 	),
 	'*.hiblogger.com',		// by chiaokin at gmail.com
 	'*.hit.bg',				// by forumup.com ??
+	'*.homeblock.com',		// 72.55.141.237(*.static.privatedns.com)
 	'*.host-page.com',
 	'*.hostingclub.de',
 	'forums.hspn.com',
@@ -1909,6 +2553,7 @@ $blocklist['B-1'] = array(
 	'*.jconserv.net',
 	'*.jeeran.com',
 	'*.jeun.fr',
+	'*.joolo.com',
 	'*.journalscape.com',
 	'*.justfree.com',
 	'*.blog.kataweb.it',
@@ -1921,6 +2566,7 @@ $blocklist['B-1'] = array(
 		'*.sblog.cz',
 	),
 	'limmon.net',
+	'listible.com',			///list/
 	'Livedoor.com' => array(
 		'blog.livedoor.jp',
 		'*.blog.livedoor.com',	// redirection
@@ -1957,6 +2603,7 @@ $blocklist['B-1'] = array(
 
 		'*.tripod.com',
 	),
+	'*.mastertopforum.com',
 	'mbga.jp',				// by DeNA Co.,Ltd. (barshige at hq.bidders.co.jp, torigoe at hq.bidders.co.jp)
 	'*.memebot.com',
 	'*.messageboard.nl',
@@ -1996,7 +2643,7 @@ $blocklist['B-1'] = array(
 		'*.9k.com',				// 64.39.31.55(netgears.com)
 		'*.freewebspace.com',	// 64.49.236.72
 	),
-	'Netscape.com' => array('mywebpage.netscape.com'),
+	'Netscape.com' => array('*.netscape.com'),
 	'users.newblog.com',
 	'neweconomics.info',
 	'*.newsit.es',				// 75.126.252.108
@@ -2055,6 +2702,7 @@ $blocklist['B-1'] = array(
 		'.za.pl',
 		'.skysquad.net',	// by Dorota Brzezinska (info at nazwa.pl)
 	),
+	'oyax.com',				///user_links.php
 	'*.parlaris.com',
 	'*.pathfinder.gr',
 	'*.persianblog.com',
@@ -2077,6 +2725,7 @@ $blocklist['B-1'] = array(
 	'ProBoards' => '#^.*\.proboards[0-9]*\.com$#',
 	'*.probook.de',
 	'*.prohosting.com',	// by Nick Wood (admin at dns-solutions.net)
+	'putfile.com',
 	'*.quickfreehost.com',
 	'quizilla.com',
 	'*.quotaless.com',
@@ -2148,6 +2797,11 @@ $blocklist['B-1'] = array(
 		'topix.net',
 	),
 	'forum.tourism-talk.com.au',
+	'tycho at e-lab.nl' => array(
+		'*.234mb.com',		// 195.242.99.206(s206.softwarelibre.nl -> 194.109.216.19)
+		'*.1234mb.com',		// 74.86.20.227(layeredpanel.com -> 195.242.99.195 -> s195.softwarelibre.nl)
+	),
+	'*.tumblr.com',
 	'UcoZ Web-Services' => array(
 		'*.3dn.ru',
 		'*.clan.su',
@@ -2306,11 +2960,13 @@ $blocklist['B-1'] = array(
 	'xeboards.com',			// by Brian Shea (bshea at xeservers.com)
 	'*.xforum.se',
 	'xfreeforum.com',
+	'*.xhost.ro',			// by domain-admin at listserv.rnc.ro
 	'*.xoomwebs.com',
 	'.freeblogs.xp.tl',
 	'*.xphost.org',			// by alex alex (alrusnac at hotmail.com)
 	'*.ya.com',				// 'geo.ya.com', 'blogs.ya.com', 'humano.ya.com', 'audio.ya.com'...
 	'Yahoo.com' => array(
+		'flickr.com',
 		'geocities.com',
 	),
 	'YANDEX, LLC.' => array(	// noc at yandex.net
@@ -2460,6 +3116,7 @@ $blocklist['B-2'] = array(
 	'openchemist.net',
 	'palungjit.com',
 	'pataphysics-lab.com',
+	'paypaldev.org',
 	'paullima.com',
 	'perl.org.br',
 	'pfff.co.uk',
@@ -3070,7 +3727,8 @@ $blocklist['C'] = array(
 		'.lineagecojp.com',		// 61.139.126.10
 		'.ragnarokonlina.com',	// 220.247.158.99
 	),
-	'aakin at yandex.ru' => array(	// by Baer
+	'aakin at yandex.ru' => array(
+		// 89.149.206.225(*.internetserviceteam.com) by Baer
 		'.entirestar.com',
 		'.superbuycheap.com',
 		'.topdircet.com',
@@ -4474,7 +5132,7 @@ $blocklist['C'] = array(
 		'.search4freez.info',
 		'.yasech.info',
 	),
-	'ice--man at mail.ru' => array(
+	'ice--man at mail.ru related' => array(
 		// 74.50.97.198 by andrey, the same approach and timing of clickx at bk.ru
 		'.bestcreola.com',
 		'.crekatierra.com',
@@ -4492,6 +5150,7 @@ $blocklist['C'] = array(
 		'.icypopular.com',
 		'.iflashpoint.com',
 		'.justmdx.com',
+		'.kiliusgroup.com',
 		'.klickerr.com',
 		'.klickerrworld.com',
 		'.kreolic.com',
@@ -4505,9 +5164,205 @@ $blocklist['C'] = array(
 		'.yourcreola.com',
 		
 		// 69.46.23.48
+		'.bestkilius.com',
 		'.crekadirecto.com',
 		'.getflashsite.com',
 		'.sucreka.com',
+		'.superkilius.com',
+
+		// 69.46.23.48 by bing-16 at ftunez.org
+		'.bovorup.cn',
+		'.litotar.cn',
+		'.nihydec.cn',
+		
+		// 66.232.112.175 by bing-32 at ftunez.org
+		'.lasyxy.cn',
+
+		// 69.46.23.48 by clarkson-34 at ftunez.org
+		'.bumora.cn',
+		'.byxite.cn',
+		'.byxuqu.cn',
+		'.jadama.cn',
+		'.kybope.cn',
+		'.mefeki.cn',
+		'.mokiso.cn',
+		'.niqeme.cn',
+		'.pukafo.cn',
+		'.qesaxa.cn',
+		'.toxezi.cn',
+		'.tujudy.cn',
+		'.tutike.cn',
+
+		// NEUTRAL but dark: with clarkson-34 at ftunez.org, non-existent domain
+		'.cabino.cn',
+		'.cuwace.cn',
+		'.ferazi.cn',
+		'.gigywy.cn',
+		'.lapype.cn',
+		'.mewabe.cn',
+		'.pezegy.cn',
+		'.pyzuza.cn',
+		'.qypony.cn',
+		'.ropesy.cn',
+		'.wadyfe.cn',
+
+		// 69.46.23.48 clarkson-58 at ftunez.org
+		'.becabe.cn',
+		'.biciqy.cn',
+		'.bezymu.cn',
+		'.cifori.cn',
+		'.ciwyxi.cn',
+		'.dobari.cn',
+		'.dusofe.cn',
+		'.dutyda.cn',
+		'.dykanu.cn',
+		'.fakexu.cn',
+		'.fylema.cn',
+		'.godymo.cn',
+		'.hyhaxy.cn',
+		'.ganosi.cn',
+		'.kuxyju.cn',
+		'.lacezy.cn',
+		'.lonyru.cn',
+		'.lycato.cn',
+		'.nykyby.cn',
+		'.qyhuko.cn',
+		'.redere.cn',
+		'.riwimu.cn',
+		'.wopary.cn',
+		'.xizity.cn',
+		'.xuxusa.cn',
+
+		// 69.46.23.48 by entretov-32 at ftunez.org
+		'.cihuji.cn',
+		'.deqyve.cn',
+		'.genefa.cn',
+		'.gujyju.cn',
+		'.hasadu.cn',
+		'.hedomi.cn',
+		'.kecicy.cn',
+		'.kipabo.cn',
+		'.manunu.cn',
+		'.musoru.cn',
+		'.myvuna.cn',
+		'.pikybe.cn',
+		'.riqawo.cn',
+		'.rufuxy.cn',
+		'.vyfilu.cn',
+		'.xadule.cn',
+		'.zolaxe.cn',
+		'.zerixu.cn',
+
+		// 66.232.112.242(hv78.steephost.com) by entretov-43 at ftunez.org
+		'.dozoda.cn',
+		'.nemipu.cn',
+
+		// 69.46.23.48 by jeremy-57 at ftunez.org
+		'.duzele.cn',
+		'.figede.cn',
+		'.fiwany.cn',
+		'.gyfalu.cn',
+		'.jepylo.cn',
+		'.nuqumy.cn',
+
+		// NEUTRAL but dark: with jeremy-57 at ftunez.org, non-existent domain
+		'.burahu.cn',
+		'.jydijy.cn',
+		'.komyby.cn',
+		'.najepa.cn',
+		'.pylobu.cn',
+		'.qofoly.cn',
+		'.sybuvi.cn',
+		'.vycexu.cn',
+		'.wotyqo.cn',
+		'.xudoli.cn',
+
+		// 66.232.112.175 by entretov-86 at ftunez.org
+		'.faweji.cn',
+		'.jypaci.cn',
+		'.xozuso.cn',
+
+		// 69.46.23.48 by miles-37 at ftunez.org
+		'.beqymo.cn',
+		'.ceqibi.cn',
+		'.dyraqo.cn',
+		'.qenedo.cn',
+		'.qurypa.cn',
+		'.siluvo.cn',
+		'.tujala.cn',
+		'.wukuwi.cn',
+		'.xenibo.cn',
+		'.xiculo.cn',
+		'.zabemu.cn',
+
+		// NEUTRAL but dark: with miles-37 at ftunez.org, non-existent domain
+		'.bevaka.cn',
+		'.fysyte.cn',
+		'.guxixu.cn',
+		'.hatoli.cn',
+		'.jitobu.cn',
+		'.juxeca.cn',
+		'.kifuhy.cn',
+		'.licila.cn',
+		'.mecomy.cn',
+		'.niryko.cn',
+		'.noxoco.cn',
+		'.qiwysu.cn',
+		'.tutysy.cn',
+
+		// 66.232.112.175 by sabrosky-49 at ftunez.org
+		'.gywiqe.cn',
+		'.jotapo.cn',
+		'.jywixa.cn',
+
+		// '69.46.23.48 by sabrosky-60 at ftunez.org
+		'.bawegap.cn',
+		'.buremyl.cn',
+		'.cilybut.cn',
+		'.cutufek.cn',
+		'.defypyr.cn',
+		'.femaxij.cn',
+		'.gelejo.cn',
+		'.gocylyv.cn',
+		'.kehiqaq.cn',
+		'.ninyjit.cn',
+		'.ruroruw.cn',
+		'.vetehow.cn',
+
+		// 69.46.23.48 sabrosky-85 at ftunez.org
+		'.banyla.cn',
+		'.bubaqu.cn',
+		'.bygage.cn',
+		'.dafozy.cn',
+		'.kaxyjo.cn',
+		'.makyle.cn',
+		'.naleto.cn',
+		'.pidele.cn',
+		'.poqexa.cn',
+		'.pymaqo.cn',
+		'.qupiqy.cn',
+		'.reqefy.cn',
+		'.sopocy.cn',
+		'.vuhexo.cn',
+		'.weryso.cn',
+		'.wubula.cn',
+		'.xufuxy.cn',
+		'.zuhyxu.cn',
+
+		// 69.46.23.48 by tribiani-97 at ftunez.org
+		'.dyxorod.cn',
+		'.firywoz.cn',
+		'.jixezyx.cn',
+		'.joveraw.cn',
+		'.jowaxup.cn',
+		'.nodarej.cn',
+		'.pimijom.cn',
+		'.tugupeg.cn',
+
+		// 66.232.112.175 by abuse-here at inbox.ru
+		'.catybe.cn',
+		'.jytame.cn',
+		'.wygete.cn',
 	),
 	'nijeoi at hotmai.com' => array(
 		// 66.232.126.74 by Nicol Makerson, the same approach and timing _and IP_ of clickx at bk.ru
@@ -4549,6 +5404,15 @@ $blocklist['C'] = array(
 		'.nice-host.info',
 		'.realyfast.info',
 		'.resuts.info',
+
+		// 66.232.126.74, the same approach and IP of clickx at bk.ru
+		'.bepoh.com',
+		'.gufiq.com',
+		'.kedyh.com',
+		'.pofyb.com',
+		'.rurid.com',
+		'.vucaj.com',
+		'.vuwir.com',
 	),
 	'porychik at hot.ee' => array(	// by Igor
 		'.tedstate.info',	// "Free Web Hosting"
@@ -4679,6 +5543,7 @@ $blocklist['C'] = array(
 	'supermaster at pisem.net' => array(	// by Aleksandr Krasnik (supermaster at pisem.net), ns *.msn-dns.com
 		'.kiski.net.in',
 		'.pipki.org.in',
+		'.popki.ind.in',
 		'.siski.co.in',
 	),
 	'tiptronikmike at mail.com' => array(
@@ -4782,11 +5647,13 @@ $blocklist['C'] = array(
 	),
 	'snap990 at yahoo.com' => array(	// by John Glade (snap990 at yahoo.com)
 		'.date-x.info',				// 208.73.34.48(support-office.hostican.com -> 208.79.200.16)
+		'.getrun.cn',				// 208.73.34.48
 		'.ipod-application.info',	// NO IP
 		'.love-total.net',			// 208.73.34.48, was 74.50.97.136(server.serveshare.com)
 		'.stonesex.info',			// NO IP, was 74.50.97.136
 	),
-	'germerts at yandex.ru' => array(	// by Sergey Marchenko (germerts at yandex.ru)
+	'germerts at yandex.ru' => array(
+		// 89.188.112.64(allworldteam.com by aakin at yandex.ru) by Sergey Marchenko (germerts at yandex.ru)
 		'.andatra.info',
 		'.banchitos.info',
 		'.batareya.info',
@@ -4795,6 +5662,8 @@ $blocklist['C'] = array(
 		'.gamadril.info',
 		'.gipotenuza.info',
 		'.govnosaklo.info',
+		'.muflon.info',
+		'.termitnik.info',
 	),
 	'84.252.148.80' => array(	//  84.252.148.80(heimdall.mchost.ru)
 		'.acronis-true-image.info',
@@ -4976,7 +5845,7 @@ $blocklist['C'] = array(
 			'.ukncd.cn',
 			'.zijgb.cn',
 
-		// 84.16.255.253(84-16-255-253.internetserviceteam.com), / says 'noy found'
+		// 84.16.255.253(*.internetserviceteam.com), / says 'noy found'
 		'.dns4dedka.info',	// by acua at mail.ru
 			// by webmaster at dns4dedka.info
 			'.bcpnb.cn',
@@ -5157,8 +6026,7 @@ $blocklist['C'] = array(
 		// (206.161.201.216 -> 206-161-201-216.pccwglobal.net)
 		// by Eddie Sachs (hostmaster at isoftpay.com), scaring virus, spyware or something
 		// NOTE: scanner.malwarealarm.com(206.161.201.212 -> 206-161-201-212.pccwglobal.net)
-	'.viagrageneric.org',	// IP not allocated, ns *.heyhey.info(IP not allocated)
-	'.viagraorder.org',		// IP not allocated, ns *.heyhey.info(IP not allocated)
+	'.viagraorder.org',		// IP not allocated, ns *.heyhey.info(IP not allocated) => 89.248.99.110
 	'Inet-Traffic.com' => array(
 		// "The Inet-Traffic network offers over 6 million unique visitors a month."
 		//'.dcomm.com',		// by D Communications Inc. S.A.
@@ -5193,10 +6061,19 @@ $blocklist['C'] = array(
 		// ...
 		'.gameroom.com',	// 72.32.22.210 by julieisbusy at yahoo.com, listed at inet-traffic.com and freehomepages.com
 	),
-	'andreyletov at yahoo.com' => array(
+	'andreyletov at yahoo.com related' => array(
 		'.180haifa.com',		// 82.103.128.177(e82-103-128-177s.easyspeedy.com) by Andrey Letov
 		'.mens-medication.com',	// 89.248.99.118 by Boris Rabinovich
 		'.pills-supplier.com',	// 89.248.99.118 by Boris Rabinovich
+
+		// 89.248.99.118 by anonymous
+		'.lpgpharmacy.com',
+		'.viagrabest.info',
+		'.viagratop.info',
+
+		'.canadians-medication.com',	// 89.248.99.118 by beseo at bk.ru
+		'.absulutepills.com',			// 216.40.236.58(*.ev1servers.net) by bulka at skyhaifa.com, redirect to canadians-medication.com
+		'.eyzempills.com',				// 216.40.236.59(*.ev1servers.net) by bulka at skyhaifa.com, redirect to canadians-medication.com
 	),
 	'alrusnac at hotmail.com' => array(
 		'.122mb.com',			// 209.67.214.122 by Alexandru Rusnac (alrusnac at hotmail.com)
@@ -5225,18 +6102,28 @@ $blocklist['C'] = array(
 		'.yemine.info',
 		'.fr4f3ds.info',
 	),
-	'66.232.112.175' => array(
-		// by abuse-here at inbox.ru
-		'.catybe.cn',
-		'.jytame.cn',
-		'.wygete.cn',
-
-		// by bing-32 at ftunez.org
-		'.lasyxy.cn',
-
-		// by entretov-86 at ftunez.org
-		'.faweji.cn',
-		'.xozuso.cn',
+	'75.126.129.222' => array(
+		// 75.126.129.222(greatpool.biz -> 72.232.198.234 -> brasilrok.com.br -> ...)
+		'.viagrabuycheap.info',	// ns *.advernsserver.com
+		'.viagrageneric.org',	// IP not allocated, ns *.heyhey.info(IP not allocated) => 75.126.129.222
+	),
+	'sqr at bk.ru' => array(
+		// 69.46.18.2(hv113.steephost.com -> 72.232.191.50 -> 72.232.191.50.steephost.com)
+		'.masserch.info',		// "Free Web Hosting", spam
+		'.miserch.info',
+	),
+	'gangstadra at hotmail.com' => array(
+		'.kenrucky.com',		// 82.98.86.167(*.sedoparking.com)
+		'.michigab.com',		// 82.98.86.175(*.sedoparking.com)
+		'.pimperos.com',		// 82.98.86.163(*.sedoparking.com)
+		'.pimpcupid.com',		// 89.149.226.111(*.internetserviceteam.com)
+	),
+	'hosan by front.ru' => array(
+		'.online-freesearch.com',	// 206.53.51.155
+		'.carsprojects.com',		// 206.53.51.159
+		'.sport-brands.com',		// 206.53.51.167
+		'.choosefinest.com',		// 206.53.51.157
+		'.online-pharmaceutics.com',	// 206.53.51.168
 	),
 
 	// C-2: Lonely domains (buddies not found yet)
@@ -5364,7 +6251,6 @@ $blocklist['C'] = array(
 	'.pharmacy2online.com',	// by Mike Hiliok (bbong80 at yahoo.com)
 	'.pills-storage.com',	// by 
 	'.plusintedia.com',		// by g yk (abc00623 at 163.com), seems not used now
-	'.popki.ind.in',			// by Aleksandr Krasnik (supermaster at pisem.net)
 	'.porkyhost.com',		// 79965 at whois.gkg.net
 	'.porno-babe.info',		// by Peter (asdas at mail.ru), redirect to Google
 	'.pornesc.com',			// by Xpeople (suppij atmail.ru)
@@ -5435,15 +6321,14 @@ $blocklist['C'] = array(
 	'.alasex.info',			// 'UcoZ web-services' 216.32.81.234(server.isndns.net) by yx0 at yx0.be
 	'.golden-keys.net',		// 89.149.205.146(unknown.vectoral.info) by aktitol at list.ru
 
-	'.masserch.info',		// 69.46.18.2(hv113.steephost.com -> 72.232.191.50 -> 72.232.191.50.steephost.com) "Free Web Hosting" by sqr at bk.ru, spam
-	'.viagrabuycheap.info',	// 75.126.129.222(greatpool.biz -> 72.232.198.234 -> brasilrok.com.br -> ...), ns *.advernsserver.com
-
 	'.chatwalker.com',		// 124.32.230.65
 	'.angel-live.com',		// 61.211.231.181, ns *.netassist.ne.jp, pr to himehime.com
 	'.angelkiss.jp',		// 59.106.45.50, pr to himehime.com and chatwalker.com
 
+	'.morfolojna.cn',		// 206.53.51.126, by gilserta at jilbertsabram.com, Using web.archive.org
 	'.mncxvsm.info',		// 217.11.233.105, / blank
 	'.super-discount.sakura.ne.jp',	// 59.106.19.206(www756.sakura.ne.jp), sales
+	'.privatedns.com',		// 209.172.41.50(sebulba.privatedns.com), encoded JavaScript, root of various posts
 
 	// C-3: Not classifiable (information wanted)
 	//
@@ -5628,6 +6513,14 @@ $blocklist['E'] = array(
 		'.point-park.jp',	// 43.244.140.160(160.140.244.43.ap.yournet.ne.jp)
 	),
 	'.potitto.info',		// 219.94.132.89(sv450.lolipop.jp)
+	'PRJAPAN.co.jp' => array(
+		//'.prjapan.co.jp',		// 211.10.20.143(sv.prjapan.co.jp)
+		'go.prjapan.co.jp',		// 210.189.72.220(sv.webstars.jp)
+		'.bestsale.jp',			// 210.189.77.143 "Public Relations Inc." by info at prjapan.co.jp, kamita at prjapan.co.jp, nakade at prjapan.co.jp
+		'.hyouka-navi.jp',		// 202.218.52.63(sv.numberzoo.jp) by kamita at i-say.net
+		'.sugowaza.jp',			// 210.189.77.143(sv.bestsale.jp) by kamita at i-say.net, 
+		//'.webstars.jp',		// 210.189.72.220  by info at prjapan.co.jp
+	),
 	'Rakuten.co.jp' => array(
 		'hb.afl.rakuten.co.jp',		///hsc/ 203.190.60.104 redirect to rakuten.co.jp
 		'hbb.afl.rakuten.co.jp',	///hsb/ 203.190.60.105 image server?
