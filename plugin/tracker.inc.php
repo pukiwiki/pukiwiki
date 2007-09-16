@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.52 2007/09/15 16:50:23 henoheno Exp $
+// $Id: tracker.inc.php,v 1.53 2007/09/16 04:06:39 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -21,6 +21,8 @@ define('PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN','#^SubMenu$|/#');	// 'SubMenu' and 
 
 // Show error rows (can't capture columns properly)
 define('PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE', 1);
+
+// ----
 
 // Sort options
 define('PLUGIN_TRACKER_LIST_SORT_DESC',    3);
@@ -904,80 +906,92 @@ class Tracker_list
 		return $sortkey;
 	}
 
-	// toString(): Used with preg_replace_callback()
-	function _replace_item($arr)
+	// toString(): Called within preg_replace_callback()
+	function _replace_item($matches = array())
 	{
-		$params = explode(',', $arr[1]);
-		$name   = array_shift($params);
-		if ($name == '') {
-			$str = '';
-		} else if (isset($this->items[$name])) {
-			$str = $this->items[$name];
-			if (isset($this->fields[$name])) {
-				$str = $this->fields[$name]->format_cell($str);
+		$fields = $this->fields;
+		$items  = $this->items;
+		$escape = isset($this->_escape) ? (bool)$this->_escape : FALSE;
+
+		$params    = isset($matches[1]) ? explode(',', $matches[1]) : array();
+		$fieldname = isset($params[0]) ? $params[0] : '';
+		$stylename = isset($params[1]) ? $params[1] : $fieldname;
+
+		if ($fieldname == '') return '';	// Invalid
+
+		if (! isset($items[$fieldname])) {
+			// Maybe load miss of the page
+			if (isset($fields[$fieldname])) {
+				$str = '[page_err]';	// Exactlly
+			} else {
+				$str = isset($matches[0]) ? $matches[0] : '';	// Nothing to do
 			}
 		} else {
-			return $this->pipe ? str_replace('|', '&#x7c;', $arr[0]) : $arr[0];
+			$str = $items[$fieldname];
+			if (isset($fields[$fieldname])) {
+				$str    = $fields[$fieldname]->format_cell($str);
+			}
+			if (isset($fields[$stylename]) && isset($items[$stylename])) {
+				$_style = $fields[$stylename]->get_style($items[$stylename]);
+				$str    = sprintf($_style, $str);
+			}
 		}
 
-		$style = empty($params) ? $name : $params[0];
-		if (isset($this->items[$style]) && isset($this->fields[$style])) {
-			$str = sprintf($this->fields[$style]->get_style($this->items[$style]), $str);
-		}
-
-		return $this->pipe ? str_replace('|', '&#x7c;', $str) : $str;
+		return $escape ? str_replace('|', '&#x7c;', $str) : $str;
 	}
 
-	// toString(): Used with preg_replace_callback()
-	function _replace_title($arr)
+	// toString(): Called within preg_replace_callback()
+	function _replace_title($matches = array())
 	{
-		$field = $arr[1];
-		if (! isset($this->fields[$field])) return $arr[0];
-
-		$sort = $field;
-		if ($sort == '_name' || $sort == '_page') $sort = '_real';
-
-		$arrow = '';
-		$order = PLUGIN_TRACKER_LIST_SORT_ASC;
-
+		$fields = $this->fields;
 		$orders = $this->order;
 
+		$fieldname = isset($matches[1]) ? $matches[1] : '';
+		if (! isset($fields[$fieldname])) {
+			return isset($matches[0]) ? $matches[0] : '';	// Nothing to do
+		}
+
+		$sort = $fieldname;
+		if ($sort == '_name' || $sort == '_page') $sort = '_real';
+
+		$arrow  = '';
+		$order  = PLUGIN_TRACKER_LIST_SORT_ASC;
+		$_order = array();
 		if (isset($orders[$sort])) {
 			// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
 			$order_keys = array_keys($orders); // with array_shift();
 
 			$index   = array_flip($order_keys);
 			$pos     = 1 + $index[$sort];
-			$b_end   = ($sort == array_shift($order_keys));
-			$b_order = ($orders[$sort] == PLUGIN_TRACKER_LIST_SORT_ASC);
+			$b_end   = ($sort == $order_keys[0]);
+			$b_order = ($orders[$sort] === PLUGIN_TRACKER_LIST_SORT_ASC);
 			$order   = ($b_end xor $b_order)
 				? PLUGIN_TRACKER_LIST_SORT_ASC
 				: PLUGIN_TRACKER_LIST_SORT_DESC;
 			$arrow   = '&br;' . ($b_order ? '&uarr;' : '&darr;') . '(' . $pos . ')';
 
-			unset($order_keys);
-		}
-		$title  = $this->fields[$field]->title;
-		$r_base = rawurlencode($this->base);
-		$r_config = rawurlencode($this->config->config_name);
-		$r_list = rawurlencode($this->list);
+			unset($order_keys, $index);
 
-		$_order = array($sort . ':' . $order);
+			// $sort become the first
+			unset($orders[$sort]);
+			$_order[] = $sort . ':' . $this->_sortkey_define2string($order);
+		}
 		foreach ($orders as $key => $value) {
 			$_order[] = $key . ':' . $this->_sortkey_define2string($value);
 		}
 
-		$script = get_script_uri();
 		return '[[' .
-				$title . $arrow .
-				'>' .
-				$script . '?plugin=tracker_list&base=' . $r_base .
-				'&config=' . $r_config .
-				'&list=' . $r_list .
-				'&order=' . rawurlencode(join(';', $_order)) .
+				$fields[$fieldname]->title . $arrow .
+				'>' . get_script_uri() .
+				'?plugin=tracker_list&' .
+				'base='    . rawurlencode($this->base) .
+				'&config=' . rawurlencode($this->config->config_name) .
+				'&list='   . rawurlencode($this->list) .
+				'&order='  . rawurlencode(join(';', $_order)) .
 				']]';
 	}
 
+	// Output part of XHTML
 	function toString($limit = 0)
 	{
 		if (empty($this->rows)) {
@@ -985,29 +999,19 @@ class Tracker_list
 			return FALSE;
 		}
 
-		$count = $_count = count($this->rows);
-
-		if ($limit != 0) {
-			$limit = max(1, intval($limit));
-			if ($count > $limit) {
-				$rows   = array_slice($this->rows, 0, $limit);
-				$_count = count($rows);
-			} else {
-				$rows = $this->rows;
-			}
-		} else {
-			$rows = $this->rows;
-		}
-
 		$source = array();
+		$rows   = $this->rows;
 
-		if ($count > $_count) {
-			// Message
+		$count = count($this->rows);
+		$limit = intval($limit);
+		if ($limit != 0) $limit = max(1, $limit);
+		if ($limit != 0 && $count > $limit) {
 			$source[] = str_replace(
 				array('$1',   '$2'  ),
-				array($count, $_count),
+				array($count, $limit),
 				plugin_tracker_message('msg_limit')
 			) . "\n";
+			$rows  = array_slice($this->rows, 0, $limit);
 		}
 
 		$body = array();
@@ -1024,12 +1028,11 @@ class Tracker_list
 
 			$this->items = $row;
 			foreach ($body as $line) {
-				if (ltrim($line) == '') {
-					$source[] = $line;
-				} else {
-					$this->pipe = ($line{0} == '|' || $line{0} == ':');
-					$source[] = preg_replace_callback('/\[([^\[\]]+)\]/', array(& $this, '_replace_item'), $line);
+				if (ltrim($line) != '') {
+					$this->_escape = ($line[0] == '|' || $line[0] == ':');	// The first letter
+					$line = preg_replace_callback('/\[([^\[\]]+)\]/', array(& $this, '_replace_item'), $line);
 				}
+				$source[] = $line;
 			}
 		}
 
