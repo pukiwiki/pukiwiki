@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.53 2007/09/16 04:06:39 henoheno Exp $
+// $Id: tracker.inc.php,v 1.54 2007/09/17 16:05:28 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -707,9 +707,9 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 	$result = $list->toString($limit);
 	if ($result === FALSE) {
 		return '#tracker_list: ' . htmlspecialchars($list->error) . '<br />';
+	} else {
+		return convert_html($result);
 	}
-
-	return $result;
 }
 
 // Listing class
@@ -727,6 +727,10 @@ class Tracker_list
 	var $_added = array();
 
 	var $error  = '';	// Error message
+
+	// Used by toString() only
+	var $_itmes;
+	var $_escape;
 
 	// TODO: Why list here
 	function Tracker_list($base, $refer, & $config, $list)
@@ -832,9 +836,10 @@ class Tracker_list
 			return TRUE;
 		}
 
+		$fields = $this->fields;
 		$orders = array();
 		$params = array();	// Arguments for array_multisort()
-		$names  = array_flip(array_keys($this->fields));
+		$names  = array_flip(array_keys($fields));
 
 		foreach (explode(';', $order_commands) as $command) {
 			// TODO: ???
@@ -847,21 +852,26 @@ class Tracker_list
 			}
 
 			$order = $this->_sortkey_string2define($order);
-			if ($order === FALSE) return FALSE;
-			if ($order !== NULL) $orders[$fieldname] = $order;
+			if ($order === NULL) continue;
+			if ($order === FALSE) {
+				$this->error =  'Invalid sortkey: ' . $order;
+				return FALSE;
+			}
+
+			$orders[$fieldname] = $order;	// Set or override
 		}
-		// TODO: LIMIT (count($orders) < N < count(fields)) TO LIMIT array_multisort()
+		// TODO: LIMIT (count($orders) < N < count(fields_effective)) TO LIMIT array_multisort()
 
 		foreach ($orders as $fieldname => $order) {
 			// One column set (one-dimensional array(), sort type, and order-by)
 			$array = array();
 			foreach ($this->rows as $row) {
 				$array[] = isset($row[$fieldname]) ?
-					$this->fields[$fieldname]->get_value($row[$fieldname]) :
+					$fields[$fieldname]->get_value($row[$fieldname]) :
 					'';
 			}
 			$params[] = $array;
-			$params[] = $this->fields[$fieldname]->sort_type;
+			$params[] = $fields[$fieldname]->sort_type;
 			$params[] = $order;
 		}
 		$params[] = & $this->rows;
@@ -910,7 +920,7 @@ class Tracker_list
 	function _replace_item($matches = array())
 	{
 		$fields = $this->fields;
-		$items  = $this->items;
+		$items  = $this->_items;
 		$escape = isset($this->_escape) ? (bool)$this->_escape : FALSE;
 
 		$params    = isset($matches[1]) ? explode(',', $matches[1]) : array();
@@ -948,34 +958,36 @@ class Tracker_list
 
 		$fieldname = isset($matches[1]) ? $matches[1] : '';
 		if (! isset($fields[$fieldname])) {
-			return isset($matches[0]) ? $matches[0] : '';	// Nothing to do
+			// Invalid sortkey or user's own string or something. Nothing to do
+			return isset($matches[0]) ? $matches[0] : '';
 		}
 
-		$sort = $fieldname;
-		if ($sort == '_name' || $sort == '_page') $sort = '_real';
+		if ($fieldname == '_name' || $fieldname == '_page') {
+			$sort = '_real';
+		} else {
+			$sort = $fieldname;
+		}
 
 		$arrow  = '';
-		$order  = PLUGIN_TRACKER_LIST_SORT_ASC;
-		$_order = array();
 		if (isset($orders[$sort])) {
-			// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
-			$order_keys = array_keys($orders); // with array_shift();
-
+			// Sorted
+			$order_keys = array_keys($orders);
 			$index   = array_flip($order_keys);
 			$pos     = 1 + $index[$sort];
-			$b_end   = ($sort == $order_keys[0]);
+			$b_end   = ($sort == isset($order_keys[0]) ? $order_keys[0] : '');
 			$b_order = ($orders[$sort] === PLUGIN_TRACKER_LIST_SORT_ASC);
 			$order   = ($b_end xor $b_order)
 				? PLUGIN_TRACKER_LIST_SORT_ASC
 				: PLUGIN_TRACKER_LIST_SORT_DESC;
 			$arrow   = '&br;' . ($b_order ? '&uarr;' : '&darr;') . '(' . $pos . ')';
-
 			unset($order_keys, $index);
-
-			// $sort become the first
-			unset($orders[$sort]);
-			$_order[] = $sort . ':' . $this->_sortkey_define2string($order);
+			unset($orders[$sort]);	// $sort become the first if you click this
+		} else {
+			// Not sorted yet, but $sort become the first if you click this
+			$order   = PLUGIN_TRACKER_LIST_SORT_ASC;
 		}
+
+		$_order = array($sort . ':' . $this->_sortkey_define2string($order));
 		foreach ($orders as $key => $value) {
 			$_order[] = $key . ':' . $this->_sortkey_define2string($value);
 		}
@@ -991,7 +1003,7 @@ class Tracker_list
 				']]';
 	}
 
-	// Output part of XHTML
+	// Output a part of Wiki text
 	function toString($limit = 0)
 	{
 		if (empty($this->rows)) {
@@ -999,8 +1011,8 @@ class Tracker_list
 			return FALSE;
 		}
 
-		$source = array();
 		$rows   = $this->rows;
+		$source = array();
 
 		$count = count($this->rows);
 		$limit = intval($limit);
@@ -1014,19 +1026,23 @@ class Tracker_list
 			$rows  = array_slice($this->rows, 0, $limit);
 		}
 
-		$body = array();
+		// Loading template
+		$header = $body = array();
 		foreach (plugin_tracker_get_source($this->config->page . '/' . $this->list) as $line) {
 			if (preg_match('/^\|(.+)\|[hfc]$/i', $line)) {
-				// Table decolations
-				$source[] = preg_replace_callback('/\[([^\[\]]+)\]/', array(& $this, '_replace_title'), $line);
+				// TODO: Why c and f  here
+				$header[] = $line;	// Table header, footer, and decoration
 			} else {
-				$body[] = $line;
+				$body[]   = $line;	// The others
 			}
+		}
+
+		foreach($header as $line) {
+			$source[] = preg_replace_callback('/\[([^\[\]]+)\]/', array(& $this, '_replace_title'), $line);
 		}
 		foreach ($rows as $row) {
 			if (! PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE && ! $row['_match']) continue;
-
-			$this->items = $row;
+			$this->_items = $row;
 			foreach ($body as $line) {
 				if (ltrim($line) != '') {
 					$this->_escape = ($line[0] == '|' || $line[0] == ':');	// The first letter
@@ -1036,7 +1052,7 @@ class Tracker_list
 			}
 		}
 
-		return convert_html(implode('', $source));
+		return implode('', $source);
 	}
 }
 
