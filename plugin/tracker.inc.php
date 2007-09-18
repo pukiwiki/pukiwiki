@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.54 2007/09/17 16:05:28 henoheno Exp $
+// $Id: tracker.inc.php,v 1.55 2007/09/18 14:01:20 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -12,8 +12,11 @@ define('PLUGIN_TRACKER_LIST_USAGE', '#tracker_list([config[/list]][[,base][,fiel
 define('PLUGIN_TRACKER_DEFAULT_CONFIG', 'default');
 define('PLUGIN_TRACKER_DEFAULT_FORM',   'form');
 define('PLUGIN_TRACKER_DEFAULT_LIST',   'list');
-define('PLUGIN_TRACKER_DEFAULT_LIMIT',  0);	// 0 = Unlimited
-define('PLUGIN_TRACKER_DEFAULT_ORDER',  '_real:SORT_ASC');
+define('PLUGIN_TRACKER_DEFAULT_LIMIT',  0 );	// 0 = Unlimited
+define('PLUGIN_TRACKER_DEFAULT_ORDER',  '');	// Example: '_real'
+
+// Sort N columns at a time
+define('PLUGIN_TRACKER_LIST_SORT_LIMIT', 3);
 
 // Excluding pattern
 define('PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN','#^SubMenu$|/#');	// 'SubMenu' and using '/'
@@ -27,6 +30,7 @@ define('PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE', 1);
 // Sort options
 define('PLUGIN_TRACKER_LIST_SORT_DESC',    3);
 define('PLUGIN_TRACKER_LIST_SORT_ASC',     4);
+define('PLUGIN_TRACKER_LIST_SORT_DEFAULT', PLUGIN_TRACKER_LIST_SORT_ASC);
 
 // Show a form
 function plugin_tracker_convert()
@@ -681,7 +685,7 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 	$refer = trim($refer);
 
 	$config_name = trim($config_name);
-	if ($config_name == '') return '#tracker_list: Config not specified<br />';
+	if ($config_name == '') $config_name = PLUGIN_TRACKER_DEFAULT_CONFIG;
 
 	$list  = trim($list);
 	if (! is_numeric($limit)) return PLUGIN_TRACKER_LIST_USAGE . '<br />';
@@ -698,18 +702,16 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 	}
 
 	$list = & new Tracker_list($base, $refer, $config, $list);
-
-	$order_commands = trim($order_commands);
 	if ($list->sort($order_commands) === FALSE) {
 		return '#tracker_list: ' . htmlspecialchars($list->error) . '<br />';
 	}
-
 	$result = $list->toString($limit);
 	if ($result === FALSE) {
 		return '#tracker_list: ' . htmlspecialchars($list->error) . '<br />';
-	} else {
-		return convert_html($result);
 	}
+	unset($list);
+
+	return convert_html($result);
 }
 
 // Listing class
@@ -828,40 +830,41 @@ class Tracker_list
 		$this->rows[$name] = $row;
 	}
 
-	// Sort $this->rows with $order_commands
+	// Sort $this->rows by $order_commands
 	function sort($order_commands = '')
 	{
+		$order_commands = trim($order_commands);
 		if ($order_commands == '') {
 			$this->order = array();
 			return TRUE;
 		}
 
 		$fields = $this->fields;
+
+		$i = 0;
 		$orders = array();
-		$params = array();	// Arguments for array_multisort()
-		$names  = array_flip(array_keys($fields));
-
 		foreach (explode(';', $order_commands) as $command) {
-			// TODO: ???
-			list($fieldname, $order) = array_pad(explode(':', $command), 1, 'SORT_ASC');
-			$fieldname = trim($fieldname);
+			$command = trim($command);
+			if ($command == '') continue;
+			$arg = explode(':', $command, 2);
+			$fieldname = isset($arg[0]) ? trim($arg[0]) : '';
+			$order     = isset($arg[1]) ? trim($arg[1]) : '';
 
-			if (! isset($names[$fieldname])) {
+			if (! isset($fields[$fieldname])) {
 				$this->error =  'No such field: ' . $fieldname;
 				return FALSE;
 			}
-
-			$order = $this->_sortkey_string2define($order);
-			if ($order === NULL) continue;
-			if ($order === FALSE) {
+			$_order = $this->_sortkey_string2define($order);
+			if ($_order === FALSE) {
 				$this->error =  'Invalid sortkey: ' . $order;
 				return FALSE;
 			}
 
-			$orders[$fieldname] = $order;	// Set or override
+			if (! isset($orders[$fieldname]) && PLUGIN_TRACKER_LIST_SORT_LIMIT < ++$i) continue;
+			$orders[$fieldname] = $_order;	// Set or override
 		}
-		// TODO: LIMIT (count($orders) < N < count(fields_effective)) TO LIMIT array_multisort()
 
+		$params = array();	// Arguments for array_multisort()
 		foreach ($orders as $fieldname => $order) {
 			// One column set (one-dimensional array(), sort type, and order-by)
 			$array = array();
@@ -899,7 +902,7 @@ class Tracker_list
 	function _sortkey_string2define($sortkey)
 	{
 		switch (strtoupper(trim($sortkey))) {
-		case '':          $sortkey = NULL; break;
+		case '':          $sortkey = PLUGIN_TRACKER_LIST_SORT_DEFAULT; break;
 
 		case SORT_ASC:    /*FALLTHROUGH*/ // Compat, will be removed at 1.4.9 or later
 		case 'SORT_ASC':  /*FALLTHROUGH*/
@@ -958,48 +961,48 @@ class Tracker_list
 
 		$fieldname = isset($matches[1]) ? $matches[1] : '';
 		if (! isset($fields[$fieldname])) {
-			// Invalid sortkey or user's own string or something. Nothing to do
+			// Invalid $fieldname or user's own string or something. Nothing to do
 			return isset($matches[0]) ? $matches[0] : '';
 		}
-
-		if ($fieldname == '_name' || $fieldname == '_page') {
-			$sort = '_real';
-		} else {
-			$sort = $fieldname;
-		}
+		if ($fieldname == '_name' || $fieldname == '_page') $fieldname = '_real';
 
 		$arrow  = '';
-		if (isset($orders[$sort])) {
+		if (isset($orders[$fieldname])) {
 			// Sorted
 			$order_keys = array_keys($orders);
 			$index   = array_flip($order_keys);
-			$pos     = 1 + $index[$sort];
-			$b_end   = ($sort == isset($order_keys[0]) ? $order_keys[0] : '');
-			$b_order = ($orders[$sort] === PLUGIN_TRACKER_LIST_SORT_ASC);
+			$pos     = 1 + $index[$fieldname];
+			$b_end   = ($fieldname == (isset($order_keys[0]) ? $order_keys[0] : ''));
+			$b_order = ($orders[$fieldname] === PLUGIN_TRACKER_LIST_SORT_ASC);
 			$order   = ($b_end xor $b_order)
 				? PLUGIN_TRACKER_LIST_SORT_ASC
 				: PLUGIN_TRACKER_LIST_SORT_DESC;
 			$arrow   = '&br;' . ($b_order ? '&uarr;' : '&darr;') . '(' . $pos . ')';
 			unset($order_keys, $index);
-			unset($orders[$sort]);	// $sort become the first if you click this
+			unset($orders[$fieldname]);
 		} else {
-			// Not sorted yet, but $sort become the first if you click this
-			$order   = PLUGIN_TRACKER_LIST_SORT_ASC;
+			// Not sorted yet, but
+			$order = PLUGIN_TRACKER_LIST_SORT_ASC;	// Default
 		}
 
-		$_order = array($sort . ':' . $this->_sortkey_define2string($order));
+		// $fieldname become the first, if you click this link
+		$_order = array($fieldname . ':' . $this->_sortkey_define2string($order));
 		foreach ($orders as $key => $value) {
 			$_order[] = $key . ':' . $this->_sortkey_define2string($value);
 		}
 
+		$r_config = ($this->config->config_name != PLUGIN_TRACKER_DEFAULT_CONFIG) ?
+			'&config=' . rawurlencode($this->config->config_name) : '';
+		$r_list   = ($this->list != PLUGIN_TRACKER_DEFAULT_LIST) ?
+			'&list=' . rawurlencode($this->list) : '';
 		return '[[' .
 				$fields[$fieldname]->title . $arrow .
 				'>' . get_script_uri() .
-				'?plugin=tracker_list&' .
-				'base='    . rawurlencode($this->base) .
-				'&config=' . rawurlencode($this->config->config_name) .
-				'&list='   . rawurlencode($this->list) .
-				'&order='  . rawurlencode(join(';', $_order)) .
+				'?plugin=tracker_list' .
+				'&base=' . rawurlencode($this->base) .
+				$r_config .
+				$r_list .
+				'&order=' . rawurlencode(join(';', $_order)) .
 				']]';
 	}
 
