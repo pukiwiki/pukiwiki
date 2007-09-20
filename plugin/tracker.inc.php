@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.56 2007/09/18 14:29:30 henoheno Exp $
+// $Id: tracker.inc.php,v 1.57 2007/09/20 15:17:20 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -302,7 +302,7 @@ class Tracker_field
 
 	function format_cell($str)
 	{
-		return preg_replace('/[\r\n]+/', '', $str);
+		return $str;
 	}
 
 	// Compare key for Tracker_list->sort()
@@ -349,7 +349,7 @@ class Tracker_field_title extends Tracker_field_text
 	function format_cell($str)
 	{
 		make_heading($str);
-		return parent::format_cell($str);
+		return $str;
 	}
 }
 
@@ -369,7 +369,7 @@ class Tracker_field_textarea extends Tracker_field
 
 	function format_cell($str)
 	{
-		$str = parent::format_cell($str);
+		$str = preg_replace('/[\r\n]+/', '', $str);
 		if (! empty($this->values[2]) && strlen($str) > ($this->values[2] + 3)) {
 			$str = mb_substr($str, 0, $this->values[2]) . '...';
 		}
