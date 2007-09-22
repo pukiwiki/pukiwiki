@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.63 2007/09/22 08:24:41 henoheno Exp $
+// $Id: tracker.inc.php,v 1.64 2007/09/22 11:04:47 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -769,30 +769,39 @@ class Tracker_list
 
 			$fieldname = array_shift($source);
 			if (isset($fields[$fieldname])) {
-				$pattern[]        = '(.*)';		// Just capture it
+				$pattern[]        = '(.*?)';		// Just capture it
 				$pattern_fields[] = $fieldname;	// Capture it as this $filedname
 			} else {
-				$pattern[]        = '.*';		// Just ignore pseudo fields etc
+				$pattern[]        = '.*?';		// Just ignore pseudo fields etc
 			}
 		}
-		$this->pattern        = '/' . implode('', $pattern) . '/s';
+		$this->pattern        = '/' . implode('', $pattern) . '/sS';
 		$this->pattern_fields = $pattern_fields;
 	}
 
 	// Load pages
 	function _load()
 	{
-		$base   = $this->base;
-
-		$pattern     = $base . '/';
+		$pattern     = $this->base . '/';
 		$pattern_len = strlen($pattern);
+
 		foreach (get_existpages() as $_page) {
 			if (strpos($_page, $pattern) === 0) {
 				$name = substr($_page, $pattern_len);
 				if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, $name)) continue;
-				$this->add($_page, $name);
+
+				// Adding $this->rows
+				if ($this->add($_page, $name) === FALSE) {
+					return FALSE;
+				}
 			}
 		}
+		if (empty($this->rows)) {
+			$this->error = 'Pages not found under: ' . $pattern;
+			return FALSE;
+		}
+
+		return TRUE;
 	}
 
 	function add($page, $name)
@@ -808,10 +817,10 @@ class Tracker_list
 			$to_page = strip_bracket(trim($matches[1]));
 			if (is_page($to_page)) {
 				unset($source);	// Release
-				$this->add($to_page, $name);	// Recurse(Rescan)
-				return;
+				return $this->add($to_page, $name);	// Recurse(Rescan)
 			} else {
-				return;	// Invalid
+				$this->error = 'add(): Invalid pagename';
+				return FALSE;
 			}
 		}
 
@@ -839,6 +848,7 @@ class Tracker_list
 		}
 
 		$this->rows[$name] = $row;
+		return TRUE;
 	}
 
 	// sort()
@@ -1115,14 +1125,10 @@ class Tracker_list
 		$this->_generate_regex();
 
 		// Load $this->rows
-		$this->_load();
-		if (empty($this->rows)) {
-			$this->error = 'Pages not found under: ' . $this->base . '/';
-			return FALSE;
-		}
+		if ($this->_load() === FALSE) return FALSE;
 
 		// Sort $this->rows
-		$this->_sort();
+		if ($this->_sort() === FALSE) return FALSE;
 		$rows   = $this->rows;
 
 		$count = count($this->rows);
