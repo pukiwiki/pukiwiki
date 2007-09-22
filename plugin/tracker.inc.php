@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.61 2007/09/22 06:24:38 henoheno Exp $
+// $Id: tracker.inc.php,v 1.62 2007/09/22 06:42:05 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -702,7 +702,7 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 	}
 
 	$list = & new Tracker_list($base, $refer, $config, $list);
-	if ($list->sort($order_commands) === FALSE) {
+	if ($list->setOrder($order_commands) === FALSE) {
 		return '#tracker_list: ' . htmlspecialchars($list->error) . '<br />';
 	}
 	$result = $list->toString($limit);
@@ -725,7 +725,7 @@ class Tracker_list
 	var $pattern_fields;
 
 	var $rows   = array();
-	var $order  = array();
+	var $orders = array();
 	var $_added = array();
 
 	var $error  = '';	// Error message
@@ -734,7 +734,7 @@ class Tracker_list
 	var $_itmes;
 	var $_the_first_character_of_the_line;
 
-	// TODO: Why list here
+	// TODO: Why list here, why load all of columns
 	function Tracker_list($base, $refer, & $config, $list)
 	{
 		$this->base     = $base;
@@ -869,14 +869,23 @@ class Tracker_list
 		return $orders;
 	}
 
-	// Sort $this->rows by $order_commands
-	function sort($order_commands = '')
+	// sort()
+	function setOrder($order_commands = '')
 	{
 		$orders = $this->_order_commands2orders($order_commands);
 		if ($orders === FALSE) {
+			$this->orders = array();
 			return FALSE;
 		}
 
+		$this->orders = $orders;
+		return $orders;
+	}
+
+	// Sort $this->rows by $this->orders
+	function _sort()
+	{
+		$orders = $this->orders;
 		$fields = $this->fields;
 
 		$params = array();	// Arguments for array_multisort()
@@ -905,7 +914,6 @@ class Tracker_list
 		$params[] = & $this->rows;
 
 		call_user_func_array('array_multisort', $params);
-		$this->order = $orders;
 
 		return TRUE; 
 	}
@@ -965,7 +973,7 @@ class Tracker_list
 	function _replace_title($matches = array())
 	{
 		$fields = $this->fields;
-		$orders = $this->order;
+		$orders = $this->orders;
 		$list   = $this->list;
 		$config_name = $this->config->config_name;
 
@@ -1066,7 +1074,10 @@ class Tracker_list
 			return FALSE;
 		}
 
+		// Sort $this->rows
+		$this->_sort();
 		$rows   = $this->rows;
+
 		$source = array();
 
 		$count = count($this->rows);
