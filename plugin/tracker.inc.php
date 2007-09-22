@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.65 2007/09/22 11:27:42 henoheno Exp $
+// $Id: tracker.inc.php,v 1.66 2007/09/22 15:08:44 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -659,21 +659,20 @@ function plugin_tracker_list_action()
 {
 	global $get, $vars;
 
-	$base   = isset($get['base'])   ? $get['base']   : '';
+	$base   = isset($get['base'])   ? $get['base']   : '';		// Base directory to load
+	$refer  = isset($get['refer'])  ? $get['refer']  : $base;	// Where to #tracker_list
+	if ($base == '') $base = $refer;	// Compat before 1.4.8
+
 	$config = isset($get['config']) ? $get['config'] : '';
 	$list   = isset($get['list'])   ? $get['list']   : 'list';
-
 	$order  = isset($vars['order']) ? $vars['order'] : PLUGIN_TRACKER_DEFAULT_ORDER;
 	$limit  = isset($vars['limit']) ? $vars['limit'] : 0;
 
-	// Compat before 1.4.8
-	if ($base == '') $base = isset($get['refer']) ? $get['refer'] : '';
-
-	$s_base = make_pagelink(trim($base));
+	$s_refer = make_pagelink(trim($refer));
 	return array(
 		'msg' => plugin_tracker_message('msg_list'),
-		'body'=> str_replace('$1', $s_base, plugin_tracker_message('msg_back')) .
-			plugin_tracker_list_render($base, $base, $config, $list, $order, $limit)
+		'body'=> str_replace('$1', $s_refer, plugin_tracker_message('msg_back')) .
+			plugin_tracker_list_render($base, $refer, $config, $list, $order, $limit)
 	);
 }
 
@@ -682,7 +681,11 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 	$base  = trim($base);
 	if ($base == '') return '#tracker_list: Base not specified' . '<br />';
 
+	// TODO: is_page
 	$refer = trim($refer);
+	if (! is_page($refer)) {
+		return '#tracker_list: Refer page not found: ' . htmlspecialchars($refer) . '<br />';
+	}
 
 	$config_name = trim($config_name);
 	if ($config_name == '') $config_name = PLUGIN_TRACKER_DEFAULT_CONFIG;
@@ -690,7 +693,6 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 	$list  = trim($list);
 	if (! is_numeric($limit)) return PLUGIN_TRACKER_LIST_USAGE . '<br />';
 	$limit = intval($limit);
-
 
 	$config = new Config('plugin/tracker/' . $config_name);
 	if (! $config->read()) {
@@ -729,9 +731,10 @@ class Tracker_list
 	var $orders = array();
 	var $error  = '';	// Error message
 
+	// add()
 	var $_added = array();
 
-	// Used by toString() only
+	// toString()
 	var $_itmes;
 	var $_the_first_character_of_the_line;
 
@@ -744,7 +747,30 @@ class Tracker_list
 		$this->fields   = plugin_tracker_get_fields($base, $refer, $config);
 	}
 	
-	// Generate regexes
+	// Load pages
+	function _load()
+	{
+		$pattern     = $this->base . '/';
+		$pattern_len = strlen($pattern);
+
+		foreach (get_existpages() as $_page) {
+			if (strpos($_page, $pattern) === 0) {
+				$name = substr($_page, $pattern_len);
+				if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, $name)) continue;
+
+				// Adding $this->rows
+				if ($this->add($_page, $name) === FALSE) return FALSE;
+			}
+		}
+		if (empty($this->rows)) {
+			$this->error = 'Pages not found under: ' . $pattern;
+			return FALSE;
+		}
+
+		return TRUE;
+	}
+
+	// add(): Generate regexes
 	function _generate_regex()
 	{
 		$config_page = $this->config->page;
@@ -782,29 +808,6 @@ class Tracker_list
 		}
 		$this->pattern        = '/' . implode('', $pattern) . '/sS';
 		$this->pattern_fields = $pattern_fields;
-	}
-
-	// Load pages
-	function _load()
-	{
-		$pattern     = $this->base . '/';
-		$pattern_len = strlen($pattern);
-
-		foreach (get_existpages() as $_page) {
-			if (strpos($_page, $pattern) === 0) {
-				$name = substr($_page, $pattern_len);
-				if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, $name)) continue;
-
-				// Adding $this->rows
-				if ($this->add($_page, $name) === FALSE) return FALSE;
-			}
-		}
-		if (empty($this->rows)) {
-			$this->error = 'Pages not found under: ' . $pattern;
-			return FALSE;
-		}
-
-		return TRUE;
 	}
 
 	function add($page, $name)
@@ -899,7 +902,7 @@ class Tracker_list
 		}
 
 		$this->orders = $orders;
-		return $orders;
+		return TRUE;
 	}
 
 	// Sort $this->rows by $this->orders
@@ -992,10 +995,14 @@ class Tracker_list
 	// toString(): Called within preg_replace_callback()
 	function _replace_title($matches = array())
 	{
+		static $script;
+
 		$fields = $this->fields;
 		$orders = $this->orders;
-		$list   = $this->list;
+		$base   = $this->base;
+		$refer  = $this->refer;
 		$config_name = $this->config->config_name;
+		$list   = $this->list;
 
 		$fieldname = isset($matches[1]) ? $matches[1] : '';
 		if (! isset($fields[$fieldname])) {
@@ -1034,21 +1041,23 @@ class Tracker_list
 			$_order[] = $key . ':' . $this->_sortkey_define2string($value);
 		}
 
+		if (! isset($script)) $script = get_script_uri();
+		$r_refer  = ($refer != $base) ?
+			'&refer=' . rawurlencode($refer) : '';
 		$r_config = ($config_name != PLUGIN_TRACKER_DEFAULT_CONFIG) ?
 			'&config=' . rawurlencode($config_name) : '';
 		$r_list   = ($list != PLUGIN_TRACKER_DEFAULT_LIST) ?
 			'&list=' . rawurlencode($list) : '';
+		$r_order  = ! empty($_order) ?
+			'&order=' . rawurlencode(join(';', $_order)) : '';
 
 		return
 			 '[[' .
 				$fields[$fieldname]->title . $arrow .
 			'>' .
-				get_script_uri() .
-				'?plugin=tracker_list' .
-				'&base=' . rawurlencode($this->base) .
-				$r_config .
-				$r_list .
-				'&order=' . rawurlencode(join(';', $_order)) .
+				$script . '?plugin=tracker_list' .
+				'&base=' . rawurlencode($base) .
+				$r_refer . $r_config . $r_list . $r_order  .
 			']]';
 	}
 
@@ -1096,7 +1105,8 @@ class Tracker_list
 		// Loading template: Roughly checking listed fields
 		$matches        = array();
 		$used_fieldname = array('_real' => TRUE);
-		preg_match_all($regex, plugin_tracker_get_source($list, TRUE), $matches);
+		$template       = plugin_tracker_get_source($list, TRUE);
+		preg_match_all($regex, $template, $matches);
 		unset($matches[0]);
 		foreach ($matches[1] as $match) {
 			$params = explode(',', $match);
@@ -1131,6 +1141,7 @@ class Tracker_list
 		if ($this->_sort() === FALSE) return FALSE;
 		$rows   = $this->rows;
 
+		// toString()
 		$count = count($this->rows);
 		$limit = intval($limit);
 		if ($limit != 0) $limit = max(1, $limit);
