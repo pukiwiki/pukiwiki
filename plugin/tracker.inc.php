@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.58 2007/09/22 04:43:52 henoheno Exp $
+// $Id: tracker.inc.php,v 1.59 2007/09/22 05:52:30 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -858,15 +858,29 @@ class Tracker_list
 			if ($_order === FALSE) {
 				$this->error =  'Invalid sortkey: ' . $order;
 				return FALSE;
+			} else if (isset($orders[$fieldname])) {
+				$this->error =  'Sortkey already set: ' . $fieldname;
+				return FALSE;
 			}
 
-			if (! isset($orders[$fieldname]) && PLUGIN_TRACKER_LIST_SORT_LIMIT < ++$i) continue;
-			$orders[$fieldname] = $_order;	// Set or override
+			if (PLUGIN_TRACKER_LIST_SORT_LIMIT <= $i) continue;	// Ignore
+			++$i;
+			$orders[$fieldname] = $_order;
 		}
 
 		$params = array();	// Arguments for array_multisort()
 		foreach ($orders as $fieldname => $order) {
 			// One column set (one-dimensional array(), sort type, and order-by)
+
+			if ($order = PLUGIN_TRACKER_LIST_SORT_ASC) {
+				$order = SORT_ASC;
+			} else if ($order = PLUGIN_TRACKER_LIST_SORT_DESC) {
+				$order = SORT_DESC;
+			} else {
+				$this->error = 'Invalid sort order for array_multisort()';
+				return FALSE;
+			}
+
 			$array = array();
 			foreach ($this->rows as $row) {
 				$array[] = isset($row[$fieldname]) ?
@@ -919,6 +933,23 @@ class Tracker_list
 		return $sortkey;
 	}
 
+	// toString(): Escape special characters not to break Wiki syntax
+	function _escape($syntax_hint = '|', $string)
+	{
+		$from = array("\n",   "\r"  );
+		$to   = array('&br;', '&br;');
+		if ($syntax_hint == '|' || $syntax_hint == ':') {
+			// <table> or <dl> Wiki syntax: Excape '|'
+			$from[] = '|';
+			$to[]   = '&#x7c;';
+		} else if ($syntax_hint == ',') {
+			// <table> by comma
+			$from[] = ',';
+			$to[]   = '&#x2c;';
+		}
+		return str_replace($from, $to, $string);
+	}
+
 	// toString(): Called within preg_replace_callback()
 	function _replace_item($matches = array())
 	{	
@@ -927,8 +958,8 @@ class Tracker_list
 		$tfc    = $this->_the_first_character_of_the_line ;
 
 		$params    = isset($matches[1]) ? explode(',', $matches[1]) : array();
-		$fieldname = isset($params[0]) ? $params[0] : '';
-		$stylename = isset($params[1]) ? $params[1] : $fieldname;
+		$fieldname = isset($params[0])  ? $params[0] : '';
+		$stylename = isset($params[1])  ? $params[1] : $fieldname;
 
 		if ($fieldname == '') return '';	// Invalid
 
@@ -950,20 +981,7 @@ class Tracker_list
 			}
 		}
 
-		// Escape special characters not to break Wiki syntax
-		$from = array("\n",   "\r"  );
-		$to   = array('&br;', '&br;');
-		if ($tfc == '|' || $tfc == ':') {
-			// <table> or <dl> Wiki syntax: Excape '|'
-			$from[] = '|';
-			$to[]   = '&#x7c;';
-		} else if ($tfc == ',') {
-			// <table> by comma
-			$from[] = ',';
-			$to[]   = '&#x2c;';
-		}
-
-		return str_replace($from, $to, $str);
+		return $this->_escape($tfc, $str);
 	}
 
 	// toString(): Called within preg_replace_callback()
@@ -971,6 +989,8 @@ class Tracker_list
 	{
 		$fields = $this->fields;
 		$orders = $this->order;
+		$list   = $this->list;
+		$config_name = $this->config->config_name;
 
 		$fieldname = isset($matches[1]) ? $matches[1] : '';
 		if (! isset($fields[$fieldname])) {
@@ -983,16 +1003,21 @@ class Tracker_list
 		if (isset($orders[$fieldname])) {
 			// Sorted
 			$order_keys = array_keys($orders);
-			$index   = array_flip($order_keys);
-			$pos     = 1 + $index[$fieldname];
+
+			// Toggle
 			$b_end   = ($fieldname == (isset($order_keys[0]) ? $order_keys[0] : ''));
 			$b_order = ($orders[$fieldname] === PLUGIN_TRACKER_LIST_SORT_ASC);
 			$order   = ($b_end xor $b_order)
 				? PLUGIN_TRACKER_LIST_SORT_ASC
 				: PLUGIN_TRACKER_LIST_SORT_DESC;
+
+			// Arrow decoration
+			$index   = array_flip($order_keys);
+			$pos     = 1 + $index[$fieldname];
 			$arrow   = '&br;' . ($b_order ? '&uarr;' : '&darr;') . '(' . $pos . ')';
+
 			unset($order_keys, $index);
-			unset($orders[$fieldname]);
+			unset($orders[$fieldname]);	// $fieldname will be added to the first
 		} else {
 			// Not sorted yet, but
 			$order = PLUGIN_TRACKER_LIST_SORT_ASC;	// Default
@@ -1004,19 +1029,22 @@ class Tracker_list
 			$_order[] = $key . ':' . $this->_sortkey_define2string($value);
 		}
 
-		$r_config = ($this->config->config_name != PLUGIN_TRACKER_DEFAULT_CONFIG) ?
-			'&config=' . rawurlencode($this->config->config_name) : '';
-		$r_list   = ($this->list != PLUGIN_TRACKER_DEFAULT_LIST) ?
-			'&list=' . rawurlencode($this->list) : '';
-		return '[[' .
+		$r_config = ($config_name != PLUGIN_TRACKER_DEFAULT_CONFIG) ?
+			'&config=' . rawurlencode($config_name) : '';
+		$r_list   = ($list != PLUGIN_TRACKER_DEFAULT_LIST) ?
+			'&list=' . rawurlencode($list) : '';
+
+		return
+			 '[[' .
 				$fields[$fieldname]->title . $arrow .
-				'>' . get_script_uri() .
+			'>' .
+				get_script_uri() .
 				'?plugin=tracker_list' .
 				'&base=' . rawurlencode($this->base) .
 				$r_config .
 				$r_list .
 				'&order=' . rawurlencode(join(';', $_order)) .
-				']]';
+			']]';
 	}
 
 	// Output a part of Wiki text
