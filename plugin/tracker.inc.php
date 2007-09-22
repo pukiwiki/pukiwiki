@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.57 2007/09/20 15:17:20 henoheno Exp $
+// $Id: tracker.inc.php,v 1.58 2007/09/22 04:43:52 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -732,7 +732,7 @@ class Tracker_list
 
 	// Used by toString() only
 	var $_itmes;
-	var $_escape;
+	var $_the_first_character_of_the_line;
 
 	// TODO: Why list here
 	function Tracker_list($base, $refer, & $config, $list)
@@ -921,10 +921,10 @@ class Tracker_list
 
 	// toString(): Called within preg_replace_callback()
 	function _replace_item($matches = array())
-	{
+	{	
 		$fields = $this->fields;
 		$items  = $this->_items;
-		$escape = isset($this->_escape) ? (bool)$this->_escape : FALSE;
+		$tfc    = $this->_the_first_character_of_the_line ;
 
 		$params    = isset($matches[1]) ? explode(',', $matches[1]) : array();
 		$fieldname = isset($params[0]) ? $params[0] : '';
@@ -950,7 +950,20 @@ class Tracker_list
 			}
 		}
 
-		return $escape ? str_replace('|', '&#x7c;', $str) : $str;
+		// Escape special characters not to break Wiki syntax
+		$from = array("\n",   "\r"  );
+		$to   = array('&br;', '&br;');
+		if ($tfc == '|' || $tfc == ':') {
+			// <table> or <dl> Wiki syntax: Excape '|'
+			$from[] = '|';
+			$to[]   = '&#x7c;';
+		} else if ($tfc == ',') {
+			// <table> by comma
+			$from[] = ',';
+			$to[]   = '&#x2c;';
+		}
+
+		return str_replace($from, $to, $str);
 	}
 
 	// toString(): Called within preg_replace_callback()
@@ -1048,7 +1061,7 @@ class Tracker_list
 			$this->_items = $row;
 			foreach ($body as $line) {
 				if (ltrim($line) != '') {
-					$this->_escape = ($line[0] == '|' || $line[0] == ':');	// The first letter
+					$this->_the_first_character_of_the_line = $line[0];
 					$line = preg_replace_callback('/\[([^\[\]]+)\]/', array(& $this, '_replace_item'), $line);
 				}
 				$source[] = $line;
