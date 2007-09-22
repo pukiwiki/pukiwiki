@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.67 2007/09/22 15:44:10 henoheno Exp $
+// $Id: tracker.inc.php,v 1.68 2007/09/22 16:11:23 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -895,7 +895,6 @@ class Tracker_list
 			$this->orders = array();
 			return FALSE;
 		}
-
 		$this->orders = $orders;
 		return TRUE;
 	}
@@ -910,9 +909,9 @@ class Tracker_list
 		foreach ($orders as $fieldname => $order) {
 			// One column set (one-dimensional array(), sort type, and order-by)
 
-			if ($order = PLUGIN_TRACKER_LIST_SORT_ASC) {
+			if ($order == PLUGIN_TRACKER_LIST_SORT_ASC) {
 				$order = SORT_ASC;
-			} else if ($order = PLUGIN_TRACKER_LIST_SORT_DESC) {
+			} else if ($order == PLUGIN_TRACKER_LIST_SORT_DESC) {
 				$order = SORT_DESC;
 			} else {
 				$this->error = 'Invalid sort order for array_multisort()';
