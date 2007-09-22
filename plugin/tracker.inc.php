@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.59 2007/09/22 05:52:30 henoheno Exp $
+// $Id: tracker.inc.php,v 1.60 2007/09/22 05:53:19 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -951,40 +951,6 @@ class Tracker_list
 	}
 
 	// toString(): Called within preg_replace_callback()
-	function _replace_item($matches = array())
-	{	
-		$fields = $this->fields;
-		$items  = $this->_items;
-		$tfc    = $this->_the_first_character_of_the_line ;
-
-		$params    = isset($matches[1]) ? explode(',', $matches[1]) : array();
-		$fieldname = isset($params[0])  ? $params[0] : '';
-		$stylename = isset($params[1])  ? $params[1] : $fieldname;
-
-		if ($fieldname == '') return '';	// Invalid
-
-		if (! isset($items[$fieldname])) {
-			// Maybe load miss of the page
-			if (isset($fields[$fieldname])) {
-				$str = '[page_err]';	// Exactlly
-			} else {
-				$str = isset($matches[0]) ? $matches[0] : '';	// Nothing to do
-			}
-		} else {
-			$str = $items[$fieldname];
-			if (isset($fields[$fieldname])) {
-				$str    = $fields[$fieldname]->format_cell($str);
-			}
-			if (isset($fields[$stylename]) && isset($items[$stylename])) {
-				$_style = $fields[$stylename]->get_style($items[$stylename]);
-				$str    = sprintf($_style, $str);
-			}
-		}
-
-		return $this->_escape($tfc, $str);
-	}
-
-	// toString(): Called within preg_replace_callback()
 	function _replace_title($matches = array())
 	{
 		$fields = $this->fields;
@@ -1045,6 +1011,40 @@ class Tracker_list
 				$r_list .
 				'&order=' . rawurlencode(join(';', $_order)) .
 			']]';
+	}
+
+	// toString(): Called within preg_replace_callback()
+	function _replace_item($matches = array())
+	{	
+		$fields = $this->fields;
+		$items  = $this->_items;
+		$tfc    = $this->_the_first_character_of_the_line ;
+
+		$params    = isset($matches[1]) ? explode(',', $matches[1]) : array();
+		$fieldname = isset($params[0])  ? $params[0] : '';
+		$stylename = isset($params[1])  ? $params[1] : $fieldname;
+
+		if ($fieldname == '') return '';	// Invalid
+
+		if (! isset($items[$fieldname])) {
+			// Maybe load miss of the page
+			if (isset($fields[$fieldname])) {
+				$str = '[page_err]';	// Exactlly
+			} else {
+				$str = isset($matches[0]) ? $matches[0] : '';	// Nothing to do
+			}
+		} else {
+			$str = $items[$fieldname];
+			if (isset($fields[$fieldname])) {
+				$str    = $fields[$fieldname]->format_cell($str);
+			}
+			if (isset($fields[$stylename]) && isset($items[$stylename])) {
+				$_style = $fields[$stylename]->get_style($items[$stylename]);
+				$str    = sprintf($_style, $str);
+			}
+		}
+
+		return $this->_escape($tfc, $str);
 	}
 
 	// Output a part of Wiki text
