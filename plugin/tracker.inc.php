@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.64 2007/09/22 11:04:47 henoheno Exp $
+// $Id: tracker.inc.php,v 1.65 2007/09/22 11:27:42 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -727,9 +727,9 @@ class Tracker_list
 
 	var $rows   = array();
 	var $orders = array();
-	var $_added = array();
-
 	var $error  = '';	// Error message
+
+	var $_added = array();
 
 	// Used by toString() only
 	var $_itmes;
@@ -762,6 +762,7 @@ class Tracker_list
 		$source = preg_split('/\\\\\[(\w+)\\\\\]/', preg_quote($source, '/'), -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		// NOTE: if the page has garbages between fields, it will fail to be load
+		$pat_last = '';
 		while (! empty($source)) {
 			// Just ignore these _fixed_ data
 			$pattern[] = preg_replace('/\s+/', '\\s*', '(?>\\s*' . trim(array_shift($source)) . '\\s*)');
@@ -769,10 +770,14 @@ class Tracker_list
 
 			$fieldname = array_shift($source);
 			if (isset($fields[$fieldname])) {
-				$pattern[]        = '(.*?)';		// Just capture it
+				$pat_last  = '(.*?)';	// Just capture it
+				$pattern[] = $pat_last;	
 				$pattern_fields[] = $fieldname;	// Capture it as this $filedname
 			} else {
-				$pattern[]        = '.*?';		// Just ignore pseudo fields etc
+				if ($pat_last != '.*?') {
+					$pat_last  = '.*?';	// Just ignore pseudo fields etc
+					$pattern[] = $pat_last;	
+				}
 			}
 		}
 		$this->pattern        = '/' . implode('', $pattern) . '/sS';
@@ -791,9 +796,7 @@ class Tracker_list
 				if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, $name)) continue;
 
 				// Adding $this->rows
-				if ($this->add($_page, $name) === FALSE) {
-					return FALSE;
-				}
+				if ($this->add($_page, $name) === FALSE) return FALSE;
 			}
 		}
 		if (empty($this->rows)) {
@@ -806,21 +809,18 @@ class Tracker_list
 
 	function add($page, $name)
 	{
-		if (isset($this->_added[$page])) return;
+		if (isset($this->_added[$page])) return TRUE;
 		$this->_added[$page] = TRUE;
 
-		$source = plugin_tracker_get_source($page);
+		$source = plugin_tracker_get_source($page, TRUE);
 
 		// Compat: 'move to [[page]]' (bugtrack plugin)
 		$matches = array();
-		if (! empty($source) && preg_match('/move\sto\s(.+)/', $source[0], $matches)) {
+		if (! empty($source) && preg_match('/move\sto\s(.+)/', $source, $matches)) {
 			$to_page = strip_bracket(trim($matches[1]));
 			if (is_page($to_page)) {
 				unset($source);	// Release
 				return $this->add($to_page, $name);	// Recurse(Rescan)
-			} else {
-				$this->error = 'add(): Invalid pagename';
-				return FALSE;
 			}
 		}
 
@@ -837,7 +837,7 @@ class Tracker_list
 
 		// Load / Redefine cell
 		$matches = array();
-		$row['_match'] = preg_match($this->pattern, implode('', $source), $matches);
+		$row['_match'] = preg_match($this->pattern, $source, $matches);
 		unset($source);
 		if ($row['_match']) {
 			array_shift($matches);	// $matches[0] = all of the captured string
