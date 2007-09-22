@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.62 2007/09/22 06:42:05 henoheno Exp $
+// $Id: tracker.inc.php,v 1.63 2007/09/22 08:24:41 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -718,6 +718,7 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 class Tracker_list
 {
 	var $base;
+	var $refer;
 	var $config;
 	var $list;
 	var $fields;
@@ -734,20 +735,26 @@ class Tracker_list
 	var $_itmes;
 	var $_the_first_character_of_the_line;
 
-	// TODO: Why list here, why load all of columns
 	function Tracker_list($base, $refer, & $config, $list)
 	{
 		$this->base     = $base;
+		$this->refer    = $refer;
 		$this->config   = & $config;
 		$this->list     = $list;
+		$this->fields   = plugin_tracker_get_fields($base, $refer, $config);
+	}
+	
+	// Generate regexes
+	function _generate_regex()
+	{
+		$config_page = $this->config->page;
+		$fields      = $this->fields;
 
 		$pattern        = array();
 		$pattern_fields = array();
 
-		// Generate regexes:
-
 		// TODO: if (is FALSE) OR file_exists()
-		$source = plugin_tracker_get_source($config->page . '/page', TRUE);
+		$source = plugin_tracker_get_source($config_page . '/page', TRUE);
 		// Block-plugins to pseudo fields (#convert => [_block_convert])
 		$source = preg_replace('/^\#([^\(\s]+)(?:\((.*)\))?\s*$/m', '[_block_$1]', $source);
 
@@ -755,7 +762,6 @@ class Tracker_list
 		$source = preg_split('/\\\\\[(\w+)\\\\\]/', preg_quote($source, '/'), -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		// NOTE: if the page has garbages between fields, it will fail to be load
-		$fields = plugin_tracker_get_fields($base, $refer, $config);
 		while (! empty($source)) {
 			// Just ignore these _fixed_ data
 			$pattern[] = preg_replace('/\s+/', '\\s*', '(?>\\s*' . trim(array_shift($source)) . '\\s*)');
@@ -766,14 +772,18 @@ class Tracker_list
 				$pattern[]        = '(.*)';		// Just capture it
 				$pattern_fields[] = $fieldname;	// Capture it as this $filedname
 			} else {
-				$pattern[]        = '.*';		// Just ignore pseudo fields
+				$pattern[]        = '.*';		// Just ignore pseudo fields etc
 			}
 		}
-		$this->fields         = $fields;
 		$this->pattern        = '/' . implode('', $pattern) . '/s';
 		$this->pattern_fields = $pattern_fields;
+	}
 
-		// Listing
+	// Load pages
+	function _load()
+	{
+		$base   = $this->base;
+
 		$pattern     = $base . '/';
 		$pattern_len = strlen($pattern);
 		foreach (get_existpages() as $_page) {
@@ -1069,6 +1079,43 @@ class Tracker_list
 	// Output a part of Wiki text
 	function toString($limit = 0)
 	{
+		$source = array();
+		$list   = $this->config->page . '/' . $this->list;
+		$regex  = '/\[([^\[\]]+)\]/';
+
+		// Loading template: Roughly checking listed fields
+		$matches        = array();
+		$used_fieldname = array('_real' => TRUE);
+		preg_match_all($regex, plugin_tracker_get_source($list, TRUE), $matches);
+		unset($matches[0]);
+		foreach ($matches[1] as $match) {
+			$params = explode(',', $match);
+			if (isset($params[0]) && ! isset($used_fieldname[$params[0]])) {
+				$used_fieldname[$params[0]] = TRUE;
+			}
+		}
+		unset($matches[1]);
+		foreach (array_keys($this->orders) as $fieldname) {
+			if (! isset($used_fieldname[$fieldname])) {
+				$used_fieldname[$fieldname] = TRUE;
+			}
+		}
+
+		// Remove unused $this->fields
+		$fields = $this->fields;
+		$new_filds = array();
+		foreach (array_keys($fields) as $fieldname) {
+			if (isset($used_fieldname[$fieldname])) {
+				$new_filds[$fieldname] = & $fields[$fieldname];
+			}
+		}
+		$this->fields = $new_filds;
+
+		// Generate regex for $this->fields
+		$this->_generate_regex();
+
+		// Load $this->rows
+		$this->_load();
 		if (empty($this->rows)) {
 			$this->error = 'Pages not found under: ' . $this->base . '/';
 			return FALSE;
@@ -1077,8 +1124,6 @@ class Tracker_list
 		// Sort $this->rows
 		$this->_sort();
 		$rows   = $this->rows;
-
-		$source = array();
 
 		$count = count($this->rows);
 		$limit = intval($limit);
@@ -1094,7 +1139,7 @@ class Tracker_list
 
 		// Loading template
 		$header = $body = array();
-		foreach (plugin_tracker_get_source($this->config->page . '/' . $this->list) as $line) {
+		foreach (plugin_tracker_get_source($list) as $line) {
 			if (preg_match('/^\|(.+)\|[hfc]$/i', $line)) {
 				// TODO: Why c and f  here
 				$header[] = $line;	// Table header, footer, and decoration
@@ -1104,7 +1149,7 @@ class Tracker_list
 		}
 
 		foreach($header as $line) {
-			$source[] = preg_replace_callback('/\[([^\[\]]+)\]/', array(& $this, '_replace_title'), $line);
+			$source[] = preg_replace_callback($regex, array(& $this, '_replace_title'), $line);
 		}
 		foreach ($rows as $row) {
 			if (! PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE && ! $row['_match']) continue;
@@ -1112,7 +1157,7 @@ class Tracker_list
 			foreach ($body as $line) {
 				if (ltrim($line) != '') {
 					$this->_the_first_character_of_the_line = $line[0];
-					$line = preg_replace_callback('/\[([^\[\]]+)\]/', array(& $this, '_replace_item'), $line);
+					$line = preg_replace_callback($regex, array(& $this, '_replace_item'), $line);
 				}
 				$source[] = $line;
 			}
