@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.60 2007/09/22 05:53:19 henoheno Exp $
+// $Id: tracker.inc.php,v 1.61 2007/09/22 06:24:38 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -741,7 +741,6 @@ class Tracker_list
 		$this->config   = & $config;
 		$this->list     = $list;
 
-		$fields         = plugin_tracker_get_fields($base, $refer, $config);
 		$pattern        = array();
 		$pattern_fields = array();
 
@@ -755,22 +754,23 @@ class Tracker_list
 		// Now, $source = array('*someting*', 'fieldname', '*someting*', 'fieldname', ...)
 		$source = preg_split('/\\\\\[(\w+)\\\\\]/', preg_quote($source, '/'), -1, PREG_SPLIT_DELIM_CAPTURE);
 
+		// NOTE: if the page has garbages between fields, it will fail to be load
+		$fields = plugin_tracker_get_fields($base, $refer, $config);
 		while (! empty($source)) {
 			// Just ignore these _fixed_ data
-			// NOTE: if a page has garbages between fields, it will fail to be load
 			$pattern[] = preg_replace('/\s+/', '\\s*', '(?>\\s*' . trim(array_shift($source)) . '\\s*)');
-			if (! empty($source)) {
-				$fieldname = array_shift($source);
-				if (isset($fields[$fieldname])) {
-					$pattern[]        = '(.*)';		// Just capture it
-					$pattern_fields[] = $fieldname;	// Capture it as this $filedname
-				} else {
-					$pattern[]        = '.*';		// Just ignore pseudo fields
-				}
+			if (empty($source)) continue;
+
+			$fieldname = array_shift($source);
+			if (isset($fields[$fieldname])) {
+				$pattern[]        = '(.*)';		// Just capture it
+				$pattern_fields[] = $fieldname;	// Capture it as this $filedname
+			} else {
+				$pattern[]        = '.*';		// Just ignore pseudo fields
 			}
 		}
 		$this->fields         = $fields;
-		$this->pattern        = implode('', $pattern);
+		$this->pattern        = '/' . implode('', $pattern) . '/s';
 		$this->pattern_fields = $pattern_fields;
 
 		// Listing
@@ -818,31 +818,29 @@ class Tracker_list
 
 		// Load / Redefine cell
 		$matches = array();
-		$row['_match'] = preg_match('/' . $this->pattern . '/s', implode('', $source), $matches);
+		$row['_match'] = preg_match($this->pattern, implode('', $source), $matches);
 		unset($source);
 		if ($row['_match']) {
 			array_shift($matches);	// $matches[0] = all of the captured string
-			foreach ($this->pattern_fields as $key => $field) {
-				$row[$field] = trim($matches[$key]);
+			foreach ($this->pattern_fields as $key => $fieldname) {
+				$row[$fieldname] = trim($matches[$key]);
+				unset($matches[$key]);
 			}
 		}
 
 		$this->rows[$name] = $row;
 	}
 
-	// Sort $this->rows by $order_commands
-	function sort($order_commands = '')
+	// sort()
+	function _order_commands2orders($order_commands = '')
 	{
 		$order_commands = trim($order_commands);
-		if ($order_commands == '') {
-			$this->order = array();
-			return TRUE;
-		}
+		if ($order_commands == '') return array();
 
+		$orders = array();
 		$fields = $this->fields;
 
 		$i = 0;
-		$orders = array();
 		foreach (explode(';', $order_commands) as $command) {
 			$command = trim($command);
 			if ($command == '') continue;
@@ -867,6 +865,19 @@ class Tracker_list
 			++$i;
 			$orders[$fieldname] = $_order;
 		}
+
+		return $orders;
+	}
+
+	// Sort $this->rows by $order_commands
+	function sort($order_commands = '')
+	{
+		$orders = $this->_order_commands2orders($order_commands);
+		if ($orders === FALSE) {
+			return FALSE;
+		}
+
+		$fields = $this->fields;
 
 		$params = array();	// Arguments for array_multisort()
 		foreach ($orders as $fieldname => $order) {
