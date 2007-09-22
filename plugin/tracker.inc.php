@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.66 2007/09/22 15:08:44 henoheno Exp $
+// $Id: tracker.inc.php,v 1.67 2007/09/22 15:44:10 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -788,7 +788,6 @@ class Tracker_list
 		$source = preg_split('/\\\\\[(\w+)\\\\\]/', preg_quote($source, '/'), -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		// NOTE: if the page has garbages between fields, it will fail to be load
-		$pat_last = '';
 		while (! empty($source)) {
 			// Just ignore these _fixed_ data
 			$pattern[] = preg_replace('/\s+/', '\\s*', '(?>\\s*' . trim(array_shift($source)) . '\\s*)');
@@ -796,14 +795,10 @@ class Tracker_list
 
 			$fieldname = array_shift($source);
 			if (isset($fields[$fieldname])) {
-				$pat_last  = '(.*?)';	// Just capture it
-				$pattern[] = $pat_last;	
+				$pattern[] = '(.*?)';	// Just capture it
 				$pattern_fields[] = $fieldname;	// Capture it as this $filedname
 			} else {
-				if ($pat_last != '.*?') {
-					$pat_last  = '.*?';	// Just ignore pseudo fields etc
-					$pattern[] = $pat_last;	
-				}
+				$pattern[] = '.*?';	// Just ignore pseudo fields etc
 			}
 		}
 		$this->pattern        = '/' . implode('', $pattern) . '/sS';
