@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.77 2007/09/23 13:55:30 henoheno Exp $
+// $Id: tracker.inc.php,v 1.78 2007/09/23 14:24:18 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -662,15 +662,21 @@ function plugin_tracker_list_action()
 	global $get, $vars;
 
 	$base   = isset($get['base'])   ? $get['base']   : '';		// Base directory to load
-	$refer  = isset($get['refer'])  ? $get['refer']  : $base;	// Where to #tracker_list
-	if ($base == '') $base = $refer;	// Compat before 1.4.8
+
+	if (isset($get['refer'])) {
+		$refer = $get['refer'];	// Where to #tracker_list
+		if ($base == '') $base = $refer;	// Compat before 1.4.8
+	} else {
+		$refer = $base;
+		$vars['refer'] = $refer;	// Try to show page title properly
+	}
 
 	$config = isset($get['config']) ? $get['config'] : '';
 	$list   = isset($get['list'])   ? $get['list']   : 'list';
-	$order  = isset($vars['order']) ? $vars['order'] : PLUGIN_TRACKER_DEFAULT_ORDER;
-	$limit  = isset($vars['limit']) ? $vars['limit'] : 0;
+	$order  = isset($get['order'])  ? $get['order']  : PLUGIN_TRACKER_DEFAULT_ORDER;
+	$limit  = isset($get['limit'])  ? $get['limit']  : 0;
 
-	$s_refer = make_pagelink(trim($refer));
+	$s_refer = make_pagelink($refer);
 	return array(
 		'msg' => plugin_tracker_message('msg_list'),
 		'body'=> str_replace('$1', $s_refer, plugin_tracker_message('msg_back')) .
