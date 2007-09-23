@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.70 2007/09/23 04:47:06 henoheno Exp $
+// $Id: tracker.inc.php,v 1.71 2007/09/23 04:47:42 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -683,7 +683,6 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 	$base  = trim($base);
 	if ($base == '') return '#tracker_list: Base not specified' . '<br />';
 
-	// TODO: is_page
 	$refer = trim($refer);
 	if (! is_page($refer)) {
 		return '#tracker_list: Refer page not found: ' . htmlspecialchars($refer) . '<br />';
