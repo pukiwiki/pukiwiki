@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.69 2007/09/23 04:09:45 henoheno Exp $
+// $Id: tracker.inc.php,v 1.70 2007/09/23 04:47:06 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -68,10 +68,6 @@ function plugin_tracker_convert()
 		return '#tracker: Config \'' . htmlspecialchars($config_name) . '\' not found<br />';
 	}
 	$config->config_name = $config_name;
-	$form = $config->page . '/' . $form;
-	if (! is_page($form)) {
-		return '#tracker: Form \'' . make_pagelink($form) . '\' not found<br />';
-	}
 
 	$from = $to = $hidden = array();
 	$fields = plugin_tracker_get_fields($base, $refer, $config);
@@ -87,8 +83,14 @@ function plugin_tracker_convert()
 		unset($fields[$field]);
 	}
 
+	$form = $config->page . '/' . $form;
+	$retval = plugin_tracker_get_source($form);
+	if ($retval === FALSE || empty($retval)) {
+		return '#tracker: Form \'' . make_pagelink($form) . '\' not found or seems empty<br />';
+	}
+
 	$script = get_script_uri();
-	$retval = str_replace($from, $to, convert_html(plugin_tracker_get_source($form)));
+	$retval = str_replace($from, $to, convert_html($retval));
 	$hidden = implode('<br />' . "\n", $hidden);
 	return <<<EOD
 <form enctype="multipart/form-data" action="$script" method="post">
@@ -138,13 +140,6 @@ function plugin_tracker_action()
 		return '<p>config file \'' . htmlspecialchars($config_name) . '\' not found.</p>';
 	}
 	$config->config_name = $config_name;
-	$template_page = $config->page . '/page';
-	if (! is_page($template_page)) {
-		return array(
-			'msg'  => 'Cannot write',
-			'body' => 'Page template (' . htmlspecialchars($template_page) . ') not exists'
-		);
-	}
 
 	// Default
 	$_post = array_merge($post, $_FILES);
@@ -166,7 +161,14 @@ function plugin_tracker_action()
 	}
 
 	// Load $template
+	$template_page = $config->page . '/page';
 	$template = plugin_tracker_get_source($template_page);
+	if ($template === FALSE || empty($template)) {
+		return array(
+			'msg'  => 'Cannot write',
+			'body' => 'Page template (' . htmlspecialchars($template_page) . ') not exists or seems empty'
+		);
+	}
 
 	// Repalace every [$field]s to real values in the $template
 	$subject = $subject_e = array();
@@ -773,14 +775,18 @@ class Tracker_list
 	// add(): Generate regexes
 	function _generate_regex()
 	{
-		$config_page = $this->config->page;
+		$config_page = $this->config->page . '/page';
 		$fields      = $this->fields;
 
 		$pattern        = array();
 		$pattern_fields = array();
 
-		// TODO: if (is FALSE) OR file_exists()
-		$source = plugin_tracker_get_source($config_page . '/page', TRUE);
+		$source = plugin_tracker_get_source($config_page, TRUE);
+		if ($source === FALSE || empty($source)) {
+			$this->error = 'Page not found or seems empty: ' . $config_page;
+			return FALSE;
+		}
+
 		// Block-plugins to pseudo fields (#convert => [_block_convert])
 		$source = preg_replace('/^\#([^\(\s]+)(?:\((.*)\))?\s*$/m', '[_block_$1]', $source);
 
@@ -803,6 +809,8 @@ class Tracker_list
 		}
 		$this->pattern        = '/' . implode('', $pattern) . '/sS';
 		$this->pattern_fields = $pattern_fields;
+
+		return TRUE;
 	}
 
 	function add($page, $name, $rescan = FALSE)
@@ -811,6 +819,7 @@ class Tracker_list
 		$this->_added[$page] = TRUE;
 
 		$source = plugin_tracker_get_source($page, TRUE);
+		if ($source === FALSE) $source = '';
 
 		// Compat: 'move to [[page]]' (bugtrack plugin)
 		$matches = array();
@@ -1102,6 +1111,10 @@ class Tracker_list
 		$matches        = array();
 		$used_fieldname = array('_real' => TRUE);
 		$template       = plugin_tracker_get_source($list, TRUE);
+		if ($template === FALSE || empty($template)) {
+			$this->error = 'Page not found or seems empty: ' . $template;
+			return FALSE;
+		}
 		preg_match_all($regex, $template, $matches);
 		unset($matches[0]);
 		foreach ($matches[1] as $match) {
@@ -1128,7 +1141,7 @@ class Tracker_list
 		$this->fields = $new_filds;
 
 		// Generate regex for $this->fields
-		$this->_generate_regex();
+		if ($this->_generate_regex() === FALSE) return FALSE;
 
 		// Load $this->rows
 		if ($this->_load() === FALSE) return FALSE;
@@ -1183,6 +1196,7 @@ class Tracker_list
 function plugin_tracker_get_source($page, $join = FALSE)
 {
 	$source = get_source($page, TRUE, $join);
+	if ($source === FALSE) return FALSE;
 
 	// Remove fixed-heading anchors
 	$source = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $source);
