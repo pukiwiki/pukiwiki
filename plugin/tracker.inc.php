@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.72 2007/09/23 05:00:24 henoheno Exp $
+// $Id: tracker.inc.php,v 1.73 2007/09/23 08:00:50 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -1165,21 +1165,29 @@ class Tracker_list
 		// Loading template
 		// TODO: How do you feel single/multiple table rows with 'c'(decolation)?
 		$matches = $header = $body = $footer = array();
-		foreach (plugin_tracker_get_source($list) as $line) {
+		$template = plugin_tracker_get_source($list);
+		if ($template === FALSE) {
+			$this->error = 'Page not found or seems empty: ' . $list;
+			return FALSE;
+		}
+		foreach ($template as $line) {
 			if (preg_match('/^\|.+\|([hfc])$/i', $line, $matches)) {
-				if (strtolower($matches[1]) == 'jf') {
+				if (strtolower($matches[1]) == 'f') {
 					$footer[] = $line;	// Table footer
 				} else {
-					$header[] = $line;	// Table header, and decoration
+					$header[] = $line;	// Table header, or decoration
 				}
 			} else {
-				$body[]   = $line;	// The others
+				$body[]   = $line;
 			}
 		}
 
+		// Header and decolation
 		foreach($header as $line) {
 			$source[] = preg_replace_callback($regex, array(& $this, '_replace_title'), $line);
 		}
+		unset($header);
+		// Repeat
 		foreach ($rows as $row) {
 			if (! PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE && ! $row['_match']) continue;
 			$this->_items = $row;
@@ -1191,6 +1199,8 @@ class Tracker_list
 				$source[] = $line;
 			}
 		}
+		unset($body);
+		// Footer
 		foreach($footer as $line) {
 			$source[] = preg_replace_callback($regex, array(& $this, '_replace_title'), $line);
 		}
@@ -1204,11 +1214,17 @@ function plugin_tracker_get_source($page, $join = FALSE)
 	$source = get_source($page, TRUE, $join);
 	if ($source === FALSE) return FALSE;
 
-	// Remove fixed-heading anchors
-	$source = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $source);
-
-	// Remove #freeze-es
-	return preg_replace('/^#freeze\s*$/im', '', $source);
+	return preg_replace(
+		 array(
+			'/^#freeze\s*$/im',
+			'/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m',	// Remove fixed-heading anchors
+		),
+		array(
+			'',
+			'$1$2',
+		),
+		$source
+	);
 }
 
 function plugin_tracker_message($key)
