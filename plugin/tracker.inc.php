@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.68 2007/09/22 16:11:23 henoheno Exp $
+// $Id: tracker.inc.php,v 1.69 2007/09/23 04:09:45 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -805,7 +805,7 @@ class Tracker_list
 		$this->pattern_fields = $pattern_fields;
 	}
 
-	function add($page, $name)
+	function add($page, $name, $rescan = FALSE)
 	{
 		if (isset($this->_added[$page])) return TRUE;
 		$this->_added[$page] = TRUE;
@@ -814,11 +814,11 @@ class Tracker_list
 
 		// Compat: 'move to [[page]]' (bugtrack plugin)
 		$matches = array();
-		if (! empty($source) && preg_match('/move\sto\s(.+)/', $source, $matches)) {
+		if (! $rescan && ! empty($source) && preg_match('/move\sto\s(.+)/', $source, $matches)) {
 			$to_page = strip_bracket(trim($matches[1]));
 			if (is_page($to_page)) {
-				unset($source);	// Release
-				return $this->add($to_page, $name);	// Recurse(Rescan)
+				unset($source, $matches);	// Release
+				return $this->add($to_page, $name, TRUE);	// Recurse(Rescan) once
 			}
 		}
 
@@ -849,7 +849,7 @@ class Tracker_list
 		return TRUE;
 	}
 
-	// sort()
+	// setOrder()
 	function _order_commands2orders($order_commands = '')
 	{
 		$order_commands = trim($order_commands);
@@ -870,6 +870,7 @@ class Tracker_list
 				$this->error =  'No such field: ' . $fieldname;
 				return FALSE;
 			}
+
 			$_order = $this->_sortkey_string2define($order);
 			if ($_order === FALSE) {
 				$this->error =  'Invalid sortkey: ' . $order;
@@ -881,13 +882,14 @@ class Tracker_list
 
 			if (PLUGIN_TRACKER_LIST_SORT_LIMIT <= $i) continue;	// Ignore
 			++$i;
+
 			$orders[$fieldname] = $_order;
 		}
 
 		return $orders;
 	}
 
-	// sort()
+	// Set commands for sort()
 	function setOrder($order_commands = '')
 	{
 		$orders = $this->_order_commands2orders($order_commands);
