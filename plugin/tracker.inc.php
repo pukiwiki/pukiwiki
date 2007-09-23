@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.76 2007/09/23 13:50:01 henoheno Exp $
+// $Id: tracker.inc.php,v 1.77 2007/09/23 13:55:30 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -1075,24 +1075,27 @@ class Tracker_list
 		$fieldname = isset($params[0])  ? $params[0] : '';
 		$stylename = isset($params[1])  ? $params[1] : $fieldname;
 
-		if ($fieldname == '') return '';	// Invalid
+		$str = '';
 
-		if (! isset($items[$fieldname])) {
-			// Maybe load miss of the page
-			if (isset($fields[$fieldname])) {
-				$str = '[page_err]';	// Exactlly
+		if ($fieldname != '') {
+			if (! isset($items[$fieldname])) {
+				// Maybe load miss of the page
+				if (isset($fields[$fieldname])) {
+					$str = '[page_err]';	// Exactlly
+				} else {
+					$str = isset($matches[0]) ? $matches[0] : '';	// Nothing to do
+				}
 			} else {
-				$str = isset($matches[0]) ? $matches[0] : '';	// Nothing to do
+				$str = $items[$fieldname];
+				if (isset($fields[$fieldname])) {
+					$str    = $fields[$fieldname]->format_cell($str);
+				}
 			}
-		} else {
-			$str = $items[$fieldname];
-			if (isset($fields[$fieldname])) {
-				$str    = $fields[$fieldname]->format_cell($str);
-			}
-			if (isset($fields[$stylename]) && isset($items[$stylename])) {
-				$_style = $fields[$stylename]->get_style($items[$stylename]);
-				$str    = sprintf($_style, $str);
-			}
+		}
+
+		if (isset($fields[$stylename]) && isset($items[$stylename])) {
+			$_style = $fields[$stylename]->get_style($items[$stylename]);
+			$str    = sprintf($_style, $str);
 		}
 
 		return $this->_escape($tfc, $str);
