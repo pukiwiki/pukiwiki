@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.73 2007/09/23 08:00:50 henoheno Exp $
+// $Id: tracker.inc.php,v 1.74 2007/09/23 12:56:42 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -747,24 +747,23 @@ class Tracker_list
 		$this->list     = $list;
 		$this->fields   = plugin_tracker_get_fields($base, $refer, $config);
 	}
-	
-	// Load pages
-	function _load()
+
+	// Add multiple pages at a time
+	function loadPages()
 	{
-		$pattern     = $this->base . '/';
-		$pattern_len = strlen($pattern);
+		$base     = $this->base . '/';
+		$base_reg = '#^' . preg_quote($base, '#') . '#';
+		$base_len = strlen($base);
 
-		foreach (get_existpages() as $_page) {
-			if (strpos($_page, $pattern) === 0) {
-				$name = substr($_page, $pattern_len);
-				if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, $name)) continue;
+		foreach (preg_grep($base_reg, array_values(get_existpages())) as $pagename) {
+			$basename = substr($pagename, $base_len);
+			if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, $basename)) continue;
 
-				// Adding $this->rows
-				if ($this->add($_page, $name) === FALSE) return FALSE;
-			}
+			// Adding $this->rows
+			if ($this->addPage($pagename, $basename) === FALSE) return FALSE;
 		}
 		if (empty($this->rows)) {
-			$this->error = 'Pages not found under: ' . $pattern;
+			$this->error = 'Pages not found under: ' . $base;
 			return FALSE;
 		}
 
@@ -812,12 +811,13 @@ class Tracker_list
 		return TRUE;
 	}
 
-	function add($page, $name, $rescan = FALSE)
+	// Add one pages
+	function addPage($pagename, $basename, $rescan = FALSE)
 	{
-		if (isset($this->_added[$page])) return TRUE;
-		$this->_added[$page] = TRUE;
+		if (isset($this->_added[$pagename])) return TRUE;
+		$this->_added[$pagename] = TRUE;
 
-		$source = plugin_tracker_get_source($page, TRUE);
+		$source = plugin_tracker_get_source($pagename, TRUE);
 		if ($source === FALSE) $source = '';
 
 		// Compat: 'move to [[page]]' (bugtrack plugin)
@@ -826,16 +826,16 @@ class Tracker_list
 			$to_page = strip_bracket(trim($matches[1]));
 			if (is_page($to_page)) {
 				unset($source, $matches);	// Release
-				return $this->add($to_page, $name, TRUE);	// Recurse(Rescan) once
+				return $this->addPage($to_page, $basename, TRUE);	// Recurse(Rescan) once
 			}
 		}
 
 		// Default column
-		$filetime = get_filetime($page);
+		$filetime = get_filetime($pagename);
 		$row = array(
 			// column => default data of the cell
-			'_page'   => '[[' . $page . ']]',
-			'_real'   => $name,
+			'_page'   => '[[' . $pagename . ']]',
+			'_real'   => $basename,
 			'_update' => $filetime,
 			'_past'   => $filetime,
 			'_match'  => FALSE,
@@ -853,7 +853,7 @@ class Tracker_list
 			}
 		}
 
-		$this->rows[$name] = $row;
+		$this->rows[$basename] = $row;
 		return TRUE;
 	}
 
@@ -910,7 +910,7 @@ class Tracker_list
 	}
 
 	// Sort $this->rows by $this->orders
-	function _sort()
+	function sortRows()
 	{
 		$orders = $this->orders;
 		$fields = $this->fields;
@@ -949,8 +949,8 @@ class Tracker_list
 	function _sortkey_define2string($sortkey)
 	{
 		switch ($sortkey) {
-		case PLUGIN_TRACKER_LIST_SORT_ASC:  $sortkey = 'SORT_ASC';  break;
-		case PLUGIN_TRACKER_LIST_SORT_DESC: $sortkey = 'SORT_DESC'; break;
+		case PLUGIN_TRACKER_LIST_SORT_ASC:  $sortkey = 'asc';  break;
+		case PLUGIN_TRACKER_LIST_SORT_DESC: $sortkey = 'desc'; break;
 		default:
 			$this->error =  'No such define: ' . $sortkey;
 			$sortkey = FALSE;
@@ -1143,10 +1143,10 @@ class Tracker_list
 		if ($this->_generate_regex() === FALSE) return FALSE;
 
 		// Load $this->rows
-		if ($this->_load() === FALSE) return FALSE;
+		if ($this->loadPages() === FALSE) return FALSE;
 
 		// Sort $this->rows
-		if ($this->_sort() === FALSE) return FALSE;
+		if ($this->sortRows() === FALSE) return FALSE;
 		$rows   = $this->rows;
 
 		// toString()
@@ -1164,7 +1164,7 @@ class Tracker_list
 
 		// Loading template
 		// TODO: How do you feel single/multiple table rows with 'c'(decolation)?
-		$matches = $header = $body = $footer = array();
+		$matches = $t_header = $t_body = $t_footer = array();
 		$template = plugin_tracker_get_source($list);
 		if ($template === FALSE) {
 			$this->error = 'Page not found or seems empty: ' . $list;
@@ -1173,25 +1173,26 @@ class Tracker_list
 		foreach ($template as $line) {
 			if (preg_match('/^\|.+\|([hfc])$/i', $line, $matches)) {
 				if (strtolower($matches[1]) == 'f') {
-					$footer[] = $line;	// Table footer
+					$t_footer[] = $line;	// Table footer
 				} else {
-					$header[] = $line;	// Table header, or decoration
+					$t_header[] = $line;	// Table header, or decoration
 				}
 			} else {
-				$body[]   = $line;
+				$t_body[]   = $line;
 			}
 		}
+		unset($template);
 
 		// Header and decolation
-		foreach($header as $line) {
+		foreach($t_header as $line) {
 			$source[] = preg_replace_callback($regex, array(& $this, '_replace_title'), $line);
 		}
-		unset($header);
+		unset($t_header);
 		// Repeat
 		foreach ($rows as $row) {
 			if (! PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE && ! $row['_match']) continue;
 			$this->_items = $row;
-			foreach ($body as $line) {
+			foreach ($t_body as $line) {
 				if (ltrim($line) != '') {
 					$this->_the_first_character_of_the_line = $line[0];
 					$line = preg_replace_callback($regex, array(& $this, '_replace_item'), $line);
@@ -1199,11 +1200,12 @@ class Tracker_list
 				$source[] = $line;
 			}
 		}
-		unset($body);
+		unset($t_body);
 		// Footer
-		foreach($footer as $line) {
+		foreach($t_footer as $line) {
 			$source[] = preg_replace_callback($regex, array(& $this, '_replace_title'), $line);
 		}
+		unset($t_footer);
 
 		return implode('', $source);
 	}
