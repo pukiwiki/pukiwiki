@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.75 2007/09/23 13:19:41 henoheno Exp $
+// $Id: tracker.inc.php,v 1.76 2007/09/23 13:50:01 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -705,7 +705,7 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 	}
 
 	$list = & new Tracker_list($base, $refer, $config, $list);
-	if ($list->setOrder($order_commands) === FALSE) {
+	if ($list->setSortOrder($order_commands) === FALSE) {
 		return '#tracker_list: ' . htmlspecialchars($list->error) . '<br />';
 	}
 	$result = $list->toString($limit);
@@ -749,18 +749,14 @@ class Tracker_list
 	}
 
 	// Add multiple pages at a time
-	function loadPages()
+	function loadRows()
 	{
 		$base     = $this->base . '/';
 		$base_reg = '#^' . preg_quote($base, '#') . '#';
-		$base_len = strlen($base);
 
+		// Adding $this->rows
 		foreach (preg_grep($base_reg, array_values(get_existpages())) as $pagename) {
-			$basename = substr($pagename, $base_len);
-			if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, $basename)) continue;
-
-			// Adding $this->rows
-			if ($this->addPage($pagename, $basename) === FALSE) return FALSE;
+			if ($this->addRow($pagename) === FALSE) return FALSE;
 		}
 		if (empty($this->rows)) {
 			$this->error = 'Pages not found under: ' . $base;
@@ -812,10 +808,14 @@ class Tracker_list
 	}
 
 	// Add one pages
-	function addPage($pagename, $basename, $rescan = FALSE)
+	function addRow($pagename, $rescan = FALSE)
 	{
 		if (isset($this->_added[$pagename])) return TRUE;
 		$this->_added[$pagename] = TRUE;
+
+		$base     = $this->base;
+		$basename = substr($pagename, strlen($base) + 1);
+		if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, $basename)) return TRUE;
 
 		$source = plugin_tracker_get_source($pagename, TRUE);
 		if ($source === FALSE) $source = '';
@@ -826,7 +826,7 @@ class Tracker_list
 			$to_page = strip_bracket(trim($matches[1]));
 			if (is_page($to_page)) {
 				unset($source, $matches);	// Release
-				return $this->addPage($to_page, $basename, TRUE);	// Recurse(Rescan) once
+				return $this->addRow($to_page, TRUE);	// Recurse(Rescan) once
 			}
 		}
 
@@ -835,7 +835,7 @@ class Tracker_list
 		$row = array(
 			// column => default data of the cell
 			'_page'   => '[[' . $pagename . ']]',
-			'_real'   => $basename,
+			'_real'   => $basename,	// TODO: Why not $pagename
 			'_update' => $filetime,
 			'_past'   => $filetime,
 		);
@@ -848,15 +848,15 @@ class Tracker_list
 				$row[$fieldname] = trim($matches[$key]);
 				unset($matches[$key]);
 			}
-			$this->rows[$basename] = $row;
+			$this->rows[] = $row;
 		} else if (PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE) {
-			$this->rows[$basename] = $row;	// Error
+			$this->rows[] = $row;	// Error
 		}
 
 		return TRUE;
 	}
 
-	// setOrder()
+	// setSortOrder()
 	function _order_commands2orders($order_commands = '')
 	{
 		$order_commands = trim($order_commands);
@@ -897,7 +897,7 @@ class Tracker_list
 	}
 
 	// Set commands for sort()
-	function setOrder($order_commands = '')
+	function setSortOrder($order_commands = '')
 	{
 		$orders = $this->_order_commands2orders($order_commands);
 		if ($orders === FALSE) {
@@ -1142,7 +1142,7 @@ class Tracker_list
 		if ($this->_generate_regex() === FALSE) return FALSE;
 
 		// Load $this->rows
-		if ($this->loadPages() === FALSE) return FALSE;
+		if ($this->loadRows() === FALSE) return FALSE;
 
 		// Sort $this->rows
 		if ($this->sortRows() === FALSE) return FALSE;
