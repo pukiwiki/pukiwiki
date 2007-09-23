@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.71 2007/09/23 04:47:42 henoheno Exp $
+// $Id: tracker.inc.php,v 1.72 2007/09/23 05:00:24 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -1163,11 +1163,15 @@ class Tracker_list
 		}
 
 		// Loading template
-		$header = $body = array();
+		// TODO: How do you feel single/multiple table rows with 'c'(decolation)?
+		$matches = $header = $body = $footer = array();
 		foreach (plugin_tracker_get_source($list) as $line) {
-			if (preg_match('/^\|(.+)\|[hfc]$/i', $line)) {
-				// TODO: Why c and f  here
-				$header[] = $line;	// Table header, footer, and decoration
+			if (preg_match('/^\|.+\|([hfc])$/i', $line, $matches)) {
+				if (strtolower($matches[1]) == 'jf') {
+					$footer[] = $line;	// Table footer
+				} else {
+					$header[] = $line;	// Table header, and decoration
+				}
 			} else {
 				$body[]   = $line;	// The others
 			}
@@ -1186,6 +1190,9 @@ class Tracker_list
 				}
 				$source[] = $line;
 			}
+		}
+		foreach($footer as $line) {
+			$source[] = preg_replace_callback($regex, array(& $this, '_replace_title'), $line);
 		}
 
 		return implode('', $source);
