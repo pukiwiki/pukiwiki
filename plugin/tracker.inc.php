@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.74 2007/09/23 12:56:42 henoheno Exp $
+// $Id: tracker.inc.php,v 1.75 2007/09/23 13:19:41 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -838,22 +838,21 @@ class Tracker_list
 			'_real'   => $basename,
 			'_update' => $filetime,
 			'_past'   => $filetime,
-			'_match'  => FALSE,
 		);
 
 		// Load / Redefine cell
 		$matches = array();
-		$row['_match'] = preg_match($this->pattern, $source, $matches);
-		unset($source);
-		if ($row['_match']) {
+		if (preg_match($this->pattern, $source, $matches)) {
 			array_shift($matches);	// $matches[0] = all of the captured string
 			foreach ($this->pattern_fields as $key => $fieldname) {
 				$row[$fieldname] = trim($matches[$key]);
 				unset($matches[$key]);
 			}
+			$this->rows[$basename] = $row;
+		} else if (PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE) {
+			$this->rows[$basename] = $row;	// Error
 		}
 
-		$this->rows[$basename] = $row;
 		return TRUE;
 	}
 
@@ -1190,7 +1189,6 @@ class Tracker_list
 		unset($t_header);
 		// Repeat
 		foreach ($rows as $row) {
-			if (! PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE && ! $row['_match']) continue;
 			$this->_items = $row;
 			foreach ($t_body as $line) {
 				if (ltrim($line) != '') {
