@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.86 2007/09/02 14:24:40 henoheno Exp $
+// $Id: file.php,v 1.87 2007/09/23 04:23:40 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -35,38 +35,33 @@ function get_source($page = NULL, $lock = TRUE, $join = FALSE)
 	$path = get_filename($page);
 	if (file_exists($path)) {
 
-		if ($lock) {
+		if ($lock || $join) {
 			$fp = @fopen($path, 'r');
 			if ($fp === FALSE) return FALSE;
-			flock($fp, LOCK_SH);
 		}
 
+		if ($lock) flock($fp, LOCK_SH);
 		if ($join) {
-			// Returns a value
 			$size = filesize($path);
 			if ($size === FALSE) {
 				$result = FALSE;
 			} else if ($size == 0) {
 				$result = '';
 			} else {
-				$result = fread($fp, $size);
-				if ($result !== FALSE) {
-					// Removing line-feeds
-					$result = str_replace("\r", '', $result);
-				}
+				$result = fread($fp, $size);	// Returns a value
 			}
 		} else {
-			// Returns an array
-			$result = file($path);
-			if ($result !== FALSE) {
-				// Removing line-feeds
-				$result = str_replace("\r", '', $result);
-			}
+			$result = file($path);	// Returns an array
+		}
+		if ($lock) flock($fp, LOCK_UN);
+
+		if ($lock || $join) {
+			@fclose($fp);
 		}
 
-		if ($lock) {
-			flock($fp, LOCK_UN);
-			@fclose($fp);
+		if ($result !== FALSE) {
+			// Removing line-feeds
+			$result = str_replace("\r", '', $result);
 		}
 	}
 
