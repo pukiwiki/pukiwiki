@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.80 2007/09/24 03:30:24 henoheno Exp $
+// $Id: tracker.inc.php,v 1.81 2007/09/24 03:37:10 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -923,6 +923,7 @@ class Tracker_list
 		return TRUE;
 	}
 
+	// sortRows(): Internal sort type => PHP sort define
 	function _sort_type_dropout($order)
 	{
 		if ($order == PLUGIN_TRACKER_SORT_TYPE_REGULAR) {
@@ -939,6 +940,7 @@ class Tracker_list
 		}
 	}
 
+	// sortRows(): Internal sort order => PHP sort define
 	function _sort_order_dropout($order)
 	{
 		if ($order == PLUGIN_TRACKER_SORT_ORDER_ASC) {
@@ -959,21 +961,24 @@ class Tracker_list
 
 		$params = array();	// Arguments for array_multisort()
 		foreach ($orders as $fieldname => $order) {
+			$field = $fields[$fieldname];
+
 			// One column set (one-dimensional array(), sort type, and order-by)
 
 			$order = $this->_sort_order_dropout($order);
 			if ($order === FALSE) return FALSE;
 
-			$type = $this->_sort_type_dropout($fields[$fieldname]->sort_type);
+			$type = $this->_sort_type_dropout($field->sort_type);
 			if ($type === FALSE) return FALSE;
 
 			$array = array();
 			foreach ($this->rows as $row) {
 				$array[] = isset($row[$fieldname]) ?
-					$fields[$fieldname]->get_value($row[$fieldname]) :
+					$field->get_value($row[$fieldname]) :
 					'';
 			}
 
+			// TODO: Consider the same values there
 			if ($type == SORT_NATURAL) {
 				natsort($array);
 				$array = array_flip(array_keys($array));
