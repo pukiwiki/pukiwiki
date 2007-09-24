@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.85 2007/09/24 05:31:06 henoheno Exp $
+// $Id: tracker.inc.php,v 1.86 2007/09/24 07:48:59 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -751,7 +751,7 @@ class Tracker_list
 	var $_added = array();
 
 	// toString()
-	var $_itmes;
+	var $_row;
 	var $_the_first_character_of_the_line;
 
 	function Tracker_list($base, $refer, & $config, $list)
@@ -1119,9 +1119,9 @@ class Tracker_list
 
 	// toString(): Called within preg_replace_callback()
 	function _replace_item($matches = array())
-	{	
+	{
 		$fields = $this->fields;
-		$items  = $this->_items;
+		$row    = $this->_row;
 		$tfc    = $this->_the_first_character_of_the_line ;
 
 		$params    = isset($matches[1]) ? explode(',', $matches[1]) : array();
@@ -1131,7 +1131,7 @@ class Tracker_list
 		$str = '';
 
 		if ($fieldname != '') {
-			if (! isset($items[$fieldname])) {
+			if (! isset($row[$fieldname])) {
 				// Maybe load miss of the page
 				if (isset($fields[$fieldname])) {
 					$str = '[page_err]';	// Exactlly
@@ -1139,15 +1139,15 @@ class Tracker_list
 					$str = isset($matches[0]) ? $matches[0] : '';	// Nothing to do
 				}
 			} else {
-				$str = $items[$fieldname];
+				$str = $row[$fieldname];
 				if (isset($fields[$fieldname])) {
 					$str    = $fields[$fieldname]->format_cell($str);
 				}
 			}
 		}
 
-		if (isset($fields[$stylename]) && isset($items[$stylename])) {
-			$_style = $fields[$stylename]->get_style($items[$stylename]);
+		if (isset($fields[$stylename]) && isset($row[$stylename])) {
+			$_style = $fields[$stylename]->get_style($row[$stylename]);
 			$str    = sprintf($_style, $str);
 		}
 
@@ -1245,7 +1245,7 @@ class Tracker_list
 		unset($t_header);
 		// Repeat
 		foreach ($rows as $row) {
-			$this->_items = $row;
+			$this->_row = $row;
 			foreach ($t_body as $line) {
 				if (ltrim($line) != '') {
 					$this->_the_first_character_of_the_line = $line[0];
