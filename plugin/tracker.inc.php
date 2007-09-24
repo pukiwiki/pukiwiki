@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.78 2007/09/23 14:24:18 henoheno Exp $
+// $Id: tracker.inc.php,v 1.79 2007/09/24 02:38:36 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -1041,7 +1041,7 @@ class Tracker_list
 			unset($orders[$fieldname]);	// $fieldname will be added to the first
 		} else {
 			// Not sorted yet, but
-			$order = PLUGIN_TRACKER_LIST_SORT_ASC;	// Default
+			$order = PLUGIN_TRACKER_LIST_SORT_DEFAULT;
 		}
 
 		// $fieldname become the first, if you click this link
