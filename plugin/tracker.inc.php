@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.81 2007/09/24 03:37:10 henoheno Exp $
+// $Id: tracker.inc.php,v 1.82 2007/09/24 03:51:51 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -978,10 +978,16 @@ class Tracker_list
 					'';
 			}
 
-			// TODO: Consider the same values there
 			if ($type == SORT_NATURAL) {
 				natsort($array);
-				$array = array_flip(array_keys($array));
+				$i = 0;
+				$last = NULL;
+				foreach (array_keys($array) as $key) {
+					// Consider the same values there for array_multisort()
+					if ($last !== $array[$key]) ++$i;
+					$last = $array[$key];
+					$array[$key] = $i;
+				}
 				ksort($array, SORT_NUMERIC);
 				$type = SORT_NUMERIC;
 			}
