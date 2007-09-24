@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.79 2007/09/24 02:38:36 henoheno Exp $
+// $Id: tracker.inc.php,v 1.80 2007/09/24 03:30:24 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -27,10 +27,19 @@ define('PLUGIN_TRACKER_LIST_SHOW_ERROR_PAGE', 1);
 
 // ----
 
-// Sort options
-define('PLUGIN_TRACKER_LIST_SORT_DESC',    3);
-define('PLUGIN_TRACKER_LIST_SORT_ASC',     4);
-define('PLUGIN_TRACKER_LIST_SORT_DEFAULT', PLUGIN_TRACKER_LIST_SORT_ASC);
+// Sort type
+define('PLUGIN_TRACKER_SORT_TYPE_REGULAR',       0);
+define('PLUGIN_TRACKER_SORT_TYPE_NUMERIC',       1);
+define('PLUGIN_TRACKER_SORT_TYPE_STRING',        2);
+//define('PLUGIN_TRACKER_SORT_TYPE_LOCALE_STRING', 5);
+define('PLUGIN_TRACKER_SORT_TYPE_NATURAL',       6);
+if (! defined('SORT_NATURAL')) define('SORT_NATURAL', PLUGIN_TRACKER_SORT_TYPE_NATURAL);
+
+// Sort order
+define('PLUGIN_TRACKER_SORT_ORDER_DESC',    3);
+define('PLUGIN_TRACKER_SORT_ORDER_ASC',     4);
+define('PLUGIN_TRACKER_SORT_ORDER_DEFAULT', PLUGIN_TRACKER_SORT_ORDER_ASC);
+
 
 // Show a form
 function plugin_tracker_convert()
@@ -267,7 +276,7 @@ class Tracker_field
 	var $refer;
 	var $config;
 	var $data;
-	var $sort_type = SORT_REGULAR;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_REGULAR;
 	var $id        = 0;
 
 	function Tracker_field($field, $base, $refer, & $config)
@@ -316,7 +325,7 @@ class Tracker_field
 
 class Tracker_field_text extends Tracker_field
 {
-	var $sort_type = SORT_STRING;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_STRING;
 
 	function get_tag()
 	{
@@ -329,7 +338,7 @@ class Tracker_field_text extends Tracker_field
 
 class Tracker_field_page extends Tracker_field_text
 {
-	var $sort_type = SORT_STRING;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_STRING;
 
 	function format_value($value)
 	{
@@ -341,12 +350,12 @@ class Tracker_field_page extends Tracker_field_text
 
 class Tracker_field_real extends Tracker_field_text
 {
-	var $sort_type = SORT_REGULAR;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_REGULAR;
 }
 
 class Tracker_field_title extends Tracker_field_text
 {
-	var $sort_type = SORT_STRING;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_STRING;
 
 	function format_cell($str)
 	{
@@ -357,7 +366,7 @@ class Tracker_field_title extends Tracker_field_text
 
 class Tracker_field_textarea extends Tracker_field
 {
-	var $sort_type = SORT_STRING;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_STRING;
 
 	function get_tag()
 	{
@@ -381,7 +390,7 @@ class Tracker_field_textarea extends Tracker_field
 
 class Tracker_field_format extends Tracker_field
 {
-	var $sort_type = SORT_STRING;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_STRING;
 	var $styles    = array();
 	var $formats   = array();
 
@@ -428,7 +437,7 @@ class Tracker_field_format extends Tracker_field
 
 class Tracker_field_file extends Tracker_field_format
 {
-	var $sort_type = SORT_STRING;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_STRING;
 
 	function get_tag()
 	{
@@ -457,7 +466,7 @@ class Tracker_field_file extends Tracker_field_format
 
 class Tracker_field_radio extends Tracker_field_format
 {
-	var $sort_type = SORT_NUMERIC;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_NUMERIC;
 	var $_options  = array();
 
 	function get_tag()
@@ -507,7 +516,7 @@ class Tracker_field_radio extends Tracker_field_format
 
 class Tracker_field_select extends Tracker_field_radio
 {
-	var $sort_type = SORT_NUMERIC;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_NUMERIC;
 
 	function get_tag($empty = FALSE)
 	{
@@ -535,7 +544,7 @@ class Tracker_field_select extends Tracker_field_radio
 
 class Tracker_field_checkbox extends Tracker_field_radio
 {
-	var $sort_type = SORT_NUMERIC;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_NUMERIC;
 
 	function get_tag()
 	{
@@ -565,7 +574,7 @@ class Tracker_field_checkbox extends Tracker_field_radio
 
 class Tracker_field_hidden extends Tracker_field_radio
 {
-	var $sort_type = SORT_NUMERIC;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_NUMERIC;
 
 	function get_tag()
 	{
@@ -596,7 +605,7 @@ EOD;
 
 class Tracker_field_date extends Tracker_field
 {
-	var $sort_type = SORT_NUMERIC;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_NUMERIC;
 
 	function format_cell($timestamp)
 	{
@@ -606,7 +615,7 @@ class Tracker_field_date extends Tracker_field
 
 class Tracker_field_past extends Tracker_field
 {
-	var $sort_type = SORT_NUMERIC;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_NUMERIC;
 
 	function format_cell($timestamp)
 	{
@@ -914,6 +923,34 @@ class Tracker_list
 		return TRUE;
 	}
 
+	function _sort_type_dropout($order)
+	{
+		if ($order == PLUGIN_TRACKER_SORT_TYPE_REGULAR) {
+			return SORT_REGULAR;
+		} else if ($order == PLUGIN_TRACKER_SORT_TYPE_NUMERIC) {
+			return SORT_NUMERIC;
+		} else if ($order == PLUGIN_TRACKER_SORT_TYPE_STRING) {
+			return SORT_STRING;
+		} else if ($order == PLUGIN_TRACKER_SORT_TYPE_NATURAL) {
+			return SORT_NATURAL;
+		} else {
+			$this->error = 'Invalid sort type';
+			return FALSE;
+		}
+	}
+
+	function _sort_order_dropout($order)
+	{
+		if ($order == PLUGIN_TRACKER_SORT_ORDER_ASC) {
+			return SORT_ASC;
+		} else if ($order == PLUGIN_TRACKER_SORT_ORDER_DESC) {
+			return SORT_DESC;
+		} else {
+			$this->error = 'Invalid sort order';
+			return FALSE;
+		}
+	}
+
 	// Sort $this->rows by $this->orders
 	function sortRows()
 	{
@@ -924,14 +961,11 @@ class Tracker_list
 		foreach ($orders as $fieldname => $order) {
 			// One column set (one-dimensional array(), sort type, and order-by)
 
-			if ($order == PLUGIN_TRACKER_LIST_SORT_ASC) {
-				$order = SORT_ASC;
-			} else if ($order == PLUGIN_TRACKER_LIST_SORT_DESC) {
-				$order = SORT_DESC;
-			} else {
-				$this->error = 'Invalid sort order for array_multisort()';
-				return FALSE;
-			}
+			$order = $this->_sort_order_dropout($order);
+			if ($order === FALSE) return FALSE;
+
+			$type = $this->_sort_type_dropout($fields[$fieldname]->sort_type);
+			if ($type === FALSE) return FALSE;
 
 			$array = array();
 			foreach ($this->rows as $row) {
@@ -939,8 +973,16 @@ class Tracker_list
 					$fields[$fieldname]->get_value($row[$fieldname]) :
 					'';
 			}
+
+			if ($type == SORT_NATURAL) {
+				natsort($array);
+				$array = array_flip(array_keys($array));
+				ksort($array, SORT_NUMERIC);
+				$type = SORT_NUMERIC;
+			}
+
 			$params[] = $array;
-			$params[] = $fields[$fieldname]->sort_type;
+			$params[] = $type;
 			$params[] = $order;
 		}
 		$params[] = & $this->rows;
@@ -954,8 +996,8 @@ class Tracker_list
 	function _sortkey_define2string($sortkey)
 	{
 		switch ($sortkey) {
-		case PLUGIN_TRACKER_LIST_SORT_ASC:  $sortkey = 'asc';  break;
-		case PLUGIN_TRACKER_LIST_SORT_DESC: $sortkey = 'desc'; break;
+		case PLUGIN_TRACKER_SORT_ORDER_ASC:  $sortkey = 'asc';  break;
+		case PLUGIN_TRACKER_SORT_ORDER_DESC: $sortkey = 'desc'; break;
 		default:
 			$this->error =  'No such define: ' . $sortkey;
 			$sortkey = FALSE;
@@ -967,15 +1009,15 @@ class Tracker_list
 	function _sortkey_string2define($sortkey)
 	{
 		switch (strtoupper(trim($sortkey))) {
-		case '':          $sortkey = PLUGIN_TRACKER_LIST_SORT_DEFAULT; break;
+		case '':          $sortkey = PLUGIN_TRACKER_SORT_ORDER_DEFAULT; break;
 
 		case SORT_ASC:    /*FALLTHROUGH*/ // Compat, will be removed at 1.4.9 or later
 		case 'SORT_ASC':  /*FALLTHROUGH*/
-		case 'ASC':       $sortkey = PLUGIN_TRACKER_LIST_SORT_ASC; break;
+		case 'ASC':       $sortkey = PLUGIN_TRACKER_SORT_ORDER_ASC; break;
 
 		case SORT_DESC:   /*FALLTHROUGH*/ // Compat, will be removed at 1.4.9 or later
  		case 'SORT_DESC': /*FALLTHROUGH*/
-		case 'DESC':      $sortkey = PLUGIN_TRACKER_LIST_SORT_DESC; break;
+		case 'DESC':      $sortkey = PLUGIN_TRACKER_SORT_ORDER_DESC; break;
 
 		default:
 			$this->error =  'Invalid sort key: ' . $sortkey;
@@ -1027,10 +1069,10 @@ class Tracker_list
 
 			// Toggle
 			$b_end   = ($fieldname == (isset($order_keys[0]) ? $order_keys[0] : ''));
-			$b_order = ($orders[$fieldname] === PLUGIN_TRACKER_LIST_SORT_ASC);
+			$b_order = ($orders[$fieldname] === PLUGIN_TRACKER_SORT_ORDER_ASC);
 			$order   = ($b_end xor $b_order)
-				? PLUGIN_TRACKER_LIST_SORT_ASC
-				: PLUGIN_TRACKER_LIST_SORT_DESC;
+				? PLUGIN_TRACKER_SORT_ORDER_ASC
+				: PLUGIN_TRACKER_SORT_ORDER_DESC;
 
 			// Arrow decoration
 			$index   = array_flip($order_keys);
@@ -1041,7 +1083,7 @@ class Tracker_list
 			unset($orders[$fieldname]);	// $fieldname will be added to the first
 		} else {
 			// Not sorted yet, but
-			$order = PLUGIN_TRACKER_LIST_SORT_DEFAULT;
+			$order = PLUGIN_TRACKER_SORT_ORDER_DEFAULT;
 		}
 
 		// $fieldname become the first, if you click this link
