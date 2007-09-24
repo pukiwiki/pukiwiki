@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.84 2007/09/24 05:20:14 henoheno Exp $
+// $Id: tracker.inc.php,v 1.85 2007/09/24 05:31:06 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -975,7 +975,7 @@ class Tracker_list
 			}
 
 			if ($type == SORT_NATURAL) {
-				natsort($array);
+				natcasesort($array);
 				$i = 0;
 				$last = NULL;
 				foreach (array_keys($array) as $key) {
