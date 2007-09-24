@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.82 2007/09/24 03:51:51 henoheno Exp $
+// $Id: tracker.inc.php,v 1.83 2007/09/24 04:06:21 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -350,7 +350,7 @@ class Tracker_field_page extends Tracker_field_text
 
 class Tracker_field_real extends Tracker_field_text
 {
-	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_REGULAR;
+	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_NATURAL;
 }
 
 class Tracker_field_title extends Tracker_field_text
@@ -850,7 +850,7 @@ class Tracker_list
 		$row = array(
 			// column => default data of the cell
 			'_page'   => '[[' . $pagename . ']]',
-			'_real'   => $basename,	// TODO: Why not $pagename
+			'_real'   => $pagename,
 			'_update' => $filetime,
 			'_past'   => $filetime,
 		);
