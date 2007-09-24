@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.83 2007/09/24 04:06:21 henoheno Exp $
+// $Id: tracker.inc.php,v 1.84 2007/09/24 05:20:14 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -766,11 +766,15 @@ class Tracker_list
 	// Add multiple pages at a time
 	function loadRows()
 	{
-		$base     = $this->base . '/';
-		$base_reg = '#^' . preg_quote($base, '#') . '#';
+		$base  = $this->base . '/';
+		$len   = strlen($base);
+		$regex = '#^' . preg_quote($base, '#') . '#';
 
 		// Adding $this->rows
-		foreach (preg_grep($base_reg, array_values(get_existpages())) as $pagename) {
+		foreach (preg_grep($regex, array_values(get_existpages())) as $pagename) {
+			if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, substr($pagename, $len))) {
+				continue;	// Ignore
+			}
 			if ($this->addRow($pagename) === FALSE) return FALSE;
 		}
 		if (empty($this->rows)) {
@@ -781,7 +785,7 @@ class Tracker_list
 		return TRUE;
 	}
 
-	// add(): Generate regexes
+	// addRow(): Generate regexes
 	function _generate_regex()
 	{
 		$config_page = $this->config->page . '/page';
@@ -827,10 +831,6 @@ class Tracker_list
 	{
 		if (isset($this->_added[$pagename])) return TRUE;
 		$this->_added[$pagename] = TRUE;
-
-		$base     = $this->base;
-		$basename = substr($pagename, strlen($base) + 1);
-		if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, $basename)) return TRUE;
 
 		$source = plugin_tracker_get_source($pagename, TRUE);
 		if ($source === FALSE) $source = '';
@@ -926,15 +926,12 @@ class Tracker_list
 	// sortRows(): Internal sort type => PHP sort define
 	function _sort_type_dropout($order)
 	{
-		if ($order == PLUGIN_TRACKER_SORT_TYPE_REGULAR) {
-			return SORT_REGULAR;
-		} else if ($order == PLUGIN_TRACKER_SORT_TYPE_NUMERIC) {
-			return SORT_NUMERIC;
-		} else if ($order == PLUGIN_TRACKER_SORT_TYPE_STRING) {
-			return SORT_STRING;
-		} else if ($order == PLUGIN_TRACKER_SORT_TYPE_NATURAL) {
-			return SORT_NATURAL;
-		} else {
+		switch ($order) {
+		case PLUGIN_TRACKER_SORT_TYPE_REGULAR: return SORT_REGULAR;
+		case PLUGIN_TRACKER_SORT_TYPE_NUMERIC: return SORT_NUMERIC;
+		case PLUGIN_TRACKER_SORT_TYPE_STRING:  return SORT_STRING;
+		case PLUGIN_TRACKER_SORT_TYPE_NATURAL: return SORT_NATURAL;
+		default:
 			$this->error = 'Invalid sort type';
 			return FALSE;
 		}
@@ -943,11 +940,10 @@ class Tracker_list
 	// sortRows(): Internal sort order => PHP sort define
 	function _sort_order_dropout($order)
 	{
-		if ($order == PLUGIN_TRACKER_SORT_ORDER_ASC) {
-			return SORT_ASC;
-		} else if ($order == PLUGIN_TRACKER_SORT_ORDER_DESC) {
-			return SORT_DESC;
-		} else {
+		switch ($order) {
+		case PLUGIN_TRACKER_SORT_ORDER_ASC:  return SORT_ASC;
+		case PLUGIN_TRACKER_SORT_ORDER_DESC: return SORT_DESC;
+		default:
 			$this->error = 'Invalid sort order';
 			return FALSE;
 		}
@@ -1007,34 +1003,32 @@ class Tracker_list
 	function _sortkey_define2string($sortkey)
 	{
 		switch ($sortkey) {
-		case PLUGIN_TRACKER_SORT_ORDER_ASC:  $sortkey = 'asc';  break;
-		case PLUGIN_TRACKER_SORT_ORDER_DESC: $sortkey = 'desc'; break;
+		case PLUGIN_TRACKER_SORT_ORDER_ASC:  return 'asc';
+		case PLUGIN_TRACKER_SORT_ORDER_DESC: return 'desc';
 		default:
 			$this->error =  'No such define: ' . $sortkey;
-			$sortkey = FALSE;
+			return FALSE;
 		}
-		return $sortkey;
 	}
 
 	// toString(): Sort key: String to define (string => internal var)
 	function _sortkey_string2define($sortkey)
 	{
 		switch (strtoupper(trim($sortkey))) {
-		case '':          $sortkey = PLUGIN_TRACKER_SORT_ORDER_DEFAULT; break;
+		case '':          return PLUGIN_TRACKER_SORT_ORDER_DEFAULT; break;
 
 		case SORT_ASC:    /*FALLTHROUGH*/ // Compat, will be removed at 1.4.9 or later
 		case 'SORT_ASC':  /*FALLTHROUGH*/
-		case 'ASC':       $sortkey = PLUGIN_TRACKER_SORT_ORDER_ASC; break;
+		case 'ASC':       return PLUGIN_TRACKER_SORT_ORDER_ASC;
 
 		case SORT_DESC:   /*FALLTHROUGH*/ // Compat, will be removed at 1.4.9 or later
  		case 'SORT_DESC': /*FALLTHROUGH*/
-		case 'DESC':      $sortkey = PLUGIN_TRACKER_SORT_ORDER_DESC; break;
+		case 'DESC':      return PLUGIN_TRACKER_SORT_ORDER_DESC;
 
 		default:
 			$this->error =  'Invalid sort key: ' . $sortkey;
-			$sortkey = FALSE;
+			return FALSE;
 		}
-		return $sortkey;
 	}
 
 	// toString(): Escape special characters not to break Wiki syntax
