@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.79 2007/09/15 16:12:24 henoheno Exp $
+// $Id: spam.ini.php,v 1.80 2007/09/24 16:01:00 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -5131,6 +5131,12 @@ $blocklist['C'] = array(
 		'.real-big-host.info',
 		'.search4freez.info',
 		'.yasech.info',
+
+		// 66.232.97.246(host4.blazegalaxy.com => 71.6.196.202)
+		'.bymire.com',
+
+		// 66.232.120.98(host.radiantdomain.com => 71.6.196.202 => fc6196202.aspadmin.net)
+		'.ligiwa.com',
 	),
 	'ice--man at mail.ru related' => array(
 		// 74.50.97.198 by andrey, the same approach and timing of clickx at bk.ru
@@ -5395,6 +5401,12 @@ $blocklist['C'] = array(
 		'.zeliw.com',
 		'.zimev.com',
 		'.zipif.com',
+
+		// 66.232.97.244(host2.blazegalaxy.com => 71.6.196.202)
+		'.tycoco.com',
+
+		// 66.232.97.246(host4.blazegalaxy.com => 71.6.196.202)
+		'.pufeqa.com',
 	),
 	'niichka at hotmail.com' => array(
 		// 66.232.113.44, the same approach and IP of clickx at bk.ru
@@ -5413,6 +5425,15 @@ $blocklist['C'] = array(
 		'.rurid.com',
 		'.vucaj.com',
 		'.vuwir.com',
+
+		// 66.232.97.244(host2.blazegalaxy.com => 71.6.196.202 => fc6196202.aspadmin.net)
+		'.bejefe.com',
+
+		// 66.232.97.245(host3.blazegalaxy.com => 71.6.196.202)
+		'.tidawu.com',
+
+		// 66.232.97.247(host5.blazegalaxy.com => 71.6.196.202)
+		'.rofuqa.com',
 	),
 	'porychik at hot.ee' => array(	// by Igor
 		'.tedstate.info',	// "Free Web Hosting"
@@ -6068,7 +6089,9 @@ $blocklist['C'] = array(
 
 		// 89.248.99.118 by anonymous
 		'.lpgpharmacy.com',
+		'.onlybestgalleries.com',
 		'.viagrabest.info',
+		'.viagrabestprice.info',
 		'.viagratop.info',
 
 		'.canadians-medication.com',	// 89.248.99.118 by beseo at bk.ru
