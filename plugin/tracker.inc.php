@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.87 2007/09/25 13:24:38 henoheno Exp $
+// $Id: tracker.inc.php,v 1.88 2007/09/25 15:25:44 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -98,9 +98,9 @@ function plugin_tracker_convert()
 		return '#tracker: Form \'' . make_pagelink($form) . '\' not found or seems empty<br />';
 	}
 
-	$script = get_script_uri();
+	$script   = get_script_uri();
 	$template = str_replace($from, $to, convert_html($template));
-	$hidden = implode('<br />' . "\n", $hidden);
+	$hidden   = implode('<br />' . "\n", $hidden);
 	return <<<EOD
 <form enctype="multipart/form-data" action="$script" method="post">
 <div>
@@ -179,36 +179,37 @@ function plugin_tracker_action()
 		);
 	}
 
+	// TODO: Too rich
 	// Repalace every [$field]s to real values in the $template
-	$subject = $subject_e = array();
-	foreach (array_keys($template) as $num) {
-		if (trim($template[$num]) == '') continue;
-		$letter = $template[$num]{0};
+	$subject = $escape = array();
+	foreach (array_keys($template) as $linenum) {
+		if (trim($template[$linenum]) == '') continue;
+
+		// Escape for some TextFormattingRules
+		$letter = $template[$linenum][0];
 		if ($letter == '|' || $letter == ':') {
-			// Escape for some TextFormattingRules: <table> and <dr>
-			$subject_e[$num] = $template[$num];
+			$escape['|'][$linenum] = $template[$linenum];
+		} else if ($letter == ',') {
+			$escape[','][$linenum] = $template[$linenum];
 		} else {
-			$subject[$num]   = $template[$num];
+			// TODO: Escape "\n" except multiline-allowed fields
+			$subject[$linenum]     = $template[$linenum];
 		}
 	}
-	foreach (str_replace($from,   $to,   $subject  ) as $num => $line) {
-		$template[$num] = $line;
+	foreach (str_replace($from, $to, $subject) as $linenum => $line) {
+		$template[$linenum] = $line;
 	}
-	// Escape for some TextFormattingRules: <table> and <dr>
-	if ($subject_e) {
-		$to_e = array();
-		foreach($to as $value) {
-			if (strpos($value, '|') !== FALSE) {
-				// Escape for some TextFormattingRules: <table> and <dr>
-				$to_e[] = str_replace('|', '&#x7c;', $value);
-			} else{
-				$to_e[] = $value;	
+	if ($escape) {
+		// Escape for some TextFormattingRules
+		foreach(array_keys($escape) as $hint) {
+			$to_e = plugin_tracker_escape($to, $hint);
+			foreach (str_replace($from, $to_e, $escape[$hint]) as $linenum => $line) {
+				$template[$linenum] = $line;
 			}
 		}
-		foreach (str_replace($from, $to_e, $subject_e) as $num => $line) {
-			$template[$num] = $line;
-		}
+		unset($to_e);
 	}
+	unset($from, $to);
 
 	// Write $template, without touch
 	page_write($page, join('', $template));
@@ -1033,23 +1034,6 @@ class Tracker_list
 		}
 	}
 
-	// toString(): Escape special characters not to break Wiki syntax
-	function _escape($syntax_hint = '|', $string)
-	{
-		$from = array("\n",   "\r"  );
-		$to   = array('&br;', '&br;');
-		if ($syntax_hint == '|' || $syntax_hint == ':') {
-			// <table> or <dl> Wiki syntax: Excape '|'
-			$from[] = '|';
-			$to[]   = '&#x7c;';
-		} else if ($syntax_hint == ',') {
-			// <table> by comma
-			$from[] = ',';
-			$to[]   = '&#x2c;';
-		}
-		return str_replace($from, $to, $string);
-	}
-
 	// toString(): Called within preg_replace_callback()
 	function _replace_title($matches = array())
 	{
@@ -1151,7 +1135,7 @@ class Tracker_list
 			$str    = sprintf($_style, $str);
 		}
 
-		return $this->_escape($tfc, $str);
+		return plugin_tracker_escape($str, $tfc);
 	}
 
 	// Output a part of Wiki text
@@ -1246,6 +1230,7 @@ class Tracker_list
 		// Repeat
 		foreach ($rows as $row) {
 			$this->_row = $row;
+			// Body
 			foreach ($t_body as $line) {
 				if (ltrim($line) != '') {
 					$this->_the_first_character_of_the_line = $line[0];
@@ -1281,6 +1266,25 @@ function plugin_tracker_get_source($page, $join = FALSE)
 		),
 		$source
 	);
+}
+
+// Escape special characters not to break Wiki syntax
+function plugin_tracker_escape($string, $syntax_hint = '')
+{
+	// Default: line-oriented
+	$from = array("\n",   "\r"  );
+	$to   = array('&br;', '&br;');
+
+	if ($syntax_hint == '|' || $syntax_hint == ':') {
+		// <table> or <dl> Wiki syntax: Excape '|'
+		$from[] = '|';
+		$to[]   = '&#x7c;';
+	} else if ($syntax_hint == ',') {
+		// <table> by comma
+		$from[] = ',';
+		$to[]   = '&#x2c;';
+	}
+	return str_replace($from, $to, $string);
 }
 
 function plugin_tracker_message($key)
