@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.86 2007/09/24 07:48:59 henoheno Exp $
+// $Id: tracker.inc.php,v 1.87 2007/09/25 13:24:38 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -15,7 +15,7 @@ define('PLUGIN_TRACKER_DEFAULT_LIST',   'list');
 define('PLUGIN_TRACKER_DEFAULT_LIMIT',  0 );	// 0 = Unlimited
 define('PLUGIN_TRACKER_DEFAULT_ORDER',  '');	// Example: '_real'
 
-// Sort N columns at a time
+// Allow N columns sorted at a time
 define('PLUGIN_TRACKER_LIST_SORT_LIMIT', 3);
 
 // Excluding pattern
@@ -65,9 +65,9 @@ function plugin_tracker_convert()
 	case 1:
 		// Config/form
 		if ($args[0] != '') {
-			$arg = explode('/', $args[0], 2);
-			if ($arg[0] != '' ) $config_name = $arg[0];
-			if (isset($arg[1])) $form        = $arg[1];
+			$arg = explode('/', trim($args[0]), 2);
+			if ($arg[0] != '' ) $config_name = trim($arg[0]);
+			if (isset($arg[1])) $form        = trim($arg[1]);
 		}
 	}
 	unset($args, $argc, $arg);
@@ -92,19 +92,19 @@ function plugin_tracker_convert()
 		unset($fields[$field]);
 	}
 
-	$form = $config->page . '/' . $form;
-	$retval = plugin_tracker_get_source($form);
-	if ($retval === FALSE || empty($retval)) {
+	$form     = $config->page . '/' . $form;
+	$template = plugin_tracker_get_source($form);
+	if ($template === FALSE || empty($template)) {
 		return '#tracker: Form \'' . make_pagelink($form) . '\' not found or seems empty<br />';
 	}
 
 	$script = get_script_uri();
-	$retval = str_replace($from, $to, convert_html($retval));
+	$template = str_replace($from, $to, convert_html($template));
 	$hidden = implode('<br />' . "\n", $hidden);
 	return <<<EOD
 <form enctype="multipart/form-data" action="$script" method="post">
 <div>
-$retval
+$template
 $hidden
 </div>
 </form>
@@ -670,14 +670,13 @@ function plugin_tracker_list_action()
 {
 	global $get, $vars;
 
-	$base   = isset($get['base'])   ? $get['base']   : '';		// Base directory to load
+	$base = isset($get['base']) ? $get['base'] : '';	// Base directory to load
 
 	if (isset($get['refer'])) {
 		$refer = $get['refer'];	// Where to #tracker_list
-		if ($base == '') $base = $refer;	// Compat before 1.4.8
+		if ($base == '') $base = $refer;
 	} else {
 		$refer = $base;
-		$vars['refer'] = $refer;	// Try to show page title properly
 	}
 
 	$config = isset($get['config']) ? $get['config'] : '';
@@ -773,7 +772,7 @@ class Tracker_list
 		// Adding $this->rows
 		foreach (preg_grep($regex, array_values(get_existpages())) as $pagename) {
 			if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, substr($pagename, $len))) {
-				continue;	// Ignore
+				continue;
 			}
 			if ($this->addRow($pagename) === FALSE) return FALSE;
 		}
@@ -785,34 +784,34 @@ class Tracker_list
 		return TRUE;
 	}
 
-	// addRow(): Generate regexes
+	// addRow(): Generate regex to load a page
 	function _generate_regex()
 	{
-		$config_page = $this->config->page . '/page';
-		$fields      = $this->fields;
+		$template_page = $this->config->page . '/page';
+		$fields        = $this->fields;
 
 		$pattern        = array();
 		$pattern_fields = array();
 
-		$source = plugin_tracker_get_source($config_page, TRUE);
-		if ($source === FALSE || empty($source)) {
-			$this->error = 'Page not found or seems empty: ' . $config_page;
+		$template = plugin_tracker_get_source($template_page, TRUE);
+		if ($template === FALSE || empty($template)) {
+			$this->error = 'Page not found or seems empty: ' . $template_page;
 			return FALSE;
 		}
 
 		// Block-plugins to pseudo fields (#convert => [_block_convert])
-		$source = preg_replace('/^\#([^\(\s]+)(?:\((.*)\))?\s*$/m', '[_block_$1]', $source);
+		$template = preg_replace('/^\#([^\(\s]+)(?:\((.*)\))?\s*$/m', '[_block_$1]', $template);
 
-		// Now, $source = array('*someting*', 'fieldname', '*someting*', 'fieldname', ...)
-		$source = preg_split('/\\\\\[(\w+)\\\\\]/', preg_quote($source, '/'), -1, PREG_SPLIT_DELIM_CAPTURE);
+		// Now, $template = array('*someting*', 'fieldname', '*someting*', 'fieldname', ...)
+		$template = preg_split('/\\\\\[(\w+)\\\\\]/', preg_quote($template, '/'), -1, PREG_SPLIT_DELIM_CAPTURE);
 
-		// NOTE: if the page has garbages between fields, it will fail to be load
-		while (! empty($source)) {
+		// NOTE: if the page has garbages between [field]s, it will fail to be load
+		while (! empty($template)) {
 			// Just ignore these _fixed_ data
-			$pattern[] = preg_replace('/\s+/', '\\s*', '(?>\\s*' . trim(array_shift($source)) . '\\s*)');
-			if (empty($source)) continue;
+			$pattern[] = preg_replace('/\s+/', '\\s*', '(?>\\s*' . trim(array_shift($template)) . '\\s*)');
+			if (empty($template)) continue;
 
-			$fieldname = array_shift($source);
+			$fieldname = array_shift($template);
 			if (isset($fields[$fieldname])) {
 				$pattern[] = '(.*?)';	// Just capture it
 				$pattern_fields[] = $fieldname;	// Capture it as this $filedname
@@ -835,7 +834,7 @@ class Tracker_list
 		$source = plugin_tracker_get_source($pagename, TRUE);
 		if ($source === FALSE) $source = '';
 
-		// Compat: 'move to [[page]]' (bugtrack plugin)
+		// Compat: 'move to [[page]]' (like bugtrack plugin)
 		$matches = array();
 		if (! $rescan && ! empty($source) && preg_match('/move\sto\s(.+)/', $source, $matches)) {
 			$to_page = strip_bracket(trim($matches[1]));
@@ -849,10 +848,10 @@ class Tracker_list
 		$filetime = get_filetime($pagename);
 		$row = array(
 			// column => default data of the cell
-			'_page'   => '[[' . $pagename . ']]',
-			'_real'   => $pagename,
-			'_update' => $filetime,
-			'_past'   => $filetime,
+			'_page'   => '[[' . $pagename . ']]',	// TODO: Redudant column pair [1]
+			'_real'   => $pagename,	// TODO: Redudant column pair [1]
+			'_update' => $filetime,	// TODO: Redudant column pair [2]
+			'_past'   => $filetime,	// TODO: Redudant column pair [2]
 		);
 
 		// Load / Redefine cell
@@ -884,6 +883,7 @@ class Tracker_list
 		foreach (explode(';', $order_commands) as $command) {
 			$command = trim($command);
 			if ($command == '') continue;
+
 			$arg = explode(':', $command, 2);
 			$fieldname = isset($arg[0]) ? trim($arg[0]) : '';
 			$order     = isset($arg[1]) ? trim($arg[1]) : '';
@@ -895,14 +895,14 @@ class Tracker_list
 
 			$_order = $this->_sortkey_string2define($order);
 			if ($_order === FALSE) {
-				$this->error =  'Invalid sortkey: ' . $order;
+				$this->error =  'Invalid sort key: ' . $order;
 				return FALSE;
 			} else if (isset($orders[$fieldname])) {
-				$this->error =  'Sortkey already set: ' . $fieldname;
+				$this->error =  'Sort key already set for: ' . $fieldname;
 				return FALSE;
 			}
 
-			if (PLUGIN_TRACKER_LIST_SORT_LIMIT <= $i) continue;	// Ignore
+			if (PLUGIN_TRACKER_LIST_SORT_LIMIT <= $i) continue;
 			++$i;
 
 			$orders[$fieldname] = $_order;
@@ -956,45 +956,47 @@ class Tracker_list
 		$fields = $this->fields;
 
 		$params = array();	// Arguments for array_multisort()
+
 		foreach ($orders as $fieldname => $order) {
 			$field = $fields[$fieldname];
-
-			// One column set (one-dimensional array(), sort type, and order-by)
-
-			$order = $this->_sort_order_dropout($order);
-			if ($order === FALSE) return FALSE;
 
 			$type = $this->_sort_type_dropout($field->sort_type);
 			if ($type === FALSE) return FALSE;
 
-			$array = array();
+			$order = $this->_sort_order_dropout($order);
+			if ($order === FALSE) return FALSE;
+
+			$column = array();
 			foreach ($this->rows as $row) {
-				$array[] = isset($row[$fieldname]) ?
+				$column[] = isset($row[$fieldname]) ?
 					$field->get_value($row[$fieldname]) :
 					'';
 			}
-
 			if ($type == SORT_NATURAL) {
-				natcasesort($array);
+				natcasesort($column);
 				$i = 0;
 				$last = NULL;
-				foreach (array_keys($array) as $key) {
+				foreach (array_keys($column) as $key) {
 					// Consider the same values there for array_multisort()
-					if ($last !== $array[$key]) ++$i;
-					$last = $array[$key];
-					$array[$key] = $i;
+					if ($last !== $column[$key]) ++$i;
+					$last = strtolower($column[$key]);	// natCASEsort()
+					$column[$key] = $i;
 				}
-				ksort($array, SORT_NUMERIC);
+				ksort($column, SORT_NUMERIC);
 				$type = SORT_NUMERIC;
 			}
 
-			$params[] = $array;
+			// One column set (one-dimensional array, sort type, and sort order)
+			// for array_multisort()
+			$params[] = $column;
 			$params[] = $type;
 			$params[] = $order;
 		}
-		$params[] = & $this->rows;
 
-		call_user_func_array('array_multisort', $params);
+		if (! empty($params) && ! empty($this->rows)) {
+			$params[] = & $this->rows;	// The target
+			call_user_func_array('array_multisort', $params);
+		}
 
 		return TRUE; 
 	}
@@ -1051,8 +1053,6 @@ class Tracker_list
 	// toString(): Called within preg_replace_callback()
 	function _replace_title($matches = array())
 	{
-		static $script;
-
 		$fields = $this->fields;
 		$orders = $this->orders;
 		$base   = $this->base;
@@ -1097,9 +1097,9 @@ class Tracker_list
 			$_order[] = $key . ':' . $this->_sortkey_define2string($value);
 		}
 
-		if (! isset($script)) $script = get_script_uri();
-		$r_refer  = ($refer != $base) ?
-			'&refer=' . rawurlencode($refer) : '';
+		$script = get_script_uri();
+		$r_base   = ($refer != $base) ?
+			'&base='  . rawurlencode($base) : '';
 		$r_config = ($config_name != PLUGIN_TRACKER_DEFAULT_CONFIG) ?
 			'&config=' . rawurlencode($config_name) : '';
 		$r_list   = ($list != PLUGIN_TRACKER_DEFAULT_LIST) ?
@@ -1112,8 +1112,8 @@ class Tracker_list
 				$fields[$fieldname]->title . $arrow .
 			'>' .
 				$script . '?plugin=tracker_list' .
-				'&base=' . rawurlencode($base) .
-				$r_refer . $r_config . $r_list . $r_order  .
+				'&refer=' . rawurlencode($refer) .	// Try to show 'page title' properly
+				$r_base . $r_config . $r_list . $r_order  .
 			']]';
 	}
 
@@ -1141,7 +1141,7 @@ class Tracker_list
 			} else {
 				$str = $row[$fieldname];
 				if (isset($fields[$fieldname])) {
-					$str    = $fields[$fieldname]->format_cell($str);
+					$str = $fields[$fieldname]->format_cell($str);
 				}
 			}
 		}
