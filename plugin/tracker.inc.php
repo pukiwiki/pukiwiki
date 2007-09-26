@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.88 2007/09/25 15:25:44 henoheno Exp $
+// $Id: tracker.inc.php,v 1.89 2007/09/26 14:39:32 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -1006,8 +1006,8 @@ class Tracker_list
 	function _sortkey_define2string($sortkey)
 	{
 		switch ($sortkey) {
-		case PLUGIN_TRACKER_SORT_ORDER_ASC:  return 'asc';
-		case PLUGIN_TRACKER_SORT_ORDER_DESC: return 'desc';
+		case PLUGIN_TRACKER_SORT_ORDER_ASC:     return 'asc';
+		case PLUGIN_TRACKER_SORT_ORDER_DESC:    return 'desc';
 		default:
 			$this->error =  'No such define: ' . $sortkey;
 			return FALSE;
@@ -1069,16 +1069,18 @@ class Tracker_list
 			$arrow   = '&br;' . ($b_order ? '&uarr;' : '&darr;') . '(' . $pos . ')';
 
 			unset($order_keys, $index);
-			unset($orders[$fieldname]);	// $fieldname will be added to the first
 		} else {
-			// Not sorted yet, but
-			$order = PLUGIN_TRACKER_SORT_ORDER_DEFAULT;
+			$order  = PLUGIN_TRACKER_SORT_ORDER_DEFAULT;
 		}
+		$orders = array($fieldname => $order) + $orders;	// To the first, if you click
 
-		// $fieldname become the first, if you click this link
-		$_order = array($fieldname . ':' . $this->_sortkey_define2string($order));
-		foreach ($orders as $key => $value) {
-			$_order[] = $key . ':' . $this->_sortkey_define2string($value);
+		$_orders = array();
+		foreach ($orders as $_fieldname => $_order) {
+			if ($_order == PLUGIN_TRACKER_SORT_ORDER_DEFAULT) {
+				$_orders[] = $_fieldname;
+			} else {
+				$_orders[] = $_fieldname . ':' . $this->_sortkey_define2string($_order);
+			}
 		}
 
 		$script = get_script_uri();
@@ -1088,8 +1090,8 @@ class Tracker_list
 			'&config=' . rawurlencode($config_name) : '';
 		$r_list   = ($list != PLUGIN_TRACKER_DEFAULT_LIST) ?
 			'&list=' . rawurlencode($list) : '';
-		$r_order  = ! empty($_order) ?
-			'&order=' . rawurlencode(join(';', $_order)) : '';
+		$r_order  = ! empty($_orders) ?
+			'&order=' . rawurlencode(join(';', $_orders)) : '';
 
 		return
 			 '[[' .
