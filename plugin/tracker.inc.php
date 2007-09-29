@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.90 2007/09/29 04:00:35 henoheno Exp $
+// $Id: tracker.inc.php,v 1.91 2007/09/29 15:49:16 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -78,8 +78,12 @@ function plugin_tracker_convert()
 	}
 	$config->config_name = $config_name;
 
+
+	$_form = & new Tracker_form($base, $refer, $config);
+	$_form->initFields();
+	$fields = $_form->fields;
+
 	$from = $to = $hidden = array();
-	$fields = plugin_tracker_get_fields($base, $refer, $config);
 	foreach (array_keys($fields) as $field) {
 		$from[] = '[' . $field . ']';
 		$_to    = $fields[$field]->get_tag();
@@ -162,7 +166,10 @@ function plugin_tracker_action()
 	pkwk_touch_file(get_filename($page));
 
 	$from = $to = array();
-	$fields = plugin_tracker_get_fields($page, $refer, $config);
+
+	$form = & new Tracker_form($base, $refer, $config);
+	$form->initFields();
+	$fields = & $form->fields;	// unset()
 	foreach (array_keys($fields) as $field) {
 		$from[] = '[' . $field . ']';
 		$to[]   = isset($_post[$field]) ? $fields[$field]->format_value($_post[$field]) : '';
@@ -219,81 +226,113 @@ function plugin_tracker_action()
 	exit;
 }
 
-// Construct $fields (an array of Tracker_field objects)
-function plugin_tracker_get_fields($base, $refer, & $config)
+// Data set of XHTML form or someting
+class Tracker_form
 {
-	global $now;
+	var $id;
+	var $base;
+	var $refer;
+	var $config;
+	var $fields = array();
 
-	$fields = array();
-
-	foreach ($config->get('fields') as $field) {
-		// $field[0]: Field name
-		// $field[1]: Field name (for display)
-		// $field[2]: Field type
-		// $field[3]: Option ("size", "cols", "rows", etc)
-		// $field[4]: Default value
-		$class = 'Tracker_field_' . $field[2];
-		if (! class_exists($class)) {
-			// Default
-			$field[2] = 'text';
-			$class    = 'Tracker_field_' . $field[2];
-			$field[3] = '20';
-		}
-		$fieldname = $field[0];
-		$fields[$fieldname] = & new $class($field, $base, $refer, $config);
-	}
-
-	foreach (
-		array(
-			// Reserved ones
-			'_date'   => 'text',	// Post date
-			'_update' => 'date',	// Last modified date
-			'_past'   => 'past',	// Elapsed time (passage)
-			'_page'   => 'page',	// Page name
-			'_name'   => 'text',	// Page name specified by poster
-			'_real'   => 'real',	// Page name (Real)
-			'_refer'  => 'page',	// Page name refer from this (Page who has forms)
-			'_base'   => 'page',
-			'_submit' => 'submit'
-		) as $fieldname => $type)
+	function Tracker_form($base, $refer, $config)
 	{
-		if (isset($fields[$fieldname])) continue;
-		$field = array($fieldname, plugin_tracker_message('btn' . $fieldname), '', '20', '');
-		$class = 'Tracker_field_' . $type;
-		$fields[$fieldname] = & new $class($field, $base, $refer, $config);
+		static $id = 0;	// Unique id per instance
+
+		$this->id     = ++$id;
+		$this->base   = $base;
+		$this->refer  = $refer;
+		$this->config = $config;
 	}
 
-	return $fields;
+	function addField($fieldname, $displayname, $type = 'text', $options = '20', $default = '')
+	{
+		// TODO: Return an error
+		if (isset($this->fields[$fieldname])) return TRUE;
+
+		$class = 'Tracker_field_' . $type;
+		if (! class_exists($class)) {
+			// TODO: Return an error
+			$type    = 'text';
+			$class   = 'Tracker_field_' . $type;
+			$options = '20';
+		}
+
+		$this->fields[$fieldname] = & new $class(
+			array(
+				$fieldname,
+				$displayname,
+				NULL,		// $type
+				$options,
+				$default
+			),
+			$this->base,
+			$this->refer,
+			$this->config
+		);
+
+		return TRUE;
+	}
+
+	function initFields()
+	{
+		foreach ($this->config->get('fields') as $field) {
+			$this->addField($field[0], $field[1], $field[2], $field[3], $field[4]);
+		}
+		foreach (
+			array(
+				// Reserved ones
+				'_date'   => 'text',	// Post date
+				'_update' => 'date',	// Last modified date
+				'_past'   => 'past',	// Elapsed time (passage)
+				'_page'   => 'page',	// Page name
+				'_name'   => 'text',	// Page name specified by poster
+				'_real'   => 'real',	// Page name (Real)
+				'_refer'  => 'page',	// Page name refer from this (Page who has forms)
+				'_base'   => 'page',
+				'_submit' => 'submit'
+			) as $fieldname => $type)
+		{
+			$this->addField($fieldname, plugin_tracker_message('btn' . $fieldname), $type);
+		}
+	}
 }
 
-// Field classes
+// Field classes within a form
 class Tracker_field
 {
+	var $id;
+
 	var $name;
 	var $title;
 	var $values;
 	var $default_value;
+
 	var $base;
 	var $refer;
 	var $config;
+
 	var $data;
+
 	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_REGULAR;
-	var $id        = 0;
 
 	function Tracker_field($field, $base, $refer, & $config)
 	{
 		global $post;
-		static $id = 0;	// Unique id per instance
+		static $id = 0;	// Unique id per instance, and per class(extended-class)
 
-		$this->id     = ++$id;
-		$this->name   = $field[0];
-		$this->title  = $field[1];
-		$this->values = explode(',', $field[3]);
-		$this->default_value = $field[4];
+		$this->id = ++$id;
+
+		$this->name          = isset($field[0]) ? $field[0] : '';
+		$this->title         = isset($field[1]) ? $field[1] : '';
+		$this->values        = isset($field[3]) ? explode(',', $field[3]) : array();
+		$this->default_value = isset($field[4]) ? $field[4] : '';
+
+		$this->data = isset($post[$this->name]) ? $post[$this->name] : '';
+
 		$this->base   = $base;
 		$this->refer  = $refer;
 		$this->config = & $config;
-		$this->data   = isset($post[$this->name]) ? $post[$this->name] : '';
 	}
 
 	// XHTML part inside a form
@@ -735,11 +774,9 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 // Listing class
 class Tracker_list
 {
-	var $base;
-	var $refer;
-	var $config;
+	var $form;
 	var $list;
-	var $fields;
+
 	var $pattern;
 	var $pattern_fields;
 
@@ -756,17 +793,17 @@ class Tracker_list
 
 	function Tracker_list($base, $refer, & $config, $list)
 	{
-		$this->base     = $base;
-		$this->refer    = $refer;
-		$this->config   = & $config;
-		$this->list     = $list;
-		$this->fields   = plugin_tracker_get_fields($base, $refer, $config);
+		$form = & new Tracker_form($base, $refer, $config);
+		$form->initFields();
+		$this->form = $form;
+
+		$this->list = $list;
 	}
 
 	// Add multiple pages at a time
 	function loadRows()
 	{
-		$base  = $this->base . '/';
+		$base  = $this->form->base . '/';
 		$len   = strlen($base);
 		$regex = '#^' . preg_quote($base, '#') . '#';
 
@@ -788,9 +825,9 @@ class Tracker_list
 	// addRow(): Generate regex to load a page
 	function _generate_regex()
 	{
-		$template_page = $this->config->page . '/page';
-		$fields        = $this->fields;
-
+		$template_page = $this->form->config->page . '/page';
+		$fields        = $this->form->fields;
+		
 		$pattern        = array();
 		$pattern_fields = array();
 
@@ -877,8 +914,8 @@ class Tracker_list
 		$order_commands = trim($order_commands);
 		if ($order_commands == '') return array();
 
+		$fields = $this->form->fields;
 		$orders = array();
-		$fields = $this->fields;
 
 		$i = 0;
 		foreach (explode(';', $order_commands) as $command) {
@@ -953,8 +990,8 @@ class Tracker_list
 	// Sort $this->rows by $this->orders
 	function sortRows()
 	{
+		$fields = $this->form->fields;
 		$orders = $this->orders;
-		$fields = $this->fields;
 
 		$params = array();	// Arguments for array_multisort()
 
@@ -1037,12 +1074,14 @@ class Tracker_list
 	// toString(): Called within preg_replace_callback()
 	function _replace_title($matches = array())
 	{
-		$fields = $this->fields;
-		$orders = $this->orders;
-		$base   = $this->base;
-		$refer  = $this->refer;
-		$config_name = $this->config->config_name;
-		$list   = $this->list;
+		$form        = $this->form;
+		$base        = $form->base;
+		$refer       = $form->refer;
+		$fields      = $form->fields;
+		$config_name = $form->config->config_name;
+
+		$list        = $this->list;
+		$orders      = $this->orders;
 
 		$fieldname = isset($matches[1]) ? $matches[1] : '';
 		if (! isset($fields[$fieldname])) {
@@ -1106,7 +1145,7 @@ class Tracker_list
 	// toString(): Called within preg_replace_callback()
 	function _replace_item($matches = array())
 	{
-		$fields = $this->fields;
+		$fields = $this->form->fields;
 		$row    = $this->_row;
 		$tfc    = $this->_the_first_character_of_the_line ;
 
@@ -1143,8 +1182,8 @@ class Tracker_list
 	// Output a part of Wiki text
 	function toString($limit = 0)
 	{
+		$list   = $this->form->config->page . '/' . $this->list;
 		$source = array();
-		$list   = $this->config->page . '/' . $this->list;
 		$regex  = '/\[([^\[\]]+)\]/';
 
 		// Loading template: Roughly checking listed fields
@@ -1170,17 +1209,17 @@ class Tracker_list
 			}
 		}
 
-		// Remove unused $this->fields
-		$fields = $this->fields;
+		// Remove unused $this->form->fields
+		$fields = & $this->form->fields;	// Modify
 		$new_filds = array();
 		foreach (array_keys($fields) as $fieldname) {
 			if (isset($used_fieldname[$fieldname])) {
 				$new_filds[$fieldname] = & $fields[$fieldname];
 			}
 		}
-		$this->fields = $new_filds;
+		$fields = $new_filds;
 
-		// Generate regex for $this->fields
+		// Generate regex for $this->form->fields
 		if ($this->_generate_regex() === FALSE) return FALSE;
 
 		// Load $this->rows
