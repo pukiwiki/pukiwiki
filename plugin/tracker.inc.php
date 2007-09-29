@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.89 2007/09/26 14:39:32 henoheno Exp $
+// $Id: tracker.inc.php,v 1.90 2007/09/29 04:00:35 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -1051,28 +1051,28 @@ class Tracker_list
 		}
 		if ($fieldname == '_name' || $fieldname == '_page') $fieldname = '_real';
 
-		$arrow  = '';
+		// This column seems sorted or not
 		if (isset($orders[$fieldname])) {
-			// Sorted
-			$order_keys = array_keys($orders);
+			$is_asc = ($orders[$fieldname] == PLUGIN_TRACKER_SORT_ORDER_ASC);
 
-			// Toggle
-			$b_end   = ($fieldname == (isset($order_keys[0]) ? $order_keys[0] : ''));
-			$b_order = ($orders[$fieldname] === PLUGIN_TRACKER_SORT_ORDER_ASC);
-			$order   = ($b_end xor $b_order)
-				? PLUGIN_TRACKER_SORT_ORDER_ASC
-				: PLUGIN_TRACKER_SORT_ORDER_DESC;
+			$indexes = array_flip(array_keys($orders));
+			$index   = $indexes[$fieldname] + 1;
+			unset($indexes);
 
-			// Arrow decoration
-			$index   = array_flip($order_keys);
-			$pos     = 1 + $index[$fieldname];
-			$arrow   = '&br;' . ($b_order ? '&uarr;' : '&darr;') . '(' . $pos . ')';
-
-			unset($order_keys, $index);
+			$arrow = '&br;' . ($is_asc ? '&uarr;' : '&darr;') . '(' . $index . ')';
+			// Allow flip, if this is the first column
+			if (($index == 1) xor $is_asc) {
+				$order = PLUGIN_TRACKER_SORT_ORDER_ASC;
+			} else {
+				$order = PLUGIN_TRACKER_SORT_ORDER_DESC;
+			}
 		} else {
-			$order  = PLUGIN_TRACKER_SORT_ORDER_DEFAULT;
+			$arrow = '';
+			$order = PLUGIN_TRACKER_SORT_ORDER_DEFAULT;
 		}
-		$orders = array($fieldname => $order) + $orders;	// To the first, if you click
+
+		// This column will be the first position , if you click
+		$orders = array($fieldname => $order) + $orders;
 
 		$_orders = array();
 		foreach ($orders as $_fieldname => $_order) {
