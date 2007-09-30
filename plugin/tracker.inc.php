@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.92 2007/09/30 08:32:58 henoheno Exp $
+// $Id: tracker.inc.php,v 1.93 2007/09/30 12:28:14 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -237,6 +237,8 @@ class Tracker_form
 	var $raw_fields;
 	var $fields = array();
 
+	var $error  = '';	// Error message
+
 	function Tracker_form($base, $refer, $config)
 	{
 		static $id = 0;	// Unique id per instance
@@ -276,11 +278,9 @@ class Tracker_form
 		return TRUE;
 	}
 
-	function initFields($requests = array())
+	function initFields($requests = NULL)
 	{
-		if (isset($this->raw_fields)) {
-			$raw_fields = $this->raw_fields;
-		} else {
+		if (! isset($this->raw_fields)) {
 			$raw_fields = array();
 			// From config
 			foreach ($this->config->get('fields') as $field) {
@@ -312,11 +312,24 @@ class Tracker_form
 				) + $default;
 			}
 			$this->raw_fields = $raw_fields;
+		} else {
+			$raw_fields = $this->raw_fields;
 		}
 
-		if (! is_array($requests)) $requests = array($requests);
-		if ($requests) {
-			// A part of
+		if ($requests === NULL) {
+			// All
+			foreach ($raw_fields as $fieldname => $field) {
+				$this->addField(
+					$fieldname,
+					$field['display'],
+					$field['type'],
+					$field['options'],
+					$field['default']
+				);
+			}
+		} else {
+			if (! is_array($requests)) $requests = array($requests);
+			// A part of, specific order
 			foreach ($requests as $fieldname) {
 				if (isset($raw_fields[$fieldname])) {
 					$field = $raw_fields[$fieldname];
@@ -328,20 +341,9 @@ class Tracker_form
 						$field['default']
 					);
 				} else{
-					// TODO: Return an error: Invalid fieldname
-					// return FALSE;
+					$this->error = 'Invalid fieldname: ' . $fieldname;
+					return FALSE;
 				}
-			}
-		} else {
-			// All
-			foreach ($raw_fields as $fieldname => $field) {
-				$this->addField(
-					$fieldname,
-					$field['display'],
-					$field['type'],
-					$field['options'],
-					$field['default']
-				);
 			}
 		}
 
@@ -847,9 +849,6 @@ class Tracker_list
 		$form = & new Tracker_form($base, $refer, $config);
 		$this->form = $form;
 		$this->list = $list;
-
-		// TODO: Call with sort() and toString()
-		$this->form->initFields();
 	}
 
 	// Add multiple pages at a time
@@ -1231,6 +1230,27 @@ class Tracker_list
 		return plugin_tracker_escape($str, $tfc);
 	}
 
+	// Loading template: Roughly checking listed fields from template
+	function fieldPickup($string = '')
+	{
+		if (! is_string($string) || empty($string)) return array();
+
+		$fieldnames = array();
+
+		$matches = array();
+		preg_match_all('/\[([^\[\]]+)\]/', $string, $matches);
+		unset($matches[0]);
+
+		foreach ($matches[1] as $match) {
+			$params = explode(',', $match, 2);
+			if (isset($params[0])) {
+				$fieldnames[$params[0]] = TRUE;
+			}
+		}
+
+		return array_keys($fieldnames);
+	}
+
 	// Output a part of Wiki text
 	function toString($limit = 0)
 	{
@@ -1238,38 +1258,24 @@ class Tracker_list
 		$source = array();
 		$regex  = '/\[([^\[\]]+)\]/';
 
-		// Loading template: Roughly checking listed fields
-		$matches        = array();
-		$used_fieldname = array('_real' => TRUE);
-		$template       = plugin_tracker_get_source($list, TRUE);
+		// Loading template
+		$template = plugin_tracker_get_source($list, TRUE);
 		if ($template === FALSE || empty($template)) {
 			$this->error = 'Page not found or seems empty: ' . $template;
 			return FALSE;
 		}
-		preg_match_all($regex, $template, $matches);
-		unset($matches[0]);
-		foreach ($matches[1] as $match) {
-			$params = explode(',', $match);
-			if (isset($params[0]) && ! isset($used_fieldname[$params[0]])) {
-				$used_fieldname[$params[0]] = TRUE;
-			}
-		}
-		unset($matches[1]);
-		foreach (array_keys($this->orders) as $fieldname) {
-			if (! isset($used_fieldname[$fieldname])) {
-				$used_fieldname[$fieldname] = TRUE;
-			}
-		}
 
-		// Remove unused $this->form->fields
-		$fields = & $this->form->fields;	// Modify
-		$new_filds = array();
-		foreach (array_keys($fields) as $fieldname) {
-			if (isset($used_fieldname[$fieldname])) {
-				$new_filds[$fieldname] = & $fields[$fieldname];
-			}
+		// Creating $this->form->fields just you need
+		if ($this->form->initFields('_real') === FALSE) {
+		    $this->error = $this->form->error;
+			return FALSE;
+		} else if ($this->form->initFields($this->fieldPickup($template)) === FALSE) {
+		    $this->error = $this->form->error . ' at ' . $list;
+			return FALSE;
+		} else if ($this->form->initFields(array_keys($this->orders)) === FALSE) {
+		    $this->error = $this->form->error . ' at sort setting';
+			return FALSE;
 		}
-		$fields = $new_filds;
 
 		// Generate regex for $this->form->fields
 		if ($this->_generate_regex() === FALSE) return FALSE;
@@ -1279,7 +1285,10 @@ class Tracker_list
 
 		// Sort $this->rows
 		if ($this->sortRows() === FALSE) return FALSE;
-		$rows   = $this->rows;
+		$rows = $this->rows;
+
+
+
 
 		// toString()
 		$count = count($this->rows);
