@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.96 2007/09/30 15:34:24 henoheno Exp $
+// $Id: tracker.inc.php,v 1.97 2007/09/30 15:38:22 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -85,7 +85,11 @@ function plugin_tracker_convert()
 	}
 
 	$_form = & new Tracker_form($base, $refer, $config);
-	$_form->initFields(plugin_tracker_field_pickup($template));
+
+	$_form->initFields();
+	// TODO: Need to case for 'hidden' type
+	//$_form->initFields(plugin_tracker_field_pickup($template));
+
 	$fields = $_form->fields;
 
 	$from = $to = $hidden = array();
