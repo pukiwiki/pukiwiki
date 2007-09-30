@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.91 2007/09/29 15:49:16 henoheno Exp $
+// $Id: tracker.inc.php,v 1.92 2007/09/30 08:32:58 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -226,20 +226,22 @@ function plugin_tracker_action()
 	exit;
 }
 
-// Data set of XHTML form or someting
+// Data set of XHTML form or something
 class Tracker_form
 {
 	var $id;
 	var $base;
 	var $refer;
 	var $config;
+
+	var $raw_fields;
 	var $fields = array();
 
 	function Tracker_form($base, $refer, $config)
 	{
 		static $id = 0;	// Unique id per instance
+		$this->id = ++$id;
 
-		$this->id     = ++$id;
 		$this->base   = $base;
 		$this->refer  = $refer;
 		$this->config = $config;
@@ -274,14 +276,25 @@ class Tracker_form
 		return TRUE;
 	}
 
-	function initFields()
+	function initFields($requests = array())
 	{
-		foreach ($this->config->get('fields') as $field) {
-			$this->addField($field[0], $field[1], $field[2], $field[3], $field[4]);
-		}
-		foreach (
-			array(
-				// Reserved ones
+		if (isset($this->raw_fields)) {
+			$raw_fields = $this->raw_fields;
+		} else {
+			$raw_fields = array();
+			// From config
+			foreach ($this->config->get('fields') as $field) {
+				$fieldname = isset($field[0]) ? $field[0] : '';
+				$raw_fields[$fieldname] = array(
+					'display' => isset($field[1]) ? $field[1] : '',
+					'type'    => isset($field[2]) ? $field[2] : '',
+					'options' => isset($field[3]) ? $field[3] : '',
+					'default' => isset($field[4]) ? $field[4] : '',
+				);
+			}
+			// From reserved
+			$default = array('options' => '20', 'default' => '');
+			foreach (array(
 				'_date'   => 'text',	// Post date
 				'_update' => 'date',	// Last modified date
 				'_past'   => 'past',	// Elapsed time (passage)
@@ -291,10 +304,48 @@ class Tracker_form
 				'_refer'  => 'page',	// Page name refer from this (Page who has forms)
 				'_base'   => 'page',
 				'_submit' => 'submit'
-			) as $fieldname => $type)
-		{
-			$this->addField($fieldname, plugin_tracker_message('btn' . $fieldname), $type);
+			) as $fieldname => $type) {
+				if (isset($raw_fields[$fieldname])) continue;
+				$raw_fields[$fieldname] = array(
+					'display' => plugin_tracker_message('btn' . $fieldname),
+					'type'    => $type,
+				) + $default;
+			}
+			$this->raw_fields = $raw_fields;
 		}
+
+		if (! is_array($requests)) $requests = array($requests);
+		if ($requests) {
+			// A part of
+			foreach ($requests as $fieldname) {
+				if (isset($raw_fields[$fieldname])) {
+					$field = $raw_fields[$fieldname];
+					$this->addField(
+						$fieldname,
+						$field['display'],
+						$field['type'],
+						$field['options'],
+						$field['default']
+					);
+				} else{
+					// TODO: Return an error: Invalid fieldname
+					// return FALSE;
+				}
+			}
+		} else {
+			// All
+			foreach ($raw_fields as $fieldname => $field) {
+				$this->addField(
+					$fieldname,
+					$field['display'],
+					$field['type'],
+					$field['options'],
+					$field['default']
+				);
+			}
+		}
+
+		return TRUE;
 	}
 }
 
@@ -794,10 +845,11 @@ class Tracker_list
 	function Tracker_list($base, $refer, & $config, $list)
 	{
 		$form = & new Tracker_form($base, $refer, $config);
-		$form->initFields();
 		$this->form = $form;
-
 		$this->list = $list;
+
+		// TODO: Call with sort() and toString()
+		$this->form->initFields();
 	}
 
 	// Add multiple pages at a time
