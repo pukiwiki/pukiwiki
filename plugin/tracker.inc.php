@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.93 2007/09/30 12:28:14 henoheno Exp $
+// $Id: tracker.inc.php,v 1.94 2007/09/30 13:23:39 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -331,19 +331,15 @@ class Tracker_form
 			if (! is_array($requests)) $requests = array($requests);
 			// A part of, specific order
 			foreach ($requests as $fieldname) {
-				if (isset($raw_fields[$fieldname])) {
-					$field = $raw_fields[$fieldname];
-					$this->addField(
-						$fieldname,
-						$field['display'],
-						$field['type'],
-						$field['options'],
-						$field['default']
-					);
-				} else{
-					$this->error = 'Invalid fieldname: ' . $fieldname;
-					return FALSE;
-				}
+				if (! isset($raw_fields[$fieldname])) continue;
+				$field = $raw_fields[$fieldname];
+				$this->addField(
+					$fieldname,
+					$field['display'],
+					$field['type'],
+					$field['options'],
+					$field['default']
+				);
 			}
 		}
 
@@ -1254,7 +1250,8 @@ class Tracker_list
 	// Output a part of Wiki text
 	function toString($limit = 0)
 	{
-		$list   = $this->form->config->page . '/' . $this->list;
+		$form   = & $this->form;
+		$list   = $form->config->page . '/' . $this->list;
 		$source = array();
 		$regex  = '/\[([^\[\]]+)\]/';
 
@@ -1265,30 +1262,20 @@ class Tracker_list
 			return FALSE;
 		}
 
-		// Creating $this->form->fields just you need
-		if ($this->form->initFields('_real') === FALSE) {
-		    $this->error = $this->form->error;
-			return FALSE;
-		} else if ($this->form->initFields($this->fieldPickup($template)) === FALSE) {
-		    $this->error = $this->form->error . ' at ' . $list;
-			return FALSE;
-		} else if ($this->form->initFields(array_keys($this->orders)) === FALSE) {
-		    $this->error = $this->form->error . ' at sort setting';
+		// Creating $form->fields just you need
+ 		if ($form->initFields('_real') === FALSE ||
+ 		    $form->initFields($this->fieldPickup($template)) === FALSE ||
+ 		    $form->initFields(array_keys($this->orders)) === FALSE) {
+		    $this->error = $form->error;
 			return FALSE;
 		}
 
-		// Generate regex for $this->form->fields
+		// Generate regex for $form->fields
 		if ($this->_generate_regex() === FALSE) return FALSE;
 
-		// Load $this->rows
-		if ($this->loadRows() === FALSE) return FALSE;
-
-		// Sort $this->rows
-		if ($this->sortRows() === FALSE) return FALSE;
+		// Load and sort $this->rows
+ 		if ($this->loadRows() === FALSE || $this->sortRows() === FALSE) return FALSE;
 		$rows = $this->rows;
-
-
-
 
 		// toString()
 		$count = count($this->rows);
