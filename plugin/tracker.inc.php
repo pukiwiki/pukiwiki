@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.94 2007/09/30 13:23:39 henoheno Exp $
+// $Id: tracker.inc.php,v 1.95 2007/09/30 13:38:50 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -961,7 +961,6 @@ class Tracker_list
 		$order_commands = trim($order_commands);
 		if ($order_commands == '') return array();
 
-		$fields = $this->form->fields;
 		$orders = array();
 
 		$i = 0;
@@ -972,11 +971,6 @@ class Tracker_list
 			$arg = explode(':', $command, 2);
 			$fieldname = isset($arg[0]) ? trim($arg[0]) : '';
 			$order     = isset($arg[1]) ? trim($arg[1]) : '';
-
-			if (! isset($fields[$fieldname])) {
-				$this->error =  'No such field: ' . $fieldname;
-				return FALSE;
-			}
 
 			$_order = $this->_sortkey_string2define($order);
 			if ($_order === FALSE) {
@@ -1039,6 +1033,13 @@ class Tracker_list
 	{
 		$fields = $this->form->fields;
 		$orders = $this->orders;
+
+		foreach (array_keys($orders) as $fieldname) {
+			if (! isset($fields[$fieldname])) {
+				$this->error =  'No such field: ' . $fieldname;
+				return FALSE;
+			}
+		}
 
 		$params = array();	// Arguments for array_multisort()
 
