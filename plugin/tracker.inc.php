@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.95 2007/09/30 13:38:50 henoheno Exp $
+// $Id: tracker.inc.php,v 1.96 2007/09/30 15:34:24 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -78,9 +78,14 @@ function plugin_tracker_convert()
 	}
 	$config->config_name = $config_name;
 
+	$form     = $config->page . '/' . $form;
+	$template = plugin_tracker_get_source($form, TRUE);
+	if ($template === FALSE || empty($template)) {
+		return '#tracker: Form \'' . make_pagelink($form) . '\' not found or seems empty<br />';
+	}
 
 	$_form = & new Tracker_form($base, $refer, $config);
-	$_form->initFields();
+	$_form->initFields(plugin_tracker_field_pickup($template));
 	$fields = $_form->fields;
 
 	$from = $to = $hidden = array();
@@ -94,12 +99,6 @@ function plugin_tracker_convert()
 			$to[]     = $_to;
 		}
 		unset($fields[$field]);
-	}
-
-	$form     = $config->page . '/' . $form;
-	$template = plugin_tracker_get_source($form);
-	if ($template === FALSE || empty($template)) {
-		return '#tracker: Form \'' . make_pagelink($form) . '\' not found or seems empty<br />';
 	}
 
 	$script   = get_script_uri();
@@ -1227,27 +1226,6 @@ class Tracker_list
 		return plugin_tracker_escape($str, $tfc);
 	}
 
-	// Loading template: Roughly checking listed fields from template
-	function fieldPickup($string = '')
-	{
-		if (! is_string($string) || empty($string)) return array();
-
-		$fieldnames = array();
-
-		$matches = array();
-		preg_match_all('/\[([^\[\]]+)\]/', $string, $matches);
-		unset($matches[0]);
-
-		foreach ($matches[1] as $match) {
-			$params = explode(',', $match, 2);
-			if (isset($params[0])) {
-				$fieldnames[$params[0]] = TRUE;
-			}
-		}
-
-		return array_keys($fieldnames);
-	}
-
 	// Output a part of Wiki text
 	function toString($limit = 0)
 	{
@@ -1265,7 +1243,7 @@ class Tracker_list
 
 		// Creating $form->fields just you need
  		if ($form->initFields('_real') === FALSE ||
- 		    $form->initFields($this->fieldPickup($template)) === FALSE ||
+ 		    $form->initFields(plugin_tracker_field_pickup($template)) === FALSE ||
  		    $form->initFields(array_keys($this->orders)) === FALSE) {
 		    $this->error = $form->error;
 			return FALSE;
@@ -1338,6 +1316,28 @@ class Tracker_list
 
 		return implode('', $source);
 	}
+}
+
+// Roughly checking listed fields from template
+// " [field1] [field2,style1] " => array('fielld', 'field2')
+function plugin_tracker_field_pickup($string = '')
+{
+	if (! is_string($string) || empty($string)) return array();
+
+	$fieldnames = array();
+
+	$matches = array();
+	preg_match_all('/\[([^\[\]]+)\]/', $string, $matches);
+	unset($matches[0]);
+
+	foreach ($matches[1] as $match) {
+		$params = explode(',', $match, 2);
+		if (isset($params[0])) {
+			$fieldnames[$params[0]] = TRUE;
+		}
+	}
+
+	return array_keys($fieldnames);
 }
 
 function plugin_tracker_get_source($page, $join = FALSE)
