@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.97 2007/09/30 15:38:22 henoheno Exp $
+// $Id: tracker.inc.php,v 1.98 2007/10/01 13:55:45 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -85,24 +85,21 @@ function plugin_tracker_convert()
 	}
 
 	$_form = & new Tracker_form($base, $refer, $config);
-
-	$_form->initFields();
-	// TODO: Need to case for 'hidden' type
-	//$_form->initFields(plugin_tracker_field_pickup($template));
-
+	$_form->initFields(plugin_tracker_field_pickup($template));
+	$_form->initHiddenFields();
 	$fields = $_form->fields;
 
 	$from = $to = $hidden = array();
-	foreach (array_keys($fields) as $field) {
-		$from[] = '[' . $field . ']';
-		$_to    = $fields[$field]->get_tag();
-		if (is_a($fields[$field], 'Tracker_field_hidden')) {
+	foreach (array_keys($fields) as $fieldname) {
+		$from[] = '[' . $fieldname . ']';
+		$_to    = $fields[$fieldname]->get_tag();
+		if (is_a($fields[$fieldname], 'Tracker_field_hidden')) {
 			$to[]     = '';
 			$hidden[] = $_to;
 		} else {
 			$to[]     = $_to;
 		}
-		unset($fields[$field]);
+		unset($fields[$fieldname]);
 	}
 
 	$script   = get_script_uri();
@@ -170,15 +167,6 @@ function plugin_tracker_action()
 
 	$from = $to = array();
 
-	$form = & new Tracker_form($base, $refer, $config);
-	$form->initFields();
-	$fields = & $form->fields;	// unset()
-	foreach (array_keys($fields) as $field) {
-		$from[] = '[' . $field . ']';
-		$to[]   = isset($_post[$field]) ? $fields[$field]->format_value($_post[$field]) : '';
-		unset($fields[$field]);
-	}
-
 	// Load $template
 	$template_page = $config->page . '/page';
 	$template = plugin_tracker_get_source($template_page);
@@ -189,13 +177,21 @@ function plugin_tracker_action()
 		);
 	}
 
-	// TODO: Too rich
-	// Repalace every [$field]s to real values in the $template
+	$form = & new Tracker_form($base, $refer, $config);
+	$form->initFields(plugin_tracker_field_pickup(implode('', $template)));
+	$fields = & $form->fields;	// unset()
+	foreach (array_keys($fields) as $field) {
+		$from[] = '[' . $field . ']';
+		$to[]   = isset($_post[$field]) ? $fields[$field]->format_value($_post[$field]) : '';
+		unset($fields[$field]);
+	}
+
+	// Repalace every [$field]s (found inside $template) to real values
 	$subject = $escape = array();
 	foreach (array_keys($template) as $linenum) {
 		if (trim($template[$linenum]) == '') continue;
 
-		// Escape for some TextFormattingRules
+		// Escape some TextFormattingRules
 		$letter = $template[$linenum][0];
 		if ($letter == '|' || $letter == ':') {
 			$escape['|'][$linenum] = $template[$linenum];
@@ -314,13 +310,13 @@ class Tracker_form
 					'type'    => $type,
 				) + $default;
 			}
-			$this->raw_fields = $raw_fields;
+			$this->raw_fields = & $raw_fields;
 		} else {
-			$raw_fields = $this->raw_fields;
+			$raw_fields = & $this->raw_fields;
 		}
 
 		if ($requests === NULL) {
-			// All
+			// (The rest of) All, defined order
 			foreach ($raw_fields as $fieldname => $field) {
 				$this->addField(
 					$fieldname,
@@ -330,9 +326,10 @@ class Tracker_form
 					$field['default']
 				);
 			}
+			$raw_fields = array();
 		} else {
+			// Part of, specific order
 			if (! is_array($requests)) $requests = array($requests);
-			// A part of, specific order
 			foreach ($requests as $fieldname) {
 				if (! isset($raw_fields[$fieldname])) continue;
 				$field = $raw_fields[$fieldname];
@@ -343,10 +340,26 @@ class Tracker_form
 					$field['options'],
 					$field['default']
 				);
+				unset($raw_fields[$fieldname]);
 			}
 		}
 
 		return TRUE;
+	}
+
+	function initHiddenFields()
+	{
+		// Make sure to init $this->raw_fields
+		$this->initFields(array());
+
+		$fields = array();
+		foreach ($this->raw_fields as $fieldname => $field) {
+			if ($field['type'] == 'hidden') {
+				$fields[] = $fieldname;
+			}
+		}
+
+		$this->initFields($fields);
 	}
 }
 
