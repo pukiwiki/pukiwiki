@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.98 2007/10/01 13:55:45 henoheno Exp $
+// $Id: tracker.inc.php,v 1.99 2007/10/01 14:29:01 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -363,6 +363,7 @@ class Tracker_form
 	}
 }
 
+// TODO: Why a filter sometimes created so many?
 // Field classes within a form
 class Tracker_field
 {
@@ -608,10 +609,7 @@ class Tracker_field_radio extends Tracker_field_format
 		$name    = $this->name;
 
 		if (! isset($options[$name])) {
-			$values = array_map(
-				create_function('$array', 'return $array[0];'),
-				$this->config->get($name)
-			);
+			$values = array_map('reset', $this->config->get($name));
 			$options[$name] = array_flip($values);	// array('value0' => 0, 'value1' => 1, ...)
 		}
 
