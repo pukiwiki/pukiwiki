@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.99 2007/10/01 14:29:01 henoheno Exp $
+// $Id: tracker.inc.php,v 1.100 2007/10/02 13:45:13 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -262,16 +262,14 @@ class Tracker_form
 		}
 
 		$this->fields[$fieldname] = & new $class(
+			$this,
 			array(
 				$fieldname,
 				$displayname,
 				NULL,		// $type
 				$options,
 				$default
-			),
-			$this->base,
-			$this->refer,
-			$this->config
+			)
 		);
 
 		return TRUE;
@@ -369,36 +367,30 @@ class Tracker_field
 {
 	var $id;
 
+	var $form;	// Parent (class Tracker_form)
 	var $name;
 	var $title;
 	var $values;
 	var $default_value;
 
-	var $base;
-	var $refer;
-	var $config;
-
 	var $data;
 
 	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_REGULAR;
 
-	function Tracker_field($field, $base, $refer, & $config)
+	function Tracker_field(& $tracker_form, $field)
 	{
 		global $post;
 		static $id = 0;	// Unique id per instance, and per class(extended-class)
 
 		$this->id = ++$id;
 
+		$this->form          = & $tracker_form;
 		$this->name          = isset($field[0]) ? $field[0] : '';
 		$this->title         = isset($field[1]) ? $field[1] : '';
 		$this->values        = isset($field[3]) ? explode(',', $field[3]) : array();
 		$this->default_value = isset($field[4]) ? $field[4] : '';
 
 		$this->data = isset($post[$this->name]) ? $post[$this->name] : '';
-
-		$this->base   = $base;
-		$this->refer  = $refer;
-		$this->config = & $config;
 	}
 
 	// XHTML part inside a form
@@ -500,11 +492,11 @@ class Tracker_field_format extends Tracker_field
 	var $styles    = array();
 	var $formats   = array();
 
-	function Tracker_field_format($field, $base, $refer, & $config)
+	function Tracker_field_format(& $tracker_form, $field)
 	{
-		parent::Tracker_field($field, $base, $refer, $config);
+		parent::Tracker_field($tracker_form, $field);
 
-		foreach ($this->config->get($this->name) as $option) {
+		foreach ($this->form->config->get($this->name) as $option) {
 			list($key, $style, $format) =
 				array_pad(array_map(create_function('$a', 'return trim($a);'), $option), 3, '');
 			if ($style  != '') $this->styles[$key]  = $style;
@@ -558,10 +550,11 @@ class Tracker_field_file extends Tracker_field_format
 
 			require_once(PLUGIN_DIR . 'attach.inc.php');
 
-			$result = attach_upload($_FILES[$this->name], $this->base);
+			$base = $this->form->base;
+			$result = attach_upload($_FILES[$this->name], $base);
 			if (isset($result['result']) && $result['result']) {
 				// Upload success
-				return parent::format_value($this->base . '/' . $_FILES[$this->name]['name']);
+				return parent::format_value($base . '/' . $_FILES[$this->name]['name']);
 			}
 		}
 
@@ -581,7 +574,7 @@ class Tracker_field_radio extends Tracker_field_format
 
 		$id = 0;
 		$s_name = htmlspecialchars($this->name);
-		foreach ($this->config->get($this->name) as $option) {
+		foreach ($this->form->config->get($this->name) as $option) {
 			++$id;
 			$s_id = '_p_tracker_' . $s_name . '_' . $this->id . '_' . $id;
 			$s_option = htmlspecialchars($option[0]);
@@ -609,7 +602,7 @@ class Tracker_field_radio extends Tracker_field_format
 		$name    = $this->name;
 
 		if (! isset($options[$name])) {
-			$values = array_map('reset', $this->config->get($name));
+			$values = array_map('reset', $this->form->config->get($name));
 			$options[$name] = array_flip($values);	// array('value0' => 0, 'value1' => 1, ...)
 		}
 
@@ -634,7 +627,7 @@ class Tracker_field_select extends Tracker_field_radio
 		$retval = '<select name="' . $s_name . '[]"' . $s_size . $s_multiple . '>' . "\n";
 		if ($empty) $retval .= ' <option value=""></option>' . "\n";
 		$defaults = array_flip(preg_split('/\s*,\s*/', $this->default_value, -1, PREG_SPLIT_NO_EMPTY));
-		foreach ($this->config->get($this->name) as $option) {
+		foreach ($this->form->config->get($this->name) as $option) {
 			$s_option = htmlspecialchars($option[0]);
 			$selected = isset($defaults[trim($option[0])]) ? ' selected="selected"' : '';
 			$retval  .= ' <option value="' . $s_option . '"' . $selected . '>' . $s_option . '</option>' . "\n";
@@ -656,8 +649,7 @@ class Tracker_field_checkbox extends Tracker_field_radio
 		$id = 0;
 		$s_name   = htmlspecialchars($this->name);
 		$defaults = array_flip(preg_split('/\s*,\s*/', $this->default_value, -1, PREG_SPLIT_NO_EMPTY));
-		foreach ($this->config->get($this->name) as $option)
-		{
+		foreach ($this->form->config->get($this->name) as $option) {
 			++$id;
 			$s_id     = '_p_tracker_' . $s_name . '_' . $this->id . '_' . $id;
 			$s_option = htmlspecialchars($option[0]);
@@ -691,10 +683,12 @@ class Tracker_field_submit extends Tracker_field
 {
 	function get_tag()
 	{
+		$form = $this->form;
+
 		$s_title  = htmlspecialchars($this->title);
-		$s_base   = htmlspecialchars($this->base);
-		$s_refer  = htmlspecialchars($this->refer);
-		$s_config = htmlspecialchars($this->config->config_name);
+		$s_base   = htmlspecialchars($form->base);
+		$s_refer  = htmlspecialchars($form->refer);
+		$s_config = htmlspecialchars($form->config->config_name);
 
 		return <<<EOD
 <input type="submit" value="$s_title" />
