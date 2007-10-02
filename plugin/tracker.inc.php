@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.100 2007/10/02 13:45:13 henoheno Exp $
+// $Id: tracker.inc.php,v 1.101 2007/10/02 13:52:15 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -262,7 +262,7 @@ class Tracker_form
 		}
 
 		$this->fields[$fieldname] = & new $class(
-			$this,
+			$this,			// Reference
 			array(
 				$fieldname,
 				$displayname,
