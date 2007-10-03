@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.101 2007/10/02 13:52:15 henoheno Exp $
+// $Id: tracker.inc.php,v 1.102 2007/10/03 15:18:15 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -228,7 +228,8 @@ function plugin_tracker_action()
 // Data set of XHTML form or something
 class Tracker_form
 {
-	var $id;
+	var $id;	// Unique id per instance
+
 	var $base;
 	var $refer;
 	var $config;
@@ -240,7 +241,7 @@ class Tracker_form
 
 	function Tracker_form($base, $refer, $config)
 	{
-		static $id = 0;	// Unique id per instance
+		static $id = 0;
 		$this->id = ++$id;
 
 		$this->base   = $base;
@@ -365,9 +366,10 @@ class Tracker_form
 // Field classes within a form
 class Tracker_field
 {
-	var $id;
+	var $id;	// Unique id per instance, and per class(extended-class)
 
 	var $form;	// Parent (class Tracker_form)
+
 	var $name;
 	var $title;
 	var $values;
@@ -380,7 +382,7 @@ class Tracker_field
 	function Tracker_field(& $tracker_form, $field)
 	{
 		global $post;
-		static $id = 0;	// Unique id per instance, and per class(extended-class)
+		static $id = 0;
 
 		$this->id = ++$id;
 
@@ -434,6 +436,7 @@ class Tracker_field_text extends Tracker_field
 	}
 }
 
+// Special type: The page names
 class Tracker_field_page extends Tracker_field_text
 {
 	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_STRING;
@@ -444,8 +447,14 @@ class Tracker_field_page extends Tracker_field_text
 		if (is_pagename($value)) $value = '[[' . $value . ']]';
 		return parent::format_value($value);
 	}
+
+	function format_cell($value)
+	{
+		return '[[' . $value . ']]';
+	}
 }
 
+// Special type : Real(Raw) value of page name
 class Tracker_field_real extends Tracker_field_text
 {
 	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_NATURAL;
@@ -486,19 +495,20 @@ class Tracker_field_textarea extends Tracker_field
 	}
 }
 
+// Text with formatting if trim($cell) != ''
+// See also: http://home.arino.jp/?tracker.inc.php%2F41
 class Tracker_field_format extends Tracker_field
 {
 	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_STRING;
+
 	var $styles    = array();
 	var $formats   = array();
 
 	function Tracker_field_format(& $tracker_form, $field)
 	{
 		parent::Tracker_field($tracker_form, $field);
-
 		foreach ($this->form->config->get($this->name) as $option) {
-			list($key, $style, $format) =
-				array_pad(array_map(create_function('$a', 'return trim($a);'), $option), 3, '');
+			list($key, $style, $format) = array_pad(array_map('trim', $option), 3, '');
 			if ($style  != '') $this->styles[$key]  = $style;
 			if ($format != '') $this->formats[$key] = $format;
 		}
@@ -831,7 +841,8 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 // Listing class
 class Tracker_list
 {
-	var $form;
+	var $form;	// class Tracker_form
+
 	var $list;
 
 	var $pattern;
@@ -941,7 +952,7 @@ class Tracker_list
 		$filetime = get_filetime($pagename);
 		$row = array(
 			// column => default data of the cell
-			'_page'   => '[[' . $pagename . ']]',	// TODO: Redudant column pair [1]
+			'_page'   => $pagename,	// TODO: Redudant column pair [1]
 			'_real'   => $pagename,	// TODO: Redudant column pair [1]
 			'_update' => $filetime,	// TODO: Redudant column pair [2]
 			'_past'   => $filetime,	// TODO: Redudant column pair [2]
