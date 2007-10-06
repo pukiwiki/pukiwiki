@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.35 2007/07/28 14:02:48 henoheno Exp $
+// $Id: rename.inc.php,v 1.36 2007/10/06 13:20:59 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -40,7 +40,7 @@ function plugin_rename_action()
 		$page  = plugin_rename_getvar('page');
 		$refer = plugin_rename_getvar('refer');
 
-		if ($refer === '') {
+		if ($refer == '') {
 			return plugin_rename_phase1();
 
 		} else if (! is_page($refer)) {
@@ -49,7 +49,7 @@ function plugin_rename_action()
 		} else if (is_cantedit($refer)) {
 			return plugin_rename_phase1('norename', $refer);
 
-		} else if ($page === '' || $page === $refer) {
+		} else if ($page == '' || $page === $refer) {
 			return plugin_rename_phase2();
 
 		} else if (! is_pagename($page)) {

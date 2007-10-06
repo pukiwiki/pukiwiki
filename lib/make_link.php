@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.35 2006/09/30 02:10:50 henoheno Exp $
+// $Id: make_link.php,v 1.36 2007/10/06 13:20:48 henoheno Exp $
 // Copyright (C)
-//   2003-2005 PukiWiki Developers Team
+//   2003-2005, 2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -784,7 +784,7 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolin
 	$r_page  = rawurlencode($page);
 	$r_refer = ($refer == '') ? '' : '&amp;refer=' . rawurlencode($refer);
 
-	if (! isset($related[$page]) && $page != $vars['page'] && is_page($page))
+	if (! isset($related[$page]) && $page !== $vars['page'] && is_page($page))
 		$related[$page] = get_filetime($page);
 
 	if ($isautolink || is_page($page)) {

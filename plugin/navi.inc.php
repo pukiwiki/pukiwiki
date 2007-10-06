@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: navi.inc.php,v 1.22 2005/04/02 06:33:39 henoheno Exp $
+// $Id: navi.inc.php,v 1.23 2007/10/06 13:20:59 henoheno Exp $
 //
 // Navi plugin: Show DocBook-like navigation bar and contents
 
@@ -100,7 +100,7 @@ function plugin_navi_convert()
 
 		$prev = $home;
 		foreach ($pages as $page) {
-			if ($page == $current) break;
+			if ($page === $current) break;
 			$prev = $page;
 		}
 		$next = current($pages);
@@ -154,7 +154,7 @@ function plugin_navi_convert()
 		} else {
 			$ret .= '<ul>';
 			foreach ($pages as $page)
-				if ($page != $home)
+				if ($page !== $home)
 					$ret .= ' <li>' . make_pagelink($page) . '</li>';
 			$ret .= '</ul>';
 		}
