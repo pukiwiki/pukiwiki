@@ -93,7 +93,7 @@ function plugin_edit_inline()
 	$s_label = strip_htmltag(array_pop($args), FALSE);
 
 	$page    = array_shift($args);
-	if ($page == NULL) $page = '';
+	if ($page === NULL) $page = '';
 	$_noicon = $_nolabel = FALSE;
 	foreach($args as $arg){
 		switch(strtolower($arg)){

@@ -81,7 +81,7 @@ function plugin_popular_convert()
 			$page = substr($page, 1);
 
 			$s_page = htmlsc($page);
-			if ($page == $vars['page']) {
+			if ($page === $vars['page']) {
 				// No need to link itself, notifies where you just read
 				$pg_passage = get_pg_passage($page,FALSE);
 				$items .= ' <li><span title="' . $s_page . ' ' . $pg_passage . '">' .

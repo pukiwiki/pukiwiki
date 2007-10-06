@@ -108,7 +108,7 @@ function plugin_include_convert()
 	if ($with_title) {
 		$link = '<a href="' . $script . '?cmd=edit&amp;page=' . $r_page .
 			'">' . $s_page . '</a>';
-		if ($page == $menubar) {
+		if ($page === $menubar) {
 			$body = '<span align="center"><h5 class="side_label">' .
 				$link . '</h5></span><small>' . $body . '</small>';
 		} else {

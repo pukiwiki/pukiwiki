@@ -39,7 +39,7 @@ function plugin_rename_action()
 		$page  = plugin_rename_getvar('page');
 		$refer = plugin_rename_getvar('refer');
 
-		if ($refer === '') {
+		if ($refer == '') {
 			return plugin_rename_phase1();
 
 		} else if (! is_page($refer)) {
@@ -48,7 +48,7 @@ function plugin_rename_action()
 		} else if ($refer === $whatsnew) {
 			return plugin_rename_phase1('norename', $refer);
 
-		} else if ($page === '' || $page === $refer) {
+		} else if ($page == '' || $page === $refer) {
 			return plugin_rename_phase2();
 
 		} else if (! is_pagename($page)) {

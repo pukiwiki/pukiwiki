@@ -47,7 +47,7 @@ function plugin_menu_convert()
 
 		if (! is_page($page)) {
 			return '';
-		} else if ($vars['page'] == $page) {
+		} else if ($vars['page'] === $page) {
 			return '<!-- #menu(): You already view ' . htmlsc($page) . ' -->';
 		} else {
 			// Cut fixed anchors

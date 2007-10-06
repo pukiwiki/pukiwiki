@@ -67,7 +67,7 @@ function links_update($page)
 	$links    = links_get_objects($page, TRUE);
 	foreach ($links as $_obj) {
 		if (! isset($_obj->type) || $_obj->type != 'pagename' ||
-		    $_obj->name == $page || $_obj->name == '')
+		    $_obj->name === $page || $_obj->name == '')
 			continue;
 
 		if (is_a($_obj, 'Link_autolink')) { // 行儀が悪い
@@ -109,7 +109,7 @@ function links_update($page)
 		$search_non_list = 1;
 		$pages           = do_search($page, 'AND', TRUE);
 		foreach ($pages as $_page) {
-			if ($_page != $page)
+			if ($_page !== $page)
 				links_update($_page);
 		}
 	}
@@ -193,7 +193,7 @@ function links_add($page, $add, $rel_auto)
 			foreach (file($ref_file) as $line) {
 				list($ref_page, $ref_auto) = explode("\t", rtrim($line));
 				if (! $ref_auto) $all_auto = FALSE;
-				if ($ref_page != $page) $ref .= $line;
+				if ($ref_page !== $page) $ref .= $line;
 			}
 			unlink($ref_file);
 		}
@@ -220,7 +220,7 @@ function links_delete($page, $del)
 		$ref = '';
 		foreach (file($ref_file) as $line) {
 			list($ref_page, $ref_auto) = explode("\t", rtrim($line));
-			if ($ref_page != $page) {
+			if ($ref_page !== $page) {
 				if (! $ref_auto) $all_auto = FALSE;
 				$ref .= $line;
 			}

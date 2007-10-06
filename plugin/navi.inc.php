@@ -100,7 +100,7 @@ function plugin_navi_convert()
 
 		$prev = $home;
 		foreach ($pages as $page) {
-			if ($page == $current) break;
+			if ($page === $current) break;
 			$prev = $page;
 		}
 		$next = current($pages);
@@ -154,7 +154,7 @@ function plugin_navi_convert()
 		} else {
 			$ret .= '<ul>';
 			foreach ($pages as $page)
-				if ($page != $home)
+				if ($page !== $home)
 					$ret .= ' <li>' . make_pagelink($page) . '</li>';
 			$ret .= '</ul>';
 		}
