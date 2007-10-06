@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.102 2007/10/03 15:18:15 henoheno Exp $
+// $Id: tracker.inc.php,v 1.103 2007/10/06 06:30:18 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -395,31 +395,34 @@ class Tracker_field
 		$this->data = isset($post[$this->name]) ? $post[$this->name] : '';
 	}
 
-	// XHTML part inside a form
+	// Output a part of XHTML form for the field
 	function get_tag()
 	{
 		return '';
 	}
 
-	function get_style()
-	{
-		return '%s';
-	}
-
+	// Format user input before write
 	function format_value($value)
 	{
 		return $value;
 	}
 
+	// Compare key for Tracker_list->sort()
+	function get_value($value)
+	{
+		return $value;
+	}
+
+	// Format table cell data before output the wiki text
 	function format_cell($str)
 	{
 		return $str;
 	}
 
-	// Compare key for Tracker_list->sort()
-	function get_value($value)
+	// Format-string for sprintf() before output the wiki text
+	function get_style()
 	{
-		return $value;	// Default: $value itself
+		return '%s';
 	}
 }
 
@@ -436,28 +439,43 @@ class Tracker_field_text extends Tracker_field
 	}
 }
 
-// Special type: The page names
+// Special type: Page name with link syntax
 class Tracker_field_page extends Tracker_field_text
 {
 	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_STRING;
 
+	function _format($page)
+	{
+		$page = strip_bracket($page);
+		if (is_pagename($page)) $page = '[[' . $page . ']]';
+		return $page;
+	}
+
 	function format_value($value)
 	{
-		$value = strip_bracket($value);
-		if (is_pagename($value)) $value = '[[' . $value . ']]';
-		return parent::format_value($value);
+		return $this->_format($value);
 	}
 
 	function format_cell($value)
 	{
-		return '[[' . $value . ']]';
+		return $this->_format($value);
 	}
 }
 
-// Special type : Real(Raw) value of page name
+// Special type: Page name minus 'base'
+// e.g.
+//  page name: Tracker/sales/100
+//  base     : Tracker/sales
+//  _real    : 100
 class Tracker_field_real extends Tracker_field_text
 {
 	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_NATURAL;
+
+	function format_cell($value)
+	{
+		// basename(): Rough but work with this(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN prohibits '/') situation
+		return basename($value);
+	}
 }
 
 class Tracker_field_title extends Tracker_field_text
@@ -495,7 +513,7 @@ class Tracker_field_textarea extends Tracker_field
 	}
 }
 
-// Text with formatting if trim($cell) != ''
+// Writing text with formatting if trim($cell) != ''
 // See also: http://home.arino.jp/?tracker.inc.php%2F41
 class Tracker_field_format extends Tracker_field
 {
@@ -514,16 +532,16 @@ class Tracker_field_format extends Tracker_field
 		}
 	}
 
+	function _get_key($str)
+	{
+		return ($str == '') ? 'IS NULL' : 'IS NOT NULL';
+	}
+
 	function get_tag()
 	{
 		return '<input type="text"' .
 			' name="' . htmlspecialchars($this->name)      . '"' .
 			' size="' . htmlspecialchars($this->values[0]) . '" />';
-	}
-
-	function get_key($str)
-	{
-		return ($str == '') ? 'IS NULL' : 'IS NOT NULL';
 	}
 
 	function format_value($str)
@@ -532,13 +550,13 @@ class Tracker_field_format extends Tracker_field
 			return join(', ', array_map(array($this, 'format_value'), $str));
 		}
 
-		$key = $this->get_key($str);
+		$key = $this->_get_key($str);
 		return isset($this->formats[$key]) ? str_replace('%s', $str, $this->formats[$key]) : $str;
 	}
 
 	function get_style($str)
 	{
-		$key = $this->get_key($str);
+		$key = $this->_get_key($str);
 		return isset($this->styles[$key]) ? $this->styles[$key] : '%s';
 	}
 }
@@ -601,11 +619,6 @@ class Tracker_field_radio extends Tracker_field_format
 		return $retval;
 	}
 
-	function get_key($str)
-	{
-		return $str;
-	}
-
 	function get_value($value)
 	{
 		$options = & $this->_options;
@@ -624,27 +637,36 @@ class Tracker_field_select extends Tracker_field_radio
 {
 	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_NUMERIC;
 
+	var $_defaults;
+
 	function get_tag($empty = FALSE)
 	{
+		if (! isset($this->_defaults)) {
+			$this->_defaults = array_flip(preg_split('/\s*,\s*/', $this->default_value, -1, PREG_SPLIT_NO_EMPTY));
+		}
+		$defaults = $this->_defaults;
+
+		$retval = array();
+
 		$s_name = htmlspecialchars($this->name);
 		$s_size = (isset($this->values[0]) && is_numeric($this->values[0])) ?
-			' size="' . htmlspecialchars($this->values[0]) . '"' :
-			'';
+			' size="' . htmlspecialchars($this->values[0]) . '"' : '';
 		$s_multiple = (isset($this->values[1]) && strtolower($this->values[1]) == 'multiple') ?
-			' multiple="multiple"' :
-			'';
+			' multiple="multiple"' : '';
+		$retval[] = '<select name="' . $s_name . '[]"' . $s_size . $s_multiple . '>';
 
-		$retval = '<select name="' . $s_name . '[]"' . $s_size . $s_multiple . '>' . "\n";
-		if ($empty) $retval .= ' <option value=""></option>' . "\n";
-		$defaults = array_flip(preg_split('/\s*,\s*/', $this->default_value, -1, PREG_SPLIT_NO_EMPTY));
+		if ($empty) $retval[] = ' <option value=""></option>';
+
 		foreach ($this->form->config->get($this->name) as $option) {
-			$s_option = htmlspecialchars($option[0]);
-			$selected = isset($defaults[trim($option[0])]) ? ' selected="selected"' : '';
-			$retval  .= ' <option value="' . $s_option . '"' . $selected . '>' . $s_option . '</option>' . "\n";
+			$option   = reset($option);
+			$s_option = htmlspecialchars($option);
+			$selected = isset($defaults[trim($option)]) ? ' selected="selected"' : '';
+			$retval[] = ' <option value="' . $s_option . '"' . $selected . '>' . $s_option . '</option>';
 		}
-		$retval .= '</select>';
 
-		return $retval;
+		$retval[] = '</select>';
+
+		return implode("\n", $retval);
 	}
 }
 
@@ -724,14 +746,14 @@ class Tracker_field_past extends Tracker_field
 {
 	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_NUMERIC;
 
-	function format_cell($timestamp)
-	{
-		return get_passage($timestamp, FALSE);
-	}
-
 	function get_value($value)
 	{
 		return UTIME - $value;
+	}
+
+	function format_cell($timestamp)
+	{
+		return get_passage($timestamp, FALSE);
 	}
 }
 
@@ -1052,53 +1074,56 @@ class Tracker_list
 	{
 		$fields = $this->form->fields;
 		$orders = $this->orders;
+		$types  = array();
 
-		foreach (array_keys($orders) as $fieldname) {
+		$fieldnames = array_keys($orders);	// Field names to sort
+
+		foreach ($fieldnames as $fieldname) {
 			if (! isset($fields[$fieldname])) {
 				$this->error =  'No such field: ' . $fieldname;
 				return FALSE;
 			}
+			$types[$fieldname]  = $this->_sort_type_dropout($fields[$fieldname]->sort_type);
+			$orders[$fieldname] = $this->_sort_order_dropout($orders[$fieldname]);
+			if ($types[$fieldname] === FALSE || $orders[$fieldname] === FALSE) return FALSE;
 		}
 
-		$params = array();	// Arguments for array_multisort()
-
-		foreach ($orders as $fieldname => $order) {
-			$field = $fields[$fieldname];
-
-			$type = $this->_sort_type_dropout($field->sort_type);
-			if ($type === FALSE) return FALSE;
-
-			$order = $this->_sort_order_dropout($order);
-			if ($order === FALSE) return FALSE;
-
-			$column = array();
-			foreach ($this->rows as $row) {
-				$column[] = isset($row[$fieldname]) ?
-					$field->get_value($row[$fieldname]) :
-					'';
+		$columns = array();
+		foreach ($this->rows as $row) {
+			foreach ($fieldnames as $fieldname) {
+				if (isset($row[$fieldname])) {
+					$columns[$fieldname][] = $fields[$fieldname]->get_value($row[$fieldname]);
+				} else {
+					$columns[$fieldname][] = '';
+				}
 			}
-			if ($type == SORT_NATURAL) {
+		}
+
+		$params = array();
+		foreach ($fieldnames as $fieldname) {
+
+			if ($types[$fieldname] == SORT_NATURAL) {
+				$column = & $columns[$fieldname];
 				natcasesort($column);
 				$i = 0;
 				$last = NULL;
 				foreach (array_keys($column) as $key) {
-					// Consider the same values there for array_multisort()
+					// Consider the same values there, for array_multisort()
 					if ($last !== $column[$key]) ++$i;
 					$last = strtolower($column[$key]);	// natCASEsort()
 					$column[$key] = $i;
 				}
-				ksort($column, SORT_NUMERIC);
-				$type = SORT_NUMERIC;
+				ksort($column, SORT_NUMERIC);	// Revert the order
+				$types[$fieldname] = SORT_NUMERIC;
 			}
 
 			// One column set (one-dimensional array, sort type, and sort order)
 			// for array_multisort()
-			$params[] = $column;
-			$params[] = $type;
-			$params[] = $order;
+			$params[] = $columns[$fieldname];
+			$params[] = $types[$fieldname];
+			$params[] = $orders[$fieldname];
 		}
-
-		if (! empty($params) && ! empty($this->rows)) {
+		if (! empty($orders) && ! empty($this->rows)) {
 			$params[] = & $this->rows;	// The target
 			call_user_func_array('array_multisort', $params);
 		}
@@ -1155,7 +1180,6 @@ class Tracker_list
 			// Invalid $fieldname or user's own string or something. Nothing to do
 			return isset($matches[0]) ? $matches[0] : '';
 		}
-		if ($fieldname == '_name' || $fieldname == '_page') $fieldname = '_real';
 
 		// This column seems sorted or not
 		if (isset($orders[$fieldname])) {
