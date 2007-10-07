@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.80 2007/09/24 16:01:00 henoheno Exp $
+// $Id: spam.ini.php,v 1.81 2007/10/07 12:59:02 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -1607,6 +1607,7 @@ $blocklist['B-1'] = array(
 	'*.alkablog.com',
 	'*.alluwant.de',
 	'.amkbb.com',
+	'answerbag.com',	// 8.5.0.128
 	'AOL.com' =>	// http://about.aol.com/international_services
 		'/^(?:chezmoi|home|homes|hometown|journals|user)\.' .
 		'(?:aol|americaonline)\.' .
@@ -1628,6 +1629,7 @@ $blocklist['B-1'] = array(
 	'bestfreeforums.com',
 	'bestvotexxx.com',
 	'Bizcn.com' => '/.*\.w[0-9]+\.bizcn\.com$/', // XiaMen BizCn Computer & Network CO.,LTD
+	'blinklist.com',
 	'Blog.com' => array(
 		'*.blog.com',
 		'*.blogandorra.com',	// by admin.domains at co.blog.com
@@ -1659,6 +1661,7 @@ $blocklist['B-1'] = array(
 	'*.blogstream.com',
 	'blogyaz.com',
 	'bloodee.com',
+	'bluedot.us',			// 209.245.176.23 by mohitsriv at yahoo.com
 	'board-4you.de',
 	'boboard.com',			// 66.29.54.116 by Excelsoft (shabiba at e4t.net)
 	'*.boardhost.com',
@@ -1709,6 +1712,7 @@ $blocklist['B-1'] = array(
 	'*.canalblog.com',		// 195.137.184.103 by dns-admin at pinacolaweb.com
 	'*.chueca.com',
 	'city-forum.com',
+	'*.craigslist.org',
 	'concepts-mall.com',
 	'*.conforums.com',		// by Roger Sutton (rogersutton at cox.net)
 	'connectedy.com',		// 66.132.45.227(camilla.jtlnet.com) by astrader at insight.rr.com
@@ -1722,9 +1726,11 @@ $blocklist['B-1'] = array(
 	),
 	'dakrats.net',
 	'*.dcswtech.com',
+	'del.icio.us',
 	'*.devil.it',
 	'*.diaryland.com',
 	'digg.com',
+	'digstock.com',
 	'domains at galaxywave.net' => array(
 		'blogstation.net',
 		'.phpbb-host.com',
@@ -2475,6 +2481,7 @@ $blocklist['B-1'] = array(
 	'Google.com' => array(
 		'*.blogspot.com',
 		'docs.google.com',
+		'*.googlepages.com',
 		'groups-beta.google.com',
 	),
 	'guestbook.at',
@@ -2566,6 +2573,7 @@ $blocklist['B-1'] = array(
 		'*.sblog.cz',
 	),
 	'limmon.net',
+	'lipstick.com',			// 208.96.53.70(customer-reverse-entry.*) by domain_admin at advancemags.com
 	'listible.com',			///list/
 	'Livedoor.com' => array(
 		'blog.livedoor.jp',
@@ -2605,6 +2613,7 @@ $blocklist['B-1'] = array(
 	),
 	'*.mastertopforum.com',
 	'mbga.jp',				// by DeNA Co.,Ltd. (barshige at hq.bidders.co.jp, torigoe at hq.bidders.co.jp)
+	'meneame.net',
 	'*.memebot.com',
 	'*.messageboard.nl',
 	'mokono GmbH' => array(
@@ -2628,7 +2637,8 @@ $blocklist['B-1'] = array(
 		'*.monforum.fr',
 	),
 	'*.multiforum.nl',		// by Ron Warris (info at phpbbhost.nl)
-	'*.my10gb.com',
+	'*.my3gb.com',			// 74.86.20.235(layeredpanel.com => 213.239.213.90 => *.clients.your-server.de)
+	'*.my10gb.com',			// by craig_gatenby at hotmail.com
 	'myblog.is',
 	'myblogma.com',
 	'*.myblogvoice.com',
@@ -2817,6 +2827,7 @@ $blocklist['B-1'] = array(
 		'*.ws.co.ua',
 	),
 	'*.unforo.net',
+	'veoh.com',
 	'*.vdforum.ru',
 	'*.vtost.com',
 	'*.vidiac.com',
@@ -3120,6 +3131,7 @@ $blocklist['B-2'] = array(
 	'paullima.com',
 	'perl.org.br',
 	'pfff.co.uk',
+	'pimpo.com',			///_old_site/
 	'pix4online.co.uk',
 	'plone.dk',
 	'preform.dk',
@@ -6148,6 +6160,18 @@ $blocklist['C'] = array(
 		'.choosefinest.com',		// 206.53.51.157
 		'.online-pharmaceutics.com',	// 206.53.51.168
 	),
+	'89.248.107.118' => array(	// "Canadian Pharmacy" 89.248.107.118(non-existent)
+		'.cialischeap.info',
+		'.superrv.info',
+	),
+	'74.50.97.*' => array(
+		'.kaqeje.com',			// 74.50.97.51(non-existent) by abuse-here at inbox.ru
+		'.kaxavo.com',			// 74.50.97.52(non-existent) by gunter at ftunez.org
+		'.tyqoti.com',			// 74.50.97.52(non-existent) by anna at hotmail.com
+		'.fupopu.com',			// 74.50.97.53(non-existent) by abuse-here at inbox.ru
+		'.poxupo.com',			// 74.50.97.53(non-existent) by inna at gmail.com
+		'.civuhe.com',			// 74.50.97.54(non-existent) by olga at ike.com
+	),
 
 	// C-2: Lonely domains (buddies not found yet)
 	'.0721-4404.com',
@@ -6352,6 +6376,9 @@ $blocklist['C'] = array(
 	'.mncxvsm.info',		// 217.11.233.105, / blank
 	'.super-discount.sakura.ne.jp',	// 59.106.19.206(www756.sakura.ne.jp), sales
 	'.privatedns.com',		// 209.172.41.50(sebulba.privatedns.com), encoded JavaScript, root of various posts
+	'.hostzerocost.com',	// server failed, by Gokhan Yildirim (gokhany at gmail.com)
+	'.easypharmsite.com',	// 75.126.129.229(greatpool.biz => 72.232.198.234 => ) by andrew at pharmacy-inet.com
+	'.wbtechs.us',			// 68.178.232.100(parkwebwin-v01.prod.mesa1.secureserver.net) by westbabylon at aol.com
 
 	// C-3: Not classifiable (information wanted)
 	//
