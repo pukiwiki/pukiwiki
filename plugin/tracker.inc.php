@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.105 2007/10/08 13:44:38 henoheno Exp $
+// $Id: tracker.inc.php,v 1.106 2007/10/08 14:29:29 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -239,27 +239,27 @@ class Tracker_form
 
 	var $error  = '';	// Error message
 
-	function Tracker_form($base, $refer, $config)
+	function Tracker_form($base, $refer, & $config)
 	{
 		static $id = 0;
 		$this->id = ++$id;
 
 		$this->base   = $base;
 		$this->refer  = $refer;
-		$this->config = $config;
+		$this->config = & $config;
 	}
 
 	function addField($fieldname, $displayname, $type = 'text', $options = '20', $default = '')
 	{
-		// TODO: Return an error
-		if (isset($this->fields[$fieldname])) return TRUE;
+		if (isset($this->fields[$fieldname])) {
+			$this->error = "No such field: " . $fieldname;
+			return FALSE;
+		}
 
 		$class = 'Tracker_field_' . $type;
 		if (! class_exists($class)) {
-			// TODO: Return an error
-			$type    = 'text';
-			$class   = 'Tracker_field_' . $type;
-			$options = '20';
+			$this->error = "No such type: " . $type;
+			return FALSE;
 		}
 
 		$this->fields[$fieldname] = & new $class(
@@ -317,13 +317,14 @@ class Tracker_form
 		if ($requests === NULL) {
 			// (The rest of) All, defined order
 			foreach ($raw_fields as $fieldname => $field) {
-				$this->addField(
+				$err = $this->addField(
 					$fieldname,
 					$field['display'],
 					$field['type'],
 					$field['options'],
 					$field['default']
 				);
+				if ($err === FALSE) return FALSE;
 			}
 			$raw_fields = array();
 		} else {
@@ -332,7 +333,7 @@ class Tracker_form
 			foreach ($requests as $fieldname) {
 				if (! isset($raw_fields[$fieldname])) continue;
 				$field = $raw_fields[$fieldname];
-				$this->addField(
+				$err = $this->addField(
 					$fieldname,
 					$field['display'],
 					$field['type'],
@@ -340,6 +341,7 @@ class Tracker_form
 					$field['default']
 				);
 				unset($raw_fields[$fieldname]);
+				if ($err === FALSE) return FALSE;
 			}
 		}
 
@@ -372,7 +374,7 @@ class Tracker_field
 
 	var $name;
 	var $title;
-	var $values;
+	var $options;
 	var $default_value;
 
 	var $data;
@@ -389,7 +391,7 @@ class Tracker_field
 		$this->form          = & $tracker_form;
 		$this->name          = isset($field[0]) ? $field[0] : '';
 		$this->title         = isset($field[1]) ? $field[1] : '';
-		$this->values        = isset($field[3]) ? explode(',', $field[3]) : array();
+		$this->options       = isset($field[3]) ? explode(',', $field[3]) : array();
 		$this->default_value = isset($field[4]) ? $field[4] : '';
 
 		$this->data = isset($post[$this->name]) ? $post[$this->name] : '';
@@ -432,10 +434,14 @@ class Tracker_field_text extends Tracker_field
 
 	function get_tag()
 	{
+		$s_name  = htmlspecialchars($this->name);
+		$s_size  = isset($this->options[0]) ? htmlspecialchars($this->options[0]) : '';
+		$s_value = htmlspecialchars($this->default_value);
+
 		return '<input type="text"' .
-				' name="'  . htmlspecialchars($this->name)          . '"' .
-				' size="'  . htmlspecialchars($this->values[0])     . '"' .
-				' value="' . htmlspecialchars($this->default_value) . '" />';
+				' name="'  . $s_name  . '"' .
+				' size="'  . $s_size  . '"' .
+				' value="' . $s_value . '" />';
 	}
 }
 
@@ -495,11 +501,16 @@ class Tracker_field_textarea extends Tracker_field
 
 	function get_tag()
 	{
+		$s_name = htmlspecialchars($this->name);
+		$s_cols = isset($this->options[0]) ? htmlspecialchars($this->options[0]) : '';
+		$s_rows = isset($this->options[1]) ? htmlspecialchars($this->options[1]) : '';
+		$s_default = htmlspecialchars($this->default_value);
+
 		return '<textarea' .
-			' name="' . htmlspecialchars($this->name)      . '"' .
-			' cols="' . htmlspecialchars($this->values[0]) . '"' .
-			' rows="' . htmlspecialchars($this->values[1]) . '">' .
-						htmlspecialchars($this->default_value) .
+				' name="' . $s_name . '"' .
+				' cols="' . $s_cols . '"' .
+				' rows="' . $s_rows . '">' .
+				$s_default .
 			'</textarea>';
 	}
 
@@ -507,8 +518,8 @@ class Tracker_field_textarea extends Tracker_field
 	{
 		// Cut too long ones
 		// TODO: Why store all of them to the memory?
-		if (isset($this->values[2])) {
-			$limit = max(0, $this->values[2]);
+		if (isset($this->options[2])) {
+			$limit = max(0, $this->options[2]);
 			$len = mb_strlen($str);
 			if ($len > ($limit + 3)) {	// 3 = mb_strlen('...')
 				$str = mb_substr($str, 0, $limit) . '...';
@@ -544,9 +555,10 @@ class Tracker_field_format extends Tracker_field
 
 	function get_tag()
 	{
-		return '<input type="text"' .
-			' name="' . htmlspecialchars($this->name)      . '"' .
-			' size="' . htmlspecialchars($this->values[0]) . '" />';
+		$s_name = htmlspecialchars($this->name);
+		$s_size = isset($this->options[0]) ? htmlspecialchars($this->options[0]) : '';
+
+		return '<input type="text" name="' . $s_name . '" size="' . $s_size . '" />';
 	}
 
 	function format_value($str)
@@ -572,9 +584,10 @@ class Tracker_field_file extends Tracker_field_format
 
 	function get_tag()
 	{
-		return '<input type="file"' .
-			' name="' . htmlspecialchars($this->name)      . '"' .
-			' size="' . htmlspecialchars($this->values[0]) . '" />';
+		$s_name = htmlspecialchars($this->name);
+		$s_size = isset($this->options[0]) ? htmlspecialchars($this->options[0]) : '';
+
+		return '<input type="file" name="' . $s_name . '" size="' . $s_size . '" />';
 	}
 
 	function format_value()
@@ -611,7 +624,7 @@ class Tracker_field_radio extends Tracker_field_format
 			++$id;
 			$s_id = '_p_tracker_' . $s_name . '_' . $this->id . '_' . $id;
 			$s_option = htmlspecialchars($option[0]);
-			$checked  = trim($option[0]) == trim($this->default_value) ? ' checked="checked"' : '';
+			$checked  = trim($option[0]) === trim($this->default_value) ? ' checked="checked"' : '';
 
 			$retval .= '<input type="radio"' .
 				' name="'  . $s_name   . '"' .
@@ -654,9 +667,9 @@ class Tracker_field_select extends Tracker_field_radio
 		$retval = array();
 
 		$s_name = htmlspecialchars($this->name);
-		$s_size = (isset($this->values[0]) && is_numeric($this->values[0])) ?
-			' size="' . htmlspecialchars($this->values[0]) . '"' : '';
-		$s_multiple = (isset($this->values[1]) && strtolower($this->values[1]) == 'multiple') ?
+		$s_size = (isset($this->options[0]) && is_numeric($this->options[0])) ?
+			' size="' . htmlspecialchars($this->options[0]) . '"' : '';
+		$s_multiple = (isset($this->options[1]) && strtolower($this->options[1]) == 'multiple') ?
 			' multiple="multiple"' : '';
 		$retval[] = '<select name="' . $s_name . '[]"' . $s_size . $s_multiple . '>';
 
