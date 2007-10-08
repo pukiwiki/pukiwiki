@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.103 2007/10/06 06:30:18 henoheno Exp $
+// $Id: tracker.inc.php,v 1.104 2007/10/08 13:42:17 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -505,9 +505,13 @@ class Tracker_field_textarea extends Tracker_field
 
 	function format_cell($str)
 	{
-		$str = preg_replace('/[\r\n]+/', '', $str);
-		if (! empty($this->values[2]) && strlen($str) > ($this->values[2] + 3)) {
-			$str = mb_substr($str, 0, $this->values[2]) . '...';
+		// Cut too long ones
+		if (isset($this->values[2])) {
+			$limit = max(0, $this->values[2]);
+			$len = mb_strlen($str);
+			if ($len > ($limit + 3)) {	// 3 = mb_strlen('...')
+				$str = mb_substr($str, 0, $limit) . '...';
+			}
 		}
 		return $str;
 	}
@@ -1289,7 +1293,7 @@ class Tracker_list
  		if ($form->initFields('_real') === FALSE ||
  		    $form->initFields(plugin_tracker_field_pickup($template)) === FALSE ||
  		    $form->initFields(array_keys($this->orders)) === FALSE) {
-		    $this->error = $form->error;
+			$this->error = $form->error;
 			return FALSE;
 		}
 
