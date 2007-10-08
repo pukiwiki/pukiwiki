@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.104 2007/10/08 13:42:17 henoheno Exp $
+// $Id: tracker.inc.php,v 1.105 2007/10/08 13:44:38 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -506,6 +506,7 @@ class Tracker_field_textarea extends Tracker_field
 	function format_cell($str)
 	{
 		// Cut too long ones
+		// TODO: Why store all of them to the memory?
 		if (isset($this->values[2])) {
 			$limit = max(0, $this->values[2]);
 			$len = mb_strlen($str);
