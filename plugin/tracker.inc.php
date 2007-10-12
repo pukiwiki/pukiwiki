@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.108 2007/10/12 16:00:27 henoheno Exp $
+// $Id: tracker.inc.php,v 1.109 2007/10/12 16:09:15 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -876,11 +876,11 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 
 	$tracker_list = & new Tracker_list($base, $refer, $config);
 	if ($tracker_list->setSortOrder($order_commands) === FALSE) {
-		return '#tracker_list: ' . htmlspecialchars($list->error) . '<br />';
+		return '#tracker_list: ' . htmlspecialchars($tracker_list->error) . '<br />';
 	}
 	$result = $tracker_list->toString($list, $limit);
 	if ($result === FALSE) {
-		return '#tracker_list: ' . htmlspecialchars($list->error) . '<br />';
+		return '#tracker_list: ' . htmlspecialchars($tracker_list->error) . '<br />';
 	}
 	unset($tracker_list);
 
