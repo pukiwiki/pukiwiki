@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.109 2007/10/12 16:09:15 henoheno Exp $
+// $Id: tracker.inc.php,v 1.110 2007/10/12 16:31:26 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -1299,6 +1299,8 @@ class Tracker_list
 	function toString($list, $limit = 0)
 	{
 		$form   = & $this->form;
+
+		$this->_list = $list;	// For _replace_title() only
 		$list   = $form->config->page . '/' . $list;
 
 		$source = array();
@@ -1307,7 +1309,7 @@ class Tracker_list
 		// Loading template
 		$template = plugin_tracker_get_source($list, TRUE);
 		if ($template === FALSE || empty($template)) {
-			$this->error = 'Page not found or seems empty: ' . $template;
+			$this->error = 'Page not found or seems empty: ' . $list;
 			return FALSE;
 		}
 
@@ -1330,7 +1332,6 @@ class Tracker_list
 
 
 		// toString()
-		$this->_list = $list;	// For _replace_title() only
 		$count = count($this->rows);
 		$limit = intval($limit);
 		if ($limit != 0) $limit = max(1, $limit);
