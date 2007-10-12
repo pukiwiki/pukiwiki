@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.107 2007/10/08 14:44:56 henoheno Exp $
+// $Id: tracker.inc.php,v 1.108 2007/10/12 16:00:27 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -249,33 +249,8 @@ class Tracker_form
 		$this->config = & $config;
 	}
 
-	function addField($fieldname, $displayname, $type = 'text', $options = '20', $default = '')
-	{
-		if (isset($this->fields[$fieldname])) {
-			$this->error = "No such field: " . $fieldname;
-			return FALSE;
-		}
-
-		$class = 'Tracker_field_' . $type;
-		if (! class_exists($class)) {
-			$this->error = "No such type: " . $type;
-			return FALSE;
-		}
-
-		$this->fields[$fieldname] = & new $class(
-			$this,			// Reference
-			array(
-				$fieldname,
-				$displayname,
-				NULL,		// $type
-				$options,
-				$default
-			)
-		);
-
-		return TRUE;
-	}
-
+	// Init $this->raw_fields and $this->fields
+	// TODO: Using func_get_args() to shrink the code?
 	function initFields($requests = NULL)
 	{
 		if (! isset($this->raw_fields)) {
@@ -361,6 +336,35 @@ class Tracker_form
 		}
 
 		$this->initFields($fields);
+	}
+
+	// Called from InitFields()
+	function addField($fieldname, $displayname, $type = 'text', $options = '20', $default = '')
+	{
+		// Not Init
+		if (isset($this->fields[$fieldname])) {
+			$this->error = "No such field: " . $fieldname;
+			return FALSE;
+		}
+
+		$class = 'Tracker_field_' . $type;
+		if (! class_exists($class)) {
+			$this->error = "No such type: " . $type;
+			return FALSE;
+		}
+
+		$this->fields[$fieldname] = & new $class(
+			$this,			// Reference
+			array(
+				$fieldname,
+				$displayname,
+				NULL,		// $type
+				$options,
+				$default
+			)
+		);
+
+		return TRUE;
 	}
 }
 
@@ -870,15 +874,15 @@ function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_c
 		return '#tracker_list: List not found: ' . make_pagelink($config->page . '/' . $list) . '<br />';
 	}
 
-	$list = & new Tracker_list($base, $refer, $config, $list);
-	if ($list->setSortOrder($order_commands) === FALSE) {
+	$tracker_list = & new Tracker_list($base, $refer, $config);
+	if ($tracker_list->setSortOrder($order_commands) === FALSE) {
 		return '#tracker_list: ' . htmlspecialchars($list->error) . '<br />';
 	}
-	$result = $list->toString($limit);
+	$result = $tracker_list->toString($list, $limit);
 	if ($result === FALSE) {
 		return '#tracker_list: ' . htmlspecialchars($list->error) . '<br />';
 	}
-	unset($list);
+	unset($tracker_list);
 
 	return convert_html($result);
 }
@@ -888,29 +892,28 @@ class Tracker_list
 {
 	var $form;	// class Tracker_form
 
-	var $list;
-
-	var $pattern;
-	var $pattern_fields;
-
 	var $rows   = array();
 	var $orders = array();
 	var $error  = '';	// Error message
+
+	// _generate_regex()
+	var $pattern;
+	var $pattern_fields;
 
 	// add()
 	var $_added = array();
 
 	// toString()
+	var $_list;
 	var $_row;
 	var $_the_first_character_of_the_line;
 
-	function Tracker_list($base, $refer, & $config, $list)
+	function Tracker_list($base, $refer, & $config)
 	{
-		$form = & new Tracker_form($base, $refer, $config);
-		$this->form = $form;
-		$this->list = $list;
+		$this->form = & new Tracker_form($base, $refer, $config);
 	}
 
+	// Adding $this->rows
 	// Add multiple pages at a time
 	function loadRows()
 	{
@@ -918,7 +921,6 @@ class Tracker_list
 		$len   = strlen($base);
 		$regex = '#^' . preg_quote($base, '#') . '#';
 
-		// Adding $this->rows
 		foreach (preg_grep($regex, array_values(get_existpages())) as $pagename) {
 			if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, substr($pagename, $len))) {
 				continue;
@@ -1195,8 +1197,8 @@ class Tracker_list
 		$fields      = $form->fields;
 		$config_name = $form->config->config_name;
 
-		$list        = $this->list;
 		$orders      = $this->orders;
+		$list        = $this->_list;
 
 		$fieldname = isset($matches[1]) ? $matches[1] : '';
 		if (! isset($fields[$fieldname])) {
@@ -1294,10 +1296,11 @@ class Tracker_list
 	}
 
 	// Output a part of Wiki text
-	function toString($limit = 0)
+	function toString($list, $limit = 0)
 	{
 		$form   = & $this->form;
-		$list   = $form->config->page . '/' . $this->list;
+		$list   = $form->config->page . '/' . $list;
+
 		$source = array();
 		$regex  = '/\[([^\[\]]+)\]/';
 
@@ -1308,22 +1311,26 @@ class Tracker_list
 			return FALSE;
 		}
 
-		// Creating $form->fields just you need
- 		if ($form->initFields('_real') === FALSE ||
+		// Try to create $form->fields just you need
+		if ($form->initFields('_real') === FALSE ||
  		    $form->initFields(plugin_tracker_field_pickup($template)) === FALSE ||
  		    $form->initFields(array_keys($this->orders)) === FALSE) {
 			$this->error = $form->error;
 			return FALSE;
 		}
 
+		// TODO: Check isset($this->rows) or something
 		// Generate regex for $form->fields
 		if ($this->_generate_regex() === FALSE) return FALSE;
 
+		// TODO: Check isset($this->rows) or something
 		// Load and sort $this->rows
  		if ($this->loadRows() === FALSE || $this->sortRows() === FALSE) return FALSE;
 		$rows = $this->rows;
 
+
 		// toString()
+		$this->_list = $list;	// For _replace_title() only
 		$count = count($this->rows);
 		$limit = intval($limit);
 		if ($limit != 0) $limit = max(1, $limit);
