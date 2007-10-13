@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.110 2007/10/12 16:31:26 henoheno Exp $
+// $Id: tracker.inc.php,v 1.111 2007/10/13 09:28:32 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -250,9 +250,12 @@ class Tracker_form
 	}
 
 	// Init $this->raw_fields and $this->fields
-	// TODO: Using func_get_args() to shrink the code?
 	function initFields($requests = NULL)
 	{
+		if (func_num_args() == 0 && $requests === NULL) {
+			return $this->initFields(NULL);
+		}
+
 		if (! isset($this->raw_fields)) {
 			$raw_fields = array();
 			// From config
@@ -289,22 +292,17 @@ class Tracker_form
 			$raw_fields = & $this->raw_fields;
 		}
 
-		if ($requests === NULL) {
-			// (The rest of) All, defined order
-			foreach ($raw_fields as $fieldname => $field) {
-				$err = $this->addField(
-					$fieldname,
-					$field['display'],
-					$field['type'],
-					$field['options'],
-					$field['default']
-				);
-				if ($err === FALSE) return FALSE;
+
+		foreach(func_get_args() as $requests) {
+			if (empty($raw_fields)) return TRUE;
+
+			if (! is_array($requests)) {
+				if ($requests === NULL) {
+					$requests = array_keys($raw_fields);	// (The rest of) All, defined order
+				} else {
+					$requests = array($requests);	// Just one
+				}
 			}
-			$raw_fields = array();
-		} else {
-			// Part of, specific order
-			if (! is_array($requests)) $requests = array($requests);
 			foreach ($requests as $fieldname) {
 				if (! isset($raw_fields[$fieldname])) continue;
 				$field = $raw_fields[$fieldname];
@@ -330,7 +328,7 @@ class Tracker_form
 
 		$fields = array();
 		foreach ($this->raw_fields as $fieldname => $field) {
-			if ($field['type'] == 'hidden') {
+			if (isset($field['type']) && $field['type'] == 'hidden') {
 				$fields[] = $fieldname;
 			}
 		}
@@ -1314,9 +1312,8 @@ class Tracker_list
 		}
 
 		// Try to create $form->fields just you need
-		if ($form->initFields('_real') === FALSE ||
- 		    $form->initFields(plugin_tracker_field_pickup($template)) === FALSE ||
- 		    $form->initFields(array_keys($this->orders)) === FALSE) {
+		if ($form->initFields('_real', plugin_tracker_field_pickup($template),
+		    array_keys($this->orders)) === FALSE) {
 			$this->error = $form->error;
 			return FALSE;
 		}
