@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.111 2007/10/13 09:28:32 henoheno Exp $
+// $Id: tracker.inc.php,v 1.112 2007/10/13 14:10:19 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -336,14 +336,10 @@ class Tracker_form
 		$this->initFields($fields);
 	}
 
-	// Called from InitFields()
+	// Add $this->fields
 	function addField($fieldname, $displayname, $type = 'text', $options = '20', $default = '')
 	{
-		// Not Init
-		if (isset($this->fields[$fieldname])) {
-			$this->error = "No such field: " . $fieldname;
-			return FALSE;
-		}
+		if (isset($this->fields[$fieldname])) return TRUE;	// Already
 
 		$class = 'Tracker_field_' . $type;
 		if (! class_exists($class)) {
@@ -936,7 +932,7 @@ class Tracker_list
 	// addRow(): Generate regex to load a page
 	function _generate_regex()
 	{
-		$template_page = $this->form->config->page . '/page';
+		$template_page = $this->form->config->page . '/' . 'page';
 		$fields        = $this->form->fields;
 		
 		$pattern        = array();
@@ -968,6 +964,7 @@ class Tracker_list
 				$pattern[] = '.*?';	// Just ignore pseudo fields etc
 			}
 		}
+
 		$this->pattern        = '/' . implode('', $pattern) . '/sS';
 		$this->pattern_fields = $pattern_fields;
 
