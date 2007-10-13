@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.112 2007/10/13 14:10:19 henoheno Exp $
+// $Id: tracker.inc.php,v 1.113 2007/10/13 14:47:14 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -228,8 +228,6 @@ function plugin_tracker_action()
 // Data set of XHTML form or something
 class Tracker_form
 {
-	var $id;	// Unique id per instance
-
 	var $base;
 	var $refer;
 	var $config;
@@ -241,9 +239,6 @@ class Tracker_form
 
 	function Tracker_form($base, $refer, & $config)
 	{
-		static $id = 0;
-		$this->id = ++$id;
-
 		$this->base   = $base;
 		$this->refer  = $refer;
 		$this->config = & $config;
@@ -291,7 +286,6 @@ class Tracker_form
 		} else {
 			$raw_fields = & $this->raw_fields;
 		}
-
 
 		foreach(func_get_args() as $requests) {
 			if (empty($raw_fields)) return TRUE;
@@ -697,22 +691,23 @@ class Tracker_field_checkbox extends Tracker_field_radio
 
 	function get_tag()
 	{
-		$retval = '';
+		$config   = $this->form->config;
 
-		$id = 0;
 		$s_name   = htmlspecialchars($this->name);
+		$s_fid    = htmlspecialchars($this->id);
 		$defaults = array_flip(preg_split('/\s*,\s*/', $this->default_value, -1, PREG_SPLIT_NO_EMPTY));
-		foreach ($this->form->config->get($this->name) as $option) {
+
+		$id     = 0;
+		$retval = '';
+		foreach ($config->get($this->name) as $option) {
 			++$id;
-			$s_id     = '_p_tracker_' . $s_name . '_' . $this->id . '_' . $id;
+			$s_id     = '_p_tracker_' . $s_name . '_' . $s_fid . '_' . $id;
 			$s_option = htmlspecialchars($option[0]);
 			$checked  = isset($defaults[trim($option[0])]) ? ' checked="checked"' : '';
 
 			$retval .= '<input type="checkbox"' .
-				' name="' . $s_name . '[]"' .
-				' id="' . $s_id . '"' .
-				' value="' . $s_option . '"' .
-				$checked . ' />' .
+				' name="' . $s_name . '[]" id="' . $s_id . '"' .
+				' value="' . $s_option . '"' . $checked . ' />' .
 				'<label for="' . $s_id . '">' . $s_option . '</label>' . "\n";
 		}
 
@@ -726,9 +721,12 @@ class Tracker_field_hidden extends Tracker_field_radio
 
 	function get_tag()
 	{
+		$s_name    = htmlspecialchars($this->name);
+		$s_default = htmlspecialchars($this->default_value);
+
 		return '<input type="hidden"' .
-			' name="'  . htmlspecialchars($this->name)          . '"' .
-			' value="' . htmlspecialchars($this->default_value) . '" />' . "\n";
+			' name="'  . $s_name    . '"' .
+			' value="' . $s_default . '" />' . "\n";
 	}
 }
 
@@ -907,31 +905,11 @@ class Tracker_list
 		$this->form = & new Tracker_form($base, $refer, $config);
 	}
 
-	// Adding $this->rows
-	// Add multiple pages at a time
-	function loadRows()
-	{
-		$base  = $this->form->base . '/';
-		$len   = strlen($base);
-		$regex = '#^' . preg_quote($base, '#') . '#';
-
-		foreach (preg_grep($regex, array_values(get_existpages())) as $pagename) {
-			if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, substr($pagename, $len))) {
-				continue;
-			}
-			if ($this->addRow($pagename) === FALSE) return FALSE;
-		}
-		if (empty($this->rows)) {
-			$this->error = 'Pages not found under: ' . $base;
-			return FALSE;
-		}
-
-		return TRUE;
-	}
-
-	// addRow(): Generate regex to load a page
+	// Generate regex to load a page
 	function _generate_regex()
 	{
+		if (isset($this->pattern) && isset($this->pattern_fields)) return TRUE;
+
 		$template_page = $this->form->config->page . '/' . 'page';
 		$fields        = $this->form->fields;
 		
@@ -971,9 +949,34 @@ class Tracker_list
 		return TRUE;
 	}
 
+	// Adding $this->rows
+	// Add multiple pages at a time
+	function loadRows()
+	{
+		$base  = $this->form->base . '/';
+		$len   = strlen($base);
+		$regex = '#^' . preg_quote($base, '#') . '#';
+
+		foreach (preg_grep($regex, array_values(get_existpages())) as $pagename) {
+			if (preg_match(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN, substr($pagename, $len))) {
+				continue;
+			}
+			if ($this->addRow($pagename) === FALSE) return FALSE;
+		}
+		if (empty($this->rows)) {
+			$this->error = 'Pages not found under: ' . $base;
+			return FALSE;
+		}
+
+		return TRUE;
+	}
+
 	// Add one pages
 	function addRow($pagename, $rescan = FALSE)
 	{
+		// Generate/Regenerate regex if needed
+		if ($this->_generate_regex() === FALSE) return FALSE;
+
 		if (isset($this->_added[$pagename])) return TRUE;
 		$this->_added[$pagename] = TRUE;
 
@@ -1314,10 +1317,6 @@ class Tracker_list
 			$this->error = $form->error;
 			return FALSE;
 		}
-
-		// TODO: Check isset($this->rows) or something
-		// Generate regex for $form->fields
-		if ($this->_generate_regex() === FALSE) return FALSE;
 
 		// TODO: Check isset($this->rows) or something
 		// Load and sort $this->rows
