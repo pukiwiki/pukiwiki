@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.88 2007/10/06 13:20:48 henoheno Exp $
+// $Id: file.php,v 1.89 2007/10/14 15:49:57 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -93,6 +93,7 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	$oldpostdata = is_page($page) ? get_source($page, TRUE, TRUE) : '';
 	$diffdata    = do_diff($oldpostdata, $postdata);
 	file_write(DIFF_DIR, $page, $diffdata);
+	unset($oldpostdata, $diffdata);
 
 	// Create backup
 	make_backup($page, $postdata == ''); // Is $postdata null?
