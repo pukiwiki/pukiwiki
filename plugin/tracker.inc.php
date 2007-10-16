@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.113 2007/10/13 14:47:14 henoheno Exp $
+// $Id: tracker.inc.php,v 1.114 2007/10/16 13:09:29 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -48,9 +48,9 @@ function plugin_tracker_convert()
 
 	if (PKWK_READONLY) return ''; // Show nothing
 
-	$base = $refer = isset($vars['page']) ? $vars['page'] : '';
-	$config_name = PLUGIN_TRACKER_DEFAULT_CONFIG;
-	$form        = PLUGIN_TRACKER_DEFAULT_FORM;
+	$base   = $refer = isset($vars['page']) ? $vars['page'] : '';
+	$config = PLUGIN_TRACKER_DEFAULT_CONFIG;
+	$form   = PLUGIN_TRACKER_DEFAULT_FORM;
 
 	$args = func_get_args();
 	$argc = count($args);
@@ -66,28 +66,31 @@ function plugin_tracker_convert()
 		// Config/form
 		if ($args[0] != '') {
 			$arg = explode('/', trim($args[0]), 2);
-			if ($arg[0] != '' ) $config_name = trim($arg[0]);
-			if (isset($arg[1])) $form        = trim($arg[1]);
+			if ($arg[0] != '' ) $config = trim($arg[0]);
+			if (isset($arg[1])) $form   = trim($arg[1]);
 		}
 	}
 	unset($args, $argc, $arg);
 
-	$config = new Config('plugin/tracker/' . $config_name);
-	if (! $config->read()) {
-		return '#tracker: Config \'' . htmlspecialchars($config_name) . '\' not found<br />';
+	$obj_config = new Config('plugin/tracker/' . $config);
+	if (! $obj_config->read()) {
+		return '#tracker: Config \'' . htmlspecialchars($config) . '\' not found<br />';
 	}
-	$config->config_name = $config_name;
+	$obj_config->_local_name = $config;
 
-	$form     = $config->page . '/' . $form;
+	$form     = $obj_config->page . '/' . $form;
 	$template = plugin_tracker_get_source($form, TRUE);
 	if ($template === FALSE || empty($template)) {
 		return '#tracker: Form \'' . make_pagelink($form) . '\' not found or seems empty<br />';
 	}
 
-	$_form = & new Tracker_form($base, $refer, $config);
-	$_form->initFields(plugin_tracker_field_pickup($template));
-	$_form->initHiddenFields();
-	$fields = $_form->fields;
+	$tracker_form = & new Tracker_form($base, $refer, $obj_config);
+	if ($tracker_form->initFields(plugin_tracker_field_pickup($template)) === FALSE ||
+		$tracker_form->initHiddenFields() === FALSE) {
+		return '#tracker: ' . htmlspecialchars($tracker_form->error);
+	}
+	$fields = $tracker_form->fields;
+	unset($tracker_form);
 
 	$from = $to = $hidden = array();
 	foreach (array_keys($fields) as $fieldname) {
@@ -147,12 +150,15 @@ function plugin_tracker_action()
 	}
 
 	// Loading configuration
-	$config_name = isset($post['_config']) ? $post['_config'] : '';
-	$config = new Config('plugin/tracker/' . $config_name);
-	if (! $config->read()) {
-		return '<p>config file \'' . htmlspecialchars($config_name) . '\' not found.</p>';
+	$config = isset($post['_config']) ? $post['_config'] : '';
+	$obj_config = new Config('plugin/tracker/' . $config);
+	if (! $obj_config->read()) {
+		return array(
+			'msg'  => 'Cannot write',
+			'body' => 'Config file \'' . htmlspecialchars($config) . '\' not found'
+		);
 	}
-	$config->config_name = $config_name;
+	$obj_config->_local_name = $config;
 
 	// Default
 	$_post = array_merge($post, $_FILES);
@@ -168,7 +174,7 @@ function plugin_tracker_action()
 	$from = $to = array();
 
 	// Load $template
-	$template_page = $config->page . '/page';
+	$template_page = $obj_config->page . '/page';
 	$template = plugin_tracker_get_source($template_page);
 	if ($template === FALSE || empty($template)) {
 		return array(
@@ -177,9 +183,16 @@ function plugin_tracker_action()
 		);
 	}
 
-	$form = & new Tracker_form($base, $refer, $config);
-	$form->initFields(plugin_tracker_field_pickup(implode('', $template)));
-	$fields = & $form->fields;	// unset()
+	$tracker_form = & new Tracker_form($base, $refer, $obj_config);
+	if ($tracker_form->initFields(plugin_tracker_field_pickup(implode('', $template))) === FALSE) {
+		return array(
+			'msg'  => 'Cannot write',
+			'body' => htmlspecialchars($tracker_form->error)
+		);
+	}
+	$fields = $tracker_form->fields;
+	unset($tracker_form);
+
 	foreach (array_keys($fields) as $field) {
 		$from[] = '[' . $field . ']';
 		$to[]   = isset($_post[$field]) ? $fields[$field]->format_value($_post[$field]) : '';
@@ -475,7 +488,8 @@ class Tracker_field_real extends Tracker_field_text
 
 	function format_cell($value)
 	{
-		// basename(): Rough but work with this(PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN prohibits '/') situation
+		// basename(): Rough but work with this
+		// (PLUGIN_TRACKER_LIST_EXCLUDE_PATTERN prohibits '/') situation
 		return basename($value);
 	}
 }
@@ -538,6 +552,7 @@ class Tracker_field_format extends Tracker_field
 	function Tracker_field_format(& $tracker_form, $field)
 	{
 		parent::Tracker_field($tracker_form, $field);
+
 		foreach ($this->form->config->get($this->name) as $option) {
 			list($key, $style, $format) = array_pad(array_map('trim', $option), 3, '');
 			if ($style  != '') $this->styles[$key]  = $style;
@@ -590,7 +605,6 @@ class Tracker_field_file extends Tracker_field_format
 	function format_value()
 	{
 		if (isset($_FILES[$this->name])) {
-
 			require_once(PLUGIN_DIR . 'attach.inc.php');
 
 			$base = $this->form->base;
@@ -739,7 +753,7 @@ class Tracker_field_submit extends Tracker_field
 		$s_title  = htmlspecialchars($this->title);
 		$s_base   = htmlspecialchars($form->base);
 		$s_refer  = htmlspecialchars($form->refer);
-		$s_config = htmlspecialchars($form->config->config_name);
+		$s_config = htmlspecialchars($form->config->_local_name);
 
 		return <<<EOD
 <input type="submit" value="$s_title" />
@@ -783,11 +797,11 @@ function plugin_tracker_list_convert()
 {
 	global $vars;
 
-	$base = $refer = isset($vars['page']) ? $vars['page'] : '';
-	$config_name = PLUGIN_TRACKER_DEFAULT_CONFIG;
-	$list        = PLUGIN_TRACKER_DEFAULT_LIST;
-	$limit       = PLUGIN_TRACKER_DEFAULT_LIMIT;
-	$order       = PLUGIN_TRACKER_DEFAULT_ORDER;
+	$base   = $refer = isset($vars['page']) ? $vars['page'] : '';
+	$config = '';
+	$list   = '';
+	$limit  = NULL;
+	$order  = '';
 
 	$args = func_get_args();
 	$argc = count($args);
@@ -805,13 +819,13 @@ function plugin_tracker_list_convert()
 		// Config/list
 		if ($args[0] != '') {
 			$arg = explode('/', $args[0], 2);
-			if ($arg[0] != '' ) $config_name = $arg[0];
-			if (isset($arg[1])) $list        = $arg[1];
+			if ($arg[0] != '' ) $config = $arg[0];
+			if (isset($arg[1])) $list   = $arg[1];
 		}
 	}
 	unset($args, $argc, $arg);
 
-	return plugin_tracker_list_render($base, $refer, $config_name, $list, $order, $limit);
+	return plugin_tracker_list_render($base, $refer, $config, $order, $list, $limit);
 }
 
 function plugin_tracker_list_action()
@@ -828,48 +842,44 @@ function plugin_tracker_list_action()
 	}
 
 	$config = isset($get['config']) ? $get['config'] : '';
-	$list   = isset($get['list'])   ? $get['list']   : 'list';
-	$order  = isset($get['order'])  ? $get['order']  : PLUGIN_TRACKER_DEFAULT_ORDER;
-	$limit  = isset($get['limit'])  ? $get['limit']  : 0;
+	$list   = isset($get['list'])   ? $get['list']   : '';
+	$order  = isset($get['order'])  ? $get['order']  : '';
+	$limit  = isset($get['limit'])  ? $get['limit']  : NULL;
 
 	$s_refer = make_pagelink($refer);
 	return array(
 		'msg' => plugin_tracker_message('msg_list'),
 		'body'=> str_replace('$1', $s_refer, plugin_tracker_message('msg_back')) .
-			plugin_tracker_list_render($base, $refer, $config, $list, $order, $limit)
+			plugin_tracker_list_render($base, $refer, $config, $order, $list, $limit)
 	);
 }
 
-function plugin_tracker_list_render($base, $refer, $config_name, $list, $order_commands = '', $limit = 0)
+function plugin_tracker_list_render($base, $refer, $config = '', $order_commands = '', $list = '', $limit = NULL)
 {
-	$base  = trim($base);
+	$base   = trim($base);
+	$refer  = trim($refer);
+	$config = trim($config);
+	$list   = trim($list);
+	if ($config == ''        ) $config         = PLUGIN_TRACKER_DEFAULT_CONFIG;
+	if ($list   == ''        ) $list           = PLUGIN_TRACKER_DEFAULT_LIST;
+	if ($order_commands == '') $order_commands = PLUGIN_TRACKER_DEFAULT_ORDER;
+	if ($limit  == NULL      ) $limit          = PLUGIN_TRACKER_DEFAULT_LIMIT;
+
 	if ($base == '') return '#tracker_list: Base not specified' . '<br />';
+	if (! is_page($refer)) return '#tracker_list: Refer page not found: ' . htmlspecialchars($refer) . '<br />';
 
-	$refer = trim($refer);
-	if (! is_page($refer)) {
-		return '#tracker_list: Refer page not found: ' . htmlspecialchars($refer) . '<br />';
-	}
-
-	$config_name = trim($config_name);
-	if ($config_name == '') $config_name = PLUGIN_TRACKER_DEFAULT_CONFIG;
-
-	$list  = trim($list);
 	if (! is_numeric($limit)) return PLUGIN_TRACKER_LIST_USAGE . '<br />';
 	$limit = intval($limit);
 
-	$config = new Config('plugin/tracker/' . $config_name);
-	if (! $config->read()) {
-		return '#tracker_list: Config not found: ' . htmlspecialchars($config_name) . '<br />';
-	}
-	$config->config_name = $config_name;
-	if (! is_page($config->page . '/' . $list)) {
-		return '#tracker_list: List not found: ' . make_pagelink($config->page . '/' . $list) . '<br />';
-	}
+	$obj_config = new Config('plugin/tracker/' . $config);
+	if (! $obj_config->read()) return '#tracker_list: Config not found: ' . htmlspecialchars($config) . '<br />';
+	$obj_config->_local_name = $config;
 
-	$tracker_list = & new Tracker_list($base, $refer, $config);
+	$tracker_list = & new Tracker_list($base, $refer, $obj_config);
 	if ($tracker_list->setSortOrder($order_commands) === FALSE) {
 		return '#tracker_list: ' . htmlspecialchars($tracker_list->error) . '<br />';
 	}
+
 	$result = $tracker_list->toString($list, $limit);
 	if ($result === FALSE) {
 		return '#tracker_list: ' . htmlspecialchars($tracker_list->error) . '<br />';
@@ -885,7 +895,7 @@ class Tracker_list
 	var $form;	// class Tracker_form
 
 	var $rows   = array();
-	var $orders = array();
+	var $orders;
 	var $error  = '';	// Error message
 
 	// _generate_regex()
@@ -905,7 +915,7 @@ class Tracker_list
 		$this->form = & new Tracker_form($base, $refer, $config);
 	}
 
-	// Generate regex to load a page
+	// Generate/Regenerate regex to load one page
 	function _generate_regex()
 	{
 		if (isset($this->pattern) && isset($this->pattern_fields)) return TRUE;
@@ -1059,11 +1069,12 @@ class Tracker_list
 	{
 		$orders = $this->_order_commands2orders($order_commands);
 		if ($orders === FALSE) {
-			$this->orders = array();
+			unset($this->orders);
 			return FALSE;
+		} else {
+			$this->orders = $orders;
+			return TRUE;
 		}
-		$this->orders = $orders;
-		return TRUE;
 	}
 
 	// sortRows(): Internal sort type => PHP sort define
@@ -1095,6 +1106,11 @@ class Tracker_list
 	// Sort $this->rows by $this->orders
 	function sortRows()
 	{
+		if (! isset($this->orders)) {
+			$this->error = "Sort order seems not set";
+			return FALSE;
+		}
+
 		$fields = $this->form->fields;
 		$orders = $this->orders;
 		$types  = array();
@@ -1189,14 +1205,14 @@ class Tracker_list
 	// toString(): Called within preg_replace_callback()
 	function _replace_title($matches = array())
 	{
-		$form        = $this->form;
-		$base        = $form->base;
-		$refer       = $form->refer;
-		$fields      = $form->fields;
-		$config_name = $form->config->config_name;
+		$form   = $this->form;
+		$base   = $form->base;
+		$refer  = $form->refer;
+		$fields = $form->fields;
+		$config = $form->config->_local_name;
 
-		$orders      = $this->orders;
-		$list        = $this->_list;
+		$orders = $this->orders;
+		$list   = $this->_list;
 
 		$fieldname = isset($matches[1]) ? $matches[1] : '';
 		if (! isset($fields[$fieldname])) {
@@ -1239,8 +1255,8 @@ class Tracker_list
 		$script = get_script_uri();
 		$r_base   = ($refer != $base) ?
 			'&base='  . rawurlencode($base) : '';
-		$r_config = ($config_name != PLUGIN_TRACKER_DEFAULT_CONFIG) ?
-			'&config=' . rawurlencode($config_name) : '';
+		$r_config = ($config != PLUGIN_TRACKER_DEFAULT_CONFIG) ?
+			'&config=' . rawurlencode($config) : '';
 		$r_list   = ($list != PLUGIN_TRACKER_DEFAULT_LIST) ?
 			'&list=' . rawurlencode($list) : '';
 		$r_order  = ! empty($_orders) ?
@@ -1294,7 +1310,7 @@ class Tracker_list
 	}
 
 	// Output a part of Wiki text
-	function toString($list, $limit = 0)
+	function toString($list = PLUGIN_TRACKER_DEFAULT_LIST, $limit = 0)
 	{
 		$form   = & $this->form;
 
@@ -1307,7 +1323,7 @@ class Tracker_list
 		// Loading template
 		$template = plugin_tracker_get_source($list, TRUE);
 		if ($template === FALSE || empty($template)) {
-			$this->error = 'Page not found or seems empty: ' . $list;
+			$this->error = 'List not found: ' . $list;
 			return FALSE;
 		}
 
@@ -1318,11 +1334,9 @@ class Tracker_list
 			return FALSE;
 		}
 
-		// TODO: Check isset($this->rows) or something
 		// Load and sort $this->rows
  		if ($this->loadRows() === FALSE || $this->sortRows() === FALSE) return FALSE;
 		$rows = $this->rows;
-
 
 		// toString()
 		$count = count($this->rows);
