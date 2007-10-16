@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.114 2007/10/16 13:09:29 henoheno Exp $
+// $Id: tracker.inc.php,v 1.115 2007/10/16 13:26:22 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -76,7 +76,6 @@ function plugin_tracker_convert()
 	if (! $obj_config->read()) {
 		return '#tracker: Config \'' . htmlspecialchars($config) . '\' not found<br />';
 	}
-	$obj_config->_local_name = $config;
 
 	$form     = $obj_config->page . '/' . $form;
 	$template = plugin_tracker_get_source($form, TRUE);
@@ -84,6 +83,7 @@ function plugin_tracker_convert()
 		return '#tracker: Form \'' . make_pagelink($form) . '\' not found or seems empty<br />';
 	}
 
+	$obj_config->_local_name = $config;
 	$tracker_form = & new Tracker_form($base, $refer, $obj_config);
 	if ($tracker_form->initFields(plugin_tracker_field_pickup($template)) === FALSE ||
 		$tracker_form->initHiddenFields() === FALSE) {
@@ -158,7 +158,6 @@ function plugin_tracker_action()
 			'body' => 'Config file \'' . htmlspecialchars($config) . '\' not found'
 		);
 	}
-	$obj_config->_local_name = $config;
 
 	// Default
 	$_post = array_merge($post, $_FILES);
@@ -183,6 +182,7 @@ function plugin_tracker_action()
 		);
 	}
 
+	$obj_config->_local_name = $config;
 	$tracker_form = & new Tracker_form($base, $refer, $obj_config);
 	if ($tracker_form->initFields(plugin_tracker_field_pickup(implode('', $template))) === FALSE) {
 		return array(
@@ -854,18 +854,19 @@ function plugin_tracker_list_action()
 	);
 }
 
-function plugin_tracker_list_render($base, $refer, $config = '', $order_commands = '', $list = '', $limit = NULL)
+function plugin_tracker_list_render($base, $refer, $config = '', $order = '', $list = '', $limit = NULL)
 {
 	$base   = trim($base);
 	$refer  = trim($refer);
 	$config = trim($config);
+	$order  = trim($order);
 	$list   = trim($list);
-	if ($config == ''        ) $config         = PLUGIN_TRACKER_DEFAULT_CONFIG;
-	if ($list   == ''        ) $list           = PLUGIN_TRACKER_DEFAULT_LIST;
-	if ($order_commands == '') $order_commands = PLUGIN_TRACKER_DEFAULT_ORDER;
-	if ($limit  == NULL      ) $limit          = PLUGIN_TRACKER_DEFAULT_LIMIT;
+	if ($config == ''  ) $config = PLUGIN_TRACKER_DEFAULT_CONFIG;
+	if ($list   == ''  ) $list   = PLUGIN_TRACKER_DEFAULT_LIST;
+	if ($order  == ''  ) $order  = PLUGIN_TRACKER_DEFAULT_ORDER;
+	if ($limit  == NULL) $limit  = PLUGIN_TRACKER_DEFAULT_LIMIT;
 
-	if ($base == '') return '#tracker_list: Base not specified' . '<br />';
+	if ($base == '')       return '#tracker_list: Base not specified' . '<br />';
 	if (! is_page($refer)) return '#tracker_list: Refer page not found: ' . htmlspecialchars($refer) . '<br />';
 
 	if (! is_numeric($limit)) return PLUGIN_TRACKER_LIST_USAGE . '<br />';
@@ -873,10 +874,10 @@ function plugin_tracker_list_render($base, $refer, $config = '', $order_commands
 
 	$obj_config = new Config('plugin/tracker/' . $config);
 	if (! $obj_config->read()) return '#tracker_list: Config not found: ' . htmlspecialchars($config) . '<br />';
-	$obj_config->_local_name = $config;
 
+	$obj_config->_local_name = $config;
 	$tracker_list = & new Tracker_list($base, $refer, $obj_config);
-	if ($tracker_list->setSortOrder($order_commands) === FALSE) {
+	if ($tracker_list->setSortOrder($order) === FALSE) {
 		return '#tracker_list: ' . htmlspecialchars($tracker_list->error) . '<br />';
 	}
 
@@ -1253,14 +1254,10 @@ class Tracker_list
 		}
 
 		$script = get_script_uri();
-		$r_base   = ($refer != $base) ?
-			'&base='  . rawurlencode($base) : '';
-		$r_config = ($config != PLUGIN_TRACKER_DEFAULT_CONFIG) ?
-			'&config=' . rawurlencode($config) : '';
-		$r_list   = ($list != PLUGIN_TRACKER_DEFAULT_LIST) ?
-			'&list=' . rawurlencode($list) : '';
-		$r_order  = ! empty($_orders) ?
-			'&order=' . rawurlencode(join(';', $_orders)) : '';
+		$r_base   = ($refer  != $base) ? '&base='  . rawurlencode($base) : '';
+		$r_config = ($config != PLUGIN_TRACKER_DEFAULT_CONFIG) ? '&config=' . rawurlencode($config) : '';
+		$r_list   = ($list   != PLUGIN_TRACKER_DEFAULT_LIST  ) ? '&list='   . rawurlencode($list)   : '';
+		$r_order  = ! empty($_orders) ? '&order=' . rawurlencode(join(';', $_orders)) : '';
 
 		return
 			 '[[' .
