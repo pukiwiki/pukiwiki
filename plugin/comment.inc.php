@@ -60,7 +60,7 @@ function plugin_comment_action()
 					"\n";  // Insert one blank line above #commment, to avoid indentation
 			} else {
 				$postdata = rtrim($postdata) . "\n" .
-					$comment . "\n"; // Insert one blank line below #commment
+					$comment . "\n";
 			}
 		}
 		if ($above) $postdata .= $line;
