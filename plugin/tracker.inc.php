@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.116 2007/10/16 15:43:32 henoheno Exp $
+// $Id: tracker.inc.php,v 1.117 2007/10/17 15:16:19 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -81,7 +81,7 @@ function plugin_tracker_convert()
 	$form     = $tracker_form->config->page . '/' . $form;
 	$template = plugin_tracker_get_source($form, TRUE);
 	if ($template === FALSE || empty($template)) {
-		return '#tracker: Form \'' . make_pagelink($form) . '\' not found or seems empty<br />';
+		return '#tracker: Form \'' . make_pagelink($form) . '\' not found<br />';
 	}
 
 	if ($tracker_form->initFields(plugin_tracker_field_pickup($template)) === FALSE ||
@@ -158,6 +158,7 @@ function plugin_tracker_action()
 	$_post['_real'] = $real;
 	// $_post['_refer'] = $_post['refer'];
 
+	// TODO: Why here
 	// Creating an empty page, before attaching files
 	pkwk_touch_file(get_filename($page));
 
@@ -883,17 +884,9 @@ function plugin_tracker_list_render($base, $refer, $config = '', $order = '', $l
 	if ($base == '')       return '#tracker_list: Base not specified' . '<br />';
 	if (! is_page($refer)) return '#tracker_list: Refer page not found: ' . htmlspecialchars($refer) . '<br />';
 
-	if (! is_numeric($limit)) return PLUGIN_TRACKER_LIST_USAGE . '<br />';
-	$limit = intval($limit);
-
 	$tracker_list = & new Tracker_list($base, $refer);
-
-	// TODO: Not simple
-	if ($tracker_list->form->loadConfig($config) === FALSE) {
-		return '#tracker_list: ' . htmlspecialchars($tracker_list->form->error) . '<br />';
-	}
-
-	if ($tracker_list->setSortOrder($order) === FALSE) {
+	if ($tracker_list->loadConfig($config)  === FALSE ||
+		$tracker_list->setSortOrder($order) === FALSE) {
 		return '#tracker_list: ' . htmlspecialchars($tracker_list->error) . '<br />';
 	}
 
@@ -930,6 +923,17 @@ class Tracker_list
 	function Tracker_list($base, $refer)
 	{
 		$this->form = & new Tracker_form($base, $refer);
+	}
+
+	// Wrapper of $this->form->loadConfig()
+	function loadConfig($config = PLUGIN_TRACKER_DEFAULT_CONFIG)
+	{
+		if ($this->form->loadConfig($config) === FALSE) {
+			$this->error = $this->form->error;
+			return FALSE;
+		} else {
+			return TRUE;
+		}
 	}
 
 	// Generate/Regenerate regex to load one page
@@ -1325,10 +1329,15 @@ class Tracker_list
 	// Output a part of Wiki text
 	function toString($list = PLUGIN_TRACKER_DEFAULT_LIST, $limit = 0)
 	{
+		if (! is_numeric($limit)) {
+			$this->error = "Limit seems not numeric: " . $limit;
+			return FALSE;
+		}
+	
 		$form   = & $this->form;
 
 		$this->_list = $list;	// For _replace_title() only
-		$list   = $form->config->page . '/' . $list;
+		$list = $form->config->page . '/' . $list;
 
 		$source = array();
 		$regex  = '/\[([^\[\]]+)\]/';
