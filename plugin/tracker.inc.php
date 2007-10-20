@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.117 2007/10/17 15:16:19 henoheno Exp $
+// $Id: tracker.inc.php,v 1.118 2007/10/20 10:46:42 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -41,6 +41,21 @@ define('PLUGIN_TRACKER_SORT_ORDER_ASC',     4);
 define('PLUGIN_TRACKER_SORT_ORDER_DEFAULT', PLUGIN_TRACKER_SORT_ORDER_ASC);
 
 
+// ----
+// Basic interface and strategy
+
+// $refer  : Where the plugin had been set / Where to return back to
+//           Compat: If ($base == '') $base = $refer;
+// $base   : "$base/nnn" will be added by plugin_tracker_action(), or will be shown by Tracker_list
+// $config : ":config/plugin/tracker/$config" will be load to the Config
+// $form   : ":config/plugin/tracker/$config/$form" will be load as template for XHTML form by Tracker_form
+// $page   : ":config/plugin/tracker/$config/$page" will be load as template for a new page written by Tracker_form
+// $list   : ":config/plugin/tracker/$config/$list" will be load as template of Tracker_list
+// $order  : order command string for Tracker_list
+// $limit  : Show top N rows at a time
+
+// ----
+
 // Show a form
 function plugin_tracker_convert()
 {
@@ -48,22 +63,23 @@ function plugin_tracker_convert()
 
 	if (PKWK_READONLY) return ''; // Show nothing
 
-	$base   = $refer = isset($vars['page']) ? $vars['page'] : '';
-	$config = PLUGIN_TRACKER_DEFAULT_CONFIG;
-	$form   = PLUGIN_TRACKER_DEFAULT_FORM;
-
-	$args = func_get_args();
 	$argc = count($args);
+	$args = func_get_args();
 	if ($argc > 2) {
 		return PLUGIN_TRACKER_USAGE . '<br />';
 	}
+
+	$base   = $refer = isset($vars['page']) ? $vars['page'] : '';
+	$config = '';
+	$form   = '';
 	switch ($argc) {
 	case 2:
+		// Set $base
 		$arg = get_fullname($args[1], $base);
 		if (is_pagename($arg)) $base = $arg;
 		/*FALLTHROUGH*/
 	case 1:
-		// Config/form
+		// Set "$config/$form"
 		if ($args[0] != '') {
 			$arg = explode('/', trim($args[0]), 2);
 			if ($arg[0] != '' ) $config = trim($arg[0]);
@@ -73,19 +89,20 @@ function plugin_tracker_convert()
 	unset($args, $argc, $arg);
 
 	$tracker_form = & new Tracker_form($base, $refer);
-	if ($tracker_form->loadConfig($config) === FALSE) {
+	if (! $tracker_form->loadConfig($config)) {
 		return '#tracker: ' . htmlspecialchars($tracker_form->error);
 	}
 
 	// Load $template
-	$form     = $tracker_form->config->page . '/' . $form;
+	$form = ($form != '') ? $form : PLUGIN_TRACKER_DEFAULT_FORM;
+	$form = $tracker_form->config->page . '/' . $form;
 	$template = plugin_tracker_get_source($form, TRUE);
 	if ($template === FALSE || empty($template)) {
 		return '#tracker: Form \'' . make_pagelink($form) . '\' not found<br />';
 	}
 
-	if ($tracker_form->initFields(plugin_tracker_field_pickup($template)) === FALSE ||
-		$tracker_form->initHiddenFields() === FALSE) {
+	if (! $tracker_form->initFields(plugin_tracker_field_pickup($template)) ||
+		! $tracker_form->initHiddenFields()) {
 		return '#tracker: ' . htmlspecialchars($tracker_form->error);
 	}
 	$fields = $tracker_form->fields;
@@ -125,6 +142,7 @@ function plugin_tracker_action()
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
 	$base  = isset($post['_base'])  ? $post['_base']  : '';
+
 	$refer = isset($post['_refer']) ? $post['_refer'] : $base;
 	if (! is_pagename($refer)) {
 		return array(
@@ -165,7 +183,7 @@ function plugin_tracker_action()
 	$from = $to = array();
 
 	$tracker_form = & new Tracker_form($base, $refer);
-	if ($tracker_form->loadConfig($config) === FALSE) {
+	if (! $tracker_form->loadConfig($config)) {
 		return array(
 			'msg'  => 'Cannot write',
 			'body' => htmlspecialchars($tracker_form->error)
@@ -182,7 +200,7 @@ function plugin_tracker_action()
 		);
 	}
 
-	if ($tracker_form->initFields(plugin_tracker_field_pickup(implode('', $template))) === FALSE) {
+	if (! $tracker_form->initFields(plugin_tracker_field_pickup(implode('', $template)))) {
 		return array(
 			'msg'  => 'Cannot write',
 			'body' => htmlspecialchars($tracker_form->error)
@@ -336,7 +354,7 @@ class Tracker_form
 					$field['default']
 				);
 				unset($raw_fields[$fieldname]);
-				if ($err === FALSE) return FALSE;
+				if (! $err) return FALSE;
 			}
 		}
 
@@ -812,11 +830,12 @@ function plugin_tracker_list_convert()
 {
 	global $vars;
 
-	$base   = $refer = isset($vars['page']) ? $vars['page'] : '';
+	$base   = isset($vars['page']) ? $vars['page'] : '';
+	$refer  = $base;
 	$config = '';
+	$order  = '';
 	$list   = '';
 	$limit  = NULL;
-	$order  = '';
 
 	$args = func_get_args();
 	$argc = count($args);
@@ -827,11 +846,12 @@ function plugin_tracker_list_convert()
 	case 4: $limit = $args[3];	/*FALLTHROUGH*/
 	case 3: $order = $args[2];	/*FALLTHROUGH*/
 	case 2:
+		// Set $base
 		$arg = get_fullname($args[1], $base);
 		if (is_pagename($arg)) $base = $arg;
 		/*FALLTHROUGH*/
 	case 1:
-		// Config/list
+		// Set "$config/$list"
 		if ($args[0] != '') {
 			$arg = explode('/', $args[0], 2);
 			if ($arg[0] != '' ) $config = $arg[0];
@@ -845,26 +865,23 @@ function plugin_tracker_list_convert()
 
 function plugin_tracker_list_action()
 {
-	global $get, $vars;
+	global $get;
 
-	$base = isset($get['base']) ? $get['base'] : '';	// Base directory to load
-
-	if (isset($get['refer'])) {
-		$refer = $get['refer'];	// Where to #tracker_list
-		if ($base == '') $base = $refer;
-	} else {
-		$refer = $base;
-	}
-
+	$base   = isset($get['base'])   ? $get['base']   : '';
+	$refer  = isset($get['refer'])  ? $get['refer']  : $base;
 	$config = isset($get['config']) ? $get['config'] : '';
-	$list   = isset($get['list'])   ? $get['list']   : '';
 	$order  = isset($get['order'])  ? $get['order']  : '';
+	$list   = isset($get['list'])   ? $get['list']   : '';
 	$limit  = isset($get['limit'])  ? $get['limit']  : NULL;
 
+	if ($base == '') $base = $refer;	// Compat
+
 	$s_refer = make_pagelink($refer);
+
 	return array(
 		'msg' => plugin_tracker_message('msg_list'),
-		'body'=> str_replace('$1', $s_refer, plugin_tracker_message('msg_back')) .
+		'body'=>
+			str_replace('$1', $s_refer, plugin_tracker_message('msg_back')) .
 			plugin_tracker_list_render($base, $refer, $config, $order, $list, $limit)
 	);
 }
@@ -877,16 +894,16 @@ function plugin_tracker_list_render($base, $refer, $config = '', $order = '', $l
 	$order  = trim($order);
 	$list   = trim($list);
 	if ($config == ''  ) $config = PLUGIN_TRACKER_DEFAULT_CONFIG;
-	if ($list   == ''  ) $list   = PLUGIN_TRACKER_DEFAULT_LIST;
 	if ($order  == ''  ) $order  = PLUGIN_TRACKER_DEFAULT_ORDER;
+	if ($list   == ''  ) $list   = PLUGIN_TRACKER_DEFAULT_LIST;
 	if ($limit  == NULL) $limit  = PLUGIN_TRACKER_DEFAULT_LIMIT;
 
 	if ($base == '')       return '#tracker_list: Base not specified' . '<br />';
 	if (! is_page($refer)) return '#tracker_list: Refer page not found: ' . htmlspecialchars($refer) . '<br />';
 
 	$tracker_list = & new Tracker_list($base, $refer);
-	if ($tracker_list->loadConfig($config)  === FALSE ||
-		$tracker_list->setSortOrder($order) === FALSE) {
+	if (! $tracker_list->loadConfig($config)  ||
+		! $tracker_list->setSortOrder($order)) {
 		return '#tracker_list: ' . htmlspecialchars($tracker_list->error) . '<br />';
 	}
 
