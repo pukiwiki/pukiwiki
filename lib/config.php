@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: config.php,v 1.6 2005/04/29 11:24:20 henoheno Exp $
+// $Id: config.php,v 1.7 2007/10/20 04:46:55 henoheno Exp $
 // Copyright (C) 2003-2005 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -146,7 +146,7 @@ class ConfigTable
 		}
 	}
 
-	// Addi an  explanation
+	// Add an  explanation
 	function add_line($line)
 	{
 		$this->after[] = $line;
