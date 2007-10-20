@@ -1,5 +1,5 @@
 <?php
-// $Id: spam_pickup.php,v 1.4 2007/09/15 16:16:12 henoheno Exp $
+// $Id: spam_pickup.php,v 1.5 2007/10/20 04:44:08 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -693,6 +693,9 @@ function spam_uri_pickup_preprocess($string = '', $method = array())
 	$string = preg_replace(
 		'#h?ttp://' .
 		'(' .
+			'a9\.com/' . '|' .
+			'aboutus\.org/' . '|' .
+			'alexa\.com/data/details\?url='  . '|' .
 			'ime\.(?:nu|st)/' . '|' .	// 2ch.net
 			'link\.toolbot\.com/' . '|' .
 			'urlx\.org/' . '|' .
@@ -729,7 +732,8 @@ function spam_uri_pickup_preprocess($string = '', $method = array())
 				// ...
 			')' .
 			'/' .
-			'([a-z0-9?=&.%_/\'\\\+-]+)' .				// 3:path/?query=foo+bar+
+			//TODO: Specify URL-enable characters
+			'([a-z0-9?=&.,%_/\'\\\+-]+)' .				// 3:path/?query=foo+bar+
 			'(?:\b|%20)site:([a-z0-9.%_-]+\.[a-z0-9.%_-]+)' .	// 4:site:nasty.example.com
 			'()' .										// 5:Preserve or remove?
 			'#i',
