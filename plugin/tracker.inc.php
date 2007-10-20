@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.118 2007/10/20 10:46:42 henoheno Exp $
+// $Id: tracker.inc.php,v 1.119 2007/10/20 10:50:44 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -63,8 +63,8 @@ function plugin_tracker_convert()
 
 	if (PKWK_READONLY) return ''; // Show nothing
 
-	$argc = count($args);
 	$args = func_get_args();
+	$argc = count($args);
 	if ($argc > 2) {
 		return PLUGIN_TRACKER_USAGE . '<br />';
 	}
@@ -278,6 +278,8 @@ class Tracker_form
 	{
 		if (isset($this->config)) return TRUE;
 
+		if ($config == '') $config = PLUGIN_TRACKER_DEFAULT_CONFIG;
+
 		$obj_config  = new Config('plugin/tracker/' . $config);
 
 		if ($obj_config->read()) {
@@ -364,7 +366,7 @@ class Tracker_form
 	function initHiddenFields()
 	{
 		// Make sure to init $this->raw_fields
-		$this->initFields(array());
+		if (! $this->initFields(array())) return FALSE;
 
 		$fields = array();
 		foreach ($this->raw_fields as $fieldname => $field) {
@@ -373,7 +375,7 @@ class Tracker_form
 			}
 		}
 
-		$this->initFields($fields);
+		return $this->initFields($fields);
 	}
 
 	// Add $this->fields
