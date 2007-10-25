@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: ls2.inc.php,v 1.25 2006/10/03 13:33:36 henoheno Exp $
+// $Id: ls2.inc.php,v 1.26 2007/10/25 14:51:54 henoheno Exp $
 //
 // List plugin 2
 
@@ -33,21 +33,24 @@ function plugin_ls2_action()
 {
 	global $vars, $_ls2_msg_title;
 
-	$params = array();
 	$keys   = array('title', 'include', 'reverse');
-	foreach ($keys as $key)
+	$params = array();
+	foreach ($keys as $key) {
 		$params[$key] = isset($vars[$key]);
+	}
 
 	$prefix = isset($vars['prefix']) ? $vars['prefix'] : '';
-	$body = plugin_ls2_show_lists($prefix, $params);
+	$body   = plugin_ls2_show_lists($prefix, $params);
 
-	return array('body'=>$body,
-		'msg'=>str_replace('$1', htmlspecialchars($prefix), $_ls2_msg_title));
+	return array(
+		'body' => $body,
+		'msg'  => str_replace('$1', htmlspecialchars($prefix), $_ls2_msg_title)
+	);
 }
 
 function plugin_ls2_convert()
 {
-	global $script, $vars, $_ls2_msg_title;
+	global $vars, $_ls2_msg_title;
 
 	$params = array(
 		'link'    => FALSE,
@@ -59,63 +62,60 @@ function plugin_ls2_convert()
 		'_done'   => FALSE
 	);
 
-	$args = array();
+	$args = func_get_args();
 	$prefix = '';
-	if (func_num_args()) {
-		$args   = func_get_args();
-		$prefix = array_shift($args);
-	}
-	if ($prefix == '') $prefix = strip_bracket($vars['page']) . '/';
+	if (! empty($args)) $prefix = array_shift($args);
+	if ($prefix == '')  $prefix = strip_bracket($vars['page']) . '/';
 
-	foreach ($args as $arg)
+	foreach ($args as $arg) {
 		plugin_ls2_check_arg($arg, $params);
+	}
 
 	$title = (! empty($params['_args'])) ? join(',', $params['_args']) :   // Manual
 		str_replace('$1', htmlspecialchars($prefix), $_ls2_msg_title); // Auto
 
-	if (! $params['link'])
+	if (! $params['link']) {
 		return plugin_ls2_show_lists($prefix, $params);
+	}
 
 	$tmp = array();
 	$tmp[] = 'plugin=ls2&amp;prefix=' . rawurlencode($prefix);
 	if (isset($params['title']))   $tmp[] = 'title=1';
 	if (isset($params['include'])) $tmp[] = 'include=1';
 
-	return '<p><a href="' . $script . '?' . join('&amp;', $tmp) . '">' .
+	return '<p><a href="' . get_script_uri() . '?' . join('&amp;', $tmp) . '">' .
 		$title . '</a></p>' . "\n";
 }
 
 function plugin_ls2_show_lists($prefix, & $params)
 {
-	global $_ls2_err_nopages;
-
-	$pages = array();
-	if ($prefix != '') {
-		foreach (get_existpages() as $_page)
-			if (strpos($_page, $prefix) === 0)
-				$pages[] = $_page;
-	} else {
+	if ($prefix == '') {
 		$pages = get_existpages();
+	} else {
+		$pages = preg_grep('#^' .  preg_quote($prefix , '#') . '#', get_existpages());
+	}
+	if (empty($pages)) {
+		global $_ls2_err_nopages;
+		return str_replace('$1', htmlspecialchars($prefix), $_ls2_err_nopages);
 	}
 
 	natcasesort($pages);
 	if ($params['reverse']) $pages = array_reverse($pages);
 
-	foreach ($pages as $page) $params['page_ ' . $page] = 0;
-
-	if (empty($pages)) {
-		return str_replace('$1', htmlspecialchars($prefix), $_ls2_err_nopages);
-	} else {
-		$params['result'] = $params['saved'] = array();
-		foreach ($pages as $page)
-			plugin_ls2_get_headings($page, $params, 1);
-		return join("\n", $params['result']) . join("\n", $params['saved']);
+	foreach ($pages as $page) {
+		$params['page_ ' . $page] = 0;
 	}
+
+	$params['result'] = $params['saved'] = array();
+	foreach ($pages as $page) {
+		plugin_ls2_get_headings($page, $params, 1);
+	}
+
+	return join("\n", $params['result']) . join("\n", $params['saved']);
 }
 
 function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 {
-	global $script;
 	static $_ls2_anchor = 0;
 
 	// ページが未表示のとき
@@ -125,7 +125,7 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 	$r_page = rawurlencode($page);
 	$s_page = htmlspecialchars($page);
 	$title  = $s_page . ' ' . get_pg_passage($page, FALSE);
-	$href   = $script . '?cmd=read&amp;page=' . $r_page;
+	$href   = get_script_uri() . '?cmd=read&amp;page=' . $r_page;
 
 	plugin_ls2_list_push($params, $level);
 	$ret = $include ? '<li>include ' : '<li>';
@@ -139,6 +139,7 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 
 	$ret .= '<a id="list_' . $params["page_$page"] . '" href="' . $href .
 		'" title="' . $title . '">' . $s_page . '</a>';
+
 	array_push($params['result'], $ret);
 
 	$anchor = PLUGIN_LS2_ANCHOR_ORIGIN;
@@ -171,8 +172,9 @@ function plugin_ls2_list_push(& $params, $level)
 	$open   = '<ul%s>';
 	$close  = '</li></ul>';
 
-	while (count($saved) > $level || (! empty($saved) && $saved[0] != $close))
+	while (count($saved) > $level || (! empty($saved) && $saved[0] != $close)) {
 		array_push($result, array_shift($saved));
+	}
 
 	$margin = $level - count($saved);
 
