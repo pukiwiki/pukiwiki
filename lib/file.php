@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.89 2007/10/14 15:49:57 henoheno Exp $
+// $Id: file.php,v 1.90 2007/10/27 13:59:32 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -187,21 +187,33 @@ function generate_fixed_heading_anchor_id($seed)
 
 // Read top N lines as an array
 // (Use PHP file() function if you want to get ALL lines)
-function file_head($file, $count = 1, $lock = TRUE, $buffer = 8192)
+function file_head($file, $count = 1, $lock = TRUE, $buffer = NULL)
 {
 	$array = array();
 
 	$fp = @fopen($file, 'r');
 	if ($fp === FALSE) return FALSE;
+
 	set_file_buffer($fp, 0);
 	if ($lock) flock($fp, LOCK_SH);
 	rewind($fp);
-	$index = 0;
-	while (! feof($fp)) {
-		$line = fgets($fp, $buffer);
-		if ($line != FALSE) $array[] = $line;
-		if (++$index >= $count) break;
+
+	$index  = 0;
+	if ($buffer === NULL) {
+		while (! feof($fp)) {
+			$line = fgets($fp);
+			if ($line != FALSE) $array[] = $line;
+			if (++$index >= $count) break;
+		}
+	} else {
+		$buffer = max(16, intval($buffer));
+		while (! feof($fp)) {
+			$line = fgets($fp, $buffer);
+			if ($line != FALSE) $array[] = $line;
+			if (++$index >= $count) break;
+		}
 	}
+
 	if ($lock) flock($fp, LOCK_UN);
 	if (! fclose($fp)) return FALSE;
 
