@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: ls2.inc.php,v 1.28 2007/10/27 13:34:32 henoheno Exp $
+// $Id: ls2.inc.php,v 1.29 2007/10/27 16:17:31 henoheno Exp $
 // Copyright (C)
-//   2002-2006, 2007 PukiWiki Developers Team
+//   2002-2004, 2006-2007 PukiWiki Developers Team
 //   2002       panda  http://home.arino.jp/?ls2.inc.php 
 //   2002       Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net (ls.inc.php)
 // License: GPL version 2
