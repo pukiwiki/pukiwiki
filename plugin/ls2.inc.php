@@ -1,7 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: ls2.inc.php,v 1.26 2007/10/25 14:51:54 henoheno Exp $
+// $Id: ls2.inc.php,v 1.27 2007/10/27 10:17:21 henoheno Exp $
+// Copyright (C)
+//   2002-2006, 2007 PukiWiki Developers Team
+//   2002       panda  http://home.arino.jp/?ls2.inc.php 
+//   (derivererd from ls.inc.php)
+// License: GPL version 2
 //
 // List plugin 2
 

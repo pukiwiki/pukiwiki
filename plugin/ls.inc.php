@@ -1,12 +1,12 @@
 <?php
-/*
- * PukiWiki lsプラグイン
- *
- * CopyRight 2002 Y.MASUI GPL2
- * http://masui.net/pukiwiki/ masui@masui.net
- *
- * $Id: ls.inc.php,v 1.9 2004/07/31 03:09:20 henoheno Exp $
- */
+// PukiWiki - Yet another WikiWikiWeb clone.
+// $Id: ls.inc.php,v 1.10 2007/10/27 10:17:21 henoheno Exp $
+// Copyright (C)
+//   2002-2004 PukiWiki Developers Team
+//   2002      Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net
+// License: GPL version 2
+//
+// List plugin
 
 function plugin_ls_convert()
 {
