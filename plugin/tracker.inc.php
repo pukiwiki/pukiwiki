@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.120 2007/10/22 13:04:43 henoheno Exp $
+// $Id: tracker.inc.php,v 1.121 2007/10/28 14:44:48 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -470,14 +470,22 @@ class Tracker_field
 		return $value;
 	}
 
-	// Format table cell data before output the wiki text
-	function format_cell($str)
+	// Get $this->formats[$key] for format_value()), or
+	// Get $this->styles[$key]  for get_style()
+	// from cell contents
+ 	function get_key($value)
 	{
-		return $str;
+		return $value;
+	}
+
+	// Format table cell data before output the wiki text
+	function format_cell($value)
+	{
+		return $value;
 	}
 
 	// Format-string for sprintf() before output the wiki text
-	function get_style()
+	function get_style($value)
 	{
 		return '%s';
 	}
@@ -549,10 +557,10 @@ class Tracker_field_title extends Tracker_field_text
 {
 	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_STRING;
 
-	function format_cell($str)
+	function format_cell($value)
 	{
-		make_heading($str);
-		return $str;
+		make_heading($value);
+		return $value;
 	}
 }
 
@@ -575,18 +583,18 @@ class Tracker_field_textarea extends Tracker_field
 			'</textarea>';
 	}
 
-	function format_cell($str)
+	function format_cell($value)
 	{
 		// Cut too long ones
 		// TODO: Why store all of them to the memory?
 		if (isset($this->options[2])) {
 			$limit = max(0, $this->options[2]);
-			$len = mb_strlen($str);
+			$len = mb_strlen($value);
 			if ($len > ($limit + 3)) {	// 3 = mb_strlen('...')
-				$str = mb_substr($str, 0, $limit) . '...';
+				$value = mb_substr($value, 0, $limit) . '...';
 			}
 		}
-		return $str;
+		return $value;
 	}
 }
 
@@ -610,9 +618,9 @@ class Tracker_field_format extends Tracker_field
 		}
 	}
 
-	function _get_key($str)
+	function get_key($value)
 	{
-		return ($str == '') ? 'IS NULL' : 'IS NOT NULL';
+		return ($value == '') ? 'IS NULL' : 'IS NOT NULL';
 	}
 
 	function get_tag()
@@ -623,19 +631,19 @@ class Tracker_field_format extends Tracker_field
 		return '<input type="text" name="' . $s_name . '" size="' . $s_size . '" />';
 	}
 
-	function format_value($str)
+	function format_value($value)
 	{
-		if (is_array($str)) {
-			return join(', ', array_map(array($this, 'format_value'), $str));
+		if (is_array($value)) {
+			return join(', ', array_map(array($this, 'format_value'), $value));
 		}
 
-		$key = $this->_get_key($str);
-		return isset($this->formats[$key]) ? str_replace('%s', $str, $this->formats[$key]) : $str;
+		$key = $this->get_key($value);
+		return isset($this->formats[$key]) ? str_replace('%s', $value, $this->formats[$key]) : $value;
 	}
 
-	function get_style($str)
+	function get_style($value)
 	{
-		$key = $this->_get_key($str);
+		$key = $this->get_key($value);
 		return isset($this->styles[$key]) ? $this->styles[$key] : '%s';
 	}
 }
@@ -709,6 +717,12 @@ class Tracker_field_radio extends Tracker_field_format
 		}
 
 		return isset($options[$name][$value]) ? $options[$name][$value] : $value;
+	}
+
+	// Revert(re-overload) Tracker_field_format's specific code
+	function get_key($value)
+	{
+		return $value;
 	}
 }
 
@@ -829,9 +843,9 @@ class Tracker_field_past extends Tracker_field
 {
 	var $sort_type = PLUGIN_TRACKER_SORT_TYPE_NUMERIC;
 
-	function get_value($value)
+	function get_value($timestamp)
 	{
-		return UTIME - $value;
+		return UTIME - $timestamp;
 	}
 
 	function format_cell($timestamp)
@@ -1332,7 +1346,7 @@ class Tracker_list
 			if (! isset($row[$fieldname])) {
 				// Maybe load miss of the page
 				if (isset($fields[$fieldname])) {
-					$str = '[page_err]';	// Exactlly
+					$str = '[match_err]';	// Exactlly
 				} else {
 					$str = isset($matches[0]) ? $matches[0] : '';	// Nothing to do
 				}
@@ -1342,6 +1356,7 @@ class Tracker_list
 					$str = $fields[$fieldname]->format_cell($str);
 				}
 			}
+			$str = plugin_tracker_escape($str, $tfc);
 		}
 
 		if (isset($fields[$stylename]) && isset($row[$stylename])) {
@@ -1349,7 +1364,7 @@ class Tracker_list
 			$str    = sprintf($_style, $str);
 		}
 
-		return plugin_tracker_escape($str, $tfc);
+		return $str;
 	}
 
 	// Output a part of Wiki text
