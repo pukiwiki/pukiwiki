@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.91 2007/10/27 14:52:34 henoheno Exp $
+// $Id: file.php,v 1.92 2007/10/28 12:44:10 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -376,7 +376,7 @@ function lastmodified_add($update = '', $remove = '')
 
 	// Read (keep the order of the lines)
 	$recent_pages = $matches = array();
-	foreach(file_head($file, $maxshow + PKWK_MAXSHOW_ALLOWANCE) as $line) {
+	foreach(file_head($file, $maxshow + PKWK_MAXSHOW_ALLOWANCE, FALSE) as $line) {
 		if (preg_match('/^([0-9]+)\t(.+)/', $line, $matches)) {
 			$recent_pages[$matches[2]] = $matches[1];
 		}
