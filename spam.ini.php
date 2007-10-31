@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.84 2007/10/28 00:39:10 henoheno Exp $
+// $Id: spam.ini.php,v 1.85 2007/10/31 15:02:05 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -1826,6 +1826,7 @@ $blocklist['B-1'] = array(
 	'*.conforums.com',		// by Roger Sutton (rogersutton at cox.net)
 	'connectedy.com',		// 66.132.45.227(camilla.jtlnet.com) by astrader at insight.rr.com
 	'counterhit.de',
+	'*.createblog.com',
 	'*.createforum.net',
 	'*.creatuforo.com',		// by Desafio Internet S.L. (david at soluwol.com)
 	'*.createmybb.com',
@@ -2573,6 +2574,7 @@ $blocklist['B-1'] = array(
 		'freewebsfarms.com',
 	),
 	'*.freewebspace.net.au',
+	'freewebtown.com',
 	'*.freemyforum.com',	// by messahost at gmail.com
 	'freepowerboards.com',
 	'*.freepowerboards.com',
@@ -2596,6 +2598,7 @@ $blocklist['B-1'] = array(
 	'Google.com' => array(
 		'*.blogspot.com',
 		'docs.google.com',
+		'*.googlegroups.com',		///web/
 		'*.googlepages.com',
 		'groups-beta.google.com',
 	),
@@ -2750,6 +2753,7 @@ $blocklist['B-1'] = array(
 	),
 	'mojklc.com',
 	'*.mundoforo.com',
+	'*.money-host.com',
 	'MonForum.com' => array(
 		'*.monforum.com',
 		'*.monforum.fr',
@@ -3204,6 +3208,7 @@ $blocklist['B-2'] = array(
 	'Harvard Law School' => array('blogs.law.harvard.edu'),
 	'helpiammoving.com',
 	'homepage-dienste.com',
+	'*.hostistry.com',		// by support at hostistry.com, hostistry at gmail.com
 	'Howard University' => array('networks.howard.edu'),
 	'hullandhull.com',
 	'Huntington University' => array('huntington.edu'),
@@ -3235,6 +3240,7 @@ $blocklist['B-2'] = array(
 	'Loyola Marymount University' => array('lmu.edu'),
 	'forum.lixium.fr',
 	'macfaq.net',
+	'macvirus.org',		///board/
 	'me4x4.com',
 	'microbial-ecology.net',
 	'minsterscouts.org',
@@ -3254,6 +3260,9 @@ $blocklist['B-2'] = array(
 		'hlc.ncat.edu',
 	),
 	'placetobe.org',
+	'Naropa University' => array(
+		'naropa.edu',			///forum/
+	),
 	'users.nethit.pl',
 	'nightclubvip.net',
 	'njbodybuilding.com',
@@ -5358,9 +5367,20 @@ $blocklist['C'] = array(
 		'.bovorup.cn',
 		'.litotar.cn',
 		'.nihydec.cn',
-		
+
 		// 66.232.112.175 by bing-32 at ftunez.org
 		'.lasyxy.cn',
+
+		// by bing-65 at ftunez.org
+		'.coxyvuk.cn',		// 66.232.120.111(non-existent)
+		'.comygyx.cn',		// 66.232.120.112(non-existent)
+		'.gyqalec.cn',		// 66.232.120.114(non-existent)
+		'.paluwir.cn',		// 66.232.120.114(non-existent)
+		'.qunonid.cn',		// 66.232.120.114(*snip*)
+		'.qupyvin.cn',		// 66.232.120.115(non-existent)
+		'.ririjyz.cn',		// 66.232.120.111(*snip*)
+		'.saralar.cn',		// 66.232.120.113(non-existent)
+		'.vawomyl.cn',		// 66.232.120.115(non-existent)
 
 		// 69.46.23.48 by clarkson-34 at ftunez.org
 		'.bumora.cn',
@@ -5417,6 +5437,10 @@ $blocklist['C'] = array(
 		'.xizity.cn',
 		'.xuxusa.cn',
 
+		// by entretov-28 at ftunez.org
+		'.hotejen.cn',		// 66.232.120.111(*snip*)
+		'.kyhadat.cn',		// 66.232.120.115(*snip*)
+
 		// 69.46.23.48 by entretov-32 at ftunez.org
 		'.cihuji.cn',
 		'.deqyve.cn',
@@ -5441,6 +5465,11 @@ $blocklist['C'] = array(
 		'.dozoda.cn',
 		'.nemipu.cn',
 
+		// entretov-84 at ftunez.org
+		'.muruvun.cn',		// 66.232.120.114(*snip*)
+		'.favulol.cn',		// 66.232.120.115(*snip*)
+		'.tixuqyx.cn',		// 66.232.120.111(*snip*)
+
 		// 69.46.23.48 by jeremy-57 at ftunez.org
 		'.duzele.cn',
 		'.figede.cn',
@@ -5460,6 +5489,13 @@ $blocklist['C'] = array(
 		'.vycexu.cn',
 		'.wotyqo.cn',
 		'.xudoli.cn',
+
+		// entretov-28 at ftunez.org
+		'.xevavuv.cn',		// 66.232.120.113(*snip*)
+
+		// by entretov-37 at ftunez.org
+		'.sadyroz.cn',		// 66.232.120.114(*snip*)
+		'.zedutox.cn',		//  66.232.120.112(non-existent)
 
 		// 66.232.112.175 by entretov-86 at ftunez.org
 		'.faweji.cn',
@@ -5494,12 +5530,24 @@ $blocklist['C'] = array(
 		'.qiwysu.cn',
 		'.tutysy.cn',
 
+		// by oker-97 at ftunez.org
+		'.dohakot.cn',		// 66.232.127.126(yourbusiness.ME-127.com)
+		'.mesyvuc.cn',		// 66.232.120.111(*snip*)
+		'.nyjyzup.cn',		// 66.232.127.126(*snip*)
+		'.qagibit.cn',		// 66.232.120.114(*snip*)
+		'.rovazaw.cn',		// 66.232.120.112(*snip*)
+		'.tozojug.cn',		// 66.232.120.111(*snip*)
+		'.xywataw.cn',		// 66.232.120.112(*snip*)
+
+		// by polet-20 at ftunez.org
+		'.mopoxon.cn',		// 66.232.127.126(*snip*)
+
 		// 66.232.112.175 by sabrosky-49 at ftunez.org
 		'.gywiqe.cn',
 		'.jotapo.cn',
 		'.jywixa.cn',
 
-		// '69.46.23.48 by sabrosky-60 at ftunez.org
+		// 69.46.23.48 by sabrosky-60 at ftunez.org
 		'.bawegap.cn',
 		'.buremyl.cn',
 		'.cilybut.cn',
@@ -5547,6 +5595,50 @@ $blocklist['C'] = array(
 		'.catybe.cn',
 		'.jytame.cn',
 		'.wygete.cn',
+	),
+	'74.50.97.*' => array(
+		'.kaqeje.com',			// 74.50.97.51(non-existent) by abuse-here at inbox.ru
+		'.cumimo.com',			// 74.50.97.51(non-existent) by olga at ike.com
+		'.kaxavo.com',			// 74.50.97.52(non-existent) by gunter at ftunez.org
+		'.hoheru.com',			// 74.50.97.52(non-existent) by gunter at ftunez.org
+		'.tyqoti.com',			// 74.50.97.52(non-existent) by anna at hotmail.com
+		'.fupopu.com',			// 74.50.97.53(non-existent) by abuse-here at inbox.ru
+		'.poxupo.com',			// 74.50.97.53(non-existent) by inna at gmail.com
+		'.kuluvo.com',			// 74.50.97.53(non-existent) by gunter at ftunez.org
+		'.wugoba.com',			// 74.50.97.53(non-existent) by abuse-here at inbox.ru
+		'.civuhe.com',			// 74.50.97.54(non-existent) by olga at ike.com
+		'.zasuly.com',			// 74.50.97.54(non-existent) by olga at ike.com
+		'.liwowu.com',			// 74.50.97.54(non-existent) by abuse-here at inbox.ru
+		'.vobime.com',			// 74.50.97.55(non-existent) by inna at gmail.com
+		'.nyrive.com',			// 74.50.97.55(non-existent) by anna at hotmail.com
+		'.hehepu.com',			// 74.50.99.245(non-existent) by abuse-here at inbox.ru
+		'.bynute.com',			// 74.50.99.245(non-existent) by abuse-here at inbox.ru
+
+		'.sevimy.com',			// 66.232.124.12(time-out) by inna at gmail.com
+		'.gapubo.com',			// 66.232.124.12(time-out) by gunter at ftunez.org
+		'.vejoku.com',			// 66.232.124.12(time-out) by olga at ike.com
+		'.qysahu.com',			// 66.232.124.12(time-out) by abuse-here at inbox.ru
+		'.hidolu.com',			// 66.232.124.13(time-out) by inna at gmail.com
+		'.tetace.com',			// 66.232.124.13(time-out) by gunter at ftunez.org
+		'.vuxilu.com',			// 66.232.124.13(time-out) by olga at ike.com
+		'.teboca.com',			// 66.232.124.13(time-out) by olga at ike.com
+		'.dizive.com',			// 66.232.124.14(time-out) by olga at ike.com
+		'.peduxe.com',			// 66.232.124.14(time-out) by gunter at ftunez.org
+		'.sybyna.com',			// 66.232.124.14(time-out) by gunter at ftunez.org
+		'.bepofe.com',			// 66.232.124.15(time-out) by anna at hotmail.com
+		'.kuloja.com',			// 66.232.124.15(time-out) by gunter at ftunez.org
+		'.tetadu.com',			// 66.232.124.15(time-out) by inna at gmail.com
+		'.qilato.com',			// 66.232.124.15(time-out) by inna at gmail.com
+		'.lobimi.com',			// 66.232.124.16(time-out) by olga at ike.com
+		'.tazuwe.com',			// 66.232.124.16(time-out) by olga at ike.com
+		'.pihufo.com',			// 66.232.124.16(time-out) by olga at ike.com
+		'.decewa.com',			// 66.232.124.16(time-out) by gunter at ftunez.org
+
+		'.lynymu.com',			// 206.51.226.194(time-out) by abuse-here at inbox.ru
+		'.saciqo.com',			// 206.51.226.194(time-out) by olga at ike.com
+		'.zalajy.com',			// 206.51.226.194(time-out) by inna at gmail.com
+		'.hisimy.com',			// 206.51.226.194(time-out) by inna at gmail.com
+		'.qysowe.com',			// 206.51.226.194(time-out) by olga at ike.com
 	),
 	'nijeoi at hotmai.com' => array(
 		// 66.232.126.74 by Nicol Makerson, the same approach and timing _and IP_ of clickx at bk.ru
@@ -6391,57 +6483,17 @@ $blocklist['C'] = array(
 		'.online-pharmaceutics.com',	// 206.53.51.168
 	),
 	'89.248.107.118' => array(	// "Canadian Pharmacy" 89.248.107.118(non-existent)
+		'.canadians-health.com',	// by andreyletov at yahoo.com
 		'.cialischeap.info',
 		'.superrv.info',
 	),
-	'74.50.97.*' => array(
-		'.kaqeje.com',			// 74.50.97.51(non-existent) by abuse-here at inbox.ru
-		'.cumimo.com',			// 74.50.97.51(non-existent) by olga at ike.com
-		'.kaxavo.com',			// 74.50.97.52(non-existent) by gunter at ftunez.org
-		'.hoheru.com',			// 74.50.97.52(non-existent) by gunter at ftunez.org
-		'.tyqoti.com',			// 74.50.97.52(non-existent) by anna at hotmail.com
-		'.fupopu.com',			// 74.50.97.53(non-existent) by abuse-here at inbox.ru
-		'.poxupo.com',			// 74.50.97.53(non-existent) by inna at gmail.com
-		'.kuluvo.com',			// 74.50.97.53(non-existent) by gunter at ftunez.org
-		'.wugoba.com',			// 74.50.97.53(non-existent) by abuse-here at inbox.ru
-		'.civuhe.com',			// 74.50.97.54(non-existent) by olga at ike.com
-		'.zasuly.com',			// 74.50.97.54(non-existent) by olga at ike.com
-		'.liwowu.com',			// 74.50.97.54(non-existent) by abuse-here at inbox.ru
-		'.vobime.com',			// 74.50.97.55(non-existent) by inna at gmail.com
-		'.nyrive.com',			// 74.50.97.55(non-existent) by anna at hotmail.com
-		'.hehepu.com',			// 74.50.99.245(non-existent) by abuse-here at inbox.ru
-		'.bynute.com',			// 74.50.99.245(non-existent) by abuse-here at inbox.ru
-
-		'.sevimy.com',			// 66.232.124.12(time-out) by inna at gmail.com
-		'.gapubo.com',			// 66.232.124.12(time-out) by gunter at ftunez.org
-		'.vejoku.com',			// 66.232.124.12(time-out) by olga at ike.com
-		'.qysahu.com',			// 66.232.124.12(time-out) by abuse-here at inbox.ru
-		'.hidolu.com',			// 66.232.124.13(time-out) by inna at gmail.com
-		'.tetace.com',			// 66.232.124.13(time-out) by gunter at ftunez.org
-		'.vuxilu.com',			// 66.232.124.13(time-out) by olga at ike.com
-		'.teboca.com',			// 66.232.124.13(time-out) by olga at ike.com
-		'.dizive.com',			// 66.232.124.14(time-out) by olga at ike.com
-		'.peduxe.com',			// 66.232.124.14(time-out) by gunter at ftunez.org
-		'.sybyna.com',			// 66.232.124.14(time-out) by gunter at ftunez.org
-		'.bepofe.com',			// 66.232.124.15(time-out) by anna at hotmail.com
-		'.kuloja.com',			// 66.232.124.15(time-out) by gunter at ftunez.org
-		'.tetadu.com',			// 66.232.124.15(time-out) by inna at gmail.com
-		'.qilato.com',			// 66.232.124.15(time-out) by inna at gmail.com
-		'.lobimi.com',			// 66.232.124.16(time-out) by olga at ike.com
-		'.tazuwe.com',			// 66.232.124.16(time-out) by olga at ike.com
-		'.pihufo.com',			// 66.232.124.16(time-out) by olga at ike.com
-		'.decewa.com',			// 66.232.124.16(time-out) by gunter at ftunez.org
-
-		'.lynymu.com',			// 206.51.226.194(time-out) by abuse-here at inbox.ru
-		'.saciqo.com',			// 206.51.226.194(time-out) by olga at ike.com
-		'.zalajy.com',			// 206.51.226.194(time-out) by inna at gmail.com
-		'.hisimy.com',			// 206.51.226.194(time-out) by inna at gmail.com
-		'.qysowe.com',			// 206.51.226.194(time-out) by olga at ike.com
-	),
 	'zinerit4 at gmail.com' => array(	// 69.46.29.149(hv37.steephost.com => 72.232.191.50 ...)
 		'.hatbi.com',
+		'.justrty.com',
 		'.kol2you.com',
 		'.kolplanet.com',
+		'.myrty.com',
+		'.officialrty.com',
 		'.pbaol.com',
 		'.planetkol.com',
 	),
@@ -6709,6 +6761,7 @@ $blocklist['C'] = array(
 	'.vip-get.info',		// 203.223.150.222 by Jhon Craig (bartes1992 at mail.ru), / forbidden
 	'.virtualsystem.de',
 	'.vdxhost.com',
+	'.vodkaporn.com',		// 67.19.116.83(non-existent) by green at gmx.co.uk
 	'.vviccd520.com',		// 202.75.219.217 by kuang zhang (oulingfeng66 at 163.com), encoded JavaScript
 	'.homes.com.au',		// 139.134.5.124 by wongcr at bigpond.net.au, / meanless,
 	'.wbtechs.us',			// 68.178.232.100(parkwebwin-v01.prod.mesa1.secureserver.net) by westbabylon at aol.com
@@ -6772,7 +6825,7 @@ $blocklist['E'] = array(
 	// E: Sample setting of
 	// Promoters
 	// (Affiliates, Hypes, Catalog retailers, Multi-level marketings, Resellers,
-	//  Ads, Business promotions)
+	//  Ads, Business promotions, SEO, etc)
 	//
 	// They often promotes near you using blog article, mail-magazines, tools(search engines, blogs, etc), etc.
 	// Sometimes they may promote each other
@@ -6941,6 +6994,7 @@ $blocklist['E'] = array(
 		'hbb.afl.rakuten.co.jp',	///hsb/ 203.190.60.105 image server?
 	),
 	'.sedori-data.com',		// 210.188.205.7(sv03.lolipop.jp)
+	'.seozone.jp',			// 211.133.134.77(sv27.wadax.ne.jp) by blue_whale20002004 at yahoo.com.cn
 	'.tool4success.com',	// 210.188.201.31(sv70.xserver.jp) by Yukihiro Akada (ml at original-ehon.com)
 	'tera at kirinn.com' => array(	// 59.139.29.234(s240.xrea.com) by Naohsi Terada (tera at kirinn.com)
 		'.e123.info',
