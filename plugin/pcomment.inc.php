@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pcomment.inc.php,v 1.45 2007/08/19 14:20:58 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.46 2007/11/03 15:50:36 henoheno Exp $
 //
-// pcomment plugin - Show/Insert comments into specified (another) page
+// Page comment plugin - Show/Insert comments into another page
 //
 // Usage: #pcomment([page][,max][,options])
 //
