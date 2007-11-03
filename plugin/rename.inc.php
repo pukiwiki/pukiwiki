@@ -307,21 +307,20 @@ function plugin_rename_get_files($pages)
 	$matches = array();
 	foreach ($dirs as $path) {
 		$dir = opendir($path);
-		if (! $dir) continue;
-
-		while ($file = readdir($dir)) {
+		if (! $dir) continue;	// TODO: !== FALSE or die()?
+		while (($file = readdir($dir)) !== FALSE) {
 			if ($file == '.' || $file == '..') continue;
-
-			foreach ($pages as $from=>$to) {
+			foreach ($pages as $from => $to) {
+				// TODO: preg_quote()?
 				$pattern = '/^' . str_replace('/', '\/', $from) . '([._].+)$/';
-				if (! preg_match($pattern, $file, $matches))
-					continue;
-
-				$newfile = $to . $matches[1];
-				$files[$from][$path . $file] = $path . $newfile;
+				if (preg_match($pattern, $file, $matches)) {
+					$newfile = $to . $matches[1];
+					$files[$from][$path . $file] = $path . $newfile;
+				}
 			}
 		}
 	}
+
 	return $files;
 }
 
