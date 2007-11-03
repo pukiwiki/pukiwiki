@@ -510,21 +510,36 @@ function header_lastmod($page = NULL)
 	}
 }
 
+// Get a list of encoded files (must specify a directory and a suffix)
+function get_existfiles($dir = DATA_DIR, $ext = '.txt')
+{
+	$aryret = array();
+	$pattern = '/^(?:[0-9A-F]{2})+' . preg_quote($ext, '/') . '$/';
+
+	$dp = @opendir($dir) or die_message($dir . ' is not found or not readable.');
+	while (($file = readdir($dp)) !== FALSE) {
+		if (preg_match($pattern, $file)) {
+			$aryret[] = $dir . $file;
+		}
+	}
+	closedir($dp);
+
+	return $aryret;
+}
+
 // Get a page list of this wiki
 function get_existpages($dir = DATA_DIR, $ext = '.txt')
 {
 	$aryret = array();
+	$pattern = '/^((?:[0-9A-F]{2})+)' . preg_quote($ext, '/') . '$/';
 
-	$pattern = '((?:[0-9A-F]{2})+)';
-	if ($ext != '') $ext = preg_quote($ext, '/');
-	$pattern = '/^' . $pattern . $ext . '$/';
-
-	$dp = @opendir($dir) or
-		die_message($dir . ' is not found or not readable.');
+	$dp = @opendir($dir) or die_message($dir . ' is not found or not readable.');
 	$matches = array();
-	while ($file = readdir($dp))
-		if (preg_match($pattern, $file, $matches))
+	while (($file = readdir($dp)) !== FALSE) {
+		if (preg_match($pattern, $file, $matches)) {
 			$aryret[$file] = decode($matches[1]);
+		}
+	}
 	closedir($dp);
 
 	return $aryret;
@@ -689,19 +704,6 @@ function get_readings()
 	}
 
 	return $readings;
-}
-
-// Get a list of encoded files (must specify a directory and a suffix)
-function get_existfiles($dir, $ext)
-{
-	$pattern = '/^(?:[0-9A-F]{2})+' . preg_quote($ext, '/') . '$/';
-	$aryret = array();
-	$dp = @opendir($dir) or die_message($dir . ' is not found or not readable.');
-	while ($file = readdir($dp))
-		if (preg_match($pattern, $file))
-			$aryret[] = $dir . $file;
-	closedir($dp);
-	return $aryret;
 }
 
 // Get a list of related pages of the page

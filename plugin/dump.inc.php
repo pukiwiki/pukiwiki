@@ -1,5 +1,9 @@
 <?php
-// $Id: dump.inc.php,v 1.38 2007/05/12 09:17:14 henoheno Exp $
+// $Id: dump.inc.php,v 1.41 2007/11/03 15:17:52 henoheno Exp $
+// Copyright (C)
+//   2004-2007 PukiWiki Developers Team
+//   2004      teanan / Interfair Laboratory
+// License: GPL v2 or (at your option) any later version
 //
 // Remote dump / restore plugin
 // Originated as tarfile.inc.php by teanan / Interfair Laboratory 2004.
@@ -386,10 +390,10 @@ class tarlib
 			@unlink($this->filename);
 			die_message($dir . ' is not found or not readable.');
 		}
-
-		while ($filename = readdir($dp)) {
-			if (preg_match("/$mask/", $filename))
+		while (($filename = readdir($dp)) !== FALSE) {
+			if (preg_match('/' . $mask . '/', $filename)) {
 				$files[] = $dir . $filename;
+			}
 		}
 		closedir($dp);
 		

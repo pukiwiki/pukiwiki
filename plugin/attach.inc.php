@@ -818,9 +818,8 @@ class AttachPages
 		$pattern = "/^({$page_pattern})_((?:[0-9A-F]{2})+){$age_pattern}$/";
 
 		$matches = array();
-		while ($file = readdir($dir)) {
-			if (! preg_match($pattern, $file, $matches))
-				continue;
+		while (($file = readdir($dir)) !== FALSE) {
+			if (! preg_match($pattern, $file, $matches)) continue;
 
 			$_page = decode($matches[1]);
 			$_file = decode($matches[2]);
