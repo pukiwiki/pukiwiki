@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.88 2007/09/02 12:35:00 henoheno Exp $
+// $Id: attach.inc.php,v 1.89 2007/11/03 15:15:15 henoheno Exp $
 // Copyright (C)
 //   2003-2007 PukiWiki Developers Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
@@ -818,9 +818,8 @@ class AttachPages
 		$pattern = "/^({$page_pattern})_((?:[0-9A-F]{2})+){$age_pattern}$/";
 
 		$matches = array();
-		while ($file = readdir($dir)) {
-			if (! preg_match($pattern, $file, $matches))
-				continue;
+		while (($file = readdir($dir)) !== FALSE) {
+			if (! preg_match($pattern, $file, $matches)) continue;
 
 			$_page = decode($matches[1]);
 			$_file = decode($matches[2]);
