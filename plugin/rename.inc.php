@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.36 2007/10/06 13:20:59 henoheno Exp $
+// $Id: rename.inc.php,v 1.37 2007/11/03 15:26:19 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -317,21 +317,20 @@ function plugin_rename_get_files($pages)
 	$matches = array();
 	foreach ($dirs as $path) {
 		$dir = opendir($path);
-		if (! $dir) continue;
-
-		while ($file = readdir($dir)) {
+		if (! $dir) continue;	// TODO: !== FALSE or die()?
+		while (($file = readdir($dir)) !== FALSE) {
 			if ($file == '.' || $file == '..') continue;
-
-			foreach ($pages as $from=>$to) {
+			foreach ($pages as $from => $to) {
+				// TODO: preg_quote()?
 				$pattern = '/^' . str_replace('/', '\/', $from) . '([._].+)$/';
-				if (! preg_match($pattern, $file, $matches))
-					continue;
-
-				$newfile = $to . $matches[1];
-				$files[$from][$path . $file] = $path . $newfile;
+				if (preg_match($pattern, $file, $matches)) {
+					$newfile = $to . $matches[1];
+					$files[$from][$path . $file] = $path . $newfile;
+				}
 			}
 		}
 	}
+
 	return $files;
 }
 
