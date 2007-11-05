@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.121 2007/10/28 14:44:48 henoheno Exp $
+// $Id: tracker.inc.php,v 1.122 2007/11/05 14:21:25 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -87,8 +87,7 @@ function plugin_tracker_convert()
 	unset($args, $argc, $arg);
 
 	$tracker_form = & new Tracker_form();
-	if (! $tracker_form->init($base, $refer, $rel) ||
-	    ! $tracker_form->loadConfig($config)) {
+	if (! $tracker_form->init($base, $refer, $config, $rel)) {
 		return '#tracker: ' . htmlspecialchars($tracker_form->error) . '<br />';
 	}
 
@@ -176,8 +175,7 @@ function plugin_tracker_action()
 	$from = $to = array();
 
 	$tracker_form = & new Tracker_form();
-	if (! $tracker_form->init($base, $refer) ||
-	    ! $tracker_form->loadConfig($config)) {
+	if (! $tracker_form->init($base, $refer, $config)) {
 		return array(
 			'msg'  => 'Cannot write',
 			'body' => htmlspecialchars($tracker_form->error)
@@ -262,14 +260,14 @@ class Tracker_form
 
 	var $error  = '';	// Error message
 
-	function init($base, $refer = '', $relative = '')
+	function init($base, $refer = '', $config = NULL, $relative = '')
 	{
 		$base     = trim($base);
 		$refer    = trim($refer);
 		$relative = trim($relative);
 
-		if ($refer == '') $refer = $base;
-		if ($base  == '') $base  = $refer;	// Compat
+		if ($refer  == '') $refer  = $base;
+		if ($base   == '') $base   = $refer;	// Compat
 
 		if ($base  == '') {
 			$this->error = 'Base not specified';
@@ -285,10 +283,14 @@ class Tracker_form
 		$this->base  = $base;
 		$this->refer = $refer;
 
+		if ($config !== NULL && ! $this->loadConfig($config)) {
+			return FALSE;
+		}
+
 		return TRUE;
 	}
 
-	function loadConfig($config = PLUGIN_TRACKER_DEFAULT_CONFIG)
+	function loadConfig($config = '')
 	{
 		if (isset($this->config)) return TRUE;
 
@@ -918,8 +920,7 @@ function plugin_tracker_list_render($base, $refer, $rel = '', $config = '', $ord
 {
 	$tracker_list = & new Tracker_list();
 
-	if (! $tracker_list->init($base, $refer, $rel) ||
-	    ! $tracker_list->loadConfig($config)  ||
+	if (! $tracker_list->init($base, $refer, $config, $rel)  ||
 		! $tracker_list->setSortOrder($order)) {
 		return '#tracker_list: ' . htmlspecialchars($tracker_list->error) . '<br />';
 	}
@@ -958,21 +959,10 @@ class Tracker_list
 	var $_row;
 	var $_the_first_character_of_the_line;
 
-	function init($base, $refer, $relative = '')
+	function init($base, $refer, $config = NULL, $relative = '')
 	{
 		$this->form = & new Tracker_form();
-		return $this->form->init($base, $refer, $relative);
-	}
-
-	// Wrapper of $this->form->loadConfig()
-	function loadConfig($config = PLUGIN_TRACKER_DEFAULT_CONFIG)
-	{
-		if (! $this->form->loadConfig($config)) {
-			$this->error = $this->form->error;
-			return FALSE;
-		} else {
-			return TRUE;
-		}
+		return $this->form->init($base, $refer, $config, $relative);
 	}
 
 	// Generate/Regenerate regex to load one page
