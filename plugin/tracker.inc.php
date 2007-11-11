@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.122 2007/11/05 14:21:25 henoheno Exp $
+// $Id: tracker.inc.php,v 1.123 2007/11/11 12:28:19 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -168,7 +168,7 @@ function plugin_tracker_action()
 	$_post['_real'] = $real;
 	// $_post['_refer'] = $_post['refer'];
 
-	// TODO: Why here
+	// TODO: Why here => See BugTrack/662
 	// Creating an empty page, before attaching files
 	pkwk_touch_file(get_filename($page));
 
