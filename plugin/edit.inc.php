@@ -82,7 +82,7 @@ function plugin_edit_inline()
 {
 	static $usage = '&edit(pagename#anchor[[,noicon],nolabel])[{label}];';
 
-	global $script, $vars, $fixed_heading_anchor_edit;
+	global $vars, $fixed_heading_anchor_edit;
 
 	if (PKWK_READONLY) return ''; // Show nothing 
 
@@ -152,6 +152,7 @@ function plugin_edit_inline()
 	}
 
 	// URL
+	$script = get_script_uri();
 	if ($isfreeze) {
 		$url   = $script . '?cmd=unfreeze&amp;page=' . rawurlencode($s_page);
 	} else {
