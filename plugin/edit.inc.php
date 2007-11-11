@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.47 2007/11/11 10:48:21 henoheno Exp $
+// $Id: edit.inc.php,v 1.48 2007/11/11 12:14:09 henoheno Exp $
 // Copyright (C) 2001-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -82,7 +82,7 @@ function plugin_edit_inline()
 {
 	$usage = '&amp;edit(pagename#anchor[[,noicon],nolabel])[{label}];';
 
-	global $script, $vars, $fixed_heading_anchor_edit;
+	global $vars, $fixed_heading_anchor_edit;
 
 	if (PKWK_READONLY) return ''; // Show nothing 
 
@@ -152,6 +152,7 @@ function plugin_edit_inline()
 	}
 
 	// URL
+	$script = get_script_uri();
 	if ($isfreeze) {
 		$url   = $script . '?cmd=unfreeze&amp;page=' . rawurlencode($s_page);
 	} else {
