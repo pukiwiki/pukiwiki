@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: color.inc.php,v 1.23 2007/11/11 09:36:53 henoheno Exp $
+// $Id: color.inc.php,v 1.24 2007/11/11 10:43:39 henoheno Exp $
 //
 // Text color plugin
 //
@@ -14,7 +14,7 @@ define('PLUGIN_COLOR_ALLOW_CSS', 1);
 
 // ----
 define('PLUGIN_COLOR_USAGE', '&amp;color(foreground[,background]){text};');
-define('PLUGIN_COLOR_REGEX', '/^(#[0-9a-f]{3}|#[0-9a-f]{6}|[a-z-]+)$/i');
+define('PLUGIN_COLOR_REGEX', '/^(?:#[0-9a-f]{3}|#[0-9a-f]{6}|[a-z-]+)$/i');
 
 function plugin_color_inline()
 {
