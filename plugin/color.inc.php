@@ -1,15 +1,19 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: color.inc.php,v 1.22 2005/06/16 15:04:08 henoheno Exp $
+// $Id: color.inc.php,v 1.23 2007/11/11 09:36:53 henoheno Exp $
 //
 // Text color plugin
+//
+// See Also:
+// CCS 2.1 Specification: 4.3.6 Colors
+// http://www.w3.org/TR/CSS21/syndata.html#value-def-color
 
 // Allow CSS instead of <font> tag
 // NOTE: <font> tag become invalid from XHTML 1.1
-define('PLUGIN_COLOR_ALLOW_CSS', TRUE); // TRUE, FALSE
+define('PLUGIN_COLOR_ALLOW_CSS', 1);
 
 // ----
-define('PLUGIN_COLOR_USAGE', '&color(foreground[,background]){text};');
+define('PLUGIN_COLOR_USAGE', '&amp;color(foreground[,background]){text};');
 define('PLUGIN_COLOR_REGEX', '/^(#[0-9a-f]{3}|#[0-9a-f]{6}|[a-z-]+)$/i');
 
 function plugin_color_inline()
@@ -17,32 +21,38 @@ function plugin_color_inline()
 	global $pkwk_dtd;
 
 	$args = func_get_args();
-	$text = strip_autolink(array_pop($args)); // Already htmlspecialchars(text)
+	$text    = strip_autolink(array_pop($args)); // htmlspecialchars(text) already
+	$color   = isset($args[0]) ? trim($args[0]) : '';
+	$bgcolor = isset($args[1]) ? trim($args[1]) : '';
 
-	list($color, $bgcolor) = array_pad($args, 2, '');
-	if ($color != '' && $bgcolor != '' && $text == '') {
-		// Maybe the old style: '&color(foreground,text);'
-		$text    = htmlspecialchars($bgcolor);
-		$bgcolor = '';
-	}
-	if (($color == '' && $bgcolor == '') || $text == '' || func_num_args() > 3)
+	if (($color == '' && $bgcolor == '') || func_num_args() > 3) {
 		return PLUGIN_COLOR_USAGE;
-
-	// Invalid color
-	foreach(array($color, $bgcolor) as $col){
-		if ($col != '' && ! preg_match(PLUGIN_COLOR_REGEX, $col))
-			return '&color():Invalid color: ' . htmlspecialchars($col) . ';';
+	}
+	if ($text == '' ) {
+		if ($color != '' && $bgcolor != '') {
+			// The old style like: '&color(foreground,text);'
+			$text    = htmlspecialchars($bgcolor);
+			$bgcolor = '';
+		} else {
+			return PLUGIN_COLOR_USAGE;
+		}
+	}
+	foreach(array($color, $bgcolor) as $_color){
+		if ($_color != '' && ! preg_match(PLUGIN_COLOR_REGEX, $_color)) {
+			return '&amp;color():Invalid color: ' . htmlspecialchars($_color) . ';';
+		}
 	}
 
-	if (PLUGIN_COLOR_ALLOW_CSS === TRUE || ! isset($pkwk_dtd) || $pkwk_dtd == PKWK_DTD_XHTML_1_1) {
-		$delimiter = '';
-		if ($color != '' && $bgcolor != '') $delimiter = '; ';
-		if ($color   != '') $color   = 'color:' . $color;
+	if (PLUGIN_COLOR_ALLOW_CSS || ! isset($pkwk_dtd) || $pkwk_dtd == PKWK_DTD_XHTML_1_1) {
+		if ($color   != '') $color   = 'color:'            . $color;
 		if ($bgcolor != '') $bgcolor = 'background-color:' . $bgcolor;
+		$delimiter = ($color != '' && $bgcolor != '') ? ';' : '';
 		return '<span style="' . $color . $delimiter . $bgcolor . '">' .
 			$text . '</span>';
 	} else {
-		if ($bgcolor != '') return '&color(): bgcolor (with CSS) not allowed;';
+		if ($bgcolor != '') {
+			return '&amp;color(): bgcolor not allowed;';
+		}
 		return '<font color="' . $color . '">' . $text . '</font>';
 	}
 }
