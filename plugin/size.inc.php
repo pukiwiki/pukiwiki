@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: size.inc.php,v 1.12 2007/11/13 14:59:45 henoheno Exp $
+// $Id: size.inc.php,v 1.13 2007/11/15 14:30:20 henoheno Exp $
 //
 // Font-size plugin
 //
@@ -28,7 +28,7 @@ define('PLUGIN_SIZE_USAGE', '&amp;size(pixel or percentage){Text you want to cha
 define('PLUGIN_SIZE_REGEX',
 	'/^(?:' .
 	'([0-9]+(?:\.[0-9]+)?)(?: *px)?' . '|' .	// Pixel (default)
-	'([0-9.]+(?:\.[0-9]+)?) *%' .				// Percentage
+	'([0-9]+(?:\.[0-9]+)?) *%' .				// Percentage
 	')$/i');
 
 function plugin_size_inline()
