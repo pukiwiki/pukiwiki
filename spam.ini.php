@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.86 2007/11/27 16:22:18 henoheno Exp $
+// $Id: spam.ini.php,v 1.87 2007/12/01 01:45:28 teanan Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -73,8 +73,8 @@ $blocklist['goodhost'] = array(
 	//'ifastnet.com',				// Server hosting
 	//'threefortune.ifastnet.com',	// Server hosting
 	//'sirakaba.s21.xrea.com',		// Ratbeta, known as PukiWiki hacker
-	//''
-	//''
+	//'desperadoes.biz',			// YEAR OF THE CAT, PukiWiki skin designer
+	//'',
 	//''
 
 );
