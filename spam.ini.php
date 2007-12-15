@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.88 2007/12/15 06:46:54 henoheno Exp $
+// $Id: spam.ini.php,v 1.89 2007/12/15 13:00:33 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -2615,9 +2615,10 @@ $blocklist['B-1'] = array(
 		'*.googlegroups.com',		///web/
 		'*.googlepages.com',
 		'groups-beta.google.com',
-		'groups.google.ca',
-		'groups.google.com',
-		'groups.google.co.uk',
+		'groups.google.*',	 ///group/ Seems widely distributed
+			//'groups.google.ca', 'groups.google.com', 'groups.google.co.uk',
+			//'groups.google.de', 'groups.google.es',  'groups.google.fr',
+			//'groups.google.it', ...
 	),
 	'guestbook.at',
 	'club.giovani.it',
@@ -2704,6 +2705,10 @@ $blocklist['B-1'] = array(
 	'koolpages.com',
 	'*.kostenlose-foren.org',
 	'*.ksiegagosci.info',
+	'LaCoctelera.com' => array(
+		'lacoctelera.com',	// by alberto at the-cocktail.com
+		'espacioblog.com',	// by dominios at ferca.com
+	),
 	'Lide.cz' => array(
 		'*.lide.cz',
 		'*.sblog.cz',
@@ -3403,7 +3408,7 @@ $blocklist['B-2'] = array(
 	'.xthost.info',			// by Michael Renz (dhost at mykuhl.de)
 	'Yahoo.com' => array(
 		'blog.360.yahoo.com',
-		'*.groups.yahoo.com'
+		'*.groups.yahoo.com',	///group/ * = es, finance, fr, games, lauch, ...
 	),
 	'yasushi.site.ne.jp',	// One of mixedmedia.net'
 	'youthpeer.org',
@@ -6587,19 +6592,47 @@ $blocklist['C'] = array(
 		'.tonoscelular.info',
 		'.tonosmotorola.info',
 	),
-	'89.149.208.23' => array(
+	'Anderson at extra.by' => array(
+		// Encoded JavaScript
+
+		// 84.16.235.84(ns2.rrbone-dns.net -> non-existent) ns *.5upp.info
+		'.4cat.info',	// by Anderson at extra.by, ns *.9upp.info
+		'.6dir.info',
+		'.8dir.info',
+		'.9dir.info',
+		'.2pro.info',
+		'.5pro.info',	// by Anderson at extra.by, ns *.9upp.info
+		'.6pro.info',
+		'.7pro.info',
+		'.8pro.info',
+		'.9pro.info',
+		'.5sms.info',
+		'.6sms.info',
+		'.8sms.info',
+		'.9sms.info',
+		'.1upp.info',
+		'.2upp.info',
+		'.3upp.info',
+		'.4upp.info',
+		'.5upp.info',
+		'.6upp.info',
+		'.7upp.info',
+		'.8upp.info',
+		'.9upp.info',	// 89.149.208.23(*.internetserviceteam.com) by Anderson at extra.by, ns *.9upp.info
+		'.2vip.info',	// by Anderson at extra.by
+		'.4vip.info',
+		'.5vip.info',
+		'.6vip.info',
+		'.7vip.info',
+		'.8vip.info',	// ns *.9upp.info
+		'.9vip.info',
+
 		// 89.149.208.23(*.internetserviceteam.com) by evdesign at gmail.com, ns *.9upp.info
 		'.w3rar.info',
 		'.w3sex.info',
 		'.w3zip.info',
 		'.w3in.info',
 		'.w3out.info',
-
-		// 89.149.208.23(*.internetserviceteam.com) by Anderson at extra.by, ns *.9upp.info, encoded JavaScript
-		'.2vip.info',
-		'.4cat.info',
-		'.8vip.info',
-		'.9upp.info',
 	),
 	'zorkin87 at mail.ru' => array(
 		// 66.232.112.242(hv78.steephost.com -> 72.232.191.50 -> *.steephost.com)
@@ -6673,13 +6706,6 @@ $blocklist['C'] = array(
 	'vme at hotmail.ru' => array(
 		'.seoblack.net',	// 216.195.33.112(non-exsistent)
 		'.seoblack.biz',	// 216.195.33.113(non-exsistent)
-	),
-	'84.16.235.84' => array(
-		// 84.16.235.84(ns2.rrbone-dns.net -> non-existent) ns *.5upp.info
-		'.5sms.info',
-		'.6sms.info',
-		'.8sms.info',
-		'.9sms.info',
 	),
 	'john at hellomyns.info' => array(
 		'.cuhdw.cn',		// 217.20.113.27, / nothing
