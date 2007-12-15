@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.87 2007/12/01 01:45:28 teanan Exp $
+// $Id: spam.ini.php,v 1.88 2007/12/15 06:46:54 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -74,7 +74,8 @@ $blocklist['goodhost'] = array(
 	//'threefortune.ifastnet.com',	// Server hosting
 	//'sirakaba.s21.xrea.com',		// Ratbeta, known as PukiWiki hacker
 	//'desperadoes.biz',			// YEAR OF THE CAT, PukiWiki skin designer
-	//'',
+	//''
+	//''
 	//''
 
 );
@@ -172,6 +173,7 @@ $blocklist['A-1'] = array(
 		'*.ovp.pl',
 		'*.6-6-6.pl',
 	),
+	'babelfish.altavista.com',	///babelfish/trurl_pagecontent
 	'amoo.org',
 	'web.archive.org',		///web/2
 	'Arzy.net' => array(	// "(c) 2007 www.arzy.net", by urladmin at zvxr.com, DNS arzy.net
@@ -1489,7 +1491,7 @@ $blocklist['A-2'] = array(
 
 $blocklist['B-1'] = array(
 
-	// B-1: Web N.M spaces (N > 0, M > 0)
+	// B-1: Web N.M spaces (N > 0, M >= 0)
 	//
 	//   Messages from forerunners:
 	//     activefreehost.com
@@ -1864,6 +1866,7 @@ $blocklist['B-1'] = array(
 	'*.ekiwi.de',
 	'*.eamped.com',			// Admin by Joe Hayes (joe_h_31028 at yahoo.com)
 	'.easyfreeforum.com',	// by XT Store Sas, Luca Lo Bascio (marketing at atomicshop.it)
+	'*.easyjournal.com',
 	'*.ebloggy.com',
 	'enunblog.com',
 	'*.epinoy.com',
@@ -2612,6 +2615,9 @@ $blocklist['B-1'] = array(
 		'*.googlegroups.com',		///web/
 		'*.googlepages.com',
 		'groups-beta.google.com',
+		'groups.google.ca',
+		'groups.google.com',
+		'groups.google.co.uk',
 	),
 	'guestbook.at',
 	'club.giovani.it',
@@ -3167,11 +3173,14 @@ $blocklist['B-2'] = array(
 	'alwanforthearts.org',
 	'*.anchor.net.au',
 	'anewme.org',
+	'arcrockett.com',		///golf/excel/
 	'arisedesign.net',		//Portfolio/d981/
 	'internetyfamilia.asturiastelecentros.com',
+	'ballblair.com',		///images/thumbs/
 	'Ball State University' => array('web.bsu.edu'),
 	'btofaq.net',			///v3/forum
 	'blepharospasm.org',
+	'brettforrest.com',		// 72.10.43.226 by brettforrest at hotmail.com, ns *.mediatemple.net
 	'nyweb.bowlnfun.dk',
 	'*.buzznet.com',
 	'Carroll College' => array(
@@ -3182,6 +3191,7 @@ $blocklist['B-2'] = array(
 	'Case Western Reserve University' => array('case.edu'),
 	'ceval.de',
 	'chaco.gov.ar',
+	'chasingrainbowsaustralia.com',	///geometry/
 	'codespeak.net',
 	'Colorado School of Mines' => array('ticc.mines.edu'),
 	'*.colourware.co.uk',
@@ -3207,8 +3217,10 @@ $blocklist['B-2'] = array(
 	'forums.drumcore.com',
 	'dundeeunited.org',
 	'energyglass.com.ua',
+	'equitas.com.au',		///images/mim3/, no index.html
 	'exclusivehotels.com',
 	'info.ems-rfid.com',
+	'fairyfunkyard.com',	///images_files/files/
 	'farrowhosting.com',	// by Paul Farrow (postmaster at farrowcomputing.com)
 	'fbwloc.com',
 	'.fhmcsa.org.au',
@@ -3322,6 +3334,7 @@ $blocklist['B-2'] = array(
 	'ryanclark.org',
 	'*.reallifelog.com',
 	'rkphunt.com',
+	'rso-csp.org',			///bulletins/
 	'.saasmar.ru',			// Jacked. iframe to banep.info on root, etc
 	'sapphireblue.com',
 	'saskchamber.com',
@@ -5757,6 +5770,8 @@ $blocklist['C'] = array(
 		// 209.67.218.106(*.static.reverse.ltdomains.com) by partner at pornography-world.com, ns *.peraonline.info
 		'.new-greece-travel.com',
 		'.peraonline.info',
+
+		'.barkman.cn',
 	),
 
 	'aofa at vip.163.com' => array(
@@ -6643,6 +6658,7 @@ $blocklist['C'] = array(
 		// The same method with info at cash4wm.biz
 		'.coolnews-4u.com',		// 217.20.123.122(*.internetserviceteam.com),
 		'.bestnews-4u.com',		// 84.16.227.135(*.internetserviceteam.com)
+		'.big-site-news.com',	// 84.16.243.168(*.fixshell.com -> non-existent)
 		'.good-news-4u.info',	// 89.149.196.72(mendoi.fansubs.omni-forums.net -> ..)
 		'.super-blog-here.com',	// 89.149.247.25, the same IP with iblcqms.cn
 		'.bloginfo4u.info',		// 89.149.247.25
@@ -6657,6 +6673,54 @@ $blocklist['C'] = array(
 	'vme at hotmail.ru' => array(
 		'.seoblack.net',	// 216.195.33.112(non-exsistent)
 		'.seoblack.biz',	// 216.195.33.113(non-exsistent)
+	),
+	'84.16.235.84' => array(
+		// 84.16.235.84(ns2.rrbone-dns.net -> non-existent) ns *.5upp.info
+		'.5sms.info',
+		'.6sms.info',
+		'.8sms.info',
+		'.9sms.info',
+	),
+	'john at hellomyns.info' => array(
+		'.cuhdw.cn',		// 217.20.113.27, / nothing
+		'.byouz.cn',		// 89.149.247.24, / nothing
+		'.idghc.cn',
+		'.inxrj.cn',
+		'.jqzdf.cn',
+		'.vsxej.cn',
+		'.wkgnr.cn',
+	),
+	'.CN spam payload' => array(
+		'.i3sa.cn',			// by varra6yu4lt8607 at yahoo.com
+		'.bjlzhh.cn',		// 210.51.162.236(non-existent) by bjlzhh at 163.com
+		'.iactive.com.cn',	// 60.28.204.205(non-existent) by buggd at 263.net
+		'.njss.com.cn',		// 219.142.175.25(mail.codeprof.com) by admin at yywt.com
+		'.qimo.com.cn',		// 219.235.228.55(non-existent) by baojieshuma at 163.com
+		'.wzhj.com.cn',		// 218.244.136.78 by nemesisxue at yahoo.com.cn
+		'.ytbaixin.com.cn',	// 210.22.13.42(sym.gdsz.cncnet.net) by ytwqg at 163.com
+		'.tj-008.cn',		// 222.35.3.90(non-existent) by dinmo.net at gmail.com
+		'.xglzl.cn',		// 60.215.129.74(non-existent) by 148044648 at 163.com
+		'.xixii.cn',		// 218.206.72.210(non-existent) by chenzhen8168 at yahoo.com.cn
+	),
+	'Time2ns.info' => array(
+		// time2ns.info(84.16.226.58 -> *.internetserviceteam.com), "Fedora Core Test Page" says this is private
+		'.klmnei.cn',		// 84.16.243.123(*.internetserviceteam.com) by arsen at time2ns.info(84.16.226.58)
+		'.lumyjugmn.cn',	// 89.149.243.225(*.internetserviceteam.com) by kashin at time2ns.info
+		'.uxmrscgdi.cn',	// 89.149.247.23(*.internetserviceteam.com) by Bmurphy at itsmyns.info
+		'.iblcqms.cn',		// 89.149.247.25(*.internetserviceteam.com) by Gershun at time2ns.info, / not found
+	),
+	'Ilovemyns.info' => array(
+		// ilovemyns.info(89.149.247.26 -> *.internetserviceteam.com), "Fedora Core Test Page" says this is private
+		'.aasghwf.cn',		// 84.16.243.121(*.internetserviceteam.com) by Shooll at ilovemyns.info
+	),
+	'Freehostdns.info' => array(
+		// freehostdns.info(217.20.112.24 -> neviem.kto.sk), "Fedora Core Test Page" says this is private
+		'.qyxswynd.cn',		// 89.149.247.26(*.internetserviceteam.com) by margarita at freehostdns.info
+		'.ugivorm.cn',		// 217.20.127.219(*.internetserviceteam.com) by Chos at freehostdns.info
+	),
+	'Newns4me.info' => array(
+		// newns4me.info(217.20.127.231 -> pls.dont.eat.shit.la), "Fedora Core Test Page" says not public
+		'.lxwxjzpiy.cn',	// 217.20.113.27(*.internetserviceteam.com) by Alexan at newns4me.info
 	),
 
 	// C-2: Lonely domains (buddies not found yet)
@@ -6690,20 +6754,26 @@ $blocklist['C'] = array(
 	'.auto-car-cheap.org',
 	'.banep.info',			// by Mihailov Dmitriy (marokogadro at yahoo.com), iframe to this site
 	'.baurish.info',
+	'.bernardtomic21.info',	// by filboj at hotmail.com
 	'.bestop.name',
 	'.betmmo.com',			// 63.223.98.182 by Huang Qiang (liuxing-wushi at hotmail.com), pl
 	'.bestrademark.info',	// by victoria (niko16d at yahoo.com), redirect to majordomo.ru
 	'.bestshopfinder.info',
 	'.blogest.org',			// 203.116.63.68 by Bobby.R.Kightlinger at pookmail.com, / seems blank
 	'.bookblogsite.org',	// 217.11.233.58 by Eugene.E.Mather at mailinator.com
+	'.brisbanedecking.com',	// 61.14.187.244(orion.websiteactive.com) by jgstubb at bigpond.net.au, / nothing
 	'.businessplace.biz',	// by Grenchenko Ivan Petrovich (eurogogi at yandex.ru)
+	'.buyshaliflute.com',	// 70.84.133.34(epsilon.websiteactive.com) by bigwave3000 at ozemail.com.au
 	'.capital2u.info',		// by Delbert.A.Henry at dodgeit.com
 	'.casa-olympus.com',	// "UcoZ WEB-SERVICES"
+	'.cashing-view.com',	// 210.188.201.22(sv69.xserver.jp) by kikuchi at money-agent.jp
 	'.catkittenmagazines.org',		// 87.118.97.117
+	'.cdmsolutionsinc.com',	// 206.123.100.160 by rpeterson at ricochet.com
 	'.chatwalker.com',		// 124.32.230.65
 	'.cosamoza.com',		// 216.195.51.62 by travelwins at yahoo.com
 	'.covertarena.co.uk',	// by Wayne Huxtable
 	'.d999.info',			// by Peter Vayner (peter.vayner at inbox.ru)
+	'.dance-ithaca.com',	// 203.191.238.22(non-existent) by iichiba at hotmail.com, finance
 	'.dinmo.cn',			// 218.30.96.149 by dinso at 163.com, seo etc.	//'.wow-gold.dinmo.cn',	// 125.65.76.59, pl
 	'.dinmoseo.com',		// 210.51.168.102(winp2-web-g02.xinnetdns.com) by jianmin911 at 126.com, NS *.xinnetdns.com, seo
 	'.discoverproducts.info',// 216.195.58.37(non-existent) by snarku at gmail.com
@@ -6711,6 +6781,7 @@ $blocklist['C'] = array(
 	'.dollar4u.info',		// by Carla (Carla.J.Merritt at mytrashmail.com), / is blank
 	'.drug-shop.us',			// by Alexandr (matrixpro at mail.ru)
 	'.drugs-usa.info',		// by Edward SanFilippo (Edward.SanFilippo at gmail.com), redirect to activefreehost.com
+	'.dssoaps.com',			// 67.15.104.24(pluto.websiteactive.com) by donnabl at iprimus.com.au, encoded JavaScript
 	'.easypharmsite.com',	// 75.126.129.229(greatpool.biz => 72.232.198.234 => ) by andrew at pharmacy-inet.com
 	'.easyshopusa.com',		// by riter (riter at nm.ru)
 	'.edjuego.com',			// 85.92.70.253(non-existent), gamble
@@ -6731,6 +6802,7 @@ $blocklist['C'] = array(
 	'.freehost5.com',		// 75.126.32.184(kosmohost.net), words only
 	'.freeliveringtones.com',	// by Silan (lippe1988 at gmail.com)
 	'.freemobilephonesworld.info',	// by andresid (andresid1 at yandex.ru)
+	'.fwjjjtmrlr.cn',		// 217.20.127.232(really.cut3.info -> non-existent) by analog at gamehostingns.info(217.20.113.79)
 	'.game4enjoy.net',		// by huang jinglong (fenlin231 at sina.com)
 	'.game4egold.com',		// by Filus Saifullin (ebay at soft-script.com)
 	'.goldcoastonlinetutoring.com',	// by Robert Tanenbaum (buildbt at lycos.com)
@@ -6754,6 +6826,7 @@ $blocklist['C'] = array(
 	'.hostzerocost.com',	// server failed, by Gokhan Yildirim (gokhany at gmail.com)
 	'.iinaa.net',			// domain at ml.ninja.co.jp, ns *.shinobi.jp
 	'.incbuy.info',			// by Diego T. Murphy (Diego.T.Murphy at incbuy.info)
+	'.informator4you.com',	// 84.16.235.141 by info at cash4wm.biz
 	'.infradoc.com',
 	'.investorvillage.com',	// by natalija puchkova (internet at internet.lv)
 	'.ismarket.com',		// Google-hiding. intercage.com related IP
@@ -6761,9 +6834,11 @@ $blocklist['C'] = array(
 	'.italy-search.org',	// by Alex Yablin (zaharov-alex at yandex.ru)
 	'.itsexosit.net',
 	'.itxxxit.net',
+	'.hostsy.us',			// 217.11.233.21 by Julian.L.Harrington at dodgit.com, / empty, redirection
 	'.jimmys21.com',		// by Klen Kudryavii (telvid at shaw.ca)
 	'.jimka-mmsa.com',		// by Alex Covax (c0vax at mail.ru), seems not used yet
 	'.joynu.com',			// by lei wang (93065 at qq.com), hidden JavaScript
+	'.jsyuanyang.com',		// 58.211.0.23(non-existing)
 	'.karasikov.net',			// 217.107.217.7(server3.jino.ru -> 217.107.217.17) by pashkanet at list.ru, encoded JavaScript
 	'.kingtools.de',
 	'.kymon.org',			// by Albert Poire (isupport at yahoo.com), / Forbidden, 70.87.62.252
@@ -6772,6 +6847,7 @@ $blocklist['C'] = array(
 	'.lightyearmedia.com',	// 216.104.33.66(esc91.midphase.com) by techsupport at midphase.com, encoded JavaScript
 	'.link-keeper.net',		// 210.172.108.236 (257.xrea.com)
 	'.ls.la',				// by Milton McLellan (McLellanMilton at yahoo.com)
+	'.m-sr.net',			// 210.175.62.125(non-existent) by luckynets2003 at yahoo.co.jp, ns *.ARK-NET.NE.JP
 	'.mamaha.info',			// by Alex Klimovsky (paganec at gmail.com), seems now constructiong
 	'.manseekingwomanx.com',// by Bill Peterson (coccooc at fastmail.fm)
 	'.mdjadozone.org',		// 64.34.124.103(non-existent) by info at infoconceptlc.com, / blank
@@ -6819,7 +6895,10 @@ $blocklist['C'] = array(
 	'.rigame.info',			// by debra_jordan07 at yahoo.com
 	'.rmt-trade.com',		// by wang chun (dlxykj at 126.com), rmt
 	'.roin.info',			// by Evgenius (roinse at yandex.ru)
+	'.rpz3zmr75a.com',		// 216.188.26.235(park-www.trellian.com, redirects to domainparkltd.com) by hostmaster at domainparkltd.com(216.188.26.235)
+	'.rutewqsfrt10.cn',		// 72.36.237.146(*.static.reverse.ltdomains.com) by ferrari by list.ru
 	'.save-darina.org',		// 85.14.36.36 by Plamen Petrov (plamen5rov at yahoo.com)
+	'.search99top.info',	// 85.255.118.236 / not found, ns *.f01137d.com, redirect to abosearch.com
 	'.searchadv.com',		// by Jaan Randolph (searchadv at gmail.com)
 	'.seek-www.com',		// by Adam Smit (pingpong at mail.md)
 	'.sessocities.net',		// 66.98.162.20(*.ev1servers.net: Non-existent domain) by info at secureserver3.com
@@ -6880,25 +6959,6 @@ $blocklist['C'] = array(
 	'.zyguo.info',			// ns globoxhost.net
 	'.zhuyiw.com',			// by zhou yuntao (whzyt0122 at sohu.com)
 
-
-	'.cashing-view.com',	// 210.188.201.22(sv69.xserver.jp) by kikuchi at money-agent.jp
-	'.jsyuanyang.com',		// 58.211.0.23(non-existing)
-	'.m-sr.net',			// 210.175.62.125(non-existent) by luckynets2003 at yahoo.co.jp, ns *.ARK-NET.NE.JP
-	'.rutewqsfrt10.cn',		// 72.36.237.146(*.static.reverse.ltdomains.com) by ferrari by list.ru
-	'.rpz3zmr75a.com',		// 216.188.26.235(park-www.trellian.com, redirects to domainparkltd.com) by hostmaster at domainparkltd.com(216.188.26.235)
-
-	// The same approach of 'acua at mail.ru'
-	'.iblcqms.cn',			// 89.149.247.25(*.internetserviceteam.com) by Gershun at time2ns.info(84.16.226.58 -> *.internetserviceteam.com), / not found
-	'.aasghwf.cn',			// 84.16.243.121(*.internetserviceteam.com) by Shooll at ilovemyns.info(89.149.247.26 -> *.internetserviceteam.com)
-	'.fwjjjtmrlr.cn',		// 217.20.127.232(really.cut3.info -> non-existent) by analog at gamehostingns.info
-	'.klmnei.cn',			// 84.16.243.123(*.internetserviceteam.com) by arsen at time2ns.info
-	'.lumyjugmn.cn',		// 89.149.243.225(*.internetserviceteam.com) by kashin at time2ns.info
-	'.lxwxjzpiy.cn',		// TODO:
-	'.qyxswynd.cn',			// TODO:
-	'.ugivorm.cn',			// TODO:
-	'.uxmrscgdi.cn',		// TODO:
-
-	'.informator4you.com',	// 84.16.235.141 by info at cash4wm.biz
 
 	// C-3: Not classifiable (information wanted)
 	//
