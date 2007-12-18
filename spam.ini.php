@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.89 2007/12/15 13:00:33 henoheno Exp $
+// $Id: spam.ini.php,v 1.90 2007/12/18 16:25:26 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -2569,7 +2569,6 @@ $blocklist['B-1'] = array(
 	'*.freeclans.de',
 	'*.freehostplace.com',	// by contact at keepclear.co.uk
 	'*.freelinuxhost.com',	// by 100webspace.com
-	'*.nofeehost.com',
 	'*.freehyperspace.com',
 	'freeforum.at',			// by Sandro Wilhelmy
 	'freeforumshosting.com',	// by Adam Roberts (admin at skaidon.co.uk)
@@ -2577,6 +2576,7 @@ $blocklist['B-1'] = array(
 	'*.freemyforumadult.com',	// 208.97.191.105(apache2-argon.willie.dreamhost.com) by sick at designsbysick.com
 	'*.freewebhostingpro.com',
 	'*.freehostingz.com',	// no dns reply => 67.159.33.10 by Marx Lomas (marvellousmarx at hotmail.com)
+	'*.freeweb7.com',
 	'FreeWebHostingArea.com' => array(	// or www.freewha.com
 		'*.6te.net',
 		'*.ueuo.com',
@@ -2692,6 +2692,7 @@ $blocklist['B-1'] = array(
 	'*.info.com',
 	'*.informe.com',
 	'it168.com',
+	'*.itrello.com',
 	'.iwannaforum.com',
 	'*.jconserv.net',
 	'*.jeeran.com',
@@ -2803,6 +2804,7 @@ $blocklist['B-1'] = array(
 	'users.newblog.com',
 	'neweconomics.info',
 	'*.newsit.es',				// 75.126.252.108
+	'*.nofeehost.com',
 	'*.nm.ru',
 	'*.nmj.pl',
 	'*.nocatch.net',			// 74.86.93.190(layeredpanel.com => ...)
@@ -3938,6 +3940,24 @@ $blocklist['C'] = array(
 
 		'.games-nifty.com',		// 255.255.255.255 now
 		'.homepage3-nifty.com',	// 255.255.255.255 now
+	),
+	'dfym at dfym.cn' => array(
+		// ANI, JavaScript, iframe, Online games, like mail at pcinc.cn
+
+		// 220.166.64.44 by chen jinian (dfym at dfym.cn)
+		'.okwit.com',
+		'.sakerver.com',
+		'.motewiki.net',
+
+		'.caremoon.net',	// 221.10.254.63 by abc00623 at 163.com, Admin by dfym, ns *.myhostadmin.net
+
+		'.8568985.com',		// 61.139.126.10 by liaojiaying88 at sina.com, Admin by dfym, ns *.myhostadmin.net
+
+		// 61.139.126.47, by guoyongdan at 126.com, Tech by dfym, ns *.myhostadmin.net
+		'.bbtv-chat.com',
+		'.ketubatle.com',
+		'.playonlanei.com',
+		'.rmtfcne.com',
 	),
 	'caddd at 126.com' => array(
 		'.chengzhibing.com',	// by chen gzhibing
@@ -6132,18 +6152,6 @@ $blocklist['C'] = array(
 		'.pharmacyonlinenet.com',	// 216.195.51.59, hidden JavaScript
 		'.ringtonecooler.com',		// 217.11.233.34
 	),
-	'dfym at dfym.cn' => array(	// by chen jinian (dfym at dfym.cn)
-		// 220.166.64.44
-		'.okwit.com',
-		'.sakerver.com',
-		'.motewiki.net',
-
-		'.8568985.com',		// 61.139.126.10 ns *.myhostadmin.net
-		
-		// 61.139.126.47, ns *.myhostadmin.net
-		'.playonlanei.com',
-		'.rmtfcne.com',
-	),
 	'mkiyle at gmail.com' => array(	// by Mihelich (mkiyle at gmail.com)
 		'.findcraft.info',			// 209.8.28.11(209-8-28-11.pccwglobal.net)
 		'.lookmedicine.info',		// 206.161.205.22
@@ -6684,6 +6692,9 @@ $blocklist['C'] = array(
 		'.brendsite.com',
 		'.my-news-blog.com',
 
+		// 84.16.242.122(*.internetserviceteam.com)
+		'.my-huge-site.com',
+
 		// 84.16.242.123(*.internetserviceteam.com)
 		'.best-news-blog.com',
 		'.site-with-content.com',
@@ -6716,7 +6727,7 @@ $blocklist['C'] = array(
 		'.vsxej.cn',
 		'.wkgnr.cn',
 	),
-	'.CN spam payload' => array(
+	'Chinese spam payload' => array(
 		'.i3sa.cn',			// by varra6yu4lt8607 at yahoo.com
 		'.bjlzhh.cn',		// 210.51.162.236(non-existent) by bjlzhh at 163.com
 		'.iactive.com.cn',	// 60.28.204.205(non-existent) by buggd at 263.net
@@ -6727,6 +6738,9 @@ $blocklist['C'] = array(
 		'.tj-008.cn',		// 222.35.3.90(non-existent) by dinmo.net at gmail.com
 		'.xglzl.cn',		// 60.215.129.74(non-existent) by 148044648 at 163.com
 		'.xixii.cn',		// 218.206.72.210(non-existent) by chenzhen8168 at yahoo.com.cn
+
+		'.airhangchen.com',		// 210.51.168.179(non-existent) by hc9600 at 126.com
+		'.qinglvzaixian.com',	// 210.51.189.231(non-existent) by zhandyong at 163.com
 	),
 	'Time2ns.info' => array(
 		// time2ns.info(84.16.226.58 -> *.internetserviceteam.com), "Fedora Core Test Page" says this is private
@@ -6747,6 +6761,20 @@ $blocklist['C'] = array(
 	'Newns4me.info' => array(
 		// newns4me.info(217.20.127.231 -> pls.dont.eat.shit.la), "Fedora Core Test Page" says not public
 		'.lxwxjzpiy.cn',	// 217.20.113.27(*.internetserviceteam.com) by Alexan at newns4me.info
+	),
+	'gannipo at yahoo.com.cn' => array(
+		// 125.65.112.49
+		'.gomeodc.com',		// iframe to vviccd520.com
+		'.pinkdoo.com',
+	),
+	'scaryscream at gmail.com' => array(
+		// 217.11.233.60()
+		'.bestxxxnow.com',
+		'.freexxxgifts.com',
+
+		// 81.0.195.154(non-existent)
+		'.newxxxworld.com',
+		'.xxxhotclub.com',
 	),
 
 	// C-2: Lonely domains (buddies not found yet)
@@ -6833,7 +6861,6 @@ $blocklist['C'] = array(
 	'.game4egold.com',		// by Filus Saifullin (ebay at soft-script.com)
 	'.goldcoastonlinetutoring.com',	// by Robert Tanenbaum (buildbt at lycos.com)
 	'.golden-keys.net',		// 89.149.205.146(unknown.vectoral.info) by aktitol at list.ru
-	'.gomeodc.com',			// 125.65.112.49 by wang meili (gannipo at yahoo.com.cn), iframe to vviccd520.com
 	'.ganecity.com',		// by shao tian (huangjinqiang at sina.com)
 	'.gm-exchange.jp',		// 210.188.216.49 RMT
 	'.goamoto.ru',			// by Dmitry E Kotchnev (z2archive at gmail.com)
@@ -6986,6 +7013,7 @@ $blocklist['C'] = array(
 	'.zhuyiw.com',			// by zhou yuntao (whzyt0122 at sohu.com)
 
 
+	
 	// C-3: Not classifiable (information wanted)
 	//
 	// Something incoming to pukiwiki related sites
