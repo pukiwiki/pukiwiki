@@ -11,6 +11,7 @@ If you try to contribute your original work, please select
 "GPL v2 or (at your option) any later version" by default
 for the license, due to seamless merger.
 
+Thanks
 
 ----------------------------------------------------------------------
 		    GNU GENERAL PUBLIC LICENSE
