@@ -1,3 +1,18 @@
+
+The most parts of the code are:
+	"GPL v2 or (at your option) any later version"
+	(NOTE: Not just "GPL2")
+
+Some of the others:
+	"GPL2"
+	"GPL" (means _any_ version)
+
+If you try to contribute your original work, please select
+"GPL v2 or (at your option) any later version" by default
+for the license, due to seamless merger.
+
+
+----------------------------------------------------------------------
 		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 
