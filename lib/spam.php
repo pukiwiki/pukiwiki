@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.php,v 1.32 2007/08/18 14:47:32 henoheno Exp $
+// $Id: spam.php,v 1.33 2008/12/28 08:33:05 henoheno Exp $
 // Copyright (C) 2006-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -70,13 +70,46 @@ function var_export_shrink($expression, $return = FALSE, $ignore_numeric_keys = 
 	}
 }
 
-// Reverse $string with specified delimiter
-function delimiter_reverse($string = 'foo.bar.example.com', $from_delim = '.', $to_delim = '.')
+// Data structure: Create an array they _refer_only_one_ value
+function one_value_array($num = 0, $value = NULL)
 {
-	if (! is_string($string) || ! is_string($from_delim) || ! is_string($to_delim))
-		return $string;
+	$num   = max(0, intval($num));
+	$array = array();
 
-	// com.example.bar.foo
+	for ($i = 0; $i < $num; $i++) {
+		$array[] = & $value;
+	}
+
+	return $array;
+}
+
+// Reverse $string with specified delimiter
+function delimiter_reverse($string = 'foo.bar.example.com', $from_delim = '.', $to_delim = NULL)
+{
+	$to_null = ($to_delim === NULL);
+
+	if (! is_string($from_delim) || (! $to_null && ! is_string($to_delim))) {
+		return FALSE;
+	}
+	if (is_array($string)) {
+		// Map, Recurse
+		$count = count($string);
+		$from  = one_value_array($count, $from_delim);
+		if ($to_null) {
+			// Note: array_map() vanishes all keys
+			return array_map('delimiter_reverse', $string, $from);
+		} else {
+			$to = one_value_array($count, $to_delim);
+			// Note: array_map() vanishes all keys
+			return array_map('delimiter_reverse', $string, $from, $to);
+		}
+	}
+	if (! is_string($string)) {
+		return FALSE;
+	}
+
+	// Returns com.example.bar.foo
+	if ($to_null) $to_delim = & $from_delim;
 	return implode($to_delim, array_reverse(explode($from_delim, $string)));
 }
 
@@ -85,13 +118,18 @@ function ksort_by_domain(& $array)
 {
 	$sort = array();
 	foreach(array_keys($array) as $key) {
-		$sort[delimiter_reverse($key)] = $key;
+		$reversed = delimiter_reverse($key);
+		if ($reversed !== FALSE) {
+			$sort[$reversed] = $key;
+		}
 	}
 	ksort($sort, SORT_STRING);
+
 	$result = array();
 	foreach($sort as $key) {
 		$result[$key] = & $array[$key];
 	}
+
 	$array = $result;
 }
 
@@ -317,8 +355,10 @@ function generate_host_regex($string = '', $divider = '/')
 {
 	if (! is_string($string)) return '';
 
-	if (mb_strpos($string, '.') === FALSE)
+	if (mb_strpos($string, '.') === FALSE) {
+		// localhost
 		return generate_glob_regex($string, $divider);
+	}
 
 	if (is_ip($string)) {
 		// IPv4
@@ -327,10 +367,13 @@ function generate_host_regex($string = '', $divider = '/')
 		// FQDN or something
 		$part = explode('.', $string, 2);
 		if ($part[0] == '') {
-			$part[0] = '(?:.*\.)?';	// And all related FQDN
+			// .example.org
+			$part[0] = '(?:.*\.)?';
 		} else if ($part[0] == '*') {
-			$part[0] = '.*\.';	// All subdomains/hosts only
+			// *.example.org
+			$part[0] = '.*\.';
 		} else {
+			// example.org, etc
 			return generate_glob_regex($string, $divider);
 		}
 		$part[1] = generate_glob_regex($part[1], $divider);
@@ -339,20 +382,26 @@ function generate_host_regex($string = '', $divider = '/')
 }
 
 // Rough hostname checker
-// [OK] 192.168.
-// TODO: Strict digit, 0x, CIDR, IPv6
+// TODO: Strict digit, 0x, CIDR, '999.999.999.999', ':', '::G'
 function is_ip($string = '')
 {
+	if (! is_string($string)) return FALSE;
+
+	if (strpos($string, ':') !== FALSE) {
+		return 6;	// Seems IPv6
+	}
+
 	if (preg_match('/^' .
 		'(?:[0-9]{1,3}\.){3}[0-9]{1,3}' . '|' .
-		'(?:[0-9]{1,3}\.){1,3}' . '$/',
+		'(?:[0-9]{1,3}\.){1,3}'         . '$/',
 		$string)) {
 		return 4;	// Seems IPv4(dot-decimal)
-	} else {
-		return 0;	// Seems not IP
 	}
+
+	return FALSE;	// Seems not IP
 }
 
+// Load SPAM_INI_FILE and return parsed one
 function get_blocklist($list = '')
 {
 	static $regexes;
@@ -366,6 +415,7 @@ function get_blocklist($list = '')
 		$regexes = array();
 		if (file_exists(SPAM_INI_FILE)) {
 			$blocklist = array();
+
 			include(SPAM_INI_FILE);
 			//	$blocklist['list'] = array(
 			//  	//'goodhost' => FALSE;
@@ -375,11 +425,19 @@ function get_blocklist($list = '')
 			//		'*.blogspot.com',	// Blog services's subdomains (only)
 			//		'IANA-examples' => '#^(?:.*\.)?example\.(?:com|net|org)$#',
 			//	);
-			foreach(array('pre', 'list') as $special) {
+
+			foreach(array(
+					'pre',
+					'list',
+				) as $special) {
+
 				if (! isset($blocklist[$special])) continue;
+
 				$regexes[$special] = $blocklist[$special];
+
 				foreach(array_keys($blocklist[$special]) as $_list) {
 					if (! isset($blocklist[$_list])) continue;
+
 					foreach ($blocklist[$_list] as $key => $value) {
 						if (is_array($value)) {
 							$regexes[$_list][$key] = array();
@@ -390,6 +448,7 @@ function get_blocklist($list = '')
 							get_blocklist_add($regexes[$_list], $key, $value);
 						}
 					}
+
 					unset($blocklist[$_list]);
 				}
 			}
@@ -397,21 +456,21 @@ function get_blocklist($list = '')
 	}
 
 	if ($list === '') {
-		return $regexes;	// ALL
+		return $regexes;		// ALL of
 	} else if (isset($regexes[$list])) {
-		return $regexes[$list];
+		return $regexes[$list];	// A part of
 	} else {
-		return array();
+		return array();			// Found nothing
 	}
 }
 
-// Subroutine of get_blocklist()
-function get_blocklist_add(& $array, $key = 0, $value = '*.example.org')
+// Subroutine of get_blocklist(): Add new regex to the $array
+function get_blocklist_add(& $array, $key = 0, $value = '*.example.org/path/to/file.html')
 {
 	if (is_string($key)) {
-		$array[$key] = & $value; // Treat $value as a regex
+		$array[$key]   = & $value; // Treat $value as a regex for FQDN(host)s
 	} else {
-		$array[$value] = '/^' . generate_host_regex($value, '/') . '$/i';
+		$array[$value] = '#^' . generate_host_regex($value, '#') . '$#i';
 	}
 }
 
