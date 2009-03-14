@@ -1,10 +1,15 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: topicpath.inc.php,v 1.7 2007/01/21 14:32:39 henoheno Exp $
-// Copyright (C) 2004-2005 PukiWiki Developers Team
+// $Id: topicpath.inc.php,v 1.8 2009/03/14 16:07:55 henoheno Exp $
+// Copyright (C)
+//   2004-2005 PukiWiki Developers Team
+//   2003      reimy       (Some bug fix)
+//   2003      t.m         (Migrate to 1.3)
+//   2003      Nibun-no-ni (Originally written for PukiWiki 1.4.x)
 // License: GPL (any version)
 //
-// 'topicpath' plugin
+// 'topicpath(breadcrumbs list)' plugin
+
 
 // Show a link to $defaultpage or not
 define('PLUGIN_TOPICPATH_TOP_DISPLAY', 1);
@@ -20,6 +25,7 @@ define('PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY', 1);
 
 // If PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY, add a link to itself
 define('PLUGIN_TOPICPATH_THIS_PAGE_LINK', 0);
+
 
 function plugin_topicpath_convert()
 {
