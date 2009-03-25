@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.93 2007/08/19 13:59:07 henoheno Exp $
+// $Id: func.php,v 1.94 2009/03/25 14:39:45 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -598,22 +598,25 @@ function get_autolink_pattern(& $pages, $min_len = -1)
 }
 
 // Generate one compact regex for quick reTRIEval,
-// that just matches with all $array values.
+// that just matches with all $array-values.
 //
 // USAGE:
+//   $array = array(7 => 'fooa', 5 => 'foob');
 //   sort($array, SORT_STRING); // Keys are replaced, as we had expected
-//   $regex = generate_trie_regex($array);
+//   echo generate_trie_regex($array);	// 'foo(?:a|b)'
+//
 // ARGUMENTS:
-//   $array  : (_sorted_ _string_ array)
-//     array_keys($array) MUST BE _continuous integers started with 0_.
-//     All $array values MUST BE strings.
-//     Passing the reference, of the $array here, will save the memories,
-//     from flood of recursive call.
-//   $offset : (int) $array[$offset] is the first value to check
-//   $sentry : (int) $array[$sentry - 1] is the last value to check  
-//   $pos    : (int) Position of the letter to start checking. (0 = the first letter)
-// REFERENCE:
-//   http://en.wikipedia.org/wiki/Trie
+//   $array  : A _sorted_string_ array
+//     * array_keys($array) MUST BE _continuous_integers_started_with_0_.
+//     * Type of all $array-values MUST BE string.
+//     * Passing the reference of the $array here, will save memories
+//       from flood of recursive call.
+//   $offset : (int) internal use. $array[$offset    ] is the first value to check
+//   $sentry : (int) internal use. $array[$sentry - 1] is the last  value to check  
+//   $pos    : (int) internal use. Position of the letter to start checking. (0 = the first letter)
+//
+// REFERENCE: http://en.wikipedia.org/wiki/Trie
+//
 function generate_trie_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 {
 	if (empty($array)) return '(?!)'; // Zero
