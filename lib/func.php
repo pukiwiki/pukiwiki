@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.94 2009/03/25 14:39:45 henoheno Exp $
+// $Id: func.php,v 1.95 2009/03/27 14:38:59 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -647,11 +647,11 @@ function generate_trie_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 		if ($index < ($i - 1)) {
 			// Some more keys found
 			// Recurse
-			$regex .= str_replace(' ', '\\ ', preg_quote($char, '/')) .
-				generate_trie_regex($array, $index, $i, $pos + 1);
+			$regex .= str_replace(array(' ', '#'), array('\\ ', '\\#'),
+				preg_quote($char, '/')) . generate_trie_regex($array, $index, $i, $pos + 1);
 		} else {
 			// Not found
-			$regex .= str_replace(' ', '\\ ',
+			$regex .= str_replace(array(' ', '#'), array('\\ ', '\\#'),
 				preg_quote(mb_substr($array[$index], $pos), '/'));
 		}
 		$index = $i;
