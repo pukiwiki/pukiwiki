@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.96 2009/03/27 15:19:24 henoheno Exp $
+// $Id: func.php,v 1.97 2009/03/27 15:24:35 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -611,49 +611,49 @@ function get_autolink_pattern(& $pages, $min_len = -1)
 //     * Type of all $array-values MUST BE string.
 //     * Passing the reference of the $array here, will save memories
 //       from flood of recursive call.
-//   $offset : (int) internal use. $array[$offset    ] is the first value to check
-//   $sentry : (int) internal use. $array[$sentry - 1] is the last  value to check  
-//   $pos    : (int) internal use. Position of the letter to start checking. (0 = the first letter)
+//   $_offset : (int) internal use. $array[$_offset    ] is the first value to check
+//   $_sentry : (int) internal use. $array[$_sentry - 1] is the last  value to check  
+//   $_pos    : (int) internal use. Position of the letter to start checking. (0 = the first letter)
 //
 // REFERENCE: http://en.wikipedia.org/wiki/Trie
 //
-function generate_trie_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
+function generate_trie_regex(& $array, $_offset = 0, $_sentry = NULL, $_pos = 0)
 {
 	if (empty($array)) return '(?!)'; // Zero
-	if ($sentry === NULL) $sentry = count($array);
+	if ($_sentry === NULL) $_sentry = count($array);
 
 	// Too short. Skip this
-	$skip = ($pos >= mb_strlen($array[$offset]));
-	if ($skip) ++$offset;
+	$skip = ($_pos >= mb_strlen($array[$_offset]));
+	if ($skip) ++$_offset;
 
 	// Generate regex for each value
 	$regex = array();
-	$index = $offset;
+	$index = $_offset;
 	$multi = FALSE;
-	while ($index < $sentry) {
-		if ($index != $offset) {
+	while ($index < $_sentry) {
+		if ($index != $_offset) {
 			$multi = TRUE;
 			$regex[] = '|'; // OR
 		}
 
 		// Get one character from left side of the value
-		$char = mb_substr($array[$index], $pos, 1);
+		$char = mb_substr($array[$index], $_pos, 1);
 
 		// How many continuous keys have the same letter
 		// at the same position?
-		for ($i = $index; $i < $sentry; $i++)
-			if (mb_substr($array[$i], $pos, 1) != $char) break;
+		for ($i = $index; $i < $_sentry; $i++)
+			if (mb_substr($array[$i], $_pos, 1) != $char) break;
 
 		if ($index < ($i - 1)) {
 			// Some more keys found
 			// Recurse
 			$regex[] = str_replace(array(' ', '#'), array('\\ ', '\\#'),
 				preg_quote($char, '/'));
-			$regex[] = generate_trie_regex($array, $index, $i, $pos + 1);
+			$regex[] = generate_trie_regex($array, $index, $i, $_pos + 1);
 		} else {
 			// Not found
 			$regex[] = str_replace(array(' ', '#'), array('\\ ', '\\#'),
-				preg_quote(mb_substr($array[$index], $pos), '/'));
+				preg_quote(mb_substr($array[$index], $_pos), '/'));
 		}
 		$index = $i;
 	}
@@ -662,14 +662,14 @@ function generate_trie_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 		array_unshift($regex, '(?:');
 		$regex[] = ')';
 	}
-	if ($skip) $regex[] = '?'; // Match for $pages[$offset - 1]
+	if ($skip) $regex[] = '?'; // Match for $pages[$_offset - 1]
 
 	return implode('', $regex);
 }
 // Compat
-function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
+function get_autolink_pattern_sub(& $pages, $_start, $_end, $_pos)
 {
-	return generate_trie_regex($pages, $start, $end, $pos);
+	return generate_trie_regex($pages, $_start, $_end, $_pos);
 }
 
 // Load/get setting pairs from AutoAliasName
