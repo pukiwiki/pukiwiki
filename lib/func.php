@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.95 2009/03/27 14:38:59 henoheno Exp $
+// $Id: func.php,v 1.96 2009/03/27 15:19:24 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -627,13 +627,13 @@ function generate_trie_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 	if ($skip) ++$offset;
 
 	// Generate regex for each value
-	$regex = '';
+	$regex = array();
 	$index = $offset;
 	$multi = FALSE;
 	while ($index < $sentry) {
 		if ($index != $offset) {
 			$multi = TRUE;
-			$regex .= '|'; // OR
+			$regex[] = '|'; // OR
 		}
 
 		// Get one character from left side of the value
@@ -647,20 +647,24 @@ function generate_trie_regex(& $array, $offset = 0, $sentry = NULL, $pos = 0)
 		if ($index < ($i - 1)) {
 			// Some more keys found
 			// Recurse
-			$regex .= str_replace(array(' ', '#'), array('\\ ', '\\#'),
-				preg_quote($char, '/')) . generate_trie_regex($array, $index, $i, $pos + 1);
+			$regex[] = str_replace(array(' ', '#'), array('\\ ', '\\#'),
+				preg_quote($char, '/'));
+			$regex[] = generate_trie_regex($array, $index, $i, $pos + 1);
 		} else {
 			// Not found
-			$regex .= str_replace(array(' ', '#'), array('\\ ', '\\#'),
+			$regex[] = str_replace(array(' ', '#'), array('\\ ', '\\#'),
 				preg_quote(mb_substr($array[$index], $pos), '/'));
 		}
 		$index = $i;
 	}
 
-	if ($skip || $multi) $regex = '(?:' . $regex . ')';
-	if ($skip) $regex .= '?'; // Match for $pages[$offset - 1]
+	if ($skip || $multi) {
+		array_unshift($regex, '(?:');
+		$regex[] = ')';
+	}
+	if ($skip) $regex[] = '?'; // Match for $pages[$offset - 1]
 
-	return $regex;
+	return implode('', $regex);
 }
 // Compat
 function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
