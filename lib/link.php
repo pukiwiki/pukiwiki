@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: link.php,v 1.18 2007/10/07 13:08:50 henoheno Exp $
+// $Id: link.php,v 1.19 2009/03/28 02:08:54 henoheno Exp $
 // Copyright (C) 2003-2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -29,7 +29,7 @@
 // ------------------------------------------------------------
 
 
-// データベースから関連ページを得る
+// Get related-pages from DB
 function links_get_related_db($page)
 {
 	$ref_name = CACHE_DIR . encode($page) . '.ref';
@@ -44,7 +44,7 @@ function links_get_related_db($page)
 	return $times;
 }
 
-//ページの関連を更新する
+// Update link-relationships between pages
 function links_update($page)
 {
 	if (PKWK_READONLY) return; // Do nothing
@@ -62,15 +62,15 @@ function links_update($page)
 		if (isset($lines[0]))
 			$rel_old = explode("\t", rtrim($lines[0]));
 	}
-	$rel_new  = array(); // 参照先
-	$rel_auto = array(); // オートリンクしている参照先
+	$rel_new  = array();	// Reference to
+	$rel_auto = array();	// by AutoLink
 	$links    = links_get_objects($page, TRUE);
 	foreach ($links as $_obj) {
 		if (! isset($_obj->type) || $_obj->type != 'pagename' ||
 		    $_obj->name === $page || $_obj->name == '')
 			continue;
 
-		if (is_a($_obj, 'Link_autolink')) { // 行儀が悪い
+		if (is_a($_obj, 'Link_autolink')) { // Not cool though
 			$rel_auto[] = $_obj->name;
 		} else if (is_a($_obj, 'Link_autoalias')) {
 			$_alias = get_autoaliases($_obj->name);
@@ -83,15 +83,15 @@ function links_update($page)
 	}
 	$rel_new = array_unique($rel_new);
 	
-	// autolinkしか向いていないページ
+	// All pages "Referenced to" only by AutoLink
 	$rel_auto = array_diff(array_unique($rel_auto), $rel_new);
 
-	// 全ての参照先ページ
+	// All pages "Referenced to"
 	$rel_new = array_merge($rel_new, $rel_auto);
 
-	// .rel:$pageが参照しているページの一覧
+	// .rel: Pages referred from the $page
 	if ($time) {
-		// ページが存在している
+		// Page exists
 		if (! empty($rel_new)) {
     			$fp = fopen($rel_file, 'w')
     				or die_message('cannot write ' . htmlspecialchars($rel_file));
@@ -100,17 +100,17 @@ function links_update($page)
 		}
 	}
 
-	// .ref:$_pageを参照しているページの一覧
+	// .ref: Pages refer to the $page
 	links_add($page, array_diff($rel_new, $rel_old), $rel_auto);
 	links_delete($page, array_diff($rel_old, $rel_new));
 
 	global $WikiName, $autolink, $nowikiname, $search_non_list;
 
-	// $pageが新規作成されたページで、AutoLinkの対象となり得る場合
+	// $page seems newly created, and matches with AutoLink
 	if ($time && ! $rel_file_exist && $autolink
 		&& (preg_match("/^$WikiName$/", $page) ? $nowikiname : strlen($page) >= $autolink))
 	{
-		// $pageを参照していそうなページを一斉更新する(おい)
+		// Update all, because they __MAY__ refer the $page [HEAVY]
 		$search_non_list = 1;
 		$pages           = do_search($page, 'AND', TRUE);
 		foreach ($pages as $_page) {
@@ -120,14 +120,15 @@ function links_update($page)
 	}
 	$ref_file = CACHE_DIR . encode($page) . '.ref';
 
-	// $pageが削除されたときに、
+	// If the $page had been removed
 	if (! $time && file_exists($ref_file)) {
 		foreach (file($ref_file) as $line) {
 			list($ref_page, $ref_auto) = explode("\t", rtrim($line));
 
-			// $pageをAutoLinkでしか参照していないページを一斉更新する(おいおい)
-			if ($ref_auto)
+			// Update pages they refer the $page by AutoLink only [HEAVY]
+			if ($ref_auto) {
 				links_delete($ref_page, array($page));
+			}
 		}
 	}
 }
@@ -145,11 +146,11 @@ function links_init()
 	foreach (get_existfiles(CACHE_DIR, '.rel') as $cache)
 		unlink($cache);
 
-	$ref   = array(); // 参照元
+	$ref   = array(); // Reference from
 	foreach (get_existpages() as $page) {
 		if (is_cantedit($page)) continue;
 
-		$rel   = array(); // 参照先
+		$rel   = array(); // Reference to
 		$links = links_get_objects($page);
 		foreach ($links as $_obj) {
 			if (! isset($_obj->type) || $_obj->type != 'pagename' ||
