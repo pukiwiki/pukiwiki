@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.97 2009/03/27 15:24:35 henoheno Exp $
+// $Id: func.php,v 1.98 2009/03/29 02:00:16 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -597,6 +597,22 @@ function get_autolink_pattern(& $pages, $min_len = -1)
 	return array($result, $result_a, $forceignorepages);
 }
 
+// preg_quote(), and also escape PCRE_EXTENDED-related chars
+// REFERENCE: http://www.php.net/manual/en/reference.pcre.pattern.modifiers.php
+// NOTE: Some special whitespace characters may warned by PCRE_EXTRA
+function preg_quote_extended($string, $delimiter = NULL)
+{
+	// Escape some more chars
+	$regex_from = '/([[:space:]#])/';
+	$regex_to   = '\\\\$1';
+
+	if (is_string($delimiter) && preg_match($regex_from, $delimiter)) {
+		$delimiter = NULL;
+	}
+
+	return preg_replace($regex_from, $regex_to, preg_quote($string, $delimiter));
+}
+
 // Generate one compact regex for quick reTRIEval,
 // that just matches with all $array-values.
 //
@@ -647,13 +663,11 @@ function generate_trie_regex(& $array, $_offset = 0, $_sentry = NULL, $_pos = 0)
 		if ($index < ($i - 1)) {
 			// Some more keys found
 			// Recurse
-			$regex[] = str_replace(array(' ', '#'), array('\\ ', '\\#'),
-				preg_quote($char, '/'));
+			$regex[] = preg_quote_extended($char, '/');
 			$regex[] = generate_trie_regex($array, $index, $i, $_pos + 1);
 		} else {
 			// Not found
-			$regex[] = str_replace(array(' ', '#'), array('\\ ', '\\#'),
-				preg_quote(mb_substr($array[$index], $_pos), '/'));
+			$regex[] = preg_quote_extended(mb_substr($array[$index], $_pos), '/');
 		}
 		$index = $i;
 	}
