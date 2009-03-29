@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.98 2009/03/29 02:00:16 henoheno Exp $
+// $Id: func.php,v 1.99 2009/03/29 03:04:07 henoheno Exp $
 // Copyright (C)
-//   2002-2007 PukiWiki Developers Team
+//   2002-2007,2009 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -599,7 +599,8 @@ function get_autolink_pattern(& $pages, $min_len = -1)
 
 // preg_quote(), and also escape PCRE_EXTENDED-related chars
 // REFERENCE: http://www.php.net/manual/en/reference.pcre.pattern.modifiers.php
-// NOTE: Some special whitespace characters may warned by PCRE_EXTRA
+// NOTE: Some special whitespace characters may warned by PCRE_EXTRA,
+//       because of mismatch-possibility between PCRE_EXTENDED and '[:space:]#'.
 function preg_quote_extended($string, $delimiter = NULL)
 {
 	// Escape some more chars
