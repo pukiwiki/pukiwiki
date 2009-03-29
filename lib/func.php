@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.99 2009/03/29 03:04:07 henoheno Exp $
+// $Id: func.php,v 1.100 2009/03/29 15:08:00 henoheno Exp $
 // Copyright (C)
 //   2002-2007,2009 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -658,8 +658,9 @@ function generate_trie_regex(& $array, $_offset = 0, $_sentry = NULL, $_pos = 0)
 
 		// How many continuous keys have the same letter
 		// at the same position?
-		for ($i = $index; $i < $_sentry; $i++)
+		for ($i = $index + 1; $i < $_sentry; $i++) {
 			if (mb_substr($array[$i], $_pos, 1) != $char) break;
+		}
 
 		if ($index < ($i - 1)) {
 			// Some more keys found
