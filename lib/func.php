@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.100 2009/03/29 15:08:00 henoheno Exp $
+// $Id: func.php,v 1.101 2009/04/12 10:49:02 henoheno Exp $
 // Copyright (C)
 //   2002-2007,2009 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -617,9 +617,16 @@ function preg_quote_extended($string, $delimiter = NULL)
 // Generate one compact regex for quick reTRIEval,
 // that just matches with all $array-values.
 //
-// USAGE:
+// USAGE (PHP >= 4.4.0, PHP >= 5.0.2):
 //   $array = array(7 => 'fooa', 5 => 'foob');
-//   sort($array, SORT_STRING); // Keys are replaced, as we had expected
+//   $array = array_unique($array);
+//   sort($array, SORT_LOCALE_STRING);	// Keys will be replaced
+//   echo generate_trie_regex($array);	// 'foo(?:a|b)'
+//
+// USAGE (PHP >= 5.2.9):
+//   $array = array(7 => 'fooa', 5 => 'foob');
+//   $array = array_unique($array, SORT_LOCALE_STRING);
+//   $array = array_values($array);
 //   echo generate_trie_regex($array);	// 'foo(?:a|b)'
 //
 // ARGUMENTS:
@@ -636,10 +643,10 @@ function preg_quote_extended($string, $delimiter = NULL)
 //
 function generate_trie_regex(& $array, $_offset = 0, $_sentry = NULL, $_pos = 0)
 {
-	if (empty($array)) return '(?!)'; // Zero
+	if (empty($array)) return '(?!)'; // Match with nothing
 	if ($_sentry === NULL) $_sentry = count($array);
 
-	// Too short. Skip this
+	// Question mark: array('', 'something') => '(?:something)?'
 	$skip = ($_pos >= mb_strlen($array[$_offset]));
 	if ($skip) ++$_offset;
 
