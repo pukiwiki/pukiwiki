@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.101 2009/04/12 10:49:02 henoheno Exp $
+// $Id: func.php,v 1.102 2009/04/12 11:09:40 henoheno Exp $
 // Copyright (C)
 //   2002-2007,2009 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -633,15 +633,13 @@ function preg_quote_extended($string, $delimiter = NULL)
 //   $array  : A _sorted_string_ array
 //     * array_keys($array) MUST BE _continuous_integers_started_with_0_.
 //     * Type of all $array-values MUST BE string.
-//     * Passing the reference of the $array here, will save memories
-//       from flood of recursive call.
 //   $_offset : (int) internal use. $array[$_offset    ] is the first value to check
 //   $_sentry : (int) internal use. $array[$_sentry - 1] is the last  value to check  
 //   $_pos    : (int) internal use. Position of the letter to start checking. (0 = the first letter)
 //
 // REFERENCE: http://en.wikipedia.org/wiki/Trie
 //
-function generate_trie_regex(& $array, $_offset = 0, $_sentry = NULL, $_pos = 0)
+function generate_trie_regex($array, $_offset = 0, $_sentry = NULL, $_pos = 0)
 {
 	if (empty($array)) return '(?!)'; // Match with nothing
 	if ($_sentry === NULL) $_sentry = count($array);
@@ -690,7 +688,7 @@ function generate_trie_regex(& $array, $_offset = 0, $_sentry = NULL, $_pos = 0)
 	return implode('', $regex);
 }
 // Compat
-function get_autolink_pattern_sub(& $pages, $_start, $_end, $_pos)
+function get_autolink_pattern_sub($pages, $_start, $_end, $_pos)
 {
 	return generate_trie_regex($pages, $_start, $_end, $_pos);
 }
