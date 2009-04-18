@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.93 2007/11/03 15:12:42 henoheno Exp $
+// $Id: file.php,v 1.94 2009/04/18 00:47:13 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -179,7 +179,7 @@ function make_str_rules($source)
 // Generate ID
 function generate_fixed_heading_anchor_id($seed)
 {
-	// A random alphabetic letter + 7 letters of random strings from md()
+	// A random alphabetic letter + 7 letters of random strings from md5()
 	return chr(mt_rand(ord('a'), ord('z'))) .
 		substr(md5(uniqid(substr($seed, 0, 100), TRUE)),
 		mt_rand(0, 24), 7);
