@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // $Id: init.php,v 1.57 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
-//   2002-2006 PukiWiki Developers Team
+//   2002-2007, 2009 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -268,7 +268,7 @@ if (isset($_GET['encode_hint']) && $_GET['encode_hint'] != '')
 // cmdもpluginも指定されていない場合は、QUERY_STRINGを
 // ページ名かInterWikiNameであるとみなす
 $arg = '';
-if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING']) {
+if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] != '') {
 	$arg = & $_SERVER['QUERY_STRING'];
 } else if (isset($_SERVER['argv']) && ! empty($_SERVER['argv'])) {
 	$arg = & $_SERVER['argv'][0];
