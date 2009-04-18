@@ -617,7 +617,7 @@ EOD;
 			if (PLUGIN_ATTACH_DELETE_ADMIN_ONLY || $this->age) {
 				return attach_info('err_adminpass');
 			} else if (PLUGIN_ATTACH_PASSWORD_REQUIRE &&
-				md5($pass) != $this->status['pass']) {
+				md5($pass) !== $this->status['pass']) {
 				return attach_info('err_password');
 			}
 		}
@@ -669,7 +669,7 @@ EOD;
 			if (PLUGIN_ATTACH_DELETE_ADMIN_ONLY || $this->age) {
 				return attach_info('err_adminpass');
 			} else if (PLUGIN_ATTACH_PASSWORD_REQUIRE &&
-				md5($pass) != $this->status['pass']) {
+				md5($pass) !== $this->status['pass']) {
 				return attach_info('err_password');
 			}
 		}
