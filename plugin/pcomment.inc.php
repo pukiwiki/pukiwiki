@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pcomment.inc.php,v 1.46 2007/11/03 15:50:36 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.47 2009/04/18 00:42:07 henoheno Exp $
 //
 // Page comment plugin - Show/Insert comments into another page
 //
@@ -229,7 +229,7 @@ function plugin_pcomment_insert()
 			while ($end_position < $count) {
 				$matches = array();
 				if (preg_match('/^(\-{1,2})(?!\-)(.*)$/', $postdata[$end_position++], $matches)
-					&& md5($matches[2]) == $reply_hash)
+					&& md5($matches[2]) === $reply_hash)
 				{
 					$b_reply = TRUE;
 					$level   = strlen($matches[1]) + 1;
