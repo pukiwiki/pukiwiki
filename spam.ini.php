@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.91 2008/04/29 02:56:20 teanan Exp $
+// $Id: spam.ini.php,v 1.92 2009/12/13 14:32:27 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -41,6 +41,7 @@
 // 'pre': Before the other filters/checkers
 $blocklist['pre'] = array(
 	'goodhost'	=> FALSE,
+//	'official/dev'	=> FALSE,
 );
 
 // 'list': Normal list
@@ -57,28 +58,24 @@ $blocklist['list'] = array(
 
 
 // --------------------------------------------------
+// Ignorance list
 
 $blocklist['goodhost'] = array(
-	// Sample setting of ignorance list
-
 	'IANA-examples' => '#^(?:.*\.)?example\.(?:com|net|org)$#',
-
-	// PukiWiki-official/dev specific
-	//'pukiwiki.sourceforge.jp',
-	//'pukiwiki.org',	// Temporary
-	//'.logue.tk',	// Well-known PukiWiki heavy user, Logue (Paid *.tk domain, Expire on 2008-12-01)
-	//'.nyaa.tk',	// (Paid *.tk domain, Expire on 2008-05-19)
-	//'.wanwan.tk',	// (Paid *.tk domain, Expire on 2008-04-21) by nyaa.tk
-	//'emasaka.blog65.fc2.com',	// Text-to-Impress converter
-	//'ifastnet.com',				// Server hosting
-	//'threefortune.ifastnet.com',	// Server hosting
-	//'sirakaba.s21.xrea.com',		// Ratbeta, known as PukiWiki hacker
-	//'desperadoes.biz',			// YEAR OF THE CAT, PukiWiki skin designer
-	//''
-	//''
-	//''
-
 );
+
+$blocklist['official/dev'] = array(
+	// PukiWiki-official/dev specific
+	'pukiwiki.sourceforge.jp',
+	'.nyaa.tk',	// (Paid *.tk domain, Expire on 2008-05-19)
+	'.wanwan.tk',	// (Paid *.tk domain, Expire on 2008-04-21) by nyaa.tk
+	'emasaka.blog65.fc2.com',	// Text-to-Impress converter
+	'ifastnet.com',				// Server hosting
+	'threefortune.ifastnet.com',	// Server hosting
+	'sirakaba.s21.xrea.com',		// Ratbeta, known as PukiWiki hacker
+	'desperadoes.biz',			// YEAR OF THE CAT, PukiWiki skin designer
+);
+
 
 // --------------------------------------------------
 // A: Sample setting of
@@ -100,6 +97,10 @@ $blocklist['A-1'] = array(
 	//     smcurl.com
 	//       "Idiots were using smcURL to shrink URLs and
 	//        send them out via spam."
+	//     symy.jp
+	//       "One or more users are using our URL redirect
+	//        service for spam/botnet.
+	//        So we closed this service."
 	//     tinyclick.com
 	//       "...stop offering it's free services because
 	//        too many people were taking advantage of it"
@@ -190,11 +191,13 @@ $blocklist['A-1'] = array(
 	'athomebiz.com',
 	'aukcje1.pl',
 	'beam.to',
+	'*.bebo.com',
 	'beermapping.com',
 	'besturl.in',
 	'bhomiyo.com',		///en.xliterate/ 64.209.134.9(web137.discountasp.net) by piyush at arborindia.com
 	'biglnk.com',
 	'bingr.com',
+	'bit.ly',
 	'bittyurl.com',
 	'*.bizz.cc',
 	'*.blo.pl',
@@ -486,6 +489,10 @@ $blocklist['A-1'] = array(
 	'iat.net',			// 74.208.58.130 by Tony Carter
 	'ibm.com',			///links (Correct it)
 	'*.iceglow.com',
+	'internetadresi.com' => array (
+		'rxbuycheap.com',
+		'rxcheapwestern.com',
+	),
 	'go.id-tv.info',	// 77.232.68.138(77-232-68-138.static.servage.net) by Max Million (max at id-tv.info)
 	'Ideas para Nuevos Mercados SL' => array(
 		// NOTE: 'i4nm.com' by 'Ideas para Nuevos Mercados SL' (i4nm at i4nm.com)
@@ -920,6 +927,7 @@ $blocklist['A-1'] = array(
 		'*.site.tc',
 		'*.societe.st',
 	),
+	'qqa.jp',
 	'qrl.jp',
 	'qurl.net',
 	'qwer.org',
@@ -941,6 +949,7 @@ $blocklist['A-1'] = array(
 	'rio.st',
 	'rlink.org',
 	'*.rmcinfo.fr',
+	'roo.to',		// Seems closed, says "bye-bye"
 	'rubyurl.com',
 	'*.runboard.com',
 	'runurl.com',
@@ -1048,7 +1057,6 @@ $blocklist['A-1'] = array(
 	'SURL.DK' => array('surl.dk'),	// main page is: s-url.dk
 	'surl.se',
 	'surl.ws',
-	'symy.jp',
 	'tdurl.com',
 	'tighturl.com',
 	'tiniuri.com',
@@ -1074,7 +1082,7 @@ $blocklist['A-1'] = array(
 	'*.toolbot.com',
 	'*.torontonian.com',
 	'trimurl.com',
-	'ttu.cc',
+	//'ttu.cc',		// Seems closed
 	'turl.jp',
 	'*.tz4.com',
 	'U.TO' => array(	// ns *.1004web.com, 1004web.com is owned by Moon Jae Bark (utomaster at gmail.com) = u.to master
@@ -1106,6 +1114,7 @@ $blocklist['A-1'] = array(
 		'*.ever.to',
 		'*.mini.to',
 	),
+	'u-go.to',
 	'uchinoko.in',
 	'Ulimit.com' => array(
 		'*.be.tf',
@@ -1135,6 +1144,7 @@ $blocklist['A-1'] = array(
 		'*.unixlover.com',
 		'*.zik.mu',
 	),
+	'urltea.com',
 	'*.uni.cc',
 	'UNONIC.com' => array(
 		'*.at.tf',	// AlpenNIC
@@ -2926,6 +2936,7 @@ $blocklist['B-1'] = array(
 		'.aim.to',
 		'.djmp.jp',
 		'.nihongourl.nu',
+		'.url.sh',		// Says SmarTrans
 		'.urljp.com',
 		'.www1.to',
 		'.www2.to',
@@ -3126,7 +3137,7 @@ $blocklist['B-1'] = array(
 	'*.wizhoo.com',			// by Comp U Door (sales at comp-u-door.com)
 	'*.wmjblogs.ru',
 	'*.wordpress.com',
-	'.wsboards.com',		// by Chris Breen (Cbween at gmail.com)
+	//'.wsboards.com',		// Noticed this site had been removed due to spam
 	'xeboards.com',			// by Brian Shea (bshea at xeservers.com)
 	'*.xforum.se',
 	'xfreeforum.com',
@@ -3960,7 +3971,12 @@ $blocklist['C'] = array(
 	'aakin at yandex.ru' => array(
 		// 89.149.206.225(*.internetserviceteam.com) by Baer
 		'.entirestar.com',
+		'.joppperl.info',
+		'.onlinedrugsdirect.com',
+		'.pilkazen.info',
 		'.superbuycheap.com',
+		'.supersmartdrugs.com',
+		'.thecheappillspharmacy.com',
 		'.topdircet.com',
 	),
 	'newblog9 at gmail.com' => array(	// by jiuhatu kou
