@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.102 2009/04/12 11:09:40 henoheno Exp $
+// $Id: func.php,v 1.103 2010/04/19 14:14:51 henoheno Exp $
 // Copyright (C)
-//   2002-2007,2009 PukiWiki Developers Team
+//   2002-2007,2009-2010 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -857,7 +857,7 @@ function csv_implode($glue, $pieces)
 //// Compat ////
 
 // is_a --  Returns TRUE if the object is of this class or has this class as one of its parents
-// (PHP 4 >= 4.2.0)
+// (PHP 4 >= 4.2.0, PHP 5)
 if (! function_exists('is_a')) {
 
 	function is_a($class, $match)
@@ -874,7 +874,7 @@ if (! function_exists('is_a')) {
 }
 
 // array_fill -- Fill an array with values
-// (PHP 4 >= 4.2.0)
+// (PHP 4 >= 4.2.0, PHP 5)
 if (! function_exists('array_fill')) {
 
 	function array_fill($start_index, $num, $value)
@@ -886,7 +886,7 @@ if (! function_exists('array_fill')) {
 }
 
 // md5_file -- Calculates the md5 hash of a given filename
-// (PHP 4 >= 4.2.0)
+// (PHP 4 >= 4.2.0, PHP 5)
 if (! function_exists('md5_file')) {
 
 	function md5_file($filename)
@@ -902,7 +902,7 @@ if (! function_exists('md5_file')) {
 }
 
 // sha1 -- Compute SHA-1 hash
-// (PHP 4 >= 4.3.0, PHP5)
+// (PHP 4 >= 4.3.0, PHP 5)
 if (! function_exists('sha1')) {
 	if (extension_loaded('mhash')) {
 		function sha1($str)
