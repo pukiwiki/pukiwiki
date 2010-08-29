@@ -164,6 +164,6 @@ ACKNOWLEDGEMENT
     * yu-ji's Web Site          http://factage.com/yu-ji/ 
     * Hiroshi Yuki 's Web Site  http://www.hyuki.com/ 
     * YukiWiki                  http://www.hyuki.com/yukiwiki/ 
-    * Tiki                      http://todo.org/cgi-bin/jp/tiki.cgi 
+    * Tiki                      http://todo.org/
     * Original WikiWikiWeb      http://c2.com/cgi/wiki?WikiWikiWeb 
     * Author of WikiWikiWeb(Cunningham & Cunningham, Inc.) http://c2.com/

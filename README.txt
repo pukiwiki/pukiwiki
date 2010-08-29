@@ -12,7 +12,7 @@
       http://pukiwiki.sourceforge.jp/dev/
       http://sourceforge.jp/projects/pukiwiki/
 
-    $Id: README.txt,v 1.31 2006/12/07 14:51:00 henoheno Exp $
+    $Id: README.txt,v 1.32 2010/08/29 12:29:37 henoheno Exp $
 
 書式
     index.php
@@ -268,6 +268,6 @@ Wikiの様子を見る
     * yu-jiさんのホームページ   http://factage.com/yu-ji/
     * 結城浩さんのホームページ  http://www.hyuki.com/
     * YukiWikiホームページ      http://www.hyuki.com/yukiwiki/
-    * Tiki          http://todo.org/cgi-bin/tiki/tiki.cgi
-    * 本家WikiWikiWeb       http://c2.com/cgi/wiki?WikiWikiWeb
+    * Tiki                      http://todo.org/
+    * 本家WikiWikiWeb           http://c2.com/cgi/wiki?WikiWikiWeb
     * WikiWikiWebの作者(Cunningham & Cunningham, Inc.) http://c2.com/
