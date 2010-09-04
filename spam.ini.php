@@ -1,5 +1,5 @@
 <?php
-// $Id: spam.ini.php,v 1.92 2009/12/13 14:32:27 henoheno Exp $
+// $Id: spam.ini.php,v 1.93 2010/09/04 13:36:25 henoheno Exp $
 // Spam-related setting
 
 // NOTE FOR ADMINISTRATORS:
@@ -91,6 +91,9 @@ $blocklist['A-1'] = array(
 	// for spammers and affiliate users dazed by money.
 	//
 	//   Messages from forerunners:
+	//     idek.net
+	//       "..., idek will stop accepting requests to
+	//        create new urls. "
 	//     o-rly.net
 	//       "A URL REDIRECTION SERVICE GONE BAD"
 	//       "SORRY, TRULY"
@@ -104,6 +107,14 @@ $blocklist['A-1'] = array(
 	//     tinyclick.com
 	//       "...stop offering it's free services because
 	//        too many people were taking advantage of it"
+	//     tr.im
+	//       "The decision is based on waving the white
+	//        flag on a never ending battle with spammers
+	//        that relentlessly abuse tr.im."
+	//     u.nu
+	//        "Since the beginning, it has been plagued
+	//         with abuse from spammers and other
+	//         no-goodniks."
 	//     xjs.org
 	//       "We have been forced to close this facility
 	//        due to a minority of knuckle draggers who
@@ -130,6 +141,7 @@ $blocklist['A-1'] = array(
 	'1url.org',
 	'1url.in',
 	'1webspace.org',
+	'2am.jp',
 	'2Ch.net' => array(
 		'ime.nu',
 		'ime.st',
@@ -197,7 +209,10 @@ $blocklist['A-1'] = array(
 	'bhomiyo.com',		///en.xliterate/ 64.209.134.9(web137.discountasp.net) by piyush at arborindia.com
 	'biglnk.com',
 	'bingr.com',
-	'bit.ly',
+	'bit.ly' => array(
+		'bit.ly',
+		'j.mp',
+	),
 	'bittyurl.com',
 	'*.bizz.cc',
 	'*.blo.pl',
@@ -216,6 +231,7 @@ $blocklist['A-1'] = array(
 	),
 	'budgethosts.org',
 	'budu.com',				// by peter.eder at imcworld.com
+	'budurl.com',
 	'*.buzznet.com',
 	'*.bydl.com',
 	'C-O.IN' => array(
@@ -236,6 +252,7 @@ $blocklist['A-1'] = array(
 	'christopherleestreet.com',
 	'cintcm.com',
 	'*.cjb.net',
+	'cli.gs',
 	'clipurl.com',
 	'*.co.nr',
 	'Comtech Enterprises ' => array(	// comteche.com
@@ -288,6 +305,7 @@ $blocklist['A-1'] = array(
 		'.goshrink.com',
 		'ushrink.com',
 	),
+	'.eazylink.net',	// 2010/08 by info at digitalinsights.biz
 	'easyurl.jp',	// 124.38.169.39(*.ap124.ftth.ucom.ne.jp), e-mail:info at value-domain.com,
 		// says "by ascentnet.co.jp". http://www.ascentnet.co.jp/press/?type=1&press=45
 		// This service seems to be opened at 2007/08/23 with "beta" sign.
@@ -440,9 +458,10 @@ $blocklist['A-1'] = array(
 	'*.globalredirect.com',
 	'gnu.vu',
 	'*.go.cc',
-	//'Google.com' => array(
+	'Google.com' => array(
 	//		google.com/translate_c\?u=(?:http://)?
-	//),
+		'goo.gl',	// by (dns-admin at google.com)
+	),
 	'goonlink.com',
 	'.gourl.org',
 	'.greatitem.com',
@@ -611,6 +630,7 @@ $blocklist['A-1'] = array(
 	'.iwebtool.com',
 	'j6.bz',
 	'jeeee.net',
+	'is.gd',
 	'Jaze Redirect Services' => array(
 		'*.arecool.net',
 		'*.iscool.net',
@@ -893,6 +913,7 @@ $blocklist['A-1'] = array(
 	),
 	'monster-submit.com',
 	'mooo.jp',
+	'moourl.com',
 	'murl.net',
 	'myactivesurf.net',
 	'mytinylink.com',
@@ -911,6 +932,7 @@ $blocklist['A-1'] = array(
 	'*.ontheinter.net',
 	'ourl.org',
 	'ov2.net',				// frame
+	'ow.ly',
 	'*.ozonez.com',
 	'pagebang.com',
 	'palurl.com',
@@ -1045,11 +1067,15 @@ $blocklist['A-1'] = array(
 	'slink.in',
 	'smallurl.eu',
 	'smurl.name',
+	'sn.im',
 	'snipurl.com',
 	'sp-nov.net',
 	'splashblog.com',
 	'spod.cx',
 	'*.spydar.com',
+	'StumbleUpon.com' => array(
+		'su.pr',	// by (hostmaster at stumbleupon.com) 
+	),
 	'Subdomain.gr' => array(
 		'*.p2p.gr',
 		'*.subdomain.gr',
@@ -1075,6 +1101,7 @@ $blocklist['A-1'] = array(
 	'titlien.com',
 	'*.tlg.pl',
 	'tlurl.com',
+	'twurl.nl',		// 2010-09 87.255.53.196 (redirects tweetburner.com 87.255.53.196)
 	'link.toolbot.com',
 	'tnij.org',
 	'Tokelau ccTLD' => array('.tk'),
@@ -1084,6 +1111,10 @@ $blocklist['A-1'] = array(
 	'trimurl.com',
 	//'ttu.cc',		// Seems closed
 	'turl.jp',
+	'Twitter' => array(
+		't.co',		// by (cofounders at cointernet.co)
+		'twt.tl',
+	),
 	'*.tz4.com',
 	'U.TO' => array(	// ns *.1004web.com, 1004web.com is owned by Moon Jae Bark (utomaster at gmail.com) = u.to master
 		'*.1.to',
@@ -1200,6 +1231,7 @@ $blocklist['A-1'] = array(
 	),
 	'*.urlproxy.com',
 	'urlser.com',
+	'urlshorteningservicefortwitter.com',
 	'urlsnip.com',
 	'urlzip.de',
 	'urlx.org',
@@ -1379,13 +1411,19 @@ $blocklist['A-1'] = array(
 	),
 	'*.xshorturl.com',		// by Markus Lee (soul_s at list.ru) 
 	'.y11.net',
+	'Yahoo.co.jp' => array(
+		'wrs.search.yahoo.co.jp',
+	),
+	'Yahoo.com' => array(
+		'rds.yahoo.com',
+	),
+	'yatuc.com',
+	'yep.it',
 	'YESNS.com' => array(	// by Jae-Hwan Kwon (kwonjhpd at kornet.net)
 		'*.yesns.com',
 		'*.srv4u.net',
 		//blogne.com
 	),
-	'yatuc.com',
-	'yep.it',
 	'yumlum.com',
 	'yurel.com',
 	'Z.la' => array(
@@ -1512,6 +1550,8 @@ $blocklist['B-1'] = array(
 	//        to take time for software improvement to fight
 	//        with server abuse, Spam advertisement and
 	//        fraud."
+	//     wsboards.com
+	//        had been removed due to spam (noticed by its domain owner)
 	//
 	'*.0000host.com',		// 68.178.200.154, ns *.3-hosting.net
 	'*.007ihost.com',		// 195.242.99.199(s199.softwarelibre.nl)
@@ -7012,6 +7052,189 @@ $blocklist['C'] = array(
 	'.zyguo.info',			// ns globoxhost.net
 	'.zhuyiw.com',			// by zhou yuntao (whzyt0122 at sohu.com)
 
+	
+	'.canada-grants.ca',	// 173.193.6.128 link to grantsmoney.com
+	'.grantsmoney.com',		// 72.26.207.6
+
+	'admin at thumbset.net' => array(	// 2010/08 207.7.82.170, Don Wilson (admin at thumbset.net)
+		// link to licensedrxpharm.com
+		'.avelocitoyens.com',
+		'.lzbps.com',
+		'.bittermonkeycomic.com',
+		'.estadiodeportivocali.com',
+		'.fb1177.com',
+		'.ghanabookpublishers.com',
+		'.greensagepage.com',
+		'.inlakech.com',
+		'.leungwingkei.net',
+		'.liberadea.org',
+		'.rocknrollgypsy.com',
+		'.su-om.com',
+		'.ymouk.org',	// 2010/08 207.7.82.170, by (ymouk.org at contactprivacy.com)
+		
+		// link to oainternetservices.com
+		'.elpadraic.com',
+		'.fptpromo.com',
+		'.insidetheaf2.com',
+		
+		// link to pro-pay.net
+		'.movie-train.com',
+		
+		// link to vigrxplus.com
+		'.panatrog.org',
+		
+		// link to megarxsale.com
+		'.haberiniz.net',
+		'.obusilis.net',
+	),
+	'.onlinecasinoinformation.com',	// 2010/08 66.96.147.105
+	'.onlinecasinoresources.com',	// 2010/08 74.220.215.62
+	'mainalpha.com related' => array(
+
+		// 2010/08 65.254.248.143
+		'.archivecdbooksus.com',	// by (offpista at gmail.com), "sports betting"
+		'.highrollersonlinecasinos.com',	// casios
+		'.onlinecasinocenter.com',			// casios
+		'.odinhosting.com',			// by Nahum, Moshe (moshenhm at gmail.com), seems no link today
+		'.nycdivers.com',			// by Nahum, Moshe (moshenhm at gmail.com), link to mainalpha.com
+		'.robertlhines.com',		// by Nahum, Moshe (moshenhm at gmail.com), link to mainalpha.com, etc
+		'.shadowsonmyshift.com',	// by Nahum, Moshe (moshenhm at gmail.com), link to mainalpha.com, etc
+
+		// 2010/08 69.89.31.187
+		'.bcsliding.com',			// by Nahum, Moshe (moshenhm at gmail.com)
+		'.dinuzzollc.com',			// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com etc
+		'.laruesbackdoor.com',		// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com etc
+		'.msthirteen.com',			// by Nahum, Moshe (moshenhm at gmail.com), link to mainalpha.com
+		'.okrenters.com',			// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.co
+		'.pandaitaid.com',			// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com, etc
+		'.vicariouscollection.com',	// by Vishnu Prasath (info at dvishnu.com)
+		'.middlefingerproductions.net',	// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com
+		
+		// 2010/08 74.53.239.27
+		'.thetravelerscafe.com',	// by Nahum, Moshe (moshenhm at gmail.com), cheap tickets
+		
+		//  2010/08 74.81.92.55
+		'.2ndrose.com',				// by Victor Zrovanov (victor3239 at gmail.com), link to mainalpha.com
+		'.ecoxfinancial.com',		// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com etc
+		'.edgewatertowers.com',		// by Victor Frankl (victor3239 at gmail.com), link to mainalpha.com
+		'.fightingspirit-comics.com',	// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com etc
+		'.learntoplaythedobro.com',	// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com etc
+		'.montcalm4hfair.com',		// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com etc
+		'.oaads.com',				// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com etc
+		'.pabloblum.com',			// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com
+		'.renaissancequartet.com',	// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com
+		'.sbi-limited.com',			// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com
+		'.showeroffire.com',		// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com
+		'.soccerfestcolumbus.com',	// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com
+		'.sonicparthenon.com',		// by Nahum, Moshe (moshenhm at gmail.com), link to mainalpha.com
+		'.staroftheevening.com',	// by Nahum, Moshe (moshenhm at gmail.com), link to mainalpha.com
+
+		// 2010/08 173.45.103.74
+		'.digitalexperts.com',		// by Nahum, Moshe (moshenhm at gmail.com)
+		
+		// 2010/08 173.236.48.82
+		'.anniedguesthouse.com',		// by Vishnu Prasath (info dvishnu.com), link to mainalpha.com
+		'.ciprogram.com',				// link to mainalpha.com
+		'.finnfest2009.com',			// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com
+		'.hietalasoldworldmeats.com',	// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com etc
+		'.splendoreimport.com',			// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com
+		'.sunshinetesting.com',			// by Nahum, Moshe (moshenhm at gmail.com), link to mainalpha.com
+		'.sports-and-concert-tickets.com',	//  by Nahum, Moshe (moshenhm at gmail.com), seems no link today
+
+		// 2010/08 174.120.82.124
+		'.blueysretreat.com',			// by Nahum, Moshe (moshenhm at gmail.com), seems no link today
+		'.jenurbanandthebox.com',		// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com
+		'.lamborghinidenveronline.com',	// by Nahum, Moshe (moshenhm at gmail.com), seems no link today
+		'.buckandbb.net',				// by Nahum, Moshe (moshenhm at gmail.com), link to kqzyfj.com
+
+		// 2010/08 174.132.149.98
+		'.2008-national-n-scale-convention.com',	// by Moshe Nahum (moshenhm at gmail.com), link to mainalpha.com
+		'.msgulfcoastbnbs.com',		// by Michael John (cpajourney at yahoo.com), link to mainalpha.com etc
+		'.segwaybykar.com',			// by Vishnu Prasath (info at dvishnu.com), link to mainalpha.com
+		'.creativejuicecompetition.com',	// by Nahum, Moshe (moshenhm at gmail.com), seems no link today
+		
+		// 2010/08 216.119.132.2
+		'.kennybrown.net',			// by Moshe Nahum (moshenhm at gmail.com), 
+
+		// 2010/08 no address today
+		'.bestblackdatingonline.com',	// by Nahum, Moshe (moshenhm at gmail.com)
+	),
+	'kouvald at gmail.com' => array(	// by Vlad Kouvaldin (kouvald at gmail.com)
+
+		// 2010/08 91.205.156.73
+		'.newvibesmedia.com',
+		'.pacarts.org',
+		'.peruanosenbarcelona.com',
+		'.ronnievon.com',
+		'.savewilson.org',
+		'.sawanmall.com',
+		'.sickpowder.com',
+		'.theblogproject.com',
+		'.thenewswalk.com',
+		'.wilsonhillstables.com',
+
+		// 2010/08 91.205.156.77
+		'.chaironwheels.com',
+		'.countrylegends943.com',
+		'.daytonapridefest.com',
+		'.funposal.org',
+		'.mfshou.com',
+		'.mtskrilla.com',
+
+		// 2010/08 173.45.96.176
+		'.prematuretreatments.com',
+		
+		// 2010/09 173.83.127.79
+		'.bluebirdsdownunder.com',
+		
+		// 2010/09 173.83.127.80
+		'.briancallphoto.com',
+	),
+	
+	'freelanceblogger at gmail.com' => array(
+		'.geniusroulette.com',		// 2010/08 216.86.146.16 by Raj Dash (freelanceblogger at gmail.com)
+		'.geniussportsbetting.com',	// 2010/08 66.40.52.146  by Raj Dash (freelanceblogger at gmail.com)
+	),
+	
+	'.ramapowatershed.com',		// 
+	'purplefarm at gmail.com' => array(
+		// 2010/08 208.71.128.6
+		'.123dollie.com',			// by marc jones      (purplefarm at gmail.com)
+		'.451jokes.com',			// by Joshua gardiner (purplefarm at gmail.com)
+		'.skidsteersonsale.com',	// by Joshua gardiner (purplefarm at gmail.com)
+	),
+
+	'.freelivemodels.com',	// 2010/08 207.246.153.228, 207.246.153.229
+	'173.236.25.210 related' => array(
+		// 2010/08 173.236.25.210
+		'.ibd-treatment-blog.com',
+		'.my247weightlossblog.com',
+		'.yoursexualhealthblog.com',
+
+		// 2010/08 174.120.171.94
+		'.adhdbesttreatments.com',
+		'.bipolardisordertreatmentsblog.com',
+		'.diabetestype2answers.com',
+	),
+	'68.232.186.54 related' => array(
+		'.amateurxxxtube247.com',	// 2010/08 68.232.186.54 
+		'.asiansextube247.com',		// 2010/08 68.232.186.54
+		'.analsextube247.com',		// 2010/08 99.192.176.58
+		'.eroticandy.com',			// 2010/08 99.192.176.54
+	),
+	'nikiforov501@mail.ru' => array(
+		// 2010/09 91.205.156.74
+		'.211park.com',
+		'.atlantajuniorthrashers.com',
+		'.jensenwoods.com',
+		
+		// 2010/09 91.205.156.75
+		'.ltaadventure.com',
+		'.oshareo.com',
+		'.pillthrillow.com',
+		'.redaphrodite.com',
+		'.marching-season.net',
+	),
 
 	// C-3: Not classifiable (information wanted)
 	//
