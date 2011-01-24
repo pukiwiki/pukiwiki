@@ -1,10 +1,14 @@
 <?php
-// $Id: spam_pickup.php,v 1.1.2.2 2007/09/24 16:03:35 henoheno Exp $
-// Copyright (C) 2006-2007 PukiWiki Developers Team
+// $Id: spam_pickup.php,v 1.1.2.3 2011/01/24 15:34:39 henoheno Exp $
+// Copyright (C) 2006-2009 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 // Functions for Concept-work of spam-uri metrics
 //
+// (PHP 4 >= 4.3.0): preg_match_all(PREG_OFFSET_CAPTURE): $method['uri_XXX'] related feature
+//
+
+if (! defined('DOMAIN_INI_FILE')) define('DOMAIN_INI_FILE', 'domain.ini.php');
 
 // ---------------------
 // URI pickup
@@ -14,18 +18,18 @@
 // [OK] http://nasty.example.org:80/foo/xxx#nasty_string/bar
 // [OK] ftp://nasty.example.org:80/dfsdfs
 // [OK] ftp://cnn.example.com&story=breaking_news@10.0.0.1/top_story.htm (from RFC3986)
+// Not available for: IDN(ignored)
 function uri_pickup($string = '')
 {
 	if (! is_string($string)) return array();
 
-	// Not available for: IDN(ignored)
 	$array = array();
 	preg_match_all(
 		// scheme://userinfo@host:port/path/or/pathinfo/maybefile.and?query=string#fragment
 		// Refer RFC3986 (Regex below is not strict)
 		'#(\b[a-z][a-z0-9.+-]{1,8}):[/\\\]+' .		// 1: Scheme
 		'(?:' .
-			'([^\s<>"\'\[\]/\#?@]*)' .		// 2: Userinfo (Username)
+			'([^\s<>"\'\[\]/\#?@]*)' .		// 2: Userinfo (Username and/or password)
 		'@)?' .
 		'(' .
 			// 3: Host
@@ -34,7 +38,7 @@ function uri_pickup($string = '')
 			'[a-z0-9_-][a-z0-9_.-]+[a-z0-9_-]' . 	// hostname(FQDN) : foo.example.org
 		')' .
 		'(?::([0-9]*))?' .					// 4: Port
-		'((?:/+[^\s<>"\'\[\]/\#]+)*/+)?' .	// 5: Directory path or path-info
+		'((?:/+[^\s<>"\'\[\]/\#?]+)*/+)?' .	// 5: Directory path
 		'([^\s<>"\'\[\]\#?]+)?' .			// 6: File?
 		'(?:\?([^\s<>"\'\[\]\#]+))?' .		// 7: Query string
 		'(?:\#([a-z0-9._~%!$&\'()*+,;=:@-]*))?' .	// 8: Fragment
@@ -42,18 +46,18 @@ function uri_pickup($string = '')
 		 $string, $array, PREG_SET_ORDER | PREG_OFFSET_CAPTURE
 	);
 
-	// Format the $array
+	// Reformat the $array
 	static $parts = array(
 		1 => 'scheme', 2 => 'userinfo', 3 => 'host', 4 => 'port',
 		5 => 'path', 6 => 'file', 7 => 'query', 8 => 'fragment'
 	);
-	$default = array('');
+	$default = array(0 => '', 1 => -1);
 	foreach(array_keys($array) as $uri) {
 		$_uri = & $array[$uri];
 		array_rename_keys($_uri, $parts, TRUE, $default);
 		$offset = $_uri['scheme'][1]; // Scheme's offset = URI's offset
 		foreach(array_keys($_uri) as $part) {
-			$_uri[$part] = & $_uri[$part][0];	// Remove offsets
+			$_uri[$part] = $_uri[$part][0];	// Remove offsets
 		}
 	}
 
@@ -86,27 +90,43 @@ function uri_pickup_implode($uri = array())
 		$tmp[] = & $uri['scheme'];
 		$tmp[] = '://';
 	}
+
 	if (isset($uri['userinfo']) && $uri['userinfo'] !== '') {
 		$tmp[] = & $uri['userinfo'];
 		$tmp[] = '@';
+	} else if (isset($uri['user']) || isset($uri['pass'])) {
+		if (isset($uri['user']) && $uri['user'] !== '') {
+			$tmp[] = & $uri['user'];
+		}
+		$tmp[] = ':';
+		if (isset($uri['pass']) && $uri['pass'] !== '') {
+			$tmp[] = & $uri['pass'];
+		}
+		$tmp[] = '@';
 	}
+
 	if (isset($uri['host']) && $uri['host'] !== '') {
 		$tmp[] = & $uri['host'];
 	}
+
 	if (isset($uri['port']) && $uri['port'] !== '') {
 		$tmp[] = ':';
 		$tmp[] = & $uri['port'];
 	}
+
 	if (isset($uri['path']) && $uri['path'] !== '') {
 		$tmp[] = & $uri['path'];
 	}
+
 	if (isset($uri['file']) && $uri['file'] !== '') {
 		$tmp[] = & $uri['file'];
 	}
+
 	if (isset($uri['query']) && $uri['query'] !== '') {
 		$tmp[] = '?';
 		$tmp[] = & $uri['query'];
 	}
+
 	if (isset($uri['fragment']) && $uri['fragment'] !== '') {
 		$tmp[] = '#';
 		$tmp[] = & $uri['fragment'];
@@ -115,12 +135,13 @@ function uri_pickup_implode($uri = array())
 	return implode('', $tmp);
 }
 
+
 // ---------------------
 // URI normalization
 
 // Normalize an array of URI arrays
 // NOTE: Give me the uri_pickup() results
-function uri_pickup_normalize(& $pickups, $destructive = TRUE)
+function uri_pickup_normalize(& $pickups, $destructive = TRUE, $pathfile = FALSE)
 {
 	if (! is_array($pickups)) return $pickups;
 
@@ -142,6 +163,28 @@ function uri_pickup_normalize(& $pickups, $destructive = TRUE)
 			$_key['host']     = isset($_key['host'])     ? strtolower($_key['host'])         : '';
 			$_key['port']     = isset($_key['port'])     ? port_normalize($_key['port'], $_key['scheme'], FALSE) : '';
 			$_key['path']     = isset($_key['path'])     ? path_normalize($_key['path']) : '';
+		}
+	}
+
+	if ($pathfile) {
+		return uri_pickup_normalize_pathfile($pickups);
+	} else {
+		return $pickups;
+	}
+}
+
+// Normalize: 'path' + 'file' = 'path' (Similar structure using PHP's "parse_url()" function)
+// NOTE: In some case, 'file' DOES NOT mean _filename_.
+// [EXAMPLE] http://example.com/path/to/directory-accidentally-not-ended-with-slash
+function uri_pickup_normalize_pathfile(& $pickups)
+{
+	if (! is_array($pickups)) return $pickups;
+
+	foreach (array_keys($pickups) as $key) {
+		$_key = & $pickups[$key];
+		if (isset($_key['path'], $_key['file'])) {
+			$_key['path'] = $_key['path'] . $_key['file'];
+			unset($_key['file']);
 		}
 	}
 
@@ -188,13 +231,14 @@ function scheme_normalize($scheme = '', $abbrevs_harmfull = TRUE)
 // www.foo.bar => foo.bar
 // www.10.20   => www.10.20 (Invalid hostname)
 // NOTE:
-//   'www' is  mostly used as traditional hostname of WWW server.
-//   'www.foo.bar' may be identical with 'foo.bar'.
+//   'www' is basically traditional hostname for WWW server.
+//   In these case, 'www.foo.bar' MAY be identical with 'foo.bar'.
 function host_normalize($host = '')
 {
 	if (! is_string($host)) return '';
 
 	$host = strtolower($host);
+
 	$matches = array();
 	if (preg_match('/^www\.(.+\.[a-z]+)$/', $host, $matches)) {
 		return $matches[1];
@@ -693,6 +737,9 @@ function spam_uri_pickup_preprocess($string = '', $method = array())
 	$string = preg_replace(
 		'#h?ttp://' .
 		'(' .
+			'a9\.com/' . '|' .
+			'aboutus\.org/' . '|' .
+			'alexa\.com/data/details\?url='  . '|' .
 			'ime\.(?:nu|st)/' . '|' .	// 2ch.net
 			'link\.toolbot\.com/' . '|' .
 			'urlx\.org/' . '|' .
@@ -729,7 +776,8 @@ function spam_uri_pickup_preprocess($string = '', $method = array())
 				// ...
 			')' .
 			'/' .
-			'([a-z0-9?=&.%_/\'\\\+-]+)' .				// 3:path/?query=foo+bar+
+			//TODO: Specify URL-enable characters
+			'([a-z0-9?=&.,%_/\'\\\+-]+)' .				// 3:path/?query=foo+bar+
 			'(?:\b|%20)site:([a-z0-9.%_-]+\.[a-z0-9.%_-]+)' .	// 4:site:nasty.example.com
 			'()' .										// 5:Preserve or remove?
 			'#i',
@@ -787,10 +835,83 @@ function spam_uri_pickup($string = '', $method = array())
 	}
 
 	// Remove 'offset's for area_measure()
-	foreach(array_keys($array) as $key)
+	foreach(array_keys($array) as $key) {
 		unset($array[$key]['area']['offset']);
+	}
 
 	return $array;
+}
+
+// Rough hostname checker
+// TODO: Strict digit, 0x, CIDR, '999.999.999.999', ':', '::G'
+function is_ip($string = '')
+{
+	if (! is_string($string)) return FALSE;
+
+	if (strpos($string, ':') !== FALSE) {
+		return 6;	// Seems IPv6
+	}
+
+	if (preg_match('/^' .
+		'(?:[0-9]{1,3}\.){3}[0-9]{1,3}' . '|' .
+		'(?:[0-9]{1,3}\.){1,3}'         . '$/',
+		$string)) {
+		return 4;	// Seems IPv4(dot-decimal)
+	}
+
+	return FALSE;	// Seems not IP
+}
+
+// Check responsibility-root of the FQDN
+// 'foo.bar.example.com'        => 'example.com'        (.com        has the last whois for it)
+// 'foo.bar.example.au'         => 'example.au'         (.au         has the last whois for it)
+// 'foo.bar.example.edu.au'     => 'example.edu.au'     (.edu.au     has the last whois for it)
+// 'foo.bar.example.act.edu.au' => 'example.act.edu.au' (.act.edu.au has the last whois for it)
+function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $implicit = TRUE)
+{
+	static $domain;
+
+	if ($fqdn === NULL) {
+		$domain = NULL;	// Unset
+		return '';
+	}
+	if (! is_string($fqdn)) return '';
+
+	if (is_ip($fqdn)) return $fqdn;
+
+ 	if (! isset($domain)) {
+		$domain = array();
+ 		if (file_exists(DOMAIN_INI_FILE)) {
+			include(DOMAIN_INI_FILE);	// Set
+		}
+	}
+
+	$result  = array();
+	$dcursor = & $domain;
+	$array   = array_reverse(explode('.', $fqdn));
+	$i = 0;
+	while(TRUE) {
+		if (! isset($array[$i])) break;
+		$acursor = $array[$i];
+		if (is_array($dcursor) && isset($dcursor[$acursor])) {
+			$result[] = & $array[$i];
+			$dcursor  = & $dcursor[$acursor];
+		} else {
+			if (! $parent && isset($acursor)) {
+				$result[] = & $array[$i];	// Whois servers must know this subdomain
+			}
+			break;
+		}
+		++$i;
+	}
+
+	// Implicit responsibility: Top-Level-Domains must not be yours
+	// 'bar.foo.something' => 'foo.something'
+	if ($implicit && count($result) == 1 && count($array) > 1) {
+		$result[] = & $array[1];
+	}
+
+	return $result ? implode('.', array_reverse($result)) : '';
 }
 
 ?>
