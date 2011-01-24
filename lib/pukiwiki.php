@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.php,v 1.21 2007/08/26 15:17:28 henoheno Exp $
+// $Id: pukiwiki.php,v 1.22 2011/01/24 15:21:28 henoheno Exp $
 //
 // PukiWiki 1.4.*
 //  Copyright (C) 2002-2007 by PukiWiki Developers Team
@@ -103,7 +103,6 @@ if ($spam && $method != 'GET') {
 
 	if ($_spam) {
 		require(LIB_DIR . 'spam.php');
-		require(LIB_DIR . 'spam_pickup.php');
 
 		if (isset($spam['method'][$_plugin])) {
 			$_method = & $spam['method'][$_plugin];

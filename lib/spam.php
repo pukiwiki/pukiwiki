@@ -1,313 +1,22 @@
 <?php
-// $Id: spam.php,v 1.33 2008/12/28 08:33:05 henoheno Exp $
-// Copyright (C) 2006-2007 PukiWiki Developers Team
+// $Id: spam.php,v 1.34 2011/01/24 15:19:36 henoheno Exp $
+// Copyright (C) 2006-2009, 2011 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 // Functions for Concept-work of spam-uri metrics
 //
 // (PHP 4 >= 4.3.0): preg_match_all(PREG_OFFSET_CAPTURE): $method['uri_XXX'] related feature
 
+
+if (! defined('LIB_DIR'))   define('LIB_DIR', './');
+require(LIB_DIR . 'spam_pickup.php');
+require(LIB_DIR . 'spam_util.php');
+
 if (! defined('SPAM_INI_FILE'))   define('SPAM_INI_FILE',   'spam.ini.php');
-if (! defined('DOMAIN_INI_FILE')) define('DOMAIN_INI_FILE', 'domain.ini.php');
-
-// ---------------------
-// Compat etc
-
-// (PHP 4 >= 4.2.0): var_export(): mail-reporting and dump related
-if (! function_exists('var_export')) {
-	function var_export() {
-		return 'var_export() is not found on this server' . "\n";
-	}
-}
-
-// (PHP 4 >= 4.2.0): preg_grep() enables invert option
-function preg_grep_invert($pattern = '//', $input = array())
-{
-	static $invert;
-	if (! isset($invert)) $invert = defined('PREG_GREP_INVERT');
-
-	if ($invert) {
-		return preg_grep($pattern, $input, PREG_GREP_INVERT);
-	} else {
-		$result = preg_grep($pattern, $input);
-		if ($result) {
-			return array_diff($input, preg_grep($pattern, $input));
-		} else {
-			return $input;
-		}
-	}
-}
 
 
 // ---------------------
-// Utilities
-
-// Very roughly, shrink the lines of var_export()
-// NOTE: If the same data exists, it must be corrupted.
-function var_export_shrink($expression, $return = FALSE, $ignore_numeric_keys = FALSE)
-{
-	$result = var_export($expression, TRUE);
-
-	$result = preg_replace(
-		// Remove a newline and spaces
-		'# => \n *array \(#', ' => array (',
-		$result
-	);
-
-	if ($ignore_numeric_keys) {
-		$result =preg_replace(
-			// Remove numeric keys
-			'#^( *)[0-9]+ => #m', '$1',
-			$result
-		);
-	}
-
-	if ($return) {
-		return $result;
-	} else {
-		echo   $result;
-		return NULL;
-	}
-}
-
-// Data structure: Create an array they _refer_only_one_ value
-function one_value_array($num = 0, $value = NULL)
-{
-	$num   = max(0, intval($num));
-	$array = array();
-
-	for ($i = 0; $i < $num; $i++) {
-		$array[] = & $value;
-	}
-
-	return $array;
-}
-
-// Reverse $string with specified delimiter
-function delimiter_reverse($string = 'foo.bar.example.com', $from_delim = '.', $to_delim = NULL)
-{
-	$to_null = ($to_delim === NULL);
-
-	if (! is_string($from_delim) || (! $to_null && ! is_string($to_delim))) {
-		return FALSE;
-	}
-	if (is_array($string)) {
-		// Map, Recurse
-		$count = count($string);
-		$from  = one_value_array($count, $from_delim);
-		if ($to_null) {
-			// Note: array_map() vanishes all keys
-			return array_map('delimiter_reverse', $string, $from);
-		} else {
-			$to = one_value_array($count, $to_delim);
-			// Note: array_map() vanishes all keys
-			return array_map('delimiter_reverse', $string, $from, $to);
-		}
-	}
-	if (! is_string($string)) {
-		return FALSE;
-	}
-
-	// Returns com.example.bar.foo
-	if ($to_null) $to_delim = & $from_delim;
-	return implode($to_delim, array_reverse(explode($from_delim, $string)));
-}
-
-// ksort() by domain
-function ksort_by_domain(& $array)
-{
-	$sort = array();
-	foreach(array_keys($array) as $key) {
-		$reversed = delimiter_reverse($key);
-		if ($reversed !== FALSE) {
-			$sort[$reversed] = $key;
-		}
-	}
-	ksort($sort, SORT_STRING);
-
-	$result = array();
-	foreach($sort as $key) {
-		$result[$key] = & $array[$key];
-	}
-
-	$array = $result;
-}
-
-// Roughly strings(1) using PCRE
-// This function is useful to:
-//   * Reduce the size of data, from removing unprintable binary data
-//   * Detect _bare_strings_ from binary data
-// References:
-//   http://www.freebsd.org/cgi/man.cgi?query=strings (Man-page of GNU strings)
-//   http://www.pcre.org/pcre.txt
-// Note: mb_ereg_replace() is one of mbstring extension's functions
-//   and need to init its encoding.
-function strings($binary = '', $min_len = 4, $ignore_space = FALSE, $multibyte = FALSE)
-{
-	// String only
-	$binary = (is_array($binary) || $binary === TRUE) ? '' : strval($binary);
-
-	$regex = $ignore_space ?
-		'[^[:graph:] \t\n]+' :		// Remove "\0" etc, and readable spaces
-		'[^[:graph:][:space:]]+';	// Preserve readable spaces if possible
-
-	$binary = $multibyte ?
-		mb_ereg_replace($regex,           "\n",  $binary) :
-		preg_replace('/' . $regex . '/s', "\n",  $binary);
-
-	if ($ignore_space) {
-		$binary = preg_replace(
-			array(
-				'/[ \t]{2,}/',
-				'/^[ \t]/m',
-				'/[ \t]$/m',
-			),
-			array(
-				' ',
-				'',
-				''
-			),
-			 $binary);
-	}
-
-	if ($min_len > 1) {
-		// The last character seems "\n" or not
-		$br = (! empty($binary) && $binary[strlen($binary) - 1] == "\n") ? "\n" : '';
-
-		$min_len = min(1024, intval($min_len));
-		$regex = '/^.{' . $min_len . ',}/S';
-		$binary = implode("\n", preg_grep($regex, explode("\n", $binary))) . $br;
-	}
-
-	return $binary;
-}
-
-
-// ---------------------
-// Utilities: Arrays
-
-// Count leaves (A leaf = value that is not an array, or an empty array)
-function array_count_leaves($array = array(), $count_empty = FALSE)
-{
-	if (! is_array($array) || (empty($array) && $count_empty)) return 1;
-
-	// Recurse
-	$count = 0;
-	foreach ($array as $part) {
-		$count += array_count_leaves($part, $count_empty);
-	}
-	return $count;
-}
-
-// Merge two leaves
-// Similar to PHP array_merge_leaves(), except strictly preserving keys as string
-function array_merge_leaves($array1, $array2, $sort_keys = TRUE)
-{
-	// Array(s) only 
-	$is_array1 = is_array($array1);
-	$is_array2 = is_array($array2);
-	if ($is_array1) {
-		if ($is_array2) {
-			;	// Pass
-		} else {
-			return $array1;
-		}
-	} else if ($is_array2) {
-		return $array2;
-	} else {
-		return $array2; // Not array ($array1 is overwritten)
-	}
-
-	$keys_all = array_merge(array_keys($array1), array_keys($array2));
-	if ($sort_keys) sort($keys_all, SORT_STRING);
-
-	$result = array();
-	foreach($keys_all as $key) {
-		$isset1 = isset($array1[$key]);
-		$isset2 = isset($array2[$key]);
-		if ($isset1 && $isset2) {
-			// Recurse
-			$result[$key] = array_merge_leaves($array1[$key], $array2[$key], $sort_keys);
-		} else if ($isset1) {
-			$result[$key] = & $array1[$key];
-		} else {
-			$result[$key] = & $array2[$key];
-		}
-	}
-	return $result;
-}
-
-// An array-leaves to a flat array
-function array_flat_leaves($array, $unique = TRUE)
-{
-	if (! is_array($array)) return $array;
-
-	$tmp = array();
-	foreach(array_keys($array) as $key) {
-		if (is_array($array[$key])) {
-			// Recurse
-			foreach(array_flat_leaves($array[$key]) as $_value) {
-				$tmp[] = $_value;
-			}
-		} else {
-			$tmp[] = & $array[$key];
-		}
-	}
-
-	return $unique ? array_values(array_unique($tmp)) : $tmp;
-}
-
-// $array['something'] => $array['wanted']
-function array_rename_keys(& $array, $keys = array('from' => 'to'), $force = FALSE, $default = '')
-{
-	if (! is_array($array) || ! is_array($keys)) return FALSE;
-
-	// Nondestructive test
-	if (! $force) {
-		foreach(array_keys($keys) as $from) {
-			if (! isset($array[$from])) {
-				return FALSE;
-			}
-		}
-	}
-
-	foreach($keys as $from => $to) {
-		if ($from === $to) continue;
-		if (! $force || isset($array[$from])) {
-			$array[$to] = & $array[$from];
-			unset($array[$from]);
-		} else  {
-			$array[$to] = $default;
-		}
-	}
-
-	return TRUE;
-}
-
-// Remove redundant values from array()
-function array_unique_recursive($array = array())
-{
-	if (! is_array($array)) return $array;
-
-	$tmp = array();
-	foreach($array as $key => $value){
-		if (is_array($value)) {
-			$array[$key] = array_unique_recursive($value);
-		} else {
-			if (isset($tmp[$value])) {
-				unset($array[$key]);
-			} else {
-				$tmp[$value] = TRUE;
-			}
-		}
-	}
-
-	return $array;
-}
-
-
-// ---------------------
-// Part One : Checker
+// Regex
 
 // Rough implementation of globbing
 //
@@ -355,51 +64,32 @@ function generate_host_regex($string = '', $divider = '/')
 {
 	if (! is_string($string)) return '';
 
-	if (mb_strpos($string, '.') === FALSE) {
-		// localhost
+ 	if (mb_strpos($string, '.') === FALSE || is_ip($string)) {
+		// "localhost", IPv4, etc
 		return generate_glob_regex($string, $divider);
 	}
 
-	if (is_ip($string)) {
-		// IPv4
-		return generate_glob_regex($string, $divider);
+	// FQDN or something
+	$part = explode('.', $string, 2);
+	if ($part[0] == '') {
+		// ".example.org"
+		$part[0] = '(?:.*\.)?';
+	} else if ($part[0] == '*') {
+		// "*.example.org"
+		$part[0] = '.*\.';
 	} else {
-		// FQDN or something
-		$part = explode('.', $string, 2);
-		if ($part[0] == '') {
-			// .example.org
-			$part[0] = '(?:.*\.)?';
-		} else if ($part[0] == '*') {
-			// *.example.org
-			$part[0] = '.*\.';
-		} else {
-			// example.org, etc
-			return generate_glob_regex($string, $divider);
-		}
-		$part[1] = generate_glob_regex($part[1], $divider);
-		return implode('', $part);
+		// example.org, etc
+		return generate_glob_regex($string, $divider);
 	}
+
+	$part[1] = generate_glob_regex($part[1], $divider);
+
+	return implode('', $part);
 }
 
-// Rough hostname checker
-// TODO: Strict digit, 0x, CIDR, '999.999.999.999', ':', '::G'
-function is_ip($string = '')
-{
-	if (! is_string($string)) return FALSE;
 
-	if (strpos($string, ':') !== FALSE) {
-		return 6;	// Seems IPv6
-	}
-
-	if (preg_match('/^' .
-		'(?:[0-9]{1,3}\.){3}[0-9]{1,3}' . '|' .
-		'(?:[0-9]{1,3}\.){1,3}'         . '$/',
-		$string)) {
-		return 4;	// Seems IPv4(dot-decimal)
-	}
-
-	return FALSE;	// Seems not IP
-}
+// ---------------------
+// Load
 
 // Load SPAM_INI_FILE and return parsed one
 function get_blocklist($list = '')
@@ -470,7 +160,10 @@ function get_blocklist_add(& $array, $key = 0, $value = '*.example.org/path/to/f
 	if (is_string($key)) {
 		$array[$key]   = & $value; // Treat $value as a regex for FQDN(host)s
 	} else {
-		$array[$value] = '#^' . generate_host_regex($value, '#') . '$#i';
+		$regex = generate_host_regex($value, '#');
+		if (! empty($regex)) {
+			$array[$value] = '#^' . $regex . '$#i';
+		}
 	}
 }
 
@@ -651,30 +344,37 @@ function check_uri_spam($target = '', $method = array())
 	// ----------------------------------------
 	// Area measure
 
-	// Area: There's HTML anchor tag
-	if ((! $asap || ! $is_spam) && isset($method['area_anchor'])) {
-		$key = 'area_anchor';
-		$_asap = isset($method['asap']) ? array('asap' => TRUE) : array();
-		$result = area_pickup($target, array($key => TRUE) + $_asap);
-		if ($result) {
-			$sum[$key] = $result[$key];
-			if (isset($method[$key]) && $sum[$key] > $method[$key]) {
-				$is_spam[$key] = TRUE;
-			}
+	if (! $asap || ! $is_spam) {
+	
+		// Method pickup
+		$_method = array();
+		foreach(array(
+				'area_anchor',	// There's HTML anchor tag
+				'area_bbcode',	// There's 'BBCode' linking tag
+			) as $key) {
+			if (isset($method[$key])) $_method[$key] = TRUE;
 		}
-	}
 
-	// Area: There's 'BBCode' linking tag
-	if ((! $asap || ! $is_spam) && isset($method['area_bbcode'])) {
-		$key = 'area_bbcode';
-		$_asap = isset($method['asap']) ? array('asap' => TRUE) : array();
-		$result = area_pickup($target, array($key => TRUE) + $_asap);
-		if ($result) {
-			$sum[$key] = $result[$key];
-			if (isset($method[$key]) && $sum[$key] > $method[$key]) {
-				$is_spam[$key] = TRUE;
+		if ($_method) {
+			$_asap   = isset($method['asap']) ? array('asap' => TRUE) : array();
+			$_result = area_pickup($target, $_method + $_asap);
+			$_asap   = NULL;
+		} else {
+			$_result = FALSE;
+		}
+
+		if ($_result) {
+			foreach(array_keys($_method) as $key) {
+				if (isset($_result[$key])) {
+					$sum[$key] = $_result[$key];
+					if (isset($method[$key]) && $sum[$key] > $method[$key]) {
+						$is_spam[$key] = TRUE;
+					}
+				}
 			}
 		}
+
+		unset($_asap, $_method, $_result);
 	}
 
 	// Return if ...
@@ -683,14 +383,22 @@ function check_uri_spam($target = '', $method = array())
 	// ----------------------------------------
 	// URI: Pickup
 
-	$pickups = uri_pickup_normalize(spam_uri_pickup($target, $method));
+	$pickups = spam_uri_pickup($target, $method);
+
+
+	// Return if ...
+	if (empty($pickups)) return $progress;
+
+	// Normalize all
+	$pickups = uri_pickup_normalize($pickups);
+
+	// ----------------------------------------
+	// Pickup some part of URI
+
 	$hosts = array();
 	foreach ($pickups as $key => $pickup) {
 		$hosts[$key] = & $pickup['host'];
 	}
-
-	// Return if ...
-	if (empty($pickups)) return $progress;
 
 	// ----------------------------------------
 	// URI: Bad host <pre-filter> (Separate good/bad hosts from $hosts)
@@ -698,7 +406,7 @@ function check_uri_spam($target = '', $method = array())
 	if ((! $asap || ! $is_spam) && isset($method['badhost'])) {
 		$list    = get_blocklist('pre');
 		$blocked = blocklist_distiller($hosts, array_keys($list), $asap);
-		foreach($list as $key=>$type){
+		foreach($list as $key => $type){
 			if (! $type) unset($blocked[$key]); // Ignore goodhost etc
 		}
 		unset($list);
@@ -918,9 +626,9 @@ function summarize_detail_newtral($progress = array())
 			$subs = array();
 			foreach(array_keys($trie[$key]) as $sub) {
 				if ($sub == '') {
-					$subs[] = $key;
+					$subs[] = $key;			// 'example.com'
 				} else {
-					$subs[] = $sub . '.' . $key;
+					$subs[] = $sub . '. ';	// 'A.foo.bar. '
 				}
 			}
 			$result[] = '  \'' . $key . '\' => \'' . implode(', ', $subs) . '\',';
@@ -931,59 +639,6 @@ function summarize_detail_newtral($progress = array())
 		'array (' . "\n" .
 			implode("\n", $result) . "\n" .
 		')';
-}
-
-
-// Check responsibility-root of the FQDN
-// 'foo.bar.example.com'        => 'example.com'        (.com        has the last whois for it)
-// 'foo.bar.example.au'         => 'example.au'         (.au         has the last whois for it)
-// 'foo.bar.example.edu.au'     => 'example.edu.au'     (.edu.au     has the last whois for it)
-// 'foo.bar.example.act.edu.au' => 'example.act.edu.au' (.act.edu.au has the last whois for it)
-function whois_responsibility($fqdn = 'foo.bar.example.com', $parent = FALSE, $implicit = TRUE)
-{
-	static $domain;
-
-	if ($fqdn === NULL) {
-		$domain = NULL;	// Unset
-		return '';
-	}
-	if (! is_string($fqdn)) return '';
-
-	if (is_ip($fqdn)) return $fqdn;
-
- 	if (! isset($domain)) {
-		$domain = array();
- 		if (file_exists(DOMAIN_INI_FILE)) {
-			include(DOMAIN_INI_FILE);	// Set
-		}
-	}
-
-	$result  = array();
-	$dcursor = & $domain;
-	$array   = array_reverse(explode('.', $fqdn));
-	$i = 0;
-	while(TRUE) {
-		if (! isset($array[$i])) break;
-		$acursor = $array[$i];
-		if (is_array($dcursor) && isset($dcursor[$acursor])) {
-			$result[] = & $array[$i];
-			$dcursor  = & $dcursor[$acursor];
-		} else {
-			if (! $parent && isset($acursor)) {
-				$result[] = & $array[$i];	// Whois servers must know this subdomain
-			}
-			break;
-		}
-		++$i;
-	}
-
-	// Implicit responsibility: Top-Level-Domains must not be yours
-	// 'bar.foo.something' => 'foo.something'
-	if ($implicit && count($result) == 1 && count($array) > 1) {
-		$result[] = & $array[1];
-	}
-
-	return $result ? implode('.', array_reverse($result)) : '';
 }
 
 
@@ -1009,7 +664,7 @@ function spam_exit($mode = '', $data = array())
 			break;
 		case 'dump':
 			echo('<pre>' . "\n");
-			echo htmlspecialchars(var_export($data, TRUE));
+			echo htmlsc(var_export($data, TRUE));
 			echo('</pre>' . "\n");
 			break;
 	};
