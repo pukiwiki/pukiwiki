@@ -1,5 +1,5 @@
 <?php
-// $Id: insert.inc.php,v 1.13 2005/01/23 07:35:55 henoheno Exp $
+// $Id: insert.inc.php,v 1.16 2011/01/25 15:01:01 henoheno Exp $
 //
 // Text inserting box plugin
 
@@ -38,11 +38,11 @@ function plugin_insert_action()
 	$body = '';
 	if (md5(@join('', get_source($vars['refer']))) != $vars['digest']) {
 		$title = $_title_collided;
-		$body = $_msg_collided . "\n";
+		$body  = $_msg_collided . "\n";
 
-		$s_refer  = htmlspecialchars($vars['refer']);
-		$s_digest = htmlspecialchars($vars['digest']);
-		$s_postdata_input = htmlspecialchars($postdata_input);
+		$s_refer          = htmlsc($vars['refer']);
+		$s_digest         = htmlsc($vars['digest']);
+		$s_postdata_input = htmlsc($postdata_input);
 
 		$body .= <<<EOD
 <form action="$script?cmd=preview" method="post">
@@ -78,11 +78,11 @@ function plugin_insert_convert()
 
 	$insert_no = $numbers[$vars['page']]++;
 
-	$s_page   = htmlspecialchars($vars['page']);
-	$s_digest = htmlspecialchars($digest);
-	$s_cols = INSERT_COLS;
-	$s_rows = INSERT_ROWS;
-	$string = <<<EOD
+	$s_page   = htmlsc($vars['page']);
+	$s_digest = htmlsc($digest);
+	$s_cols   = INSERT_COLS;
+	$s_rows   = INSERT_ROWS;
+	$string   = <<<EOD
 <form action="$script" method="post">
  <div>
   <input type="hidden" name="insert_no" value="$insert_no" />

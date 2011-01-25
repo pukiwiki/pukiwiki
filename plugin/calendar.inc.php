@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar.inc.php,v 1.21 2005/05/04 04:56:39 henoheno Exp $
+// $Id: calendar.inc.php,v 1.22 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2003,2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -97,7 +97,7 @@ EOD;
 		$dt     = sprintf('%04d%02d%02d', $year, $m_num, $day);
 		$name   = $prefix . $dt;
 		$r_page = rawurlencode($name);
-		$s_page = htmlspecialchars($name);
+		$s_page = htmlsc($name);
 
 		$refer = ($cmd == 'edit') ? '&amp;refer=' . rawurlencode($page) : '';
 

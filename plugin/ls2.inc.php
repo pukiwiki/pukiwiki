@@ -1,7 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: ls2.inc.php,v 1.23 2004/12/05 11:37:37 henoheno Exp $
+// $Id: ls2.inc.php,v 1.30 2011/01/25 15:01:01 henoheno Exp $
+// Copyright (C)
+//   2002-2004, 2006-2007 PukiWiki Developers Team
+//   2002       panda  http://home.arino.jp/?ls2.inc.php 
+//   2002       Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net (ls.inc.php)
+// License: GPL version 2
 //
 // List plugin 2
 
@@ -41,7 +45,7 @@ function plugin_ls2_action()
 	$body = plugin_ls2_show_lists($prefix, $params);
 
 	return array('body'=>$body,
-		'msg'=>str_replace('$1', htmlspecialchars($prefix), $_ls2_msg_title));
+		'msg'=>str_replace('$1', htmlsc($prefix), $_ls2_msg_title));
 }
 
 function plugin_ls2_convert()
@@ -69,7 +73,7 @@ function plugin_ls2_convert()
 	array_walk($args, 'plugin_ls2_check_arg', & $params);
 
 	$title = (! empty($params['_args'])) ? join(',', $params['_args']) :   // Manual
-		str_replace('$1', htmlspecialchars($prefix), $_ls2_msg_title); // Auto
+		str_replace('$1', htmlsc($prefix), $_ls2_msg_title); // Auto
 
 	if (! $params['link'])
 		return plugin_ls2_show_lists($prefix, $params);
@@ -121,7 +125,7 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 	if (! $is_done) $params["page_$page"] = ++$_ls2_anchor;
 
 	$r_page = rawurlencode($page);
-	$s_page = htmlspecialchars($page);
+	$s_page = htmlsc($page);
 	$title  = $s_page . ' ' . get_pg_passage($page, FALSE);
 	$href   = $script . '?cmd=read&amp;page=' . $r_page;
 
@@ -214,6 +218,6 @@ function plugin_ls2_check_arg($value, $key, & $params)
 		$params['_done'] = TRUE;
 	}
 
-	$params['_args'][] = htmlspecialchars($value); // Link title
+	$params['_args'][] = htmlsc($value); // Link title
 }
 ?>

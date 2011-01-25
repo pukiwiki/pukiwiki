@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: auth.php,v 1.19 2005/06/13 14:02:07 henoheno Exp $
-// Copyright (C) 2003-2005 PukiWiki Developers Team
+// $Id: auth.php,v 1.22 2011/01/25 15:01:01 henoheno Exp $
+// Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
 // Authentication related functions
@@ -134,7 +134,7 @@ function check_editable($page, $auth_flag = TRUE, $exit_flag = TRUE)
 		} else {
 			// With exit
 			$body = $title = str_replace('$1',
-				htmlspecialchars(strip_bracket($page)), $_title_cannotedit);
+				htmlsc(strip_bracket($page)), $_title_cannotedit);
 			if (is_freeze($page))
 				$body .= '(<a href="' . $script . '?cmd=unfreeze&amp;page=' .
 					rawurlencode($page) . '">' . $_msg_unfreeze . '</a>)';
@@ -214,7 +214,7 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 		}
 		if ($exit_flag) {
 			$body = $title = str_replace('$1',
-				htmlspecialchars(strip_bracket($page)), $title_cannot);
+				htmlsc(strip_bracket($page)), $title_cannot);
 			$page = str_replace('$1', make_search($page), $title_cannot);
 			catbody($title, $page, $body);
 			exit;

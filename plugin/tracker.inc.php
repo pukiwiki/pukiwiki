@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.34 2005/11/28 17:48:30 teanan Exp $
+// $Id: tracker.inc.php,v 1.124 2011/01/25 15:01:01 henoheno Exp $
+// Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
 // Issue tracker plugin (See Also bugtrack plugin)
 
@@ -44,7 +46,7 @@ function plugin_tracker_convert()
 
 	if (!$config->read())
 	{
-		return "<p>config file '".htmlspecialchars($config_name)."' not found.</p>";
+		return "<p>config file '".htmlsc($config_name)."' not found.</p>";
 	}
 
 	$config->config_name = $config_name;
@@ -100,14 +102,14 @@ function plugin_tracker_action()
 	{
 		return array(
 			'msg'=>'cannot write',
-			'body'=>'page name ('.htmlspecialchars($refer).') is not valid.'
+			'body'=>'page name ('.htmlsc($refer).') is not valid.'
 		);
 	}
 	if (!is_page($source))
 	{
 		return array(
 			'msg'=>'cannot write',
-			'body'=>'page template ('.htmlspecialchars($source).') is not exist.'
+			'body'=>'page template ('.htmlsc($source).') is not exist.'
 		);
 	}
 	// ページ名を決定
@@ -299,9 +301,9 @@ class Tracker_field_text extends Tracker_field
 
 	function get_tag()
 	{
-		$s_name = htmlspecialchars($this->name);
-		$s_size = htmlspecialchars($this->values[0]);
-		$s_value = htmlspecialchars($this->default_value);
+		$s_name = htmlsc($this->name);
+		$s_size = htmlsc($this->values[0]);
+		$s_value = htmlsc($this->default_value);
 		return "<input type=\"text\" name=\"$s_name\" size=\"$s_size\" value=\"$s_value\" />";
 	}
 }
@@ -341,10 +343,10 @@ class Tracker_field_textarea extends Tracker_field
 
 	function get_tag()
 	{
-		$s_name = htmlspecialchars($this->name);
-		$s_cols = htmlspecialchars($this->values[0]);
-		$s_rows = htmlspecialchars($this->values[1]);
-		$s_value = htmlspecialchars($this->default_value);
+		$s_name = htmlsc($this->name);
+		$s_cols = htmlsc($this->values[0]);
+		$s_rows = htmlsc($this->values[1]);
+		$s_value = htmlsc($this->default_value);
 		return "<textarea name=\"$s_name\" cols=\"$s_cols\" rows=\"$s_rows\">$s_value</textarea>";
 	}
 	function format_cell($str)
@@ -383,8 +385,8 @@ class Tracker_field_format extends Tracker_field
 	}
 	function get_tag()
 	{
-		$s_name = htmlspecialchars($this->name);
-		$s_size = htmlspecialchars($this->values[0]);
+		$s_name = htmlsc($this->name);
+		$s_size = htmlsc($this->values[0]);
 		return "<input type=\"text\" name=\"$s_name\" size=\"$s_size\" />";
 	}
 	function get_key($str)
@@ -412,8 +414,8 @@ class Tracker_field_file extends Tracker_field_format
 
 	function get_tag()
 	{
-		$s_name = htmlspecialchars($this->name);
-		$s_size = htmlspecialchars($this->values[0]);
+		$s_name = htmlsc($this->name);
+		$s_size = htmlsc($this->values[0]);
 		return "<input type=\"file\" name=\"$s_name\" size=\"$s_size\" />";
 	}
 	function format_value($str)
@@ -442,7 +444,7 @@ class Tracker_field_radio extends Tracker_field_format
 		$id = 0;
 		foreach ($this->config->get($this->name) as $option)
 		{
-			$s_option = htmlspecialchars($option[0]);
+			$s_option = htmlsc($option[0]);
 			$checked = trim($option[0]) == trim($this->default_value) ? ' checked="checked"' : '';
 			++$id;
 			$s_id = '_p_tracker_' . $s_name . '_' . $this->id . '_' . $id;
@@ -473,9 +475,9 @@ class Tracker_field_select extends Tracker_field_radio
 
 	function get_tag($empty=FALSE)
 	{
-		$s_name = htmlspecialchars($this->name);
+		$s_name = htmlsc($this->name);
 		$s_size = (array_key_exists(0,$this->values) and is_numeric($this->values[0])) ?
-			' size="'.htmlspecialchars($this->values[0]).'"' : '';
+			' size="'.htmlsc($this->values[0]).'"' : '';
 		$s_multiple = (array_key_exists(1,$this->values) and strtolower($this->values[1]) == 'multiple') ?
 			' multiple="multiple"' : '';
 		$retval = "<select name=\"{$s_name}[]\"$s_size$s_multiple>\n";
@@ -486,7 +488,7 @@ class Tracker_field_select extends Tracker_field_radio
 		$defaults = array_flip(preg_split('/\s*,\s*/',$this->default_value,-1,PREG_SPLIT_NO_EMPTY));
 		foreach ($this->config->get($this->name) as $option)
 		{
-			$s_option = htmlspecialchars($option[0]);
+			$s_option = htmlsc($option[0]);
 			$selected = array_key_exists(trim($option[0]),$defaults) ? ' selected="selected"' : '';
 			$retval .= " <option value=\"$s_option\"$selected>$s_option</option>\n";
 		}
@@ -501,13 +503,13 @@ class Tracker_field_checkbox extends Tracker_field_radio
 
 	function get_tag($empty=FALSE)
 	{
-		$s_name = htmlspecialchars($this->name);
+		$s_name = htmlsc($this->name);
 		$defaults = array_flip(preg_split('/\s*,\s*/',$this->default_value,-1,PREG_SPLIT_NO_EMPTY));
 		$retval = '';
 		$id = 0;
 		foreach ($this->config->get($this->name) as $option)
 		{
-			$s_option = htmlspecialchars($option[0]);
+			$s_option = htmlsc($option[0]);
 			$checked = array_key_exists(trim($option[0]),$defaults) ?
 				' checked="checked"' : '';
 			++$id;
@@ -526,8 +528,8 @@ class Tracker_field_hidden extends Tracker_field_radio
 
 	function get_tag($empty=FALSE)
 	{
-		$s_name = htmlspecialchars($this->name);
-		$s_default = htmlspecialchars($this->default_value);
+		$s_name = htmlsc($this->name);
+		$s_default = htmlsc($this->default_value);
 		$retval = "<input type=\"hidden\" name=\"$s_name\" value=\"$s_default\" />\n";
 
 		return $retval;
@@ -537,10 +539,10 @@ class Tracker_field_submit extends Tracker_field
 {
 	function get_tag()
 	{
-		$s_title = htmlspecialchars($this->title);
-		$s_page = htmlspecialchars($this->page);
-		$s_refer = htmlspecialchars($this->refer);
-		$s_config = htmlspecialchars($this->config->config_name);
+		$s_title = htmlsc($this->title);
+		$s_page = htmlsc($this->page);
+		$s_refer = htmlsc($this->refer);
+		$s_config = htmlsc($this->config->config_name);
 
 		return <<<EOD
 <input type="submit" value="$s_title" />
@@ -626,7 +628,7 @@ function plugin_tracker_getlist($page,$refer,$config_name,$list,$order='',$limit
 
 	if (!$config->read())
 	{
-		return "<p>config file '".htmlspecialchars($config_name)."' is not exist.";
+		return "<p>config file '".htmlsc($config_name)."' is not exist.";
 	}
 
 	$config->config_name = $config_name;

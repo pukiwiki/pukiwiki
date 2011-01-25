@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.24 2006/05/04 05:04:43 henoheno Exp $
+// $Id: md5.inc.php,v 1.25 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C) 2001-2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -60,7 +60,7 @@ function plugin_md5_show_form($nophrase = FALSE, $value = '')
 	if (strlen($value) > PKWK_PASSPHRASE_LIMIT_LENGTH)
 		die_message('Limit: malicious message length');
 
-	if ($value != '') $value = 'value="' . htmlspecialchars($value) . '" ';
+	if ($value != '') $value = 'value="' . htmlsc($value) . '" ';
 
 	$sha1_enabled = function_exists('sha1');
 	$sha1_checked = $md5_checked = '';

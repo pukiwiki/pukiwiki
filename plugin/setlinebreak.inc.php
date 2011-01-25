@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: setlinebreak.inc.php,v 1.4 2005/04/02 06:27:38 henoheno Exp $
+// $Id: setlinebreak.inc.php,v 1.5 2011/01/25 15:01:01 henoheno Exp $
 //
 // Set linebreak plugin - on/of linebreak-to-'<br />' conversion
 //
@@ -41,7 +41,7 @@ function plugin_setlinebreak_convert()
 
 		default:
 			return '#setlinebreak: Invalid argument: ' .
-				htmlspecialchars($args[0]) . '<br />';
+				htmlsc($args[0]) . '<br />';
 		}
 	}
 	return '';

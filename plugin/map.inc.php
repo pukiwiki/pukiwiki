@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: map.inc.php,v 1.14 2005/01/10 09:17:11 henoheno Exp $
+// $Id: map.inc.php,v 1.18 2011/01/25 15:01:01 henoheno Exp $
+// Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
+// License: GPL v2 or (at your option) any later version
 //
 // Site map plugin
 
@@ -74,7 +76,7 @@ function plugin_map_action()
 		$nodes[$refer]->chain($nodes);
 		$retval['body'] .= '<ul>' . "\n" . $nodes[$refer]->toString($nodes) . '</ul>' . "\n";
 		$retval['body'] .= '<hr />' . "\n" .
-			'<p>Not related from ' . htmlspecialchars($refer) . '</p>' . "\n";
+			'<p>Not related from ' . htmlsc($refer) . '</p>' . "\n";
 		$keys = array_keys($nodes);
 		sort($keys);
 		$retval['body'] .= '<ul>' . "\n";

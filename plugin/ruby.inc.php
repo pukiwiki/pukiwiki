@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: ruby.inc.php,v 1.6 2005/05/07 07:41:31 henoheno Exp $
+// $Id: ruby.inc.php,v 1.8 2011/01/25 15:01:01 henoheno Exp $
 //
 // Ruby annotation plugin: Add a pronounciation into kanji-word or acronym(s)
 // See also about ruby: http://www.w3.org/TR/ruby/
@@ -23,7 +23,7 @@ function plugin_ruby_inline()
 	if ($ruby == '' || $body == '') return PLUGIN_RUBY_USAGE;
 
 	return '<ruby><rb>' . $body . '</rb>' . '<rp>(</rp>' .
-		'<rt>' .  htmlspecialchars($ruby) . '</rt>' . '<rp>)</rp>' .
+		'<rt>' .  htmlsc($ruby) . '</rt>' . '<rp>)</rp>' .
 		'</ruby>';
 }
 ?>

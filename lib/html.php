@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.57 2006/04/15 17:33:35 teanan Exp $
+// $Id: html.php,v 1.66 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -117,7 +117,7 @@ function catbody($title, $page, $body)
 
 	// Search words
 	if ($search_word_color && isset($vars['word'])) {
-		$body = '<div class="small">' . $_msg_word . htmlspecialchars($vars['word']) .
+		$body = '<div class="small">' . $_msg_word . htmlsc($vars['word']) .
 			'</div>' . $hr . "\n" . $body;
 
 		// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
@@ -132,7 +132,7 @@ function catbody($title, $page, $body)
 		$keys = get_search_words(array_keys($keys), TRUE);
 		$id = 0;
 		foreach ($keys as $key=>$pattern) {
-			$s_key    = htmlspecialchars($key);
+			$s_key    = htmlsc($key);
 			$pattern  = '/' .
 				'<textarea[^>]*>.*?<\/textarea>' .	// Ignore textareas
 				'|' . '<[^>]*>' .			// Ignore tags
@@ -190,7 +190,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 		foreach(get_existpages() as $_page) {
 			if ($_page == $whatsnew || check_non_list($_page))
 				continue;
-			$s_page = htmlspecialchars($_page);
+			$s_page = htmlsc($_page);
 			$pages[$_page] = '   <option value="' . $s_page . '">' .
 				$s_page . '</option>';
 		}
@@ -210,10 +210,10 @@ EOD;
 	}
 
 	$r_page      = rawurlencode($page);
-	$s_page      = htmlspecialchars($page);
-	$s_digest    = htmlspecialchars($digest);
-	$s_postdata  = htmlspecialchars($refer . $postdata);
-	$s_original  = isset($vars['original']) ? htmlspecialchars($vars['original']) : $s_postdata;
+	$s_page      = htmlsc($page);
+	$s_digest    = htmlsc($digest);
+	$s_postdata  = htmlsc($refer . $postdata);
+	$s_original  = isset($vars['original']) ? htmlsc($vars['original']) : $s_postdata;
 	$b_preview   = isset($vars['preview']); // TRUE when preview
 	$btn_preview = $b_preview ? $_btn_repreview : $_btn_preview;
 
@@ -293,7 +293,7 @@ function make_related($page, $tag = '')
 		if (check_non_list($page)) continue;
 
 		$r_page   = rawurlencode($page);
-		$s_page   = htmlspecialchars($page);
+		$s_page   = htmlsc($page);
 		$passage  = get_passage($lastmod);
 		$_links[] = $tag ?
 			'<a href="' . $script . '?' . $r_page . '" title="' .
@@ -367,7 +367,7 @@ function make_search($page)
 {
 	global $script;
 
-	$s_page = htmlspecialchars($page);
+	$s_page = htmlsc($page);
 	$r_page = rawurlencode($page);
 
 	return '<a href="' . $script . '?plugin=related&amp;page=' . $r_page .
@@ -429,7 +429,7 @@ function pkwk_headers_sent()
 	if (version_compare(PHP_VERSION, '4.3.0', '>=')) {
 		if (headers_sent($file, $line))
 		    die('Headers already sent at ' .
-		    	htmlspecialchars($file) .
+		    	htmlsc($file) .
 			' line ' . $line . '.');
 	} else {
 		if (headers_sent())
@@ -509,7 +509,7 @@ function pkwk_output_dtd($pkwk_dtd = PKWK_DTD_XHTML_1_1, $charset = CONTENT_CHAR
 		break;
 	}
 
-	$charset = htmlspecialchars($charset);
+	$charset = htmlsc($charset);
 
 	// Output XML or not
 	if ($type == PKWK_DTD_TYPE_XHTML) echo '<?xml version="1.0" encoding="' . $charset . '" ?>' . "\n";
