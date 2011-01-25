@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.56 2009/04/18 00:56:33 henoheno Exp $
+// $Id: init.php,v 1.57 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2007, 2009 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -64,7 +64,8 @@ if ($die) die_message(nl2br("\n\n" . $die));
 //   'uni'(means UTF-8), 'English', or 'Japanese'
 // SOURCE_ENCODING: Internal content encoding (for mbstring extension)
 //   'UTF-8', 'ASCII', or 'EUC-JP'
-// CONTENT_CHARSET: Internal content encoding = Output content charset (for skin)
+// CONTENT_CHARSET: Internal content encoding = Output content charset
+//    (for DTD, htmlsc())
 //   'UTF-8', 'iso-8859-1', 'EUC-JP' or ...
 
 switch (LANG){

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: comment.inc.php,v 1.40 2007/10/17 17:49:29 teanan Exp $
+// $Id: comment.inc.php,v 1.41 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -110,7 +110,7 @@ function plugin_comment_convert()
 		(in_array('below', $options) ? '0' : PLUGIN_COMMENT_DIRECTION_DEFAULT);
 
 	$script = get_script_uri();
-	$s_page = htmlspecialchars($vars['page']);
+	$s_page = htmlsc($vars['page']);
 	$string = <<<EOD
 <br />
 <form action="$script" method="post">

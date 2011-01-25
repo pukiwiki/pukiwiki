@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pcomment.inc.php,v 1.47 2009/04/18 00:42:07 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.48 2011/01/25 15:01:01 henoheno Exp $
 //
 // Page comment plugin - Show/Insert comments into another page
 //
@@ -87,7 +87,7 @@ function plugin_pcomment_convert()
 
 	$_page = get_fullname(strip_bracket($page), $vars_page);
 	if (!is_pagename($_page))
-		return sprintf($_pcmt_messages['err_pagename'], htmlspecialchars($_page));
+		return sprintf($_pcmt_messages['err_pagename'], htmlsc($_page));
 
 	$dir = PLUGIN_PCOMMENT_DIRECTION_DEFAULT;
 	if ($params['below']) {
@@ -115,9 +115,9 @@ function plugin_pcomment_convert()
 			'<input type="radio" name="reply" value="0" tabindex="0" checked="checked" />' : '';
 		$comment = '<input type="text" name="msg" size="' . PLUGIN_PCOMMENT_SIZE_MSG . '" />';
 
-		$s_page   = htmlspecialchars($page);
-		$s_refer  = htmlspecialchars($vars_page);
-		$s_nodate = htmlspecialchars($params['nodate']);
+		$s_page   = htmlsc($page);
+		$s_refer  = htmlsc($vars_page);
+		$s_nodate = htmlsc($params['nodate']);
 
 		$form_start = '<form action="' . get_script_uri() . '" method="post">' . "\n";
 		$form = <<<EOD
@@ -201,7 +201,7 @@ function plugin_pcomment_insert()
 	$msg = rtrim($msg);
 
 	if (! is_page($page)) {
-		$postdata = '[[' . htmlspecialchars(strip_bracket($refer)) . ']]' . "\n\n" .
+		$postdata = '[[' . htmlsc(strip_bracket($refer)) . ']]' . "\n\n" .
 			'-' . $msg . "\n";
 	} else {
 		$postdata = get_source($page);

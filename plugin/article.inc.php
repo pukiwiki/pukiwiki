@@ -1,5 +1,5 @@
 <?php
-// $Id: article.inc.php,v 1.27 2007/08/19 14:20:58 henoheno Exp $
+// $Id: article.inc.php,v 1.28 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2005, 2007 PukiWiki Developers Team
 //   2002      Originally written by OKAWARA,Satoshi <kawara@dml.co.jp>
@@ -93,9 +93,9 @@ function plugin_article_action()
 
 		$body = $_msg_collided . "\n";
 
-		$s_refer    = htmlspecialchars($post['refer']);
-		$s_digest   = htmlspecialchars($post['digest']);
-		$s_postdata = htmlspecialchars($postdata_input);
+		$s_refer    = htmlsc($post['refer']);
+		$s_digest   = htmlsc($post['digest']);
+		$s_postdata = htmlsc($postdata_input);
 		$body .= <<<EOD
 <form action="$script?cmd=preview" method="post">
  <div>
@@ -152,9 +152,9 @@ function plugin_article_convert()
 
 	$article_no = $numbers[$vars['page']]++;
 
-	$s_page   = htmlspecialchars($vars['page']);
-	$s_digest = htmlspecialchars($digest);
-	$name_cols = PLUGIN_ARTICLE_NAME_COLS;
+	$s_page       = htmlsc($vars['page']);
+	$s_digest     = htmlsc($digest);
+	$name_cols    = PLUGIN_ARTICLE_NAME_COLS;
 	$subject_cols = PLUGIN_ARTICLE_SUBJECT_COLS;
 	$article_rows = PLUGIN_ARTICLE_ROWS;
 	$article_cols = PLUGIN_ARTICLE_COLS;

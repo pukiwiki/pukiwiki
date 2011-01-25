@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: amazon.inc.php,v 1.15 2005/04/09 03:18:06 henoheno Exp $
+// $Id: amazon.inc.php,v 1.16 2011/01/25 15:01:01 henoheno Exp $
 // Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 閑舎
 //
 // Amazon plugin: Book-review maker via amazon.com/amazon.jp
@@ -125,7 +125,7 @@ function plugin_amazon_convert()
 		// レビュー作成
 		if (PKWK_READONLY) return ''; // Show nothing
 
-		$s_page = htmlspecialchars($vars['page']);
+		$s_page = htmlsc($vars['page']);
 		if ($s_page == '') $s_page = isset($vars['refer']) ? $vars['refer'] : '';
 		$ret = <<<EOD
 <form action="$script" method="post">
@@ -147,12 +147,12 @@ EOD;
 	if ($align == 'clear') return '<div style="clear:both"></div>'; // 改行挿入
 	if ($align != 'left') $align = 'right'; // 配置決定
 
-	$asin_all = htmlspecialchars($aryargs[0]);  // for XSS
+	$asin_all = htmlsc($aryargs[0]);  // for XSS
 	if (is_asin() == FALSE && $align != 'clear') return FALSE;
 
 	if ($aryargs[2] != '') {
 		// タイトル指定
-		$title = $alt = htmlspecialchars($aryargs[2]); // for XSS
+		$title = $alt = htmlsc($aryargs[2]); // for XSS
 		if ($alt == 'image') {
 			$alt = plugin_amazon_get_asin_title();
 			if ($alt == '') return FALSE;
@@ -195,7 +195,7 @@ function plugin_amazon_action()
 
 	$s_page   = isset($vars['refer']) ? $vars['refer'] : '';
 	$asin_all = isset($vars['asin']) ?
-		htmlspecialchars(rawurlencode(strip_bracket($vars['asin']))) : '';
+		htmlsc(rawurlencode(strip_bracket($vars['asin']))) : '';
 
 	if (! is_asin()) {
 		$retvars['msg']   = 'ブックレビュー編集';
@@ -236,7 +236,7 @@ function plugin_amazon_inline()
 
 	list($asin_all) = func_get_args();
 
-	$asin_all = htmlspecialchars($asin_all); // for XSS
+	$asin_all = htmlsc($asin_all); // for XSS
 	if (! is_asin()) return FALSE;
 
 	$title = plugin_amazon_get_asin_title();

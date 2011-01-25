@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: size.inc.php,v 1.13 2007/11/15 14:30:20 henoheno Exp $
+// $Id: size.inc.php,v 1.14 2011/01/25 15:01:01 henoheno Exp $
 //
 // Font-size plugin
 //
@@ -36,7 +36,7 @@ function plugin_size_inline()
 	if (func_num_args() != 2) return PLUGIN_SIZE_USAGE;
 
 	$args = func_get_args();
-	$body = trim(array_pop($args)); // htmlspecialchars() already
+	$body = trim(array_pop($args)); // htmlsc() already
 	$size = isset($args[0]) ? trim($args[0]) : '';
 
 	// strip_autolink() seems not needed for size plugin

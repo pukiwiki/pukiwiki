@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: img.inc.php,v 1.17 2007/04/08 13:16:09 henoheno Exp $
+// $Id: img.inc.php,v 1.18 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -36,7 +36,7 @@ function plugin_img_convert()
 	if (! is_url($url) || ! preg_match('/\.(jpe?g|gif|png)$/i', $url)) {
 		return PLUGIN_IMG_USAGE;
 	} else {
-		$url = htmlspecialchars($url);
+		$url = htmlsc($url);
 	}
 
 	// The third

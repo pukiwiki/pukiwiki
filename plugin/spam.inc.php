@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: spam.inc.php,v 1.9 2007/08/04 14:20:49 henoheno Exp $
+// $Id: spam.inc.php,v 1.10 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -45,7 +45,7 @@ function plugin_spam_pages()
 	$script  = get_script_uri() . '?plugin=spam&mode=pages';
 
 	$start   = isset($post['start']) ? $post['start'] : NULL;
-	$s_start = ($start === NULL) ? '' : htmlspecialchars($start);
+	$s_start = ($start === NULL) ? '' : htmlsc($start);
 	$pass    = isset($post['pass']) ? $post['pass'] : NULL;
 	$sort    = isset($post['sort']);
 	$s_sort  = $sort ? ' checked' : '';
@@ -104,16 +104,16 @@ EOD;
 
 			$progress = check_uri_spam(get_source($pagename, TRUE, TRUE), $method);
 			if (empty($progress['is_spam'])) {
-				echo htmlspecialchars($pagename);
+				echo htmlsc($pagename);
 				echo '<br/>' . "\n";
 			} else {
 				++$hit;
-				echo '<font color="red"><strong>FOUND at "' . htmlspecialchars($pagename) . '"</strong></font>';
+				echo '<font color="red"><strong>FOUND at "' . htmlsc($pagename) . '"</strong></font>';
 				echo ':<br/>' . "\n";
 				$tmp = summarize_detail_badhost($progress);
 				if ($tmp != '') {
 					echo '&nbsp; DETAIL_BADHOST: ' . 
-						str_replace('  ', '&nbsp; ', nl2br(htmlspecialchars($tmp). "\n"));
+						str_replace('  ', '&nbsp; ', nl2br(htmlsc($tmp). "\n"));
 				}
 			}
 		}

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: ref.inc.php,v 1.50 2006/02/24 01:35:34 teanan Exp $
+// $Id: ref.inc.php,v 1.51 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -187,7 +187,7 @@ function plugin_ref_body($args)
 				// Promote new design
 				if ($is_file_default && $is_file_second) {
 					// Because of race condition NOW
-					$params['_error'] = htmlspecialchars('The same file name "' .
+					$params['_error'] = htmlsc('The same file name "' .
 						$name . '" at both page: "' .  $page . '" and "' .  $_arg .
 						'". Try ref(pagename/filename) to specify one of them');
 				} else {
@@ -204,7 +204,7 @@ function plugin_ref_body($args)
 			$is_file = is_file($file);
 		}
 		if (! $is_file) {
-			$params['_error'] = htmlspecialchars('File not found: "' .
+			$params['_error'] = htmlsc('File not found: "' .
 				$name . '" at page "' . $page . '"');
 			return $params;
 		}
@@ -233,13 +233,13 @@ function plugin_ref_body($args)
 		if (PKWK_DISABLE_INLINE_IMAGE_FROM_URI) {
 			//$params['_error'] = 'PKWK_DISABLE_INLINE_IMAGE_FROM_URI prohibits this';
 			//return $params;
-			$url = htmlspecialchars($name);
+			$url = htmlsc($name);
 			$params['_body'] = '<a href="' . $url . '">' . $url . '</a>';
 			return $params;
 		}
 
-		$url = $url2 = htmlspecialchars($name);
-		$title = htmlspecialchars(preg_match('/([^\/]+)$/', $name, $matches) ? $matches[1] : $url);
+		$url = $url2 = htmlsc($name);
+		$title = htmlsc(preg_match('/([^\/]+)$/', $name, $matches) ? $matches[1] : $url);
 
 		$is_image = (! $params['noimg'] && preg_match(PLUGIN_REF_IMAGE, $name));
 
@@ -254,7 +254,7 @@ function plugin_ref_body($args)
 
 	} else { // 添付ファイル
 
-		$title = htmlspecialchars($name);
+		$title = htmlsc($name);
 
 		$is_image = (! $params['noimg'] && preg_match(PLUGIN_REF_IMAGE, $name));
 
@@ -306,7 +306,7 @@ function plugin_ref_body($args)
 		}
 
 		if (! empty($_title)) {
-			$title = htmlspecialchars(join(',', $_title));
+			$title = htmlsc(join(',', $_title));
 			if ($is_image) $title = make_line_rules($title);
 		}
 	}
@@ -420,7 +420,7 @@ function plugin_ref_action()
 			break;
 		}
 	}
-	$file = htmlspecialchars($filename);
+	$file = htmlsc($filename);
 	$size = filesize($ref);
 
 	// Output

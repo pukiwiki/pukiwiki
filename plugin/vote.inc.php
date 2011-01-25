@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: vote.inc.php,v 1.26 2007/08/19 14:20:58 henoheno Exp $
+// $Id: vote.inc.php,v 1.27 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -50,9 +50,9 @@ function plugin_vote_action()
 	if (md5(get_source($vars['refer'], TRUE, TRUE)) !== $vars['digest']) {
 		$title = $_title_collided;
 
-		$s_refer          = htmlspecialchars($vars['refer']);
-		$s_digest         = htmlspecialchars($vars['digest']);
-		$s_postdata_input = htmlspecialchars($postdata_input);
+		$s_refer          = htmlsc($vars['refer']);
+		$s_digest         = htmlsc($vars['digest']);
+		$s_postdata_input = htmlsc($postdata_input);
 		$body = <<<EOD
 $_msg_collided
 <form action="$script?cmd=preview" method="post">
@@ -97,8 +97,8 @@ function plugin_vote_convert()
 	}
 
 	$args     = func_get_args();
-	$s_page   = htmlspecialchars($page);
-	$s_digest = htmlspecialchars($digest);
+	$s_page   = htmlsc($page);
+	$s_digest = htmlsc($digest);
 
 	$body = <<<EOD
 <form action="$_script" method="post">

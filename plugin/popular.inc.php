@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: popular.inc.php,v 1.19 2007/10/06 13:20:59 henoheno Exp $
+// $Id: popular.inc.php,v 1.20 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2003-2005, 2007 PukiWiki Developers Team
 //   2002 Kazunori Mizushima <kazunori@uc.netyou.jp>
@@ -77,7 +77,7 @@ function plugin_popular_convert()
 		foreach ($counters as $page=>$count) {
 			$page = substr($page, 1);
 
-			$s_page = htmlspecialchars($page);
+			$s_page = htmlsc($page);
 			if ($page === $vars['page']) {
 				// No need to link itself, notifies where you just read
 				$pg_passage = get_pg_passage($page,FALSE);

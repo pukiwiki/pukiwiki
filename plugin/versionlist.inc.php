@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: versionlist.inc.php,v 1.21 2007/06/30 04:19:25 henoheno Exp $
+// $Id: versionlist.inc.php,v 1.22 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //	 2002-2007 PukiWiki Developers Team
 //	 2002      S.YOSHIMURA GPL2 yosimura@excellence.ac.jp
@@ -66,9 +66,9 @@ function plugin_versionlist_convert()
 EOD;
 
 	foreach (array_keys($row) as $path) {
-		$file = htmlspecialchars($path);
-		$rev  = isset($row[$path]['rev'])  ? htmlspecialchars($row[$path]['rev'])  : '';
-		$date = isset($row[$path]['date']) ? htmlspecialchars($row[$path]['date']) : '';
+		$file = htmlsc($path);
+		$rev  = isset($row[$path]['rev'])  ? htmlsc($row[$path]['rev'])  : '';
+		$date = isset($row[$path]['date']) ? htmlsc($row[$path]['date']) : '';
 		$retval[] = <<<EOD
   <tr>
    <td>$file</td>

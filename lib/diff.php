@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: diff.php,v 1.9 2007/06/23 16:30:29 henoheno Exp $
+// $Id: diff.php,v 1.10 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2003-2005, 2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -73,7 +73,7 @@ EOD;
 			$table[] = ' <tr>';
 			$params = array($_obj->get('left'), $_obj->get('right'), $_obj->text());
 			foreach ($params as $key => $text) {
-				$text = htmlspecialchars(rtrim($text));
+				$text = htmlsc(rtrim($text));
 				if (empty($text)) $text = '&nbsp;';
 				$table[] = 
 					'  <' . $tags[$key] . ' class="style_' . $tags[$key] . '">' .

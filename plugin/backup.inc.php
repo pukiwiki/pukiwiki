@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.inc.php,v 1.28 2007/08/19 13:55:04 henoheno Exp $
+// $Id: backup.inc.php,v 1.29 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2005, 2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -25,7 +25,7 @@ function plugin_backup_action()
 	if ($page == '') return array('msg'=>$_title_backuplist, 'body'=>plugin_backup_get_list_all());
 
 	check_readable($page, true, true);
-	$s_page = htmlspecialchars($page);
+	$s_page = htmlsc($page);
 	$r_page = rawurlencode($page);
 
 	$action = isset($vars['action']) ? $vars['action'] : '';
@@ -33,7 +33,7 @@ function plugin_backup_action()
 
 	$s_action = $r_action = '';
 	if ($action != '') {
-		$s_action = htmlspecialchars($action);
+		$s_action = htmlsc($action);
 		$r_action = rawurlencode($action);
 	}
 
@@ -107,7 +107,7 @@ function plugin_backup_action()
 		$body .= plugin_backup_diff(do_diff($old, $cur));
 	} else if ($s_action == 'source') {
 		$title = & $_title_backupsource;
-		$body .= '<pre>' . htmlspecialchars(join('', $backups[$s_age]['data'])) .
+		$body .= '<pre>' . htmlsc(join('', $backups[$s_age]['data'])) .
 			'</pre>' . "\n";
 	} else {
 		if (PLUGIN_BACKUP_DISABLE_BACKUP_RENDERING) {
@@ -145,7 +145,7 @@ function plugin_backup_delete($page)
 	}
 
 	$script = get_script_uri();
-	$s_page = htmlspecialchars($page);
+	$s_page = htmlsc($page);
 	$body .= <<<EOD
 <p>$_msg_backup_adminpass</p>
 <form action="$script" method="post">
@@ -172,7 +172,7 @@ $hr
 </ul>
 EOD;
 
-	return $ul . '<pre>' . diff_style_to_css(htmlspecialchars($str)) . '</pre>' . "\n";
+	return $ul . '<pre>' . diff_style_to_css(htmlsc($str)) . '</pre>' . "\n";
 }
 
 function plugin_backup_get_list($page)
@@ -182,7 +182,7 @@ function plugin_backup_get_list($page)
 
 	$script = get_script_uri();
 	$r_page = rawurlencode($page);
-	$s_page = htmlspecialchars($page);
+	$s_page = htmlsc($page);
 	$retval = array();
 	$retval[0] = <<<EOD
 <ul>

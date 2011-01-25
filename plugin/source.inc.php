@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: source.inc.php,v 1.15 2007/08/19 13:55:04 henoheno Exp $
+// $Id: source.inc.php,v 1.16 2011/01/25 15:01:01 henoheno Exp $
 //
 // Source plugin
 
@@ -20,6 +20,6 @@ function plugin_source_action()
 
 	return array('msg' => $_source_messages['msg_title'],
 		'body' => '<pre id="source">' .
-		htmlspecialchars(get_source($page, TRUE, TRUE)) . '</pre>');
+		htmlsc(get_source($page, TRUE, TRUE)) . '</pre>');
 }
 ?>

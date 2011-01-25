@@ -1,5 +1,5 @@
 <?php
-// $Id: recent.inc.php,v 1.26 2007/05/17 14:11:44 henoheno Exp $
+// $Id: recent.inc.php,v 1.27 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2002      Y.MASUI http://masui.net/pukiwiki/ masui@masui.net
@@ -64,7 +64,7 @@ function plugin_recent_convert()
 			$items[] = '<ul class="recent_list">';
 		}
 
-		$s_page = htmlspecialchars($page);
+		$s_page = htmlsc($page);
 
 		// "===" for two numerical strings
 		if ($page === $vars['page']) {
@@ -72,7 +72,7 @@ function plugin_recent_convert()
 			// This also notify where you just read.
 			$items[] = ' <li>' . $s_page . '</li>';
 		} else {
-			$passage = $show_passage ? ' ' . htmlspecialchars(get_passage($time)) : '';
+			$passage = $show_passage ? ' ' . htmlsc(get_passage($time)) : '';
 			$items[] = ' <li><a href="' . $script . '?' . rawurlencode($page) . '"' . 
 				' title="' . $s_page . $passage . '">' . $s_page . '</a></li>';
 		}

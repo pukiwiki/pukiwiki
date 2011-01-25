@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.103 2010/04/19 14:14:51 henoheno Exp $
+// $Id: func.php,v 1.104 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2007,2009-2010 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -94,12 +94,12 @@ function is_freeze($page, $clearcache = FALSE)
 		return FALSE;
 	} else {
 		$fp = fopen(get_filename($page), 'rb') or
-			die('is_freeze(): fopen() failed: ' . htmlspecialchars($page));
+			die('is_freeze(): fopen() failed: ' . htmlsc($page));
 		flock($fp, LOCK_SH) or die('is_freeze(): flock() failed');
 		rewind($fp);
 		$buffer = fgets($fp, 9);
 		flock($fp, LOCK_UN) or die('is_freeze(): flock() failed');
-		fclose($fp) or die('is_freeze(): fclose() failed: ' . htmlspecialchars($page));
+		fclose($fp) or die('is_freeze(): fclose() failed: ' . htmlsc($page));
 
 		$is_freeze[$page] = ($buffer != FALSE && rtrim($buffer, "\r\n") == '#freeze');
 		return $is_freeze[$page];
@@ -196,7 +196,7 @@ function get_search_words($words = array(), $do_escape = FALSE)
 			$char = mb_substr($word_nm, $pos, 1, SOURCE_ENCODING);
 
 			// Just normalized one? (ASCII char or Zenkaku-Katakana?)
-			$or = array(preg_quote($do_escape ? htmlspecialchars($char) : $char, $quote));
+			$or = array(preg_quote($do_escape ? htmlsc($char) : $char, $quote));
 			if (strlen($char) == 1) {
 				// An ASCII (single-byte) character
 				foreach (array(strtoupper($char), strtolower($char)) as $_char) {
@@ -277,7 +277,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 	if ($non_format) return array_keys($pages);
 
 	$r_word = rawurlencode($word);
-	$s_word = htmlspecialchars($word);
+	$s_word = htmlsc($word);
 	if (empty($pages))
 		return str_replace('$1', $s_word, $_msg_notfoundresult);
 
@@ -286,7 +286,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 	$retval = '<ul>' . "\n";
 	foreach (array_keys($pages) as $page) {
 		$r_page  = rawurlencode($page);
-		$s_page  = htmlspecialchars($page);
+		$s_page  = htmlsc($page);
 		$passage = $show_passage ? ' ' . get_passage(get_filetime($page)) : '';
 		if ($search_word_color) {
 			$uri =  $script . '?' . 'cmd=read&amp;page=' . $r_page . '&amp;word=' . $r_word;
@@ -386,12 +386,12 @@ function page_list($pages = array('pagename.txt' => 'pagename'), $cmd = 'read', 
 		}
 		$str = '   <li>' .
 			'<a href="' . $href . rawurlencode($page) . '">' .
-			htmlspecialchars($page, ENT_QUOTES) .
+			htmlsc($page, ENT_QUOTES) .
 			'</a>' .
 			get_pg_passage($page);
 		if ($withfilename) {
 			$str .= "\n" .
-				'    <ul><li>' . htmlspecialchars($file) . '</li></ul>' . "\n" .
+				'    <ul><li>' . htmlsc($file) . '</li></ul>' . "\n" .
 				'   ';
 		}
 		$str .= '</li>';
@@ -401,8 +401,8 @@ function page_list($pages = array('pagename.txt' => 'pagename'), $cmd = 'read', 
 	ksort($array, SORT_STRING);
 
 	if ($list_index) {
-		$s_msg_symbol  = htmlspecialchars($_msg_symbol);
-		$s_msg_another = htmlspecialchars($_msg_other);
+		$s_msg_symbol  = htmlsc($_msg_symbol);
+		$s_msg_another = htmlsc($_msg_other);
 	}
 	$cnt = 0;
 	$retval = $contents = array();
@@ -461,7 +461,7 @@ function catrule()
 	global $rule_page;
 
 	if (! is_page($rule_page)) {
-		return '<p>Sorry, page \'' . htmlspecialchars($rule_page) .
+		return '<p>Sorry, page \'' . htmlsc($rule_page) .
 			'\' unavailable.</p>';
 	} else {
 		return convert_html(get_source($rule_page));
@@ -784,7 +784,7 @@ function get_script_uri($init_uri = '')
 	if (isset($script_directory_index)) {
 		if (! file_exists($script_directory_index))
 			die_message('Directory index file not found: ' .
-				htmlspecialchars($script_directory_index));
+				htmlsc($script_directory_index));
 		$matches = array();
 		if (preg_match('#^(.+/)' . preg_quote($script_directory_index, '#') . '$#',
 			$script, $matches)) $script = $matches[1];
@@ -853,6 +853,13 @@ function csv_implode($glue, $pieces)
 	}
 	return join($glue, $arr);
 }
+
+// Sugar with default settings
+function htmlsc($string = '', $flags = ENT_QUOTES, $charset = CONTENT_CHARSET)
+{
+	return htmlspecialchars($string, $flags, $charset);	// htmlsc()
+}
+
 
 //// Compat ////
 

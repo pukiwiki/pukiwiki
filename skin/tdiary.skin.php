@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.36 2007/06/24 14:01:21 henoheno Exp $
+// $Id: tdiary.skin.php,v 1.37 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -56,7 +56,7 @@ if (! defined('TDIARY_THEME') || TDIARY_THEME == '') {
 	$theme_css = SKIN_DIR . 'theme/' . $theme . '/' . $theme . '.css';
 	if (! file_exists($theme_css)) {
 		echo 'tDiary theme wrapper: ';
-		echo 'Theme not found: ' . htmlspecialchars($theme_css) . '<br />';
+		echo 'Theme not found: ' . htmlsc($theme_css) . '<br />';
 		echo 'You can get tdiary-theme from: ';
 		echo 'http://sourceforge.net/projects/tdiary/';
 		exit;
@@ -587,7 +587,7 @@ if (isset($pkwk_dtd)) {
 
 <?php echo $head_tag ?>
 </head>
-<body><!-- Theme:<?php echo htmlspecialchars($theme) . ' Sidebar:' . $sidebar ?> -->
+<body><!-- Theme:<?php echo htmlsc($theme) . ' Sidebar:' . $sidebar ?> -->
 
 <?php if ($menu && $sidebar == 'strict') { ?>
 <!-- Sidebar top -->
@@ -691,7 +691,7 @@ function _navigator($key, $value = '', $javascript = ''){
 $title = '';
 if ($disable_backlink) {
 	if ($_page != '') {
-		$title = htmlspecialchars($_page);
+		$title = htmlsc($_page);
 	} else {
 		$title = $page; // Search, or something message
 	}
@@ -699,7 +699,7 @@ if ($disable_backlink) {
 	if ($page != '') {
 		$title = $page;
 	} else {
-		$title =  htmlspecialchars($_page);
+		$title = htmlsc($_page);
 	}
 }
 $title_date = $title_text = '';

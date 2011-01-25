@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: convert_html.php,v 1.20 2007/09/10 14:18:50 henoheno Exp $
+// $Id: convert_html.php,v 1.21 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2005, 2007 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -496,10 +496,10 @@ class TableCell extends Element
 				$text = $matches[5];
 			} else if ($matches[3]) {
 				$name = $matches[2] ? 'background-color' : 'color';
-				$this->style[$name] = $name . ':' . htmlspecialchars($matches[3]) . ';';
+				$this->style[$name] = $name . ':' . htmlsc($matches[3]) . ';';
 				$text = $matches[5];
 			} else if ($matches[4]) {
-				$this->style['size'] = 'font-size:' . htmlspecialchars($matches[4]) . 'px;';
+				$this->style['size'] = 'font-size:' . htmlsc($matches[4]) . 'px;';
 				$text = $matches[5];
 			}
 		}
@@ -742,7 +742,7 @@ class Pre extends Element
 	{
 		global $preformat_ltrim;
 		parent::Element();
-		$this->elements[] = htmlspecialchars(
+		$this->elements[] = htmlsc(
 			(! $preformat_ltrim || $text == '' || $text{0} != ' ') ? $text : substr($text, 1));
 	}
 

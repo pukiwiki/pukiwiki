@@ -1,5 +1,5 @@
 <?php
-// $Id: memo.inc.php,v 1.16 2007/08/19 14:20:58 henoheno Exp $
+// $Id: memo.inc.php,v 1.17 2011/01/25 15:01:01 henoheno Exp $
 //
 // Memo box plugin
 
@@ -40,9 +40,9 @@ function plugin_memo_action()
 		$title = $_title_collided;
 		$body  = $_msg_collided . "\n";
 
-		$s_refer  = htmlspecialchars($vars['refer']);
-		$s_digest = htmlspecialchars($vars['digest']);
-		$s_postdata_input = htmlspecialchars($postdata_input);
+		$s_refer          = htmlsc($vars['refer']);
+		$s_digest         = htmlsc($vars['digest']);
+		$s_postdata_input = htmlsc($postdata_input);
 
 		$body .= <<<EOD
 <form action="$script?cmd=preview" method="post">
@@ -79,7 +79,7 @@ function plugin_memo_convert()
 	$data = implode(',', $data);	// Care all arguments
 	$data = str_replace('&#x2c;', ',', $data); // Unescape commas
 	$data = str_replace('&#x22;', '"', $data); // Unescape double quotes
-	$data = htmlspecialchars(str_replace('\n', "\n", $data));
+	$data = htmlsc(str_replace('\n', "\n", $data));
 
 	if (PKWK_READONLY) {
 		$_script = '';
@@ -89,8 +89,8 @@ function plugin_memo_convert()
 		$_submit = '<input type="submit" name="memo"    value="' . $_btn_memo_update . '" />';
 	}
 
-	$s_page   = htmlspecialchars($vars['page']);
-	$s_digest = htmlspecialchars($digest);
+	$s_page   = htmlsc($vars['page']);
+	$s_digest = htmlsc($digest);
 	$s_cols   = MEMO_COLS;
 	$s_rows   = MEMO_ROWS;
 	$string   = <<<EOD

@@ -1,5 +1,5 @@
 <?php
-// $Id: newpage.inc.php,v 1.15 2005/02/27 09:35:16 henoheno Exp $
+// $Id: newpage.inc.php,v 1.16 2011/01/25 15:01:01 henoheno Exp $
 //
 // Newpage plugin
 
@@ -14,8 +14,8 @@ function plugin_newpage_convert()
 	if (func_num_args()) list($newpage) = func_get_args();
 	if (! preg_match('/^' . $BracketName . '$/', $newpage)) $newpage = '';
 
-	$s_page    = htmlspecialchars(isset($vars['refer']) ? $vars['refer'] : $vars['page']);
-	$s_newpage = htmlspecialchars($newpage);
+	$s_page    = htmlsc(isset($vars['refer']) ? $vars['refer'] : $vars['page']);
+	$s_newpage = htmlsc($newpage);
 	++$id;
 
 	$ret = <<<EOD
