@@ -1,5 +1,5 @@
 <?php
-// $Id: includesubmenu.inc.php,v 1.5 2004/07/31 03:09:20 henoheno Exp $
+// $Id: includesubmenu.inc.php,v 1.5.8.1 2011/01/30 15:48:54 henoheno Exp $
 
 function plugin_includesubmenu_convert()
 {
@@ -48,9 +48,9 @@ function plugin_includesubmenu_convert()
 
   if ($ShowPageName) {
     $r_page = rawurlencode($SubMenuPageName);
-    $s_page = htmlspecialchars($SubMenuPageName);
-    $link = "<a href=\"$script?cmd=edit&amp;page=$r_page\">$s_page</a>";
-    $body = "<h1>$link</h1>\n$body";
+    $s_page = htmlsc($SubMenuPageName);
+    $link   = "<a href=\"$script?cmd=edit&amp;page=$r_page\">$s_page</a>";
+    $body   = "<h1>$link</h1>\n$body";
   }
   return $body;
 }

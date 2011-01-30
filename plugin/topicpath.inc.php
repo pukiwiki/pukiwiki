@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: topicpath.inc.php,v 1.6 2005/01/29 14:31:04 henoheno Exp $
+// $Id: topicpath.inc.php,v 1.6.6.1 2011/01/30 15:48:54 henoheno Exp $
 //
 // 'topicpath' plugin for PukiWiki, available under GPL
 
@@ -44,7 +44,7 @@ function plugin_topicpath_inline()
 	while (! empty($parts)) {
 		$_landing = join('/', $parts);
 		$landing  = rawurlencode($_landing);
-		$element = htmlspecialchars(array_pop($parts));
+		$element = htmlsc(array_pop($parts));
 		if (! $b_link)  {
 			// This page ($_landing == $page)
 			$b_link = TRUE;

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: freeze.inc.php,v 1.9 2004/12/16 13:32:19 henoheno Exp $
+// $Id: freeze.inc.php,v 1.9.6.1 2011/01/30 15:48:54 henoheno Exp $
 //
 // Freeze(Lock) plugin
 
@@ -22,7 +22,7 @@ function plugin_freeze_action()
 	if (is_freeze($page)) {
 		// Freezed already
 		$msg  = & $_title_isfreezed;
-		$body = str_replace('$1', htmlspecialchars(strip_bracket($page)),
+		$body = str_replace('$1', htmlsc(strip_bracket($page)),
 			$_title_isfreezed);
 
 	} else if ($pass !== NULL && pkwk_login($pass)) {
@@ -40,7 +40,7 @@ function plugin_freeze_action()
 	} else {
 		// Show a freeze form
 		$msg    = & $_title_freeze;
-		$s_page = htmlspecialchars($page);
+		$s_page = htmlsc($page);
 		$body   = ($pass === NULL) ? '' : "<p><strong>$_msg_invalidpass</strong></p>\n";
 		$body  .= <<<EOD
 <p>$_msg_freezing</p>

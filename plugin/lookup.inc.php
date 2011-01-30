@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: lookup.inc.php,v 1.22 2005/07/18 18:59:27 teanan Exp $
+// $Id: lookup.inc.php,v 1.22.2.1 2011/01/30 15:48:54 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -19,11 +19,11 @@ function plugin_lookup_convert()
 	if ($num == 0 || $num > 3) return PLUGIN_LOOKUP_USAGE;
 
 	$args = func_get_args();
-	$interwiki = htmlspecialchars(trim($args[0]));
-	$button    = isset($args[1]) ? trim($args[1]) : '';
-	$button    = ($button != '') ? htmlspecialchars($button) : 'lookup';
-	$default   = ($num > 2) ? htmlspecialchars(trim($args[2])) : '';
-	$s_page    = htmlspecialchars($vars['page']);
+	$interwiki = htmlsc(trim($args[0]));
+	$button    = isset($args[1]) ? trim($args[1])         : '';
+	$button    = ($button != '') ? htmlsc($button)        : 'lookup';
+	$default   = ($num > 2)      ? htmlsc(trim($args[2])) : '';
+	$s_page    = htmlsc($vars['page']);
 	++$id;
 
 	$script = get_script_uri();
@@ -54,7 +54,7 @@ function plugin_lookup_action()
 	$url = get_interwiki_url($inter, $page);
 	if ($url === FALSE) {
 		$msg = sprintf('InterWikiName "%s" not found', $inter);
-		$msg = htmlspecialchars($msg);
+		$msg = htmlsc($msg);
 		return array('msg'=>'Not found', 'body'=>$msg);
 	}
 

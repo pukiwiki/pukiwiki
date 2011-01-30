@@ -1,5 +1,5 @@
 <?php
-// $Id: back.inc.php,v 1.9 2005/06/20 14:57:34 henoheno Exp $
+// $Id: back.inc.php,v 1.9.2.1 2011/01/30 15:48:54 henoheno Exp $
 // Copyright (C)
 //   2003-2004 PukiWiki Developers Team
 //   2002      Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
@@ -23,7 +23,7 @@ function plugin_back_convert()
 	list($word, $align, $hr, $href) = array_pad(func_get_args(), 4, '');
 
 	$word = trim($word);
-	$word = ($word == '') ? $_msg_back_word : htmlspecialchars($word);
+	$word = ($word == '') ? $_msg_back_word : htmlsc($word);
 
 	$align = strtolower(trim($align));
 	switch($align){

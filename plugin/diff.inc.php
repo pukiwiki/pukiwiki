@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: diff.inc.php,v 1.18 2005/12/10 12:48:02 henoheno Exp $
+// $Id: diff.inc.php,v 1.18.2.1 2011/01/30 15:48:54 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2002      Originally written by yu-ji
@@ -30,7 +30,7 @@ function plugin_diff_view($page)
 	global $_title_diff_delete;
 
 	$r_page = rawurlencode($page);
-	$s_page = htmlspecialchars($page);
+	$s_page = htmlsc($page);
 
 	$menu = array(
 		'<li>' . $_msg_addline . '</li>',
@@ -51,9 +51,9 @@ function plugin_diff_view($page)
 			$menu[] = '<li><a href="' . $script . '?cmd=diff&amp;action=delete&amp;page=' .
 				$r_page . '">' . str_replace('$1', $s_page, $_title_diff_delete) . '</a></li>';
 		}
-		$msg = '<pre>' . diff_style_to_css(htmlspecialchars(join('', file($filename)))) . '</pre>' . "\n";
+		$msg = '<pre>' . diff_style_to_css(htmlsc(join('', file($filename)))) . '</pre>' . "\n";
 	} else if ($is_page) {
-		$diffdata = trim(htmlspecialchars(join('', get_source($page))));
+		$diffdata = trim(htmlsc(join('', get_source($page))));
 		$msg = '<pre><span class="diff_added">' . $diffdata . '</span></pre>' . "\n";
 	} else {
 		return array('msg'=>$_title_diff, 'body'=>$_msg_notfound);
@@ -94,7 +94,7 @@ function plugin_diff_delete($page)
 		}
 	}
 
-	$s_page = htmlspecialchars($page);
+	$s_page = htmlsc($page);
 	$body .= <<<EOD
 <p>$_msg_diff_adminpass</p>
 <form action="$script" method="post">

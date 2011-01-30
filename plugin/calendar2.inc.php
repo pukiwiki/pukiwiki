@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar2.inc.php,v 1.23 2005/05/01 07:38:57 henoheno Exp $
+// $Id: calendar2.inc.php,v 1.23.2.1 2011/01/30 15:48:54 henoheno Exp $
 //
 // Calendar2 plugin
 //
@@ -35,9 +35,9 @@ function plugin_calendar2_convert()
 		$prefix = $base . '/';
 	}
 	$r_base   = rawurlencode($base);
-	$s_base   = htmlspecialchars($base);
+	$s_base   = htmlsc($base);
 	$r_prefix = rawurlencode($prefix);
-	$s_prefix = htmlspecialchars($prefix);
+	$s_prefix = htmlsc($prefix);
 
 	$yr  = substr($date_str, 0, 4);
 	$mon = substr($date_str, 4, 2);
@@ -106,7 +106,7 @@ EOD;
 		$dt     = sprintf('%4d-%02d-%02d', $year, $m_num, $day);
 		$page   = $prefix . $dt;
 		$r_page = rawurlencode($page);
-		$s_page = htmlspecialchars($page);
+		$s_page = htmlsc($page);
 
 		if ($wday == 0 && $day > 1)
 			$ret .=
@@ -188,7 +188,7 @@ function plugin_calendar2_action()
 	$yy = sprintf('%04d.%02d', substr($date, 0, 4),substr($date, 4, 2));
 
 	$aryargs = array($vars['page'], $date);
-	$s_page  = htmlspecialchars($vars['page']);
+	$s_page  = htmlsc($vars['page']);
 
 	$ret['msg']  = 'calendar ' . $s_page . '/' . $yy;
 	$ret['body'] = call_user_func_array('plugin_calendar2_convert', $aryargs);

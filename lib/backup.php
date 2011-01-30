@@ -11,7 +11,7 @@
  * @access  public
  * @author
  * @create
- * @version $Id: backup.php,v 1.12 2006/02/02 13:27:57 henoheno Exp $
+ * @version $Id: backup.php,v 1.12.2.1 2011/01/30 15:48:53 henoheno Exp $
  * Copyright (C)
  *   2002-2006 PukiWiki Developers Team
  *   2001-2002 Originally written by yu-ji
@@ -67,7 +67,7 @@ function make_backup($page, $delete = FALSE)
 		$body = preg_replace("/\n*$/", "\n", $body);
 
 		$fp = _backup_fopen($page, 'wb')
-			or die_message('Cannot open ' . htmlspecialchars(_backup_get_filename($page)) .
+			or die_message('Cannot open ' . htmlsc(_backup_get_filename($page)) .
 			'<br />Maybe permission is not writable or filename is too long');
 		_backup_fputs($fp, $strout);
 		_backup_fputs($fp, $body);

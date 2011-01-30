@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: diff.php,v 1.7 2005/12/10 12:48:02 henoheno Exp $
+// $Id: diff.php,v 1.7.2.1 2011/01/30 15:48:53 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -63,7 +63,7 @@ EOD;
 			$do_update_diff_table .= '<tr>';
 			$params = array($_obj->get('left'), $_obj->get('right'), $_obj->text());
 			foreach ($params as $key=>$text) {
-				$text = htmlspecialchars($text);
+				$text = htmlsc($text);
 				if (trim($text) == '') $text = '&nbsp;';
 				$do_update_diff_table .= '<' . $tags[$key] .
 					' class="style_' . $tags[$key] . '">' . $text .

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: aname.inc.php,v 1.27 2005/09/18 09:32:55 henoheno Exp $
+// $Id: aname.inc.php,v 1.27.2.1 2011/01/30 15:48:54 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -94,12 +94,12 @@ function plugin_aname_tag($args = array(), $convert = TRUE)
 			return plugin_aname_usage($convert, 'ID too long');
 		if (! preg_match(PLUGIN_ANAME_ID_REGEX, $id))
 			return plugin_aname_usage($convert, 'Invalid ID string: ' .
-				htmlspecialchars($id));
+				htmlsc($id));
 		$_id[$id] = TRUE; // Set
 	}
 
-	if ($convert) $body = htmlspecialchars($body);
-	$id = htmlspecialchars($id); // Insurance
+	if ($convert) $body = htmlsc($body);
+	$id = htmlsc($id); // Insurance
 	$class   = $f_super ? 'anchor_super' : 'anchor';
 	$attr_id = $f_noid  ? '' : ' id="' . $id . '"';
 	$url     = $f_full  ? get_script_uri() . '?' . rawurlencode($vars['page']) : '';

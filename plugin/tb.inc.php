@@ -1,5 +1,5 @@
 <?php
-// $Id: tb.inc.php,v 1.21 2005/06/15 15:57:11 henoheno Exp $
+// $Id: tb.inc.php,v 1.21.2.1 2011/01/30 15:48:54 henoheno Exp $
 /*
  * PukiWiki/TrackBack: TrackBack Ping receiver and viewer
  * (C) 2003-2005 PukiWiki Developers Team
@@ -140,7 +140,7 @@ function plugin_tb_output_rsslist($tb_id)
 		// _utime_, title, excerpt, _blog_name_
 		array_shift($arr); // Cut utime
 		list ($url, $title, $excerpt) = array_map(
-			create_function('$a', 'return htmlspecialchars($a);'), $arr);
+			create_function('$a', 'return htmlsc($a);'), $arr);
 		$items .= <<<EOD
 
    <item>
@@ -151,7 +151,7 @@ function plugin_tb_output_rsslist($tb_id)
 EOD;
 	}
 
-	$title = htmlspecialchars($page);
+	$title = htmlsc($page);
 	$link  = $script . '?' . rawurlencode($page);
 	$vars['page'] = $page;
 	$excerpt = strip_htmltag(convert_html(get_source($page)));

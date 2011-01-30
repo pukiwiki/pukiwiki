@@ -1,5 +1,5 @@
 <?php
-// $Id: template.inc.php,v 1.21 2005/02/27 08:06:48 henoheno Exp $
+// $Id: template.inc.php,v 1.21.4.1 2011/01/30 15:48:54 henoheno Exp $
 //
 // Load template plugin
 
@@ -43,7 +43,7 @@ function plugin_template_action()
 	}
 	$begin_select = $end_select = '';
 	for ($i = 0; $i < count($lines); $i++) {
-		$line = htmlspecialchars(mb_strimwidth($lines[$i], 0, MAX_LEN, '...'));
+		$line = htmlsc(mb_strimwidth($lines[$i], 0, MAX_LEN, '...'));
 
 		$tag = ($i == $begin) ? ' selected="selected"' : '';
 		$begin_select .= "<option value=\"$i\"$tag>$line</option>\n";
@@ -52,7 +52,7 @@ function plugin_template_action()
 		$end_select .= "<option value=\"$i\"$tag>$line</option>\n";
 	}
 
-	$_page = htmlspecialchars($page);
+	$_page = htmlsc($page);
 	$msg = $tag = '';
 	if ($is_page) {
 		$msg = $_err_template_already;
@@ -61,7 +61,7 @@ function plugin_template_action()
 		$msg = str_replace('$1', $_page, $_err_template_invalid);
 	}
 
-	$s_refer = htmlspecialchars($vars['refer']);
+	$s_refer = htmlsc($vars['refer']);
 	$s_page  = ($page == '') ? str_replace('$1', $s_refer, $_msg_template_page) : $_page;
 	$ret     = <<<EOD
 <form action="$script" method="post">

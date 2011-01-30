@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.30 2005/12/10 07:57:30 henoheno Exp $
+// $Id: make_link.php,v 1.30.2.1 2011/01/30 15:48:53 henoheno Exp $
 // Copyright (C)
 //   2003-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -95,7 +95,7 @@ class InlineConverter
 		$string = preg_replace_callback('/' . $this->pattern . '/x',
 			array(& $this, 'replace'), $string);
 
-		$arr = explode("\x08", make_line_rules(htmlspecialchars($string)));
+		$arr = explode("\x08", make_line_rules(htmlsc($string)));
 		$retval = '';
 		while (! empty($arr)) {
 			$retval .= array_shift($arr) . array_shift($this->result);
@@ -108,7 +108,7 @@ class InlineConverter
 		$obj = $this->get_converter($arr);
 
 		$this->result[] = ($obj !== NULL && $obj->set($arr, $this->page) !== FALSE) ?
-			$obj->toString() : make_line_rules(htmlspecialchars($arr[0]));
+			$obj->toString() : make_line_rules(htmlsc($arr[0]));
 
 		return "\x08"; // Add a mark into latest processed part
 	}
@@ -187,7 +187,7 @@ class Link
 		$this->type = $type;
 		if (! PKWK_DISABLE_INLINE_IMAGE_FROM_URI &&
 			is_url($alias) && preg_match('/\.(gif|png|jpe?g)$/i', $alias)) {
-			$alias = '<img src="' . htmlspecialchars($alias) . '" alt="' . $name . '" />';
+			$alias = '<img src="' . htmlsc($alias) . '" alt="' . $name . '" />';
 		} else if ($alias != '') {
 			if ($converter === NULL)
 				$converter = new InlineConverter(array('plugin'));
@@ -270,7 +270,7 @@ EOD;
 		} else {
 			// No such plugin, or Failed
 			$body = (($body == '') ? '' : '{' . $body . '}') . ';';
-			return make_line_rules(htmlspecialchars('&' . $this->plain) . $body);
+			return make_line_rules(htmlsc('&' . $this->plain) . $body);
 		}
 	}
 }
@@ -374,7 +374,7 @@ EOD;
 	function set($arr, $page)
 	{
 		list(, , $alias, $name) = $this->splice($arr);
-		return parent::setParam($page, htmlspecialchars($name),
+		return parent::setParam($page, htmlsc($name),
 			'', 'url', $alias == '' ? $name : $alias);
 	}
 
@@ -418,7 +418,7 @@ EOD;
 	function set($arr, $page)
 	{
 		list(, $name, $alias) = $this->splice($arr);
-		return parent::setParam($page, htmlspecialchars($name), '', 'url', $alias);
+		return parent::setParam($page, htmlsc($name), '', 'url', $alias);
 	}
 
 	function toString()
@@ -520,11 +520,11 @@ EOD;
 		$url = get_interwiki_url($name, $this->param);
 		$this->url = ($url === FALSE) ?
 			$script . '?' . rawurlencode('[[' . $name . ':' . $this->param . ']]') :
-			htmlspecialchars($url);
+			htmlsc($url);
 
 		return parent::setParam(
 			$page,
-			htmlspecialchars($name . ':' . $this->param),
+			htmlsc($name . ':' . $this->param),
 			'',
 			'InterWikiName',
 			$alias == '' ? $name . ':' . $this->param : $alias
@@ -708,7 +708,7 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolin
 {
 	global $script, $vars, $link_compact, $related, $_symbol_noexists;
 
-	$s_page = htmlspecialchars(strip_bracket($page));
+	$s_page = htmlsc(strip_bracket($page));
 	$s_alias = ($alias == '') ? $s_page : $alias;
 
 	if ($page == '') return '<a href="' . $anchor . '">' . $s_alias . '</a>';

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: showrss.inc.php,v 1.21 2006/05/05 04:32:09 henoheno Exp $
+// $Id: showrss.inc.php,v 1.21.2.1 2011/01/30 15:48:54 henoheno Exp $
 //  Id:showrss.inc.php,v 1.40 2003/03/18 11:52:58 hiro Exp
 // Copyright (C):
 //     2002-2006 PukiWiki Developers Team
@@ -53,11 +53,11 @@ function plugin_showrss_convert()
 
 	$class = ($template == '' || $template == 'default') ? 'ShowRSS_html' : 'ShowRSS_html_' . $template;
 	if (! is_numeric($cachehour))
-		return '#showrss: Cache-lifetime seems not numeric: ' . htmlspecialchars($cachehour) . '<br />' . "\n";
+		return '#showrss: Cache-lifetime seems not numeric: ' . htmlsc($cachehour) . '<br />' . "\n";
 	if (! class_exists($class))
-		return '#showrss: Template not found: ' . htmlspecialchars($template) . '<br />' . "\n";
+		return '#showrss: Template not found: ' . htmlsc($template) . '<br />' . "\n";
 	if (! is_url($uri))
-		return '#showrss: Seems not URI: ' . htmlspecialchars($uri) . '<br />' . "\n";
+		return '#showrss: Seems not URI: ' . htmlsc($uri) . '<br />' . "\n";
 
 	list($rss, $time) = plugin_showrss_get_rss($uri, $cachehour);
 	if ($rss === FALSE) return '#showrss: Failed fetching RSS from the server<br />' . "\n";
@@ -247,10 +247,10 @@ class ShowRSS_XML
 
 	function escape($str)
 	{
-		// Unescape already-escaped chars (&lt;, &gt;, &amp;, ...) in RSS body before htmlspecialchars()
+		// Unescape already-escaped chars (&lt;, &gt;, &amp;, ...) in RSS body before htmlsc()
 		$str = strtr($str, array_flip(get_html_translation_table(ENT_COMPAT)));
 		// Escape
-		$str = htmlspecialchars($str);
+		$str = htmlsc($str);
 		// Encoding conversion
 		$str = mb_convert_encoding($str, SOURCE_ENCODING, $this->encoding);
 		return trim($str);

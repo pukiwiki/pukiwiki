@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.40 2006/03/21 14:26:25 henoheno Exp $
+// $Id: edit.inc.php,v 1.40.2.1 2011/01/30 15:48:54 henoheno Exp $
 // Copyright (C) 2001-2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -115,11 +115,11 @@ function plugin_edit_inline()
 	$ispage   = is_page($s_page);
 
 	// Paragraph edit enabled or not
-	$short = htmlspecialchars('Edit');
+	$short = htmlsc('Edit');
 	if ($fixed_heading_anchor_edit && $editable && $ispage && ! $isfreeze) {
 		// Paragraph editing
 		$id    = rawurlencode($id);
-		$title = htmlspecialchars(sprintf('Edit %s', $page));
+		$title = htmlsc(sprintf('Edit %s', $page));
 		$icon = '<img src="' . IMAGE_DIR . 'paraedit.png' .
 			'" width="9" height="9" alt="' .
 			$short . '" title="' . $title . '" /> ';
@@ -134,7 +134,7 @@ function plugin_edit_inline()
 			$title = 'Edit %s';
 			$icon  = 'edit.png';
 		}
-		$title = htmlspecialchars(sprintf($title, $s_page));
+		$title = htmlsc(sprintf($title, $s_page));
 		$icon = '<img src="' . IMAGE_DIR . $icon .
 			'" width="20" height="20" alt="' .
 			$short . '" title="' . $title . '" />';
@@ -220,7 +220,7 @@ function plugin_edit_write()
 	if ($postdata == '') {
 		page_write($page, $postdata);
 		$retvars['msg' ] = $_title_deleted;
-		$retvars['body'] = str_replace('$1', htmlspecialchars($page), $_title_deleted);
+		$retvars['body'] = str_replace('$1', htmlsc($page), $_title_deleted);
 
 		if ($trackback) tb_delete($page);
 

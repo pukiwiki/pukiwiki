@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.15 2005/07/03 14:16:23 henoheno Exp $
+// $Id: plugin.php,v 1.15.2.1 2011/01/30 15:48:53 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -27,7 +27,7 @@ function exist_plugin($name)
 	$name = strtolower($name);
 	if(isset($exist[$name])) {
 		if (++$count[$name] > PKWK_PLUGIN_CALL_TIME_LIMIT)
-			die('Alert: plugin "' . htmlspecialchars($name) .
+			die('Alert: plugin "' . htmlsc($name) .
 			'" was called over ' . PKWK_PLUGIN_CALL_TIME_LIMIT .
 			' times. SPAM or someting?<br />' . "\n" .
 			'<a href="' . get_script_uri() . '?cmd=edit&amp;page='.
@@ -135,7 +135,7 @@ function do_plugin_convert($name, $args = '')
 	$digest  = $_digest; // Revert
 
 	if ($retvar === FALSE) {
-		return htmlspecialchars('#' . $name .
+		return htmlsc('#' . $name .
 			($args != '' ? '(' . $args . ')' : ''));
 	} else if (PKWK_ENCODING_HINT != '') {
 		// Insert a hidden field, supports idenrtifying text enconding
@@ -170,7 +170,7 @@ function do_plugin_inline($name, $args, & $body)
 
 	if($retvar === FALSE) {
 		// Do nothing
-		return htmlspecialchars('&' . $name . ($args ? '(' . $args . ')' : '') . ';');
+		return htmlsc('&' . $name . ($args ? '(' . $args . ')' : '') . ';');
 	} else {
 		return $retvar;
 	}

@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: search.inc.php,v 1.13 2005/11/29 18:19:51 teanan Exp $
+// $Id: search.inc.php,v 1.13.2.1 2011/01/30 15:48:54 henoheno Exp $
 //
 // Search plugin
 
@@ -30,9 +30,9 @@ function plugin_search_action()
 	global $post, $vars, $_title_result, $_title_search, $_msg_searching;
 
 	if (PLUGIN_SEARCH_DISABLE_GET_ACCESS) {
-		$s_word = isset($post['word']) ? htmlspecialchars($post['word']) : '';
+		$s_word = isset($post['word']) ? htmlsc($post['word']) : '';
 	} else {
-		$s_word = isset($vars['word']) ? htmlspecialchars($vars['word']) : '';
+		$s_word = isset($vars['word']) ? htmlsc($vars['word']) : '';
 	}
 	if (strlen($s_word) > PLUGIN_SEARCH_MAX_LENGTH) {
 		unset($vars['word']); // Stop using $_msg_word at lib/html.php
@@ -81,7 +81,7 @@ function plugin_search_search_form($s_word = '', $type = '', $bases = array())
 			++$_num;
 			if (PLUGIN_SEARCH_MAX_BASE < $_num) break;
 			$label_id = '_p_search_base_id_' . $_num;
-			$s_base   = htmlspecialchars($base);
+			$s_base   = htmlsc($base);
 			$base_str = '<strong>' . $s_base . '</strong>';
 			$base_label = str_replace('$1', $base_str, $_search_pages);
 			$base_msg  .=<<<EOD

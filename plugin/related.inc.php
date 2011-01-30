@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: related.inc.php,v 1.7 2005/12/18 15:28:55 henoheno Exp $
+// $Id: related.inc.php,v 1.7.2.1 2011/01/30 15:48:54 henoheno Exp $
 //
 // Related plugin: Show Backlinks for the page
 
@@ -30,9 +30,9 @@ function plugin_related_action()
 	}
 
 	// Result
-	$r_word = rawurlencode($_page);
-	$s_word = htmlspecialchars($_page);
-	$msg = 'Backlinks for: ' . $s_word;
+	$r_word  = rawurlencode($_page);
+	$s_word  = htmlsc($_page);
+	$msg     = 'Backlinks for: ' . $s_word;
 	$retval  = '<a href="' . $script . '?' . $r_word . '">' .
 		'Return to ' . $s_word .'</a><br />'. "\n";
 
@@ -44,13 +44,13 @@ function plugin_related_action()
 		$retval .= '<ul>' . "\n";
 		foreach ($data as $page=>$time) {
 			$r_page  = rawurlencode($page);
-			$s_page  = htmlspecialchars($page);
+			$s_page  = htmlsc($page);
 			$passage = get_passage($time);
 			$retval .= ' <li><a href="' . $script . '?' . $r_page . '">' . $s_page .
 				'</a> ' . $passage . '</li>' . "\n";
 		}
 		$retval .= '</ul>' . "\n";
 	}
-	return array('msg'=>$msg, 'body'=>$retval);
+	return array('msg' => $msg, 'body' => $retval);
 }
 ?>

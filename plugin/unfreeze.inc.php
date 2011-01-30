@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: unfreeze.inc.php,v 1.10 2004/12/18 01:24:21 henoheno Exp $
+// $Id: unfreeze.inc.php,v 1.10.6.1 2011/01/30 15:48:54 henoheno Exp $
 //
 // Unfreeze(Unlock) plugin
 
@@ -22,7 +22,7 @@ function plugin_unfreeze_action()
 	if (! is_freeze($page)) {
 		// Unfreezed already
 		$msg  = & $_title_isunfreezed;
-		$body = str_replace('$1', htmlspecialchars(strip_bracket($page)),
+		$body = str_replace('$1', htmlsc(strip_bracket($page)),
 			$_title_isunfreezed);
 
 	} else if ($pass !== NULL && pkwk_login($pass)) {
@@ -47,7 +47,7 @@ function plugin_unfreeze_action()
 	} else {
 		// Show unfreeze form
 		$msg    = & $_title_unfreeze;
-		$s_page = htmlspecialchars($page);
+		$s_page = htmlsc($page);
 		$body   = ($pass === NULL) ? '' : "<p><strong>$_msg_invalidpass</strong></p>\n";
 		$body  .= <<<EOD
 <p>$_msg_unfreezing</p>
