@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: keitai.ini.php,v 1.25 2005/12/10 07:57:30 henoheno Exp $
+// $Id: keitai.ini.php,v 1.26 2011/02/01 15:01:18 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -188,8 +188,8 @@ $line_rules = array(
 	'SIZE\(([^\(\)]*)\):((?:(?!SIZE\([^\)]+\)\:).)*)'	=> '$2', // Disabled
 	'%%%(?!%)((?:(?!%%%).)*)%%%'	=> '<ins>$1</ins>',
 	'%%(?!%)((?:(?!%%).)*)%%'	=> '<del>$1</del>',
-	"'''(?!')((?:(?!''').)*)'''"	=> '<em>$1</em>',
-	"''(?!')((?:(?!'').)*)''"	=> '<strong>$1</strong>',
+	"&#039;&#039;&#039;(?!&#039;)((?:(?!&#039;&#039;&#039;).)*)&#039;&#039;&#039;" => '<em>$1</em>',
+	"&#039;&#039;(?!&#039;)((?:(?!&#039;&#039;).)*)&#039;&#039;" => '<strong>$1</strong>',
 );
 
 
