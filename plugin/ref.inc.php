@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: ref.inc.php,v 1.51 2011/01/25 15:01:01 henoheno Exp $
+// $Id: ref.inc.php,v 1.52 2011/02/03 15:01:25 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -10,10 +10,11 @@
 // Include an attached image-file as an inline-image
 
 // File icon image
-if (! defined('FILE_ICON'))
+if (! defined('FILE_ICON')) {
 	define('FILE_ICON',
 	'<img src="' . IMAGE_DIR . 'file.png" width="20" height="20"' .
 	' alt="file" style="border-width:0px" />');
+}
 
 /////////////////////////////////////////////////
 // Default settings
@@ -43,7 +44,7 @@ define('PLUGIN_REF_DIRECT_ACCESS', FALSE); // FALSE or TRUE
 define('PLUGIN_REF_IMAGE', '/\.(gif|png|jpe?g)$/i');
 
 // Usage (a part of)
-define('PLUGIN_REF_USAGE', "([pagename/]attached-file-name[,parameters, ... ][,title])");
+define('PLUGIN_REF_USAGE', '([pagename/]attached-file-name[,parameters, ... ][,title])');
 
 function plugin_ref_inline()
 {
@@ -64,12 +65,12 @@ function plugin_ref_inline()
 function plugin_ref_convert()
 {
 	if (! func_num_args())
-		return '<p>#ref(): Usage:' . PLUGIN_REF_USAGE . "</p>\n";
+		return '<p>#ref(): Usage:' . PLUGIN_REF_USAGE . '</p>' . "\n";
 
 	$params = plugin_ref_body(func_get_args());
 
 	if (isset($params['_error']) && $params['_error'] != '') {
-		return "<p>#ref(): {$params['_error']}</p>\n";
+		return '<p>#ref(): ' . $params['_error'] . '</p>' . "\n";
 	}
 
 	if ((PLUGIN_REF_WRAP_TABLE && ! $params['nowrap']) || $params['wrap']) {
@@ -85,7 +86,8 @@ function plugin_ref_convert()
 		//	Netscape 6   = x (wrapで寄せが効かない)
 		//	IE6          = o
 		$margin = ($params['around'] ? '0px' : 'auto');
-		$margin_align = ($params['_align'] == 'center') ? '' : ";margin-{$params['_align']}:0px";
+		$margin_align = ($params['_align'] == 'center') ? '' :
+			';margin-' . $params['_align'] . ':0px';
 		$params['_body'] = <<<EOD
 <table class="style_table" style="margin:$margin$margin_align">
  <tr>
@@ -98,11 +100,11 @@ EOD;
 	if ($params['around']) {
 		$style = ($params['_align'] == 'right') ? 'float:right' : 'float:left';
 	} else {
-		$style = "text-align:{$params['_align']}";
+		$style = 'text-align:' . $params['_align'];
 	}
 
 	// divで包む
-	return "<div class=\"img_margin\" style=\"$style\">{$params['_body']}</div>\n";
+	return '<div class="img_margin" style="' . $style . '">' . $params['_body'] . '</div>' . "\n";
 }
 
 function plugin_ref_body($args)
@@ -123,8 +125,8 @@ function plugin_ref_body($args)
 		'noimg'  => FALSE, // 画像を展開しない
 		'zoom'   => FALSE, // 縦横比を保持する
 		'_size'  => FALSE, // サイズ指定あり
-		'_w'     => 0,       // 幅
-		'_h'     => 0,       // 高さ
+		'_w'     => 0,     // 幅
+		'_h'     => 0,     // 高さ
 		'_%'     => 0,     // 拡大率
 		'_args'  => array(),
 		'_done'  => FALSE,
@@ -173,7 +175,7 @@ function plugin_ref_body($args)
 			$is_file_second = is_file($file);
 
 			// If the second argument is WikiName, or double-bracket-inserted pagename (compat)
-			$is_bracket_bracket = preg_match("/^($WikiName|\[\[$BracketName\]\])$/", $args[0]);
+			$is_bracket_bracket = preg_match('/^(' . $WikiName . '|\[\[' . $BracketName . '\]\])$/', $args[0]);
 
 			if ($is_file_second && $is_bracket_bracket) {
 				// Believe the second argument (compat)
@@ -307,7 +309,9 @@ function plugin_ref_body($args)
 
 		if (! empty($_title)) {
 			$title = htmlsc(join(',', $_title));
-			if ($is_image) $title = make_line_rules($title);
+			if ($is_image) {
+				$title = make_line_rules($title);
+			}
 		}
 	}
 
@@ -335,7 +339,9 @@ function plugin_ref_body($args)
 			$width  = (int)($width  * $params['_%'] / 100);
 			$height = (int)($height * $params['_%'] / 100);
 		}
-		if ($width && $height) $info = "width=\"$width\" height=\"$height\" ";
+		if ($width && $height) {
+			$info = 'width="' . $width . '" height="' . $height . '" ';
+		}
 	}
 
 	// アラインメント判定
@@ -348,12 +354,19 @@ function plugin_ref_body($args)
 	}
 
 	if ($is_image) { // 画像
-		$params['_body'] = "<img src=\"$url\" alt=\"$title\" title=\"$title\" $info/>";
-		if (! $params['nolink'] && $url2)
-			$params['_body'] = "<a href=\"$url2\" title=\"$title\">{$params['_body']}</a>";
+		$params['_body'] = '<img src="' . $url . '" ' .
+			'alt="'   . $title . '" ' .
+			'title="' . $title . '" ' .
+			$info . '/>';
+		if (! $params['nolink'] && $url2) {
+			$params['_body'] =
+				'<a href="' . $url2 . '" title="' . $title . '">' .
+				$params['_body'] . '</a>';
+		}
 	} else {
 		$icon = $params['noicon'] ? '' : FILE_ICON;
-		$params['_body'] = "<a href=\"$url\" title=\"$info\">$icon$title</a>";
+		$params['_body'] = '<a href="' . $url . '" title="' . $info . '">' .
+			$icon . $title . '</a>';
 	}
 
 	return $params;
