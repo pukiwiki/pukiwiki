@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: ref.inc.php,v 1.54 2011/02/06 13:50:46 henoheno Exp $
+// $Id: ref.inc.php,v 1.55 2011/02/08 14:07:34 henoheno Exp $
 // Copyright (C)
 //   2002-2006, 2011 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -81,11 +81,11 @@ function plugin_ref_convert()
 		//	Opera 6      = x (aligning seems ignored with wrap)
 		//	Netscape 6   = x (aligning seems ignored with wrap)
 		//	IE6          = o
-		$margin = ($params['around'] ? '0px' : 'auto');
-		$margin_align = ($params['_align'] == 'center') ? '' :
-			';margin-' . $params['_align'] . ':0px';
+		$s_margin       = htmlsc($params['around'] ? '0px' : 'auto');
+		$s_margin_align = htmlsc(($params['_align'] == 'center') ? '' :
+			';margin-' . $params['_align'] . ':0px');
 		$params['_body'] = <<<EOD
-<table class="style_table" style="margin:$margin$margin_align">
+<table class="style_table" style="margin:$s_margin$s_margin_align">
  <tr>
   <td class="style_td">{$params['_body']}</td>
  </tr>
@@ -98,8 +98,9 @@ EOD;
 	} else {
 		$style = 'text-align:' . $params['_align'];
 	}
-	return '<div class="img_margin" style="' . htmlsc($style) . '">' .
-		$params['_body'] . '</div>' . "\n";
+	return '<div class="img_margin" style="' . htmlsc($style) . '">' . "\n" .
+		$params['_body'] . "\n" .
+		'</div>' . "\n";
 }
 
 // Common function
@@ -126,15 +127,14 @@ function plugin_ref_body($args)
 		'nolink' => FALSE, // Suppress link to image itself
 		'noimg'  => FALSE, // Suppress showing image
 
-		'zoom'   => FALSE, // Image size spacified
+		'zoom'   => FALSE, // Lock image width/height ratio
 		'_%'     => 0,     // percentage
 
 		'_size'  => FALSE, // Image size specified
 		'_w'     => 0,     // width
 		'_h'     => 0,     // height
 
-		'_args'  => array(),
-		'_done'  => FALSE,
+		'_title' => '',
 		'_error' => ''
 	);
 
@@ -163,7 +163,7 @@ function plugin_ref_body($args)
 			$is_file = is_file($file);
 
 		} else if (isset($args[0]) && $args[0] != '' && ! isset($params[$args[0]])) {
-			// Is the second argument a page-name or a path-name?
+			// Is the second argument a page-name or a path-name? (compat)
 			$_page = array_shift($args);
 
 			// Looks like WikiName, or double-bracket-inserted pagename? (compat)
@@ -190,7 +190,8 @@ function plugin_ref_body($args)
 				}
 				return $params;
 			}
-			$page = $_page; // Believe it (compat)
+
+			$page = $_page; // Suppose it
 
 		} else {
 			// Simple single argument
@@ -205,28 +206,15 @@ function plugin_ref_body($args)
 		}
 	}
 
-	// $params
-	if (! empty($args)) {
-		foreach ($args as $arg) {
-			ref_check_arg($arg, $params);
-		}
-	}
-	foreach (array('right', 'left', 'center') as $align) {
-		if ($params[$align])  {
-			$params['_align'] = $align;
-			break;
-		}
-	}
+	ref_check_args($args, $params);
+
 	$seems_image = (! $params['noimg'] && preg_match(PLUGIN_REF_IMAGE, $name));
 
 	$width = $height = 0;
-	$title = $url = $url2 = '';
-	$matches = array();
-
+	$url   = $url2   = '';
 	if ($is_url) {
-		$url   = $name;
-		$url2  = $name;
-
+		$url  = $name;
+		$url2 = $name;
 		if (PKWK_DISABLE_INLINE_IMAGE_FROM_URI) {
 			//$params['_error'] = 'PKWK_DISABLE_INLINE_IMAGE_FROM_URI prohibits this';
 			//return $params;
@@ -234,27 +222,24 @@ function plugin_ref_body($args)
 			$params['_body'] = '<a href="' . $s_url . '">' . $s_url . '</a>';
 			return $params;
 		}
+		$matches = array();
+		$params['_title'] = preg_match('#([^/]+)$#', $url, $matches) ? $matches[1] : $url;
 
-		$title = preg_match('#([^/]+)$#', $url, $matches) ? $matches[1] : $url;
-
-		if (PLUGIN_REF_URL_GET_IMAGE_SIZE && $seems_image && (bool)ini_get('allow_url_fopen')) {
+		if ($seems_image && PLUGIN_REF_URL_GET_IMAGE_SIZE && (bool)ini_get('allow_url_fopen')) {
 			$size = @getimagesize($name);
 			if (is_array($size)) {
 				$width  = $size[0];
 				$height = $size[1];
 			}
 		}
-
 	} else {
-		$title = $name;
-
 		// Count downloads with attach plugin
 		$url  = $script . '?plugin=attach' . '&refer=' . rawurlencode($page) .
 			'&openfile=' . rawurlencode($name); // Show its filename at the last
 		$url2 = '';
+		$params['_title'] = $name;
 
 		if ($seems_image) {
-
 			// URI for in-line image output
 			$url2 = $url;
 			if (PLUGIN_REF_DIRECT_ACCESS) {
@@ -264,7 +249,6 @@ function plugin_ref_body($args)
 				$url = $script . '?plugin=ref' . '&page=' . rawurlencode($page) .
 					'&src=' . rawurlencode($name); // Show its filename at the last
 			}
-
 			$size = @getimagesize($file);
 			if (is_array($size)) {
 				$width  = $size[0];
@@ -273,70 +257,28 @@ function plugin_ref_body($args)
 		}
 	}
 
-	if (! empty($params['_args'])) {
-		$_title = array();
-		foreach ($params['_args'] as $arg) {
-			if (preg_match('/^([0-9]+)x([0-9]+)$/', $arg, $matches)) {
-				$params['_size'] = TRUE;
-				$params['_w'] = $matches[1];
-				$params['_h'] = $matches[2];
-
-			} else if (preg_match('/^([0-9.]+)%$/', $arg, $matches) && $matches[1] > 0) {
-				$params['_%'] = $matches[1];
-
-			} else {
-				$_title[] = $arg;
-			}
-		}
-
-		if (! empty($_title)) {
-			$title = join(',', $_title);
-		}
-	}
-
 	$s_url   = htmlsc($url);
-	$s_title = htmlsc($title);
+	$s_title = htmlsc($params['_title']);
 	$s_info  = '';
 	if ($seems_image) {
 		$s_title = make_line_rules($s_title);
-		if ($params['_size']) {
-			if ($width == 0 && $height == 0) {
-				$width  = $params['_w'];
-				$height = $params['_h'];
-			} else if ($params['zoom']) {
-				$_w = $params['_w'] ? $width  / $params['_w'] : 0;
-				$_h = $params['_h'] ? $height / $params['_h'] : 0;
-				$zoom = max($_w, $_h);
-				if ($zoom) {
-					$width  = intval($width  / $zoom);
-					$height = intval($height / $zoom);
-				}
-			} else {
-				$width  = $params['_w'] ? $params['_w'] : $width;
-				$height = $params['_h'] ? $params['_h'] : $height;
-			}
+		if (ref_check_size($width, $height, $params)) {
+			$s_info = 'width="'  . htmlsc($params['_w']) .
+			        '" height="' . htmlsc($params['_h']) . '" ';
 		}
-		if ($params['_%']) {
-			$width  = intval($width  * $params['_%'] / 100);
-			$height = intval($height * $params['_%'] / 100);
-		}
-		if ($width && $height) {
-			$s_info = 'width="'  . htmlsc($width) .
-			        '" height="' . htmlsc($height) . '" ';
-		}
-		$body = '<img src="' . $s_url . '" ' .
-			'alt="'   . $s_title . '" ' .
-			'title="' . $s_title . '" ' .
+		$body = '<img src="' . $s_url   . '" ' .
+			'alt="'      . $s_title . '" ' .
+			'title="'    . $s_title . '" ' .
 			$s_info . '/>';
 		if (! $params['nolink'] && $url2) {
 			$params['_body'] =
-				'<a href="' . htmlsc($url2) . '" title="' . $s_title . '">' .
-				$body . '</a>';
+				'<a href="' . htmlsc($url2) . '" title="' . $s_title . '">' . "\n" .
+				$body . "\n" . '</a>';
 		} else {
 			$params['_body'] = $body;
 		}
 	} else {
-		if (! $is_url) {
+		if (! $is_url && $is_file) {
 			$s_info = htmlsc(get_date('Y/m/d H:i:s', filemtime($file) - LOCALZONE) .
 				' ' . sprintf('%01.1f', round(filesize($file) / 1024, 1)) . 'KB');
 		}
@@ -348,29 +290,90 @@ function plugin_ref_body($args)
 	return $params;
 }
 
-function ref_check_arg($val, & $params)
+function ref_check_args($args, & $params)
 {
-	if (preg_match('/^_/', $val)) {
-		$params['_args'][] = $val;	
-		return;
-	}
-	if ($val == '') {
-		$params['_done'] = TRUE;
-		return;
-	}
+	if (! is_array($args) || ! is_array($params)) return;
 
-	if (! $params['_done']) {
-		$lval = strtolower($val);
-		foreach (array_keys($params) as $key) {
-			if (strpos($key, $lval) === 0) {
-				$params[$key] = TRUE;
-				return;
+	$_args   = array();
+	$_title  = array();
+	$matches = array();
+
+	foreach ($args as $arg) {
+		$hit = FALSE;
+		if (! empty($arg) && ! preg_match('/^_/', $arg)) {
+			$larg = strtolower($arg);
+			foreach (array_keys($params) as $key) {
+				if (strpos($key, $larg) === 0) {
+					$hit          = TRUE;
+					$params[$key] = TRUE;
+					break;
+				}
 			}
 		}
-		$params['_done'] = TRUE;
+		if (! $hit) $_args[] = $arg;
 	}
 
-	$params['_args'][] = $val;
+	foreach ($_args as $arg) {
+		if (preg_match('/^([0-9]+)x([0-9]+)$/', $arg, $matches)) {
+			$params['_size'] = TRUE;
+			$params['_w']    = intval($matches[1]);
+			$params['_h']    = intval($matches[2]);
+		} else if (preg_match('/^([0-9.]+)%$/', $arg, $matches) && $matches[1] > 0) {
+			$params['_%']    = intval($matches[1]);
+		} else {
+			$_title[] = $arg;
+		}
+	}
+	unset($_args);
+
+	$params['_title'] = join(',', $_title);
+	unset($_title);
+
+	foreach (array('right', 'left', 'center') as $align) {
+		if (isset($params[$align]) && $params[$align]) {
+			$params['_align'] = $align;
+			unset($params[$align]);
+			break;
+		}
+	}
+}
+
+function ref_check_size($width = 0, $height = 0, & $params)
+{
+	if (! is_array($params)) return FALSE;
+
+	$width   = intval($width);
+	$height  = intval($height);
+	$_width  = isset($params['_w']) ? intval($params['_w']) : 0;
+	$_height = isset($params['_h']) ? intval($params['_h']) : 0;
+
+	if (isset($params['_size']) && $params['_size']) {
+		if ($width == 0 && $height == 0) {
+			$width  = $_width;
+			$height = $_height;
+		} else if (isset($params['zoom']) && $params['zoom']) {
+			$_w = $_width  ? $width  / $_width  : 0;
+			$_h = $_height ? $height / $_height : 0;
+			$zoom = max($_w, $_h);
+			if ($zoom) {
+				$width  = $width  / $zoom;
+				$height = $height / $zoom;
+			}
+		} else {
+			$width  = $_width  ? $_width  : $width;
+			$height = $_height ? $_height : $height;
+		}
+	}
+
+	if (isset($params['_%']) && $params['_%']) {
+		$width  = $width  * $params['_%'] / 100;
+		$height = $height * $params['_%'] / 100;
+	}
+
+	$params['_w'] = intval($width);
+	$params['_h'] = intval($height);
+
+	return ($params['_w'] && $params['_h']);
 }
 
 // Output an image (fast, non-logging <==> attach plugin)
