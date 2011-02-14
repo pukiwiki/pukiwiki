@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: ref.inc.php,v 1.55 2011/02/08 14:07:34 henoheno Exp $
+// $Id: ref.inc.php,v 1.56 2011/02/14 15:45:07 henoheno Exp $
 // Copyright (C)
 //   2002-2006, 2011 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -45,14 +45,17 @@ define('PLUGIN_REF_USAGE', '([pagename/]attached-file-name[,parameters, ... ][,t
 
 function plugin_ref_inline()
 {
-	// "$aryargs[] = & $body" at plugin.php
+	// NOTE: Already "$aryargs[] = & $body" at plugin.php
 	if (func_num_args() == 1) {
 		return htmlsc('&ref(): Usage:' . PLUGIN_REF_USAGE . ';');
 	}
 
 	$params = plugin_ref_body(func_get_args());
-	if (isset($params['_error']) && $params['_error'] != '') {
-		return htmlsc('&ref(): ' . $params['_error'] . ';');
+	if (isset($params['_error'])) {
+		return htmlsc('&ref(): ERROR: ' . $params['_error'] . ';');
+	}
+	if (! isset($params['_body'])) {
+		return htmlsc('&ref(): ERROR: No _body;');
 	}
 
 	return $params['_body'];
@@ -65,12 +68,15 @@ function plugin_ref_convert()
 	}
 
 	$params = plugin_ref_body(func_get_args());
-	if (isset($params['_error']) && $params['_error'] != '') {
-		return '<p>' . htmlsc('#ref(): ' . $params['_error']) . '</p>' . "\n";
+	if (isset($params['_error'])) {
+		return '<p>' . htmlsc('#ref(): ERROR: ' . $params['_error']) . '</p>' . "\n";
+	}
+	if (! isset($params['_body'])) {
+		return '<p>' . htmlsc('#ref(): ERROR: No _body') . '</p>' . "\n";
 	}
 
 	// Wrap with a table
-	if ((PLUGIN_REF_WRAP_TABLE && ! $params['nowrap']) || $params['wrap']) {
+	if ((PLUGIN_REF_WRAP_TABLE && ! isset($params['nowrap'])) || isset($params['wrap'])) {
 		// margin:auto
 		//	Mozilla 1.x  = x (wrap, and around are ignored)
 		//	Opera 6      = o
@@ -81,9 +87,12 @@ function plugin_ref_convert()
 		//	Opera 6      = x (aligning seems ignored with wrap)
 		//	Netscape 6   = x (aligning seems ignored with wrap)
 		//	IE6          = o
-		$s_margin       = htmlsc($params['around'] ? '0px' : 'auto');
-		$s_margin_align = htmlsc(($params['_align'] == 'center') ? '' :
-			';margin-' . $params['_align'] . ':0px');
+		$s_margin = isset($params['around']) ? '0px' : 'auto';
+		if (! isset($params['_align']) || $params['_align'] == 'center') {
+			$s_margin_align = '';
+		} else {
+			$s_margin_align = ';margin-' . htmlsc($params['_align']) . ':0px';
+		}
 		$params['_body'] = <<<EOD
 <table class="style_table" style="margin:$s_margin$s_margin_align">
  <tr>
@@ -93,7 +102,7 @@ function plugin_ref_convert()
 EOD;
 	}
 
-	if ($params['around']) {
+	if (isset($params['around'])) {
 		$style = ($params['_align'] == 'right') ? 'float:right' : 'float:left';
 	} else {
 		$style = 'text-align:' . $params['_align'];
@@ -112,30 +121,27 @@ function plugin_ref_body($args)
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
 	$params = array(
-		// Align
-		'left'   => FALSE,
-		'center' => FALSE,
-		'right'  => FALSE,
-		'_align' => PLUGIN_REF_DEFAULT_ALIGN,
-
-		// Wrap with table or not
-		'wrap'   => FALSE,
-		'nowrap' => FALSE,
-
-		'around' => FALSE, // wrap around
+		// Options
+		'left'   => FALSE, // Align
+		'center' => FALSE, //      Align
+		'right'  => FALSE, //           Align
+		'wrap'   => FALSE, // Wrap the output with table ...
+		'nowrap' => FALSE, //   or not
+		'around' => FALSE, // Text wrap around or not
 		'noicon' => FALSE, // Suppress showing icon
-		'nolink' => FALSE, // Suppress link to image itself
 		'noimg'  => FALSE, // Suppress showing image
+		'nolink' => FALSE, // Suppress link to image itself
+		'zoom'   => FALSE, // Lock image width/height ratio as the original said
 
-		'zoom'   => FALSE, // Lock image width/height ratio
-		'_%'     => 0,     // percentage
-
+		// Flags and values
+		'_align' => PLUGIN_REF_DEFAULT_ALIGN,
 		'_size'  => FALSE, // Image size specified
-		'_w'     => 0,     // width
-		'_h'     => 0,     // height
-
-		'_title' => '',
-		'_error' => ''
+		'_w'     => 0,     // Width
+		'_h'     => 0,     // Height
+		'_%'     => 0,     // Percentage
+		//'_title' => '',  // Reserved
+		//'_body   => '',  // Reserved
+		//'_error' => ''   // Reserved
 	);
 
 	// [Page_name/maybe-separated-with/slashes/]AttachedFileName.sfx or URI
@@ -208,7 +214,7 @@ function plugin_ref_body($args)
 
 	ref_check_args($args, $params);
 
-	$seems_image = (! $params['noimg'] && preg_match(PLUGIN_REF_IMAGE, $name));
+	$seems_image = (! isset($params['noimg']) && preg_match(PLUGIN_REF_IMAGE, $name));
 
 	$width = $height = 0;
 	$url   = $url2   = '';
@@ -258,11 +264,12 @@ function plugin_ref_body($args)
 	}
 
 	$s_url   = htmlsc($url);
-	$s_title = htmlsc($params['_title']);
+	$s_title = isset($params['_title']) ? htmlsc($params['_title']) : '';
 	$s_info  = '';
 	if ($seems_image) {
 		$s_title = make_line_rules($s_title);
-		if (ref_check_size($width, $height, $params)) {
+		if (ref_check_size($width, $height, $params) &&
+		    isset($params['_w']) && isset($params['_h'])) {
 			$s_info = 'width="'  . htmlsc($params['_w']) .
 			        '" height="' . htmlsc($params['_h']) . '" ';
 		}
@@ -270,7 +277,7 @@ function plugin_ref_body($args)
 			'alt="'      . $s_title . '" ' .
 			'title="'    . $s_title . '" ' .
 			$s_info . '/>';
-		if (! $params['nolink'] && $url2) {
+		if (! isset($params['nolink']) && $url2) {
 			$params['_body'] =
 				'<a href="' . htmlsc($url2) . '" title="' . $s_title . '">' . "\n" .
 				$body . "\n" . '</a>';
@@ -282,7 +289,7 @@ function plugin_ref_body($args)
 			$s_info = htmlsc(get_date('Y/m/d H:i:s', filemtime($file) - LOCALZONE) .
 				' ' . sprintf('%01.1f', round(filesize($file) / 1024, 1)) . 'KB');
 		}
-		$icon = $params['noicon'] ? '' : FILE_ICON;
+		$icon = isset($params['noicon']) ? '' : FILE_ICON;
 		$params['_body'] = '<a href="' . $s_url . '" title="' . $s_info . '">' .
 			$icon . $s_title . '</a>';
 	}
@@ -325,12 +332,16 @@ function ref_check_args($args, & $params)
 		}
 	}
 	unset($_args);
-
 	$params['_title'] = join(',', $_title);
 	unset($_title);
+	foreach(array_keys($params) as $key) {
+		if (! preg_match('/^_/', $key) && empty($params[$key])) {
+			unset($params[$key]);
+		}
+	}
 
 	foreach (array('right', 'left', 'center') as $align) {
-		if (isset($params[$align]) && $params[$align]) {
+		if (isset($params[$align])) {
 			$params['_align'] = $align;
 			unset($params[$align]);
 			break;
@@ -347,11 +358,11 @@ function ref_check_size($width = 0, $height = 0, & $params)
 	$_width  = isset($params['_w']) ? intval($params['_w']) : 0;
 	$_height = isset($params['_h']) ? intval($params['_h']) : 0;
 
-	if (isset($params['_size']) && $params['_size']) {
+	if (isset($params['_size'])) {
 		if ($width == 0 && $height == 0) {
 			$width  = $_width;
 			$height = $_height;
-		} else if (isset($params['zoom']) && $params['zoom']) {
+		} else if (isset($params['zoom'])) {
 			$_w = $_width  ? $width  / $_width  : 0;
 			$_h = $_height ? $height / $_height : 0;
 			$zoom = max($_w, $_h);
@@ -365,7 +376,7 @@ function ref_check_size($width = 0, $height = 0, & $params)
 		}
 	}
 
-	if (isset($params['_%']) && $params['_%']) {
+	if (isset($params['_%'])) {
 		$width  = $width  * $params['_%'] / 100;
 		$height = $height * $params['_%'] / 100;
 	}
