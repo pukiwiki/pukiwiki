@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: zh-CN.lng.php,v 1.5 2011/06/05 13:51:59 henoheno Exp $
+// $Id: zh-CN.lng.php,v 1.5.2.1 2011/06/05 14:20:01 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
