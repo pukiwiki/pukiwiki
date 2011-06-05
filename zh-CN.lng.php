@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: zh-CN.lng.php,v 1.3 2011/06/05 13:41:57 henoheno Exp $
+// $Id: zh-CN.lng.php,v 1.4 2011/06/05 13:47:26 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -84,10 +84,6 @@ $_msg_auth         = 'PukiWikiAuth';
 $rule_page = 'FormattingRules';	// Formatting rules
 $help_page = '帮助';		// Help
 
-///////////////////////////////////////
-// TrackBack (REMOVED)
-$_tb_date  = 'Y年n月j日 H:i:s';
-
 /////////////////////////////////////////////////
 // 題名が未記入の場合の表記 (article)
 $_no_subject = '无标题';
@@ -112,7 +108,6 @@ $_LANG['skin']['list']      = '列表';	// List of pages
 $_LANG['skin']['new']       = '新建';
 $_LANG['skin']['rdf']       = '最近更新的RDF';	// RDF of RecentChanges
 $_LANG['skin']['recent']    = '最近更新';	// RecentChanges
-$_LANG['skin']['refer']     = '原始链接';	// Show list of referer
 $_LANG['skin']['reload']    = '重新加载';
 $_LANG['skin']['rename']    = '更改名称';	// Rename a page (and related)
 $_LANG['skin']['rss']       = '最近更新的RSS';	// RSS of RecentChanges
@@ -120,7 +115,6 @@ $_LANG['skin']['rss10']     = & $_LANG['skin']['rss'];
 $_LANG['skin']['rss20']     = & $_LANG['skin']['rss'];
 $_LANG['skin']['search']    = '搜索';
 $_LANG['skin']['top']       = '首页';	// Top page
-$_LANG['skin']['trackback'] = '引用通告';	// Show list of trackback
 $_LANG['skin']['unfreeze']  = '取消保护';
 $_LANG['skin']['upload']    = '附件';	// Attach a file
 
