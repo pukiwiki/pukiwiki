@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: zh-CN.lng.php,v 1.2 2011/06/05 13:35:04 henoheno Exp $
+// $Id: zh-CN.lng.php,v 1.3 2011/06/05 13:41:57 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -330,19 +330,6 @@ $_popular_plugin_today_frame = '<h5>今天的%d个</h5><div>%s</div>';
 // recent.inc.php
 $_recent_plugin_frame = '<h5>最近的%d个</h5>
 <div>%s</div>';
-
-///////////////////////////////////////
-// referer.inc.php
-$_referer_msg = array(
-	'msg_H0_Refer'       => '查看原始链接',
-	'msg_Hed_LastUpdate' => '最近修改时间',
-	'msg_Hed_1stDate'    => '创建时间',
-	'msg_Hed_RefCounter' => '计数器',
-	'msg_Hed_Referer'    => 'Referer',
-	'msg_Fmt_Date'       => 'Y年n月j日 H:i',
-	'msg_Chr_uarr'       => '↑',
-	'msg_Chr_darr'       => '↓',
-);
 
 ///////////////////////////////////////
 // rename.inc.php
