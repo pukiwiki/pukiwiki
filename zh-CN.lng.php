@@ -1,60 +1,60 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: zh-CN.lng.php,v 1.1 2011/06/05 13:32:59 henoheno Exp $
+// $Id: zh-CN.lng.php,v 1.2 2011/06/05 13:35:04 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
-// PukiWiki message file (japanese)
+// PukiWiki message file (Simplified Chinese)
 
 // ※このファイルの文字コードは、エンコーディングの設定と一致
 //   している必要があります
 
 // Encoding hint
-$_LANG['encode_hint']['ja'] = 'ぷ';
+$_LANG['encode_hint']['zh-CN'] = '';
 
 ///////////////////////////////////////
 // Page titles
-$_title_cannotedit = '$1 は編集できません';
-$_title_edit       = '$1 の編集';
-$_title_preview    = '$1 のプレビュー';
-$_title_collided   = '$1 で【更新の衝突】が起きました';
-$_title_updated    = '$1 を更新しました';
-$_title_deleted    = '$1 を削除しました';
-$_title_help       = 'ヘルプ';
-$_title_invalidwn  = '有効なWikiNameではありません';
-$_title_backuplist = 'バックアップ一覧';
+$_title_cannotedit = '无法编辑 $1';
+$_title_edit       = '编辑 $1';
+$_title_preview    = '预览 $1';
+$_title_collided   = '在 $1 中发生了【编辑冲突】';
+$_title_updated    = '$1 已更新';
+$_title_deleted    = '$1 已删除';
+$_title_help       = '帮助';
+$_title_invalidwn  = '无效的WikiName';
+$_title_backuplist = '编辑历史';
 
 ///////////////////////////////////////
 // Messages
-$_msg_unfreeze       = '凍結解除';
-$_msg_preview        = '以下のプレビューを確認して、よければページ下部のボタンで更新してください。';
-$_msg_preview_delete = '（ページの内容は空です。更新するとこのページは削除されます。）';
-$_msg_collided       = 'あなたがこのページを編集している間に、他の人が同じページを更新してしまったようです。<br />
-今回追加した行は +で始まっています。<br />
-!で始まる行が変更された可能性があります。<br />
-!や+で始まる行を修正して再度ページの更新を行ってください。<br />';
+$_msg_unfreeze       = '取消保护';
+$_msg_preview        = '在预览后，按页面下方的按钮提交编辑。';
+$_msg_preview_delete = '（页面无任何内容。如果提交编辑，此页面将被删除。）';
+$_msg_collided       = '当您编辑此页面的同时，有其他人提交了对同一页面的编辑。<br />
+以 + 为起始的行是新增的行。<br />
+以 ! 为起始的行是内容发生变化的行。<br />
+请处理以!或+起始的行，并再次提交编辑。<br />';
 
-$_msg_collided_auto  = 'あなたがこのページを編集している間に、他の人が同じページを更新してしまったようです。<br />
-自動で衝突を解消しましたが、問題がある可能性があります。<br />
-確認後、[ページの更新]を押してください。<br />';
+$_msg_collided_auto  = '当您编辑此页面的同时，有其他人提交了对同一页面的编辑。<br />
+编辑冲突已解决，但仍然可能存在一些问题。<br />
+请您在检查完成后，按[提交编辑]。<br />';
 
-$_msg_invalidiwn     = '$1 は有効な $2 ではありません。';
-$_msg_invalidpass    = 'パスワードが間違っています。';
-$_msg_notfound       = '指定されたページは見つかりませんでした。';
-$_msg_addline        = '追加された行は<span class="diff_added">この色</span>です。';
-$_msg_delline        = '削除された行は<span class="diff_removed">この色</span>です。';
-$_msg_goto           = '$1 へ行く。';
-$_msg_andresult      = '$1 のすべてを含むページは <strong>$3</strong> ページ中、 <strong>$2</strong> ページ見つかりました。';
-$_msg_orresult       = '$1 のいずれかを含むページは <strong>$3</strong> ページ中、 <strong>$2</strong> ページ見つかりました。';
-$_msg_notfoundresult = '$1 を含むページは見つかりませんでした。';
-$_msg_symbol         = '記号';
-$_msg_other          = '日本語';
-$_msg_help           = 'テキスト整形のルールを表示する';
-$_msg_week           = array('日','月','火','水','木','金','土');
+$_msg_invalidiwn     = '$1 不是有效的 $2。';
+$_msg_invalidpass    = '密码错误。';
+$_msg_notfound       = '未找到指定页面。';
+$_msg_addline        = '新增的行显示为<span class="diff_added">此颜色</span>。';
+$_msg_delline        = '删除的行显示为<span class="diff_removed">此颜色</span>。';
+$_msg_goto           = '转到 $1。';
+$_msg_andresult      = '在所有可能包含 $1 的 <strong>$3</strong> 个页面中，找到了符合条件的 <strong>$2</strong> 个页面。';
+$_msg_orresult       = '在所有可能包含 $1 其中一个的 <strong>$3</strong> 个页面中，找到了符合条件的 <strong>$2</strong> 个页面。';
+$_msg_notfoundresult = '找不到包含 $1 的页面。';
+$_msg_symbol         = '符号';
+$_msg_other          = '中文';
+$_msg_help           = '查看文本格式语法';
+$_msg_week           = array('星期日','星期一','星期二','星期三','星期四','星期五','星期六');
 $_msg_content_back_to_top = '<div class="jumpmenu"><a href="#navigator">&uarr;</a></div>';
-$_msg_word           = 'これらのキーワードがハイライトされています：';
+$_msg_word           = '高亮显示这些关键字：';
 
 ///////////////////////////////////////
 // Symbols
@@ -63,30 +63,34 @@ $_symbol_noexists = '?';
 
 ///////////////////////////////////////
 // Form buttons
-$_btn_preview   = 'プレビュー';
-$_btn_repreview = '再度プレビュー';
-$_btn_update    = 'ページの更新';
-$_btn_cancel    = 'キャンセル';
-$_btn_notchangetimestamp = 'タイムスタンプを変更しない';
-$_btn_addtop    = 'ページの上に追加';
-$_btn_template  = '雛形とするページ';
-$_btn_load      = '読込';
-$_btn_edit      = '編集';
-$_btn_delete    = '削除';
+$_btn_preview   = '预览';
+$_btn_repreview = '重新预览';
+$_btn_update    = '提交编辑';
+$_btn_cancel    = '撤销';
+$_btn_notchangetimestamp = '不更新时间戳';
+$_btn_addtop    = '添加到页面顶部';
+$_btn_template  = '模板页';
+$_btn_load      = '打开';
+$_btn_edit      = '编辑';
+$_btn_delete    = '删除';
 
 ///////////////////////////////////////
 // Authentication
-$_title_cannotread = '$1 は閲覧できません';
+$_title_cannotread = '无法浏览 $1';
 $_msg_auth         = 'PukiWikiAuth';
 
 ///////////////////////////////////////
 // Page name
 $rule_page = 'FormattingRules';	// Formatting rules
-$help_page = 'Help';		// Help
+$help_page = '帮助';		// Help
+
+///////////////////////////////////////
+// TrackBack (REMOVED)
+$_tb_date  = 'Y年n月j日 H:i:s';
 
 /////////////////////////////////////////////////
 // 題名が未記入の場合の表記 (article)
-$_no_subject = '無題';
+$_no_subject = '无标题';
 
 /////////////////////////////////////////////////
 // 名前が未記入の場合の表記 (article, comment, pcomment)
@@ -96,183 +100,185 @@ $_no_name = '';
 // Skin
 /////////////////////////////////////////////////
 
-$_LANG['skin']['add']       = '追加';
-$_LANG['skin']['backup']    = 'バックアップ';
-$_LANG['skin']['copy']      = '複製';
-$_LANG['skin']['diff']      = '差分';
-$_LANG['skin']['edit']      = '編集';
-$_LANG['skin']['filelist']  = 'ファイル名一覧';	// List of filenames
-$_LANG['skin']['freeze']    = '凍結';
-$_LANG['skin']['help']      = 'ヘルプ';
-$_LANG['skin']['list']      = '一覧';	// List of pages
-$_LANG['skin']['new']       = '新規';
-$_LANG['skin']['rdf']       = '最終更新のRDF';	// RDF of RecentChanges
-$_LANG['skin']['recent']    = '最終更新';	// RecentChanges
-$_LANG['skin']['reload']    = 'リロード';
-$_LANG['skin']['rename']    = '名前変更';	// Rename a page (and related)
-$_LANG['skin']['rss']       = '最終更新のRSS';	// RSS of RecentChanges
+$_LANG['skin']['add']       = '添加';
+$_LANG['skin']['backup']    = '历史';
+$_LANG['skin']['copy']      = '复制';
+$_LANG['skin']['diff']      = '差异';
+$_LANG['skin']['edit']      = '编辑';
+$_LANG['skin']['filelist']  = '文件名列表';	// List of filenames
+$_LANG['skin']['freeze']    = '保护';
+$_LANG['skin']['help']      = '帮助';
+$_LANG['skin']['list']      = '列表';	// List of pages
+$_LANG['skin']['new']       = '新建';
+$_LANG['skin']['rdf']       = '最近更新的RDF';	// RDF of RecentChanges
+$_LANG['skin']['recent']    = '最近更新';	// RecentChanges
+$_LANG['skin']['refer']     = '原始链接';	// Show list of referer
+$_LANG['skin']['reload']    = '重新加载';
+$_LANG['skin']['rename']    = '更改名称';	// Rename a page (and related)
+$_LANG['skin']['rss']       = '最近更新的RSS';	// RSS of RecentChanges
 $_LANG['skin']['rss10']     = & $_LANG['skin']['rss'];
 $_LANG['skin']['rss20']     = & $_LANG['skin']['rss'];
-$_LANG['skin']['search']    = '単語検索';
-$_LANG['skin']['top']       = 'トップ';	// Top page
-$_LANG['skin']['unfreeze']  = '凍結解除';
-$_LANG['skin']['upload']    = '添付';	// Attach a file
+$_LANG['skin']['search']    = '搜索';
+$_LANG['skin']['top']       = '首页';	// Top page
+$_LANG['skin']['trackback'] = '引用通告';	// Show list of trackback
+$_LANG['skin']['unfreeze']  = '取消保护';
+$_LANG['skin']['upload']    = '附件';	// Attach a file
 
 ///////////////////////////////////////
 // Plug-in message
 ///////////////////////////////////////
 // add.inc.php
-$_title_add = '$1 への追加';
-$_msg_add   = 'ページへの追加は、現在のページ内容に改行が二つと入力内容が追加されます。';
+$_title_add = '添加到 $1';
+$_msg_add   = '如果要向页面中添加内容，请输入2个换行，再输入文本。';
 
 ///////////////////////////////////////
 // article.inc.php
-$_btn_name    = 'お名前';
-$_btn_article = '記事の投稿';
-$_btn_subject = '題名: ';
-$_msg_article_mail_sender = '投稿者: ';
-$_msg_article_mail_page   = '投稿先: ';
+$_btn_name    = '名字';
+$_btn_article = '提交编辑';
+$_btn_subject = '标题: ';
+$_msg_article_mail_sender = '编辑者: ';
+$_msg_article_mail_page   = '编辑页: ';
 
 
 ///////////////////////////////////////
 // attach.inc.php
 $_attach_messages = array(
-	'msg_uploaded' => '$1 にアップロードしました',
-	'msg_deleted'  => '$1 からファイルを削除しました',
-	'msg_freezed'  => '添付ファイルを凍結しました。',
-	'msg_unfreezed'=> '添付ファイルを凍結解除しました。',
-	'msg_renamed'  => '添付ファイルの名前を変更しました。',
-	'msg_upload'   => '$1 への添付',
-	'msg_info'     => '添付ファイルの情報',
-	'msg_confirm'  => '<p>%s を削除します。</p>',
-	'msg_list'     => '添付ファイル一覧',
-	'msg_listpage' => '$1 の添付ファイル一覧',
-	'msg_listall'  => '全ページの添付ファイル一覧',
-	'msg_file'     => '添付ファイル',
-	'msg_maxsize'  => 'アップロード可能最大ファイルサイズは %s です。',
-	'msg_count'    => ' <span class="small">%s件</span>',
-	'msg_password' => 'パスワード',
-	'msg_adminpass'=> '管理者パスワード',
-	'msg_delete'   => 'このファイルを削除します。',
-	'msg_freeze'   => 'このファイルを凍結します。',
-	'msg_unfreeze' => 'このファイルを凍結解除します。',
-	'msg_isfreeze' => 'このファイルは凍結されています。',
-	'msg_rename'   => '名前を変更します。',
-	'msg_newname'  => '新しい名前',
-	'msg_require'  => '(管理者パスワードが必要です)',
-	'msg_filesize' => 'サイズ',
-	'msg_date'     => '登録日時',
-	'msg_dlcount'  => 'アクセス数',
-	'msg_md5hash'  => 'MD5ハッシュ値',
-	'msg_page'     => 'ページ',
-	'msg_filename' => '格納ファイル名',
-	'err_noparm'   => '$1 へはアップロード・削除はできません',
-	'err_exceed'   => '$1 へのファイルサイズが大きすぎます',
-	'err_exists'   => '$1 に同じファイル名が存在します',
-	'err_notfound' => '$1 にそのファイルは見つかりません',
-	'err_noexist'  => '添付ファイルがありません。',
-	'err_delete'   => '$1 からファイルを削除できませんでした',
-	'err_rename'   => 'ファイル名を変更できませんでした',
-	'err_password' => 'パスワードが一致しません。',
-	'err_adminpass'=> '管理者パスワードが一致しません。',
-	'btn_upload'   => 'アップロード',
-	'btn_info'     => '詳細',
-	'btn_submit'   => '実行'
+	'msg_uploaded' => '已上传到 $1',
+	'msg_deleted'  => '已从 $1 中删除',
+	'msg_freezed'  => '附件已保护。',
+	'msg_unfreezed'=> '已取消对附件的保护。',
+	'msg_renamed'  => '附件的名称已更改。',
+	'msg_upload'   => '添加附件到 $1',
+	'msg_info'     => '附件信息',
+	'msg_confirm'  => '<p>删除 %s。</p>',
+	'msg_list'     => '附件列表',
+	'msg_listpage' => '$1 的附件列表',
+	'msg_listall'  => '所有页面的附件列表',
+	'msg_file'     => '附件',
+	'msg_maxsize'  => '添加小于 %s 的文件作为附件。',
+	'msg_count'    => ' <span class="small">%s个</span>',
+	'msg_password' => '密码',
+	'msg_adminpass'=> '管理员密码',
+	'msg_delete'   => '删除此文件。',
+	'msg_freeze'   => '保护此文件。',
+	'msg_unfreeze' => '取消对此文件的保护。',
+	'msg_isfreeze' => '已保护该文件。',
+	'msg_rename'   => '重命名。',
+	'msg_newname'  => '新名称',
+	'msg_require'  => '(管理员密码为必填)',
+	'msg_filesize' => '大小',
+	'msg_date'     => '添加时间',
+	'msg_dlcount'  => '下载次数',
+	'msg_md5hash'  => 'MD5哈希值',
+	'msg_page'     => '页',
+	'msg_filename' => '文件名',
+	'err_noparm'   => '无法上传或删除 $1',
+	'err_exceed'   => '上传到 $1 的文件过大',
+	'err_exists'   => '存在与 $1 相同的文件名',
+	'err_notfound' => '在 $1 中找不到文件',
+	'err_noexist'  => '没有附件。',
+	'err_delete'   => '无法在 $1 中删除文件',
+	'err_rename'   => '无法更改文件名',
+	'err_password' => '密码不匹配。',
+	'err_adminpass'=> '管理员密码不匹配。',
+	'btn_upload'   => '上传',
+	'btn_info'     => '详细信息',
+	'btn_submit'   => '应用'
 );
 
 ///////////////////////////////////////
 // back.inc.php
-$_msg_back_word = '戻る';
+$_msg_back_word = '返回';
 
 ///////////////////////////////////////
 // backup.inc.php
-$_title_backup_delete  = '$1 のバックアップを削除';
-$_title_backupdiff     = '$1 のバックアップ差分(No.$2)';
-$_title_backupnowdiff  = '$1 のバックアップの現在との差分(No.$2)';
-$_title_backupsource   = '$1 のバックアップソース(No.$2)';
-$_title_backup         = '$1 のバックアップ(No.$2)';
-$_title_pagebackuplist = '$1 のバックアップ一覧';
-$_title_backuplist     = 'バックアップ一覧';
-$_msg_backup_deleted   = '$1 のバックアップを削除しました。';
-$_msg_backup_adminpass = '削除用のパスワードを入力してください。';
-$_msg_backuplist       = 'バックアップ一覧';
-$_msg_nobackup         = '$1 のバックアップはありません。';
-$_msg_diff             = '差分';
-$_msg_nowdiff          = '現在との差分';
-$_msg_source           = 'ソース';
-$_msg_backup           = 'バックアップ';
-$_msg_view             = '$1 を表示';
-$_msg_deleted          = '$1 は削除されています。';
+$_title_backup_delete  = '删除 $1 的历史';
+$_title_backupdiff     = '$1 的历史差异(No.$2)';
+$_title_backupnowdiff  = '$1 的历史与当前的差异(No.$2)';
+$_title_backupsource   = '$1 历史源(No.$2)';
+$_title_backup         = '$1 的历史(No.$2)';
+$_title_pagebackuplist = '$1 的历史列表';
+$_title_backuplist     = '编辑历史';
+$_msg_backup_deleted   = '已删除 $1 的历史。';
+$_msg_backup_adminpass = '请输入用于删除的密码。';
+$_msg_backuplist       = '编辑历史';
+$_msg_nobackup         = '$1 无任何历史。';
+$_msg_diff             = '差异';
+$_msg_nowdiff          = '与当前的差异';
+$_msg_source           = '源';
+$_msg_backup           = '历史';
+$_msg_view             = '显示 $1';
+$_msg_deleted          = '$1 已删除。';
 
 ///////////////////////////////////////
 // calendar_viewer.inc.php
-$_err_calendar_viewer_param2 = '第2引数が変だよ';
-$_msg_calendar_viewer_right  = '次の%d件&gt;&gt;';
-$_msg_calendar_viewer_left   = '&lt;&lt;前の%d件';
-$_msg_calendar_viewer_restrict = '$1 は閲覧制限がかかっているためcalendar_viewerによる参照はできません';
+$_err_calendar_viewer_param2 = '第二参数不正确';
+$_msg_calendar_viewer_right  = '后%d个&gt;&gt;';
+$_msg_calendar_viewer_left   = '&lt;&lt;前%d个';
+$_msg_calendar_viewer_restrict = '$1 有浏览限制，无法被calendar_viewer引用';
 
 ///////////////////////////////////////
 // calendar2.inc.php
-$_calendar2_plugin_edit  = '[この日記を編集]';
-$_calendar2_plugin_empty = '%sは空です。';
+$_calendar2_plugin_edit  = '[编辑此日记]';
+$_calendar2_plugin_empty = '%s中无任何内容。';
 
 ///////////////////////////////////////
 // comment.inc.php
-$_btn_name    = 'お名前: ';
-$_btn_comment = 'コメントの挿入';
-$_msg_comment = 'コメント: ';
-$_title_comment_collided = '$1 で【更新の衝突】が起きました';
-$_msg_comment_collided   = 'あなたがこのページを編集している間に、他の人が同じページを更新してしまったようです。<br />
-コメントを追加しましたが、違う位置に挿入されているかもしれません。<br />';
+$_btn_name    = '名字: ';
+$_btn_comment = '插入评论';
+$_msg_comment = '评论内容: ';
+$_title_comment_collided = '在 $1 中发生了【编辑冲突】';
+$_msg_comment_collided   = '当您编辑此页的同时，有其他人更新了同一页面。<br />
+批注有可能被插入到了与原先不同的位置。<br />';
 
 ///////////////////////////////////////
 // deleted.inc.php
-$_deleted_plugin_title = '削除ページの一覧';
-$_deleted_plugin_title_withfilename = '削除ページファイルの一覧';
+$_deleted_plugin_title = '删除页面的列表';
+$_deleted_plugin_title_withfilename = '删除页面文件的列表';
 
 ///////////////////////////////////////
 // diff.inc.php
-$_title_diff = '$1 の変更点';
-$_title_diff_delete  = '$1 の差分を削除';
-$_msg_diff_deleted   = '$1 の差分を削除しました。';
-$_msg_diff_adminpass = '削除用のパスワードを入力してください。';
+$_title_diff = '$1 的差异';
+$_title_diff_delete  = '删除 $1 的差异';
+$_msg_diff_deleted   = '已删除 $1 的差异。';
+$_msg_diff_adminpass = '请输入用于删除的密码。';
 
 ///////////////////////////////////////
 // filelist.inc.php (list.inc.php)
-$_title_filelist = 'ページファイルの一覧';
+$_title_filelist = '页面文件列表';
 
 ///////////////////////////////////////
 // freeze.inc.php
-$_title_isfreezed = '$1 はすでに凍結されています';
-$_title_freezed   = '$1 を凍結しました';
-$_title_freeze    = '$1 の凍結';
-$_msg_freezing    = '凍結用のパスワードを入力してください。';
-$_btn_freeze      = '凍結';
+$_title_isfreezed = '$1 为保护状态';
+$_title_freezed   = '已保护 $1';
+$_title_freeze    = '保护 $1';
+$_msg_freezing    = '请输入用于保护页面的密码。';
+$_btn_freeze      = '保护';
 
 ///////////////////////////////////////
 // insert.inc.php
-$_btn_insert = '追加';
+$_btn_insert = '添加';
 
 ///////////////////////////////////////
 // include.inc.php
-$_msg_include_restrict = '$1 は閲覧制限がかかっているためincludeできません';
+$_msg_include_restrict = '$1 有浏览限制，无法进行include操作';
 
 ///////////////////////////////////////
 // interwiki.inc.php
-$_title_invalidiwn = '有効なInterWikiNameではありません';
+$_title_invalidiwn = '不是有效的 InterWikiName';
 
 ///////////////////////////////////////
 // list.inc.php
-$_title_list = 'ページの一覧';
+$_title_list = '页面列表';
 
 ///////////////////////////////////////
 // ls2.inc.php
-$_ls2_err_nopages = '<p>\'$1\' には、下位層のページがありません。</p>';
-$_ls2_msg_title   = '\'$1\'で始まるページの一覧';
+$_ls2_err_nopages = '<p>在 \'$1\' 中不包含任何子页面。</p>';
+$_ls2_msg_title   = '以\'$1\'为起始的页面列表';
 
 ///////////////////////////////////////
 // memo.inc.php
-$_btn_memo_update = 'メモ更新';
+$_btn_memo_update = '日志更新';
 
 ///////////////////////////////////////
 // navi.inc.php
@@ -283,144 +289,157 @@ $_navi_home = 'Home';
 
 ///////////////////////////////////////
 // newpage.inc.php
-$_msg_newpage = 'ページ新規作成';
+$_msg_newpage = '新建页面';
 
 ///////////////////////////////////////
 // paint.inc.php
 $_paint_messages = array(
-	'field_name'    => 'お名前',
-	'field_filename'=> 'ファイル名',
-	'field_comment' => 'コメント',
+	'field_name'    => '您的名字',
+	'field_filename'=> '文件名',
+	'field_comment' => '评论',
 	'btn_submit'    => 'paint',
-	'msg_max'       => '(最大 %d x %d)',
+	'msg_max'       => '(小于 %d x %d)',
 	'msg_title'     => 'Paint and Attach to $1',
-	'msg_title_collided' => '$1 で【更新の衝突】が起きました',
-	'msg_collided'  => 'あなたが画像を編集している間に、他の人が同じページを更新してしまったようです。<br />
-画像とコメントを追加しましたが、違う位置に挿入されているかもしれません。<br />'
+	'msg_title_collided' => '在 $1 中发生了【编辑冲突】',
+	'msg_collided'  => '当您编辑图像的同时，有其他人对同一页面进行了编辑。<br />
+图像和评论可能被插入到了与原来不同的位置。<br />'
 );
 
 ///////////////////////////////////////
 // pcomment.inc.php
 $_pcmt_messages = array(
-	'btn_name'     => 'お名前: ',
-	'btn_comment'  => 'コメントの挿入',
-	'msg_comment'  => 'コメント: ',
-	'msg_recent'   => '最新の%d件を表示しています。',
-	'msg_all'      => 'コメントページを参照',
-	'msg_none'     => 'コメントはありません。',
-	'title_collided' => '$1 で【更新の衝突】が起きました',
-	'msg_collided' => 'あなたがこのページを編集している間に、他の人が同じページを更新してしまったようです。<br />
-コメントを追加しましたが、違う位置に挿入されているかもしれません。<br />',
-	'err_pagename' => 'ページ名 [[%s]] は使用できません。 正しいページ名を指定してください。',
+	'btn_name'     => '您的名字: ',
+	'btn_comment'  => '插入评论',
+	'msg_comment'  => '评论内容: ',
+	'msg_recent'   => '显示最近的%d个。',
+	'msg_all'      => '引用评论页',
+	'msg_none'     => '没有评论。',
+	'title_collided' => '在 $1 中发生了【编辑冲突】',
+	'msg_collided' => '您在编辑此页的同时，有其他人编辑了同一页。<br />
+评论有可能被插入到了与原先不同的位置。<br />',
+	'err_pagename' => '无法使用 [[%s]] 作为页面名称。 请指定正确的页面名称。',
 );
-$_msg_pcomment_restrict = '閲覧制限がかかっているため、$1からはコメントを読みこむことができません。';
+$_msg_pcomment_restrict = '存在浏览限制，无法查看来自$1的评论。';
 
 ///////////////////////////////////////
 // popular.inc.php
-$_popular_plugin_frame       = '<h5>人気の%d件</h5><div>%s</div>';
-$_popular_plugin_today_frame = '<h5>今日の%d件</h5><div>%s</div>';
+$_popular_plugin_frame       = '<h5>最受欢迎的%d个</h5><div>%s</div>';
+$_popular_plugin_today_frame = '<h5>今天的%d个</h5><div>%s</div>';
 
 ///////////////////////////////////////
 // recent.inc.php
-$_recent_plugin_frame = '<h5>最新の%d件</h5>
+$_recent_plugin_frame = '<h5>最近的%d个</h5>
 <div>%s</div>';
+
+///////////////////////////////////////
+// referer.inc.php
+$_referer_msg = array(
+	'msg_H0_Refer'       => '查看原始链接',
+	'msg_Hed_LastUpdate' => '最近修改时间',
+	'msg_Hed_1stDate'    => '创建时间',
+	'msg_Hed_RefCounter' => '计数器',
+	'msg_Hed_Referer'    => 'Referer',
+	'msg_Fmt_Date'       => 'Y年n月j日 H:i',
+	'msg_Chr_uarr'       => '↑',
+	'msg_Chr_darr'       => '↓',
+);
 
 ///////////////////////////////////////
 // rename.inc.php
 $_rename_messages  = array(
-	'err' => '<p>エラー:%s</p>',
-	'err_nomatch'    => 'マッチするページがありません。',
-	'err_notvalid'   => 'リネーム後のページ名が正しくありません。',
-	'err_adminpass'  => '管理者パスワードが正しくありません。',
-	'err_notpage'    => '%sはページ名ではありません。',
-	'err_norename'   => '%sをリネームすることはできません。',
-	'err_already'    => 'ページがすでに存在します。:%s',
-	'err_already_below' => '以下のファイルがすでに存在します。',
-	'msg_title'      => 'ページ名の変更',
-	'msg_page'       => '変更元ページを指定',
-	'msg_regex'      => '正規表現で置換',
-	'msg_related'    => '関連ページ',
-	'msg_do_related' => '関連ページもリネームする',
-	'msg_rename'     => '%sの名前を変更します。',
-	'msg_oldname'    => '現在の名前',
-	'msg_newname'    => '新しい名前',
-	'msg_adminpass'  => '管理者パスワード',
+	'err' => '<p>错误:%s</p>',
+	'err_nomatch'    => '没有匹配的页面。',
+	'err_notvalid'   => '重命名后的名称不是有效的页面名称。',
+	'err_adminpass'  => '管理员密码不正确。',
+	'err_notpage'    => '%s不是页面名称。',
+	'err_norename'   => '无法重命名%s。',
+	'err_already'    => '页面已存在。:%s',
+	'err_already_below' => '以下文件已存在。',
+	'msg_title'      => '重命名页面',
+	'msg_page'       => '指定源页面',
+	'msg_regex'      => '使用正则表达式替换',
+	'msg_related'    => '相关页面',
+	'msg_do_related' => '重命名相关页面',
+	'msg_rename'     => '更改%s的名称。',
+	'msg_oldname'    => '当前的名称',
+	'msg_newname'    => '新名称',
+	'msg_adminpass'  => '管理员密码',
 	'msg_arrow'      => '→',
-	'msg_exist_none' => 'そのページを処理しない',
-	'msg_exist_overwrite' => 'そのファイルを上書きする',
-	'msg_confirm'    => '以下のファイルをリネームします。',
-	'msg_result'     => '以下のファイルを上書きしました。',
-	'btn_submit'     => '実行',
-	'btn_next'       => '次へ'
+	'msg_exist_none' => '不处理该页面',
+	'msg_exist_overwrite' => '覆盖到该文件',
+	'msg_confirm'    => '重命名下列文件。',
+	'msg_result'     => '已覆盖到以下文件。',
+	'btn_submit'     => '应用',
+	'btn_next'       => '下一步'
 );
 
 ///////////////////////////////////////
 // search.inc.php
-$_title_search  = '単語検索';
-$_title_result  = '$1 の検索結果';
-$_msg_searching = '全てのページから単語を検索します。大文字小文字の区別はありません。';
-$_btn_search    = '検索';
-$_btn_and       = 'AND検索';
-$_btn_or        = 'OR検索';
-$_search_pages  = '$1 から始まるページを検索';
-$_search_all    = '全てのページを検索';
+$_title_search  = '搜索';
+$_title_result  = '$1 的搜索结果';
+$_msg_searching = '在所有页面中进行搜索。不对大小写进行区分。';
+$_btn_search    = '搜索';
+$_btn_and       = 'AND条件搜索';
+$_btn_or        = 'OR条件搜索';
+$_search_pages  = '搜索从 $1 开始的页面';
+$_search_all    = '搜索所有页面';
 
 ///////////////////////////////////////
 // source.inc.php
 $_source_messages = array(
-	'msg_title'    => '$1のソース',
-	'msg_notfound' => '$1が見つかりません',
-	'err_notfound' => 'ページのソースを表示できません。'
+	'msg_title'    => '$1的源码',
+	'msg_notfound' => '$1未找到',
+	'err_notfound' => '无法显示页面源码。'
 );
 
 ///////////////////////////////////////
 // template.inc.php
-$_msg_template_start   = '開始行:<br />';
-$_msg_template_end     = '終了行:<br />';
-$_msg_template_page    = '$1/複製';
-$_msg_template_refer   = 'ページ名:';
-$_msg_template_force   = '既存のページ名で編集する';
-$_err_template_already = '$1 はすでに存在します。';
-$_err_template_invalid = '$1 は有効なページ名ではありません。';
-$_btn_template_create  = '作成';
-$_title_template       = '$1 をテンプレートにして作成';
+$_msg_template_start   = '起始行:<br />';
+$_msg_template_end     = '终止行:<br />';
+$_msg_template_page    = '$1/复制';
+$_msg_template_refer   = '页面名称:';
+$_msg_template_force   = '编辑现有的页面名称';
+$_err_template_already = '$1 已存在。';
+$_err_template_invalid = '$1 不是有效的页面名称。';
+$_btn_template_create  = '创建';
+$_title_template       = '从 $1 创建模板';
 
 ///////////////////////////////////////
 // tracker.inc.php
 $_tracker_messages = array(
-	'msg_list'   => '$1 の項目一覧',
+	'msg_list'   => '$1 的项目列表',
 	'msg_back'   => '<p>$1</p>',
-	'msg_limit'  => '全$1件中、上位$2件を表示しています。',
-	'btn_page'   => 'ページ名',
-	'btn_name'   => 'ページ名',
-	'btn_real'   => 'ページ名',
-	'btn_submit' => '追加',
-	'btn_date'   => '日付',
-	'btn_refer'  => '参照',
-	'btn_base'   => '基底',
-	'btn_update' => '更新日時',
-	'btn_past'   => '経過',
+	'msg_limit'  => '找到$1个结果，显示前$2个结果。',
+	'btn_page'   => '页面名称',
+	'btn_name'   => '页面名称',
+	'btn_real'   => '页面名称',
+	'btn_submit' => '添加',
+	'btn_date'   => '日期',
+	'btn_refer'  => '浏览',
+	'btn_base'   => '基础',
+	'btn_update' => '修改时间',
+	'btn_past'   => '耗时',
 );
 
 ///////////////////////////////////////
 // unfreeze.inc.php
-$_title_isunfreezed = '$1 は凍結されていません';
-$_title_unfreezed   = '$1 の凍結を解除しました';
-$_title_unfreeze    = '$1 の凍結解除';
-$_msg_unfreezing    = '凍結解除用のパスワードを入力してください。';
-$_btn_unfreeze      = '凍結解除';
+$_title_isunfreezed = '$1 未保护';
+$_title_unfreezed   = '已取消对 $1 的保护';
+$_title_unfreeze    = '取消对 $1 的保护';
+$_msg_unfreezing    = '请输入用于取消保护的密码。';
+$_btn_unfreeze      = '取消保护';
 
 ///////////////////////////////////////
 // versionlist.inc.php
-$_title_versionlist = '構成ファイルのバージョン一覧';
+$_title_versionlist = '配置文件的版本列表';
 
 ///////////////////////////////////////
 // vote.inc.php
-$_vote_plugin_choice = '選択肢';
+$_vote_plugin_choice = '选项';
 $_vote_plugin_votes  = '投票';
 
 ///////////////////////////////////////
 // yetlist.inc.php
-$_title_yetlist = '未作成のページ一覧';
-$_err_notexist  = '未作成のページはありません。';
+$_title_yetlist = '未创建的页面列表';
+$_err_notexist  = '未创建的页面不存在。';
 ?>
