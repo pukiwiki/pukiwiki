@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: ja.lng.php,v 1.15 2007/02/11 05:53:29 henoheno Exp $
+// $Id: ja.lng.php,v 1.16 2011/06/05 13:51:59 henoheno Exp $
 // Copyright (C)
 //   2002-2005 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -8,8 +8,7 @@
 //
 // PukiWiki message file (japanese)
 
-// ※このファイルの文字コードは、エンコーディングの設定と一致
-//   している必要があります
+// NOTE: Encoding of this file, must equal to encoding setting
 
 // Encoding hint
 $_LANG['encode_hint']['ja'] = 'ぷ';
@@ -85,11 +84,11 @@ $rule_page = 'FormattingRules';	// Formatting rules
 $help_page = 'Help';		// Help
 
 /////////////////////////////////////////////////
-// 題名が未記入の場合の表記 (article)
+// No subject (article)
 $_no_subject = '無題';
 
 /////////////////////////////////////////////////
-// 名前が未記入の場合の表記 (article, comment, pcomment)
+// No name (article,comment,pcomment)
 $_no_name = '';
 
 /////////////////////////////////////////////////
