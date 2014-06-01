@@ -106,7 +106,7 @@ function plugin_ls2_show_lists($prefix, & $params)
 	foreach ($pages as $page) $params["page_$page"] = 0;
 
 	if (empty($pages)) {
-		return str_replace('$1', htmlspecialchars($prefix), $_ls2_err_nopages);
+		return str_replace('$1', htmlsc($prefix), $_ls2_err_nopages);
 	} else {
 		$params['result'] = $params['saved'] = array();
 		foreach ($pages as $page)

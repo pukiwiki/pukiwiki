@@ -356,14 +356,14 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 
 	foreach($pages as $file=>$page) {
 		$r_page  = rawurlencode($page);
-		$s_page  = htmlspecialchars($page, ENT_QUOTES);
+		$s_page  = htmlsc($page, ENT_QUOTES);
 		$passage = get_pg_passage($page);
 
 		$str = '   <li><a href="' . $href . $r_page . '">' .
 			$s_page . '</a>' . $passage;
 
 		if ($withfilename) {
-			$s_file = htmlspecialchars($file);
+			$s_file = htmlsc($file);
 			$str .= "\n" . '    <ul><li>' . $s_file . '</li></ul>' .
 				"\n" . '   ';
 		}

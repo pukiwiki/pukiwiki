@@ -44,12 +44,12 @@ function plugin_versionlist_convert()
 				continue;
 			}
 			$data = join('',file($sdir.$file));
-			$comment = array('file'=>htmlspecialchars($sdir.$file),'rev'=>'','date'=>'');
+			$comment = array('file'=>htmlsc($sdir.$file),'rev'=>'','date'=>'');
 			if (preg_match('/\$'.'Id: (.+),v (\d+\.\d+) (\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})/',$data,$matches))
 			{
-//				$comment['file'] = htmlspecialchars($sdir.$matches[1]);
-				$comment['rev'] = htmlspecialchars($matches[2]);
-				$comment['date'] = htmlspecialchars($matches[3]);
+//				$comment['file'] = htmlsc($sdir.$matches[1]);
+				$comment['rev'] = htmlsc($matches[2]);
+				$comment['date'] = htmlsc($matches[3]);
 			}
 			$comments[$sdir.$file] = $comment;
 		}

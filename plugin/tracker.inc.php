@@ -91,7 +91,7 @@ function plugin_tracker_action()
 	$config = new Config('plugin/tracker/'.$config_name);
 	if (!$config->read())
 	{
-		return "<p>config file '".htmlspecialchars($config_name)."' not found.</p>";
+		return "<p>config file '".htmlsc($config_name)."' not found.</p>";
 	}
 	$config->config_name = $config_name;
 	$source = $config->page.'/page';
@@ -199,7 +199,7 @@ function plugin_tracker_inline()
 
 	if (!$config->read())
 	{
-		return "config file '".htmlspecialchars($config_name)."' not found.";
+		return "config file '".htmlsc($config_name)."' not found.";
 	}
 
 	$config->config_name = $config_name;
@@ -439,7 +439,7 @@ class Tracker_field_radio extends Tracker_field_format
 
 	function get_tag()
 	{
-		$s_name = htmlspecialchars($this->name);
+		$s_name = htmlsc($this->name);
 		$retval = '';
 		$id = 0;
 		foreach ($this->config->get($this->name) as $option)
