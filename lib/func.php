@@ -702,7 +702,7 @@ function csv_implode($glue, $pieces)
 }
 
 // Sugar with default settings
-function htmlsc($string = '', $flags = ENT_QUOTES, $charset = CONTENT_CHARSET)
+function htmlsc($string = '', $flags = ENT_COMPAT, $charset = CONTENT_CHARSET)
 {
 	return htmlspecialchars($string, $flags, $charset);	// htmlsc()
 }
