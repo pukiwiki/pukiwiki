@@ -75,7 +75,7 @@ function pkwk_hash_compute($phrase = '', $scheme = '{x-php-md5}', $prefix = TRUE
 	// LDAP MD5
 	case '{md5}'         :
 		$hash = ($prefix ? ($canonical ? '{MD5}' : $scheme) : '') .
-			base64_encode(hex2bin(md5($phrase)));
+			base64_encode(pkwk_hex2bin(md5($phrase)));
 		break;
 
 	// LDAP SMD5
@@ -83,13 +83,13 @@ function pkwk_hash_compute($phrase = '', $scheme = '{x-php-md5}', $prefix = TRUE
 		// MD5 Key length = 128bits = 16bytes
 		$salt = ($salt != '' ? substr(base64_decode($salt), 16) : substr(crypt(''), -8));
 		$hash = ($prefix ? ($canonical ? '{SMD5}' : $scheme) : '') .
-			base64_encode(hex2bin(md5($phrase . $salt)) . $salt);
+			base64_encode(pkwk_hex2bin(md5($phrase . $salt)) . $salt);
 		break;
 
 	// LDAP SHA
 	case '{sha}'         :
 		$hash = ($prefix ? ($canonical ? '{SHA}' : $scheme) : '') .
-			base64_encode(hex2bin(sha1($phrase)));
+			base64_encode(pkwk_hex2bin(sha1($phrase)));
 		break;
 
 	// LDAP SSHA
@@ -97,7 +97,7 @@ function pkwk_hash_compute($phrase = '', $scheme = '{x-php-md5}', $prefix = TRUE
 		// SHA-1 Key length = 160bits = 20bytes
 		$salt = ($salt != '' ? substr(base64_decode($salt), 20) : substr(crypt(''), -8));
 		$hash = ($prefix ? ($canonical ? '{SSHA}' : $scheme) : '') .
-			base64_encode(hex2bin(sha1($phrase . $salt)) . $salt);
+			base64_encode(pkwk_hex2bin(sha1($phrase . $salt)) . $salt);
 		break;
 
 	// LDAP CLEARTEXT and just cleartext
