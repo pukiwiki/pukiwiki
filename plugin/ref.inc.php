@@ -420,12 +420,12 @@ function plugin_ref_action()
 			break;
 		}
 	}
-	$file = htmlsc($filename);
+	$utf8filename = mb_convert_encoding($filename, 'UTF-8', 'auto');
 	$size = filesize($ref);
 
 	// Output
 	pkwk_common_headers();
-	header('Content-Disposition: inline; filename="' . $filename . '"');
+	header('Content-Disposition: inline; filename="' . $filename . '"; filename*=utf-8\'\'' . rawurlencode($utf8filename));
 	header('Content-Length: ' . $size);
 	header('Content-Type: '   . $type);
 	@readfile($ref);

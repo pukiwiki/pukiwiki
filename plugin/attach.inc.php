@@ -711,13 +711,13 @@ EOD;
 				break;
 			}
 		}
-		$filename = htmlsc($filename);
+		$utf8filename = mb_convert_encoding($filename, 'UTF-8', 'auto');
 
 		ini_set('default_charset', '');
 		mb_http_output('pass');
 
 		pkwk_common_headers();
-		header('Content-Disposition: inline; filename="' . $filename . '"');
+		header('Content-Disposition: inline; filename="' . $filename . '"; filename*=utf-8\'\'' . rawurlencode($utf8filename));
 		header('Content-Length: ' . $this->size);
 		header('Content-Type: '   . $this->type);
 
