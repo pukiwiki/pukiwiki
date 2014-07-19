@@ -99,8 +99,8 @@ function plugin_referer_body($page, $sort)
 		list($ltime, $stime, $count, $url, $enable) = $arr;
 
 		// 非ASCIIキャラクタ(だけ)をURLエンコードしておく BugTrack/440
-		$e_url = htmlspecialchars(preg_replace('/([" \x80-\xff]+)/e', 'rawurlencode("$1")', $url));
-		$s_url = htmlspecialchars(mb_convert_encoding(rawurldecode($url), SOURCE_ENCODING, 'auto'));
+		$e_url = htmlsc(preg_replace('/([" \x80-\xff]+)/e', 'rawurlencode("$1")', $url));
+		$s_url = htmlsc(mb_convert_encoding(rawurldecode($url), SOURCE_ENCODING, 'auto'));
 
 		$lpass = get_passage($ltime, FALSE); // 最終更新日時からの経過時間
 		$spass = get_passage($stime, FALSE); // 初回登録日時からの経過時間
@@ -164,7 +164,7 @@ function plugin_referer_set_color()
 		// BGCOLOR(#88ff88)
 		$matches = array();
 		foreach ($pconfig_color as $x)
-			$color[$x[0]] = htmlspecialchars(
+			$color[$x[0]] = htmlsc(
 				preg_match('/BGCOLOR\(([^)]+)\)/si', $x[1], $matches) ?
 					$matches[1] : $x[1]);
 	}

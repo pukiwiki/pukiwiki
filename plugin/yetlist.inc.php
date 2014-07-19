@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: yetlist.inc.php,v 1.28 2006/05/07 03:55:26 henoheno Exp $
+// $Id: yetlist.inc.php,v 1.29 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C) 2001-2006 PukiWiki Developers Team
 // License: GPL v2 or (at your option) any later version
 //
@@ -44,12 +44,12 @@ function plugin_yetlist_action()
 			foreach ($refer as $_refer) {
 				$r_refer = rawurlencode($_refer);
 				$link_refs[] = '<a href="' . $script . '?' . $r_refer . '">' .
-					htmlspecialchars($_refer) . '</a>';
+					htmlsc($_refer) . '</a>';
 			}
 			$link_ref = join(' ', $link_refs);
 			unset($link_refs);
 
-			$s_page = htmlspecialchars($page);
+			$s_page = htmlsc($page);
 			if (PKWK_READONLY) {
 				$href = $s_page;
 			} else {

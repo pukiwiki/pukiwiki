@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pcomment.inc.php,v 1.43 2005/10/04 14:31:22 henoheno Exp $
+// $Id: pcomment.inc.php,v 1.48 2011/01/25 15:01:01 henoheno Exp $
 //
 // pcomment plugin - Show/Insert comments into specified (another) page
 //
@@ -67,8 +67,6 @@ function plugin_pcomment_convert()
 	global $vars;
 	global $_pcmt_messages;
 
-	$ret = '';
-
 	$params = array(
 		'noname'=>FALSE,
 		'nodate'=>FALSE,
@@ -78,20 +76,18 @@ function plugin_pcomment_convert()
 		'_args' =>array()
 	);
 
-	// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
-	$args = func_get_args(); // with array_walk()
-	array_walk($args, 'plugin_pcomment_check_arg', & $params);
+	foreach(func_get_args() as $arg)
+		plugin_pcomment_check_arg($arg, $params);
 
 	$vars_page = isset($vars['page']) ? $vars['page'] : '';
 	$page  = (isset($params['_args'][0]) && $params['_args'][0] != '') ? $params['_args'][0] :
 		sprintf(PLUGIN_PCOMMENT_PAGE, strip_bracket($vars_page));
-	$count = (isset($params['_args'][1]) && $params['_args'][1] != '') ? $params['_args'][1] : 0;
-	if ($count == 0 && $count !== '0')
-		$count = PLUGIN_PCOMMENT_NUM_COMMENTS;
+	$count = isset($params['_args'][1]) ? intval($params['_args'][1]) : 0;
+	if ($count == 0) $count = PLUGIN_PCOMMENT_NUM_COMMENTS;
 
 	$_page = get_fullname(strip_bracket($page), $vars_page);
 	if (!is_pagename($_page))
-		return sprintf($_pcmt_messages['err_pagename'], htmlspecialchars($_page));
+		return sprintf($_pcmt_messages['err_pagename'], htmlsc($_page));
 
 	$dir = PLUGIN_PCOMMENT_DIRECTION_DEFAULT;
 	if ($params['below']) {
@@ -119,10 +115,10 @@ function plugin_pcomment_convert()
 			'<input type="radio" name="reply" value="0" tabindex="0" checked="checked" />' : '';
 		$comment = '<input type="text" name="msg" size="' . PLUGIN_PCOMMENT_SIZE_MSG . '" />';
 
-		$s_page   = htmlspecialchars($page);
-		$s_refer  = htmlspecialchars($vars_page);
-		$s_nodate = htmlspecialchars($params['nodate']);
-		$s_count  = htmlspecialchars($count);
+		$s_page   = htmlsc($page);
+		$s_refer  = htmlsc($vars_page);
+		$s_nodate = htmlsc($params['nodate']);
+		$s_count  = htmlsc($count);
 
 		$form_start = '<form action="' . get_script_uri() . '" method="post">' . "\n";
 		$form = <<<EOD
@@ -171,8 +167,7 @@ EOD;
 
 function plugin_pcomment_insert()
 {
-	global $script, $vars, $now;
-	global $_title_updated, $_no_name, $_pcmt_messages;
+	global $vars, $now, $_title_updated, $_no_name, $_pcmt_messages;
 
 	$refer = isset($vars['refer']) ? $vars['refer'] : '';
 	$page  = isset($vars['page'])  ? $vars['page']  : '';
@@ -207,7 +202,7 @@ function plugin_pcomment_insert()
 	$msg = rtrim($msg);
 
 	if (! is_page($page)) {
-		$postdata = '[[' . htmlspecialchars(strip_bracket($refer)) . ']]' . "\n\n" .
+		$postdata = '[[' . htmlsc(strip_bracket($refer)) . ']]' . "\n\n" .
 			'-' . $msg . "\n";
 	} else {
 		$postdata = get_source($page);
@@ -303,7 +298,7 @@ function plugin_pcomment_auto_log($page, $dir, $count, & $postdata)
 }
 
 // Check arguments
-function plugin_pcomment_check_arg($val, $key, & $params)
+function plugin_pcomment_check_arg($val, & $params)
 {
 	if ($val != '') {
 		$l_val = strtolower($val);

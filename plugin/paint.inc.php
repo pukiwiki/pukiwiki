@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 //
-// $Id: paint.inc.php,v 1.18 2005/01/29 02:49:41 henoheno Exp $
+// $Id: paint.inc.php,v 1.20 2011/01/25 15:01:01 henoheno Exp $
 //
 // Paint plugin
 
@@ -85,7 +85,7 @@ function plugin_paint_action()
 		if (array_key_exists('refer',$vars))
 		{
 			$r_refer = rawurlencode($vars['refer']);
-			$s_refer = htmlspecialchars($vars['refer']);
+			$s_refer = htmlsc($vars['refer']);
 		}
 		$link = "<p><a href=\"$script?$r_refer\">$s_refer</a></p>";;
 
@@ -109,7 +109,7 @@ function plugin_paint_action()
 		$f_w = (is_numeric($width) and $width > 0) ? $width : PAINT_DEFAULT_WIDTH;
 		$f_h = (is_numeric($height) and $height > 0) ? $height : PAINT_DEFAULT_HEIGHT;
 		$f_refer = array_key_exists('refer',$vars) ? encode($vars['refer']) : ''; // BBSPainter.jarがshift-jisに変換するのを回避
-		$f_digest = array_key_exists('digest',$vars) ? htmlspecialchars($vars['digest']) : '';
+		$f_digest = array_key_exists('digest',$vars) ? htmlsc($vars['digest']) : '';
 		$f_no = (array_key_exists('paint_no',$vars) and is_numeric($vars['paint_no'])) ?
 			$vars['paint_no'] + 0 : 0;
 
@@ -185,7 +185,7 @@ function plugin_paint_convert()
 	}
 
 	//XSS脆弱性問題 - 外部から来た変数をエスケープ
-	$f_page = htmlspecialchars($vars['page']);
+	$f_page = htmlsc($vars['page']);
 
 	$max = sprintf($_paint_messages['msg_max'],PAINT_MAX_WIDTH,PAINT_MAX_HEIGHT);
 

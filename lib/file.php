@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.72 2006/06/11 14:42:09 henoheno Exp $
+// $Id: file.php,v 1.95 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
@@ -223,14 +223,14 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	// File replacement (Edit)
 
 	if (! is_pagename($page))
-		die_message(str_replace('$1', htmlspecialchars($page),
+		die_message(str_replace('$1', htmlsc($page),
 		            str_replace('$2', 'WikiName', $_msg_invalidiwn)));
 
 	$str = rtrim(preg_replace('/' . "\r" . '/', '', $str)) . "\n";
 	$timestamp = ($file_exists && $notimestamp) ? filemtime($file) : FALSE;
 
 	$fp = fopen($file, 'a') or die('fopen() failed: ' .
-		htmlspecialchars(basename($dir) . '/' . encode($page) . '.txt') .	
+		htmlsc(basename($dir) . '/' . encode($page) . '.txt') .	
 		'<br />' . "\n" .
 		'Maybe permission is not writable or filename is too long');
 	set_file_buffer($fp, 0);
@@ -285,7 +285,7 @@ function add_recent($page, $recentpage, $subject = '', $limit = 0)
 
 	// Add
 	array_unshift($lines, '-' . format_date(UTIME) . ' - ' . $_page .
-		htmlspecialchars($subject) . "\n");
+		htmlsc($subject) . "\n");
 
 	// Get latest $limit reports
 	$lines = array_splice($lines, 0, $limit);
@@ -293,7 +293,7 @@ function add_recent($page, $recentpage, $subject = '', $limit = 0)
 	// Update
 	$fp = fopen(get_filename($recentpage), 'w') or
 		die_message('Cannot write page file ' .
-		htmlspecialchars($recentpage) .
+		htmlsc($recentpage) .
 		'<br />Maybe permission is not writable or filename is too long');
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
@@ -377,7 +377,7 @@ function lastmodified_add($update = '', $remove = '')
 	// Open
 	pkwk_touch_file($file);
 	$fp = fopen($file, 'r+') or
-		die_message('Cannot open ' . htmlspecialchars($whatsnew));
+		die_message('Cannot open ' . htmlsc($whatsnew));
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 
@@ -385,8 +385,8 @@ function lastmodified_add($update = '', $remove = '')
 	ftruncate($fp, 0);
 	rewind($fp);
 	foreach ($recent_pages as $_page=>$time)
-		fputs($fp, '-' . htmlspecialchars(format_date($time)) .
-			' - ' . '[[' . htmlspecialchars($_page) . ']]' . "\n");
+		fputs($fp, '-' . htmlsc(format_date($time)) .
+			' - ' . '[[' . htmlsc($_page) . ']]' . "\n");
 	fputs($fp, '#norelated' . "\n"); // :)
 
 	flock($fp, LOCK_UN);
@@ -441,15 +441,15 @@ function put_lastmodified()
 	$file = get_filename($whatsnew);
 	pkwk_touch_file($file);
 	$fp = fopen($file, 'r+') or
-		die_message('Cannot open ' . htmlspecialchars($whatsnew));
+		die_message('Cannot open ' . htmlsc($whatsnew));
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	ftruncate($fp, 0);
 	rewind($fp);
 	foreach (array_keys($recent_pages) as $page) {
 		$time      = $recent_pages[$page];
-		$s_lastmod = htmlspecialchars(format_date($time));
-		$s_page    = htmlspecialchars($page);
+		$s_lastmod = htmlsc(format_date($time));
+		$s_page    = htmlsc($page);
 		fputs($fp, '-' . $s_lastmod . ' - [[' . $s_page . ']]' . "\n");
 	}
 	fputs($fp, '#norelated' . "\n"); // :)
@@ -730,12 +730,12 @@ function pkwk_chown($filename, $preserve_time = TRUE)
 	$lockfile = CACHE_DIR . 'pkwk_chown.lock';
 	$flock = fopen($lockfile, 'a') or
 		die('pkwk_chown(): fopen() failed for: CACHEDIR/' .
-			basename(htmlspecialchars($lockfile)));
+			basename(htmlsc($lockfile)));
 	flock($flock, LOCK_EX) or die('pkwk_chown(): flock() failed for lock');
 
 	// Check owner
 	$stat = stat($filename) or
-		die('pkwk_chown(): stat() failed for: '  . basename(htmlspecialchars($filename)));
+		die('pkwk_chown(): stat() failed for: '  . basename(htmlsc($filename)));
 	if ($stat[4] === $php_uid) {
 		// NOTE: Windows always here
 		$result = TRUE; // Seems the same UID. Nothing to do
@@ -746,7 +746,7 @@ function pkwk_chown($filename, $preserve_time = TRUE)
 		// NOTE: Not 'r+'. Don't check write permission here
 		$ffile = fopen($filename, 'r') or
 			die('pkwk_chown(): fopen() failed for: ' .
-				basename(htmlspecialchars($filename)));
+				basename(htmlsc($filename)));
 
 		// Try to chown by re-creating files
 		// NOTE:
@@ -786,7 +786,7 @@ function pkwk_touch_file($filename, $time = FALSE, $atime = FALSE)
 		return $result;
 	} else {
 		die('pkwk_touch_file(): Invalid UID and (not writable for the directory or not a flie): ' .
-			htmlspecialchars(basename($filename)));
+			htmlsc(basename($filename)));
 	}
 }
 ?>

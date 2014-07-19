@@ -1,7 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-//
-// $Id: ls2.inc.php,v 1.23 2004/12/05 11:37:37 henoheno Exp $
+// $Id: ls2.inc.php,v 1.30 2011/01/25 15:01:01 henoheno Exp $
+// Copyright (C)
+//   2002-2004, 2006-2007 PukiWiki Developers Team
+//   2002       panda  http://home.arino.jp/?ls2.inc.php 
+//   2002       Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net (ls.inc.php)
+// License: GPL version 2
 //
 // List plugin 2
 
@@ -34,14 +38,15 @@ function plugin_ls2_action()
 	global $vars, $_ls2_msg_title;
 
 	$params = array();
-	foreach (array('title', 'include', 'reverse') as $key)
+	$keys   = array('title', 'include', 'reverse');
+	foreach ($keys as $key)
 		$params[$key] = isset($vars[$key]);
 
 	$prefix = isset($vars['prefix']) ? $vars['prefix'] : '';
 	$body = plugin_ls2_show_lists($prefix, $params);
 
 	return array('body'=>$body,
-		'msg'=>str_replace('$1', htmlspecialchars($prefix), $_ls2_msg_title));
+		'msg'=>str_replace('$1', htmlsc($prefix), $_ls2_msg_title));
 }
 
 function plugin_ls2_convert()
@@ -66,10 +71,11 @@ function plugin_ls2_convert()
 	}
 	if ($prefix == '') $prefix = strip_bracket($vars['page']) . '/';
 
-	array_walk($args, 'plugin_ls2_check_arg', & $params);
+	foreach ($args as $arg)
+		plugin_ls2_check_arg($arg, $params);
 
 	$title = (! empty($params['_args'])) ? join(',', $params['_args']) :   // Manual
-		str_replace('$1', htmlspecialchars($prefix), $_ls2_msg_title); // Auto
+		str_replace('$1', htmlsc($prefix), $_ls2_msg_title); // Auto
 
 	if (! $params['link'])
 		return plugin_ls2_show_lists($prefix, $params);
@@ -99,10 +105,10 @@ function plugin_ls2_show_lists($prefix, & $params)
 	natcasesort($pages);
 	if ($params['reverse']) $pages = array_reverse($pages);
 
-	foreach ($pages as $page) $params["page_$page"] = 0;
+	foreach ($pages as $page) $params['page_ ' . $page] = 0;
 
 	if (empty($pages)) {
-		return str_replace('$1', htmlspecialchars($prefix), $_ls2_err_nopages);
+		return str_replace('$1', htmlsc($prefix), $_ls2_err_nopages);
 	} else {
 		$params['result'] = $params['saved'] = array();
 		foreach ($pages as $page)
@@ -121,7 +127,7 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 	if (! $is_done) $params["page_$page"] = ++$_ls2_anchor;
 
 	$r_page = rawurlencode($page);
-	$s_page = htmlspecialchars($page);
+	$s_page = htmlsc($page);
 	$title  = $s_page . ' ' . get_pg_passage($page, FALSE);
 	$href   = $script . '?cmd=read&amp;page=' . $r_page;
 
@@ -196,7 +202,7 @@ function plugin_ls2_list_push(& $params, $level)
 }
 
 // オプションを解析する
-function plugin_ls2_check_arg($value, $key, & $params)
+function plugin_ls2_check_arg($value, & $params)
 {
 	if ($value == '') {
 		$params['_done'] = TRUE;
@@ -214,6 +220,6 @@ function plugin_ls2_check_arg($value, $key, & $params)
 		$params['_done'] = TRUE;
 	}
 
-	$params['_args'][] = htmlspecialchars($value); // Link title
+	$params['_args'][] = htmlsc($value); // Link title
 }
 ?>

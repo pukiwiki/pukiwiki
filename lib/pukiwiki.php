@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.php,v 1.11 2005/09/11 05:58:33 henoheno Exp $
+// $Id: pukiwiki.php,v 1.23 2011/01/25 15:01:01 henoheno Exp $
 //
 // PukiWiki 1.4.*
 //  Copyright (C) 2002-2005 by PukiWiki Developers Team
@@ -94,14 +94,14 @@ if ($plugin != '') {
 		}
 	} else {
 		// Not found
-		$msg = 'plugin=' . htmlspecialchars($plugin) .
+		$msg = 'plugin=' . htmlsc($plugin) .
 			' is not implemented.';
 		$retvars = array('msg'=>$msg,'body'=>$msg);
 		$base    = & $defaultpage;
 	}
 }
 
-$title = htmlspecialchars(strip_bracket($base));
+$title = htmlsc(strip_bracket($base));
 $page  = make_search($base);
 if (isset($retvars['msg']) && $retvars['msg'] != '') {
 	$title = str_replace('$1', $title, $retvars['msg']);
@@ -113,7 +113,7 @@ if (isset($retvars['body']) && $retvars['body'] != '') {
 } else {
 	if ($base == '' || ! is_page($base)) {
 		$base  = & $defaultpage;
-		$title = htmlspecialchars(strip_bracket($base));
+		$title = htmlsc(strip_bracket($base));
 		$page  = make_search($base);
 	}
 

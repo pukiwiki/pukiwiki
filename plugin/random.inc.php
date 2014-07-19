@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////
 // PukiWiki - Yet another WikiWikiWeb clone.
 //
-// $Id: random.inc.php,v 1.8 2004/09/10 14:18:34 henoheno Exp $
+// $Id: random.inc.php,v 1.9 2011/01/25 15:01:01 henoheno Exp $
 //
 
 /*
@@ -30,7 +30,7 @@ function plugin_random_convert()
 
 	return "<p><a href=\"$script?plugin=random&amp;refer=" .
 		rawurlencode($vars['page']) . '">' .
-		htmlspecialchars($title) . '</a></p>';
+		htmlsc($title) . '</a></p>';
 }
 
 function plugin_random_action()

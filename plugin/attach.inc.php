@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.82 2006/04/14 23:51:12 teanan Exp $
+// $Id: attach.inc.php,v 1.92 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
 //   2003-2006 PukiWiki Developers Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
@@ -389,7 +389,7 @@ function attach_form($page)
 	global $script, $vars, $_attach_messages;
 
 	$r_page = rawurlencode($page);
-	$s_page = htmlspecialchars($page);
+	$s_page = htmlsc($page);
 	$navi = <<<EOD
   <span class="small">
    [<a href="$script?plugin=attach&amp;pcmd=list&amp;refer=$r_page">{$_attach_messages['msg_list']}</a>]
@@ -502,7 +502,7 @@ class AttachFile
 		$param  = '&amp;file=' . rawurlencode($this->file) . '&amp;refer=' . rawurlencode($this->page) .
 			($this->age ? '&amp;age=' . $this->age : '');
 		$title = $this->time_str . ' ' . $this->size_str;
-		$label = ($showicon ? PLUGIN_ATTACH_FILE_ICON : '') . htmlspecialchars($this->file);
+		$label = ($showicon ? PLUGIN_ATTACH_FILE_ICON : '') . htmlsc($this->file);
 		if ($this->age) {
 			$label .= ' (backup No.' . $this->age . ')';
 		}
@@ -522,8 +522,8 @@ class AttachFile
 		global $script, $_attach_messages;
 
 		$r_page = rawurlencode($this->page);
-		$s_page = htmlspecialchars($this->page);
-		$s_file = htmlspecialchars($this->file);
+		$s_page = htmlsc($this->page);
+		$s_file = htmlsc($this->file);
 		$s_err = ($err == '') ? '' : '<p style="font-weight:bold">' . $_attach_messages[$err] . '</p>';
 
 		$msg_rename  = '';
@@ -564,7 +564,7 @@ class AttachFile
 		}
 		$info = $this->toString(TRUE, FALSE);
 
-		$retval = array('msg'=>sprintf($_attach_messages['msg_info'], htmlspecialchars($this->file)));
+		$retval = array('msg'=>sprintf($_attach_messages['msg_info'], htmlsc($this->file)));
 		$retval['body'] = <<< EOD
 <p class="small">
  [<a href="$script?plugin=attach&amp;pcmd=list&amp;refer=$r_page">{$_attach_messages['msg_list']}</a>]
@@ -711,13 +711,13 @@ EOD;
 				break;
 			}
 		}
-		$filename = htmlspecialchars($filename);
+		$utf8filename = mb_convert_encoding($filename, 'UTF-8', 'auto');
 
 		ini_set('default_charset', '');
 		mb_http_output('pass');
 
 		pkwk_common_headers();
-		header('Content-Disposition: inline; filename="' . $filename . '"');
+		header('Content-Disposition: inline; filename="' . $filename . '"; filename*=utf-8\'\'' . rawurlencode($utf8filename));
 		header('Content-Length: ' . $this->size);
 		header('Content-Type: '   . $this->type);
 
@@ -763,7 +763,7 @@ class AttachFiles
 				$_files[$age] = $this->files[$file][$age]->toString(FALSE, TRUE);
 			}
 			if (! isset($_files[0])) {
-				$_files[0] = htmlspecialchars($file);
+				$_files[0] = htmlsc($file);
 			}
 			ksort($_files);
 			$_file = $_files[0];
