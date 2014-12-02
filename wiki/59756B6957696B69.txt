@@ -1,3 +1,3 @@
-�ǽ��[[PukiWiki]]��ȯ����ݤ˻��ͤˤ�����Perl�ǽ񤫤줿������ץȤǤ���
+最初に[[PukiWiki]]を開発する際に参考にした、Perlで書かれたスクリプトです。
 
-[[��������Υڡ���:http://www.hyuki.com/]]
+[[結城浩さんのページ:http://www.hyuki.com/]]

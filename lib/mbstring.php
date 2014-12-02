@@ -8,15 +8,15 @@
 // (will work with LANG == 'ja' and EUC-JP environment only)
 
 /*
- * mbstring extension ¤¬¥µ¡¼¥Ğ¡¼Â¦¤ËÂ¸ºß¤·¤Ê¤¤»ş¤ÎÂåÂØ´Ø¿ô
+ * mbstring extension ãŒã‚µãƒ¼ãƒãƒ¼å´ã«å­˜åœ¨ã—ãªã„æ™‚ã®ä»£æ›¿é–¢æ•°
  *
- * Ãí°Õ»ö¹à
+ * æ³¨æ„äº‹é …
  *
- * 1. ¼Âºİ¤Ë´Á»ú¥³¡¼¥ÉÊÑ´¹¤ò¹Ô¤ï¤»¤ë¤¿¤á¤Ë¤Ï¡¢ÊÌÅÓ jcode.php
- *    (TOMOºî)¤ò¥¤¥ó¥¹¥È¡¼¥ë¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Ş¤¹¡£
+ * 1. å®Ÿéš›ã«æ¼¢å­—ã‚³ãƒ¼ãƒ‰å¤‰æ›ã‚’è¡Œã‚ã›ã‚‹ãŸã‚ã«ã¯ã€åˆ¥é€” jcode.php
+ *    (TOMOä½œ)ã‚’ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚
  *
- *   http://www.spencernetwork.org/jcode/ ¤è¤êjcode¤òÆş¼ê¤·¡¢
- *   °Ê²¼¤ÎÍÍ¤ËÅ¸³«¤·¤Æ¤¯¤À¤µ¤¤¡£
+ *   http://www.spencernetwork.org/jcode/ ã‚ˆã‚Šjcodeã‚’å…¥æ‰‹ã—ã€
+ *   ä»¥ä¸‹ã®æ§˜ã«å±•é–‹ã—ã¦ãã ã•ã„ã€‚
  *
  *   -+--- mbstring.php          -r--
  *    +-+- jcode_1.34/           dr-x
@@ -26,11 +26,11 @@
  *      +--- code_table.ucs2jis  -r--
  *      +--- code_table.jis2ucs  -r--
  *
- * 2. EUC-JPÀìÍÑ¤Ç¤¹¡£(½ĞÎÏ¤µ¤ì¤ë¥Ç¡¼¥¿¤¬EUC-JP¤Ç¤¢¤ëÉ¬Í×¤¬¤¢¤ê¤Ş¤¹)
+ * 2. EUC-JPå°‚ç”¨ã§ã™ã€‚(å‡ºåŠ›ã•ã‚Œã‚‹ãƒ‡ãƒ¼ã‚¿ãŒEUC-JPã§ã‚ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™)
  *
  */
 
-// jcode¤Î½êºß
+// jcodeã®æ‰€åœ¨
 define('JCODE_DIR', './jcode_1.34/');
 define('JCODE_FILE', JCODE_DIR . 'jcode_wrapper.php');
 
@@ -38,7 +38,7 @@ if (is_readable(JCODE_FILE)) {
 	require_once(JCODE_FILE);
 }
 
-// jcode¤¬Â¸ºß¤·¤Ê¤¤¾ì¹ç¡¢¥Ş¥ë¥Á¥Ğ¥¤¥ÈÊ¸»ú¤ä´Á»ú¥³¡¼¥É¤ò°·¤¨¤Ê¤¤
+// jcodeãŒå­˜åœ¨ã—ãªã„å ´åˆã€ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—ã‚„æ¼¢å­—ã‚³ãƒ¼ãƒ‰ã‚’æ‰±ãˆãªã„
 if (! function_exists('jcode_convert_encoding')) {
 
 //	die_message('Multibyte functions cannot be used. Please read "mbstring.php" for an additional installation procedure of "jcode".');
@@ -64,11 +64,11 @@ if (! function_exists('jcode_convert_encoding')) {
 	}
 }
 
-// mb_convert_encoding -- Ê¸»ú¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤òÊÑ´¹¤¹¤ë
+// mb_convert_encoding -- æ–‡å­—ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ã‚’å¤‰æ›ã™ã‚‹
 function mb_convert_encoding($str, $to_encoding, $from_encoding = '')
 {
-	// ³ÈÄ¥: ÇÛÎó¤ò¼õ¤±¤é¤ì¤ë¤è¤¦¤Ë
-	// mb_convert_variableÂĞºö
+	// æ‹¡å¼µ: é…åˆ—ã‚’å—ã‘ã‚‰ã‚Œã‚‹ã‚ˆã†ã«
+	// mb_convert_variableå¯¾ç­–
 	if (is_array($str)) {
 		foreach ($str as $key=>$value) {
 			$str[$key] = mb_convert_encoding($value, $to_encoding, $from_encoding);
@@ -78,11 +78,11 @@ function mb_convert_encoding($str, $to_encoding, $from_encoding = '')
 	return jcode_convert_encoding($str, $to_encoding, $from_encoding);
 }
 
-// mb_convert_variables -- ÊÑ¿ô¤ÎÊ¸»ú¥³¡¼¥É¤òÊÑ´¹¤¹¤ë
+// mb_convert_variables -- å¤‰æ•°ã®æ–‡å­—ã‚³ãƒ¼ãƒ‰ã‚’å¤‰æ›ã™ã‚‹
 function mb_convert_variables($to_encoding, $from_encoding, &$vars)
 {
-	// Ãí: ²ÄÊÑÄ¹°ú¿ô¤Ç¤Ï¤Ê¤¤¡£init.php¤«¤é¸Æ¤Ğ¤ì¤ë1°ú¿ô¤Î¥Ñ¥¿¡¼¥ó¤Î¤ß¤ò¥µ¥İ¡¼¥È
-	// ÀµÄ¾¤Ë¼ÂÁõ¤¹¤ë¤Ê¤é¡¢²ÄÊÑ°ú¿ô¤ò¥ê¥Õ¥¡¥ì¥ó¥¹¤Ç¼õ¤±¤ëÊıË¡¤¬É¬Í×
+	// æ³¨: å¯å¤‰é•·å¼•æ•°ã§ã¯ãªã„ã€‚init.phpã‹ã‚‰å‘¼ã°ã‚Œã‚‹1å¼•æ•°ã®ãƒ‘ã‚¿ãƒ¼ãƒ³ã®ã¿ã‚’ã‚µãƒãƒ¼ãƒˆ
+	// æ­£ç›´ã«å®Ÿè£…ã™ã‚‹ãªã‚‰ã€å¯å¤‰å¼•æ•°ã‚’ãƒªãƒ•ã‚¡ãƒ¬ãƒ³ã‚¹ã§å—ã‘ã‚‹æ–¹æ³•ãŒå¿…è¦
 	if (is_array($from_encoding) || $from_encoding == '' || $from_encoding == 'auto')
 		$from_encoding = mb_detect_encoding(join_array(' ', $vars));
 
@@ -92,7 +92,7 @@ function mb_convert_variables($to_encoding, $from_encoding, &$vars)
 	return $from_encoding;
 }
 
-// Êä½õ´Ø¿ô:ÇÛÎó¤òºÆµ¢Åª¤Ëjoin¤¹¤ë
+// è£œåŠ©é–¢æ•°:é…åˆ—ã‚’å†å¸°çš„ã«joinã™ã‚‹
 function join_array($glue, $pieces)
 {
 	$arr = array();
@@ -102,51 +102,51 @@ function join_array($glue, $pieces)
 	return join($glue, $arr);
 }
 
-// mb_detect_encoding -- Ê¸»ú¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤ò¸¡½Ğ¤¹¤ë
+// mb_detect_encoding -- æ–‡å­—ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ã‚’æ¤œå‡ºã™ã‚‹
 function mb_detect_encoding($str, $encoding_list = '')
 {
 	static $codes = array(0=>'ASCII', 1=>'EUC-JP', 2=>'SJIS', 3=>'JIS', 4=>'UTF-8');
 
-	// Ãí: $encoding_list¤Ï»ÈÍÑ¤·¤Ê¤¤¡£
+	// æ³¨: $encoding_listã¯ä½¿ç”¨ã—ãªã„ã€‚
 	$code = AutoDetect($str);
 	if (! isset($codes[$code])) $code = 0; // oh ;(
 
 	return $codes[$code];
 }
 
-// mb_detect_order --  Ê¸»ú¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¸¡½Ğ½ç½ø¤ÎÀßÄê/¼èÆÀ
+// mb_detect_order --  æ–‡å­—ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°æ¤œå‡ºé †åºã®è¨­å®š/å–å¾—
 function mb_detect_order($encoding_list = NULL)
 {
 	static $list = array();
 
-	// Ãí: Â¾¤Î´Ø¿ô¤Ë±Æ¶Á¤òµÚ¤Ü¤µ¤Ê¤¤¡£¸Æ¤ó¤Ç¤âÌµ°ÕÌ£¡£
+	// æ³¨: ä»–ã®é–¢æ•°ã«å½±éŸ¿ã‚’åŠã¼ã•ãªã„ã€‚å‘¼ã‚“ã§ã‚‚ç„¡æ„å‘³ã€‚
 	if ($encoding_list === NULL) return $list;
 
 	$list = is_array($encoding_list) ? $encoding_list : explode(',', $encoding_list);
 	return TRUE;
 }
 
-// mb_encode_mimeheader -- MIME¥Ø¥Ã¥À¤ÎÊ¸»úÎó¤ò¥¨¥ó¥³¡¼¥É¤¹¤ë
+// mb_encode_mimeheader -- MIMEãƒ˜ãƒƒãƒ€ã®æ–‡å­—åˆ—ã‚’ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã™ã‚‹
 function mb_encode_mimeheader($str, $charset = 'ISO-2022-JP', $transfer_encoding = 'B', $linefeed = "\r\n")
 {
-	// Ãí: $transfer_encoding¤Ë´Ø¤ï¤é¤ºbase64¥¨¥ó¥³¡¼¥É¤òÊÖ¤¹
+	// æ³¨: $transfer_encodingã«é–¢ã‚ã‚‰ãšbase64ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã‚’è¿”ã™
 	$str = mb_convert_encoding($str, $charset, 'auto');
 	return '=?' . $charset . '?B?' . $str;
 }
 
-// mb_http_output -- HTTP½ĞÎÏÊ¸»ú¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤ÎÀßÄê/¼èÆÀ
+// mb_http_output -- HTTPå‡ºåŠ›æ–‡å­—ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ã®è¨­å®š/å–å¾—
 function mb_http_output($encoding = '')
 {
-	return SOURCE_ENCODING; // Ãí: ²¿¤â¤·¤Ê¤¤
+	return SOURCE_ENCODING; // æ³¨: ä½•ã‚‚ã—ãªã„
 }
 
-// mb_internal_encoding --  ÆâÉôÊ¸»ú¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤ÎÀßÄê/¼èÆÀ
+// mb_internal_encoding --  å†…éƒ¨æ–‡å­—ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ã®è¨­å®š/å–å¾—
 function mb_internal_encoding($encoding = '')
 {
-	return SOURCE_ENCODING; // Ãí: ²¿¤â¤·¤Ê¤¤
+	return SOURCE_ENCODING; // æ³¨: ä½•ã‚‚ã—ãªã„
 }
 
-// mb_language --  ¥«¥ì¥ó¥È¤Î¸À¸ì¤òÀßÄê/¼èÆÀ
+// mb_language --  ã‚«ãƒ¬ãƒ³ãƒˆã®è¨€èªã‚’è¨­å®š/å–å¾—
 function mb_language($language = NULL)
 {
 	static $mb_language = FALSE;
@@ -154,15 +154,15 @@ function mb_language($language = NULL)
 	if ($language === NULL) return $mb_language;
 	$mb_language = $language;
 
-	return TRUE; // Ãí: ¾ï¤ËTRUE¤òÊÖ¤¹
+	return TRUE; // æ³¨: å¸¸ã«TRUEã‚’è¿”ã™
 }
 
-// mb_strimwidth -- »ØÄê¤·¤¿Éı¤ÇÊ¸»úÎó¤ò´İ¤á¤ë
+// mb_strimwidth -- æŒ‡å®šã—ãŸå¹…ã§æ–‡å­—åˆ—ã‚’ä¸¸ã‚ã‚‹
 function mb_strimwidth($str, $start, $width, $trimmarker = '', $encoding = '')
 {
 	if ($start == 0 && $width <= strlen($str)) return $str;
 
-	// Ãí: EUC-JPÀìÍÑ, $encoding¤ò»ÈÍÑ¤·¤Ê¤¤
+	// æ³¨: EUC-JPå°‚ç”¨, $encodingã‚’ä½¿ç”¨ã—ãªã„
 	$chars = unpack('C*', $str);
 	$substr = '';
 
@@ -188,17 +188,17 @@ function mb_strimwidth($str, $start, $width, $trimmarker = '', $encoding = '')
 	return $substr;
 }
 
-// mb_strlen -- Ê¸»úÎó¤ÎÄ¹¤µ¤òÆÀ¤ë
+// mb_strlen -- æ–‡å­—åˆ—ã®é•·ã•ã‚’å¾—ã‚‹
 function mb_strlen($str, $encoding = '')
 {
-	// Ãí: EUC-JPÀìÍÑ, $encoding¤ò»ÈÍÑ¤·¤Ê¤¤
+	// æ³¨: EUC-JPå°‚ç”¨, $encodingã‚’ä½¿ç”¨ã—ãªã„
 	return jstrlen($str);
 }
 
-// mb_substr -- Ê¸»úÎó¤Î°ìÉô¤òÆÀ¤ë
+// mb_substr -- æ–‡å­—åˆ—ã®ä¸€éƒ¨ã‚’å¾—ã‚‹
 function mb_substr($str, $start, $length = NULL, $encoding = '')
 {
-	// Ãí: EUC-JPÀìÍÑ, $encoding¤ò»ÈÍÑ¤·¤Ê¤¤
+	// æ³¨: EUC-JPå°‚ç”¨, $encodingã‚’ä½¿ç”¨ã—ãªã„
 	return jsubstr($str, $start, ($length === NULL) ? jstrlen($str) : $length);
 }
 ?>

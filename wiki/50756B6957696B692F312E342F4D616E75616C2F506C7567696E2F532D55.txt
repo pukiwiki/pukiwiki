@@ -7,334 +7,334 @@
 * S [#mee1bd43]
 
 **search [#ba94ddfd]
-:����|
-~���ޥ��
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+~ブロック型プラグイン
+:重要度|
+~★★★★★
+:書式|
 ''?cmd=search''{
-[&color(blue){&word=����ʸ����};]
+[&color(blue){&word=検索文字列};]
 [&color(blue){&type=OR};]
-[&color(blue){&base=��о��};]
+[&color(blue){&base=抽出条件};]
 }
 ~''#search(''
-[&color(blue){��о��1};
-[[,&color(blue){��о��2};]
-[,&color(blue){��о��n};]]]
+[&color(blue){抽出条件1};
+[[,&color(blue){抽出条件2};]
+[,&color(blue){抽出条件n};]]]
 '')''
-:����|
-~����ʸ��������ϥե������ɽ������
-���ꤷ��ʸ�����ޤ�ڡ����θ�����Ԥ��ޤ���
-:����|
-~'''���ޥ��:'''
-~�ѥ�᡼���ˤϸ���������ꤷ�ޤ���
---word �� ��������ʸ�������ꤷ�ޤ�����ά���ϸ����������Ϥ���ڡ�����ɽ�����ޤ���
---type �� 'OR' �������OR������Ԥ��ޤ�����ά����AND�����򤪤��ʤ��ޤ���
+:概要|
+~検索文字列の入力フォームを表示し、
+指定した文字列を含むページの検索を行います。
+:引数|
+~'''コマンド:'''
+~パラメータには検索条件を指定します。
+--word － 検索する文字列を指定します。省略時は検索条件を入力するページを表示します。
+--type － 'OR' 指定時、OR検索を行います。省略時はAND検索をおこないます。
 :|
-'''�֥��å����ץ饰����:'''
-~�ѥ�᡼���ˤϸ������ե������ɽ�����븡���оݥڡ�������о�����ꤷ�ޤ���
---��о��1,2,��n �� ���ϥե��������о���������ɽ����ǻ��ꤷ�ޤ���
-��о������������򤷤����ǻϤޤ�ڡ��������Ф��ƤΤߡ�������¹Ԥ��ޤ���
-����Υڡ����������򸡺���������硢��������������᤯��λ���ޤ���
-��о������򤷤ʤ��ä��������ڡ������оݤȤʤ�ޤ���
-��ά����������ɽ�����줺��������ڡ����������оݤȤʤ�ޤ���
-:�ץ饰����������|~
---PLUGIN_SEARCH_DISABLE_GET_ACCESS��GET�᥽�åɤˤ�븡����ػߤ����DoS���⡢SPAMbot������к���
---PLUGIN_SEARCH_MAX_LENGTH����������ʸ����Ȥ��ƻ����ǽ�ʺ���ʸ���� (Ʊ)
---PLUGIN_SEARCH_MAX_BASE����о��Ȥ��ƻ����ǽ�ʷ���κ�����
+'''ブロック型プラグイン:'''
+~パラメータには検索条件フォームで表示する検索対象ページの抽出条件を指定します。
+--抽出条件1,2,…n － 入力フォームの抽出条件の選択肢を表示順で指定します。
+抽出条件選択時、選択した語句で始まるページ群に対してのみ、検索を実行します。
+特定のページ群だけを検索したい場合、検索処理がより早く終了します。
+抽出条件を選択しなかった場合は全ページが対象となります。
+省略時は選択欄が表示されず、常に全ページが検索対象となります。
+:プラグイン内設定|~
+--PLUGIN_SEARCH_DISABLE_GET_ACCESS　GETメソッドによる検索を禁止する（DoS攻撃、SPAMbot、ワーム対策）
+--PLUGIN_SEARCH_MAX_LENGTH　検索する文字列として指定可能な最大文字数 (同)
+--PLUGIN_SEARCH_MAX_BASE　抽出条件として指定可能な件数の最大値
 
 
 **server [#d69aa1d0]
-:����|
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ''#server''
-:����|
-~�����С��ξ���(�����С�̾�������С����եȥ������������С�������)��ɽ�����ޤ���
+:概要|
+~サーバーの情報(サーバー名、サーバーソフトウエア、サーバー管理者)を表示します。
 
 
 **setlinebreak [#va79297e]
-:����|
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ''#setlinebreak(''
 [&color(blue){on};|&color(blue){off};|&color(blue){default};]
 '')''
-:����|
-~����ʸ����β��Ԥ���ԤȤߤʤ����ɤ����������Ԥ��ޤ���
-~PukiWiki������ʸ����β��Ԥ�ɤΤ褦�˰�������pukiwiki.ini���$line_break���������Ƥˤ�ä��Ѥ��ޤ��ʲ������ȡˡ�
-|����ʸ��|$line_break=0;|$line_break=1;|h
-|ʸ�ϣ�&br;ʸ�ϣ�|ʸ�ϣ�ʸ�ϣ�|ʸ�ϣ�&br;ʸ�ϣ�|
-~setlinebreak�ץ饰����ϳ����ڡ����ΰʹߤιԤ˴ؤ��ơ�
-$line_break������˰��餺���Ԥ�ɤΤ褦�˰����������Ǥ���褦�ˤʤ�ޤ���
-:����|
-~�ѥ�᡼���ˤϰʹߤβ��Ԥΰ�������ꤷ�ޤ���
-�ѥ�᡼������ά���줿��硢���ԤȤߤʤ����ɤ����ˤĤ��Ƥ�������ž�����ޤ���
---on �� �ʹߤ�ʸ�Ϥ�������β��Ԥ���ԤȤߤʤ��ޤ�($line_break=1��Ʊ��)��
---off �� �ʹߤ�ʸ�Ϥǲ��Ԥ�̵�뤷�ޤ�($line_break=0��Ʊ��)��
-���Ԥ�Ԥ�����ˤϹ����˥�����򵭽Ҥ��뤫��
-�����[[br�ץ饰����>../A-D#g693034c]]����Ѥ���ɬ�פ�����ޤ���
---default �� ���Ԥΰ����򤽤Υ����Ȥ�$line_break������ᤷ�ޤ���
+:概要|
+~入力文章中の改行を改行とみなすかどうかの設定を行います。
+~PukiWikiが入力文章中の改行をどのように扱うかはpukiwiki.ini内の$line_breakの設定内容によって変わります（下記参照）。
+|入力文章|$line_break=0;|$line_break=1;|h
+|文章１&br;文章２|文章１文章２|文章１&br;文章２|
+~setlinebreakプラグインは該当ページの以降の行に関して、
+$line_breakの設定に因らず改行をどのように扱うかを指定できるようになります。
+:引数|
+~パラメータには以降の改行の扱いを指定します。
+パラメータが省略された場合、改行とみなすかどうかについての設定を逆転させます。
+--on － 以降の文章で段落内の改行を改行とみなします($line_break=1と同様)。
+--off － 以降の文章で改行を無視します($line_break=0と同様)。
+改行を行うためには行末にチルダを記述するか、
+行中で[[brプラグイン>../A-D#g693034c]]を使用する必要があります。
+--default － 改行の扱いをそのサイトの$line_break設定に戻します。
 
 
 **showrss [#v7316017]
-:����|
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ''#showrss(''
-&color(blue){RSS�ؤΥѥ�};
+&color(blue){RSSへのパス};
 [,[&color(blue){default};|&color(blue){menubar};|&color(blue){recent};]
-[,[&color(blue){����å�����¸����};]
+[,[&color(blue){キャッシュ生存時間};]
 [,&color(blue){1};
 ]]]
 '')''
-:����|
-~���ꤵ�줿RSS�������������ɽ�����ޤ���
-~�ڡ����β�����RSS�μ�����Ԥ��١����ˤ˻��Ȥ����ڡ�����showrss����Ѥ������ϥ���å��嵡ǽ��Ȥ����Ȥ򤪴��ᤷ�ޤ�����ꥵ���Ȥι������٤˱����ƥ���å������¸���֤�Ŭ�����ꤷ�Ʋ�������
-:����|
-~RSS�ؤΥѥ��ˤ�RSS�ؤΥե�����ѥ���URL����ꤷ�ޤ���
-~�ƥ�ץ졼��̾�ˤϼ�������RSS��ɽ����ˡ����ꤷ�ޤ�����ά����default �Ȥʤ�ޤ���
---default �� ñ��˥ڡ�������󤷤ޤ���
---menubar �� �ڡ���̾�����˹��ݤ�Ĥ��ޤ���MenuBar�ʤɡ����������¤ˤ�����������Ǥ���
---recent �� recent�ץ饰����ν��ϤΤ褦�ˡ��ڡ���̾�����˹��ݤ�Ĥ��ƹ������դ��Ѥ����˹������դ���Ϥ��ޤ���
+:概要|
+~指定されたRSSを取得し、一覧表示します。
+~ページの解釈毎にRSSの取得を行う為、頻繁に参照されるページでshowrssを使用される場合はキャッシュ機能を使うことをお勧めします。相手サイトの更新頻度に応じてキャッシュの生存時間を適宜設定して下さい。
+:引数|
+~RSSへのパスにはRSSへのファイルパスやURLを指定します。
+~テンプレート名には取得したRSSの表示方法を指定します。省略時はdefault となります。
+--default － 単純にページを列挙します。
+--menubar － ページ名の前に黒丸をつけます。MenuBarなど、横幅に制限にある場合に便利です。
+--recent － recentプラグインの出力のように、ページ名の前に黒丸をつけて更新日付が変わる毎に更新日付を出力します。
 :|
-~����å�����¸���֤ϥ���å���򥯥ꥢ������¡ʣ�����ñ�̡ˤǤ�����ά��������å��嵡ǽ��̵���Ȥʤ�ޤ���
-~�裴������RSS������������դ�ɽ�����뤫�ɤ�������ꤷ�ޤ���1����ꤷ������ɽ�����ޤ�����ά����ɽ�����ޤ���
-:�ץ饰����������|~
---PLUGIN_SHOWRSS_USAGE�����顼����ɽ������������ˡ
-:����|
-~ư����뤿��ˤ�PHP �� xml extension ��ɬ�פǤ���
+~キャッシュ生存時間はキャッシュをクリアする期限（１時間単位）です。省略時、キャッシュ機能は無効となります。
+~第４引数はRSSを取得した日付を表示するかどうかを指定します。1を指定した場合は表示します。省略時は表示しません。
+:プラグイン内設定|~
+--PLUGIN_SHOWRSS_USAGE　エラー時に表示される使用方法
+:備考|
+~動作させるためにはPHP の xml extension が必要です。
 
 
 **size [#e5db48c0]
-:����|
-~����饤�󷿥ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~インライン型プラグイン
+:重要度|
+~★★★☆☆
+:書式|
 ''&size(''
-&color(blue){�ԥ��������};
+&color(blue){ピクセル数値};
 ''){''
-&color(blue){ʸ����};
+&color(blue){文字列};
 ''};''
-:����|
-~ʸ�����礭������ꤷ�ޤ���
-:����|
-~�ԥ�������ͤˤ�ʸ�����礭������ꤷ�ޤ���
-~ʸ�����ʸ�����礭�����ѹ�����ʸ�������ꤷ�ޤ���
-:�ץ饰����������|~
---PLUGIN_SIZE_MAX�������Ȥ��ƻ����ǽ�ʺ���ʸ��������
---PLUGIN_SIZE_MIN�������Ȥ��ƻ����ǽ�ʺǾ�ʸ��������
---PLUGIN_SIZE_USAGE������̤�������ɽ�������إ��
+:概要|
+~文字の大きさを指定します。
+:引数|
+~ピクセル数値には文字の大きさを指定します。
+~文字列は文字の大きさを変更する文字列を指定します。
+:プラグイン内設定|~
+--PLUGIN_SIZE_MAX　引数として指定可能な最大文字サイズ
+--PLUGIN_SIZE_MIN　引数として指定可能な最小文字サイズ
+--PLUGIN_SIZE_USAGE　引数未指定時に表示されるヘルプ
 
 
 **source [#k23d3e24]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★☆☆☆☆
+:書式|
 ''?cmd=source''
-&color(blue){&page=�ڡ���̾};
-:����|
-~���ꤷ���ڡ������������Υ�������ɽ�����ޤ���
-:����|
-~�ڡ���̾�ˤϥ�������ɽ������ڡ���̾����ꤷ�ޤ����ڡ���̾�ϥ��󥳡��ɤ���Ƥ���ɬ�פ�����ޤ���
+&color(blue){&page=ページ名};
+:概要|
+~指定したページの整形前のソースを表示します。
+:引数|
+~ページ名にはソースを表示するページ名を指定します。ページ名はエンコードされている必要があります。
 
 
 **stationary [#ifad4486]
-:����|
-~���ޥ��
-~�֥��å����ץ饰����
-~����饤�󷿥ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+~ブロック型プラグイン
+~インライン型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ~''?plugin=stationary''
 ~''#stationary''
 ~''&stationary;''
-:����|
-~stationary�ץ饰����ϥץ饰����������ߤ�ͤΤ���ο����Ȥ��ƺ�������ޤ�����~
-stationary�ץ饰�����ñ���ʸ�����ɽ������ʳ��ϲ��⤷�ޤ���
-:�ץ饰����������|~
---PLUGIN_STATIONARY_MAX���ץ饰���������������Ԥ�����ץ�
+:概要|
+~stationaryプラグインはプラグイン作成を試みる人のための雛形として作成されました。~
+stationaryプラグインは単純な文字列を表示する以外は何もしません。
+:プラグイン内設定|~
+--PLUGIN_STATIONARY_MAX　プラグイン内で定数定義を行うサンプル
 
 
 ------------------------------
 * T [#u58dc027]
 
 **template [#j2adfc3d]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★★★★☆
+:書式|
 ''?plugin=template''
-&color(blue){&refer=�ƥ�ץ졼�ȥڡ���};
-:����|
-~��¸�Υڡ�����ƥ�ץ졼�ȤȤ��ƥڡ����򿷵��������ޤ���
-~�ڡ����ο����������ο����Ȥ���ڡ������ɹ��ߵ�ǽ�Ȥκ��ۤϡ��ƥ�ץ졼�ȥץ饰���󤬿����Ȥ����ϰ�(��ñ��)������Ǥ���Τ��Ф��ơ��ڡ����ο����������ɤ߹���ƥ�ץ졼�Ȥ���ʸ��ƥ����ȥ��ꥢ�˥��ԡ��������ˤ���ޤ���
-:����|
-~�ƥ�ץ졼�ȥڡ����ˤϿ����Ȥ���ڡ�������ꤷ�ޤ����ڡ���̾�ϥ��󥳡��ɤ���Ƥ���ɬ�פ�����ޤ���
-:�ץ饰����������|~
---MAX_LEN�������γ��ϡ���λ���֤���ꤹ�����ɽ����������ʸ����
+&color(blue){&refer=テンプレートページ};
+:概要|
+~既存のページをテンプレートとしてページを新規作成します。
+~ページの新規作成時の雛形とするページの読込み機能との差異は、テンプレートプラグインが雛形とする範囲(行単位)に選択できるのに対して、ページの新規作成で読み込むテンプレートは全文をテキストエリアにコピーする点にあります。
+:引数|
+~テンプレートページには雛形とするページを指定します。ページ名はエンコードされている必要があります。
+:プラグイン内設定|~
+--MAX_LEN　雛形の開始／終了位置を指定する欄で表示される最大文字数
 
 
 **topicpath [#vd55c067]
-:����|
-~����饤�󷿥ץ饰����
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~インライン型プラグイン
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ~''&topicpath''
 '';''
 ~''#topicpath''
-:����|
-~�ѥ󤯤��ꥹ��(topicpath)�ȸƤФ�롢���߻��Ȥ��Ƥ��륦���֥ڡ����γ��ؤ�ɽ������桼�������󥿡��ե��������󶡤���ץ饰����Ǥ���
-~�㤨��
- [[PukiWiki/�ĥ���]]
-�Ȥ����ڡ�����#topicpath�Ƚ񤯤ȡ��ʲ����ͤ�ɽ�����֤������ޤ���
- [[Top>FrontPage]] / [[PukiWiki>PukiWiki]] / [[�ĥ���>PukiWiki/�ĥ���]]
-~����Ū�ˤϰʲ��Σ��̤�λȤ��������ꤷ�Ƥ��ޤ���
-++�֤ۤ�/�դ�/���ۡפʤɡ����������ذʾ�ο����ڡ����ǥڡ����ιԤ���򤷤䤹�����뤿���ɽ������
-++��������Ȥ߹��ߡ��ڡ��������ȥ벼��URL����������ƤΥڡ�����ɽ������
-:�ץ饰����������|~
---PLUGIN_TOPICPATH_TOP_DISPLAY��defaultpage����ֺǽ��ɽ�����뤫�ɤ�����
---PLUGIN_TOPICPATH_TOP_LABEL��$defaultpage���Ф����٥�
---PLUGIN_TOPICPATH_TOP_SEPARATOR�����ؤ���ڤ륻�ѥ졼��
---PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY������ɽ����Υڡ������Ф����󥯤�ɽ�����뤫�ɤ���
---PLUGIN_TOPICPATH_THIS_PAGE_LINK������ɽ����Υڡ������Ф��ƥ�󥯤��뤫�ɤ���
-:����|
-~��������Ȥ߹�����ϡ�pukiwiki.skin.php �� SKIN_DEFAULT_DISABLE_TOPICPATH �� 0����ꤷ�Ʋ�������
+:概要|
+~パンくずリスト(topicpath)と呼ばれる、現在参照しているウェブページの階層を表現するユーザーインターフェースを提供するプラグインです。
+~例えば
+ [[PukiWiki/ツアー]]
+というページに#topicpathと書くと、以下の様な表記に置き換わります。
+ [[Top>FrontPage]] / [[PukiWiki>PukiWiki]] / [[ツアー>PukiWiki/ツアー]]
+~基本的には以下の２通りの使い方を想定しています。
+++「ほげ/ふが/げほ」など、２～３階層以上の深いページでページの行き来をしやすくするために表示する
+++スキンに組み込み、ページタイトル下のURLの代わりに全てのページで表示する
+:プラグイン内設定|~
+--PLUGIN_TOPICPATH_TOP_DISPLAY　defaultpageを一番最初に表示するかどうか。
+--PLUGIN_TOPICPATH_TOP_LABEL　$defaultpageに対するラベル
+--PLUGIN_TOPICPATH_TOP_SEPARATOR　階層を区切るセパレータ
+--PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY　現在表示中のページに対するリンクを表示するかどうか
+--PLUGIN_TOPICPATH_THIS_PAGE_LINK　現在表示中のページに対してリンクするかどうか
+:備考|
+~スキンに組み込む場合は、pukiwiki.skin.php の SKIN_DEFAULT_DISABLE_TOPICPATH に 0を指定して下さい。
 
 
 **touchgraph [#p93402bd]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★☆☆☆☆
+:書式|
 ''?plugin=touchgraph''
-:����|
-~[[TouchGraphWikiBrowser>http://www.touchgraph.com/]]�ѤΥ���ǥå�������ޤ���
+:概要|
+~[[TouchGraphWikiBrowser>http://www.touchgraph.com/]]用のインデックスを作ります。
 
 
 **tracker [#rf5296e2]
-:����|
-~�ʥ��ޥ�ɡ�
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★★★★☆
+:書式|
 ~''#tracker(''
-[&color(blue){���̾};]
-[,&color(blue){�١����ڡ���̾};]
+[&color(blue){定義名};]
+[,&color(blue){ベースページ名};]
 '')''
-:����|
-~[[bugtrack>../A-D#a83293e8]]�ץ饰����Τ褦�ˡ��귿Ū�ʹ��ܤ��ä��ڡ������뤿������ϥե������ɽ�����ޤ���
-~���Ϲ��ܤ����ꤵ��Ƥ���[[bugtrack>../A-D#a83293e8]]�ץ饰����ȵ�ǽ�ϻ��Ƥ��ޤ��������Ϲ��ܤ��ñ���ѹ��Ǥ��������㤤�ޤ���FAQ��BBS����ɾ��TODO�ꥹ�ȤʤɻȤ�ƻ�ϥ����ǥ�������Ǥ���
-~���Ϲ��ܤ������:config/plugin/tracker/ �ʲ��˽���ν񼰤ǥƥ�ץ졼�Ȥ�������뤳�Ȥ�����Ǥ��ޤ���[[bugtrack>../A-D#a83293e8]]�ץ饰����ߴ������Ϲ��ܥƥ�ץ졼�Ȥ� :config/plugin/tracker/default ���Ѱդ���Ƥ���Τǻ��ͤˤ��Ʋ�������
-:����|
-~���̾�� #tracker(hoge) �Τ褦��tracker�Υƥ�ץ졼��̾����ꤷ�ޤ�����ά���� :config/plugin/tracker/default �����ꤵ�줿�Ȥߤʤ��ޤ���
-~�ƥ�ץ졼��̾��³���ƥե�����̾ / �ꥹ��̾����ꤹ�뤳�Ȥ��Ǥ��ޤ����ҤȤĤΥƥ�ץ졼�Ȥ�ʣ���Υե�������� / �ꥹ�ȥե����ޥåȤ��Ѱդ������Ȥ��������Ǥ����㤨�С�#tracker(hoge/form_alternative) �Ȥ���� :config/plugin/tracker/hoge/form_alternative �����Ƥ�ե�����ɽ���˻��Ѥ��ޤ�����#tracker_list(hoge/list_alternative) �Ȥ���� :config/plugin/tracker/hoge/list_alternative �����Ƥ�쥤�����Ȥ˻��Ѥ��ޤ���
-~�١����ڡ���̾�ϥե����फ����������ڡ����οƳ��ؤȤʤ�ڡ���̾����ꤷ�ޤ�����ά�������֤����ڡ����Ȥʤ�ޤ���
-:�ץ饰����������|~
---TRACKER_LIST_EXCLUDE_PATTERN��tracker_list��ɽ�����ʤ��ڡ���̾������ɽ���ǻ��ꤹ��
---TRACKER_LIST_SHOW_ERROR_PAGE�����ܤμ��Ф��˼��Ԥ����ڡ����������ɽ�����뤫
-:�ƥ�ץ졼��|~
-~�ƥ�ץ졼�Ȥϴ���Ū�����֤���tracker��ˣ��ȡ�4�ڡ����˺������ޤ���
+:概要|
+~[[bugtrack>../A-D#a83293e8]]プラグインのように、定型的な項目をもったページを作るための入力フォームを表示します。
+~入力項目が固定されている[[bugtrack>../A-D#a83293e8]]プラグインと機能は似ていますが、入力項目を簡単に変更できる点が違います。FAQ，BBS，書評，TODOリストなど使い道はアイディア次第です。
+~入力項目の定義は:config/plugin/tracker/ 以下に所定の書式でテンプレートを作成することで設定できます。[[bugtrack>../A-D#a83293e8]]プラグイン互換の入力項目テンプレートが :config/plugin/tracker/default に用意されているので参考にして下さい。
+:引数|
+~定義名は #tracker(hoge) のようにtrackerのテンプレート名を指定します。省略時は :config/plugin/tracker/default が指定されたとみなします。
+~テンプレート名に続けてフォーム名 / リスト名を指定することができます。ひとつのテンプレートに複数のフォーム形式 / リストフォーマットを用意したいときに便利です。例えば、#tracker(hoge/form_alternative) とすれば :config/plugin/tracker/hoge/form_alternative の内容をフォーム表示に使用しますし、#tracker_list(hoge/list_alternative) とすれば :config/plugin/tracker/hoge/list_alternative の内容をレイアウトに使用します。
+~ベースページ名はフォームから作成されるページの親階層となるページ名を指定します。省略時は設置したページとなります。
+:プラグイン内設定|~
+--TRACKER_LIST_EXCLUDE_PATTERN　tracker_listで表示しないページ名を正規表現で指定する
+--TRACKER_LIST_SHOW_ERROR_PAGE　項目の取り出しに失敗したページを一覧に表示するか
+:テンプレート|~
+~テンプレートは基本的に設置するtracker毎に１組（4ページ）作成します。
 --:config/plugin/tracker/hoge
-~hoge�ƥ�ץ졼�Ȥι��ܤ����Ƥ򵭽Ҥ��ޤ���
+~hogeテンプレートの項目の内容を記述します。
 --:config/plugin/tracker/hoge/form
-~���ϥե�����ι��ܤȥ쥤�����Ȥ򵭽Ҥ��ޤ���
+~入力フォームの項目とレイアウトを記述します。
 --:config/plugin/tracker/default/page
-~���Ϥ������Ƥ�ڡ���������ݤΥե����ޥåȤ򵭽Ҥ��ޤ���
+~入力した内容をページ化する際のフォーマットを記述します。
 --:config/plugin/tracker/hoge/list
-~tracker_list��ɽ������ꥹ�ȤΥ쥤�����Ȥ򵭽Ҥ��ޤ����ơ��֥�(|��|)�ν񼰻���(c) / �إå�(h) / �եå�(f) �Ԥ����̰������ޤ���
-:ͽ�����|~
---form �ǻ��ѤǤ���ͽ�����
----[_name] : ������Ͽ����ڡ���̾�����Ϥ���ե�����ɤ�ɽ������ά�ġ�
----[_submit] : [�ɲ�]�ܥ����ɽ����
---page / list �ǻ��ѤǤ���ͽ�����
----[_date] : ���������
----[_page] : �ºݤ����������ڡ���̾���֥饱�åȤ��դ���
----[_refer] : #tracker���֤����ڡ�����
----[_base] : �ڡ����Υץ�ե������� tracker()/tracker_list() ����2��������ά���줿���� [_refer] ��Ʊ�����ơ�
----[_name] : form�� [_name] �����Ƥ��Τ�Ρ�������Ͽ����ڡ���̾�ΰ����Ȥ��ƻ��Ѥ��롣
----[_real] : �ºݤ����������ڡ���̾���顢[_refer] + '/'�������̾�����ǥե���Ȥ� [_name] ��Ʊ�����ơ��ʲ��Τ����줫�ξ��˳�������Ȥ��ϡ�[[tracker>./#rf5296e2]]�ץ饰����[_real]��Ϣ�֤���Ϳ����������Ͽ����ڡ���̾����ꤹ�롣~
-��form�� [_name] �ե�����ɤ��ʤ���~
-��[_name] ���������ڡ���̾�Ȥ���̵����ʸ����ޤࡣ~
-��[_refer] / [_name] �Ȥ���̾���Υڡ��������Ǥ�¸�ߤ��롣~
---list �ǻ��ѤǤ���ͽ�����
----[_update] : �ڡ����κǽ�����������
----[_past] : �ǽ�������������ηвᡣ
+~tracker_listで表示するリストのレイアウトを記述します。テーブル(|～|)の書式指定(c) / ヘッダ(h) / フッタ(f) 行は特別扱いします。
+:予約項目|~
+--form で使用できる予約項目
+---[_name] : 記事を記録するページ名を入力するフィールドを表示。省略可。
+---[_submit] : [追加]ボタンを表示。
+--page / list で使用できる予約項目
+---[_date] : 投稿日時。
+---[_page] : 実際に生成したページ名。ブラケットが付く。
+---[_refer] : #trackerを置いたページ。
+---[_base] : ページのプレフィクス。 tracker()/tracker_list() の第2引数が省略された場合は [_refer] と同じ内容。
+---[_name] : formの [_name] の内容そのもの。記事を記録するページ名の一部として使用する。
+---[_real] : 実際に生成したページ名から、[_refer] + '/'を除いた名前。デフォルトは [_name] と同じ内容。以下のいずれかの条件に該当するときは、[[tracker>./#rf5296e2]]プラグインが[_real]に連番を付与し、記事を記録するページ名を決定する。~
+・formに [_name] フィールドがない。~
+・[_name] が空か、ページ名として無効な文字を含む。~
+・[_refer] / [_name] という名前のページがすでに存在する。~
+--list で使用できる予約項目
+---[_update] : ページの最終更新日時。
+---[_past] : 最終更新日時からの経過。
 
 
 **tracker_list [#t78d6d0a]
-:����|
-~�ʥ��ޥ�ɡ�
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★★★★☆
+:書式|
 ''#tracker_list(''
-[&color(blue){���̾};]
-[,[&color(blue){�١����ڡ���̾};]
-[,[[&color(blue){�����ȹ���};]
-:[&color(blue){�����Ƚ�};]]
-[,&color(blue){ɽ�����};]
+[&color(blue){定義名};]
+[,[&color(blue){ベースページ名};]
+[,[[&color(blue){ソート項目};]
+:[&color(blue){ソート順};]]
+[,&color(blue){表示上限};]
 ]]]
 '')''
-:����|
-~[[tracker>./#rf5296e2]]�ץ饰����Ǻ��������ڡ��������ɽ�����ޤ���
-:����|
-~���̾��[[tracker>./#rf5296e2]]�ץ饰����ǻ��ꤷ���ƥ�ץ졼��̾��Ʊ����Τ���ꤷ�ޤ�����ά���� :config/plugin/tracker/default �����ꤵ�줿�Ȥߤʤ��ޤ���
-~�١����ڡ���̾��[[tracker>./#rf5296e2]]�ץ饰����ǻ��ꤷ���١����ڡ���̾��Ʊ����Τ���ꤷ�ޤ���[[tracker>./#rf5296e2]]�ץ饰����ǥ١����ڡ���̾����ꤷ�Ƥ��ʤ�����[[tracker>./#rf5296e2]]�ץ饰��������֤����ڡ�������ꤷ�ޤ�����ά�������֤����ڡ����Ȥʤ�ޤ���
-~�裳���ܤˤϰ���ɽ���Υ����Ȥ˻Ȥ����ܤ���ӥ����Ƚ����ꤷ�ޤ��������ȹ��ܤ� :config/plugin/tracker/�ƥ�ץ졼��̾ ��field������ι��ܤ������򤷤Ʋ���������ά���ϥڡ���̾�Ȥʤ�ޤ��������Ƚ�ϡ�ASC((�������))��DESC((�߽����))��SORT_ASC((����(�����Ԥ��ѹ���) ))��SORT_DESC((�߽�(�����Ԥ��ѹ���) )) �򥳥���(:)�θ�˻��ꤷ�Ƥ����������ޤ������ߥ�����(;)�Ƕ��ڤ뤳�Ȥˤ�ꡢʣ���Υ����ȹ��ܡ������Ƚ������ǽ�Ǥ����㤨�С�#tracker_list(,,state:SORT_ASC;priority:SORT_ASC;_real:SORT_DESC) �Ȼ��ꤷ�����ϡ����ܤ��Ȥ� (1) [state]�򾺽� -> (2) [priority]�򾺽� -> (3) [_real](�ºݤΥڡ���̾)��߽硢��ͥ���̤ǥ����Ȥ��ޤ���
-~ɽ����¤ϰ���ɽ������ڡ������ξ�¤���ꤷ�ޤ�����ά��������ɽ������ޤ���
+:概要|
+~[[tracker>./#rf5296e2]]プラグインで作成したページを一覧表示します。
+:引数|
+~定義名は[[tracker>./#rf5296e2]]プラグインで指定したテンプレート名と同じものを指定します。省略時は :config/plugin/tracker/default が指定されたとみなします。
+~ベースページ名は[[tracker>./#rf5296e2]]プラグインで指定したベースページ名と同じものを指定します。[[tracker>./#rf5296e2]]プラグインでベースページ名を指定していない場合は[[tracker>./#rf5296e2]]プラグインを設置したページを指定します。省略時は設置したページとなります。
+~第３項目には一覧表示のソートに使う項目およびソート順を指定します。ソート項目は :config/plugin/tracker/テンプレート名 のfield項目内の項目から選択して下さい。省略時はページ名となります。ソート順は、ASC((昇順固定))、DESC((降順固定))、SORT_ASC((昇順(閲覧者が変更可) ))、SORT_DESC((降順(閲覧者が変更可) )) をコロン(:)の後に指定してください。また、セミコロン(;)で区切ることにより、複数のソート項目、ソート順を指定可能です。例えば、#tracker_list(,,state:SORT_ASC;priority:SORT_ASC;_real:SORT_DESC) と指定した場合は、項目ごとに (1) [state]を昇順 -> (2) [priority]を昇順 -> (3) [_real](実際のページ名)を降順、の優先順位でソートします。
+~表示上限は一覧表示するページ数の上限を指定します。省略時は全て表示されます。
 
 
 ------------------------------
 * U [#q0183edd]
 
 **unfreeze [#v039be15]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★★★☆☆
+:書式|
 ''?plugin=unfreeze''
-&color(blue){&page=�ڡ���̾};
-:����|
-~�ڡ��������������ޤ���
-:����|
-~�ڡ���̾�ˤϲ������ڡ���̾����ꤷ�ޤ����ڡ���̾�ϥ��󥳡��ɤ���Ƥ���ɬ�פ�����ޤ���
-:�ץ饰����������|~
---PLUGIN_UNFREEZE_EDIT����������˥ڡ������Խ��ե������ɽ�����뤫
+&color(blue){&page=ページ名};
+:概要|
+~ページの凍結を解除します。
+:引数|
+~ページ名には解除するページ名を指定します。ページ名はエンコードされている必要があります。
+:プラグイン内設定|~
+--PLUGIN_UNFREEZE_EDIT　凍結解除時にページの編集フォームを表示するか
 
 
 **update_entities [#r62603ec]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★☆☆☆☆
+:書式|
 ''?plugin=update_entities''
-:����|
-~CACHE_DIR/entities.dat ���������ޤ���
-~entities.dat��HTML�μ��λ��Ȥ�Ƚ�ꤹ�뤿����Ѥ�����ơ��֥���Ǽ�����ե�����Ǥ������̡����ѼԤ�����Ԥ��ռ����뵡��Ϥ���ޤ���
-:�ץ饰����������|~
---W3C_XHTML_DTD_LOCATION��DTD�ξ��
-:����|
-~���ۥե�����������Ѥ�entities.dat����°���뤿�ᡢ�̾���Ѥ��뵡��Ϥ���ޤ���
+:概要|
+~CACHE_DIR/entities.dat を生成します。
+~entities.datはHTMLの実体参照を判定するために用いられるテーブルを格納したファイルです。普通、利用者や管理者が意識する機会はありません。
+:プラグイン内設定|~
+--W3C_XHTML_DTD_LOCATION　DTDの場所
+:備考|
+~配布ファイルに生成済のentities.datが付属するため、通常使用する機会はありません。
 
 
 #navi(../)

@@ -24,18 +24,18 @@ define('PLUGIN_REF_DEFAULT_ALIGN', 'left'); // 'left', 'center', 'right'
 // Text wrapping
 define('PLUGIN_REF_WRAP_TABLE', FALSE); // TRUE, FALSE
 
-// URL»ØÄê»ş¤Ë²èÁü¥µ¥¤¥º¤ò¼èÆÀ¤¹¤ë¤«
+// URLæŒ‡å®šæ™‚ã«ç”»åƒã‚µã‚¤ã‚ºã‚’å–å¾—ã™ã‚‹ã‹
 define('PLUGIN_REF_URL_GET_IMAGE_SIZE', FALSE); // FALSE, TRUE
 
-// UPLOAD_DIR ¤Î¥Ç¡¼¥¿(²èÁü¥Õ¥¡¥¤¥ë¤Î¤ß)¤ËÄ¾ÀÜ¥¢¥¯¥»¥¹¤µ¤»¤ë
+// UPLOAD_DIR ã®ãƒ‡ãƒ¼ã‚¿(ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿)ã«ç›´æ¥ã‚¢ã‚¯ã‚»ã‚¹ã•ã›ã‚‹
 define('PLUGIN_REF_DIRECT_ACCESS', FALSE); // FALSE or TRUE
-// - ¤³¤ì¤Ï½¾Íè¤Î¥¤¥ó¥é¥¤¥ó¥¤¥á¡¼¥¸½èÍı¤ò¸ß´¹¤Î¤¿¤á¤Ë»Ä¤¹¤â¤Î¤Ç
-//   ¤¢¤ê¡¢¹âÂ®²½¤Î¤¿¤á¤Î¥ª¥×¥·¥ç¥ó¤Ç¤Ï¤¢¤ê¤Ş¤»¤ó
-// - UPLOAD_DIR ¤òWeb¥µ¡¼¥Ğ¡¼¾å¤ËÏª½Ğ¤µ¤»¤Æ¤ª¤ê¡¢¤«¤ÄÄ¾ÀÜ¥¢¥¯¥»¥¹
-//   ¤Ç¤­¤ë(¥¢¥¯¥»¥¹À©¸Â¤¬¤Ê¤¤)¾õÂÖ¤Ç¤¢¤ëÉ¬Í×¤¬¤¢¤ê¤Ş¤¹
-// - Apache ¤Ê¤É¤Ç¤Ï UPLOAD_DIR/.htaccess ¤òºï½ü¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Ş¤¹
-// - ¥Ö¥é¥¦¥¶¤Ë¤è¤Ã¤Æ¤Ï¥¤¥ó¥é¥¤¥ó¥¤¥á¡¼¥¸¤ÎÉ½¼¨¤ä¡¢¡Ö¥¤¥ó¥é¥¤¥ó
-//   ¥¤¥á¡¼¥¸¤À¤±¤òÉ½¼¨¡×¤µ¤»¤¿»ş¤Ê¤É¤ËÉÔ¶ñ¹ç¤¬½Ğ¤ë¾ì¹ç¤¬¤¢¤ê¤Ş¤¹
+// - ã“ã‚Œã¯å¾“æ¥ã®ã‚¤ãƒ³ãƒ©ã‚¤ãƒ³ã‚¤ãƒ¡ãƒ¼ã‚¸å‡¦ç†ã‚’äº’æ›ã®ãŸã‚ã«æ®‹ã™ã‚‚ã®ã§
+//   ã‚ã‚Šã€é«˜é€ŸåŒ–ã®ãŸã‚ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§ã¯ã‚ã‚Šã¾ã›ã‚“
+// - UPLOAD_DIR ã‚’Webã‚µãƒ¼ãƒãƒ¼ä¸Šã«éœ²å‡ºã•ã›ã¦ãŠã‚Šã€ã‹ã¤ç›´æ¥ã‚¢ã‚¯ã‚»ã‚¹
+//   ã§ãã‚‹(ã‚¢ã‚¯ã‚»ã‚¹åˆ¶é™ãŒãªã„)çŠ¶æ…‹ã§ã‚ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™
+// - Apache ãªã©ã§ã¯ UPLOAD_DIR/.htaccess ã‚’å‰Šé™¤ã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™
+// - ãƒ–ãƒ©ã‚¦ã‚¶ã«ã‚ˆã£ã¦ã¯ã‚¤ãƒ³ãƒ©ã‚¤ãƒ³ã‚¤ãƒ¡ãƒ¼ã‚¸ã®è¡¨ç¤ºã‚„ã€ã€Œã‚¤ãƒ³ãƒ©ã‚¤ãƒ³
+//   ã‚¤ãƒ¡ãƒ¼ã‚¸ã ã‘ã‚’è¡¨ç¤ºã€ã•ã›ãŸæ™‚ãªã©ã«ä¸å…·åˆãŒå‡ºã‚‹å ´åˆãŒã‚ã‚Šã¾ã™
 
 /////////////////////////////////////////////////
 
@@ -73,16 +73,16 @@ function plugin_ref_convert()
 	}
 
 	if ((PLUGIN_REF_WRAP_TABLE && ! $params['nowrap']) || $params['wrap']) {
-		// ÏÈ¤ÇÊñ¤à
+		// æ ã§åŒ…ã‚€
 		// margin:auto
-		//	Mozilla 1.x  = x (wrap,around¤¬¸ú¤«¤Ê¤¤)
+		//	Mozilla 1.x  = x (wrap,aroundãŒåŠ¹ã‹ãªã„)
 		//	Opera 6      = o
-		//	Netscape 6   = x (wrap,around¤¬¸ú¤«¤Ê¤¤)
-		//	IE 6         = x (wrap,around¤¬¸ú¤«¤Ê¤¤)
+		//	Netscape 6   = x (wrap,aroundãŒåŠ¹ã‹ãªã„)
+		//	IE 6         = x (wrap,aroundãŒåŠ¹ã‹ãªã„)
 		// margin:0px
-		//	Mozilla 1.x  = x (wrap¤Ç´ó¤»¤¬¸ú¤«¤Ê¤¤)
-		//	Opera 6      = x (wrap¤Ç´ó¤»¤¬¸ú¤«¤Ê¤¤)
-		//	Netscape 6   = x (wrap¤Ç´ó¤»¤¬¸ú¤«¤Ê¤¤)
+		//	Mozilla 1.x  = x (wrapã§å¯„ã›ãŒåŠ¹ã‹ãªã„)
+		//	Opera 6      = x (wrapã§å¯„ã›ãŒåŠ¹ã‹ãªã„)
+		//	Netscape 6   = x (wrapã§å¯„ã›ãŒåŠ¹ã‹ãªã„)
 		//	IE6          = o
 		$margin = ($params['around'] ? '0px' : 'auto');
 		$margin_align = ($params['_align'] == 'center') ? '' : ";margin-{$params['_align']}:0px";
@@ -101,7 +101,7 @@ EOD;
 		$style = "text-align:{$params['_align']}";
 	}
 
-	// div¤ÇÊñ¤à
+	// divã§åŒ…ã‚€
 	return "<div class=\"img_margin\" style=\"$style\">{$params['_body']}</div>\n";
 }
 
@@ -110,49 +110,49 @@ function plugin_ref_body($args)
 	global $script, $vars;
 	global $WikiName, $BracketName; // compat
 
-	// Ìá¤êÃÍ
+	// æˆ»ã‚Šå€¤
 	$params = array(
-		'left'   => FALSE, // º¸´ó¤»
-		'center' => FALSE, // Ãæ±û´ó¤»
-		'right'  => FALSE, // ±¦´ó¤»
-		'wrap'   => FALSE, // TABLE¤Ç°Ï¤à
-		'nowrap' => FALSE, // TABLE¤Ç°Ï¤Ş¤Ê¤¤
-		'around' => FALSE, // ²ó¤ê¹ş¤ß
-		'noicon' => FALSE, // ¥¢¥¤¥³¥ó¤òÉ½¼¨¤·¤Ê¤¤
-		'nolink' => FALSE, // ¸µ¥Õ¥¡¥¤¥ë¤Ø¤Î¥ê¥ó¥¯¤òÄ¥¤é¤Ê¤¤
-		'noimg'  => FALSE, // ²èÁü¤òÅ¸³«¤·¤Ê¤¤
-		'zoom'   => FALSE, // ½Ä²£Èæ¤òÊİ»ı¤¹¤ë
-		'_size'  => FALSE, // ¥µ¥¤¥º»ØÄê¤¢¤ê
-		'_w'     => 0,       // Éı
-		'_h'     => 0,       // ¹â¤µ
-		'_%'     => 0,     // ³ÈÂçÎ¨
+		'left'   => FALSE, // å·¦å¯„ã›
+		'center' => FALSE, // ä¸­å¤®å¯„ã›
+		'right'  => FALSE, // å³å¯„ã›
+		'wrap'   => FALSE, // TABLEã§å›²ã‚€
+		'nowrap' => FALSE, // TABLEã§å›²ã¾ãªã„
+		'around' => FALSE, // å›ã‚Šè¾¼ã¿
+		'noicon' => FALSE, // ã‚¢ã‚¤ã‚³ãƒ³ã‚’è¡¨ç¤ºã—ãªã„
+		'nolink' => FALSE, // å…ƒãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ãƒªãƒ³ã‚¯ã‚’å¼µã‚‰ãªã„
+		'noimg'  => FALSE, // ç”»åƒã‚’å±•é–‹ã—ãªã„
+		'zoom'   => FALSE, // ç¸¦æ¨ªæ¯”ã‚’ä¿æŒã™ã‚‹
+		'_size'  => FALSE, // ã‚µã‚¤ã‚ºæŒ‡å®šã‚ã‚Š
+		'_w'     => 0,       // å¹…
+		'_h'     => 0,       // é«˜ã•
+		'_%'     => 0,     // æ‹¡å¤§ç‡
 		'_args'  => array(),
 		'_done'  => FALSE,
 		'_error' => ''
 	);
 
-	// ÅºÉÕ¥Õ¥¡¥¤¥ë¤Î¤¢¤ë¥Ú¡¼¥¸: default¤Ï¸½ºß¤Î¥Ú¡¼¥¸Ì¾
+	// æ·»ä»˜ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚ã‚‹ãƒšãƒ¼ã‚¸: defaultã¯ç¾åœ¨ã®ãƒšãƒ¼ã‚¸å
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
-	// ÅºÉÕ¥Õ¥¡¥¤¥ë¤Î¥Õ¥¡¥¤¥ëÌ¾
+	// æ·»ä»˜ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«å
 	$name = '';
 
-	// ÅºÉÕ¥Õ¥¡¥¤¥ë¤Ş¤Ç¤Î¥Ñ¥¹¤ª¤è¤Ó(¼Âºİ¤Î)¥Õ¥¡¥¤¥ëÌ¾
+	// æ·»ä»˜ãƒ•ã‚¡ã‚¤ãƒ«ã¾ã§ã®ãƒ‘ã‚¹ãŠã‚ˆã³(å®Ÿéš›ã®)ãƒ•ã‚¡ã‚¤ãƒ«å
 	$file = '';
 
-	// Âè°ì°ú¿ô: "[¥Ú¡¼¥¸Ì¾¤ª¤è¤Ó/]ÅºÉÕ¥Õ¥¡¥¤¥ëÌ¾"¡¢¤¢¤ë¤¤¤Ï"URL"¤ò¼èÆÀ
+	// ç¬¬ä¸€å¼•æ•°: "[ãƒšãƒ¼ã‚¸åãŠã‚ˆã³/]æ·»ä»˜ãƒ•ã‚¡ã‚¤ãƒ«å"ã€ã‚ã‚‹ã„ã¯"URL"ã‚’å–å¾—
 	$name = array_shift($args);
 	$is_url = is_url($name);
 
 	if(! $is_url) {
-		// ÅºÉÕ¥Õ¥¡¥¤¥ë
+		// æ·»ä»˜ãƒ•ã‚¡ã‚¤ãƒ«
 		if (! is_dir(UPLOAD_DIR)) {
 			$params['_error'] = 'No UPLOAD_DIR';
 			return $params;
 		}
 
 		$matches = array();
-		// ¥Õ¥¡¥¤¥ëÌ¾¤Ë¥Ú¡¼¥¸Ì¾(¥Ú¡¼¥¸»²¾È¥Ñ¥¹)¤¬¹çÀ®¤µ¤ì¤Æ¤¤¤ë¤«
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã«ãƒšãƒ¼ã‚¸å(ãƒšãƒ¼ã‚¸å‚ç…§ãƒ‘ã‚¹)ãŒåˆæˆã•ã‚Œã¦ã„ã‚‹ã‹
 		//   (Page_name/maybe-separated-with/slashes/ATTACHED_FILENAME)
 		if (preg_match('#^(.+)/([^/]+)$#', $name, $matches)) {
 			if ($matches[1] == '.' || $matches[1] == '..') {
@@ -163,7 +163,7 @@ function plugin_ref_body($args)
 			$file = UPLOAD_DIR . encode($page) . '_' . encode($name);
 			$is_file = is_file($file);
 
-		// ÂèÆó°ú¿ô°Ê¹ß¤¬Â¸ºß¤·¡¢¤½¤ì¤Ïref¤Î¥ª¥×¥·¥ç¥óÌ¾¾Î¤Ê¤É¤È°ìÃ×¤·¤Ê¤¤
+		// ç¬¬äºŒå¼•æ•°ä»¥é™ãŒå­˜åœ¨ã—ã€ãã‚Œã¯refã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³åç§°ãªã©ã¨ä¸€è‡´ã—ãªã„
 		} else if (isset($args[0]) && $args[0] != '' && ! isset($params[$args[0]])) {
 			$e_name = encode($name);
 
@@ -210,20 +210,20 @@ function plugin_ref_body($args)
 		}
 	}
 
-	// »Ä¤ê¤Î°ú¿ô¤Î½èÍı
+	// æ®‹ã‚Šã®å¼•æ•°ã®å‡¦ç†
 	if (! empty($args))
 		foreach ($args as $arg)
 			ref_check_arg($arg, $params);
 
 /*
- $name¤ò¤â¤È¤Ë°Ê²¼¤ÎÊÑ¿ô¤òÀßÄê
+ $nameã‚’ã‚‚ã¨ã«ä»¥ä¸‹ã®å¤‰æ•°ã‚’è¨­å®š
  $url,$url2 : URL
- $title :¥¿¥¤¥È¥ë
- $is_image : ²èÁü¤Î¤È¤­TRUE
- $info : ²èÁü¥Õ¥¡¥¤¥ë¤Î¤È¤­getimagesize()¤Î'size'
-         ²èÁü¥Õ¥¡¥¤¥ë°Ê³°¤Î¥Õ¥¡¥¤¥ë¤Î¾ğÊó
-         ÅºÉÕ¥Õ¥¡¥¤¥ë¤Î¤È¤­ : ¥Õ¥¡¥¤¥ë¤ÎºÇ½ª¹¹¿·Æü¤È¥µ¥¤¥º
-         URL¤Î¤È¤­ : URL¤½¤Î¤â¤Î
+ $title :ã‚¿ã‚¤ãƒˆãƒ«
+ $is_image : ç”»åƒã®ã¨ãTRUE
+ $info : ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ã®ã¨ãgetimagesize()ã®'size'
+         ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ä»¥å¤–ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®æƒ…å ±
+         æ·»ä»˜ãƒ•ã‚¡ã‚¤ãƒ«ã®ã¨ã : ãƒ•ã‚¡ã‚¤ãƒ«ã®æœ€çµ‚æ›´æ–°æ—¥ã¨ã‚µã‚¤ã‚º
+         URLã®ã¨ã : URLãã®ã‚‚ã®
 */
 	$title = $url = $url2 = $info = '';
 	$width = $height = 0;
@@ -252,7 +252,7 @@ function plugin_ref_body($args)
 			}
 		}
 
-	} else { // ÅºÉÕ¥Õ¥¡¥¤¥ë
+	} else { // æ·»ä»˜ãƒ•ã‚¡ã‚¤ãƒ«
 
 		$title = htmlsc($name);
 
@@ -288,7 +288,7 @@ function plugin_ref_body($args)
 		}
 	}
 
-	// ³ÈÄ¥¥Ñ¥é¥á¡¼¥¿¤ò¥Á¥§¥Ã¥¯
+	// æ‹¡å¼µãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’ãƒã‚§ãƒƒã‚¯
 	if (! empty($params['_args'])) {
 		$_title = array();
 		foreach ($params['_args'] as $arg) {
@@ -311,9 +311,9 @@ function plugin_ref_body($args)
 		}
 	}
 
-	// ²èÁü¥µ¥¤¥ºÄ´À°
+	// ç”»åƒã‚µã‚¤ã‚ºèª¿æ•´
 	if ($is_image) {
-		// »ØÄê¤µ¤ì¤¿¥µ¥¤¥º¤ò»ÈÍÑ¤¹¤ë
+		// æŒ‡å®šã•ã‚ŒãŸã‚µã‚¤ã‚ºã‚’ä½¿ç”¨ã™ã‚‹
 		if ($params['_size']) {
 			if ($width == 0 && $height == 0) {
 				$width  = $params['_w'];
@@ -338,7 +338,7 @@ function plugin_ref_body($args)
 		if ($width && $height) $info = "width=\"$width\" height=\"$height\" ";
 	}
 
-	// ¥¢¥é¥¤¥ó¥á¥ó¥ÈÈ½Äê
+	// ã‚¢ãƒ©ã‚¤ãƒ³ãƒ¡ãƒ³ãƒˆåˆ¤å®š
 	$params['_align'] = PLUGIN_REF_DEFAULT_ALIGN;
 	foreach (array('right', 'left', 'center') as $align) {
 		if ($params[$align])  {
@@ -347,7 +347,7 @@ function plugin_ref_body($args)
 		}
 	}
 
-	if ($is_image) { // ²èÁü
+	if ($is_image) { // ç”»åƒ
 		$params['_body'] = "<img src=\"$url\" alt=\"$title\" title=\"$title\" $info/>";
 		if (! $params['nolink'] && $url2)
 			$params['_body'] = "<a href=\"$url2\" title=\"$title\">{$params['_body']}</a>";
@@ -359,7 +359,7 @@ function plugin_ref_body($args)
 	return $params;
 }
 
-// ¥ª¥×¥·¥ç¥ó¤ò²òÀÏ¤¹¤ë
+// ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’è§£æã™ã‚‹
 function ref_check_arg($val, & $params)
 {
 	if ($val == '') {

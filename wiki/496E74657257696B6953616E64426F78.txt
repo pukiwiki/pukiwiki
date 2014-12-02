@@ -1,16 +1,16 @@
-''InterWikiÍÑ¤ÎÎı½¬¥Ú¡¼¥¸¤Ç¤¹¡£''
-**Â¾¤ÎWiki¤Î¥Ú¡¼¥¸¤ËÈô¤ó¤Ç¤ß¤è¤¦¡£ [#t20eea48]
+''InterWikiç”¨ã®ç·´ç¿’ãƒšãƒ¼ã‚¸ã§ã™ã€‚''
+**ä»–ã®Wikiã®ãƒšãƒ¼ã‚¸ã«é£›ã‚“ã§ã¿ã‚ˆã†ã€‚ [#t20eea48]
 -[[WikiWikiWeb:FrontPage]]
 -[[Tiki:WelcomeVisitors]] 
 -[[YukiWiki:FrontPage]] 
 -[[RWiki:top]] 
 //-[[PukiWiki:FrontPage]] 
-//-[[¥¦¥ğ¥­¥¨¥ê¥¢:FrontPage]]
-**PukiWiki¤Î¥Ú¡¼¥¸¤ÇÈô¤ó¤Ç¤ß¤è¤¦¡£ [#sfce4c27]
+//-[[ã‚¦ãƒ°ã‚­ã‚¨ãƒªã‚¢:FrontPage]]
+**PukiWikiã®ãƒšãƒ¼ã‚¸ã§é£›ã‚“ã§ã¿ã‚ˆã†ã€‚ [#sfce4c27]
 -[[pukiwiki:FrontPage]]
 -[[pukiwiki.dev:FrontPage]]
-**¸¡º÷¤À¤Ã¤Æ½ĞÍè¤ë¡£ [#wec8fb2d]
-:Google¤Çpukiwiki¤ò¸¡º÷|
+**æ¤œç´¢ã ã£ã¦å‡ºæ¥ã‚‹ã€‚ [#wec8fb2d]
+:Googleã§pukiwikiã‚’æ¤œç´¢|
 [[Google:pukiwiki]]
-:Yahoo¤ÇPHP¤ò¸¡º÷|
+:Yahooã§PHPã‚’æ¤œç´¢|
 [[Yahoo:PHP]]

@@ -7,29 +7,29 @@
 * H [#xfadc6da]
 
 **hr [#i56a8485]
-:����|
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★★☆☆☆
+:書式|
 ''#hr''
-:����|
-~ʸ��˿�ʿ�����������ޤ���
-:����|
-~�����ꥹ�ȡ��ơ��֥���ʤɡ��̾�ο�ʿ����(----)�Ǥϥ֥��å���ȴ���Ƥ��ޤ��Ľ�ǿ�ʿ�����������뤿����Ѥ��ޤ����ꥹ����ʤɺ����ޡ��������ꤵ��Ƥ�����ϡ����������Ѥ��ޤ���
+:概要|
+~文中に水平線を挿入します。
+:備考|
+~段落やリスト、テーブル内など、通常の水平線書式(----)ではブロックを抜けてしまう個所で水平線を挿入するために用います。リスト内など左右マージンが設定されている場合は、それを引き継ぎます。
 
 
 ------------------------------
 * I [#qaa75d46]
 
 **img [#v66d65c4]
-:����|
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ''#img(''
-&color(blue){����URL};[,
+&color(blue){画像URL};[,
 &color(blue){right};|
 &color(blue){r};|
 &color(blue){left};|
@@ -40,84 +40,84 @@
 &color(blue){c};
 ]]
 '')''
-:����|
-~ź�եե�����ʳ��β�����ɽ�����뤿��˳�ȯ����ޤ�������������ǽ��ref�ץ饰��������礵�줿���ᡢ����Ū�˻��Ѥ��뤳�ȤϤ���ޤ��󡣲��Ȥθߴ����Τ���˻ĤäƤ��ޤ���
-:����|
-~����URL�ˤ�ɽ�����������URL����ꤷ�ޤ���
-�����ˤ�jpeg(jpg), gif, png �Τ߻����ǽ�Ǥ���
-~right,r,left,l,clear,c �ǲ�����ɽ�����֤ȥƥ����Ȥβ�ꤳ�ߤ���ꤷ�ޤ�����ά���� left �����ꤵ�줿�Ȥߤʤ��ޤ���
---right,r �� �����򱦴󤻤�ɽ�����ޤ���
---left,l �� �����򱦴󤻤�ɽ�����ޤ���
---clear,c �� �ƥ����Ȥβ�ꤳ�ߤ������ޤ�������Ū�ˤ� right,r,left,l �ʳ�������clear�����򤵤줿�ȸ��ʤ���ޤ���
-:�ץ饰����������|~
---PLUGIN_IMG_CLEAR��clear������˽��Ϥ��륿��
---PLUGIN_IMG_USAGE������̤�������ɽ�������إ��
+:概要|
+~添付ファイル以外の画像を表示するために開発されましたが、該当機能がrefプラグインに統合されたため、基本的に使用することはありません。過去との互換性のために残っています。
+:引数|
+~画像URLには表示する画像のURLを指定します。
+画像にはjpeg(jpg), gif, png のみ指定可能です。
+~right,r,left,l,clear,c で画像の表示位置とテキストの回りこみを指定します。省略時は left が指定されたとみなします。
+--right,r － 画像を右寄せで表示します。
+--left,l － 画像を右寄せで表示します。
+--clear,c － テキストの回りこみを解除します。内部的には right,r,left,l 以外は全てclearが選択されたと見なされます。
+:プラグイン内設定|~
+--PLUGIN_IMG_CLEAR　clear指定時に出力するタグ
+--PLUGIN_IMG_USAGE　引数未指定時に表示されるヘルプ
 
 
 **include [#nd4e3577]
-:����|
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★★★☆☆
+:書式|
 ''#include(''
-&color(blue){�ڡ���̾[,title|,notitle]};
+&color(blue){ページ名[,title|,notitle]};
 '')''
-:����|
-~���Ҥ������֤˻��ꤷ���ڡ������������ơ�ʣ���Υڡ����򤢤����⣱�ĤΥڡ����Ǥ��뤫�Τ褦��ɽ�����ޤ���
-:����|
-~�ڡ���̾�ˤ���������ڡ�������ꤷ�ޤ���~
-��2������notitle����ꤹ��ȡ��ڡ���̾��ɽ�����������ޤ���title�Ϥ��εդǤ���
-:�ץ饰����������|~
---PLUGIN_INCLUDE_MAX�����٤˥��󥯥롼�ɤǤ���ڡ����κ����
---PLUGIN_INCLUDE_WITH_TITLE��title,notitle ��̤��������������˥ڡ���̾��ɽ�����뤫�����ʤ���
---PLUGIN_INCLUDE_USAGE������̤�������ɽ�������إ��
+:概要|
+~記述した位置に指定したページを挿入して、複数のページをあたかも１つのページであるかのように表示します。
+:引数|
+~ページ名には挿入するページを指定します。~
+第2引数にnotitleを指定すると、ページ名の表示を抑制します。titleはその逆です。
+:プラグイン内設定|~
+--PLUGIN_INCLUDE_MAX　一度にインクルードできるページの最大数
+--PLUGIN_INCLUDE_WITH_TITLE　title,notitle を未指定時に挿入時にページ名を表示するか・しないか
+--PLUGIN_INCLUDE_USAGE　引数未指定時に表示されるヘルプ
 
 
 **includesubmenu [#a7f1d129]
-:����|
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★★☆☆☆
+:書式|
 ''#includesubmenu(''
 [&color(blue){showpagename};]
 '')''
-:����|
-~����ɽ����Υڡ����ˤ�äơ�MenuBar��ɽ���������Ƥ��ڤ��ؤ���٤˻��Ѥ��ޤ���
-~ɽ����Υڡ����β����ؤ�SubMenu����Ʊ���ؤˤ���SubMenu�ڡ���������ɽ������ץ饰����Ǥ���
-:����|
-~showpagename ����ꤹ��ȡ�����ɽ������ڡ����Υڡ���̾��ɽ�����ޤ�����ά���ϥڡ���̾����ɽ���Ȥ��ޤ���
+:概要|
+~現在表示中のページによって、MenuBarに表示する内容を切り替える為に使用します。
+~表示中のページの下階層のSubMenuか、同階層にあるSubMenuページを挿入表示するプラグインです。
+:引数|
+~showpagename を指定すると、挿入表示するページのページ名を表示します。省略時はページ名を非表示とします。
 
 
 **insert [#q51c8898]
-:����|
-~�ʥ��ޥ�ɡ�
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ''#insert''
-:����|
-~���Ҥ������֤�ʣ����������ȥܥ����ɽ�����ޤ���
-~�ܥ���򲡲����������������Ϥ������Ƥ�ڡ������������ޤ���
-:�ץ饰����������|~
---INSERT_COLS���Խ����ɽ����
---INSERT_ROWS���Խ����ɽ���Կ�
---INSERT_INS���������Ƥ������������ɤ�����������뤫
+:概要|
+~記述した位置に複数行入力欄とボタンを表示します。
+~ボタンを押下すると入力欄に入力した内容をページに挿入します。
+:プラグイン内設定|~
+--INSERT_COLS　編集欄の表示幅
+--INSERT_ROWS　編集欄の表示行数
+--INSERT_INS　入力内容を入力欄の前後どちらに挿入するか
 
 **interwiki [#k3075466]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★☆☆☆☆
+:書式|
 ''?cmd=interwiki''
-&color(blue){&page=InterWiki̾};
-:����|
-~InterWiki�򵭽Ҥ����ݤ�PukiWiki������Ū�˸ƤӽФ��ޤ������ѼԤ��ռ����ƻ��Ѥ��뵡��Ϥ���ޤ���
-:����|
-~InterWiki̾�ˤϥ��������InterWiki�����ǻ��ꤷ�ޤ���InterWiki̾�ϥ��󥳡��ɤ���Ƥ���ɬ�פ�����ޤ���
+&color(blue){&page=InterWiki名};
+:概要|
+~InterWikiを記述した際にPukiWikiが内部的に呼び出します。使用者が意識して使用する機会はありません。
+:引数|
+~InterWiki名にはジャンプ先をInterWiki形式で指定します。InterWiki名はエンコードされている必要があります。
 
 
 #navi(../)

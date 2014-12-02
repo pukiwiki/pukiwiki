@@ -6,13 +6,13 @@
 //
 // Issue tracker plugin (See Also bugtrack plugin)
 
-// tracker_list¤ÇÉ½¼¨¤·¤Ê¤¤¥Ú¡¼¥¸Ì¾(Àµµ¬É½¸½¤Ç)
-// 'SubMenu'¥Ú¡¼¥¸ ¤ª¤è¤Ó '/'¤ò´Þ¤à¥Ú¡¼¥¸¤ò½ü³°¤¹¤ë
+// tracker_listã§è¡¨ç¤ºã—ãªã„ãƒšãƒ¼ã‚¸å(æ­£è¦è¡¨ç¾ã§)
+// 'SubMenu'ãƒšãƒ¼ã‚¸ ãŠã‚ˆã³ '/'ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã‚’é™¤å¤–ã™ã‚‹
 define('TRACKER_LIST_EXCLUDE_PATTERN','#^SubMenu$|/#');
-// À©¸Â¤·¤Ê¤¤¾ì¹ç¤Ï¤³¤Á¤é
+// åˆ¶é™ã—ãªã„å ´åˆã¯ã“ã¡ã‚‰
 //define('TRACKER_LIST_EXCLUDE_PATTERN','#(?!)#');
 
-// ¹àÌÜ¤Î¼è¤ê½Ð¤·¤Ë¼ºÇÔ¤·¤¿¥Ú¡¼¥¸¤ò°ìÍ÷¤ËÉ½¼¨¤¹¤ë
+// é …ç›®ã®å–ã‚Šå‡ºã—ã«å¤±æ•—ã—ãŸãƒšãƒ¼ã‚¸ã‚’ä¸€è¦§ã«è¡¨ç¤ºã™ã‚‹
 define('TRACKER_LIST_SHOW_ERROR_PAGE',TRUE);
 
 function plugin_tracker_convert()
@@ -112,7 +112,7 @@ function plugin_tracker_action()
 			'body'=>'page template ('.htmlsc($source).') is not exist.'
 		);
 	}
-	// ¥Ú¡¼¥¸Ì¾¤ò·èÄê
+	// ãƒšãƒ¼ã‚¸åã‚’æ±ºå®š
 	$base = $post['_base'];
 	$num = 0;
 	$name = (array_key_exists('_name',$post)) ? $post['_name'] : '';
@@ -135,10 +135,10 @@ function plugin_tracker_action()
 		$real = ++$num;
 		$page = "$base/$real";
 	}
-	// ¥Ú¡¼¥¸¥Ç¡¼¥¿¤òÀ¸À®
+	// ãƒšãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿ã‚’ç”Ÿæˆ
 	$postdata = plugin_tracker_get_source($source);
 
-	// µ¬Äê¤Î¥Ç¡¼¥¿
+	// è¦å®šã®ãƒ‡ãƒ¼ã‚¿
 	$_post = array_merge($post,$_FILES);
 	$_post['_date'] = $now;
 	$_post['_page'] = $page;
@@ -209,23 +209,23 @@ function plugin_tracker_inline()
 	return $fields[$field]->get_tag();
 }
 */
-// ¥Õ¥£¡¼¥ë¥É¥ª¥Ö¥¸¥§¥¯¥È¤ò¹½ÃÛ¤¹¤ë
+// ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ§‹ç¯‰ã™ã‚‹
 function plugin_tracker_get_fields($base,$refer,&$config)
 {
 	global $now,$_tracker_messages;
 
 	$fields = array();
-	// Í½Ìó¸ì
+	// äºˆç´„èªž
 	foreach (array(
-		'_date'=>'text',    // Åê¹ÆÆü»þ
-		'_update'=>'date',  // ºÇ½ª¹¹¿·
-		'_past'=>'past',    // ·Ð²á(passage)
-		'_page'=>'page',    // ¥Ú¡¼¥¸Ì¾
-		'_name'=>'text',    // »ØÄê¤µ¤ì¤¿¥Ú¡¼¥¸Ì¾
-		'_real'=>'real',    // ¼ÂºÝ¤Î¥Ú¡¼¥¸Ì¾
-		'_refer'=>'page',   // »²¾È¸µ(¥Õ¥©¡¼¥à¤Î¤¢¤ë¥Ú¡¼¥¸)
-		'_base'=>'page',    // ´ð½à¥Ú¡¼¥¸
-		'_submit'=>'submit' // ÄÉ²Ã¥Ü¥¿¥ó
+		'_date'=>'text',    // æŠ•ç¨¿æ—¥æ™‚
+		'_update'=>'date',  // æœ€çµ‚æ›´æ–°
+		'_past'=>'past',    // çµŒéŽ(passage)
+		'_page'=>'page',    // ãƒšãƒ¼ã‚¸å
+		'_name'=>'text',    // æŒ‡å®šã•ã‚ŒãŸãƒšãƒ¼ã‚¸å
+		'_real'=>'real',    // å®Ÿéš›ã®ãƒšãƒ¼ã‚¸å
+		'_refer'=>'page',   // å‚ç…§å…ƒ(ãƒ•ã‚©ãƒ¼ãƒ ã®ã‚ã‚‹ãƒšãƒ¼ã‚¸)
+		'_base'=>'page',    // åŸºæº–ãƒšãƒ¼ã‚¸
+		'_submit'=>'submit' // è¿½åŠ ãƒœã‚¿ãƒ³
 		) as $field=>$class)
 	{
 		$class = 'Tracker_field_'.$class;
@@ -234,10 +234,10 @@ function plugin_tracker_get_fields($base,$refer,&$config)
 
 	foreach ($config->get('fields') as $field)
 	{
-		// 0=>¹àÌÜÌ¾ 1=>¸«½Ð¤· 2=>·Á¼° 3=>¥ª¥×¥·¥ç¥ó 4=>¥Ç¥Õ¥©¥ë¥ÈÃÍ
+		// 0=>é …ç›®å 1=>è¦‹å‡ºã— 2=>å½¢å¼ 3=>ã‚ªãƒ—ã‚·ãƒ§ãƒ³ 4=>ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤
 		$class = 'Tracker_field_'.$field[2];
 		if (!class_exists($class))
-		{ // ¥Ç¥Õ¥©¥ë¥È
+		{ // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ
 			$class = 'Tracker_field_text';
 			$field[2] = 'text';
 			$field[3] = '20';
@@ -246,7 +246,7 @@ function plugin_tracker_get_fields($base,$refer,&$config)
 	}
 	return $fields;
 }
-// ¥Õ¥£¡¼¥ë¥É¥¯¥é¥¹
+// ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚¯ãƒ©ã‚¹
 class Tracker_field
 {
 	var $name;
@@ -424,12 +424,12 @@ class Tracker_field_file extends Tracker_field_format
 		{
 			require_once(PLUGIN_DIR.'attach.inc.php');
 			$result = attach_upload($_FILES[$this->name],$this->page);
-			if ($result['result']) // ¥¢¥Ã¥×¥í¡¼¥ÉÀ®¸ù
+			if ($result['result']) // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰æˆåŠŸ
 			{
 				return parent::format_value($this->page.'/'.$_FILES[$this->name]['name']);
 			}
 		}
-		// ¥Õ¥¡¥¤¥ë¤¬»ØÄê¤µ¤ì¤Æ¤¤¤Ê¤¤¤«¡¢¥¢¥Ã¥×¥í¡¼¥É¤Ë¼ºÇÔ
+		// ãƒ•ã‚¡ã‚¤ãƒ«ãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã„ã‹ã€ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—
 		return parent::format_value('');
 	}
 }
@@ -576,7 +576,7 @@ class Tracker_field_past extends Tracker_field
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// °ìÍ÷É½¼¨
+// ä¸€è¦§è¡¨ç¤º
 function plugin_tracker_list_convert()
 {
 	global $vars;
@@ -643,7 +643,7 @@ function plugin_tracker_getlist($page,$refer,$config_name,$list,$order='',$limit
 	return $list->toString($limit);
 }
 
-// °ìÍ÷¥¯¥é¥¹
+// ä¸€è¦§ã‚¯ãƒ©ã‚¹
 class Tracker_list
 {
 	var $page;
@@ -663,11 +663,11 @@ class Tracker_list
 		$this->fields = plugin_tracker_get_fields($page,$refer,$config);
 
 		$pattern = join('',plugin_tracker_get_source($config->page.'/page'));
-		// ¥Ö¥í¥Ã¥¯¥×¥é¥°¥¤¥ó¤ò¥Õ¥£¡¼¥ë¥É¤ËÃÖ´¹
-		// #comment¤Ê¤É¤ÇÁ°¸å¤ËÊ¸»úÎó¤ÎÁý¸º¤¬¤¢¤Ã¤¿¾ì¹ç¤Ë¡¢[_block_xxx]¤ËµÛ¤¤¹þ¤Þ¤»¤ë¤è¤¦¤Ë¤¹¤ë
+		// ãƒ–ãƒ­ãƒƒã‚¯ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚’ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã«ç½®æ›
+		// #commentãªã©ã§å‰å¾Œã«æ–‡å­—åˆ—ã®å¢—æ¸›ãŒã‚ã£ãŸå ´åˆã«ã€[_block_xxx]ã«å¸ã„è¾¼ã¾ã›ã‚‹ã‚ˆã†ã«ã™ã‚‹
 		$pattern = preg_replace('/^\#([^\(\s]+)(?:\((.*)\))?\s*$/m','[_block_$1]',$pattern);
 
-		// ¥Ñ¥¿¡¼¥ó¤òÀ¸À®
+		// ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’ç”Ÿæˆ
 		$this->pattern = '';
 		$this->pattern_fields = array();
 		$pattern = preg_split('/\\\\\[(\w+)\\\\\]/',preg_quote($pattern,'/'),-1,PREG_SPLIT_DELIM_CAPTURE);
@@ -681,7 +681,7 @@ class Tracker_list
 				$this->pattern .= '(.*)';
 			}
 		}
-		// ¥Ú¡¼¥¸¤ÎÎóµó¤È¼è¤ê¹þ¤ß
+		// ãƒšãƒ¼ã‚¸ã®åˆ—æŒ™ã¨å–ã‚Šè¾¼ã¿
 		$this->rows = array();
 		$pattern = "$page/";
 		$pattern_len = strlen($pattern);
@@ -702,7 +702,7 @@ class Tracker_list
 	{
 		static $moved = array();
 
-		// Ìµ¸Â¥ë¡¼¥×ËÉ»ß
+		// ç„¡é™ãƒ«ãƒ¼ãƒ—é˜²æ­¢
 		if (array_key_exists($name,$this->rows))
 		{
 			return;
@@ -721,7 +721,7 @@ class Tracker_list
 		}
 		$source = join('',preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/','$1$2',$source));
 
-		// ¥Ç¥Õ¥©¥ë¥ÈÃÍ
+		// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤
 		$this->rows[$name] = array(
 			'_page'  => "[[$page]]",
 			'_refer' => $this->page,
@@ -916,9 +916,9 @@ class Tracker_list
 function plugin_tracker_get_source($page)
 {
 	$source = get_source($page);
-	// ¸«½Ð¤·¤Î¸ÇÍ­IDÉô¤òºï½ü
+	// è¦‹å‡ºã—ã®å›ºæœ‰IDéƒ¨ã‚’å‰Šé™¤
 	$source = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m','$1$2',$source);
-	// #freeze¤òºï½ü
+	// #freezeã‚’å‰Šé™¤
 	return preg_replace('/^#freeze\s*$/im', '', $source);
 }
 ?>

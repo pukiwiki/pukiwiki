@@ -9,9 +9,9 @@
 // PukiWiki setting file
 
 /////////////////////////////////////////////////
-// �����ִ��롼�� (���������ִ�)
-// $usedatetime = 1�ʤ������ִ��롼�뤬Ŭ�Ѥ���ޤ�
-// ɬ�פΤʤ����� $usedatetime��0�ˤ��Ƥ���������
+// 日時置換ルール (閲覧時に置換)
+// $usedatetime = 1なら日時置換ルールが適用されます
+// 必要のない方は $usedatetimeを0にしてください。
 $datetime_rules = array(
 	'&amp;_now;'	=> format_date(UTIME),
 	'&amp;_date;'	=> get_date($date_format),
@@ -19,11 +19,11 @@ $datetime_rules = array(
 );
 
 /////////////////////////////////////////////////
-// �桼������롼��(��¸�����ִ�)
-//  ����ɽ���ǵ��Ҥ��Ƥ���������?(){}-*./+\$^|�ʤ�
-//  �� \? �Τ褦�˥������Ȥ��Ƥ���������
-//  �����ɬ�� / ��ޤ�Ƥ�����������Ƭ����� ^ ��Ƭ�ˡ�
-//  ��������� $ �����ˡ�
+// ユーザ定義ルール(保存時に置換)
+//  正規表現で記述してください。?(){}-*./+\$^|など
+//  は \? のようにクォートしてください。
+//  前後に必ず / を含めてください。行頭指定は ^ を頭に。
+//  行末指定は $ を後ろに。
 //
 
 // BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5

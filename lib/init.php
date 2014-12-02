@@ -58,7 +58,7 @@ if (! file_exists(INI_FILE) || ! is_readable(INI_FILE)) {
 if ($die) die_message(nl2br("\n\n" . $die));
 
 /////////////////////////////////////////////////
-// INI_FILE: LANG ¤Ë´ğ¤Å¤¯¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°ÀßÄê
+// INI_FILE: LANG ã«åŸºã¥ãã‚¨ãƒ³ã‚³ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°è¨­å®š
 
 // MB_LANGUAGE: mb_language (for mbstring extension)
 //   'uni'(means UTF-8), 'English', or 'Japanese'
@@ -71,13 +71,13 @@ if ($die) die_message(nl2br("\n\n" . $die));
 switch (LANG){
 case 'en': define('MB_LANGUAGE', 'English' ); break;
 case 'ja': define('MB_LANGUAGE', 'Japanese'); break;
-//UTF-8:case 'ko': define('MB_LANGUAGE', 'Korean'  ); break;
-//UTF-8:	// See BugTrack2/13 for all hack about Korean support,
-//UTF-8:	// and give us your report!
+case 'ko': define('MB_LANGUAGE', 'Korean'  ); break;
+	// See BugTrack2/13 for all hack about Korean support,
+	// and give us your report!
 default: die_message('No such language "' . LANG . '"'); break;
 }
 
-//UTF-8:define('PKWK_UTF8_ENABLE', 1);
+define('PKWK_UTF8_ENABLE', 1);
 if (defined('PKWK_UTF8_ENABLE')) {
 	define('SOURCE_ENCODING', 'UTF-8');
 	define('CONTENT_CHARSET', 'UTF-8');
@@ -136,7 +136,7 @@ if (isset($script)) {
 }
 
 /////////////////////////////////////////////////
-// INI_FILE: $agents:  UserAgent¤Î¼±ÊÌ
+// INI_FILE: $agents:  UserAgentã®è­˜åˆ¥
 
 $ua = 'HTTP_USER_AGENT';
 $user_agent = $matches = array();
@@ -169,7 +169,7 @@ define('UA_VERS', isset($user_agent['vers']) ? $user_agent['vers'] : '');
 unset($user_agent);	// Unset after reading UA_INI_FILE
 
 /////////////////////////////////////////////////
-// ¥Ç¥£¥ì¥¯¥È¥ê¤Î¥Á¥§¥Ã¥¯
+// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒã‚§ãƒƒã‚¯
 
 $die = '';
 foreach(array('DATA_DIR', 'DIFF_DIR', 'BACKUP_DIR', 'CACHE_DIR') as $dir){
@@ -177,7 +177,7 @@ foreach(array('DATA_DIR', 'DIFF_DIR', 'BACKUP_DIR', 'CACHE_DIR') as $dir){
 		$die .= 'Directory is not found or not writable (' . $dir . ')' . "\n";
 }
 
-// ÀßÄê¥Õ¥¡¥¤¥ë¤ÎÊÑ¿ô¥Á¥§¥Ã¥¯
+// è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã®å¤‰æ•°ãƒã‚§ãƒƒã‚¯
 $temp = '';
 foreach(array('rss_max', 'page_title', 'note_hr', 'related_link', 'show_passage',
 	'rule_related_str', 'load_template_func') as $var){
@@ -201,14 +201,14 @@ if($die) die_message(nl2br("\n\n" . $die));
 unset($die, $temp);
 
 /////////////////////////////////////////////////
-// É¬¿Ü¤Î¥Ú¡¼¥¸¤¬Â¸ºß¤·¤Ê¤±¤ì¤Ğ¡¢¶õ¤Î¥Õ¥¡¥¤¥ë¤òºîÀ®¤¹¤ë
+// å¿…é ˆã®ãƒšãƒ¼ã‚¸ãŒå­˜åœ¨ã—ãªã‘ã‚Œã°ã€ç©ºã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã™ã‚‹
 
 foreach(array($defaultpage, $whatsnew, $interwiki) as $page){
 	if (! is_page($page)) pkwk_touch_file(get_filename($page));
 }
 
 /////////////////////////////////////////////////
-// ³°Éô¤«¤é¤¯¤ëÊÑ¿ô¤Î¥Á¥§¥Ã¥¯
+// å¤–éƒ¨ã‹ã‚‰ãã‚‹å¤‰æ•°ã®ãƒã‚§ãƒƒã‚¯
 
 // Prohibit $_GET attack
 foreach (array('msg', 'pass') as $key) {
@@ -224,49 +224,49 @@ $_GET    = input_filter($_GET);
 $_POST   = input_filter($_POST);
 $_COOKIE = input_filter($_COOKIE);
 
-// Ê¸»ú¥³¡¼¥ÉÊÑ´¹ ($_POST)
-// <form> ¤ÇÁ÷¿®¤µ¤ì¤¿Ê¸»ú (¥Ö¥é¥¦¥¶¤¬¥¨¥ó¥³¡¼¥É¤·¤¿¥Ç¡¼¥¿) ¤Î¥³¡¼¥É¤òÊÑ´¹
-// POST method ¤Ï¾ï¤Ë form ·ĞÍ³¤Ê¤Î¤Ç¡¢É¬¤ºÊÑ´¹¤¹¤ë
+// æ–‡å­—ã‚³ãƒ¼ãƒ‰å¤‰æ› ($_POST)
+// <form> ã§é€ä¿¡ã•ã‚ŒãŸæ–‡å­— (ãƒ–ãƒ©ã‚¦ã‚¶ãŒã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã—ãŸãƒ‡ãƒ¼ã‚¿) ã®ã‚³ãƒ¼ãƒ‰ã‚’å¤‰æ›
+// POST method ã¯å¸¸ã« form çµŒç”±ãªã®ã§ã€å¿…ãšå¤‰æ›ã™ã‚‹
 //
 if (isset($_POST['encode_hint']) && $_POST['encode_hint'] != '') {
-	// do_plugin_xxx() ¤ÎÃæ¤Ç¡¢<form> ¤Ë encode_hint ¤ò»Å¹ş¤ó¤Ç¤¤¤ë¤Î¤Ç¡¢
-	// encode_hint ¤òÍÑ¤¤¤Æ¥³¡¼¥É¸¡½Ğ¤¹¤ë¡£
-	// Á´ÂÎ¤ò¸«¤Æ¥³¡¼¥É¸¡½Ğ¤¹¤ë¤È¡¢µ¡¼ï°ÍÂ¸Ê¸»ú¤ä¡¢Ì¯¤Ê¥Ğ¥¤¥Ê¥ê
-	// ¥³¡¼¥É¤¬º®Æş¤·¤¿¾ì¹ç¤Ë¡¢¥³¡¼¥É¸¡½Ğ¤Ë¼ºÇÔ¤¹¤ë¶²¤ì¤¬¤¢¤ë¡£
+	// do_plugin_xxx() ã®ä¸­ã§ã€<form> ã« encode_hint ã‚’ä»•è¾¼ã‚“ã§ã„ã‚‹ã®ã§ã€
+	// encode_hint ã‚’ç”¨ã„ã¦ã‚³ãƒ¼ãƒ‰æ¤œå‡ºã™ã‚‹ã€‚
+	// å…¨ä½“ã‚’è¦‹ã¦ã‚³ãƒ¼ãƒ‰æ¤œå‡ºã™ã‚‹ã¨ã€æ©Ÿç¨®ä¾å­˜æ–‡å­—ã‚„ã€å¦™ãªãƒã‚¤ãƒŠãƒª
+	// ã‚³ãƒ¼ãƒ‰ãŒæ··å…¥ã—ãŸå ´åˆã«ã€ã‚³ãƒ¼ãƒ‰æ¤œå‡ºã«å¤±æ•—ã™ã‚‹æã‚ŒãŒã‚ã‚‹ã€‚
 	$encode = mb_detect_encoding($_POST['encode_hint']);
 	mb_convert_variables(SOURCE_ENCODING, $encode, $_POST);
 
 } else if (isset($_POST['charset']) && $_POST['charset'] != '') {
-	// TrackBack Ping ¤Ç»ØÄê¤µ¤ì¤Æ¤¤¤ë¤³¤È¤¬¤¢¤ë
-	// ¤¦¤Ş¤¯¤¤¤«¤Ê¤¤¾ì¹ç¤Ï¼«Æ°¸¡½Ğ¤ËÀÚ¤êÂØ¤¨
+	// TrackBack Ping ã§æŒ‡å®šã•ã‚Œã¦ã„ã‚‹ã“ã¨ãŒã‚ã‚‹
+	// ã†ã¾ãã„ã‹ãªã„å ´åˆã¯è‡ªå‹•æ¤œå‡ºã«åˆ‡ã‚Šæ›¿ãˆ
 	if (mb_convert_variables(SOURCE_ENCODING,
 	    $_POST['charset'], $_POST) !== $_POST['charset']) {
 		mb_convert_variables(SOURCE_ENCODING, 'auto', $_POST);
 	}
 
 } else if (! empty($_POST)) {
-	// Á´Éô¤Ş¤È¤á¤Æ¡¢¼«Æ°¸¡½Ğ¡¿ÊÑ´¹
+	// å…¨éƒ¨ã¾ã¨ã‚ã¦ã€è‡ªå‹•æ¤œå‡ºï¼å¤‰æ›
 	mb_convert_variables(SOURCE_ENCODING, 'auto', $_POST);
 }
 
-// Ê¸»ú¥³¡¼¥ÉÊÑ´¹ ($_GET)
-// GET method ¤Ï form ¤«¤é¤Î¾ì¹ç¤È¡¢<a href="http://script/?key=value> ¤Î¾ì¹ç¤¬¤¢¤ë
-// <a href...> ¤Î¾ì¹ç¤Ï¡¢¥µ¡¼¥Ğ¡¼¤¬ rawurlencode ¤·¤Æ¤¤¤ë¤Î¤Ç¡¢¥³¡¼¥ÉÊÑ´¹¤ÏÉÔÍ×
+// æ–‡å­—ã‚³ãƒ¼ãƒ‰å¤‰æ› ($_GET)
+// GET method ã¯ form ã‹ã‚‰ã®å ´åˆã¨ã€<a href="http://script/?key=value> ã®å ´åˆãŒã‚ã‚‹
+// <a href...> ã®å ´åˆã¯ã€ã‚µãƒ¼ãƒãƒ¼ãŒ rawurlencode ã—ã¦ã„ã‚‹ã®ã§ã€ã‚³ãƒ¼ãƒ‰å¤‰æ›ã¯ä¸è¦
 if (isset($_GET['encode_hint']) && $_GET['encode_hint'] != '')
 {
-	// form ·ĞÍ³¤Î¾ì¹ç¤Ï¡¢¥Ö¥é¥¦¥¶¤¬¥¨¥ó¥³¡¼¥É¤·¤Æ¤¤¤ë¤Î¤Ç¡¢¥³¡¼¥É¸¡½Ğ¡¦ÊÑ´¹¤¬É¬Í×¡£
-	// encode_hint ¤¬´Ş¤Ş¤ì¤Æ¤¤¤ë¤Ï¤º¤Ê¤Î¤Ç¡¢¤½¤ì¤ò¸«¤Æ¡¢¥³¡¼¥É¸¡½Ğ¤·¤¿¸å¡¢ÊÑ´¹¤¹¤ë¡£
-	// ÍıÍ³¤Ï¡¢post ¤ÈÆ±ÍÍ
+	// form çµŒç”±ã®å ´åˆã¯ã€ãƒ–ãƒ©ã‚¦ã‚¶ãŒã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã—ã¦ã„ã‚‹ã®ã§ã€ã‚³ãƒ¼ãƒ‰æ¤œå‡ºãƒ»å¤‰æ›ãŒå¿…è¦ã€‚
+	// encode_hint ãŒå«ã¾ã‚Œã¦ã„ã‚‹ã¯ãšãªã®ã§ã€ãã‚Œã‚’è¦‹ã¦ã€ã‚³ãƒ¼ãƒ‰æ¤œå‡ºã—ãŸå¾Œã€å¤‰æ›ã™ã‚‹ã€‚
+	// ç†ç”±ã¯ã€post ã¨åŒæ§˜
 	$encode = mb_detect_encoding($_GET['encode_hint']);
 	mb_convert_variables(SOURCE_ENCODING, $encode, $_GET);
 }
 
 
 /////////////////////////////////////////////////
-// QUERY_STRING¤ò¼èÆÀ
+// QUERY_STRINGã‚’å–å¾—
 
-// cmd¤âplugin¤â»ØÄê¤µ¤ì¤Æ¤¤¤Ê¤¤¾ì¹ç¤Ï¡¢QUERY_STRING¤ò
-// ¥Ú¡¼¥¸Ì¾¤«InterWikiName¤Ç¤¢¤ë¤È¤ß¤Ê¤¹
+// cmdã‚‚pluginã‚‚æŒ‡å®šã•ã‚Œã¦ã„ãªã„å ´åˆã¯ã€QUERY_STRINGã‚’
+// ãƒšãƒ¼ã‚¸åã‹InterWikiNameã§ã‚ã‚‹ã¨ã¿ãªã™
 $arg = '';
 if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] != '') {
 	$arg = & $_SERVER['QUERY_STRING'];
@@ -280,7 +280,7 @@ if (PKWK_QUERY_STRING_MAX && strlen($arg) > PKWK_QUERY_STRING_MAX) {
 	echo('Query string too long');
 	exit;
 }
-$arg = input_filter($arg); // \0 ½üµî
+$arg = input_filter($arg); // \0 é™¤å»
 
 // unset QUERY_STRINGs
 foreach (array('QUERY_STRING', 'argv', 'argc') as $key) {
@@ -289,15 +289,15 @@ foreach (array('QUERY_STRING', 'argv', 'argc') as $key) {
 // $_SERVER['REQUEST_URI'] is used at func.php NOW
 unset($REQUEST_URI, $HTTP_SERVER_VARS['REQUEST_URI']);
 
-// mb_convert_variables¤Î¥Ğ¥°(?)ÂĞºö: ÇÛÎó¤ÇÅÏ¤µ¤Ê¤¤¤ÈÍî¤Á¤ë
+// mb_convert_variablesã®ãƒã‚°(?)å¯¾ç­–: é…åˆ—ã§æ¸¡ã•ãªã„ã¨è½ã¡ã‚‹
 $arg = array($arg);
 mb_convert_variables(SOURCE_ENCODING, 'auto', $arg);
 $arg = $arg[0];
 
 /////////////////////////////////////////////////
-// QUERY_STRING¤òÊ¬²ò¤·¤Æ¥³¡¼¥ÉÊÑ´¹¤·¡¢$_GET ¤Ë¾å½ñ¤­
+// QUERY_STRINGã‚’åˆ†è§£ã—ã¦ã‚³ãƒ¼ãƒ‰å¤‰æ›ã—ã€$_GET ã«ä¸Šæ›¸ã
 
-// URI ¤ò urlencode ¤»¤º¤ËÆşÎÏ¤·¤¿¾ì¹ç¤ËÂĞ½è¤¹¤ë
+// URI ã‚’ urlencode ã›ãšã«å…¥åŠ›ã—ãŸå ´åˆã«å¯¾å‡¦ã™ã‚‹
 $matches = array();
 foreach (explode('&', $arg) as $key_and_value) {
 	if (preg_match('/^([^=]+)=(.+)/', $key_and_value, $matches) &&
@@ -323,35 +323,35 @@ if (empty($_POST)) {
 	$vars = array_merge($_GET, $_POST); // Considered reliable than $_REQUEST
 }
 
-// ÆşÎÏ¥Á¥§¥Ã¥¯: 'cmd=' and 'plugin=' can't live together
+// å…¥åŠ›ãƒã‚§ãƒƒã‚¯: 'cmd=' and 'plugin=' can't live together
 if (isset($vars['cmd']) && isset($vars['plugin']))
 	die('Using both cmd= and plugin= is not allowed');
 
-// ÆşÎÏ¥Á¥§¥Ã¥¯: cmd, plugin ¤ÎÊ¸»úÎó¤Ï±Ñ¿ô»ú°Ê³°¤¢¤ê¤¨¤Ê¤¤
+// å…¥åŠ›ãƒã‚§ãƒƒã‚¯: cmd, plugin ã®æ–‡å­—åˆ—ã¯è‹±æ•°å­—ä»¥å¤–ã‚ã‚Šãˆãªã„
 foreach(array('cmd', 'plugin') as $var) {
 	if (isset($vars[$var]) && ! preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $vars[$var]))
 		unset($get[$var], $post[$var], $vars[$var]);
 }
 
-// À°·Á: page, strip_bracket()
+// æ•´å½¢: page, strip_bracket()
 if (isset($vars['page'])) {
 	$get['page'] = $post['page'] = $vars['page']  = strip_bracket($vars['page']);
 } else {
 	$get['page'] = $post['page'] = $vars['page'] = '';
 }
 
-// À°·Á: msg, ²ş¹Ô¤ò¼è¤ê½ü¤¯
+// æ•´å½¢: msg, æ”¹è¡Œã‚’å–ã‚Šé™¤ã
 if (isset($vars['msg'])) {
 	$get['msg'] = $post['msg'] = $vars['msg'] = str_replace("\r", '', $vars['msg']);
 }
 
-// ¸åÊı¸ß´¹À­ (?md5=...)
+// å¾Œæ–¹äº’æ›æ€§ (?md5=...)
 if (isset($get['md5']) && $get['md5'] != '' &&
     ! isset($vars['cmd']) && ! isset($vars['plugin'])) {
 	$get['cmd'] = $post['cmd'] = $vars['cmd'] = 'md5';
 }
 
-// cmd¤âplugin¤â»ØÄê¤µ¤ì¤Æ¤¤¤Ê¤¤¾ì¹ç¤Ï¡¢QUERY_STRING¤ò¥Ú¡¼¥¸Ì¾¤«InterWikiName¤Ç¤¢¤ë¤È¤ß¤Ê¤¹
+// cmdã‚‚pluginã‚‚æŒ‡å®šã•ã‚Œã¦ã„ãªã„å ´åˆã¯ã€QUERY_STRINGã‚’ãƒšãƒ¼ã‚¸åã‹InterWikiNameã§ã‚ã‚‹ã¨ã¿ãªã™
 if (! isset($vars['cmd']) && ! isset($vars['plugin'])) {
 
 	$get['cmd']  = $post['cmd']  = $vars['cmd']  = 'read';
@@ -364,13 +364,13 @@ if (! isset($vars['cmd']) && ! isset($vars['plugin'])) {
 }
 
 /////////////////////////////////////////////////
-// ½é´üÀßÄê($WikiName,$BracketName¤Ê¤É)
+// åˆæœŸè¨­å®š($WikiName,$BracketNameãªã©)
 // $WikiName = '[A-Z][a-z]+(?:[A-Z][a-z]+)+';
 // $WikiName = '\b[A-Z][a-z]+(?:[A-Z][a-z]+)+\b';
 // $WikiName = '(?<![[:alnum:]])(?:[[:upper:]][[:lower:]]+){2,}(?![[:alnum:]])';
 // $WikiName = '(?<!\w)(?:[A-Z][a-z]+){2,}(?!\w)';
 
-// BugTrack/304»ÃÄêÂĞ½è
+// BugTrack/304æš«å®šå¯¾å‡¦
 $WikiName = '(?:[A-Z][a-z]+){2,}(?!\w)';
 
 // $BracketName = ':?[^\s\]#&<>":]+:?';
@@ -379,34 +379,34 @@ $BracketName = '(?!\s):?[^\r\n\t\f\[\]<>#&":]+:?(?<!\s)';
 // InterWiki
 $InterWikiName = '(\[\[)?((?:(?!\s|:|\]\]).)+):(.+)(?(1)\]\])';
 
-// Ãí¼á
+// æ³¨é‡ˆ
 $NotePattern = '/\(\(((?:(?>(?:(?!\(\()(?!\)\)(?:[^\)]|$)).)+)|(?R))*)\)\)/ex';
 
 /////////////////////////////////////////////////
-// ½é´üÀßÄê(¥æ¡¼¥¶ÄêµÁ¥ë¡¼¥ëÆÉ¤ß¹ş¤ß)
+// åˆæœŸè¨­å®š(ãƒ¦ãƒ¼ã‚¶å®šç¾©ãƒ«ãƒ¼ãƒ«èª­ã¿è¾¼ã¿)
 require(DATA_HOME . 'rules.ini.php');
 
 /////////////////////////////////////////////////
-// ½é´üÀßÄê(¤½¤ÎÂ¾¤Î¥°¥í¡¼¥Ğ¥ëÊÑ¿ô)
+// åˆæœŸè¨­å®š(ãã®ä»–ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°)
 
-// ¸½ºß»ş¹ï
+// ç¾åœ¨æ™‚åˆ»
 $now = format_date(UTIME);
 
-// Æü»şÃÖ´¹¥ë¡¼¥ë¤ò$line_rules¤Ë²Ã¤¨¤ë
+// æ—¥æ™‚ç½®æ›ãƒ«ãƒ¼ãƒ«ã‚’$line_rulesã«åŠ ãˆã‚‹
 if ($usedatetime) $line_rules += $datetime_rules;
 unset($datetime_rules);
 
-// ¥Õ¥§¥¤¥¹¥Ş¡¼¥¯¤ò$line_rules¤Ë²Ã¤¨¤ë
+// ãƒ•ã‚§ã‚¤ã‚¹ãƒãƒ¼ã‚¯ã‚’$line_rulesã«åŠ ãˆã‚‹
 if ($usefacemark) $line_rules += $facemark_rules;
 unset($facemark_rules);
 
-// ¼ÂÂÎ»²¾È¥Ñ¥¿¡¼¥ó¤ª¤è¤Ó¥·¥¹¥Æ¥à¤Ç»ÈÍÑ¤¹¤ë¥Ñ¥¿¡¼¥ó¤ò$line_rules¤Ë²Ã¤¨¤ë
+// å®Ÿä½“å‚ç…§ãƒ‘ã‚¿ãƒ¼ãƒ³ãŠã‚ˆã³ã‚·ã‚¹ãƒ†ãƒ ã§ä½¿ç”¨ã™ã‚‹ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’$line_rulesã«åŠ ãˆã‚‹
 //$entity_pattern = '[a-zA-Z0-9]{2,8}';
 $entity_pattern = trim(join('', file(CACHE_DIR . 'entities.dat')));
 
 $line_rules = array_merge(array(
 	'&amp;(#[0-9]+|#x[0-9a-f]+|' . $entity_pattern . ');' => '&$1;',
-	"\r"          => '<br />' . "\n",	/* ¹ÔËö¤Ë¥Á¥ë¥À¤Ï²ş¹Ô */
+	"\r"          => '<br />' . "\n",	/* è¡Œæœ«ã«ãƒãƒ«ãƒ€ã¯æ”¹è¡Œ */
 ), $line_rules);
 
 ?>

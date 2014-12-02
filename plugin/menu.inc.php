@@ -5,10 +5,10 @@
 // $Id: menu.inc.php,v 1.10 2011/01/25 15:01:01 henoheno Exp $
 //
 
-// ¥µ¥Ö¥á¥Ë¥å¡¼¤ò»ÈÍÑ¤¹¤ë
+// ã‚µãƒ–ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’ä½¿ç”¨ã™ã‚‹
 define('MENU_ENABLE_SUBMENU', FALSE);
 
-// ¥µ¥Ö¥á¥Ë¥å¡¼¤ÎÌ¾¾Î
+// ã‚µãƒ–ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®åç§°
 define('MENU_SUBMENUBAR', 'MenuBar');
 
 function plugin_menu_convert()

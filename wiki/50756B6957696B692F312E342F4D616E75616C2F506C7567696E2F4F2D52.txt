@@ -7,203 +7,203 @@
 * O [#c4c5830a]
 
 **online [#vc9c6801]
-:����|
-~�֥��å����ץ饰����
-~����饤�󷿥ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+~インライン型プラグイン
+:重要度|
+~★★☆☆☆
+:書式|
 ~''#online''
 ~''&online'''';''
-:����|
-~����PukiWiki�򻲾Ȥ��Ƥ��롢�����褽�Υ桼��������ɽ�����ޤ���
-~�桼�������ϡ��ץ饰�����ƤӽФ��줿�����ǵ�Ͽ���줿�ɣХ��ɥ쥹�ȥ����ॹ����פΤ�������ʬ����(�ѹ���ǽ)�˥��������Τ��ä����ɥ쥹�ο��Ǥ���
-:�ץ饰����������|~
---PLUGIN_ONLINE_TIMEOUT�������ॢ���Ȥ��ÿ�
---PLUGIN_ONLINE_USER_LIST���桼�����������¸����ե�����
---PLUGIN_ONLINE_LIST_REGEX���桼������������Ѥ�����ɽ��
-:����|
-~�桼�������Υ�����Ȥϥڡ���ñ�̤Ǥʤ������֤��줿PukiWiki��˹ԤäƤ��뤿�ᡢMenuBar�ʤ����ˤ˸ƤӽФ������˵��Ҥ��뤫�������������Τ����̤Ǥ���
+:概要|
+~現在PukiWikiを参照している、おおよそのユーザー数を表示します。
+~ユーザー数は、プラグインを呼び出された時点で記録されたＩＰアドレスとタイムスタンプのうち、５分以内(変更可能)にアクセスのあったアドレスの数です。
+:プラグイン内設定|~
+--PLUGIN_ONLINE_TIMEOUT　タイムアウトの秒数
+--PLUGIN_ONLINE_USER_LIST　ユーザー情報を保存するファイル
+--PLUGIN_ONLINE_LIST_REGEX　ユーザー情報取得用の正規表現
+:備考|
+~ユーザー数のカウントはページ単位でなく、設置されたPukiWiki毎に行っているため、MenuBarなど頻繁に呼び出される場所に記述するかスキンに埋め込むのが普通です。
 
 
 ------------------------------
 * P [#eb773236]
 
 **paint [#v8e0f909]
-:����|
-~�ʥ��ޥ�ɡ�
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ''#paint(''
-[&color(blue){��};]
-[,&color(blue){�⤵};]
+[&color(blue){幅};]
+[,&color(blue){高さ};]
 '')''
-:����|
-~Java���ץ�åȤ����������򡢤��Υڡ�����ź�դ��ޤ���
-~[[�вʳ�Ū����:http://www.geocities.co.jp/SiliconValley-SanJose/8609/]]�����ۤ���Ƥ���[[BBSPainter.jar:http://www.geocities.co.jp/SiliconValley-SanJose/8609/java/bbspainter/]]����Ѥ��Ƥ��ޤ���
-~���ȹ⤵�ˡ��ǥե���ȤΥ����Х�����������ꤷ�ޤ�����ά����(80,60)�Ȥʤ�ޤ����ѹ���ǽ��
-:�ץ饰����������|~
---PAINT_INSERT_INS���������Ƥ���Ƭ/�����Τɤ�����������뤫
---PAINT_DEFAULT_WIDTH���ǥե���Ȥ������ΰ����
---PAINT_DEFAULT_HEIGHT���ǥե���Ȥ������ΰ�ι⤵
---PAINT_MAX_WIDTH�������ΰ�����ξ��
---PAINT_MAX_HEIGHT�������ΰ�ι⤵�ξ��
---PAINT_APPLET_WIDTH�����ץ�å��ΰ����
---PAINT_APPLET_HEIGHT�����ץ�å��ΰ�ι⤵
---PAINT_NAME_FORMAT��̾����������ե����ޥå� 
---PAINT_MSG_FORMAT����������������ե����ޥå�
---PAINT_NOW_FORMAT��������������ե����ޥå�
---PAINT_FORMAT���������������Τ������ե����ޥåȡʥ�å����������
---PAINT_FORMAT_NOMSG���������������Τ������ե����ޥåȡʥ�å������ʤ���
-:����|
-~PukiWiki�Υ��󥹥ȡ���ǥ��쥯�ȥ�˾嵭BBSPainter.jar�������Τ�˺��ʤ��Ǥ������������Υץ饰���󤬲�����ˤ�Ω���ʤ��ʤ�ޤ���
+:概要|
+~Javaアプレットで描いた絵を、そのページに添付します。
+~[[ば科学的愛情:http://www.geocities.co.jp/SiliconValley-SanJose/8609/]]で配布されている[[BBSPainter.jar:http://www.geocities.co.jp/SiliconValley-SanJose/8609/java/bbspainter/]]を使用しています。
+~幅と高さに、デフォルトのキャンバスサイズを指定します。省略時は(80,60)となります（変更可能）
+:プラグイン内設定|~
+--PAINT_INSERT_INS　入力内容を先頭/末尾のどちらに挿入するか
+--PAINT_DEFAULT_WIDTH　デフォルトの描画領域の幅
+--PAINT_DEFAULT_HEIGHT　デフォルトの描画領域の高さ
+--PAINT_MAX_WIDTH　描画領域の幅の上限
+--PAINT_MAX_HEIGHT　描画領域の高さの上限
+--PAINT_APPLET_WIDTH　アプレット領域の幅
+--PAINT_APPLET_HEIGHT　アプレット領域の高さ
+--PAINT_NAME_FORMAT　名前欄の挿入フォーマット 
+--PAINT_MSG_FORMAT　コメント欄の挿入フォーマット
+--PAINT_NOW_FORMAT　時刻欄の挿入フォーマット
+--PAINT_FORMAT　コメント内容全体の挿入フォーマット（メッセージあり）
+--PAINT_FORMAT_NOMSG　コメント内容全体の挿入フォーマット（メッセージなし）
+:備考|
+~PukiWikiのインストールディレクトリに上記BBSPainter.jarを入れるのを忘れないでください。このプラグインが何の役にも立たなくなります。
 
 
 **pcomment [#n889950d]
-:����|
-~�ʥ��ޥ�ɡ�
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★★★☆☆
+:書式|
 ''#pcomment(''{
-[&color(blue){�����ȵ�Ͽ�ڡ���};],
-[&color(blue){ɽ�����};],
+[&color(blue){コメント記録ページ};],
+[&color(blue){表示件数};],
 [&color(blue){noname};],
 [&color(blue){nodate};],
 [&color(blue){above};],
 [&color(blue){below};],
 [&color(blue){reply};]
 }'')''
-:����|
-~�̤Υڡ����˥����Ȥ�Ͽ���뤳�Ȥ��Ǥ���comment�ץ饰����Ǥ������֤������ˤϺǿ��Υ����Ȥ�����ɽ�����뤳�Ȥ��Ǥ��ޤ����饸���ܥ����ɽ���������ꤷ����ʬ�˥����Ȥ��դ��뤳�Ȥ�Ǥ��ޤ���
-:����|
-~�����ȵ�Ͽ�ڡ��� �ˤϥ����Ȥ�Ͽ����ڡ���̾����ꤷ�ޤ�����ά����ȡ�pcomment�ץ饰������� PLUGIN_PCOMMENT_PAGE �ǻ��ꤵ�줿�ڡ����˥����Ȥ���Ͽ����ޤ����ǥե���Ȥ� [������/(���֤����ڡ���̾)] �Ǥ������ꤷ���ڡ�����¸�ߤ��ʤ��Ƥ⡢�ǽ�˥����Ȥ��ɲä������˺������ޤ��� 
-~ɽ����� ��ɽ������ǿ������Ȥο�����ꤷ�ޤ�����1��٥���ֹ�ʤ��ꥹ�Ȥ����򥫥���Ȥ��ޤ�����ά����ȡ�pcomment�Υǥե���ȷ��(�̾�10� PLUGIN_PCOMMENT_NUM_COMMENTS ���ѹ���ǽ)��ɽ������ޤ���~
-ɽ������� �����ȵ�Ͽ�ڡ��� ����˻��ꤷ�Ʋ������������ȵ�Ͽ�ڡ������ά���� ɽ����� ����ꤹ����ϡ� �����ȵ�Ͽ�ڡ��� �˶������ꤷ�ޤ�������: #pcomment(,15)��
-~noname,nodate,above,below,reply �ǥ����Ȥ�ɽ����ˡ��������ˡ����ꤷ�ޤ���
---noname �� ̾�����������ɽ�����ޤ���
---nodate �� ���դ��������ޤ���
---above �� �������������Ȥ�ե�����ξ��ɽ�����ޤ��������ȤϾ夬�Ť������˸����äƿ���������¤Ӥޤ���
---below �� �������������Ȥ�ե�����β���ɽ�����ޤ��������Ȥϲ����Ť�����˸����äƿ���������¤Ӥޤ���
---reply �� �����Ȥ�Ƭ�˥饸���ܥ����ɽ�����ޤ������륳���Ȥ��Ф����ץ饤�������Υ����ȤΥ饸���ܥ��������å����뤳�Ȥǲ�ǽ�ˤʤ�ޤ���
-:�ץ饰����������|~
---PLUGIN_PCOMMENT_PAGE��        �ڡ���̾�Υǥե����(%s��$vars['page']������)
---PLUGIN_PCOMMENT_NUM_COMMENTS��ɽ������(�ǿ���)�����ȿ��Υǥե����
---PLUGIN_PCOMMENT_SIZE_NAME��  ̾�����ɽ�����
---PLUGIN_PCOMMENT_SIZE_MSG��   ���������ɽ�����
---PLUGIN_PCOMMENT_DIRECTION_DEFAULT���������Ƥ���Ƭ/�����Τɤ�����������뤫
---PLUGIN_PCOMMENT_FORMAT_NAME��̾����������ե����ޥå�
---PLUGIN_PCOMMENT_FORMAT_MSG�� ��������������ե����ޥå�
---PLUGIN_PCOMMENT_FORMAT_NOW�� ������������ե����ޥå�
---PLUGIN_PCOMMENT_FORMAT_STRING���������������Τ������ե����ޥå�
---PLUGIN_PCOMMENT_AUTO_LOG����ư����������Ԥ��ݤ�1�ڡ���������η��(0��̵��)
---PLUGIN_PCOMMENT_TIMESTAMP�������ȥڡ����Υ����ॹ����פ򹹿����������֥ڡ����Υ����ॹ����פ򹹿����뤫
-:����|
-~���������ͤ����Ȥ��ϡ�ͽ�����̾��˥����Ȥ����������Τ��ɤ����ᡢ��ץ饤�����ꤷ�Ƶ������������Ȥ�above�ޤ���below������ˤ������ä� �����������ָ�����ɲä���ޤ���
-~�����ȵ������ɽ�������ڡ����Υ����ȥ�ˡ�(#pcomment��񤤤��ڡ���)�򹹿����ޤ����פ�ɽ������ޤ������ºݤ˹������줿�Τϥ����Ȥ�Ͽ����ڡ����Ǥ���
-~�����Ȥ���Ƥ��Ƥ⡢#pcomment���񤫤줿�ڡ����Ϲ�������ʤ��Τǡ��ǽ������ڡ����ˤϥ����Ȥ�Ͽ�����ڡ��������������Ȥ���ɽ������ޤ���
-~�����ȤȤ������л���([ [../] ]�ʤ�)���Ѥ������ϡ��񤤤��ڡ����Ƚ񤭹��ޤ줿�ڡ����Τɤ��餫�ǡ��տޤ����Ȥ�����Ѵ�����ʤ���ǽ��������ޤ���
-~��ư����������ǽ�� PLUGIN_PCOMMENT_AUTO_LOG �η�� �� PLUGIN_PCOMMENT_NUM_COMMENTS �η��ʬ�Υ����Ȥ���Ƥ������˺�ư���ޤ���
+:概要|
+~別のページにコメントを記録することができるcommentプラグインです。設置した場所には最新のコメントだけを表示することができます。ラジオボタンを表示し、指定した部分にコメントを付けることもできます。
+:引数|
+~コメント記録ページ にはコメントを記録するページ名を指定します。省略すると、pcommentプラグイン内の PLUGIN_PCOMMENT_PAGE で指定されたページにコメントが記録されます。デフォルトは [コメント/(設置したページ名)] です。指定したページが存在しなくても、最初にコメントを追加した時に作成します。 
+~表示件数 は表示する最新コメントの数を指定します。第1レベルの番号なしリストだけをカウントします。省略すると、pcommentのデフォルト件数(通常10件。 PLUGIN_PCOMMENT_NUM_COMMENTS で変更可能)が表示されます。~
+表示件数は コメント記録ページ より後に指定して下さい。コメント記録ページを省略して 表示件数 を指定する場合は、 コメント記録ページ に空白を指定します。（例: #pcomment(,15)）
+~noname,nodate,above,below,reply でコメントの表示方法、入力方法を指定します。
+--noname － 名前の入力欄を表示しません。
+--nodate － 日付を挿入しません。
+--above － 挿入したコメントをフォームの上に表示します。コメントは上が古く、下に向かって新しい順に並びます。
+--below － 挿入したコメントをフォームの下に表示します。コメントは下が古く、上に向かって新しい順に並びます。
+--reply － コメントの頭にラジオボタンを表示します。あるコメントに対するリプライが、そのコメントのラジオボタンをチェックすることで可能になります。
+:プラグイン内設定|~
+--PLUGIN_PCOMMENT_PAGE　        ページ名のデフォルト(%sに$vars['page']が入る)
+--PLUGIN_PCOMMENT_NUM_COMMENTS　表示する(最新の)コメント数のデフォルト
+--PLUGIN_PCOMMENT_SIZE_NAME　  名前欄の表示桁数
+--PLUGIN_PCOMMENT_SIZE_MSG　   コメント欄の表示桁数
+--PLUGIN_PCOMMENT_DIRECTION_DEFAULT　入力内容を先頭/末尾のどちらに挿入するか
+--PLUGIN_PCOMMENT_FORMAT_NAME　名前欄の挿入フォーマット
+--PLUGIN_PCOMMENT_FORMAT_MSG　 コメント欄の挿入フォーマット
+--PLUGIN_PCOMMENT_FORMAT_NOW　 時刻欄の挿入フォーマット
+--PLUGIN_PCOMMENT_FORMAT_STRING　コメント内容全体の挿入フォーマット
+--PLUGIN_PCOMMENT_AUTO_LOG　自動過去ログ化を行う際の1ページあたりの件数(0で無効)
+--PLUGIN_PCOMMENT_TIMESTAMP　コメントページのタイムスタンプを更新せず、設置ページのタイムスタンプを更新するか
+:備考|
+~更新が衝突したときは、予期せぬ場所にコメントが挿入されるのを防ぐため、リプライ先を指定して記入したコメントはaboveまたはbelowの設定にしたがって 一番前か一番後ろに追加されます。
+~コメント記入後に表示されるページのタイトルに「(#pcommentを書いたページ)を更新しました」と表示されますが、実際に更新されたのはコメントを記録するページです。
+~コメントを投稿しても、#pcommentが書かれたページは更新されないので、最終更新ページにはコメントを記録したページだけが更新として表示されます。
+~コメントとして相対参照([ [../] ]など)を用いた場合は、書いたページと書き込まれたページのどちらかで、意図したとおりに変換されない可能性があります。
+~自動過去ログ化機能は PLUGIN_PCOMMENT_AUTO_LOG の件数 ＋ PLUGIN_PCOMMENT_NUM_COMMENTS の件数分のコメントを投稿した時に作動します。
 
 
 **popular [#aa6d5e99]
-:����|
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★★☆☆☆
+:書式|
 ''#popular(''
-[[&color(blue){���};]
-[,[&color(blue){�оݳ��ڡ���};]
+[[&color(blue){件数};]
+[,[&color(blue){対象外ページ};]
 [,&color(blue){true};|&color(blue){false};]
 ]]
 '')''
-:����|
-~�͵��Τ���ʻ��Ȳ����¿���˥ڡ����ξ�̿����ɽ�����ޤ���
-:����|
-~����ˤϰ����ο�����ꤷ�Ʋ���������ά����PLUGIN_POPULAR_DEFAULT�˻��ꤷ������Ǥ���
-~�оݳ��ڡ����ˤϡ�ɽ���оݳ��Ȥ���ڡ���������ɽ���ǻ��ꤷ�ޤ����㤨�� FrontPage �� MenuBar �ʤɤΥڡ����������ɽ�����������ʤ��Ȥ��˻��Ѥ��ޤ���
-~true, false�ǡ��ڡ����Υ�����Ⱦ�����ꤷ�ޤ�����ά���� false �Ǥ���
---true �� �������ȤΤ��ä������ǥڡ�����ɽ�����ޤ���
---false �� �̻��λ��Ȳ����ǥڡ�����ɽ�����ޤ���
-:�ץ饰����������|~
---PLUGIN_POPULAR_DEFAULT�����̤������η��
-:����|
-~[[counter>../A-D#zedb02cf]]�ץ饰����Υ����󥿡���������Ѥ��Ƥ���Τǡ�counter�ץ饰��������֤��Ƥ��ʤ��ڡ����ϥ�����Ȥ��оݳ��Ȥʤ�ޤ������ƤΥڡ�����counter�ץ饰��������֤���Τ����Ψ�Ǥ��뤿�� counter�ץ饰�����Menubar�䥹��������֤���Τ�����Ū�Ǥ���
+:概要|
+~人気のある（参照回数の多い）ページの上位数件を表示します。
+:引数|
+~件数には一覧の数を指定して下さい。省略時はPLUGIN_POPULAR_DEFAULTに指定した件数です。
+~対象外ページには、表示対象外とするページを正規表現で指定します。例えば FrontPage や MenuBar などのページを一覧に表示させたくないときに使用します。
+~true, falseで、ページのカウント条件を指定します。省略時は false です。
+--true － 今日参照のあった回数順でページを表示します。
+--false － 通算の参照回数順でページを表示します。
+:プラグイン内設定|~
+--PLUGIN_POPULAR_DEFAULT　件数未指定時の件数
+:備考|
+~[[counter>../A-D#zedb02cf]]プラグインのカウンター情報を利用しているので、counterプラグインを設置していないページはカウントの対象外となります。全てのページにcounterプラグインを設置するのは非効率であるため counterプラグインをMenubarやスキンに設置するのが一般的です。
 
 
 ------------------------------
 * R [#heb39161]
 
 **random [#bdab4a5d]
-:����|
-~�ʥ��ޥ�ɡ�
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ''#random(''
-[&color(blue){��å�����};]
+[&color(blue){メッセージ};]
 '')''
-:����|
-~������ʥڡ����ؤΥ�󥯤�ɽ������ץ饰����
-~ɽ������ڡ����θ�������֤����ڡ����β����ؤΥڡ����Ǥ���
-:����|
-~��å������ˤϥ�󥯤�ɽ������ʸ�������ꤷ�ޤ�����ά���� 'press here.' �Ȥʤ�ޤ���
-:����|
-~�֥饦���κ��ɤ߹����к��Ϥ��Ƥ��ޤ��󡣥�����ɤ���뤿�Ӥ˥������ɽ���򷫤��֤��ޤ��� 
+:概要|
+~ランダムなページへのリンクを表示するプラグイン。
+~表示するページの候補は設置したページの下階層のページです。
+:引数|
+~メッセージにはリンクに表示する文字列を指定します。省略時は 'press here.' となります。
+:備考|
+~ブラウザの再読み込み対策はしていません。リロードされるたびにランダムな表示を繰り返します。 
 
 
 **read [#qd5d7395]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★★★★★
+:書式|
 ''?cmd=read''
-&color(blue){&page=�ڡ���̾};
-:����|
-~���ꤷ���ڡ�����ɽ�����ޤ��������ڡ�����¸�ߤ��ʤ������Խ����֤ǳ������ڡ���̾��InterWiki�Ǥ��ä����ϡ����β���Ԥ��ޤ���
-~plugin=��cmd=�����ꤵ��Ƥ��ʤ����������ǰ��ۤ˸ƤӽФ���뤿�ᡢ���ѼԤ��ռ����뵡��Ͼ��ʤ��Ǥ���
-:����|
-~�ڡ���̾�ˤ�ɽ���������ڡ���̾����ꤷ�ޤ����ڡ���̾�ϥ��󥳡��ɤ���Ƥ���ɬ�פ�����ޤ���
+&color(blue){&page=ページ名};
+:概要|
+~指定したページを表示します。該当ページが存在しない場合は編集状態で開き、ページ名がInterWikiであった場合は、その解決を行います。
+~plugin=やcmd=が指定されていない場合に内部で暗黙に呼び出されるため、利用者が意識する機会は少ないです。
+:引数|
+~ページ名には表示したいページ名を指定します。ページ名はエンコードされている必要があります。
 
 
 **recent [#f6f25416]
-:����|
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★★★★★
+:書式|
 ''#recent(''
-[&color(blue){���};]
+[&color(blue){件数};]
 '')''
-:����|
-~�Ƕṹ�����줿�ڡ����Τ������ǿ��ο����ɽ�����ޤ���
-:����|
-~����ˤ�ɽ���������ꤷ�ޤ�����ά���ϥץ饰����������ǻ��ꤷ���ͤǤ���
-:�ץ饰����������|~
---PLUGIN_RECENT_DEFAULT_LINES�����̤������η��
---PLUGIN_RECENT_CACHE��RecentChanges�Υ���å���ξ��
---PLUGIN_RECENT_USAGE������̤�������ɽ�������إ��
---PLUGIN_RECENT_EXEC_LIMIT�����ڡ�����Ǽ¹Բ�ǽ�ʾ�²��
+:概要|
+~最近更新されたページのうち、最新の数件を表示します。
+:引数|
+~件数には表示件数を指定します。省略時はプラグイン内設定で指定した値です。
+:プラグイン内設定|~
+--PLUGIN_RECENT_DEFAULT_LINES　件数未指定時の件数
+--PLUGIN_RECENT_CACHE　RecentChangesのキャッシュの場所
+--PLUGIN_RECENT_USAGE　引数未指定時に表示されるヘルプ
+--PLUGIN_RECENT_EXEC_LIMIT　１ページ中で実行可能な上限回数
 
 
 **ref [#h9e797dc]
-:����|
-~�֥��å����ץ饰����
-~����饤�󷿥ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+~インライン型プラグイン
+:重要度|
+~★★★★☆
+:書式|
 ~''#ref(''
-&color(blue){ź�եե�����̾};|
-&color(blue){�ڡ���̾/ź�եե�����̾};|
+&color(blue){添付ファイル名};|
+&color(blue){ページ名/添付ファイル名};|
 &color(blue){URL};
-[,&color(blue){�ڡ���̾};]
+[,&color(blue){ページ名};]
 {,
 [&color(blue){left};|&color(blue){center};|&color(blue){right};],
 [&color(blue){wrap};|&color(blue){nowrap};],
@@ -215,13 +215,13 @@
 [&color(blue){999x999};],
 [&color(blue){999%};]
 }
-[,&color(blue){�����ȥ�};]
+[,&color(blue){タイトル};]
 '')''
 ~''&ref(''
-&color(blue){ź�եե�����̾};|
-&color(blue){�ڡ���̾/ź�եե�����̾};|
+&color(blue){添付ファイル名};|
+&color(blue){ページ名/添付ファイル名};|
 &color(blue){URL};
-[,&color(blue){�ڡ���̾};]
+[,&color(blue){ページ名};]
 {,
 [&color(blue){noicon};],
 [&color(blue){noimg};],
@@ -230,153 +230,153 @@
 [&color(blue){999x999};],
 [&color(blue){999%};]
 }
-[,&color(blue){�����ȥ�};]
+[,&color(blue){タイトル};]
 '');''
-:����|
-~'#attach'�ǥڡ�����ź�դ��줿�ե�����������֤�Ÿ�����ޤ���ź�եե����뤬�����ξ��ϲ�����ɽ����������ʳ��ξ��ϥ�����������ѤΥ�󥯤�ɽ�����ޤ���
-:����|
-~ź�եե�����̾�ˤϥڡ�����ź�դ����ե�����̾����ꤷ�ޤ��ʾ�ά���ϥ��顼�Ȥʤ�ޤ��ˡ��̥ڡ���̾/ź�եե�����̾�Ȥ�������̥ڡ�����ź�եե���������Ǥ��ޤ���
-~�ڡ���̾�ˤϥե������ź�դ����ڡ�����WikiName��BracketName�ǻ��ꤷ�ޤ������Υ��ץ����Ϻǽ�(ź�եե�����̾�μ�)�˵��Ҥ��Ƥ�����������ά�������֤����ڡ����Ǥ���
-~�ѥ�᡼���ˤϥե������Ÿ����ˡ�����Ǥ��ޤ���
---left|center|right �� ɽ�����ΰ��֤���ꤷ�ޤ�����ά����left(�ѹ���)�Ǥ���
---wrap|nowrap �� �ơ��֥륿���ǰϤ�/�Ϥޤʤ��λ����Ԥ��ޤ�����ά����nowrap(�ѹ���)�Ǥ���
---around �� �ƥ����Ȥβ����ߤ��ǽ�Ȥ��ޤ�����ά���ϲ����ߤ�Ԥ��ޤ���
---noicon �� �ե����뤬�����ʳ��ξ���ɽ������륢�������ɽ�����ޤ��󡣾�ά����ɽ�����ޤ���
---noimg �� �ե����뤬�����ξ��˲�����Ÿ�����ʤ��褦�ˤ��ޤ�����ά����Ÿ�����ޤ���
---nolink �� ���ե�����ؤΥ�󥯤�ĥ��ʤ��褦�ˤ��ޤ�����ά���ϥ�󥯤��ޤ���
---zoom �� �Ĳ�����ݻ����ޤ�����ά���ϥ���������˽����ޤ���
---999x999 �� ����������ꤷ�ޤ�(��x�⤵)����ά���ϳ���Ψ���뤤���оݲ����Υ������˽����ޤ���
---999% �� �����������(����Ψ)���ޤ�����ά����100%�Ǥ���
---�����ȥ� �� �嵭�ʳ��Υѥ�᡼���ϲ���������ʸ���󡢥�󥯤Υ����ȥ�°���Ȥ��ƻ��Ѥ���ޤ����ڡ���̾��ѥ�᡼���˸�����ʸ�������Ѥ���Ȥ��ϡ�#ref(hoge.png,,zoom)�Τ褦�˥����ȥ�����˥���ޤ�;ʬ������ޤ���
-:�ץ饰����������|~
---PLUGIN_REF_USAGE������̤�������ɽ�������إ��
---PLUGIN_REF_IMAGE���ޥå����˻���ե����������Ȥߤʤ�����ɽ��
---FILE_ICON���������󥤥᡼���Υե�����
---PLUGIN_REF_DEFAULT_ALIGN��left,center,right��ά����ɽ������
---PLUGIN_REF_WRAP_TABLE��wrap,nowrap��ά���˥ơ��֥륿���ǰϤफ
---PLUGIN_REF_URL_GET_IMAGE_SIZE��URL������˲�����������������뤫
---PLUGIN_REF_DIRECT_ACCESS��ź�եե�����β���ɽ���� UPLOAD_DIR �Υǡ�����ľ�ܥ����������뤫
+:概要|
+~'#attach'でページに添付されたファイルを指定位置に展開します。添付ファイルが画像の場合は画像を表示し、それ以外の場合はダウンロード用のリンクを表示します。
+:引数|
+~添付ファイル名にはページに添付したファイル名を指定します（省略時はエラーとなります）。別ページ名/添付ファイル名とする事で別ページの添付ファイルも指定できます。
+~ページ名にはファイルを添付したページをWikiNameかBracketNameで指定します。このオプションは最初(添付ファイル名の次)に記述してください。省略時は設置したページです。
+~パラメータにはファイルの展開方法を指定できます。
+--left|center|right － 表示時の位置を指定します。省略時はleft(変更可)です。
+--wrap|nowrap － テーブルタグで囲む/囲まないの指定を行います。省略時はnowrap(変更可)です。
+--around － テキストの回り込みを可能とします。省略時は回り込みを行いません。
+--noicon － ファイルが画像以外の場合に表示されるアイコンを表示しません。省略時は表示します。
+--noimg － ファイルが画像の場合に画像を展開しないようにします。省略時は展開します。
+--nolink － 元ファイルへのリンクを張らないようにします。省略時はリンクします。
+--zoom － 縦横比を保持します。省略時はサイズ指定に従います。
+--999x999 － サイズを指定します(幅x高さ)。省略時は拡大率あるいは対象画像のサイズに従います。
+--999% － サイズを指定(拡大率)します。省略時は100%です、
+--タイトル － 上記以外のパラメータは画像の代替文字列、リンクのタイトル属性として使用されます。ページ名やパラメータに見える文字列を使用するときは、#ref(hoge.png,,zoom)のようにタイトルの前にカンマを余分に入れます。
+:プラグイン内設定|~
+--PLUGIN_REF_USAGE　引数未指定時に表示されるヘルプ
+--PLUGIN_REF_IMAGE　マッチ時に指定ファイルを画像とみなす正規表現
+--FILE_ICON　アイコンイメージのファイル
+--PLUGIN_REF_DEFAULT_ALIGN　left,center,right省略時の表示位置
+--PLUGIN_REF_WRAP_TABLE　wrap,nowrap省略時にテーブルタグで囲むか
+--PLUGIN_REF_URL_GET_IMAGE_SIZE　URL指定時に画像サイズを取得するか
+--PLUGIN_REF_DIRECT_ACCESS　添付ファイルの画像表示で UPLOAD_DIR のデータに直接アクセスするか
 
-:����|
-~around�ǹԤä������߻����������ˤ� clear�ץ饰���󡢤��뤤��img�ץ饰�������Ѥ��Ʋ�������
-~"�ۤ�"�Ȥ����̥ڡ�����ź�եե�����"fuga.jpg"�򥤥�饤��ץ饰��������ǻ��Ȥ����硢�������̤�ε�����ˡ��¸�ߤ��ޤ���
- (1) &ref(�ۤ�/fuga.jpg);
- (2) &ref(fuga.jpg,[[�ۤ�]]);
-~�嵭���̤�ε��ҤΤ�����(2)�ε��������ϵ�С������ȸߴ�����ݻ����뤿����Ѱդ��줿��Τǡ��侩����뵭��������(1)�Ǥ���&br;
-������ε�����ˡ�Ǥ��äƤ����Ū��ư���Ʊ���Ǥ�����������Хʡ������Τ褦��ɽ�������������̥ڡ����ؤΥ�󥯤Ȥʤ�褦�ʲ��λ���򤷤���硢
- (1)  [[&ref(�ۤ�/fuga.jpg,nolink,������̾);>�����֤�URL]] 
- (2)  [[&ref(fuga.jpg,[[�ۤ�]],nolink,������̾);>�����֤�URL]] 
-(1)�ε�����ˡ�ϴ����̤��ư��򤷤ޤ�����(2)�ε�����ˡ�ǤϤ��ޤ���󥯤���ޤ���&br;
-�ޤ����ۤ��Ȥ����ڡ�����ź�դ��줿�����򡢤��Υڡ�����ǥѥ�᡼������ꤷ�ơ��㤨��Ⱦʬ����Ψ�ǡ�ɽ�������硢
+:備考|
+~aroundで行った回り込み指定を解除するには clearプラグイン、あるいはimgプラグインを使用して下さい。
+~"ほげ"という別ページの添付ファイル"fuga.jpg"をインラインプラグイン形式で参照する場合、下記２通りの記述方法が存在します。
+ (1) &ref(ほげ/fuga.jpg);
+ (2) &ref(fuga.jpg,[[ほげ]]);
+~上記２通りの記述のうち、(2)の記述方式は旧バージョンと互換性を維持するために用意されたもので、推奨される記述方式は(1)です。&br;
+いずれの記述方法であっても一般的な動作は同じですが、いわゆるバナー画像のように表示した画像が別ページへのリンクとなるよう以下の指定をした場合、
+ (1)  [[&ref(ほげ/fuga.jpg,nolink,ウェブ名);>ウェブのURL]] 
+ (2)  [[&ref(fuga.jpg,[[ほげ]],nolink,ウェブ名);>ウェブのURL]] 
+(1)の記述方法は期待通りの動作をしますが、(2)の記述方法ではうまくリンクされません。&br;
+また、ほげというページに添付された画像を、そのページ内でパラメータを指定して（例えば半分の比率で）表示する場合、
  (3)  &ref(./fuga.jpg,50%);
- (4)  &ref(�ۤ�/fuga.jpg,50%);
- (5)  &ref(fuga.jpg,[[�ۤ�]],50%);
+ (4)  &ref(ほげ/fuga.jpg,50%);
+ (5)  &ref(fuga.jpg,[[ほげ]],50%);
  (6)  &ref(fuga.jpg,50%);
-(3)��(5)�ϴ����̤��Ʊ����̤򤷤ޤ�����(6)�ϥ��顼�Ȥʤ�ޤ���
-�����(6)�ν񼰤�(2)�ε��������Ǥ��뤿�ᡢ
-ź�եե�����̾fuga.jpg�μ��ΰ����˥ڡ���̾����Ԥ��뤿��Ǥ���
+(3)～(5)は期待通りに同じ結果をしますが、(6)はエラーとなります。
+これは(6)の書式が(2)の記述方式であるため、
+添付ファイル名fuga.jpgの次の引数にページ名を期待するためです。
  (7)  &ref(fuga.jpg);
-(7)��(6)�Ȼ������ҤǤ�����ź�եե�����̾�μ��ΰ�������ά����Ƥ��뤿�ᡢ���顼�ˤϤʤ�ޤ���
+(7)は(6)と似た記述ですが、添付ファイル名の次の引数が省略されているため、エラーにはなりません。
 
 **related [#v4da5475]
-:����|
-~���ޥ��
-~�����֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+~擬似ブロック型プラグイン
+:重要度|
+~★★★☆☆
+:書式|
 ~''?plugin=related''
-[&color(blue){&page=�ڡ���̾};]
+[&color(blue){&page=ページ名};]
 ~''#related''
-:����|
-~�оݤΥڡ����򻲾Ȥ��Ƥ���ڡ����ΰ�����ɽ�����ޤ���
-:����|
-~�֥��å����Ǽ¹Ի������֤����ڡ������оݤȤʤ�ޤ���
-~���ޥ�ɤǼ¹Ի����ڡ���̾���оݤȤʤ�ڡ��������Ǥ��ޤ�����ά������硢�ȥåץڡ��������ꤵ�줿�Ȥߤʤ��ޤ���
+:概要|
+~対象のページを参照しているページの一覧を表示します。
+:引数|
+~ブロック型で実行時、設置したページが対象となります。
+~コマンドで実行時、ページ名に対象となるページを指定できます。省略した場合、トップページが指定されたとみなします。
 
 
 **rename [#m95d6531]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★★★☆☆
+:書式|
 ''?plugin=rename''
-[&color(blue){&refer=�ڡ���̾};]
-:����|
-~��¸�ڡ�����̾�����ѹ����ޤ����¹Ԥˤϴ����Ը��¤�ɬ�פǤ���
-~�ڡ�������ʸ�Τۤ������ꤵ�줿�ڡ���̾�κ�ʬ���Хå����åס�ź�եե����롢�����󥿡���쵤�˥�͡��ष�ޤ��� 
-:����|
-~�ڡ���̾�ˤ��ѹ�����ڡ�����̾������ꤷ�ޤ�����ά���ϥڡ���̾������ޤ�������ɽ���ִ���ʸ�������ϲ��̤�ɽ������ޤ��� 
-~�¹Է�̤��Ѵ���̤Υڡ�����PLUGIN_RENAME_LOGPAGE �ǻ��ꡣɸ��� :RenameLog�ˤ��ɵ�����ޤ���
-:�ץ饰����������|~
---PLUGIN_RENAME_LOGPAGE���ڡ���̾���Ѵ���̤���Ϥ���ڡ���̾
-:����|
-~�ڡ�����Υ�󥯤ν񤭴����ϹԤʤ��ޤ���yetlist�ʤɤ��Ȥ����н褷�Ƥ���������
-~��͡����оݤΥڡ�������뤵��Ƥ��뤫�ɤ����ϥ����å����Ƥ��ޤ���
-~��Ϣ�ڡ����˥�͡����оݤ�ʸ����ʣ���ޤޤ�Ƥ���Ȥ��������ʤ�ޤ���
---���Ȥ��С�hoge�����hoge/hoge�Ȥ�����ĤΥڡ��������ä��Ȥ��ˡ�hoge�ڡ�����fuga��(��Ϣ�ڡ�����ޤ��)��͡��ह��ȡ�hoge/hoge�ڡ�����̾����fuga/fuga�ˤʤäƤ��ޤ��ޤ��� 
+[&color(blue){&refer=ページ名};]
+:概要|
+~既存ページの名前を変更します。実行には管理者権限が必要です。
+~ページの本文のほか、指定されたページ名の差分、バックアップ、添付ファイル、カウンターを一気にリネームします。 
+:引数|
+~ページ名には変更するページの名前を指定します。省略時はページ名の選択または正規表現置換用文字列入力画面が表示されます。 
+~実行結果は変換結果のページ（PLUGIN_RENAME_LOGPAGE で指定。標準は :RenameLog）に追記されます。
+:プラグイン内設定|~
+--PLUGIN_RENAME_LOGPAGE　ページ名の変換結果を出力するページ名
+:備考|
+~ページ内のリンクの書き換えは行ないません。yetlistなどを駆使して対処してください。
+~リネーム対象のページが凍結されているかどうかはチェックしていません。
+~関連ページにリネーム対象の文字列が複数含まれているとおかしくなります。
+--たとえば、hogeおよびhoge/hogeという二つのページがあったときに、hogeページをfugaに(関連ページを含んで)リネームすると、hoge/hogeページの名前がfuga/fugaになってしまいます。 
 
 
 **rss [#iaac8b70]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★☆☆☆☆
+:書式|
 ~''?plugin=rss''
 [&color(blue){&ver=};&color(blue){0.91};|
 &color(blue){1.0};|
 &color(blue){2.0};]
-:����|
-~RecentChanges��RSS���Ѵ����ƽ��Ϥ��ޤ���
-:����|
-~ver�ǽ��Ϥ���RSS����ꤷ�ޤ�����ά����0.91����Ϥ��ޤ���
-:����|
-~RSS�ϥ����Ȥ�������ۿ����뤿��˻Ȥ���XML�ե����ޥåȤǤ���RSS 1.0��RDF(Resource Description Framework)�ˤ�ȤŤ���RSS 0.9�θ�ѥե����ޥåȤǤ���RSS 0.91�� RDF�ˤ�ȤŤ��ʤ�RSS�μ����ǡ�RSS 2.0�� RSS 0.91����� 0.92�θ�ѥե����ޥåȤǤ���RSS�Ȥ���Ƭ���줬����ά�Ǥ��뤫�ϡ����줾��ۤʤ�ޤ���
-~''RSS 0.9�����1.0'': RDF Site Summary
-~''RSS 0.91�����0.92'': Rich Site Summary
+:概要|
+~RecentChangesをRSSに変換して出力します。
+:引数|
+~verで出力するRSSを指定します。省略時は0.91を出力します。
+:備考|
+~RSSはサイトの要約を配信するために使われるXMLフォーマットです。RSS 1.0はRDF(Resource Description Framework)にもとづいたRSS 0.9の後継フォーマットです。RSS 0.91は RDFにもとづかないRSSの実装で、RSS 2.0は RSS 0.91および 0.92の後継フォーマットです。RSSという頭字語が何の略であるかは、それぞれ異なります。
+~''RSS 0.9および1.0'': RDF Site Summary
+~''RSS 0.91および0.92'': Rich Site Summary
 ~''RSS 2.0'': Really Simple Syndication
 
 
 **rss10 [#v879eb4d]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★☆☆☆☆
+:書式|
 ~''?cmd=rss10''
-:����|
-~RecentChanges��RSS(RDF Site Summary)1.0���Ѵ����ƽ��Ϥ��ޤ���
-:����|
-~rss10�ץ饰����ε�ǽ��rss�ץ饰����˥ޡ������줿���ᡢ
-���Υץ饰����ϲ��Ȥθߴ����Τ���ˤΤ�¸�ߤ��Ƥ��ޤ���
-(����Ū�˺��������ǽ��������ޤ�) 
-~���Υץ饰����˥�����������ȡ�HTTP���ơ������������� 301
-(Moved Permanently)�ȤȤ�ˡ�ver=1.0���ץ�������ꤷ��rss�ץ饰����
-��URI�إ�����쥯�Ȥ���ޤ���
+:概要|
+~RecentChangesをRSS(RDF Site Summary)1.0に変換して出力します。
+:備考|
+~rss10プラグインの機能はrssプラグインにマージされたため、
+このプラグインは過去との互換性のためにのみ存在しています。
+(将来的に削除される可能性があります) 
+~このプラグインにアクセスすると、HTTPステータス・コード 301
+(Moved Permanently)とともに、ver=1.0オプションを指定したrssプラグイン
+のURIへリダイレクトされます。
 
 
 **ruby [#u3fad1fe]
-:����|
-~����饤�󷿥ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~インライン型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ''&ruby(''
-&color(blue){���};
+&color(blue){ルビ};
 ''){''
-&color(blue){�о�ʸ����};
+&color(blue){対象文字列};
 ''};''
-:����|
-~ʸ����˥�Ӥ�դ�ޤ���
-:����|
-~��Ӥˤ�ɽ�������Ӥ���ꤷ�ޤ���
-~�о�ʸ����ˤϥ�Ӥ��դ���ʸ�������ꤷ�ޤ���
-:�ץ饰����������|~
---PLUGIN_RUBY_USAGE������̤�������ɽ�������إ��
-:����|
-~XHTML 1.1�Υ�Ӥ��б������֥饦���Ǥʤ��ȡ���ӤȤ���ɽ������ޤ���IE5.5/6�Ǥ�ɽ���Ǥ��ޤ���Netscape 7/Mozilla�Ǥ�[[XHTML Ruby Support:http://white.sakura.ne.jp/~piro/xul/_rubysupport.html]]���Ȥ߹����ɽ���Ǥ��ޤ���
-~��Ӥ��б����Ƥ��ʤ��֥饦���Ǥϥ�Ӥ�դ�ʸ�����ľ��˥�Ӥ�( )���������ɽ������ޤ���
+:概要|
+~文字列にルビをふります。
+:引数|
+~ルビには表示するルビを指定します。
+~対象文字列にはルビがふられる文字列を指定します。
+:プラグイン内設定|~
+--PLUGIN_RUBY_USAGE　引数未指定時に表示されるヘルプ
+:備考|
+~XHTML 1.1のルビに対応したブラウザでないと、ルビとして表示されません。IE5.5/6では表示できます。Netscape 7/Mozillaでは[[XHTML Ruby Support:http://white.sakura.ne.jp/~piro/xul/_rubysupport.html]]を組み込めば表示できます。
+~ルビに対応していないブラウザではルビをふる文字列の直後にルビが( )に入れられて表示されます。
 
 #navi(../)

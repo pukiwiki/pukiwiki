@@ -1,6 +1,6 @@
 <?php
 /*
- * PukiWiki ls¥×¥é¥°¥¤¥ó
+ * PukiWiki lsãƒ—ãƒ©ã‚°ã‚¤ãƒ³
  *
  * CopyRight 2002 Y.MASUI GPL2
  * http://masui.net/pukiwiki/ masui@masui.net
@@ -39,7 +39,7 @@ function plugin_ls_convert()
 		if ($with_title)
 		{
 			list($comment) = get_source($page);
-			// ¸«½Ð¤·¤Î¸ÇÍ­IDÉô¤òºï½ü
+			// è¦‹å‡ºã—ã®å›ºæœ‰IDéƒ¨ã‚’å‰Šé™¤
 			$comment = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/','$1$2',$comment);
 
 			$comment = '- ' . ereg_replace('^[-*]+','',$comment);

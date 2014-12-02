@@ -1,14 +1,14 @@
 #freeze
 * [Summary]
--¥Ú¡¼¥¸:     [_refer]
--Åê¹Æ¼Ô:     [Proposer]
--Í¥Àè½ç°Ì:   [Severity]
--¾õÂÖ:       [Status]
--¥«¥Æ¥´¥ê¡¼: [Category]
--Åê¹ÆÆü:     [_date]
--¥Ğ¡¼¥¸¥ç¥ó: [Version]
+-ãƒšãƒ¼ã‚¸:     [_refer]
+-æŠ•ç¨¿è€…:     [Proposer]
+-å„ªå…ˆé †ä½:   [Severity]
+-çŠ¶æ…‹:       [Status]
+-ã‚«ãƒ†ã‚´ãƒªãƒ¼: [Category]
+-æŠ•ç¨¿æ—¥:     [_date]
+-ãƒãƒ¼ã‚¸ãƒ§ãƒ³: [Version]
 
-** ¥á¥Ã¥»¡¼¥¸
+** ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 [Messages]
 ----
 

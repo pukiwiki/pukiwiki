@@ -21,26 +21,26 @@ function plugin_bugtrack_init()
 	$init = TRUE;
 
 	$_plugin_bugtrack = array(
-		'priority_list'  => array('�۵�', '����', '����', '��'),
-		'state_list'     => array('���', '���', 'CVS�Ԥ�', '��λ', '��α', '�Ѳ�'),
-		'state_sort'     => array('���', 'CVS�Ԥ�', '��α', '��λ', '���', '�Ѳ�'),
+		'priority_list'  => array('緊急', '重要', '普通', '低'),
+		'state_list'     => array('提案', '着手', 'CVS待ち', '完了', '保留', '却下'),
+		'state_sort'     => array('着手', 'CVS待ち', '保留', '完了', '提案', '却下'),
 		'state_bgcolor'  => array('#ccccff', '#ffcc99', '#ccddcc', '#ccffcc', '#ffccff', '#cccccc', '#ff3333'),
 		'header_bgcolor' => '#ffffcc',
-		'base'     => '�ڡ���',
-		'summary'  => '���ޥ�',
-		'nosummary'=> '�����˥��ޥ�������Ʋ�����',
-		'priority' => 'ͥ����',
-		'state'    => '����',
-		'name'     => '��Ƽ�',
-		'noname'   => '̵̾������',
-		'date'     => '�����',
-		'body'     => '��å�����',
-		'category' => '���ƥ��꡼',
-		'pagename' => '�ڡ���̾',
-		'pagename_comment' => '����Τޤޤ��ȼ�ưŪ�˥ڡ���̾�������ޤ���',
-		'version_comment'  => '����Ǥ⹽���ޤ���',
-		'version'  => '�С������',
-		'submit'   => '�ɲ�'
+		'base'     => 'ページ',
+		'summary'  => 'サマリ',
+		'nosummary'=> 'ここにサマリを記入して下さい',
+		'priority' => '優先順位',
+		'state'    => '状態',
+		'name'     => '投稿者',
+		'noname'   => '名無しさん',
+		'date'     => '投稿日',
+		'body'     => 'メッセージ',
+		'category' => 'カテゴリー',
+		'pagename' => 'ページ名',
+		'pagename_comment' => '空欄のままだと自動的にページ名が振られます。',
+		'version_comment'  => '空欄でも構いません',
+		'version'  => 'バージョン',
+		'submit'   => '追加'
 		);
 }
 

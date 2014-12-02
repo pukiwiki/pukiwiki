@@ -1,7 +1,7 @@
 * PHP: Hypertext Preprocessor [#k50e5340]
 
 http://www.php.net/
-- http://jp2.php.net/ (ÆüËÜ¤Î¥ß¥é¡¼¥µ¥¤¥È)
+- http://jp2.php.net/ (æ—¥æœ¬ã®ãƒŸãƒ©ãƒ¼ã‚µã‚¤ãƒˆ)
 
-- ÆüËÜPHP¥æ¡¼¥¶¡¼²ñ (Japan PHP User Group)
+- æ—¥æœ¬PHPãƒ¦ãƒ¼ã‚¶ãƒ¼ä¼š (Japan PHP User Group)
 -- http://www.php.gr.jp/

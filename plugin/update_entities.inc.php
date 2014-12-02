@@ -7,30 +7,30 @@
 // Update entities plugin - Update XHTML entities from DTD
 // (for admin)
 
-// DTD�ξ��
+// DTDの場所
 define('W3C_XHTML_DTD_LOCATION', 'http://www.w3.org/TR/xhtml1/DTD/');
 
-// ��å���������
+// メッセージ設定
 function plugin_update_entities_init()
 {
 	$messages = array(
 		'_entities_messages'=>array(
-			'title_update'  => '����å��幹��',
-			'msg_adminpass' => '�����ԥѥ����',
-			'btn_submit'    => '�¹�',
-			'msg_done'      => '����å���ι�������λ���ޤ�����',
+			'title_update'  => 'キャッシュ更新',
+			'msg_adminpass' => '管理者パスワード',
+			'btn_submit'    => '実行',
+			'msg_done'      => 'キャッシュの更新が完了しました。',
 			'msg_usage'     => '
-* ��������
+* 処理内容
 
-:ʸ�����λ��Ȥ˥ޥå���������ɽ���ѥ�����Υ���å���򹹿�|
-PHP�λ��ĥơ��֥뤪���W3C��DTD�򥹥���󤷤ơ�����å���˵�Ͽ���ޤ���
+:文字実体参照にマッチする正規表現パターンのキャッシュを更新|
+PHPの持つテーブルおよびW3CのDTDをスキャンして、キャッシュに記録します。
 
-* �����о�
-��COLOR(red){not found.}�פ�ɽ�����줿�ե�����Ͻ�������ޤ���
+* 処理対象
+「COLOR(red){not found.}」と表示されたファイルは処理されません。
 -%s
 
-* �¹�
-�����ԥѥ���ɤ����Ϥ��ơ�[�¹�]�ܥ���򥯥�å����Ƥ���������
+* 実行
+管理者パスワードを入力して、[実行]ボタンをクリックしてください。
 '
 		));
 	set_plugin_messages($messages);

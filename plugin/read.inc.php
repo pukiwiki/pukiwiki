@@ -11,20 +11,20 @@ function plugin_read_action()
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
 	if (is_page($page)) {
-		// ¥Ú¡¼¥¸¤òÉ½¼¨
+		// ãƒšãƒ¼ã‚¸ã‚’è¡¨ç¤º
 		check_readable($page, true, true);
 		header_lastmod($page);
 		return array('msg'=>'', 'body'=>'');
 
 	} else if (! PKWK_SAFE_MODE && is_interwiki($page)) {
-		return do_plugin_action('interwiki'); // InterWikiName¤ò½èÍý
+		return do_plugin_action('interwiki'); // InterWikiNameã‚’å‡¦ç†
 
 	} else if (is_pagename($page)) {
 		$vars['cmd'] = 'edit';
-		return do_plugin_action('edit'); // Â¸ºß¤·¤Ê¤¤¤Î¤Ç¡¢ÊÔ½¸¥Õ¥©¡¼¥à¤òÉ½¼¨
+		return do_plugin_action('edit'); // å­˜åœ¨ã—ãªã„ã®ã§ã€ç·¨é›†ãƒ•ã‚©ãƒ¼ãƒ ã‚’è¡¨ç¤º
 
 	} else {
-		// Ìµ¸ú¤Ê¥Ú¡¼¥¸Ì¾
+		// ç„¡åŠ¹ãªãƒšãƒ¼ã‚¸å
 		return array(
 			'msg'=>$_title_invalidwn,
 			'body'=>str_replace('$1', htmlsc($page),

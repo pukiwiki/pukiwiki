@@ -1,36 +1,36 @@
 #freeze
 *mime-type
 
-¤³¤ÎÉ½¤Ï¡¢attach.inc.php¤¬¥Õ¥¡¥¤¥ë¤ÎContent-type¤ò·èÄê¤¹¤ë¤È¤­¤Ë»ÈÍÑ¤·¤Ş¤¹¡£
+ã“ã®è¡¨ã¯ã€attach.inc.phpãŒãƒ•ã‚¡ã‚¤ãƒ«ã®Content-typeã‚’æ±ºå®šã™ã‚‹ã¨ãã«ä½¿ç”¨ã—ã¾ã™ã€‚
 
-|~Content-type|~³ÈÄ¥»Ò|~ÀâÌÀ|h
-|image/jpeg|jpeg jpg|jpeg ²èÁü|
-|image/gif|gif|gif ²èÁü|
-|image/png|png|png ²èÁü|
-|application/pdf|pdf|pdf ¥Õ¥¡¥¤¥ë|
-|application/x-shockwave-flash|swf|¥Õ¥é¥Ã¥·¥å¥Õ¥¡¥¤¥ë|
-|video/mpg|mpg|mpg ¥Ó¥Ç¥ª¥Õ¥¡¥¤¥ë|
-|application/vnd.rn-realmedia|rm|RealPlay ¥Ó¥Ç¥ª¥Õ¥¡¥¤¥ë|
-|video/quicktime|mov|mov ¥Ó¥Ç¥ª¥Õ¥¡¥¤¥ë|
-|video/avi|avi|avi ¥Ó¥Ç¥ª¥Õ¥¡¥¤¥ë|
-|video/x-ms-wmv|wmv|Windows ¥Ó¥Ç¥ª¥Õ¥¡¥¤¥ë|
-|audio/mp3|mp3|MP3 ²»À¼¥Õ¥¡¥¤¥ë|
-|audio/wav|wav wave|wave ²»À¼¥Õ¥¡¥¤¥ë|
-|audio/vnd.rn-realaudio|ra ram|RealPlay ²»À¼¥Õ¥¡¥¤¥ë|
-|audio/midi|mid midi|midi ¥ª¡¼¥Ç¥£¥ª¥Õ¥¡¥¤¥ë|
-|application/x-zip-compressed|zip|zip °µ½Ì¥Õ¥¡¥¤¥ë|
-|application/x-lzh-compressed|lzh|lzh °µ½Ì¥Õ¥¡¥¤¥ë|
-|application/x-gzip|gz|g-zip °µ½Ì¥Õ¥¡¥¤¥ë|
-|application/x-bz2-compressed|bz2|bz2 °µ½Ì¥Õ¥¡¥¤¥ë|
-|application/x-compress|z tgz|compress °µ½Ì¥Õ¥¡¥¤¥ë|
-|application/x-cab-compressed|cab|cab °µ½Ì¥Õ¥¡¥¤¥ë|
-|application/x-stuffit|sit|stuff it °µ½Ì¥Õ¥¡¥¤¥ë|
-|application/x-tar|tar|tar ½ñ¸Ë¥Õ¥¡¥¤¥ë|
-|text/plain|txt text dat jis euc sjis sjs asc utf utf8 csv|¥×¥ì¡¼¥ó¥Æ¥­¥¹¥È|
-|text/html|html htm|htmlÊ¸½ñ|
+|~Content-type|~æ‹¡å¼µå­|~èª¬æ˜|h
+|image/jpeg|jpeg jpg|jpeg ç”»åƒ|
+|image/gif|gif|gif ç”»åƒ|
+|image/png|png|png ç”»åƒ|
+|application/pdf|pdf|pdf ãƒ•ã‚¡ã‚¤ãƒ«|
+|application/x-shockwave-flash|swf|ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ãƒ•ã‚¡ã‚¤ãƒ«|
+|video/mpg|mpg|mpg ãƒ“ãƒ‡ã‚ªãƒ•ã‚¡ã‚¤ãƒ«|
+|application/vnd.rn-realmedia|rm|RealPlay ãƒ“ãƒ‡ã‚ªãƒ•ã‚¡ã‚¤ãƒ«|
+|video/quicktime|mov|mov ãƒ“ãƒ‡ã‚ªãƒ•ã‚¡ã‚¤ãƒ«|
+|video/avi|avi|avi ãƒ“ãƒ‡ã‚ªãƒ•ã‚¡ã‚¤ãƒ«|
+|video/x-ms-wmv|wmv|Windows ãƒ“ãƒ‡ã‚ªãƒ•ã‚¡ã‚¤ãƒ«|
+|audio/mp3|mp3|MP3 éŸ³å£°ãƒ•ã‚¡ã‚¤ãƒ«|
+|audio/wav|wav wave|wave éŸ³å£°ãƒ•ã‚¡ã‚¤ãƒ«|
+|audio/vnd.rn-realaudio|ra ram|RealPlay éŸ³å£°ãƒ•ã‚¡ã‚¤ãƒ«|
+|audio/midi|mid midi|midi ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒ•ã‚¡ã‚¤ãƒ«|
+|application/x-zip-compressed|zip|zip åœ§ç¸®ãƒ•ã‚¡ã‚¤ãƒ«|
+|application/x-lzh-compressed|lzh|lzh åœ§ç¸®ãƒ•ã‚¡ã‚¤ãƒ«|
+|application/x-gzip|gz|g-zip åœ§ç¸®ãƒ•ã‚¡ã‚¤ãƒ«|
+|application/x-bz2-compressed|bz2|bz2 åœ§ç¸®ãƒ•ã‚¡ã‚¤ãƒ«|
+|application/x-compress|z tgz|compress åœ§ç¸®ãƒ•ã‚¡ã‚¤ãƒ«|
+|application/x-cab-compressed|cab|cab åœ§ç¸®ãƒ•ã‚¡ã‚¤ãƒ«|
+|application/x-stuffit|sit|stuff it åœ§ç¸®ãƒ•ã‚¡ã‚¤ãƒ«|
+|application/x-tar|tar|tar æ›¸åº«ãƒ•ã‚¡ã‚¤ãƒ«|
+|text/plain|txt text dat jis euc sjis sjs asc utf utf8 csv|ãƒ—ãƒ¬ãƒ¼ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ|
+|text/html|html htm|htmlæ–‡æ›¸|
 |image/svg-xml|svg|svg(Scalable Vector Graphics)|
-|application/ms-download|exe|Windows ¼Â¹Ô¥Õ¥¡¥¤¥ë|
-|application/ms-word|doc|MS-Word Ê¸½ñ¥Õ¥¡¥¤¥ë|
-|application/ms-excel|xls|MS-Excel Ê¸½ñ¥Õ¥¡¥¤¥ë|
-|application/ms-access|mdb mde|MS-Access ¥Ç¡¼¥¿¥Ù¡¼¥¹|
-|application/ms-powerpoint|ppt pps|MS-¥Ñ¥ï¡¼¥İ¥¤¥ó¥È¥×¥ì¥¼¥ó¥Æ¡¼¥·¥ç¥ó|
+|application/ms-download|exe|Windows å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«|
+|application/ms-word|doc|MS-Word æ–‡æ›¸ãƒ•ã‚¡ã‚¤ãƒ«|
+|application/ms-excel|xls|MS-Excel æ–‡æ›¸ãƒ•ã‚¡ã‚¤ãƒ«|
+|application/ms-access|mdb mde|MS-Access ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹|
+|application/ms-powerpoint|ppt pps|MS-ãƒ‘ãƒ¯ãƒ¼ãƒã‚¤ãƒ³ãƒˆãƒ—ãƒ¬ã‚¼ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³|

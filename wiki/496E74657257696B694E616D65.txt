@@ -1,11 +1,11 @@
 [[PukiWiki]]
 * InterWikiName [#bf2d416a]
-InterWikiÍÑ¤Î¥µ¡¼¥Ğ¥ê¥¹¥È¤Ç¤¹¡£
-  [URL ¥µ¡¼¥ĞÌ¾] ¥¿¥¤¥×
-¤Î·Á¼°¤Çµ­½Ò¤·¤Æ¤¯¤À¤µ¤¤¡£
+InterWikiç”¨ã®ã‚µãƒ¼ãƒãƒªã‚¹ãƒˆã§ã™ã€‚
+  [URL ã‚µãƒ¼ãƒå] ã‚¿ã‚¤ãƒ—
+ã®å½¢å¼ã§è¨˜è¿°ã—ã¦ãã ã•ã„ã€‚
 
 ** WikiEngines [#c3e04f1c]
--[http://www.c2.com/cgi/wiki? WikiWikiWeb] raw WikiName¤Î¤ß¤Ê¤Î¤Çraw¡£
+-[http://www.c2.com/cgi/wiki? WikiWikiWeb] raw WikiNameã®ã¿ãªã®ã§rawã€‚
 -[http://www.todo.org/cgi-bin/jp/tiki.cgi?c=v&p= Tiki] euc
 -[http://www.hyuki.com/yukiwiki/wiki.cgi? YukiWiki] euc
 -[http://www.jin.gr.jp/~nahi/RWiki/?cmd=view;name= RWiki] euc
@@ -22,22 +22,22 @@ InterWikiÍÑ¤Î¥µ¡¼¥Ğ¥ê¥¹¥È¤Ç¤¹¡£
 
 ** Search Engine [#jaaa4e4c]
 -[http://www.google.co.jp/search?ie=utf8&oe=utf8&q=$1&lr=lang_ja&hl=ja Google] utf8 
-//IE¤ÎGoogle¥Ä¡¼¥ë¥Ğ¡¼ÂĞºö¤ÇUTF-8¤Ë¤Ê¤Ã¤Æ¤Ş¤¹¡£
+//IEã®Googleãƒ„ãƒ¼ãƒ«ãƒãƒ¼å¯¾ç­–ã§UTF-8ã«ãªã£ã¦ã¾ã™ã€‚
 -[http://search.yahoo.co.jp/bin/search?p= Yahoo] euc
 -[http://www.wikipedia.org/wiki/ WikiPedia] utf8
 -[http://en.wikipedia.org/wiki/ WikiPedia.en] utf8
 -[http://ja.wikipedia.org/wiki/ WikiPedia.ja] utf8
 
-** ³ÈÄ¥InterWikiName [#q192ea38]
--[./?cmd=add&page= ¿·µ¬]
+** æ‹¡å¼µInterWikiName [#q192ea38]
+-[./?cmd=add&page= æ–°è¦]
 -[./?cmd=add&page= New]
--[./?cmd=read&page= »²¾È]
+-[./?cmd=read&page= å‚ç…§]
 -[./?cmd=read&page= View]
--[./?cmd=edit&page= ÊÔ½¸]
+-[./?cmd=edit&page= ç·¨é›†]
 -[./?cmd=edit&page= Edit]
--[./?cmd=search&word=$1&type=OR ¸¡º÷]
+-[./?cmd=search&word=$1&type=OR æ¤œç´¢]
 -[./?cmd=search&word=$1&type=OR Search]
 
-*** ¤½¤ÎÂ¾ [#b69e2eec]
--[http://www.gembook.jp/tsum/page.pys?wiki= ¥¦¥ğ¥­¥¨¥ê¥¢] moin
+*** ãã®ä»– [#b69e2eec]
+-[http://www.gembook.jp/tsum/page.pys?wiki= ã‚¦ãƒ°ã‚­ã‚¨ãƒªã‚¢] moin
 -[http://tdiary-users.sourceforge.jp/cgi-bin/wiki.cgi? tDiaryUsers] euc

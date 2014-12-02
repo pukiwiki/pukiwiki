@@ -8,36 +8,36 @@
 // article: BBS-like plugin
 
  /*
- ��å��������ѹ�����������LANGUAGE�ե�����˲������ͤ��ɲä��Ƥ��餴���Ѥ�������
-	$_btn_name    = '��̾��';
-	$_btn_article = '���������';
-	$_btn_subject = '��̾: ';
+ メッセージを変更したい場合はLANGUAGEファイルに下記の値を追加してからご使用ください
+	$_btn_name    = 'お名前';
+	$_btn_article = '記事の投稿';
+	$_btn_subject = '題名: ';
 
- ��$_btn_name��comment�ץ饰����Ǵ������ꤵ��Ƥ����礬����ޤ�
+ ※$_btn_nameはcommentプラグインで既に設定されている場合があります
 
- ������Ƥμ�ư�᡼��ž����ǽ�򤴻��Ѥˤʤꤿ������
- -������ƤΥ᡼�뼫ư�ۿ�
- -������ƤΥ᡼�뼫ư�ۿ���
- ������ξ塢�����Ѥ���������
+ 投稿内容の自動メール転送機能をご使用になりたい場合は
+ -投稿内容のメール自動配信
+ -投稿内容のメール自動配信先
+ を設定の上、ご使用ください。
 
  */
 
-define('PLUGIN_ARTICLE_COLS',	70); // �ƥ����ȥ��ꥢ�Υ�����
-define('PLUGIN_ARTICLE_ROWS',	 5); // �ƥ����ȥ��ꥢ�ιԿ�
-define('PLUGIN_ARTICLE_NAME_COLS',	24); // ̾���ƥ����ȥ��ꥢ�Υ�����
-define('PLUGIN_ARTICLE_SUBJECT_COLS',	60); // ��̾�ƥ����ȥ��ꥢ�Υ�����
-define('PLUGIN_ARTICLE_NAME_FORMAT',	'[[$name]]'); // ̾���������ե����ޥå�
-define('PLUGIN_ARTICLE_SUBJECT_FORMAT',	'**$subject'); // ��̾�������ե����ޥå�
+define('PLUGIN_ARTICLE_COLS',	70); // テキストエリアのカラム数
+define('PLUGIN_ARTICLE_ROWS',	 5); // テキストエリアの行数
+define('PLUGIN_ARTICLE_NAME_COLS',	24); // 名前テキストエリアのカラム数
+define('PLUGIN_ARTICLE_SUBJECT_COLS',	60); // 題名テキストエリアのカラム数
+define('PLUGIN_ARTICLE_NAME_FORMAT',	'[[$name]]'); // 名前の挿入フォーマット
+define('PLUGIN_ARTICLE_SUBJECT_FORMAT',	'**$subject'); // 題名の挿入フォーマット
 
-define('PLUGIN_ARTICLE_INS',	0); // ����������� 1:����� 0:��θ�
-define('PLUGIN_ARTICLE_COMMENT',	1); // �񤭹��ߤβ��˰�ԥ����Ȥ������ 1:����� 0:����ʤ�
-define('PLUGIN_ARTICLE_AUTO_BR',	1); // ���Ԥ�ưŪ�Ѵ� 1:���� 0:���ʤ�
+define('PLUGIN_ARTICLE_INS',	0); // 挿入する位置 1:欄の前 0:欄の後
+define('PLUGIN_ARTICLE_COMMENT',	1); // 書き込みの下に一行コメントを入れる 1:入れる 0:入れない
+define('PLUGIN_ARTICLE_AUTO_BR',	1); // 改行を自動的変換 1:する 0:しない
 
-define('PLUGIN_ARTICLE_MAIL_AUTO_SEND',	0); // ������ƤΥ᡼�뼫ư�ۿ� 1:���� 0:���ʤ�
-define('PLUGIN_ARTICLE_MAIL_FROM',	''); // ������ƤΥ᡼���������������ԥ᡼�륢�ɥ쥹
-define('PLUGIN_ARTICLE_MAIL_SUBJECT_PREFIX', "[someone's PukiWiki]"); // ������ƤΥ᡼������������̾
+define('PLUGIN_ARTICLE_MAIL_AUTO_SEND',	0); // 投稿内容のメール自動配信 1:する 0:しない
+define('PLUGIN_ARTICLE_MAIL_FROM',	''); // 投稿内容のメール送信時の送信者メールアドレス
+define('PLUGIN_ARTICLE_MAIL_SUBJECT_PREFIX', "[someone's PukiWiki]"); // 投稿内容のメール送信時の題名
 
-// ������ƤΥ᡼�뼫ư�ۿ���
+// 投稿内容のメール自動配信先
 global $_plugin_article_mailto;
 $_plugin_article_mailto = array (
 	''
@@ -63,8 +63,8 @@ function plugin_article_action()
 
 	$msg = rtrim($post['msg']);
 	if (PLUGIN_ARTICLE_AUTO_BR) {
-		//���Ԥμ�갷���Ϥ��ä�������ä�URL��������Ȥ��ϡ�
-		//�����ȹԡ������Ѥ߹Ԥˤ�~��Ĥ��ʤ��褦�� arino
+		//改行の取り扱いはけっこう厄介。特にURLが絡んだときは…
+		//コメント行、整形済み行には~をつけないように arino
 		$msg = join("\n", preg_replace('/^(?!\/\/)(?!\s)(.*)$/', '$1~', explode("\n", $msg)));
 	}
 	$article .= $msg . "\n\n" . '//';
@@ -109,7 +109,7 @@ EOD;
 	} else {
 		page_write($post['refer'], trim($postdata));
 
-		// ������ƤΥ᡼�뼫ư����
+		// 投稿内容のメール自動送信
 		if (PLUGIN_ARTICLE_MAIL_AUTO_SEND) {
 			$mailaddress = implode(',', $_plugin_article_mailto);
 			$mailsubject = PLUGIN_ARTICLE_MAIL_SUBJECT_PREFIX . ' ' . str_replace('**', '', $subject);
@@ -121,7 +121,7 @@ EOD;
 			$mailbody .= "\n\n" . '---' . "\n";
 			$mailbody .= $_msg_article_mail_sender . $post['name'] . ' (' . $now . ')' . "\n";
 			$mailbody .= $_msg_article_mail_page . $post['refer'] . "\n";
-			$mailbody .= '�� URL: ' . $script . '?' . rawurlencode($post['refer']) . "\n";
+			$mailbody .= '　 URL: ' . $script . '?' . rawurlencode($post['refer']) . "\n";
 			$mailbody = mb_convert_encoding($mailbody, 'JIS');
 
 			$mailaddheader = 'From: ' . PLUGIN_ARTICLE_MAIL_FROM;

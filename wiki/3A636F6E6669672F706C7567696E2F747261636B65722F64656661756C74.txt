@@ -1,41 +1,41 @@
 #freeze
-* Tracker�ץ饰����: �ǥե��������
-tracker�ץ饰������������ꤷ�ʤ��ä���硢�������꤬���Ѥ���ޤ���(�� "#tracker")
+* Trackerプラグイン: デフォルト設定
+trackerプラグインで設定を指定しなかった場合、この設定が使用されます。(例 "#tracker")
 
 ----
 #ls(./)
 
 * fields
-|����̾  |���Ф�    |������  |���ץ����|�ǥե����|h
-|Proposer|��Ƽ�    |page    |20        |anonymous |
-|Category|���ƥ��꡼|select  |          |          |
-|Severity|������    |select  |          |��        |
-|Status  |����      |select  |          |���      |
-|Version |�С������|text    |10        |          |
-|Summary |���ޥ�    |title   |60        |          |
-|Messages|��å�����|textarea|60,6      |          |
+|項目名  |見出し    |タイプ  |オプション|デフォルト|h
+|Proposer|投稿者    |page    |20        |anonymous |
+|Category|カテゴリー|select  |          |          |
+|Severity|重要度    |select  |          |低        |
+|Status  |状態      |select  |          |提案      |
+|Version |バージョン|text    |10        |          |
+|Summary |サマリ    |title   |60        |          |
+|Messages|メッセージ|textarea|60,6      |          |
 
 * Severity
-|���Ф�|����ν�         |h
-|�۵�  |BGCOLOR(#ff8080):%s|
-|����  |BGCOLOR(#ffcccc):%s|
-|����  |BGCOLOR(#cccccc):%s|
-|��    |BGCOLOR(#ffffff):%s|
+|見出し|セルの書式         |h
+|緊急  |BGCOLOR(#ff8080):%s|
+|重要  |BGCOLOR(#ffcccc):%s|
+|普通  |BGCOLOR(#cccccc):%s|
+|低    |BGCOLOR(#ffffff):%s|
 
 * Status
-|���Ф� |����ν�         |h
-|���   |BGCOLOR(#ffccff):%s|
-|���   |BGCOLOR(#ccccff):%s|
-|CVS�Ԥ�|BGCOLOR(#ffccff):%s|
-|��λ   |BGCOLOR(#ccffcc):%s|
-|��α   |BGCOLOR(#ccddcc):%s|
-|�Ѳ�   |BGCOLOR(#cccccc):%s|
+|見出し |セルの書式         |h
+|提案   |BGCOLOR(#ffccff):%s|
+|着手   |BGCOLOR(#ccccff):%s|
+|CVS待ち|BGCOLOR(#ffccff):%s|
+|完了   |BGCOLOR(#ccffcc):%s|
+|保留   |BGCOLOR(#ccddcc):%s|
+|却下   |BGCOLOR(#cccccc):%s|
 
 * Category
-|���Ф�          |����ν�         |h
-|���ΥХ�        |BGCOLOR(#ffccff):%s|
-|���ο���ǽ      |BGCOLOR(#ccccff):%s|
-|�ץ饰����      |BGCOLOR(#ccffcc):%s|
-|�ߤ����ץ饰����|BGCOLOR(#ccffcc):%s|
-|������          |BGCOLOR(#ccddcc):%s|
-|����¾          |BGCOLOR(#cccccc):%s|
+|見出し          |セルの書式         |h
+|本体バグ        |BGCOLOR(#ffccff):%s|
+|本体新機能      |BGCOLOR(#ccccff):%s|
+|プラグイン      |BGCOLOR(#ccffcc):%s|
+|欲しいプラグイン|BGCOLOR(#ccffcc):%s|
+|サイト          |BGCOLOR(#ccddcc):%s|
+|その他          |BGCOLOR(#cccccc):%s|

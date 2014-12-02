@@ -5,7 +5,7 @@
  *
  * backup.php
  *
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¤ò´ÉÍı¤¹¤ë
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã‚’ç®¡ç†ã™ã‚‹
  *
  * @package org.pukiwiki
  * @access  public
@@ -20,11 +20,11 @@
 
 /**
  * make_backup
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¤òºîÀ®¤¹¤ë
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã‚’ä½œæˆã™ã‚‹
  *
  * @access    public
- * @param     String    $page        ¥Ú¡¼¥¸Ì¾
- * @param     Boolean   $delete      TRUE:¥Ğ¥Ã¥¯¥¢¥Ã¥×¤òºï½ü¤¹¤ë
+ * @param     String    $page        ãƒšãƒ¼ã‚¸å
+ * @param     Boolean   $delete      TRUE:ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã‚’å‰Šé™¤ã™ã‚‹
  *
  * @return    Void
  */
@@ -49,7 +49,7 @@ function make_backup($page, $delete = FALSE)
 		$backups = get_backup($page);
 		$count   = count($backups) + 1;
 
-		// Ä¾¸å¤Ë1·ïÄÉ²Ã¤¹¤ë¤Î¤Ç¡¢(ºÇÂç·ï¿ô - 1)¤òÄ¶¤¨¤ëÍ×ÁÇ¤ò¼Î¤Æ¤ë
+		// ç›´å¾Œã«1ä»¶è¿½åŠ ã™ã‚‹ã®ã§ã€(æœ€å¤§ä»¶æ•° - 1)ã‚’è¶…ãˆã‚‹è¦ç´ ã‚’æ¨ã¦ã‚‹
 		if ($count > $maxage)
 			array_splice($backups, 0, $count - $maxage);
 
@@ -77,16 +77,16 @@ function make_backup($page, $delete = FALSE)
 
 /**
  * get_backup
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¤ò¼èÆÀ¤¹¤ë
- * $age = 0¤Ş¤¿¤Ï¾ÊÎ¬ : Á´¤Æ¤Î¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Ç¡¼¥¿¤òÇÛÎó¤Ç¼èÆÀ¤¹¤ë
- * $age > 0           : »ØÄê¤·¤¿À¤Âå¤Î¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Ç¡¼¥¿¤ò¼èÆÀ¤¹¤ë
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã‚’å–å¾—ã™ã‚‹
+ * $age = 0ã¾ãŸã¯çœç•¥ : å…¨ã¦ã®ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿ã‚’é…åˆ—ã§å–å¾—ã™ã‚‹
+ * $age > 0           : æŒ‡å®šã—ãŸä¸–ä»£ã®ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
  *
  * @access    public
- * @param     String    $page        ¥Ú¡¼¥¸Ì¾
- * @param     Integer   $age         ¥Ğ¥Ã¥¯¥¢¥Ã¥×¤ÎÀ¤ÂåÈÖ¹æ ¾ÊÎ¬»ş¤ÏÁ´¤Æ
+ * @param     String    $page        ãƒšãƒ¼ã‚¸å
+ * @param     Integer   $age         ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã®ä¸–ä»£ç•ªå· çœç•¥æ™‚ã¯å…¨ã¦
  *
- * @return    String    ¥Ğ¥Ã¥¯¥¢¥Ã¥×       ($age != 0)
- *            Array     ¥Ğ¥Ã¥¯¥¢¥Ã¥×¤ÎÇÛÎó ($age == 0)
+ * @return    String    ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—       ($age != 0)
+ *            Array     ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã®é…åˆ— ($age == 0)
  */
 function get_backup($page, $age = 0)
 {
@@ -117,12 +117,12 @@ function get_backup($page, $age = 0)
 
 /**
  * _backup_get_filename
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ëÌ¾¤ò¼èÆÀ¤¹¤ë
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—ã™ã‚‹
  *
  * @access    private
- * @param     String    $page        ¥Ú¡¼¥¸Ì¾
+ * @param     String    $page        ãƒšãƒ¼ã‚¸å
  *
- * @return    String    ¥Ğ¥Ã¥¯¥¢¥Ã¥×¤Î¥Õ¥¡¥¤¥ëÌ¾
+ * @return    String    ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã®ãƒ•ã‚¡ã‚¤ãƒ«å
  */
 function _backup_get_filename($page)
 {
@@ -131,12 +131,12 @@ function _backup_get_filename($page)
 
 /**
  * _backup_file_exists
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë¤¬Â¸ºß¤¹¤ë¤«
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã‹
  *
  * @access    private
- * @param     String    $page        ¥Ú¡¼¥¸Ì¾
+ * @param     String    $page        ãƒšãƒ¼ã‚¸å
  *
- * @return    Boolean   TRUE:¤¢¤ë FALSE:¤Ê¤¤
+ * @return    Boolean   TRUE:ã‚ã‚‹ FALSE:ãªã„
  */
 function _backup_file_exists($page)
 {
@@ -145,12 +145,12 @@ function _backup_file_exists($page)
 
 /**
  * _backup_get_filetime
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë¤Î¹¹¿·»ş¹ï¤òÆÀ¤ë
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›´æ–°æ™‚åˆ»ã‚’å¾—ã‚‹
  *
  * @access    private
- * @param     String    $page        ¥Ú¡¼¥¸Ì¾
+ * @param     String    $page        ãƒšãƒ¼ã‚¸å
  *
- * @return    Integer   ¥Õ¥¡¥¤¥ë¤Î¹¹¿·»ş¹ï(GMT)
+ * @return    Integer   ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›´æ–°æ™‚åˆ»(GMT)
  */
 
 function _backup_get_filetime($page)
@@ -161,12 +161,12 @@ function _backup_get_filetime($page)
 
 /**
  * _backup_delete
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë¤òºï½ü¤¹¤ë
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰Šé™¤ã™ã‚‹
  *
  * @access    private
- * @param     String    $page        ¥Ú¡¼¥¸Ì¾
+ * @param     String    $page        ãƒšãƒ¼ã‚¸å
  *
- * @return    Boolean   FALSE:¼ºÇÔ
+ * @return    Boolean   FALSE:å¤±æ•—
  */
 function _backup_delete($page)
 {
@@ -176,19 +176,19 @@ function _backup_delete($page)
 /////////////////////////////////////////////////
 
 if (extension_loaded('zlib')) {
-	// ¥Õ¥¡¥¤¥ë¥·¥¹¥Æ¥à´Ø¿ô
-	// zlib´Ø¿ô¤ò»ÈÍÑ
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚·ã‚¹ãƒ†ãƒ é–¢æ•°
+	// zlibé–¢æ•°ã‚’ä½¿ç”¨
 	define('BACKUP_EXT', '.gz');
 
 /**
  * _backup_fopen
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë¤ò³«¤¯
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
  *
  * @access    private
- * @param     String    $page        ¥Ú¡¼¥¸Ì¾
- * @param     String    $mode        ¥â¡¼¥É
+ * @param     String    $page        ãƒšãƒ¼ã‚¸å
+ * @param     String    $mode        ãƒ¢ãƒ¼ãƒ‰
  *
- * @return    Boolean   FALSE:¼ºÇÔ
+ * @return    Boolean   FALSE:å¤±æ•—
  */
 	function _backup_fopen($page, $mode)
 	{
@@ -197,13 +197,13 @@ if (extension_loaded('zlib')) {
 
 /**
  * _backup_fputs
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë¤Ë½ñ¤­¹ş¤à
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã‚€
  *
  * @access    private
- * @param     Integer   $zp          ¥Õ¥¡¥¤¥ë¥İ¥¤¥ó¥¿
- * @param     String    $str         Ê¸»úÎó
+ * @param     Integer   $zp          ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿
+ * @param     String    $str         æ–‡å­—åˆ—
  *
- * @return    Boolean   FALSE:¼ºÇÔ ¤½¤ÎÂ¾:½ñ¤­¹ş¤ó¤À¥Ğ¥¤¥È¿ô
+ * @return    Boolean   FALSE:å¤±æ•— ãã®ä»–:æ›¸ãè¾¼ã‚“ã ãƒã‚¤ãƒˆæ•°
  */
 	function _backup_fputs($zp, $str)
 	{
@@ -212,12 +212,12 @@ if (extension_loaded('zlib')) {
 
 /**
  * _backup_fclose
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë¤òÊÄ¤¸¤ë
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
  *
  * @access    private
- * @param     Integer   $zp          ¥Õ¥¡¥¤¥ë¥İ¥¤¥ó¥¿
+ * @param     Integer   $zp          ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿
  *
- * @return    Boolean   FALSE:¼ºÇÔ
+ * @return    Boolean   FALSE:å¤±æ•—
  */
 	function _backup_fclose($zp)
 	{
@@ -226,12 +226,12 @@ if (extension_loaded('zlib')) {
 
 /**
  * _backup_file
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë¤ÎÆâÍÆ¤ò¼èÆÀ¤¹¤ë
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã®å†…å®¹ã‚’å–å¾—ã™ã‚‹
  *
  * @access    private
- * @param     String    $page        ¥Ú¡¼¥¸Ì¾
+ * @param     String    $page        ãƒšãƒ¼ã‚¸å
  *
- * @return    Array     ¥Õ¥¡¥¤¥ë¤ÎÆâÍÆ
+ * @return    Array     ãƒ•ã‚¡ã‚¤ãƒ«ã®å†…å®¹
  */
 	function _backup_file($page)
 	{
@@ -243,18 +243,18 @@ if (extension_loaded('zlib')) {
 /////////////////////////////////////////////////
 else
 {
-	// ¥Õ¥¡¥¤¥ë¥·¥¹¥Æ¥à´Ø¿ô
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚·ã‚¹ãƒ†ãƒ é–¢æ•°
 	define('BACKUP_EXT', '.txt');
 
 /**
  * _backup_fopen
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë¤ò³«¤¯
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
  *
  * @access    private
- * @param     String    $page        ¥Ú¡¼¥¸Ì¾
- * @param     String    $mode        ¥â¡¼¥É
+ * @param     String    $page        ãƒšãƒ¼ã‚¸å
+ * @param     String    $mode        ãƒ¢ãƒ¼ãƒ‰
  *
- * @return    Boolean   FALSE:¼ºÇÔ
+ * @return    Boolean   FALSE:å¤±æ•—
  */
 	function _backup_fopen($page, $mode)
 	{
@@ -263,13 +263,13 @@ else
 
 /**
  * _backup_fputs
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë¤Ë½ñ¤­¹ş¤à
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã‚€
  *
  * @access    private
- * @param     Integer   $zp          ¥Õ¥¡¥¤¥ë¥İ¥¤¥ó¥¿
- * @param     String    $str         Ê¸»úÎó
+ * @param     Integer   $zp          ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿
+ * @param     String    $str         æ–‡å­—åˆ—
  *
- * @return    Boolean   FALSE:¼ºÇÔ ¤½¤ÎÂ¾:½ñ¤­¹ş¤ó¤À¥Ğ¥¤¥È¿ô
+ * @return    Boolean   FALSE:å¤±æ•— ãã®ä»–:æ›¸ãè¾¼ã‚“ã ãƒã‚¤ãƒˆæ•°
  */
 	function _backup_fputs($zp, $str)
 	{
@@ -278,12 +278,12 @@ else
 
 /**
  * _backup_fclose
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë¤òÊÄ¤¸¤ë
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
  *
  * @access    private
- * @param     Integer   $zp          ¥Õ¥¡¥¤¥ë¥İ¥¤¥ó¥¿
+ * @param     Integer   $zp          ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿
  *
- * @return    Boolean   FALSE:¼ºÇÔ
+ * @return    Boolean   FALSE:å¤±æ•—
  */
 	function _backup_fclose($zp)
 	{
@@ -292,12 +292,12 @@ else
 
 /**
  * _backup_file
- * ¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë¤ÎÆâÍÆ¤ò¼èÆÀ¤¹¤ë
+ * ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã®å†…å®¹ã‚’å–å¾—ã™ã‚‹
  *
  * @access    private
- * @param     String    $page        ¥Ú¡¼¥¸Ì¾
+ * @param     String    $page        ãƒšãƒ¼ã‚¸å
  *
- * @return    Array     ¥Õ¥¡¥¤¥ë¤ÎÆâÍÆ
+ * @return    Array     ãƒ•ã‚¡ã‚¤ãƒ«ã®å†…å®¹
  */
 	function _backup_file($page)
 	{

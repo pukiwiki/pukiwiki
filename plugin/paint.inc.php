@@ -8,32 +8,32 @@
 /*
  * Usage
  *  #paint(width,height)
- * ¥Ñ¥é¥á¡¼¥¿
- *  ¥­¥ã¥ó¥Ğ¥¹¤ÎÉı¤È¹â¤µ
+ * ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+ *  ã‚­ãƒ£ãƒ³ãƒã‚¹ã®å¹…ã¨é«˜ã•
  */
 
-// ÁŞÆş¤¹¤ë°ÌÃÖ 1:Íó¤ÎÁ° 0:Íó¤Î¸å
+// æŒ¿å…¥ã™ã‚‹ä½ç½® 1:æ¬„ã®å‰ 0:æ¬„ã®å¾Œ
 define('PAINT_INSERT_INS',0);
 
-// ¥Ç¥Õ¥©¥ë¥È¤ÎÉÁ²èÎÎ°è¤ÎÉı¤È¹â¤µ
+// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®æç”»é ˜åŸŸã®å¹…ã¨é«˜ã•
 define('PAINT_DEFAULT_WIDTH',80);
 define('PAINT_DEFAULT_HEIGHT',60);
 
-// ÉÁ²èÎÎ°è¤ÎÉı¤È¹â¤µ¤ÎÀ©¸ÂÃÍ
+// æç”»é ˜åŸŸã®å¹…ã¨é«˜ã•ã®åˆ¶é™å€¤
 define('PAINT_MAX_WIDTH',320);
 define('PAINT_MAX_HEIGHT',240);
 
-// ¥¢¥×¥ì¥Ã¥ÈÎÎ°è¤ÎÉı¤È¹â¤µ 50x50Ì¤Ëş¤ÇÊÌ¥¦¥¤¥ó¥É¥¦¤¬³«¤¯
+// ã‚¢ãƒ—ãƒ¬ãƒƒãƒˆé ˜åŸŸã®å¹…ã¨é«˜ã• 50x50æœªæº€ã§åˆ¥ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãŒé–‹ã
 define('PAINT_APPLET_WIDTH',800);
 define('PAINT_APPLET_HEIGHT',300);
 
-//¥³¥á¥ó¥È¤ÎÁŞÆş¥Õ¥©¡¼¥Ş¥Ã¥È
+//ã‚³ãƒ¡ãƒ³ãƒˆã®æŒ¿å…¥ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
 define('PAINT_NAME_FORMAT','[[$name]]');
 define('PAINT_MSG_FORMAT','$msg');
 define('PAINT_NOW_FORMAT','&new{$now};');
-//¥á¥Ã¥»¡¼¥¸¤¬¤¢¤ë¾ì¹ç
+//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒã‚ã‚‹å ´åˆ
 define('PAINT_FORMAT',"\x08MSG\x08 -- \x08NAME\x08 \x08NOW\x08");
-//¥á¥Ã¥»¡¼¥¸¤¬¤Ê¤¤¾ì¹ç
+//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒãªã„å ´åˆ
 define('PAINT_FORMAT_NOMSG',"\x08NAME\x08 \x08NOW\x08");
 
 function plugin_paint_action()
@@ -42,7 +42,7 @@ function plugin_paint_action()
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 	
-	//Ìá¤êÃÍ¤ò½é´ü²½
+	//æˆ»ã‚Šå€¤ã‚’åˆæœŸåŒ–
 	$retval['msg'] = $_paint_messages['msg_title'];
 	$retval['body'] = '';
 
@@ -50,15 +50,15 @@ function plugin_paint_action()
 		and array_key_exists('refer',$vars))
 	{
 		$file = $_FILES['attach_file'];
-		//BBSPaiter.jar¤Ï¡¢shift-jis¤ÇÆâÍÆ¤òÁ÷¤Ã¤Æ¤¯¤ë¡£ÌÌÅİ¤Ê¤Î¤Ç¥Ú¡¼¥¸Ì¾¤Ï¥¨¥ó¥³¡¼¥É¤·¤Æ¤«¤éÁ÷¿®¤µ¤»¤ë¤è¤¦¤Ë¤·¤¿¡£
+		//BBSPaiter.jarã¯ã€shift-jisã§å†…å®¹ã‚’é€ã£ã¦ãã‚‹ã€‚é¢å€’ãªã®ã§ãƒšãƒ¼ã‚¸åã¯ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã—ã¦ã‹ã‚‰é€ä¿¡ã•ã›ã‚‹ã‚ˆã†ã«ã—ãŸã€‚
 		$vars['page'] = $vars['refer'] = decode($vars['refer']);
 
 		$filename = $vars['filename'];
 		$filename = mb_convert_encoding($filename,SOURCE_ENCODING,'auto');
 
-		//¥Õ¥¡¥¤¥ëÌ¾ÃÖ´¹
+		//ãƒ•ã‚¡ã‚¤ãƒ«åç½®æ›
 		$attachname = preg_replace('/^[^\.]+/',$filename,$file['name']);
-		//¤¹¤Ç¤ËÂ¸ºß¤·¤¿¾ì¹ç¡¢ ¥Õ¥¡¥¤¥ëÌ¾¤Ë'_0','_1',...¤òÉÕ¤±¤Æ²óÈò(¸ÈÂ©)
+		//ã™ã§ã«å­˜åœ¨ã—ãŸå ´åˆã€ ãƒ•ã‚¡ã‚¤ãƒ«åã«'_0','_1',...ã‚’ä»˜ã‘ã¦å›é¿(å§‘æ¯)
 		$count = '_0';
 		while (file_exists(UPLOAD_DIR.encode($vars['refer']).'_'.encode($attachname)))
 		{
@@ -92,7 +92,7 @@ function plugin_paint_action()
 		$w = PAINT_APPLET_WIDTH;
 		$h = PAINT_APPLET_HEIGHT;
 
-		//¥¦¥¤¥ó¥É¥¦¥â¡¼¥É :)
+		//ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰ :)
 		if ($w < 50 and $h < 50)
 		{
 			$w = $h = 0;
@@ -103,12 +103,12 @@ function plugin_paint_action()
 			$link = '';
 		}
 
-		//XSSÀÈ¼åÀ­ÌäÂê - ³°Éô¤«¤éÍè¤¿ÊÑ¿ô¤ò¥¨¥¹¥±¡¼¥×
+		//XSSè„†å¼±æ€§å•é¡Œ - å¤–éƒ¨ã‹ã‚‰æ¥ãŸå¤‰æ•°ã‚’ã‚¨ã‚¹ã‚±ãƒ¼ãƒ—
 		$width = empty($vars['width']) ? PAINT_DEFAULT_WIDTH : $vars['width'];
 		$height = empty($vars['height']) ? PAINT_DEFAULT_HEIGHT : $vars['height'];
 		$f_w = (is_numeric($width) and $width > 0) ? $width : PAINT_DEFAULT_WIDTH;
 		$f_h = (is_numeric($height) and $height > 0) ? $height : PAINT_DEFAULT_HEIGHT;
-		$f_refer = array_key_exists('refer',$vars) ? encode($vars['refer']) : ''; // BBSPainter.jar¤¬shift-jis¤ËÊÑ´¹¤¹¤ë¤Î¤ò²óÈò
+		$f_refer = array_key_exists('refer',$vars) ? encode($vars['refer']) : ''; // BBSPainter.jarãŒshift-jisã«å¤‰æ›ã™ã‚‹ã®ã‚’å›é¿
 		$f_digest = array_key_exists('digest',$vars) ? htmlsc($vars['digest']) : '';
 		$f_no = (array_key_exists('paint_no',$vars) and is_numeric($vars['paint_no'])) ?
 			$vars['paint_no'] + 0 : 0;
@@ -164,10 +164,10 @@ function plugin_paint_convert()
 	}
 	$paint_no = $numbers[$vars['page']]++;
 
-	//Ìá¤êÃÍ
+	//æˆ»ã‚Šå€¤
 	$ret = '';
 
-	//Ê¸»úÎó¤ò¼èÆÀ
+	//æ–‡å­—åˆ—ã‚’å–å¾—
 	$width = $height = 0;
 	$args = func_get_args();
 	if (count($args) >= 2)
@@ -184,7 +184,7 @@ function plugin_paint_convert()
 		$height = PAINT_DEFAULT_HEIGHT;
 	}
 
-	//XSSÀÈ¼åÀ­ÌäÂê - ³°Éô¤«¤éÍè¤¿ÊÑ¿ô¤ò¥¨¥¹¥±¡¼¥×
+	//XSSè„†å¼±æ€§å•é¡Œ - å¤–éƒ¨ã‹ã‚‰æ¥ãŸå¤‰æ•°ã‚’ã‚¨ã‚¹ã‚±ãƒ¼ãƒ—
 	$f_page = htmlsc($vars['page']);
 
 	$max = sprintf($_paint_messages['msg_max'],PAINT_MAX_WIDTH,PAINT_MAX_HEIGHT);
@@ -228,13 +228,13 @@ function paint_insert_ref($filename)
 	$msg = str_replace("\x08NAME\x08",$name, $msg);
 	$msg = str_replace("\x08NOW\x08",$now, $msg);
 
-	//¥Ö¥í¥Ã¥¯¤Ë¿©¤ï¤ì¤Ê¤¤¤è¤¦¤Ë¡¢#clear¤ÎÄ¾Á°¤Ë\n¤ò2¸Ä½ñ¤¤¤Æ¤ª¤¯
+	//ãƒ–ãƒ­ãƒƒã‚¯ã«é£Ÿã‚ã‚Œãªã„ã‚ˆã†ã«ã€#clearã®ç›´å‰ã«\nã‚’2å€‹æ›¸ã„ã¦ãŠã
 	$msg = "#ref($filename,wrap,around)\n" . trim($msg) . "\n\n" .
 		"#clear\n";
 
 	$postdata_old = get_source($vars['refer']);
 	$postdata = '';
-	$paint_no = 0; //'#paint'¤Î½Ğ¸½²ó¿ô
+	$paint_no = 0; //'#paint'ã®å‡ºç¾å›æ•°
 	foreach ($postdata_old as $line)
 	{
 		if (!PAINT_INSERT_INS)
@@ -255,7 +255,7 @@ function paint_insert_ref($filename)
 		}
 	}
 
-	// ¹¹¿·¤Î¾×ÆÍ¤ò¸¡½Ğ
+	// æ›´æ–°ã®è¡çªã‚’æ¤œå‡º
 	if (md5(join('',$postdata_old)) !== $vars['digest'])
 	{
 		$ret['msg'] = $_paint_messages['msg_title_collided'];

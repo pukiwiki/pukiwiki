@@ -1,3 +1,3 @@
-InterWiki �ϡ�PukiWiki �� ¾�Υ����С�����³���뵡ǽ�Ǥ���
+InterWiki は、PukiWiki と 他のサーバーを接続する機能です。
 
-InterWikiName �Υڡ����ǥ����С�̾��������Ƥ��ޤ��� 
+InterWikiName のページでサーバー名を定義しています。 

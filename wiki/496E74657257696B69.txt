@@ -1,48 +1,48 @@
 * InterWiki [#teeaa78d]
-InterWiki �ϡ�[[PukiWiki]] �� ¾�Υ����С�����³���뵡ǽ�Ǥ���
+InterWiki は、[[PukiWiki]] と 他のサーバーを接続する機能です。
 
-[[InterWikiName]] �Υڡ����ǥ����С�̾��������Ƥ��ޤ���
+[[InterWikiName]] のページでサーバー名を定義しています。
 
 #contents
 
-** [[InterWiki]]�ؤΥ�������(InterWikiName������) [#nb5bafb9]
-�����Хꥹ�Ȥˤ��� ������̾:WikiName ��[[BracketName]]�Ǻ���[[InterWikiName]]�δ�����~
-�����ڡ����˵��Ҥ���С����Υ����Ф�[[WikiName]]�ؤΥϥ��ѡ���󥯤���������ޤ���
+** [[InterWiki]]へのアクセス(InterWikiNameの生成) [#nb5bafb9]
+サーバリストにある サーバ名:WikiName を[[BracketName]]で作れば[[InterWikiName]]の完成。~
+これをページに記述すれば、そのサーバの[[WikiName]]へのハイパーリンクが生成されます。
 
- [[������̾:WikiName]]
+ [[サーバ名:WikiName]]
  [[pukiwiki:FrontPage]]
 
-** �����С��ꥹ�Ȥؤ��ɲ� [#a71a4d66]
-[[InterWikiName]] �Υڡ����˰ʲ��Τ褦�˥����Ф�����򤹤뤳�Ȥ�
-�����С��ꥹ�Ȥ��ɲä��뤳�Ȥ��Ǥ��ޤ���
+** サーバーリストへの追加 [#a71a4d66]
+[[InterWikiName]] のページに以下のようにサーバの定義をすることで
+サーバーリストに追加することができます。
 
- [URL ������̾] ������
+ [URL サーバ名] タイプ
  [http://pukiwiki.sourceforge.jp/index.php pukiwiki] utf8
 
-** WikiName���������� [#q7ad1d6d]
-�׵ᤷ�褦�Ȥ���URL�ؤ�[[WikiName]]���������֤� $1 �ǻ��ꤹ�뤳�Ȥ��Ǥ��ޤ�����ά����Ȥ����ˤ��äĤ��ޤ���
+** WikiNameの挿入位置 [#q7ad1d6d]
+要求しようとするURLへの[[WikiName]]の挿入位置を $1 で指定することができます。省略するとお尻にくっつきます。
 
  -[http://pukiwiki.sourceforge.jp/index.php?cmd=backup&page=$1&age=1 pukiwiki] utf8
 
-** ʸ���������Ѵ������� [#k34801d3]
+** 文字コード変換タイプ [#k34801d3]
 
-[[PukiWiki]]��Υڡ����ʳ��ˤ����Ф��ޤ������ܸ��URL�˴ޤ��ǽ���⤢��ΤǤ��ξ��Υ��󥳡��ǥ��󥰤λ���򥿥��פȤ��ƻ���Ǥ��ޤ���
+[[PukiWiki]]内のページ以外にも飛ばせます。日本語をURLに含む可能性もあるのでその場合のエンコーディングの指定をタイプとして指定できます。
 
  -[http://pukiwiki.sourceforge.jp/index.php?cmd=read&page=$1 somewhere] utf8
 
-:std ��ά��|����ʸ�����󥳡��ǥ���(ɸ���SJIS)�Τޤ�URL���󥳡��ɤ��ޤ���
-:raw asis|URL���󥳡��ɤ��ʤ��Ǥ��Τޤ޻��ѡ�
-:sjis|ʸ�����SJIS���Ѵ�����URL���󥳡��ɤ��ޤ���(mb_string��SJIS�ؤΥ����ꥢ���Ǥ�)
-:euc|ʸ��������ܸ�EUC���Ѵ�����URL���󥳡��ɤ��ޤ���(mb_string��EUC-JP�ؤΥ����ꥢ���Ǥ�)
-:utf8|ʸ�����UTF-8���Ѵ�����URL���󥳡��ɤ��ޤ���(mb_string��UTF-8�ؤΥ����ꥢ���Ǥ�)
-:yw|YukiWiki�ϤؤΥ��󥳡��ǥ��󥰡�
-:moin|MoinMoin�Ѥ��Ѵ����ޤ��� 
+:std 省略時|内部文字エンコーディング(標準はSJIS)のままURLエンコードします。
+:raw asis|URLエンコードしないでそのまま使用。
+:sjis|文字列をSJISに変換し、URLエンコードします。(mb_stringのSJISへのエイリアスです)
+:euc|文字列を日本語EUCに変換し、URLエンコードします。(mb_stringのEUC-JPへのエイリアスです)
+:utf8|文字列をUTF-8に変換し、URLエンコードします。(mb_stringのUTF-8へのエイリアスです)
+:yw|YukiWiki系へのエンコーディング。
+:moin|MoinMoin用に変換します。 
 
-����¾��PHP4��mb_string�ǥ��ݡ��Ȥ���Ƥ���ʲ��Υ��󥳡���ʸ�������ѤǤ��ޤ���
+その他、PHP4のmb_stringでサポートされている以下のエンコード文字が使用できます。
 
 ''UCS-4, UCS-4BE, UCS-4LE, UCS-2, UCS-2BE, UCS-2LE, UTF-32, UTF-32BE, UTF-32LE, UCS-2LE, UTF-16, UTF-16BE, UTF-16LE, UTF-8, UTF-7, ASCII, EUC-JP, SJIS, eucJP-win, SJIS-win, ISO-2022-JP, JIS, ISO-8859-1, ISO-8859-2, ISO-8859-3, ISO-8859-4, ISO-8859-5, ISO-8859-6, ISO-8859-7, ISO-8859-8, ISO-8859-9, ISO-8859-10, ISO-8859-13, ISO-8859-14, ISO-8859-15, byte2be, byte2le, byte4be, byte4le, BASE64, 7bit, 8bit, UTF7-IMAP''
 
-** [[YukiWiki]]�ϤؤΥ��󥳡��ǥ��� [#zeb5d7f0]
+** [[YukiWiki]]系へのエンコーディング [#zeb5d7f0]
 
--[[WikiName]]�Τ�ΤؤϤ��Τޤ�URL���󥳡��ɡ�
--[[BracketName]]�Τ�Τ�[[ ]]���ղä���URL���󥳡��ɡ�
+-[[WikiName]]のものへはそのままURLエンコード。
+-[[BracketName]]のものは[[ ]]を付加してURLエンコード。

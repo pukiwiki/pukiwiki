@@ -453,12 +453,12 @@ $agents = array(
 	array('pattern'=>'#\b(AVE-Front)/([0-9\.]+)#',	'profile'=>'keitai'), // The same?
 
 	// NTT-DoCoMo, i-mode (embeded Compact NetFront) and FOMA (embedded NetFront) phones
-	// Sample: "DoCoMo/1.0/F501i", "DoCoMo/1.0/N504i/c10/TB/serXXXX" // c°Ê¹ß¤Ï²ÄÊÑ
-	// Sample: "DoCoMo/2.0 MST_v_SH2101V(c100;TB;W22H12;serXXXX;iccxxxx)" // ()¤ÎÃæ¤Ï²ÄÊÑ
+	// Sample: "DoCoMo/1.0/F501i", "DoCoMo/1.0/N504i/c10/TB/serXXXX" // cä»¥é™ã¯å¯å¤‰
+	// Sample: "DoCoMo/2.0 MST_v_SH2101V(c100;TB;W22H12;serXXXX;iccxxxx)" // ()ã®ä¸­ã¯å¯å¤‰
 	array('pattern'=>'#^(DoCoMo)/([0-9\.]+)#',	'profile'=>'keitai'),
 
 	// Vodafone's embedded browser
-	// Sample: "J-PHONE/2.0/J-T03"	// 2.0¤Ï"¥Ö¥é¥¦¥¶¤Î"¥Ğ¡¼¥¸¥ç¥ó
+	// Sample: "J-PHONE/2.0/J-T03"	// 2.0ã¯"ãƒ–ãƒ©ã‚¦ã‚¶ã®"ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 	// Sample: "J-PHONE/4.0/J-SH51/SNxxxx SH/0001a Profile/MIDP-1.0 Configuration/CLDC-1.0 Ext-Profile/JSCL-1.1.0"
 	array('pattern'=>'#^(J-PHONE)/([0-9\.]+)#',	'profile'=>'keitai'),
 

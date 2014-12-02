@@ -6,30 +6,30 @@
 - http://pukiwiki.sourceforge.jp/
 - http://sourceforge.jp/projects/pukiwiki/
 
-PukiWiki�� Wiki([[WikiWikiWeb]]) �ȸƤФ�Ƥ����ΤΤҤȤĤǡ�����Ū��ï�Ǥ����ƤΥڡ�����������Խ����뤳�Ȥ��Ǥ��ޤ���
+PukiWikiは Wiki([[WikiWikiWeb]]) と呼ばれているもののひとつで、基本的に誰でも全てのページを作成・編集することができます。
 
-�ޤ����Խ��ˤ����̤��μ����פ��뤳�Ȥʤ�����ñ�ʥ롼��˽����������������줿HTMLʸ��������Ǥ��ޤ���
+また、編集には特別な知識を要することなく、簡単なルールに従うだけで整形されたHTML文書を生成できます。
 
-- �����򥵥ݡ��Ȥ��Ƥ��ޤ������ܸ�Υڡ���̾��OK��
-- ���ƤΥǡ����ϥƥ����ȥե��������¸����ޤ�
-- ���Ū�˥Хå����åפ���¸�����Τǡ�������ñ
-- �ڡ���ñ�̤����ʤɤ��ǽ�Ǥ�
-- URL��û��ɽ���Ǥ���[[InterWiki]]�򥵥ݡ���
-- [[PHP]]�ǽ񤫤�Ƥ��ޤ�
-- �饤���󥹤�GPL(( http://www.gnu.org/licenses/gpl.html ))�Ǥ�
+- 漢字をサポートしています。日本語のページ名もOK！
+- 全てのデータはテキストファイルに保存されます
+- 定期的にバックアップが保存されるので、復旧も簡単
+- ページ単位の凍結なども可能です
+- URLを短く表現できる[[InterWiki]]をサポート
+- [[PHP]]で書かれています
+- ライセンスはGPL(( http://www.gnu.org/licenses/gpl.html ))です
 
-** ��� [#nf50e667]
+** リンク [#nf50e667]
 
-- [[PukiWiki-official:http://sourceforge.jp/projects/pukiwiki/]] ����PukiWiki ���������Ȥ����٤ޤ�
--- ��������ո��ϡ�������ؤɤ����� :)
+- [[PukiWiki-official:http://sourceforge.jp/projects/pukiwiki/]] からPukiWiki 公式サイトへ飛べます
+-- ご質問や御意見は、こちらへどうぞ。 :)
 
 - Pukiwiki-dev - http://pukiwiki.sourceforge.jp/dev/
--- �������PukiWiki��ȯ�����ȤǤ���PukiWiki��ȯ�����ȤǤϡ������С������γ�ȯ�����Ǥʤ������ԥС�������1.4�Ϥ�1.3�Ϥν������������ƥ�fix���Ԥʤ��Ƥ��ޤ���[[pukiwiki.dev:��ȯ����]]�������κ�Ȥ����Ƥ��Ǻܤ���Ƥ��ޤ��Τǡ�PukiWiki���Ѥ���Ƥ��������ܤ��̤��褦���ꤤ���ޤ���
+-- こちらはPukiWiki開発サイトです。PukiWiki開発サイトでは、次期バージョンの開発だけでなく、現行バージョンの1.4系や1.3系の修正、セキュリティfixが行なわれています。[[pukiwiki.dev:開発日記]]で日々の作業の内容が掲載されていますので、PukiWikiを運用されている方は目を通すようお願いします。
 
 - http://sourceforge.jp/projects/pukiwiki/
--- Sourceforge �Υץ��������ȥ��ޥ�Ǥ���PukiWiki�Υ���������ɤϤ����餫��ɤ�����
+-- Sourceforge のプロジェクトサマリです。PukiWikiのダウンロードはこちらからどうぞ。
 
-** ��Ϣ�ڡ��� [#zf685513]
+** 関連ページ [#zf685513]
 
 #ls2
-- [[InterWikiName]] -- [[InterWiki]]�Υ����Хꥹ��
+- [[InterWikiName]] -- [[InterWiki]]のサーバリスト

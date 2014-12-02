@@ -29,7 +29,7 @@
 // ------------------------------------------------------------
 
 
-// ¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤é´ØÏ¢¥Ú¡¼¥¸¤òÆÀ¤ë
+// ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰é–¢é€£ãƒšãƒ¼ã‚¸ã‚’å¾—ã‚‹
 function links_get_related_db($page)
 {
 	$ref_name = CACHE_DIR . encode($page) . '.ref';
@@ -44,7 +44,7 @@ function links_get_related_db($page)
 	return $times;
 }
 
-//¥Ú¡¼¥¸¤Î´ØÏ¢¤ò¹¹¿·¤¹¤ë
+//ãƒšãƒ¼ã‚¸ã®é–¢é€£ã‚’æ›´æ–°ã™ã‚‹
 function links_update($page)
 {
 	if (PKWK_READONLY) return; // Do nothing
@@ -62,15 +62,15 @@ function links_update($page)
 		if (isset($lines[0]))
 			$rel_old = explode("\t", rtrim($lines[0]));
 	}
-	$rel_new  = array(); // »²¾ÈÀè
-	$rel_auto = array(); // ¥ª¡¼¥È¥ê¥ó¥¯¤·¤Æ¤¤¤ë»²¾ÈÀè
+	$rel_new  = array(); // å‚ç…§å…ˆ
+	$rel_auto = array(); // ã‚ªãƒ¼ãƒˆãƒªãƒ³ã‚¯ã—ã¦ã„ã‚‹å‚ç…§å…ˆ
 	$links    = links_get_objects($page, TRUE);
 	foreach ($links as $_obj) {
 		if (! isset($_obj->type) || $_obj->type != 'pagename' ||
 		    $_obj->name === $page || $_obj->name == '')
 			continue;
 
-		if (is_a($_obj, 'Link_autolink')) { // ¹Ôµ·¤¬°­¤¤
+		if (is_a($_obj, 'Link_autolink')) { // è¡Œå„€ãŒæ‚ªã„
 			$rel_auto[] = $_obj->name;
 		} else {
 			$rel_new[]  = $_obj->name;
@@ -78,15 +78,15 @@ function links_update($page)
 	}
 	$rel_new = array_unique($rel_new);
 	
-	// autolink¤·¤«¸þ¤¤¤Æ¤¤¤Ê¤¤¥Ú¡¼¥¸
+	// autolinkã—ã‹å‘ã„ã¦ã„ãªã„ãƒšãƒ¼ã‚¸
 	$rel_auto = array_diff(array_unique($rel_auto), $rel_new);
 
-	// Á´¤Æ¤Î»²¾ÈÀè¥Ú¡¼¥¸
+	// å…¨ã¦ã®å‚ç…§å…ˆãƒšãƒ¼ã‚¸
 	$rel_new = array_merge($rel_new, $rel_auto);
 
-	// .rel:$page¤¬»²¾È¤·¤Æ¤¤¤ë¥Ú¡¼¥¸¤Î°ìÍ÷
+	// .rel:$pageãŒå‚ç…§ã—ã¦ã„ã‚‹ãƒšãƒ¼ã‚¸ã®ä¸€è¦§
 	if ($time) {
-		// ¥Ú¡¼¥¸¤¬Â¸ºß¤·¤Æ¤¤¤ë
+		// ãƒšãƒ¼ã‚¸ãŒå­˜åœ¨ã—ã¦ã„ã‚‹
 		if (! empty($rel_new)) {
     			$fp = fopen($rel_file, 'w')
     				or die_message('cannot write ' . htmlsc($rel_file));
@@ -95,17 +95,17 @@ function links_update($page)
 		}
 	}
 
-	// .ref:$_page¤ò»²¾È¤·¤Æ¤¤¤ë¥Ú¡¼¥¸¤Î°ìÍ÷
+	// .ref:$_pageã‚’å‚ç…§ã—ã¦ã„ã‚‹ãƒšãƒ¼ã‚¸ã®ä¸€è¦§
 	links_add($page, array_diff($rel_new, $rel_old), $rel_auto);
 	links_delete($page, array_diff($rel_old, $rel_new));
 
 	global $WikiName, $autolink, $nowikiname, $search_non_list;
 
-	// $page¤¬¿·µ¬ºîÀ®¤µ¤ì¤¿¥Ú¡¼¥¸¤Ç¡¢AutoLink¤ÎÂÐ¾Ý¤È¤Ê¤êÆÀ¤ë¾ì¹ç
+	// $pageãŒæ–°è¦ä½œæˆã•ã‚ŒãŸãƒšãƒ¼ã‚¸ã§ã€AutoLinkã®å¯¾è±¡ã¨ãªã‚Šå¾—ã‚‹å ´åˆ
 	if ($time && ! $rel_file_exist && $autolink
 		&& (preg_match("/^$WikiName$/", $page) ? $nowikiname : strlen($page) >= $autolink))
 	{
-		// $page¤ò»²¾È¤·¤Æ¤¤¤½¤¦¤Ê¥Ú¡¼¥¸¤ò°ìÀÆ¹¹¿·¤¹¤ë(¤ª¤¤)
+		// $pageã‚’å‚ç…§ã—ã¦ã„ãã†ãªãƒšãƒ¼ã‚¸ã‚’ä¸€æ–‰æ›´æ–°ã™ã‚‹(ãŠã„)
 		$search_non_list = 1;
 		$pages           = do_search($page, 'AND', TRUE);
 		foreach ($pages as $_page) {
@@ -115,12 +115,12 @@ function links_update($page)
 	}
 	$ref_file = CACHE_DIR . encode($page) . '.ref';
 
-	// $page¤¬ºï½ü¤µ¤ì¤¿¤È¤­¤Ë¡¢
+	// $pageãŒå‰Šé™¤ã•ã‚ŒãŸã¨ãã«ã€
 	if (! $time && file_exists($ref_file)) {
 		foreach (file($ref_file) as $line) {
 			list($ref_page, $ref_auto) = explode("\t", rtrim($line));
 
-			// $page¤òAutoLink¤Ç¤·¤«»²¾È¤·¤Æ¤¤¤Ê¤¤¥Ú¡¼¥¸¤ò°ìÀÆ¹¹¿·¤¹¤ë(¤ª¤¤¤ª¤¤)
+			// $pageã‚’AutoLinkã§ã—ã‹å‚ç…§ã—ã¦ã„ãªã„ãƒšãƒ¼ã‚¸ã‚’ä¸€æ–‰æ›´æ–°ã™ã‚‹(ãŠã„ãŠã„)
 			if ($ref_auto)
 				links_delete($ref_page, array($page));
 		}
@@ -142,11 +142,11 @@ function links_init()
 	foreach (get_existfiles(CACHE_DIR, '.rel') as $cache)
 		unlink($cache);
 
-	$ref   = array(); // »²¾È¸µ
+	$ref   = array(); // å‚ç…§å…ƒ
 	foreach (get_existpages() as $page) {
 		if ($page == $whatsnew) continue;
 
-		$rel   = array(); // »²¾ÈÀè
+		$rel   = array(); // å‚ç…§å…ˆ
 		$links = links_get_objects($page);
 		foreach ($links as $_obj) {
 			if (! isset($_obj->type) || $_obj->type != 'pagename' ||

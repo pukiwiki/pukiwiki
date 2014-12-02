@@ -63,33 +63,33 @@ function plugin_calendar_viewer_convert()
 	$func_args = func_get_args();
 
 	// Default values
-	$pagename    = $func_args[0];	// ´ğ½à¤È¤Ê¤ë¥Ú¡¼¥¸Ì¾
-	$page_YM     = '';	// °ìÍ÷É½¼¨¤¹¤ëÇ¯·î
-	$limit_base  = 0;	// ÀèÆ¬¤«¤é¿ô¤¨¤Æ²¿¥Ú¡¼¥¸ÌÜ¤«¤éÉ½¼¨¤¹¤ë¤« (ÀèÆ¬)
-	$limit_pitch = 0;	// ²¿·ï¤Å¤ÄÉ½¼¨¤¹¤ë¤«
-	$limit_page  = 0;	// ¥µ¡¼¥Á¤¹¤ë¥Ú¡¼¥¸¿ô
-	$mode        = 'past';	// Æ°ºî¥â¡¼¥É
-	$date_sep    = '-';	// ÆüÉÕ¤Î¥»¥Ñ¥ì¡¼¥¿ calendar2¤Ê¤é '-', calendar¤Ê¤é ''
+	$pagename    = $func_args[0];	// åŸºæº–ã¨ãªã‚‹ãƒšãƒ¼ã‚¸å
+	$page_YM     = '';	// ä¸€è¦§è¡¨ç¤ºã™ã‚‹å¹´æœˆ
+	$limit_base  = 0;	// å…ˆé ­ã‹ã‚‰æ•°ãˆã¦ä½•ãƒšãƒ¼ã‚¸ç›®ã‹ã‚‰è¡¨ç¤ºã™ã‚‹ã‹ (å…ˆé ­)
+	$limit_pitch = 0;	// ä½•ä»¶ã¥ã¤è¡¨ç¤ºã™ã‚‹ã‹
+	$limit_page  = 0;	// ã‚µãƒ¼ãƒã™ã‚‹ãƒšãƒ¼ã‚¸æ•°
+	$mode        = 'past';	// å‹•ä½œãƒ¢ãƒ¼ãƒ‰
+	$date_sep    = '-';	// æ—¥ä»˜ã®ã‚»ãƒ‘ãƒ¬ãƒ¼ã‚¿ calendar2ãªã‚‰ '-', calendarãªã‚‰ ''
 
 	// Check $func_args[1]
 	$matches = array();
 	if (preg_match('/[0-9]{4}' . $date_sep . '[0-9]{2}/', $func_args[1])) {
-		// »ØÄêÇ¯·î¤Î°ìÍ÷É½¼¨
+		// æŒ‡å®šå¹´æœˆã®ä¸€è¦§è¡¨ç¤º
 		$page_YM     = $func_args[1];
 		$limit_page  = 31;
 	} else if (preg_match('/this/si', $func_args[1])) {
-		// º£·î¤Î°ìÍ÷É½¼¨
+		// ä»Šæœˆã®ä¸€è¦§è¡¨ç¤º
 		$page_YM     = get_date('Y' . $date_sep . 'm');
 		$limit_page  = 31;
 	} else if (preg_match('/^[0-9]+$/', $func_args[1])) {
-		// nÆüÊ¬É½¼¨
+		// næ—¥åˆ†è¡¨ç¤º
 		$limit_pitch = $func_args[1];
 		$limit_page  = $func_args[1];
 	} else if (preg_match('/(-?[0-9]+)\*([0-9]+)/', $func_args[1], $matches)) {
-		// ÀèÆ¬¤è¤ê¿ô¤¨¤Æ x ¥Ú¡¼¥¸ÌÜ¤«¤é¡¢y·ï¤Å¤ÄÉ½¼¨
+		// å…ˆé ­ã‚ˆã‚Šæ•°ãˆã¦ x ãƒšãƒ¼ã‚¸ç›®ã‹ã‚‰ã€yä»¶ã¥ã¤è¡¨ç¤º
 		$limit_base  = $matches[1];
 		$limit_pitch = $matches[2];
-		$limit_page  = $matches[1] + $matches[2]; // ÆÉ¤ßÈô¤Ğ¤¹ + É½¼¨¤¹¤ë
+		$limit_page  = $matches[1] + $matches[2]; // èª­ã¿é£›ã°ã™ + è¡¨ç¤ºã™ã‚‹
 	} else {
 		return '#calendar_viewer(): ' . $_err_calendar_viewer_param2 . '<br />' . "\n";
 	}
@@ -109,9 +109,9 @@ function plugin_calendar_viewer_convert()
 		$viewed[$pagename] = TRUE; // Valid
 	}
 
-	// °ìÍ÷É½¼¨¤¹¤ë¥Ú¡¼¥¸Ì¾¤È¥Õ¥¡¥¤¥ëÌ¾¤Î¥Ñ¥¿¡¼¥ó¡¡¥Õ¥¡¥¤¥ëÌ¾¤Ë¤ÏÇ¯·î¤ò´Ş¤à
+	// ä¸€è¦§è¡¨ç¤ºã™ã‚‹ãƒšãƒ¼ã‚¸åã¨ãƒ•ã‚¡ã‚¤ãƒ«åã®ãƒ‘ã‚¿ãƒ¼ãƒ³ã€€ãƒ•ã‚¡ã‚¤ãƒ«åã«ã¯å¹´æœˆã‚’å«ã‚€
 	if ($pagename == '') {
-		// pagenameÌµ¤·¤Îyyyy-mm-dd¤ËÂĞ±ş¤¹¤ë¤¿¤á¤Î½èÍı
+		// pagenameç„¡ã—ã®yyyy-mm-ddã«å¯¾å¿œã™ã‚‹ãŸã‚ã®å‡¦ç†
 		$pagepattern     = '';
 		$pagepattern_len = 0;
 		$filepattern     = encode($page_YM);
@@ -123,7 +123,7 @@ function plugin_calendar_viewer_convert()
 		$filepattern_len = strlen($filepattern);
 	}
 
-	// ¥Ú¡¼¥¸¥ê¥¹¥È¤Î¼èÆÀ
+	// ãƒšãƒ¼ã‚¸ãƒªã‚¹ãƒˆã®å–å¾—
 	$pagelist = array();
 	if ($dir = @opendir(DATA_DIR)) {
 		$_date = get_date('Y' . $date_sep . 'm' . $date_sep . 'd');
@@ -158,7 +158,7 @@ function plugin_calendar_viewer_convert()
 	$tmppage     = $vars['page'];
 	$return_body = '';
 
-	// $limit_page ¤Î·ï¿ô¤Ş¤Ç¥¤¥ó¥¯¥ë¡¼¥É
+	// $limit_page ã®ä»¶æ•°ã¾ã§ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 	$tmp = max($limit_base, 0); // Skip minus
 	while ($tmp < $limit_page) {
 		if (! isset($pagelist[$tmp])) break;
@@ -166,7 +166,7 @@ function plugin_calendar_viewer_convert()
 		$page = $pagelist[$tmp];
 		$get['page'] = $post['page'] = $vars['page'] = $page;
 
-		// ¸½¾õ¤Ç±ÜÍ÷µö²Ä¤¬¤¢¤ë¾ì¹ç¤À¤±É½¼¨¤¹¤ë
+		// ç¾çŠ¶ã§é–²è¦§è¨±å¯ãŒã‚ã‚‹å ´åˆã ã‘è¡¨ç¤ºã™ã‚‹
 		if (check_readable($page, FALSE, FALSE)) {
 			$body = convert_html(get_source($page));
 		} else {
@@ -204,17 +204,17 @@ function plugin_calendar_viewer_convert()
 		++$tmp;
 	}
 
-	// ¤³¤³¤Ç¡¢Á°¸å¤Î¥ê¥ó¥¯¤òÉ½¼¨
-	// ?plugin=calendar_viewer&file=¥Ú¡¼¥¸Ì¾&date=yyyy-mm
+	// ã“ã“ã§ã€å‰å¾Œã®ãƒªãƒ³ã‚¯ã‚’è¡¨ç¤º
+	// ?plugin=calendar_viewer&file=ãƒšãƒ¼ã‚¸å&date=yyyy-mm
 	$enc_pagename = rawurlencode(substr($pagepattern, 0, $pagepattern_len - 1));
 
 	if ($page_YM != '') {
-		// Ç¯·îÉ½¼¨»ş
+		// å¹´æœˆè¡¨ç¤ºæ™‚
 		$date_sep_len = strlen($date_sep);
 		$this_year    = substr($page_YM, 0, 4);
 		$this_month   = substr($page_YM, 4 + $date_sep_len, 2);
 
-		// ¼¡·î
+		// æ¬¡æœˆ
 		$next_year  = $this_year;
 		$next_month = $this_month + 1;
 		if ($next_month > 12) {
@@ -223,7 +223,7 @@ function plugin_calendar_viewer_convert()
 		}
 		$next_YM = sprintf('%04d%s%02d', $next_year, $date_sep, $next_month);
 
-		// Á°·î
+		// å‰æœˆ
 		$prev_year  = $this_year;
 		$prev_month = $this_month - 1;
 		if ($prev_month < 1) {
@@ -243,23 +243,23 @@ function plugin_calendar_viewer_convert()
 			$right_text = $next_YM . '&gt;&gt;'; // >>
 		}
 	} else {
-		// n·ïÉ½¼¨»ş
+		// nä»¶è¡¨ç¤ºæ™‚
 		if ($limit_base <= 0) {
-			$left_YM = ''; // É½¼¨¤·¤Ê¤¤ (¤½¤ì¤è¤êÁ°¤Î¹àÌÜ¤Ï¤Ê¤¤)
+			$left_YM = ''; // è¡¨ç¤ºã—ãªã„ (ãã‚Œã‚ˆã‚Šå‰ã®é …ç›®ã¯ãªã„)
 		} else {
 			$left_YM   = $limit_base - $limit_pitch . '*' . $limit_pitch;
 			$left_text = sprintf($_msg_calendar_viewer_left, $limit_pitch);
 
 		}
 		if ($limit_base + $limit_pitch >= count($pagelist)) {
-			$right_YM = ''; // É½¼¨¤·¤Ê¤¤ (¤½¤ì¤è¤ê¸å¤Î¹àÌÜ¤Ï¤Ê¤¤)
+			$right_YM = ''; // è¡¨ç¤ºã—ãªã„ (ãã‚Œã‚ˆã‚Šå¾Œã®é …ç›®ã¯ãªã„)
 		} else {
 			$right_YM   = $limit_base + $limit_pitch . '*' . $limit_pitch;
 			$right_text = sprintf($_msg_calendar_viewer_right, $limit_pitch);
 		}
 	}
 
-	// ¥Ê¥Ó¥²¡¼¥ÈÍÑ¤Î¥ê¥ó¥¯¤òËöÈø¤ËÄÉ²Ã
+	// ãƒŠãƒ“ã‚²ãƒ¼ãƒˆç”¨ã®ãƒªãƒ³ã‚¯ã‚’æœ«å°¾ã«è¿½åŠ 
 	if ($left_YM != '' || $right_YM != '') {
 		$s_date_sep = htmlsc($date_sep);
 		$left_link = $right_link = '';
@@ -271,7 +271,7 @@ function plugin_calendar_viewer_convert()
 		if ($right_YM != '')
 			$right_link = '<a href="' . $link .
 				'date=' . $right_YM . '">' . $right_text . '</a>';
-		// past mode¤Ï<<¿· µì>> Â¾¤Ï<<µì ¿·>>
+		// past modeã¯<<æ–° æ—§>> ä»–ã¯<<æ—§ æ–°>>
 		$return_body .=
 			'<div class="calendar_viewer">' .
 			'<span class="calendar_viewer_left">'  . $left_link  . '</span>' .
@@ -309,7 +309,7 @@ function plugin_calendar_viewer_action()
 	$return_vars_array['msg'] = 'calendar_viewer ' . htmlsc($vars['page']);
 	if ($vars['page'] != '') $return_vars_array['msg'] .= '/';
 	if (preg_match('/\*/', $page_YM)) {
-		// ¤¦¡¼¤ó¡¢n·ïÉ½¼¨¤Î»ş¤Ï¤Ê¤ó¤Æ¥Ú¡¼¥¸Ì¾¤Ë¤·¤¿¤é¤¤¤¤¡©
+		// ã†ãƒ¼ã‚“ã€nä»¶è¡¨ç¤ºã®æ™‚ã¯ãªã‚“ã¦ãƒšãƒ¼ã‚¸åã«ã—ãŸã‚‰ã„ã„ï¼Ÿ
 	} else {
 		$return_vars_array['msg'] .= htmlsc($page_YM);
 	}
@@ -322,7 +322,7 @@ function plugin_calendar_viewer_isValidDate($aStr, $aSepList = '-/ .')
 {
 	$matches = array();
 	if ($aSepList == '') {
-		// yyymmdd¤È¤·¤Æ¥Á¥§¥Ã¥¯¡Ê¼êÈ´¤­(^^;¡Ë
+		// yyymmddã¨ã—ã¦ãƒã‚§ãƒƒã‚¯ï¼ˆæ‰‹æŠœã(^^;ï¼‰
 		return checkdate(substr($aStr, 4, 2), substr($aStr, 6, 2), substr($aStr, 0, 4));
 	} else if (ereg("^([0-9]{2,4})[$aSepList]([0-9]{1,2})[$aSepList]([0-9]{1,2})$", $aStr, $matches) ) {
 		return checkdate($matches[2], $matches[3], $matches[1]);

@@ -60,14 +60,14 @@ function plugin_rename_action()
 	}
 }
 
-// ÊÑ¿ô¤ò¼èÆÀ¤¹¤ë
+// å¤‰æ•°ã‚’å–å¾—ã™ã‚‹
 function plugin_rename_getvar($key)
 {
 	global $vars;
 	return isset($vars[$key]) ? $vars[$key] : '';
 }
 
-// ¥¨¥é¡¼¥á¥Ã¥»¡¼¥¸¤òºî¤ë
+// ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ä½œã‚‹
 function plugin_rename_err($err, $page = '')
 {
 	global $_rename_messages;
@@ -86,7 +86,7 @@ function plugin_rename_err($err, $page = '')
 	return $msg;
 }
 
-//Âè°ìÃÊ³¬:¥Ú¡¼¥¸Ì¾¤Ş¤¿¤ÏÀµµ¬É½¸½¤ÎÆşÎÏ
+//ç¬¬ä¸€æ®µéš:ãƒšãƒ¼ã‚¸åã¾ãŸã¯æ­£è¦è¡¨ç¾ã®å…¥åŠ›
 function plugin_rename_phase1($err = '', $page = '')
 {
 	global $script, $_rename_messages;
@@ -128,7 +128,7 @@ EOD;
 	return $ret;
 }
 
-//ÂèÆóÃÊ³¬:¿·¤·¤¤Ì¾Á°¤ÎÆşÎÏ
+//ç¬¬äºŒæ®µéš:æ–°ã—ã„åå‰ã®å…¥åŠ›
 function plugin_rename_phase2($err = '')
 {
 	global $script, $_rename_messages;
@@ -174,7 +174,7 @@ EOD;
 	return $ret;
 }
 
-//¥Ú¡¼¥¸Ì¾¤È´ØÏ¢¤¹¤ë¥Ú¡¼¥¸¤òÎóµó¤·¡¢phase3¤Ø
+//ãƒšãƒ¼ã‚¸åã¨é–¢é€£ã™ã‚‹ãƒšãƒ¼ã‚¸ã‚’åˆ—æŒ™ã—ã€phase3ã¸
 function plugin_rename_refer()
 {
 	$page  = plugin_rename_getvar('page');
@@ -190,7 +190,7 @@ function plugin_rename_refer()
 	return plugin_rename_phase3($pages);
 }
 
-//Àµµ¬É½¸½¤Ç¥Ú¡¼¥¸¤òÃÖ´¹
+//æ­£è¦è¡¨ç¾ã§ãƒšãƒ¼ã‚¸ã‚’ç½®æ›
 function plugin_rename_regex($arr_from, $arr_to)
 {
 	$exists = array();
@@ -339,7 +339,7 @@ function plugin_rename_proceed($pages, $files, $exists)
 				unlink($new);
 			rename($old, $new);
 
-			// link¥Ç¡¼¥¿¥Ù¡¼¥¹¤ò¹¹¿·¤¹¤ë BugTrack/327 arino
+			// linkãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚’æ›´æ–°ã™ã‚‹ BugTrack/327 arino
 			links_update($old);
 			links_update($new);
 		}
@@ -373,12 +373,12 @@ function plugin_rename_proceed($pages, $files, $exists)
 		$postdata[] = '-' . decode($old) .
 			$_rename_messages['msg_arrow'] . decode($new) . "\n";
 
-	// ¹¹¿·¤Î¾×ÆÍ¤Ï¥Á¥§¥Ã¥¯¤·¤Ê¤¤¡£
+	// æ›´æ–°ã®è¡çªã¯ãƒã‚§ãƒƒã‚¯ã—ãªã„ã€‚
 
-	// ¥Õ¥¡¥¤¥ë¤Î½ñ¤­¹ş¤ß
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›¸ãè¾¼ã¿
 	page_write(PLUGIN_RENAME_LOGPAGE, join('', $postdata));
 
-	//¥ê¥À¥¤¥ì¥¯¥È
+	//ãƒªãƒ€ã‚¤ãƒ¬ã‚¯ãƒˆ
 	$page = plugin_rename_getvar('page');
 	if ($page == '') $page = PLUGIN_RENAME_LOGPAGE;
 

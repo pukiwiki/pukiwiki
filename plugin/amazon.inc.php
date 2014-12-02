@@ -1,13 +1,13 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // $Id: amazon.inc.php,v 1.16 2011/01/25 15:01:01 henoheno Exp $
-// Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 �׼�
+// Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 閑舎
 //
 // Amazon plugin: Book-review maker via amazon.com/amazon.jp
 //
 // Copyright:
 //	2004-2005 PukiWiki Developers Team
-//	2003 �׼� <raku@rakunet.org> (Original author)
+//	2003 閑舎 <raku@rakunet.org> (Original author)
 //
 // License: GNU/GPL
 //
@@ -15,33 +15,33 @@
 // * 2004/04/03 PukiWiki Developer Team (arino <arino@users.sourceforge.jp>)
 //        - replace plugin_amazon_get_page().
 //        - PLUGIN_AMAZON_XML 'xml.amazon.com' -> 'xml.amazon.co.jp'
-// * 0.6  URL ��¸�ߤ��ʤ���硢No image ��ɽ�����������֤ʤɽ�����
-//        ����饤��ץ饰����θƤӽФ���������
-//	  ASIN �ֹ���ʬ������å����롣
-//	  �����������ȥ�Υ���å���ˤ��®�٤��������åס�
-// * 0.7  �֥å���ӥ塼�����ΥǥХå���ǧ������ΰ���Υ��ꥢ��
-// * 0.8  amazon �����ʤβ�����ɽ����
-//	  ������������ ID ���б���
-// * 0.9  RedHat9+php4.3.2+apache2.0.46 �ǲ���������ޤǤ����ɤ߹��ޤ�ʤ�������н衣
-//        ���ܸ�ڡ����β��˥֥å���ӥ塼�������Ȥ����ʸ���������ƺ��ʤ�����β�衣
-//        ���ҤǤʤ� CD �ʤɡ�ASIN ��ʬ��Ĺ���Ƥ⥿���ȥ�򤦤ޤ������褦�ˤ��롣
-//        �̱ƤΤ߼�����ΤǤʤ���С�B000002G6J.01 �Ƚ񤫤� B000002G6J �Ƚ񤤤Ƥ�̱Ƥ��Ф�褦�ˤ��롣
-//	  ASIN ���б����륭��å������/����å��奿���ȥ�򤽤줾�������뵡ǽ�ɲá�
-//	  proxy �б�(�Ū)��
-//	  proxy �����β����ǰ��̥桼���Τ���� AID �Ϥʤ��Ȥ⼫ư��������뤳�Ȥ��狼�ꡢ���������
-// * 1.0  �֥å���ӥ塼�Ǥʤ�����ӥ塼�Ȥ��롣
-//        �����Υ���å������������¤��ߤ��롣
-//        �����ȥ롢�̱Ƥ� Web Services �� XML ������������ˡ�ˤ�ä� get ���뤳�Ȥǻ��֤�û�̤��롣
-//        ��ӥ塼�ڡ��������Υ����ߥ󥰤ˤĤ�����������롣
-// * 1.1  �Խ����¤򤫤��Ƥ����硢�����Ԥ���ӥ塼�������Ȥ��ơ��ڡ����ϤǤ��ʤ��� ASIN4774110655.tit �ʤɤΥ���å��夬�Ǥ���Τ��衣
-//        �����κǸ夬 01 �ξ�硢image ��������� noimage.jpg �ȤʤäƤ��ޤ��Х�������
-//        1.0 ��Ƴ������ XML ���������Ϲ�®�������֤��������󤬥����ʤΤǡ�09 ������ʤ� 01 ��ȥ饤���롢�ǻ���Ū�˲�衣
+// * 0.6  URL が存在しない場合、No image を表示、画像配置など修正。
+//        インラインプラグインの呼び出し方を修正。
+//	  ASIN 番号部分をチェックする。
+//	  画像、タイトルのキャッシュによる速度の大幅アップ。
+// * 0.7  ブックレビュー生成のデバッグ、認証問題の一応のクリア。
+// * 0.8  amazon 全商品の画像を表示。
+//	  アソシエイト ID に対応。
+// * 0.9  RedHat9+php4.3.2+apache2.0.46 で画像が途中までしか読み込まれない問題に対処。
+//        日本語ページの下にブックレビューを作ろうとすると文字化けして作れない問題の解決。
+//        書籍でなく CD など、ASIN 部分が長くてもタイトルをうまく拾うようにする。
+//        写影のみ取り込むのでなければ、B000002G6J.01 と書かず B000002G6J と書いても写影が出るようにする。
+//	  ASIN に対応するキャッシュ画像/キャッシュタイトルをそれぞれ削除する機能追加。
+//	  proxy 対応(試験的)。
+//	  proxy 実装の過程で一般ユーザのための AID はなくとも自動生成されることがわかり、削除した。
+// * 1.0  ブックレビューでなく、レビューとする。
+//        画像のキャッシュを削除する期限を設ける。
+//        タイトル、写影を Web Services の XML アクセスの方法によって get することで時間を短縮する。
+//        レビューページ生成のタイミングについて注を入れる。
+// * 1.1  編集制限をかけている場合、部外者がレビューを作ろうとして、ページはできないが ASIN4774110655.tit などのキャッシュができるのを解決。
+//        画像の最後が 01 の場合、image を削除すると noimage.jpg となってしまうバグを修正。
+//        1.0 で導入した XML アクセスは高速だが、返す画像情報がウソなので、09 がだめなら 01 をトライする、で暫定的に解決。
 //
 // Caution!:
-// * �������Ϣ����١�www.amazon.co.jp �Υ����������ȥץ��������ǧ�ξ头���Ѳ�������
-// * ��ӥ塼�ϡ�amazon �ץ饰���󤬸ƤӽФ��Խ����̤Ϥ⤦����� PukiWiki ����Ͽ����Ƥ���Τǡ�
-//   ��ߤ���ʤ���ʸ�������ƥڡ����ι����ܥ���򲡤����ȡ�
-// * ���� PLUGIN_AMAZON_AID��PROXY �����Ф���ʬ��expire ����ʬ��Ŭ�����Խ����ƻ��Ѥ��Ƥ�������(¾�Ϥ��ΤޤޤǤ� Ok)��
+// * 著作権が関連する為、www.amazon.co.jp のアソシエイトプログラムを確認の上ご利用下さい。
+// * レビューは、amazon プラグインが呼び出す編集画面はもう出来て PukiWiki に登録されているので、
+//   中止するなら全文を削除してページの更新ボタンを押すこと。
+// * 下の PLUGIN_AMAZON_AID、PROXY サーバの部分、expire の部分を適当に編集して使用してください(他はそのままでも Ok)。
 //
 // Thanks to: Reimy and PukiWiki Developers Team
 //
@@ -92,21 +92,21 @@ function plugin_amazon_init()
 		$amazon_aid = PLUGIN_AMAZON_AID . '/';
 	}
 	$amazon_body = <<<EOD
--���: [[�����Խ��Τ���]]
--ɾ��: ��̾��
--����: &date;
-**�������о�
-[[�����Խ��Τ���]]
+-作者: [[ここ編集のこと]]
+-評者: お名前
+-日付: &date;
+**お薦め対象
+[[ここ編集のこと]]
 
 #amazon(,clear)
-**����
-[[�����Խ��Τ���]]
+**感想
+[[ここ編集のこと]]
 
-// �ޤ������Υ�ӥ塼��ߤ���硢��ʸ���������ڡ�����[�����ܥ���]�򲡤��Ƥ���������(PukiWiki �ˤϤ⤦��Ͽ����Ƥ��ޤ�)
-// ³����ʤ顢��Ρ�[[�����Խ��Τ���]]��ʬ���̤�ޤ�ƺ��������ľ���Ƥ���������
-// ��̾������ʬ�Ϥ���ʬ��̾�����ѹ����Ƥ�������������ȡ��׼ˡ��Ǥ���
-// **�������оݡ�����ϡ��������Ԥ��ɲä��ʤ��Ǥ����������ܼ������˻��Ѥ���Τǡ�
-// //�ǻϤޤ륳���ȹԤϡ��ǽ�Ū���������åȤ��Ƥ����������ܼ�������˺����Ǥ��ʤ���ǽ��������ޤ���
+// まず、このレビューを止める場合、全文を削除し、ページの[更新ボタン]を押してください！(PukiWiki にはもう登録されています)
+// 続けるなら、上の、[[ここ編集のこと]]部分を括弧を含めて削除し、書き直してください。
+// お名前、部分はご自分の名前に変更してください。私だと、閑舎、です。
+// **お薦め対象、より上は、新しい行を追加しないでください。目次作成に使用するので。
+// //で始まるコメント行は、最終的に全部カットしてください。目次が正常に作成できない可能性があります。
 #comment
 EOD;
 }
@@ -122,7 +122,7 @@ function plugin_amazon_convert()
 			'[,book-title|,image|,delimage|,deltitle|,delete])';
 
 	} else if (func_num_args() == 0) {
-		// ��ӥ塼����
+		// レビュー作成
 		if (PKWK_READONLY) return ''; // Show nothing
 
 		$s_page = htmlsc($vars['page']);
@@ -134,7 +134,7 @@ function plugin_amazon_convert()
   <input type="hidden" name="refer" value="$s_page" />
   ASIN:
   <input type="text" name="asin" size="30" value="" />
-  <input type="submit" value="��ӥ塼�Խ�" /> (ISBN 10 �� or ASIN 12 ��)
+  <input type="submit" value="レビュー編集" /> (ISBN 10 桁 or ASIN 12 桁)
  </div>
 </form>
 EOD;
@@ -144,14 +144,14 @@ EOD;
 	$aryargs = func_get_args();
 
 	$align = strtolower($aryargs[1]);
-	if ($align == 'clear') return '<div style="clear:both"></div>'; // ��������
-	if ($align != 'left') $align = 'right'; // ���ַ���
+	if ($align == 'clear') return '<div style="clear:both"></div>'; // 改行挿入
+	if ($align != 'left') $align = 'right'; // 配置決定
 
 	$asin_all = htmlsc($aryargs[0]);  // for XSS
 	if (is_asin() == FALSE && $align != 'clear') return FALSE;
 
 	if ($aryargs[2] != '') {
-		// �����ȥ����
+		// タイトル指定
 		$title = $alt = htmlsc($aryargs[2]); // for XSS
 		if ($alt == 'image') {
 			$alt = plugin_amazon_get_asin_title();
@@ -178,7 +178,7 @@ EOD;
 			}
 		}
 	} else {
-		// �����ȥ뼫ư����
+		// タイトル自動取得
 		$alt = $title = plugin_amazon_get_asin_title();
 		if ($alt == '') return FALSE;
 	}
@@ -198,7 +198,7 @@ function plugin_amazon_action()
 		htmlsc(rawurlencode(strip_bracket($vars['asin']))) : '';
 
 	if (! is_asin()) {
-		$retvars['msg']   = '�֥å���ӥ塼�Խ�';
+		$retvars['msg']   = 'ブックレビュー編集';
 		$retvars['refer'] = & $s_page;
 		$retvars['body']  = plugin_amazon_convert();
 		return $retvars;
@@ -286,11 +286,11 @@ function plugin_amazon_get_asin_title()
 
 	$url = PLUGIN_AMAZON_XML . $asin;
 
-	if (file_exists(CACHE_DIR) === FALSE || is_writable(CACHE_DIR) === FALSE) $nocachable = 1; // ����å����ԲĤξ��
+	if (file_exists(CACHE_DIR) === FALSE || is_writable(CACHE_DIR) === FALSE) $nocachable = 1; // キャッシュ不可の場合
 
 	if (($title = plugin_amazon_cache_title_fetch(CACHE_DIR)) == FALSE) {
-		$nocache = 1; // ����å��師�Ĥ��餺
-		$body    = plugin_amazon_get_page($url); // �������ʤ��ΤǼ��ˤ���
+		$nocache = 1; // キャッシュ見つからず
+		$body    = plugin_amazon_get_page($url); // しかたないので取りにいく
 		$tmpary  = array();
 		$body    = mb_convert_encoding($body, SOURCE_ENCODING, 'UTF-8');
 		preg_match('/<ProductName>([^<]*)</', $body, $tmpary);
@@ -313,7 +313,7 @@ function plugin_amazon_get_asin_title()
 	}
 }
 
-// �����ȥ륭��å��夬���뤫Ĵ�٤�
+// タイトルキャッシュがあるか調べる
 function plugin_amazon_cache_title_fetch($dir)
 {
 	global $asin, $asin_ext, $asin_all;
@@ -342,7 +342,7 @@ function plugin_amazon_cache_title_fetch($dir)
 	}
 }
 
-// ��������å��夬���뤫Ĵ�٤�
+// 画像キャッシュがあるか調べる
 function plugin_amazon_cache_image_fetch($dir)
 {
 	global $asin, $asin_ext, $asin_all;
@@ -369,8 +369,8 @@ function plugin_amazon_cache_image_fetch($dir)
 			$size = getimagesize($tmpfile);
 			unlink($tmpfile);
 		}
-		if ($body == '' || $size[1] <= 1) { // �̾��1���֤뤬ǰ�Τ���0�ξ���(reimy)
-			// ����å���� PLUGIN_AMAZON_NO_IMAGE �Υ��ԡ��Ȥ���
+		if ($body == '' || $size[1] <= 1) { // 通常は1が返るが念のため0の場合も(reimy)
+			// キャッシュを PLUGIN_AMAZON_NO_IMAGE のコピーとする
 			if ($asin_ext == '09') {
 				$url = 'http://images-jp.amazon.com/images/P/' . $asin . '.01.MZZZZZZZ.jpg';
 				$body = plugin_amazon_get_page($url);

@@ -7,410 +7,410 @@
 * A [#w8de4799]
 
 **add [#vef8f18f]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★☆☆☆☆
+:書式|
 ''?cmd=add''
-&color(blue){&page=�ڡ���̾};
-:����|
-~�¹Ԥ�����Խ����̤�ɽ������ޤ��������ܥ���򲡤��ȡ����ꤷ����¸�ڡ������������Խ�������Ϥ������Ƥ��ɲä���ޤ���
-:����|
-~�ڡ���̾�Ͼ�ά�Ǥ��ޤ��󡣥ڡ���̾�ϥ��󥳡��ɤ���Ƥ���ɬ�פ�����ޤ���
-~[[edit>../E-G#i1e8d3e8]]���Խ����̤˴�¸�Υڡ������Ƥ�ɽ������Τ��Ф���add�Ͼ���Խ����̤����Ȥʤ�ޤ������Ѱդ˴�¸���������Ƥ��ѹ���������ʤ����ᡢñ����ɵ����Ƥ��������Υڡ����Ǥ�add��Ȥ��������Ǥ���
-:����|
-~��Ȥ�ȥǥե���Ȥ�skin�ǥ�˥塼�Ρ��ɲáפȤ��ƻȤ��Ƥ��ޤ�������edit���ޥ��(�Խ�)�ǻ�­��뤿�ᡢ�ǥե���Ȥ�skin�Ǥϥ�˥塼���鳰����Ƥ��ޤ���
+&color(blue){&page=ページ名};
+:概要|
+~実行すると編集画面が表示されます。更新ボタンを押すと、指定した既存ページの末尾に編集欄で入力した内容が追加されます。
+:引数|
+~ページ名は省略できません。ページ名はエンコードされている必要があります。
+~[[edit>../E-G#i1e8d3e8]]が編集画面に既存のページ内容を表示するのに対し、addは常に編集画面が空となります。不用意に既存の入力内容を変更する事がないため、単純に追記していくだけのページではaddを使うと便利です。
+:備考|
+~もともとデフォルトのskinでメニューの「追加」として使われていましたが、editコマンド(編集)で事足りるため、デフォルトのskinではメニューから外されています。
 
 
 **amazon [#v7173e39]
-:����|
-~�ʥ��ޥ�ɡ�
-~����饤�󷿥ץ饰����
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~（コマンド）
+~インライン型プラグイン
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ~''&amazon(''
-&color(blue){ASIN�ֹ�};
+&color(blue){ASIN番号};
 '');''
 ~''#amazon''
 ~''#amazon('',
 &color(blue){clear};
 '')''
 ~''#amazon(''
-&color(blue){ASIN�ֹ�};,
+&color(blue){ASIN番号};,
 [&color(blue){left};|&color(blue){right};],
-[&color(blue){�����ȥ�};|&color(blue){image};|&color(blue){delimage};|&color(blue){deltitle};|&color(blue){delete};]
+[&color(blue){タイトル};|&color(blue){image};|&color(blue){delimage};|&color(blue){deltitle};|&color(blue){delete};]
 '')''
-:����|
-~���ޥ����http://www.amazon.co.jp�ˤ��󶡤��뾦�ʤΥ��᡼���ȡ�����̾��ɽ�����ޤ���
-~���ޥ���Υ����������� ID�ʾҲ�ʸ�ʤɤ�񤯤��Ȥ�����������館�뤫�⤷��ʤ����Ȥߡˤ��б����Ƥ��ޤ��� ASIN �����Ϥ�������ǡ�ͽ����������귿���ʾҲ�ե����ޥåȤ�ư�������뤳�Ȥ��Ǥ��ޤ���
-:����|
-~���Ƥΰ������ά����ȡ��֥å���ӥ塼�����ե����ब����ޤ����ֽ�ɾ�פȤ����ڡ����ˤ�����֤��ȡֽ�ɾ/ASIN�ֹ�פȤ����ҥڡ�������ޤ���
-~left,right,clear �Ǿ��ʤΥ��᡼���ȥ����ȥ�ν�����������ꤷ�ޤ���
---left|right �� ɽ�����ΰ��֤���ꤷ�ޤ�����ά����right�Ǥ���
---clear �� �ƥ����Ȳ����߻���������ޤ���
-:|�����ȥ�,image ��ɽ�����Ƥ���ꤷ�ޤ���
---�����ȥ� �� ���ʤΥ����ȥ����ꤷ�ޤ�����ά���ϼ�ư�������ޤ���
---image �� ���ʤΥ��᡼���Τ�ɽ�����ޤ�����ά���ϥ��᡼���ȥ����ȥ��ɽ�����ޤ���
-:|delimage,deltitle,delete �ǥ���å���κ����Ԥ��ޤ�
---delimage �� �б����륤�᡼������å���������ޤ���
---deltitle �� �б����륿���ȥ륭��å���������ޤ���
---delete �� �б����륤�᡼������å���,�����ȥ륭��å���������ޤ���
-:�ץ饰����������|
---PLUGIN_AMAZON_AID��amazon �Υ����������� ID(�ʤ��ʤ� ���̥桼��)
---PLUGIN_AMAZON_EXPIRE_IMAGECACHE��expire ���᡼������å�������Ǻ�����뤫
---PLUGIN_AMAZON_EXPIRE_TITLECACHE��expire �����ȥ륭��å�������Ǻ�����뤫
---PLUGIN_AMAZON_NO_IMAGE�������ʤ��ξ��β���
---PLUGIN_AMAZON_SHOP_URI��amazon ����åפ�URI
---PLUGIN_AMAZON_XML��amazon ���ʾ�����礻 URI
-:����|
-~�������Ϣ����١����ޥ���Υ����������ȥץ��������ǧ�ξ头���Ѳ�������
-~���᡼���ʤ��ξ��˻��Ѥ������������ɬ�פǤ����ǥե���Ȥ� image/noimage.jpg ����Ѥ��ޤ���
-~ASIN �Ͻ��Ҥξ�� ISBN ������Ʊ���Ǥ������Ұʳ��ξ��ϡ����ޥ���Υ����Ȥ��оݤ�ɽ�������ݤμ̿��Υץ��ѥƥ���Ƚ�Ǥ��ޤ����㤨�в��Τ褦�ʾ����ȡ��Ǹ�� 01 ��ޤᡢB000002G6J.01 �Ȥ��ޤ���B000002G6J �Ȥ���ȡ��ǥե���Ȥ� 09 ��Ŭ�Ѥ���Ƥ��ޤ��������ʤ��Ȥʤ�ޤ��ʲ��������Ǥʤ������ȥ��Ƥ֤ΤǤ���� 10 ��� Ok�ˡ�
+:概要|
+~アマゾン（http://www.amazon.co.jp）が提供する商品のイメージと、商品名を表示します。
+~アマゾンのアソシエイト ID（紹介文などを書くことで副収入がもらえるかもしれない仕組み）に対応しています。 ASIN を入力するだけで、予め作成した定型作品紹介フォーマットを自動生成することができます。
+:引数|
+~全ての引数を省略すると、ブックレビュー作成フォームが現れます。「書評」というページにこれを置くと「書評/ASIN番号」という子ページを作ります。
+~left,right,clear で商品のイメージとタイトルの出力方式を指定します。
+--left|right － 表示時の位置を指定します。省略時はrightです。
+--clear － テキスト回り込み指定を解除します。
+:|タイトル,image で表示内容を指定します。
+--タイトル － 商品のタイトルを指定します。省略時は自動取得します。
+--image － 商品のイメージのみ表示します。省略時はイメージとタイトルを表示します。
+:|delimage,deltitle,delete でキャッシュの削除を行います
+--delimage － 対応するイメージキャッシュを削除します。
+--deltitle － 対応するタイトルキャッシュを削除します。
+--delete － 対応するイメージキャッシュ,タイトルキャッシュを削除します。
+:プラグイン内設定|
+--PLUGIN_AMAZON_AID　amazon のアソシエイト ID(ないなら 一般ユーザ)
+--PLUGIN_AMAZON_EXPIRE_IMAGECACHE　expire イメージキャッシュを何日で削除するか
+--PLUGIN_AMAZON_EXPIRE_TITLECACHE　expire タイトルキャッシュを何日で削除するか
+--PLUGIN_AMAZON_NO_IMAGE　画像なしの場合の画像
+--PLUGIN_AMAZON_SHOP_URI　amazon ショップのURI
+--PLUGIN_AMAZON_XML　amazon 商品情報問合せ URI
+:備考|
+~著作権が関連する為、アマゾンのアソシエイトプログラムを確認の上ご利用下さい。
+~イメージなしの場合に使用する画像が別途必要です。デフォルトは image/noimage.jpg を使用します。
+~ASIN は書籍の場合 ISBN と全く同じです。書籍以外の場合は、アマゾンのサイトで対象を表示した際の写真のプロパティで判断します。例えば下のような場合だと、最後の 01 を含め、B000002G6J.01 とします。B000002G6J とすると、デフォルトの 09 が適用されてしまい、画像なしとなります（画像だけでなくタイトルも呼ぶのであれば 10 桁で Ok）。
  http://images-jp.amazon.com/images/P/B000002G6J.01.LZZZZZZZ.jpg
 
 
 **aname [#n9f7bab5]
-:����|
-~����饤�󷿥ץ饰����
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~インライン型プラグイン
+~ブロック型プラグイン
+:重要度|
+~★★★★☆
+:書式|
 ~''&aname(''
-&color(blue){���󥫡�̾};
+&color(blue){アンカー名};
 [,{[&color(blue){super};],
 [&color(blue){full};],
 [&color(blue){noid};]}]
 ''){''
-&color(blue){���󥫡�ʸ����};
+&color(blue){アンカー文字列};
 ''};''
 ~''#aname(''
-&color(blue){���󥫡�̾};
+&color(blue){アンカー名};
 [,{[&color(blue){super};],
 [&color(blue){full};],
 [&color(blue){noid};]},
-&color(blue){���󥫡�ʸ����};]
+&color(blue){アンカー文字列};]
 '')''
-:����|
-~���ꤷ�����֤˥��󥫡�(��󥯤�������)�����ꤷ�ޤ���
-:����|
-~���󥫡�̾���ͤ����󥫡��Υե饰���Ȼ���Ҥ˻��Ѥ���ޤ������󥫡�̾�Ͼ�ά�Ǥ��ޤ��󡣥��󥫡�̾�ˤ�Ⱦ�ѱѻ�����ʸ������ʸ���ˤ����Ѳ�ǽ�Ǥ���
-~super,full,noid �ǥ��󥫡��ν�����������ꤷ�ޤ���
---super �� ���󥫡�ʸ�������դ�ɽ�����ޤ�����ά���Ͼ��դ�ɽ������ޤ���
---full �� �ե饰���Ȼ���Ұʳ���URI����äƥ��󥫡�����Ϥ��ޤ�����ά���ϥե饰���Ȼ���ҤΤ߽��Ϥ���ޤ���
---noid �� ���󥫡��˥ե饰���Ȼ���Ҥ���Ϥ��ޤ���
-:|~���󥫡�ʸ���󤬻��ꤵ�줿��硢���ꤷ��ʸ������Ф��ƥ��󥫡������Ϥ���ޤ������󥫡���¸�ߤ����ѼԤ������������������Ѥ��ޤ�����ά���϶�ʸ�����Ф��륢�󥫡��Ȥʤ�ޤ���
-:�ץ饰����������|~
---PLUGIN_ANAME_ID_MAX�����󥫡�̾�˻����ǽ��ʸ����Ĺ�ξ��
---PLUGIN_ANAME_ID_REGEX�����󥫡�̾�˻����ǽ��ʸ���������ɽ��
---PLUGIN_ANAME_ID_MUST_UNIQUE����ʣ�������󥫡�̾�����Ѥ�����票�顼�Ȥ���
-:����|
-~�̾�ϥ���饤�󷿥ץ饰����Ȥ��ƻ��Ѥ��ޤ���2�ĤΥ֥��å����ץ饰����˶��ޤ줿��ʬ�˥��󥫡����ꤷ�������˥���饤��ץ饰����Ȥ��Ƶ��ҤǤ��ʤ����ᡢ�֥��å����ץ饰����Ȥ��Ƥ�Ȥ���褦�ˤ��Ƥ���ޤ���
-~PukiWiki���ν�����aname�ץ饰���������Ū�˸ƤӽФ��Ƥ��뤿�ᡢɬ���Ȥ߹���ɬ�פ�����ޤ���
+:概要|
+~指定した位置にアンカー(リンクの飛び先)を設定します。
+:引数|
+~アンカー名の値がアンカーのフラグメント指定子に使用されます。アンカー名は省略できません。アンカー名には半角英字（大文字／小文字）が使用可能です。
+~super,full,noid でアンカーの出力方式を指定します。
+--super － アンカー文字列を上付き表示します。省略時は上付き表示されません。
+--full － フラグメント指定子以外のURIを補ってアンカーを出力します。省略時はフラグメント指定子のみ出力されます。
+--noid － アンカーにフラグメント指定子を出力しません。
+:|~アンカー文字列が指定された場合、指定した文字列に対してアンカーが出力されます。アンカーの存在を利用者に明示したい場合に利用します。省略時は空文字に対するアンカーとなります。
+:プラグイン内設定|~
+--PLUGIN_ANAME_ID_MAX　アンカー名に指定可能な文字列長の上限
+--PLUGIN_ANAME_ID_REGEX　アンカー名に指定可能な文字列の正規表現
+--PLUGIN_ANAME_ID_MUST_UNIQUE　重複したアンカー名を利用した場合エラーとする
+:備考|
+~通常はインライン型プラグインとして使用します。2つのブロック型プラグインに挟まれた部分にアンカー設定したい場合にインラインプラグインとして記述できないため、ブロック型プラグインとしても使えるようにしてあります。
+~PukiWiki本体処理でanameプラグインを内部的に呼び出しているため、必ず組み込む必要があります。
 
 
 **article [#a06a7f60]
-:����|
-~�ʥ��ޥ�ɡ�
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★★★☆☆
+:書式|
 ''#article''
-:����|
-~���ꤷ�����֤˴ʰ׷Ǽ��Ĥ����֤��ޤ���
-:�ץ饰����������|~
---PLUGIN_ARTICLE_COLS���ƥ����ȥ��ꥢ�Υ�����
---PLUGIN_ARTICLE_ROWS���ƥ����ȥ��ꥢ�ιԿ�
---PLUGIN_ARTICLE_NAME_COLS��̾���ƥ����ȥ��ꥢ�Υ�����
---PLUGIN_ARTICLE_SUBJECT_COLS����̾�ƥ����ȥ��ꥢ�Υ�����
---PLUGIN_ARTICLE_NAME_FORMAT��̾���������ե����ޥå�
---PLUGIN_ARTICLE_SUBJECT_FORMAT����̾�������ե����ޥå�
---PLUGIN_ARTICLE_INS���������Ƥ������������ɤ�����������뤫
---PLUGIN_ARTICLE_COMMENT���񤭹��ߤβ��˰�ԥ����Ȥ�����뤫
---PLUGIN_ARTICLE_AUTO_BR�����Ԥ�ưŪ�Ѵ����뤫
---PLUGIN_ARTICLE_MAIL_AUTO_SEND��������ƤΥ᡼�뼫ư�ۿ��򤹤뤫
---PLUGIN_ARTICLE_MAIL_FROM��������ƤΥ᡼���������������ԥ᡼�륢�ɥ쥹
---PLUGIN_ARTICLE_MAIL_SUBJECT_PREFIX��������ƤΥ᡼������������̾
---$_plugin_article_mailto��������ƤΥ᡼�뼫ư�ۿ��襢�ɥ쥹
+:概要|
+~指定した位置に簡易掲示板を設置します。
+:プラグイン内設定|~
+--PLUGIN_ARTICLE_COLS　テキストエリアのカラム数
+--PLUGIN_ARTICLE_ROWS　テキストエリアの行数
+--PLUGIN_ARTICLE_NAME_COLS　名前テキストエリアのカラム数
+--PLUGIN_ARTICLE_SUBJECT_COLS　題名テキストエリアのカラム数
+--PLUGIN_ARTICLE_NAME_FORMAT　名前の挿入フォーマット
+--PLUGIN_ARTICLE_SUBJECT_FORMAT　題名の挿入フォーマット
+--PLUGIN_ARTICLE_INS　入力内容を入力欄の前後どちらに挿入するか
+--PLUGIN_ARTICLE_COMMENT　書き込みの下に一行コメントを入れるか
+--PLUGIN_ARTICLE_AUTO_BR　改行を自動的変換するか
+--PLUGIN_ARTICLE_MAIL_AUTO_SEND　投稿内容のメール自動配信をするか
+--PLUGIN_ARTICLE_MAIL_FROM　投稿内容のメール送信時の送信者メールアドレス
+--PLUGIN_ARTICLE_MAIL_SUBJECT_PREFIX　投稿内容のメール送信時の題名
+--$_plugin_article_mailto　投稿内容のメール自動配信先アドレス
 
 
 **attach [#qe43bebc]
-:����|
-~�ʥ��ޥ�ɡ�
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★★★★★
+:書式|
 ''#attach(''
 [&color(blue){nolist};]
 [,&color(blue){noform};]
 '')''
-:����|
-~�ڡ�����ź�եե�����ΰ�����ɽ�������ե�����ź�դΤ�������ϥե���������֤��ޤ���
-:����|
-~nolist, noform ��ɽ�����Ƥ���ꤷ�ޤ���
---nolist �� �ڡ�����ź�եե�����ΰ�����ɽ�����ޤ��󡣾�ά���ϰ�����ɽ�����ޤ���
---noform �� �ե�����ź�դΤ�������ϥե������ɽ�����ޤ��󡣾�ά�������ϥե������ɽ�����ޤ���
-:�ץ饰����������|~
---PLUGIN_ATTACH_MAX_FILESIZE���ե����륢�åץ����ɤξ��
---PLUGIN_ATTACH_UPLOAD_ADMIN_ONLY�������Ԥ�����ź�եե�����򥢥åץ����ɤǤ���褦�ˤ��뤫
---PLUGIN_ATTACH_DELETE_ADMIN_ONLY�������Ԥ�����ź�եե���������Ǥ���褦�ˤ��뤫
---PLUGIN_ATTACH_DELETE_ADMIN_NOBACKUP��PLUGIN_ATTACH_DELETE_ADMIN_ONLY�ΤȤ��������Ԥ�ź�եե������������Ȥ��ϡ��Хå����åפ���ʤ�
---PLUGIN_ATTACH_PASSWORD_REQUIRE�����åץ�����/������˥ѥ���ɤ��׵᤹�뤫(PLUGIN_ATTACH_��_ADMIN_ONLY��ͥ��)
---PLUGIN_ATTACH_RENAME_ENABLE���ե�����Υ�͡��ब��ǽ��
---PLUGIN_ATTACH_FILE_MODE�����åץ����ɤ��줿�ե�����Υ���������
---PLUGIN_ATTACH_FILE_ICON���������󥤥᡼���Υե�����
---PLUGIN_ATTACH_CONFIG_PAGE_MIME������������ɻ���mime-type�򵭽Ҥ����ڡ���
-:����|
-~�ǥե���Ȥ�skin�Υ�˥塼�Ρ�ź�աפǸƤӽФ���Ƥ��뤿�ᡢ�ǥե���Ȥ�skin��Ȥ����ˤ�ɬ���Ȥ߹���ɬ�פ�����ޤ���
-~�ץ饰����������� PLUGIN_ATTACH_MAX_FILESIZE �����䤹���ϡ�php.ini�� upload_max_filesize ��Apache �� LimitRequestBody�ʤ�PukiWiki�ʳ��Ǥξ�����꤬����������դ��Ʋ�������
+:概要|
+~ページの添付ファイルの一覧を表示し、ファイル添付のための入力フォームを設置します。
+:引数|
+~nolist, noform で表示内容を指定します。
+--nolist － ページの添付ファイルの一覧を表示しません。省略時は一覧を表示します。
+--noform － ファイル添付のための入力フォームを表示しません。省略時は入力フォームを表示します。
+:プラグイン内設定|~
+--PLUGIN_ATTACH_MAX_FILESIZE　ファイルアップロードの上限
+--PLUGIN_ATTACH_UPLOAD_ADMIN_ONLY　管理者だけが添付ファイルをアップロードできるようにするか
+--PLUGIN_ATTACH_DELETE_ADMIN_ONLY　管理者だけが添付ファイルを削除できるようにするか
+--PLUGIN_ATTACH_DELETE_ADMIN_NOBACKUP　PLUGIN_ATTACH_DELETE_ADMIN_ONLYのとき、管理者が添付ファイルを削除するときは、バックアップを作らない
+--PLUGIN_ATTACH_PASSWORD_REQUIRE　アップロード/削除時にパスワードを要求するか(PLUGIN_ATTACH_～_ADMIN_ONLYが優先)
+--PLUGIN_ATTACH_RENAME_ENABLE　ファイルのリネームが可能か
+--PLUGIN_ATTACH_FILE_MODE　アップロードされたファイルのアクセス権
+--PLUGIN_ATTACH_FILE_ICON　アイコンイメージのファイル
+--PLUGIN_ATTACH_CONFIG_PAGE_MIME　ダウンロード時のmime-typeを記述したページ
+:備考|
+~デフォルトのskinのメニューの「添付」で呼び出されているため、デフォルトのskinを使う場合には必ず組み込む必要があります。
+~プラグイン内設定の PLUGIN_ATTACH_MAX_FILESIZE を増やす場合は、php.iniの upload_max_filesize やApache の LimitRequestBodyなどPukiWiki以外での上限設定がある事に注意して下さい。
 
 
 ------------------------------
 * B [#v07e2c1a]
 
 **back [#vd9cd7ec]
-:����|
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ''#back(''
-[[&color(blue){ɽ��ʸ����};]
+[[&color(blue){表示文字列};]
 [,[&color(blue){left};|
 &color(blue){center};|
 &color(blue){right};]
 [,[&color(blue){0};|
 &color(blue){1};]
-[,[&color(blue){�����};]
+[,[&color(blue){戻り先};]
 ]]]]
 '')''
-:����|
-~���ꤷ�����֤������ؤΥ�󥯤����֤��ޤ���
-:����|
-~ɽ��ʸ����Ͼ�ά����ȡ����פˤʤ�ޤ���
-~left��center��right��ɽ�����֤���ꤷ�ޤ�����ά����center�ˤʤ�ޤ���
---left �� ��󥯤򺸴󤻤�ɽ�����ޤ���
---center �� ��󥯤�����󤻤�ɽ�����ޤ���
---right �� ��󥯤򱦴󤻤�ɽ�����ޤ���
-:|~0��1�ǿ�ʿ����̵ͭ����ꤷ�ޤ�����ά�����1�ˤʤ�ޤ���
---0 �� ��ʿ����ɽ�����ޤ���
---1 �� ��ʿ����ɽ�����ޤ���
-:|~�����ϥ�󥯤�������ΰ�ư��Ȥʤ�URL���ڡ���̾�Τ����줫�ǻ��ꤷ�ޤ���PLUGIN_BACK_ALLOW_PAGELINK��TRUE�ξ��Τߥڡ���̾������ǽ�Ǥ����ڡ���̾�ϡ֥ڡ���̾#anchor�פε��Ҥ�Ԥ����ǰ�ư��Υ��󥫡�������ǽ�Ǥ���PLUGIN_BACK_ALLOW_JAVASCRIPT��TRUE�ξ��Τ������ξ�ά����ǽ�Ǥ����������ά�����ľ���˻��Ȥ��Ƥ����ڡ����������ˤʤ�ޤ��������ѼԤΥ֥饦�������꤬JavaScript on�Ǥʤ��ȵ�ǽ���ޤ���
-:�ץ饰����������|~
---PLUGIN_BACK_ALLOW_PAGELINK���ڡ���̾(+���󥫡�̾)�ˤ������������ǽ�Ȥ��뤫�ɤ���
---PLUGIN_BACK_ALLOW_JAVASCRIPT�������λ����JavaScript(history.go(-1))�����Ѥ��뤫�ɤ���
---PLUGIN_BACK_USAGE�����顼����ɽ������������ˡ
+:概要|
+~指定した位置に戻り先へのリンクを設置します。
+:引数|
+~表示文字列は省略すると「戻る」になります。
+~left、center、rightで表示位置を指定します。省略時はcenterになります。
+--left － リンクを左寄せで表示します。
+--center － リンクを中央寄せで表示します。
+--right － リンクを右寄せで表示します。
+:|~0、1で水平線の有無を指定します。省略すると1になります。
+--0 － 水平線を表示しません。
+--1 － 水平線を表示します。
+:|~戻り先はリンクを選択時の移動先となるURL、ページ名のいずれかで指定します。PLUGIN_BACK_ALLOW_PAGELINKがTRUEの場合のみページ名を指定可能です。ページ名は「ページ名#anchor」の記述を行う事で移動先のアンカーも指定可能です。PLUGIN_BACK_ALLOW_JAVASCRIPTがTRUEの場合のみ戻り先の省略が可能です。戻り先を省略すると直前に参照していたページが戻り先になりますが、利用者のブラウザの設定がJavaScript onでないと機能しません。
+:プラグイン内設定|~
+--PLUGIN_BACK_ALLOW_PAGELINK　ページ名(+アンカー名)による戻り先指定を可能とするかどうか
+--PLUGIN_BACK_ALLOW_JAVASCRIPT　戻り先の指定にJavaScript(history.go(-1))を利用するかどうか
+--PLUGIN_BACK_USAGE　エラー時に表示される使用方法
 
 
 **backup [#n727318e]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★★★★★
+:書式|
 ''?cmd=backup''
-[&color(blue){&page=�ڡ���̾};]
-:����|
-~���ꤷ���ڡ��������뤤�����ΤΥХå����åװ�����ɽ�����ޤ���
-:����|
-~�ڡ���̾���ά����ȡ�PukiWiki���ΤΥХå����åװ�����ɽ�����ޤ����ڡ���̾�ϥ��󥳡��ɤ���Ƥ���ɬ�פ�����ޤ���
-:�ץ饰����������|~
---PLUGIN_BACKUP_DISABLE_BACKUP_RENDERING���Хå����åץǡ����������󥰤��뵡ǽ��̵���ˤ��롣
+[&color(blue){&page=ページ名};]
+:概要|
+~指定したページ、あるいは全体のバックアップ一覧を表示します。
+:引数|
+~ページ名を省略すると、PukiWiki全体のバックアップ一覧を表示します。ページ名はエンコードされている必要があります。
+:プラグイン内設定|~
+--PLUGIN_BACKUP_DISABLE_BACKUP_RENDERING　バックアップデータをレンダリングする機能を無効にする。
 
 
 **br [#g693034c]
-:����|
-~�֥��å����ץ饰����
-~����饤�󷿥ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+~インライン型プラグイン
+:重要度|
+~★★☆☆☆
+:書式|
 ~''#br''
 ~''&br'''';''
-:����|
-~ʸ����ǲ��Ԥ�Ԥ��ޤ���
-~�����ꥹ�ȡ��ơ��֥���ʤɡ�������~�ˤ����ԤǤϥ֥��å����Ǥ�ȴ���Ƥ��ޤ��Ľ�ǲ��Ԥ���Ԥ��������뤿����Ѥ��ޤ���
-:�ץ饰����������|~
---PLUGIN_BR_ESCAPE_BLOCKQUOTE������ʸ������Ѥ������Υ������������򤹤�
---PLUGIN_BR_TAG��br�ץ饰���󤬽��Ϥ��륿��
+:概要|
+~文章中で改行を行います。
+~段落やリスト、テーブル内など、行末の~による改行ではブロック要素を抜けてしまう個所で改行や空行の挿入するために用います。
+:プラグイン内設定|~
+--PLUGIN_BR_ESCAPE_BLOCKQUOTE　引用文中で利用した場合のタグ不整合を回避する
+--PLUGIN_BR_TAG　brプラグインが出力するタグ
 
 
 **bugtrack [#a83293e8]
-:����|
-~�ʥ��ޥ�ɡ�
-~�֥��å����ץ饰����
-:������|
-~���������� (���̥�����)
-~���������� (���եȳ�ȯ������)
-:��|
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆ (一般サイト)
+~★★★★☆ (ソフト開発サイト)
+:書式|
 ''#bugtrack(''
-[[&color(blue){�ڡ���̾};]
-[&color(blue){,���ƥ��꡼1�ĥ��ƥ��꡼n};]]
+[[&color(blue){ページ名};]
+[&color(blue){,カテゴリー1…カテゴリーn};]]
 '')''
-:����|
-~�Х����ץ����ƥ�ΰ���ʬ�Ǥ���Х���ݡ��Ȥ����ϥե���������֤��ޤ���
-:����|
-~�ڡ���̾�ˤϥХ���ݡ��ȤȤ��ƺ��������ڡ����οƳ��ؤȤʤ�ڡ���̾����ꤷ�ޤ�����ά�������֤����ڡ����Ȥʤ�ޤ���~
-�̾�Х���ݡ��Ȥˤϻ��ꤷ���ڡ���̾�λҳ��ؤ˼�ưŪ���ֹ椬�����ƥڡ�������������ޤ����Ĥޤ�"�Х����ڡ���"�Ȼ��ꤷ�����֤������ϡ��Х����ڡ���/1,�Х����ڡ���/2,�Х����ڡ���/3�ĤΤ褦�˥Х���ݡ��ȤΥڡ����������������ˤʤ�ޤ���
-~���ƥ��꡼�ˤϥХ����оݤȤʤꤦ�����Ǥ���ꤷ�ޤ�����ά����������Ȥʤ�ޤ���
-:�ץ饰����������|~
---PLUGIN_BUGTRACK_NUMBER_FORMAT���Х���ݡ��ȤȤ��ƺ��������ڡ����ֹ�η���
-:����|
-~���եȳ�ȯ�����Ȥǽ�������ץ饰����Ǥ����⤷�Х����װʳ������ӤǥХ���ݡ��ȤΤ褦���귿Ū�ʹ��ܤ���ä��ڡ������������ե����ब�ߤ�����硤���뤤�ϥХ���ݡ��Ȥι��ܤ򥫥����ޥ�������������[[tracker>../S-U#rf5296e2]]�ץ饰�������Ѥ��Ʋ�������
+:概要|
+~バグ追跡システムの一部分であるバグレポートの入力フォームを設置します。
+:引数|
+~ページ名にはバグレポートとして作成されるページの親階層となるページ名を指定します。省略時は設置したページとなります。~
+通常、バグレポートには指定したページ名の子階層に自動的に番号が振られてページが作成されます。つまり"バグ報告ページ"と指定して設置した場合は、バグ報告ページ/1,バグ報告ページ/2,バグ報告ページ/3…のようにバグレポートのページが作成される事になります。
+~カテゴリーにはバグの対象となりうる要素を指定します。省略時は入力欄となります。
+:プラグイン内設定|~
+--PLUGIN_BUGTRACK_NUMBER_FORMAT　バグレポートとして作成されるページ番号の形式
+:備考|
+~ソフト開発サイトで重宝するプラグインです。もしバグ追跡以外の用途でバグレポートのように定型的な項目を持ったページを作成するフォームが欲しい場合，あるいはバグレポートの項目をカスタマイズしたい場合は[[tracker>../S-U#rf5296e2]]プラグインを使用して下さい。
 
 
 **bugtrack_list [#q557ea11]
-:����|
-~�֥��å����ץ饰����
-:������|
-~���������� (���̥�����)
-~���������� (���եȳ�ȯ������)
-:��|
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆ (一般サイト)
+~★★★★☆ (ソフト開発サイト)
+:書式|
 ''#bugtrack_list(''
-[&color(blue){�ڡ���̾};]
+[&color(blue){ページ名};]
 '')''
-:����|
-~�Х����ץ����ƥ�ΰ���ʬ�Ǥ���Х���ݡ��Ȥΰ���ɽ����Ԥ��ޤ���
-:����|
-~�ڡ���̾�ˤϥХ���ݡ��ȤȤ��ƺ��������ڡ����οƳ��ؤȤʤ�ڡ���̾����ꤷ�ޤ�����ά�������֤����ڡ����Ȥʤ�ޤ���~
-:����|
-~�̾��bugtrack�ץ饰������¤٤ƻ��Ѥ��ޤ���
-~bugtrack_list�ץ饰������椫��bugtrack�ץ饰�����ƤӽФ��Ƥ��뤿�ᡢbugtrack�ץ饰���󤬤ʤ��ȵ�ǽ���ޤ���
-~bugtrack_list�ץ饰����ϡ�[[tracker_list>../S-U#t78d6d0a]]�ץ饰�������٤��㵡ǽ�Ǥ������꥽�������񤬾��ʤ�����®�٤�®���Ȥ������åȤ�����ޤ������κ��ϥڡ����������ä����㤷�Ƹ���뷹�������뤿�ᡢ�Ȥ�ʬ����ɬ�פǤ���
+:概要|
+~バグ追跡システムの一部分であるバグレポートの一覧表示を行います。
+:引数|
+~ページ名にはバグレポートとして作成されるページの親階層となるページ名を指定します。省略時は設置したページとなります。~
+:備考|
+~通常はbugtrackプラグインと並べて使用します。
+~bugtrack_listプラグインの中からbugtrackプラグインを呼び出しているため、bugtrackプラグインがないと機能しません。
+~bugtrack_listプラグインは、[[tracker_list>../S-U#t78d6d0a]]プラグインに比べて低機能ですが、リソース消費が少なく処理速度が速いというメリットがあります。この差はページ数の増加に比例して顕れる傾向があるため、使い分けが必要です。
 
 
 ------------------------------
 * C [#y43dfe74]
 
-**calendar��calendar_edit��calendar_read [#v5a54211]
-:����|
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+**calendar、calendar_edit、calendar_read [#v5a54211]
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ~''#calendar(''
-[{[&color(blue){�ڡ���̾};],
-[&color(blue){ǯ��};]}]
+[{[&color(blue){ページ名};],
+[&color(blue){年月};]}]
 '')''
 ~''#calendar_edit(''
-[{[&color(blue){�ڡ���̾};],
-[&color(blue){ǯ��};]}]
+[{[&color(blue){ページ名};],
+[&color(blue){年月};]}]
 '')''
 ~''#calendar_read(''
-[{[&color(blue){�ڡ���̾};],
-[&color(blue){ǯ��};]}]
+[{[&color(blue){ページ名};],
+[&color(blue){年月};]}]
 '')''
-:����|
-~���ꤷ�����֤˥������������֤��ޤ��������������yyyy/mm/dd�Ȥ������դ����򤹤�ȡ��ڡ���̾/yyyymmdd�Ȥ����ڡ������Խ���ɽ���Ǥ��ޤ���
-~�������������դ����򤷤����˳�������ڡ������Խ����֡�ɽ�����֤Τɤ���ǳ����������ĤΥץ饰����ΰ㤤�Ǥ���calendar_edit�Ȥ��Խ����֤ǡ�calendar, calendar_read��ɽ�����֤ǳ����ޤ���
-:����|
-~�ڡ���̾���Խ�/���Ȥ��륫�������Υڡ����ξ�̥ڡ���̾����ꤷ�ޤ���
-�ڡ���̾���ά��������֤����ڡ����Υڡ���̾�ˤʤ�ޤ���
-~ǯ���ɽ�����륫������������ȷ��yyyymm�η����ǻ��ꤷ�ޤ�����ά�������ϸ��ߤ�ǯ��ˤʤ�ޤ���
-:����|
-~���ⵡǽ��calendar2�ץ饰���󤬤��뤿�ᡢ������calendar�ץ饰�����Ȥ�ɬ�����ϤۤȤ�ɤʤ��ʤ�ޤ�����
-~calendar_edit�ץ饰����ڤ�calendar_read�ץ饰������椫��calendar�ץ饰�����ƤӽФ��Ƥ��뤿�ᡢcalendar�ץ饰���󤬤ʤ��ȵ�ǽ���ޤ���
+:概要|
+~指定した位置にカレンダーを設置します。カレンダー上でyyyy/mm/ddという日付を選択すると、ページ名/yyyymmddというページを編集／表示できます。
+~カレンダーの日付を選択した場合に該当するページを編集状態、表示状態のどちらで開くかが３つのプラグインの違いです。calendar_editとは編集状態で、calendar, calendar_readは表示状態で開きます。
+:引数|
+~ページ名は編集/参照するカレンダーのページの上位ページ名を指定します。
+ページ名を省略すると設置したページのページ名になります。
+~年月は表示するカレンダーの西暦と月をyyyymmの形式で指定します。省略した場合は現在の年月になります。
+:備考|
+~より高機能なcalendar2プラグインがあるため、あえてcalendarプラグインを使う必要性はほとんどなくなりました。
+~calendar_editプラグイン及びcalendar_readプラグインの中からcalendarプラグインを呼び出しているため、calendarプラグインがないと機能しません。
 
 
 **calendar_viewer [#nd7dc5b8]
-:����|
-~�ʥ��ޥ�ɡ�
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★★★☆☆
+:書式|
 ''#calendar_viewer(''
-&color(blue){�ڡ���̾};,
+&color(blue){ページ名};,
 &color(blue){yyyy-mm};|
 &color(blue){n};|
 &color(blue){x*y};|
 &color(blue){this};
 [,[&color(blue){past};|&color(blue){future};|&color(blue){view};]
-[,&color(blue){ǯ����ɽ���ζ��ڤ�ʸ��};]]
+[,&color(blue){年月日表示の区切り文字};]]
 '')''
-:����|
-~calendar�ץ饰����ޤ���calendar2�ץ饰����Ǻ������줿�ڡ�������ꤷ�����֤�ɽ�����ޤ���
-:����|
-~�ڡ���̾��calendar�ץ饰����ޤ���calendar2�ץ饰��������֤��Ƥ���ڡ�����̾������ꤷ�ޤ���
-~yyyy-mm�����������ꤷ��ǯ��Υڡ�����ɽ�����ޤ���
-~���������������ꤷ�����ʬ�Υڡ�����ɽ�����ޤ���
-~x*y����������Ƭ�������� x �ڡ�����(��Ƭ��0)���顢y��Ťİ���ɽ�����ޤ���x �� y�Ϥ��������ͤǤ���
-~this������������Υڡ��������ɽ�����ޤ���
-~past��future��view��ɽ������ڡ����ξ�����ꤷ�ޤ�����ά/̵�������past�Ȥʤ�ޤ���
---past �� ���������Υڡ�����ɽ�����ޤ���
---future �� �����ʹߤΥڡ�����ɽ�����ޤ���
---view �� ����̤��ذ���ɽ�����ޤ���
-:|~ǯ�����ζ��ڤ�ʸ����-��/�ʤɤ���ꤷ�ޤ�����ά��������-�ˤʤ�ޤ���
-:�ץ饰����������|~
---PLUGIN_CALENDAR_VIEWER_USAGE�����顼����ɽ������������ˡ
---PLUGIN_CALENDAR_VIEWER_DATE_FORMAT�����դ�ɽ������
-:����|
-~calendar2�ץ饰����ǤϺ��������դε������ʤ���硢������ɽ�����ʤ����ᡢ����0���ˤʤä��Ȥ���˵�����ɽ������ʤ��ʤ�Ȥ�������������ޤ�����calendar_viewer�Ϥ��μ������䤦����˳�ȯ���줿�ץ饰����Ǥ���calendar_view�ϡ����դ��Ѥ�äƤ�ǿ��ε�����ɽ�����뤳�Ȥ��Ǥ��ޤ��������������Τ�Τ�ɽ����calendar2(off)�ǹԤʤ��ޤ���
+:概要|
+~calendarプラグインまたはcalendar2プラグインで作成されたページを指定した位置に表示します。
+:引数|
+~ページ名はcalendarプラグインまたはcalendar2プラグインを設置しているページの名前を指定します。
+~yyyy-mmを指定時、指定した年月のページを表示します。
+~数字を指定時、指定した件数分のページを表示します。
+~x*yを指定時、先頭より数えて x ページ目(先頭は0)から、y件づつ一覧表示します。x と yはいずれも数値です。
+~thisを指定時、今月のページを一覧表示します。
+~past、future、viewで表示するページの条件を指定します。省略/無指定時はpastとなります。
+--past － 今日以前のページを表示します。
+--future － 今日以降のページを表示します。
+--view － 過去から未来へ一覧表示します。
+:|~年月日の区切り文字は-や/などを指定します。省略した場合は-になります。
+:プラグイン内設定|~
+--PLUGIN_CALENDAR_VIEWER_USAGE　エラー時に表示される使用方法
+--PLUGIN_CALENDAR_VIEWER_DATE_FORMAT　日付の表示形式
+:備考|
+~calendar2プラグインでは今日の日付の記事がない場合、記事を表示しないため、午前0時になったとたんに記事が表示されなくなるという弱点がありました。calendar_viewerはその弱点を補うために開発されたプラグインです。calendar_viewは、日付が変わっても最新の記事を表示することができます。カレンダーそのものの表示はcalendar2(off)で行ないます。
 
 
 **calendar2 [#afda2820]
-:����|
-~�ʥ��ޥ�ɡ�
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★★★☆☆
+:書式|
 ''#calendar2(''
-[{[&color(blue){�ڡ���̾};|&color(blue){*};],
+[{[&color(blue){ページ名};|&color(blue){*};],
 [&color(blue){yyyymm};],
 [&color(blue){off};]}]
 '')''
-:����|
-~���ꤷ�����֤˥������������֤��ޤ���ɽ����ΤȤʤ��ɽ�����줿���(<< ����� >>)�����򤹤뤳�Ȥ�������ʬ�Υ���������ɽ���Ǥ��ޤ��������������yyyy/mm/dd�Ȥ������դ����򤹤�ȡ��ڡ���̾/yyyy-mm-dd�Ȥ����ڡ�����ɽ���Ǥ��ޤ�������ʬ�Υڡ�������������Ƥ�����硢���������α��٤�����ʬ�Υڡ������Ƥ�ɽ�����ޤ���
-:����|
-~�ڡ���̾��ɽ������ڡ����ξ�̳��ؤΥڡ��������Ǥ��ޤ����ڡ���̾���ά��������֤����ڡ����Υڡ����Ȥʤ�ޤ����ڡ���̾��*����ꤹ��Ⱦ�̳��ؤΥڡ����Ϥʤ���ɽ������ڡ���̾��yyyy-mm-dd�ˤȤʤ�ޤ���
-~yyyymm��ɽ�����륫������������ȷ�����Ǥ��ޤ�����ά����������ǯ��Ȥʤ�ޤ���
-~off������������ʬ�ڡ�����ɽ�����뵡ǽ����������ޤ�����ά��������ʬ�Υڡ�����ɽ�����ޤ���
-:����|
-~calender_edit�Ǻ��������ڡ����ϥڡ���̾/yyyymmdd�Ȥʤꡢcalender2�Ǻ��������ڡ����ϥڡ���̾/yyyy-mm-dd�Ȥʤ뤿�ᡢ���դ�ɬ�פǤ���
+:概要|
+~指定した位置にカレンダーを設置します。表示月のとなりに表示されたリンク(<< および >>)を選択することで先月／次月分のカレンダーを表示できます。カレンダー上でyyyy/mm/ddという日付を選択すると、ページ名/yyyy-mm-ddというページを表示できます。当日分のページが作成されていた場合、カレンダーの右隣に当日分のページ内容を表示します。
+:引数|
+~ページ名で表示するページの上位階層のページを指定できます。ページ名を省略すると設置したページのページとなります。ページ名に*を指定すると上位階層のページはなし（表示するページ名がyyyy-mm-dd）となります。
+~yyyymmで表示するカレンダーの西暦と月を指定できます。省略時は当日の年月となります。
+~offを指定時、当日分ページを表示する機能は抑制されます。省略時は当日分のページを表示します。
+:備考|
+~calender_editで作成したページはページ名/yyyymmddとなり、calender2で作成したページはページ名/yyyy-mm-ddとなるため、注意が必要です。
 
 
 **clear [#v515085f]
-:����|
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+:重要度|
+~★☆☆☆☆
+:書式|
 ''#clear''
-:����|
-~ref�ץ饰�����around���ץ�����ͭ���Ȥʤä��ƥ����Ȳ����߻���������ޤ���
-:����|
-~img�ץ饰�����clear���ץ���������Ƚ������Ƥ�Ʊ���Ǥ���
+:概要|
+~refプラグインのaroundオプションで有効となったテキスト回り込み指定を解除します。
+:備考|
+~imgプラグインのclearオプション指定時と処理内容は同等です。
 
 
 **color [#q9790b97]
-:����|
-~����饤�󷿥ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~インライン型プラグイン
+:重要度|
+~★★★★☆
+:書式|
 ~''&color(''
-[&color(blue){ʸ����};]
-[,&color(blue){�طʿ�};]
+[&color(blue){文字色};]
+[,&color(blue){背景色};]
 ''){''
-&color(blue){ʸ��};
+&color(blue){文章};
 ''};''
-:����|
-~�����ǻ��ꤷ������饤������(���ʸ��)�Ρ�ʸ�������طʿ�����ꤷ�ޤ���
-:����|
-~ʸ�������طʿ��Ϥ��줾�쿧̾(red��blue�ʤ�)�����㡼�פǻϤޤ�3���16�ʿ���(#000��#FFF)��Ʊ����6���16�ʿ���(#000000 �� #FFFFFF)�Τ����줫�ǻ��ꤹ�뤳�Ȥ��Ǥ��ޤ�����ʸ����ʸ�����䤤�ޤ���
-~ʸ�������طʿ���ξ�����ά������ϤǤ��ޤ��󡣰������ά�������Ͼ�ά����¦�ο����ѹ��Ϥ���ޤ���
-:�ץ饰����������|~
---PLUGIN_COLOR_ALLOW_CSS�������ѹ���(font�����ǤϤʤ�)CSS�����Ѥ���
---PLUGIN_COLOR_USAGE�����顼����ɽ������������ˡ
---PLUGIN_COLOR_REGEX�������˻���Ǥ��뿧������ɽ��
-:����|
-~�ʲ���[[W3C�����:http://www.w3.org/TR/1999/REC-html401-19991224/types.html#h-6.5]]���ȴ�褷����̾��
+:概要|
+~引数で指定したインライン要素(主に文章)の、文字色・背景色を指定します。
+:引数|
+~文字色・背景色はそれぞれ色名(red、blueなど)、シャープで始まる3桁の16進数値(#000～#FFF)、同じく6桁の16進数値(#000000 ～ #FFFFFF)のいずれかで指定することができます。大文字小文字は問いません。
+~文字色・背景色の両方を省略する事はできません。一方を省略した場合は省略した側の色の変更はされません。
+:プラグイン内設定|~
+--PLUGIN_COLOR_ALLOW_CSS　色の変更に(fontタグではなく)CSSを利用する
+--PLUGIN_COLOR_USAGE　エラー時に表示される使用方法
+--PLUGIN_COLOR_REGEX　引数に指定できる色の正規表現
+:備考|
+~以下、[[W3C勧告書:http://www.w3.org/TR/1999/REC-html401-19991224/types.html#h-6.5]]より抜粋した色名。
 Aqua = "#00FFFF",
 Black = "#000000",
 Blue = "#0000FF",
@@ -429,145 +429,145 @@ White = "#FFFFFF",
 Yellow = "#FFFF00"
 
 **comment [#kc065cd8]
-:����|
-~�ʥ��ޥ�ɡ�
-~�֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~（コマンド）
+~ブロック型プラグイン
+:重要度|
+~★★★★★
+:書式|
 ''#comment(''
 {[&color(blue){above};],
 [&color(blue){below};],
 [&color(blue){nodate};],
 [&color(blue){noname};]}
 '')''
-:����|
-~�����Ȥ������Ѥ��������ɽ�����ޤ���
-:����|
-~�����Ȥ�������ˡ������ǻ��ꤷ�ޤ���
---above �� ���Ϥ��������Ȥ�������������ξ���ɲä��ޤ�
---below �� ���Ϥ��������Ȥ�������������β����ɲä��ޤ��ʾ�ά����above�����ꤵ�줿�Ȥߤʤ��ޤ���
---nodate �� �������륳���Ȥˡ�����������ղä��ʤ��ʾ�ά�����ղä��ޤ���
---noname �� �����ȵ�����̾�����������ɽ���Ȥ��ޤ��ʾ�ά����ɽ�����ޤ��� 
-:�ץ饰����������|~
---PLUGIN_COMMENT_DIRECTION_DEFAULT�������Ȥ������������ɤ�����������뤫
---PLUGIN_COMMENT_SIZE_MSG�������ȤΥƥ����ȥ��ꥢ��ɽ����
---PLUGIN_COMMENT_SIZE_NAME�������Ȥ�̾���ƥ����ȥ��ꥢ��ɽ����
---PLUGIN_COMMENT_FORMAT_MSG����������������ե����ޥå�
---PLUGIN_COMMENT_FORMAT_NAME��̾����������ե����ޥå�
---PLUGIN_COMMENT_FORMAT_NOW��������������ե����ޥå�
---PLUGIN_COMMENT_FORMAT_STRING���������������Τ������ե����ޥå�
+:概要|
+~コメントの入力用の入力欄を表示します。
+:引数|
+~コメントの挿入方法を引数で指定します。
+--above － 入力したコメントがコメント入力欄の上に追加します
+--below － 入力したコメントがコメント入力欄の下に追加します（省略時はaboveが指定されたとみなします）
+--nodate － 挿入するコメントに、挿入時刻を付加しない（省略時は付加します）
+--noname － コメント記入者名の入力欄を非表示とします（省略時は表示します） 
+:プラグイン内設定|~
+--PLUGIN_COMMENT_DIRECTION_DEFAULT　コメントを入力欄の前後どちらに挿入するか
+--PLUGIN_COMMENT_SIZE_MSG　コメントのテキストエリアの表示幅
+--PLUGIN_COMMENT_SIZE_NAME　コメントの名前テキストエリアの表示幅
+--PLUGIN_COMMENT_FORMAT_MSG　コメント欄の挿入フォーマット
+--PLUGIN_COMMENT_FORMAT_NAME　名前欄の挿入フォーマット
+--PLUGIN_COMMENT_FORMAT_NOW　時刻欄の挿入フォーマット
+--PLUGIN_COMMENT_FORMAT_STRING　コメント内容全体の挿入フォーマット
 
 
 **contents [#vd4dabcd]
-:����|
-~�����֥��å����ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~擬似ブロック型プラグイン
+:重要度|
+~★★★☆☆
+:書式|
 ~''#contents''
-:����|
-~���֤����ڡ�����θ��Ф��ΰ�����ɽ�����ޤ���
+:概要|
+~設置したページ中の見出しの一覧を表示します。
 
 
 **counter [#zedb02cf]
-:����|
-~�֥��å����ץ饰����
-~����饤�󷿥ץ饰����
-:������|
-~����������
-:��|
+:種別|
+~ブロック型プラグイン
+~インライン型プラグイン
+:重要度|
+~★★★☆☆
+:書式|
 ~''#counter''
 ~''&counter(''
 [&color(blue){total};|
 &color(blue){today};|
 &color(blue){yesterday};]
 '');''
-:����|
-~���֤����ڡ����λ��Ȳ����ɽ�����ޤ���
-:����|
-~������ɽ����ˡ�Ȥ��� total, today, yesterday �����줫����ꤷ�ޤ�����ά����total�����ꤵ�줿�Ȥߤʤ��ޤ����֥��å����ץ饰����ǤϾ��total�����ꤵ�줿�Ȥߤʤ��ޤ���
---total �� ���Υڡ��������Ȥ��줿��������פ�ɽ�����ޤ���
---today �� ���Υڡ��������Ȥ��줿���������ʬ�ˤ�ɽ�����ޤ���
---yesterday �� ���Υڡ��������Ȥ��줿����ʺ���ʬ�ˤ�ɽ�����ޤ���
-:�ץ饰����������|~
---PLUGIN_COUNTER_SUFFIX���ڡ������Ȳ�����ݻ�����ǡ����ե�����γ�ĥ��
-:����|
-~���٤ƤΥڡ����ǻ��Ȳ����ɽ�����������ϡ�MenuBar�䥹���󤫤�counter�ץ饰�����ƤӽФ��Ƥ���������
+:概要|
+~設置したページの参照回数を表示します。
+:引数|
+~カウンタ表示方法として total, today, yesterday いずれかを指定します。省略時はtotalが指定されたとみなします。ブロック型プラグインでは常にtotalが指定されたとみなします。
+--total － そのページが参照された回数の総計を表示します。
+--today － そのページが参照された回数（当日分）を表示します。
+--yesterday － そのページが参照された回数（昨日分）を表示します。
+:プラグイン内設定|~
+--PLUGIN_COUNTER_SUFFIX　ページ参照回数を保持するデータファイルの拡張子
+:備考|
+~すべてのページで参照回数を表示したい場合は、MenuBarやスキンからcounterプラグインを呼び出してください。
 
 
 ------------------------------
 * D [#bfe38652]
 
 **deleted [#kf08f93d]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★★☆☆☆
+:書式|
 ''?plugin=deleted''
 {[&color(blue){&dir=diff};|
 &color(blue){backup};]
 [&color(blue){&file=on};]}
-:����|
-~������줿�ڡ����ΰ�����ɽ�����ޤ���
-:����|
-~file=on���������Хå����åסʤ��뤤�Ϻ�ʬ�ˤΥե�����̾����Ϥ��ޤ�����ά����ɽ�����ޤ���
-~dir�Ǻ����Ƚ����ˡ����ꤷ�ޤ�����ά����backup�Ǥ���
---backup �� �Хå����åפ�¸�ߤ����ڡ�����¸�ߤ��ʤ����˺�����줿�Ȥߤʤ��ޤ�
---diff �� ��ʬ��¸�ߤ����ڡ�����¸�ߤ��ʤ����˺�����줿�Ȥߤʤ��ޤ�
-:����|
-~����Wiki�δ����ԤˤȤäƤϸ����䰭�դ��ä��Խ��ˤ��ڡ������������å�����Τ˽������ޤ���
+:概要|
+~削除されたページの一覧を表示します。
+:引数|
+~file=onを指定時、バックアップ（あるいは差分）のファイル名を出力します。省略時は表示しません。
+~dirで削除の判定方法を指定します。省略時はbackupです。
+--backup － バックアップが存在し、ページが存在しない時に削除されたとみなします
+--diff － 差分が存在し、ページが存在しない時に削除されたとみなします
+:備考|
+~公開Wikiの管理者にとっては誤操作や悪意をもった編集によるページ削除をチェックするのに重宝します。
 
 **diff [#zabff312]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★★★★★
+:書式|
 ''?cmd=diff''
-&color(blue){&page=�ڡ���̾};
-:����|
-~���ꤷ���ڡ����θ��ߤ����ƤȺǸ�ΥХå����å׾��֤Ȥκ�ʬ��ɽ�����ޤ���
-:����|
-~�ڡ���̾���ѹ���ʬ��ɽ������ڡ�������ꤷ�ޤ����ڡ���̾�ϥ��󥳡��ɤ���Ƥ��ʤ���Фʤ�ޤ���
-:����|
-~�Ǹ�ΥХå����åװʳ��Ȥκ�ʬ��ɽ���������backup�����Ѥ��ޤ���
+&color(blue){&page=ページ名};
+:概要|
+~指定したページの現在の内容と最後のバックアップ状態との差分を表示します。
+:引数|
+~ページ名に変更差分を表示するページを指定します。ページ名はエンコードされていなければなりません。
+:備考|
+~最後のバックアップ以外との差分を表示する場合はbackupを利用します。
 
 
 **dump [#k344e979]
-:����|
-~���ޥ��
-:������|
-~����������
-:��|
+:種別|
+~コマンド
+:重要度|
+~★☆☆☆☆
+:書式|
 ~''?plugin=dump''
-:����|
-~����ǥ��쥯�ȥ���Υե������ޤȤ��tar(tar.gz, tgz)�����ǥХå����å�/�ꥹ�ȥ����ޤ���~
-�Хå����å�/�ꥹ�ȥ��μ¹Ԥˤϴ����ԥѥ���ɤ�ɬ�פǤ���~
-�Хå����åפϥե�����̾��ڡ���̾���Ѵ����Ƽ�����������Ǥ��ޤ���
-�����Ѵ��ǥꥹ�ȥ��ˤ����ѽ���ʤ��ʤ�ޤ�����
-�ե�����̾����ڡ���̾�������ưפˤʤ�ޤ���~
-�Хå����åפϼ�������ǥ��쥯�ȥ��Ǥ�դ˻��ꤹ������Ǥ��ޤ���~
-�ꥹ�ȥ��ϳ����ե�����ξ�񤭤ˤ�äƹԤ��ޤ���
-���Τ��ᡢ�ե�����κ����Ԥ����ϤǤ��ޤ���~
-�Хå����å�/�ꥹ�ȥ��оݤȤ��ƻ����ǽ�ʥǥ��쥯�ȥ�ϡ��ʲ����̤�Ǥ���
+:概要|
+~指定ディレクトリ内のファイルをまとめてtar(tar.gz, tgz)形式でバックアップ/リストアします。~
+バックアップ/リストアの実行には管理者パスワードが必要です。~
+バックアップはファイル名をページ名に変換して取得する事ができます。
+この変換でリストアには利用出来なくなりますが、
+ファイル名からページ名の類推は容易になります。~
+バックアップは取得するディレクトリを任意に指定する事ができます。~
+リストアは該当ファイルの上書きによって行われます。
+そのため、ファイルの削除を行う事はできません。~
+バックアップ/リストア対象として指定可能なディレクトリは、以下の通りです。
 --DATA_DIR (wiki/*.txt)
 --UPLOAD_DIR (attach/*)
 --BACKUP_DIR (backup/*)
 
-:�ץ饰����������|~
---PLUGIN_DUMP_ALLOW_RESTORE���ꥹ�ȥ�����Ĥ��뤫�ɤ���
---PLUGIN_DUMP_FILENAME_ENCORDING���ڡ���̾��ǥ��쥯�ȥ깽¤���Ѵ�����ݤ�ʸ��������
---PLUGIN_DUMP_MAX_FILESIZE�����祢�åץ����ɥ�����(Kbyte)
---PLUGIN_DUMP_DUMP���Хå����å׻��˥ץ饰����������Ѥ������
---PLUGIN_DUMP_RESTORE���ꥹ�ȥ����˥ץ饰����������Ѥ������
+:プラグイン内設定|~
+--PLUGIN_DUMP_ALLOW_RESTORE　リストアを許可するかどうか
+--PLUGIN_DUMP_FILENAME_ENCORDING　ページ名をディレクトリ構造に変換する際の文字コード
+--PLUGIN_DUMP_MAX_FILESIZE　最大アップロードサイズ(Kbyte)
+--PLUGIN_DUMP_DUMP　バックアップ時にプラグイン内で利用する引数
+--PLUGIN_DUMP_RESTORE　リストア時にプラグイン内で利用する引数
 
-:����|
-~PukiWiki��������������ե������ľ�ܼ���/��������Ȥ��������塢
-�������ƥ��������������������ǽ��������ޤ�����ʬ�����դ���������
-~DATA_DIR�Υꥹ�ȥ���Ԥä����ϡ�[[links>../L-N#m5bbd018]]�ץ饰�����
-�ڡ����֤Υ�󥯾��󥭥�å���򹹿�����ɬ�פ�����ޤ���
+:備考|
+~PukiWikiが内部管理するファイルを直接取得/更新するという性質上、
+セキュリティ上の問題を引き起こす可能性があります。十分ご注意ください。
+~DATA_DIRのリストアを行った場合は、[[links>../L-N#m5bbd018]]プラグインで
+ページ間のリンク情報キャッシュを更新する必要があります。
 
 
 #navi(../)

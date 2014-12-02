@@ -1,5 +1,5 @@
-̾��
-    PukiWiki  - ��ͳ�˥ڡ������ɲá�������Խ��Ǥ���Web�ڡ������ۥ�����ץ�
+名前
+    PukiWiki  - 自由にページを追加・削除・編集できるWebページ構築スクリプト
 
     Version 1.5.0
     Copyright (C)
@@ -9,91 +9,91 @@
 
     $Id: INSTALL.txt,v 1.9 2007/02/11 05:53:30 henoheno Exp $
 
-���󥹥ȡ���
-    PukiWiki��PHP������ץȤǤ��뤿�ᡢ(�㤨��Perl�Τ褦��)������ץȤ˼¹Ը�
-    ���դ���ɬ�פϤ���ޤ���CGI��ư�Ǥʤ��ΤǤ���С�������ץȤΰ���ܤ�
-    ������ɬ�פ⤢��ޤ���
+インストール
+    PukiWikiはPHPスクリプトであるため、(例えばPerlのように)スクリプトに実行権
+    を付ける必要はありません。CGI起動でないのであれば、スクリプトの一行目を修
+    正する必要もありません。
 
-    Web�����С��ؤΥ����륢����������ǽ�Ǥ���С�PukiWiki�Υ��������֤򤽤Τ�
-    �ޥ����С���ž�����������С���ǲ���(tar pzxf pukiwiki*.tar.gz) �������
-    �ǥѡ��ߥå����������Ԥ�졢�����˻Ȥ��Ϥ������Ǥ���Ǥ��礦��
+    Webサーバーへのシェルアクセスが可能であれば、PukiWikiのアーカイブをそのま
+    まサーバーに転送し、サーバー上で解凍(tar pzxf pukiwiki*.tar.gz) するだけ
+    でパーミッションの設定も行われ、すぐに使い始める事ができるでしょう。
 
-    ������ץȤ�������ܸ��(����С�����Ū��)EUC-JP�ǡ��ޤ����ԥ����ɤ�LF��
-    ���Ҥ���Ƥ��ޤ���������ץȤ�ľ���Խ�������ϡ����ܸ�ʸ�������ɤȲ���
-    �����ɤμ�ưȽ�̤��Ǥ�������򸵤Τޤ���¸�Ǥ���ƥ����ȥ��ǥ�������Ѥ�
-    �Ʋ�������
+    スクリプトの中の日本語は(あれば、基本的に)EUC-JPで、また改行コードはLFで
+    記述されています。スクリプトを直接編集する場合は、日本語文字コードと改行
+    コードの自動判別ができ、それを元のまま保存できるテキストエディタを使用し
+    て下さい。
 
-    �ʲ��ˡ������˥��饤�����PC�Ǻ�Ȥ�Ԥ�������򵭤��ޤ���
+    以下に、事前にクライアントPCで作業を行う場合の例を記します。
 
-    1. PukiWiki�Υ��������֤�Ÿ�����ޤ���
+    1. PukiWikiのアーカイブを展開します。
 
-    2. ����ե�����(*.ini.php)�����Ƥ��ǧ���ޤ������⽤�������Ȥ�ư��ޤ�
-       �����������줿�������֤���ΤǤ���С�ǰ�Τ�������˴����ԥѥ����
-       �������Ʋ�������
+    2. 設定ファイル(*.ini.php)の内容を確認します。何も修正せずとも動作します
+       が、公開された場所に設置するのであれば、念のため事前に管理者パスワード
+       を修正して下さい。
 
-       ����ե�����ΤۤȤ�ɤι��ܤ� pukiwiki.ini.php �˽��󤵤�Ƥ��ޤ���
+       設定ファイルのほとんどの項目は pukiwiki.ini.php に集約されています。
 
-        ��������           : pukiwiki.ini.php
-        �桼�����         : rules.ini.php
+        全体設定           : pukiwiki.ini.php
+        ユーザ定義         : rules.ini.php
 
-       ����¾���桼��������������Ȥ��Ȥ����꤬�Ѱդ���Ƥ��ޤ���
+       その他、ユーザーエージェントごとの設定が用意されています。
 
-        �ǥ����ȥå�PC     : default.ini.php
-        �������ä����PDA  : keitai.ini.php
-           (�� i_mode.ini.php/jphone.ini.php)
+        デスクトップPC     : default.ini.php
+        携帯電話およびPDA  : keitai.ini.php
+           (旧 i_mode.ini.php/jphone.ini.php)
 
-      PukiWiki�δ����ԥѥ���ɤϡ�pukiwiki.ini.php �ˤ����ѿ� $adminpass
-      �Ǥ�����ñ�˻�����Ǥ���ʤ�С��ʲ��Τ褦�����Ƥǽ�ʬ�Ǥ��礦��
-      ('YourPassWord' ����ʬ�򡢤��ʤ������Υ�����ɤ��֤������Ʋ�����)
+      PukiWikiの管理者パスワードは、pukiwiki.ini.php にある変数 $adminpass
+      です。簡単に試すだけであるならば、以下のような内容で充分でしょう。
+      ('YourPassWord' の部分を、あなただけのキーワードで置き換えて下さい)
 
          $adminpass = '{x-php-md5}' . md5('YourPassWord');
 
-      ��������ͭ���ˤ���פȤϡ�¿���ξ�硢�����ͤ������ 0 �Ǥʤ���(�㤨
-        ��1)�ˤ�����Ǥ��������������̾���� DISABLE �ʤ��� $noXXX �Ȥ���ޤ�
-        �����������ͤ� 0 �Ǥʤ���Τˤ��뤳�Ȥǡ����������ͤ��б����뵡ǽ��
-        ̵���ˤʤ�ޤ���(̵���ˤ�����䤬ͭ���ˤʤ�ޤ�)
+      ※設定を「有効にする」とは、多くの場合、設定値を数字の 0 でない値(例え
+        ば1)にする事です。一部の設定は名前に DISABLE ないし $noXXX とあります
+        が、それらは値を 0 でないものにすることで、その設定値に対応する機能が
+        無効になります。(無効にする役割が有効になります)
 
-      �����󥿡��ͥåȤ˸�������PukiWiki�Ǥ���ʤ�С�PKWK_SAFE_MODE ��ͭ����
-        ���뤳�Ȥ����ᤷ�ޤ���(�ܺ�:BugTrack/787)
+      ※インターネットに公開するPukiWikiであるならば、PKWK_SAFE_MODE を有効に
+        することをお薦めします。(詳細:BugTrack/787)
 
-      ��¾�ͤ��Խ������ʤ��Ķ�����˾�Ǥ���С�PKWK_READONLY ��ͭ���ˤ��뤳
-        �Ȥ����ᤷ�ޤ���(�ܺ�:BugTrack/744)
+      ※他人に編集させない環境をご要望であれば、PKWK_READONLY を有効にするこ
+        とをお薦めします。(詳細:BugTrack/744)
 
-    3.  �ե������FTP�ʤɤǥ����Ф�ž�����ޤ���
-      ����Ū�˲����Ѵ���Ԥ鷺���֤��Τޤޡ�ž�����Ʋ�����
-      ���ե�����̾�䡢�ե�����̾����ʸ����ʸ���ʤɤ��ѹ����ʤ��ǲ�����
-      ��FTP��ž���⡼�ɤϡ֥Х��ʥ�(bin)�פ���Ѥ��Ʋ�����
+    3.  ファイルをFTPなどでサーバに転送します。
+      基本的に何の変換も行わず、「そのまま」転送して下さい
+      ・ファイル名や、ファイル名の大文字小文字などを変更しないで下さい
+      ・FTPの転送モードは「バイナリ(bin)」を使用して下さい
 
-    4.  �����о�Υե����뤪��ӥǥ��쥯�ȥ�Υѡ��ߥå������ǧ���ޤ���
+    4.  サーバ上のファイルおよびディレクトリのパーミッションを確認します。
 
-    �ǥ��쥯�ȥ� �ѡ��ߥå����
-      attach         777	ź�եե������Ǽ�ǥ��쥯�ȥ�
-      backup         777	�Хå����åץե������Ǽ�ǥ��쥯�ȥ�
-      cache          777	����å���ե������Ǽ�ǥ��쥯�ȥ�
-      counter        777	�����󥿥ե������Ǽ�ǥ��쥯�ȥ�
-      diff           777	��ʬ�ե������Ǽ�ǥ��쥯�ȥ�
-      image          755	�����ե�����
-      image/face     755 	(�����ե�����)�ե������ޡ���  
-      lib            755	�饤�֥��
-      plugin         755	�ץ饰����
-      skin           755	������CSS��JavaScirpt�ե�����
-      wiki           777	�ǡ����γ�Ǽ�ǥ��쥯�ȥ�
+    ディレクトリ パーミッション
+      attach         777	添付ファイル格納ディレクトリ
+      backup         777	バックアップファイル格納ディレクトリ
+      cache          777	キャッシュファイル格納ディレクトリ
+      counter        777	カウンタファイル格納ディレクトリ
+      diff           777	差分ファイル格納ディレクトリ
+      image          755	画像ファイル
+      image/face     755 	(画像ファイル)フェイスマーク  
+      lib            755	ライブラリ
+      plugin         755	プラグイン
+      skin           755	スキン、CSS、JavaScirptファイル
+      wiki           777	データの格納ディレクトリ
 
-    �ե�����    �ѡ��ߥå���� �ǡ����μ���(����)
+    ファイル    パーミッション データの種類(参考)
       .htaccess      644       ASCII
       .htpasswd      644       ASCII
       */.htaccess    644       ASCII
 
-    �ե�����    �ѡ��ߥå���� �ǡ����μ���(����)
+    ファイル    パーミッション データの種類(参考)
       *.php          644       ASCII
       */*.php        644       ASCII
-      attach/*       666       BINARY (�Ϥ����¸�ߤ���)
-      backup/*.gz    666       BINARY (���󥹥ȡ������¸�ߤ���)
-      backup/*.txt   666       ASCII  (¿���δĶ��Ǥ�¸�ߤ���)
+      attach/*       666       BINARY (はじめは存在せず)
+      backup/*.gz    666       BINARY (インストール時は存在せず)
+      backup/*.txt   666       ASCII  (多くの環境では存在せず)
       cache/*        666       ASCII
-        (�����Υץ饰����ϥХ��ʥ�ե��������¸���ޤ�)
-      counter/*      666       ASCII  (�Ϥ����¸�ߤ���)
-      diff/*.txt     666       ASCII  (�Ϥ����¸�ߤ���)
+        (一部のプラグインはバイナリファイルを保存します)
+      counter/*      666       ASCII  (はじめは存在せず)
+      diff/*.txt     666       ASCII  (はじめは存在せず)
       wiki/*.txt     666       ASCII
       image/*        644       BINARY
       image/face/*   644       BINARY
@@ -101,107 +101,107 @@
       plugin/*       644       ASCII
       skin/*         644       ASCII
 
-    5. �����С������֤��� PukiWiki �� index.php ���뤤�� pukiwiki.php �ˡ�Web
-      �֥饦�����饢����������PukiWiki��ư��뤫�ͻҤ򸫤ޤ���
+    5. サーバーに設置した PukiWiki の index.php あるいは pukiwiki.php に、Web
+      ブラウザからアクセスし、PukiWikiが動作するか様子を見ます。
 
-      �����顼���Ф���: �����򻲾Ȥ��Ʋ�����
+      ※エラーが出る場合: 下記を参照して下さい
 
-    6.  ɬ�פ˱����ơ�����������ǥ������Ĵ�����Ʋ�������
+    6.  必要に応じて、さらに設定やデザインを調整して下さい。
 
-      ��CSS(����)�� skin/������̾.css.php �ˤ���ޤ����������Ū�˱�����CSS��
-        ���Ϥ��뤳�ȤΤǤ��롢ñ�Ȥ�PHP������ץȤǤ����������Ū�ʥե������
-        ���������ϡ�Web�֥饦���ǽ��Ϸ�̤���Ф��Ʋ��������ɤΤ褦��CSS
-        �������Ƥ��뤫�ϥ�����˵��Ҥ���Ƥ��ޤ���
-      ��������(�����ι��Ȥ�)�˴ؤ���������ܤ� skin/������̾.skin.php ����Ƭ��
-        ����ޤ���
-      ���ץ饰�����ȼ���������ܤ� plugin/�ץ饰����̾.inc.php ����Ƭ�ˤ����
-        ��
-      ��tDiary�ơ���(tDiary������)�λ���ˡ�� BugTrack/769 �򻲾Ȥ��Ʋ�������
+      ※CSS(外見)は skin/スキン名.css.php にあります。これは目的に応じたCSSを
+        出力することのできる、単独のPHPスクリプトです。これを静的なファイルに
+        したい場合は、Webブラウザで出力結果を取り出して下さい。どのようなCSS
+        が求められているかはスキンに記述されています。
+      ※スキン(外見の骨組み)に関する設定項目は skin/スキン名.skin.php の先頭に
+        あります。
+      ※プラグイン独自の設定項目は plugin/プラグイン名.inc.php の先頭にありま
+        す
+      ※tDiaryテーマ(tDiaryスキン)の使用法は BugTrack/769 を参照して下さい。
 
-���顼���Ф���
-    CGI�Ǥ�PHP�����֤��줿�����С�(�ä�suExec���Ȥ߹�蘆��Ƥ���Ķ�)��ư��
-    �����褦�Ȥ������� "Internal Server Error" �ʤɤ�ɽ��������礬�����
-    �����ܤ����ϥ����С������Ԥ�PHP������ץȸ������󶡤��Ƥ��������ǧ����
-    ��������
+エラーが出る場合
+    CGI版のPHPが設置されたサーバー(特にsuExecと組み合わされている環境)で動作
+    させようとした場合に "Internal Server Error" などと表示される場合がありま
+    す。詳しくはサーバー管理者がPHPスクリプト向けに提供している情報を確認して
+    下さい。
 
-      1. �¹Ԥ���PHP������ץ�(PukiWiki�ξ�� index.php �� pukiwiki.php)��
-        ����ܤˡ�PHP�Х��ʥ�ؤΥѥ����ɲä���ɬ�פ����뤫�⤷��ޤ���
-        (��: #!/usr/local/bin/php)�����ͤϥ����С��ˤ��ۤʤ�ޤ���
+      1. 実行するPHPスクリプト(PukiWikiの場合 index.php か pukiwiki.php)の
+        一行目に、PHPバイナリへのパスを追加する必要があるかもしれません。
+        (例: #!/usr/local/bin/php)この値はサーバーにより異なります。
 
-      2. �����Ƥ��ξ�硢��긷̩�ʥѡ��ߥå���󤬵����ޤ���
+      2. たいていの場合、より厳密なパーミッションが求められます。
 
-���顼���Ф���: .htaccess�ե�����
-    PukiWiki 1.4.4 ���� .htaccess �ե������ź�դ����ͤˤʤäƤ��ޤ�����
-    Apache Web �����С�������ˤ�äƤ� "Internal Server Error" �򵯤������
-    ������ޤ���
+エラーが出る場合: .htaccessファイル
+    PukiWiki 1.4.4 から .htaccess ファイルを添付する様になっていますが、
+    Apache Web サーバーの設定によっては "Internal Server Error" を起こす場合
+    があります。
 
-    ������:
-      Web�֥饦���� "Internal Server Error" ��ɽ������
-      Web�����С��Υ��顼�����ˤ� "order not allowed here" �Ȥ������顼����Ͽ
-      �����
+    具体例:
+      Webブラウザに "Internal Server Error" と表示され
+      Webサーバーのエラーログには "order not allowed here" というエラーが記録
+      される
 
-    �����PukiWiki�����֤��������� .htaccess �ˤ�������ѹ������Ĥ���Ƥ���
-    ��(�ä� "AllowOverride Limit" �Ǥʤ�)�Τ������Ǥ���
+    これはPukiWikiを設置したい場所で .htaccess による設定変更が許可されていな
+    い(特に "AllowOverride Limit" でない)のが原因です。
 
-    �����: .htaccess������� skin/.htaccess ��������
+    回避策: .htaccess、および skin/.htaccess を削除する
 
-    ������
-      Apache����ե�����(httpd.conf)�Ρ�PukiWiki�����֤������ǥ��쥯�ȥ�˴�
-      ������ʬ�� "AllowOverride Limit" ���ɲä���
+    解決策：
+      Apache設定ファイル(httpd.conf)の、PukiWikiを設置したいディレクトリに関
+      する部分に "AllowOverride Limit" を追加する
 
-���顼���Ф���: Parse error
+エラーが出る場合: Parse error
     "Parse error: parse error, unexpected XXXX in .... on line NNN"
 
-    PHP������ץȤ�̷�⤬�����硢���Τ褦�ʥ�å�������ɽ������ޤ������ꤵ
-    ��Ƥ���ե�����Ρ����ꤵ�줿�Ԥ��ն������å��������꤬����н�������
-    ����������ͳ�Ȥ��Ƥϰʲ��Τ褦�ʥ��������ͤ����ޤ���
+    PHPスクリプトに矛盾がある場合、このようなメッセージが表示されます。指定さ
+    れているファイルの、指定された行の付近をチェックし、問題があれば修正して
+    下さい。理由としては以下のようなケースが考えられます。
 
-      1. �����ˤ��ä����ߥ������ä��Ƥ��ޤä�
+      1. 末尾にあったセミコロンを消してしまった
 
-      2. ʸ����򥷥󥰥륯�����Ȥ����֥륯�����ȤǰϤ�Ϥ�����������ä���
-         ���ޤä� / ʸ��������(ʸ�����Ϥ�Ǥ���Τ�Ʊ��)���󥰥륯������
-         ����֥륯�����Ȥ�����
+      2. 文字列をシングルクォートかダブルクォートで囲むはずが、片方を消して
+         しまった / 文字列の中に(文字列を囲んでいるのと同じ)シングルクォート
+         やダブルクォートがある
 
-���顼���Ф���: Runtime error
+エラーが出る場合: Runtime error
     Error message : Directory is not found or not writable (xxx_DIR)
 
-    �ǡ�����񤭹���ǥ��쥯�ȥ�(��ե�����)�˽񤭹��߸��¤�̵����硢���Τ�
-    ���ʥ�å�������ɽ�����ޤ���xxx_DIR ���ɤ��ˤ����뤫�ϡ�����ե������Ʊ
-    ̾�������������Ƥ�����ʬ�򻲾Ȥ��Ʋ�������
+    データを書き込むディレクトリ(やファイル)に書き込み権限が無い場合、このよ
+    うなメッセージを表示します。xxx_DIR がどこにあたるかは、設定ファイルで同
+    名の定数を定義している部分を参照して下さい。
 
-���顼���Ф���: CSS��ư��ʤ�
-    pukiwiki.css.php ��ñ�Ȥ�PHP�ץ������Ǥ��뤿�ᡢCGI��ư��ɬ�פʴĶ���
-    ���ä��ꡢmod_layout�ˤ�빭�����������Ԥ����Ϥ��Υե�����ˤĤ��Ƥ�
-    index.php��Ʊ�ͤ��б���Ԥ�ɬ�פ�����ޤ���
+エラーが出る場合: CSSが動作しない
+    pukiwiki.css.php は単独のPHPプログラムであるため、CGI起動が必要な環境で
+    あったり、mod_layoutによる広告挿入回避を行う場合はこのファイルについても
+    index.phpと同様の対応を行う必要があります。
 
-�Хå����åפȥꥹ�ȥ�
-    �ڡ����κǿ��ǡ��������Ƥ���ǥ��쥯�ȥ�(�ǥե���Ȥ�̾���� wiki)�ʲ�
-    �򡢤ޤ�ɬ�פ˱�����¾�Υǡ��������Ƥ���ǥ��쥯�ȥ�ʲ���Хå����åפ�
-    �Ʋ�������(Ʊ attach, backup, cache, counter, diff)
+バックアップとリストア
+    ページの最新データを収めているディレクトリ(デフォルトの名前は wiki)以下
+    を、また必要に応じて他のデータを収めているディレクトリ以下をバックアップし
+    て下さい。(同 attach, backup, cache, counter, diff)
 
-    cache�ǥ��쥯�ȥ��Хå����åפ��뤳�Ȥ����ᤷ�ޤ���
-    1. cache/*.rel �ե������ cache/*.ref �ե������ links�ץ饰���� �Ǻ���
-       ����ǽ�Ǥ��������ν��������˽Ť����Ķ��ˤ�äƤϽ�����ɬ�����Ԥ���
-       (���Ǥ���)��礬����ޤ���
-    2. cache/*.rel �ե����뤬PukiWiki�������ʤ����˴�¸�Υڡ������Խ�����ȡ�
-      links�ץ饰�����¹Ԥ������֤Ȥۤ�Ʊ������٤�������ޤ���
-      (�ܺ�:BugTrack2/56)
-    3. amazon�ץ饰����Ϥ����˲���(�Υ���å���)����¸���ޤ���
+    cacheディレクトリもバックアップすることをお薦めします。
+    1. cache/*.rel ファイルと cache/*.ref ファイルは linksプラグイン で再生
+       成可能ですが、この処理は非常に重く、環境によっては処理が必ず失敗する
+       (中断する)場合があります。
+    2. cache/*.rel ファイルがPukiWikiに全くない時に既存のページを編集すると、
+      linksプラグインを実行した状態とほぼ同等の負荷がかかります。
+      (詳細:BugTrack2/56)
+    3. amazonプラグインはここに画像(のキャッシュ)を保存します。
 
-    �ǡ��������֤������ϡ��ե�����Υѡ��ߥå���󤬴��Ԥ���Ƥ����̤꤫�ɤ�
-    �����ޤ��ºݤ�ư��뤫�ɤ������ǧ���Ʋ�������(��: ���֤����ڡ����ι���
-    ���ߤ�)
+    データを配置した時は、ファイルのパーミッションが期待されている通りかどう
+    か、また実際に動作するかどうかを確認して下さい。(例: 配置したページの更新
+    を試みる)
 
-    PukiWiki 1.4.5 �ʹߤǤϡ�ź�դ���Ƥ��� dump�ץ饰���� �ǡ�wiki/attach/
-    backup �ǥ��쥯�ȥ�Υ�⡼�ȥХå����å�(*.tar.gz�ʤ���*.tar����)����ǽ��
-    ����
-      ��ư����: index.php?plugin=dump
+    PukiWiki 1.4.5 以降では、添付されている dumpプラグイン で、wiki/attach/
+    backup ディレクトリのリモートバックアップ(*.tar.gzないし*.tar形式)が可能で
+    す。
+      起動の例: index.php?plugin=dump
 
-    dump�ץ饰����ˤ�dump�ץ饰����Ǽ��������ե��������Ȥ�PukiWiki��Ÿ����
-    �뵡ǽ(��⡼�ȥꥹ�ȥ�)���Ѱդ���Ƥ��ޤ����������ե�����˴ޤޤ�Ƥ��ʤ�
-    �ǡ�����PukiWiki���������뵡ǽ�Ϥ���ޤ���(��˾�񤭤ˤʤ�ޤ�)����Web
-    �����С���PHP�Υ��åץ����ɥե����륵�������¤�ۤ���ե���������Ѥ��뤳
-    �ȤϤǤ��ޤ��󡣤ޤ����ε�ǽ�ϥǥե���Ȥ�̵���ˤʤäƤ��ޤ���
+    dumpプラグインにはdumpプラグインで取得したファイルの中身をPukiWikiに展開す
+    る機能(リモートリストア)も用意されています。ただしファイルに含まれていない
+    データをPukiWikiから削除する機能はありません(常に上書きになります)し、Web
+    サーバーやPHPのアップロードファイルサイズ制限を越えるファイルを利用するこ
+    とはできません。またこの機能はデフォルトで無効になっています。
 
-    ����¾��PukiWiki�ι������Ƥ�᡼������Τ��뵡ǽ�ϡ���¸�Υǡ����򼺤�ʤ�
-    ����ε�ǽ�Ȥ��ƤȤ館������Ǥ���Ǥ��礦��
+    その他、PukiWikiの更新内容をメールで通知する機能は、既存のデータを失わない
+    ための機能としてとらえる事ができるでしょう。

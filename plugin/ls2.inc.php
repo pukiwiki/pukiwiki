@@ -10,27 +10,27 @@
 // List plugin 2
 
 /*
- * ÇÛ²¼¤Î¥Ú¡¼¥¸¤ä¡¢¤½¤Î¸«½Ğ¤·(*,**,***)¤Î°ìÍ÷¤òÉ½¼¨¤¹¤ë
+ * é…ä¸‹ã®ãƒšãƒ¼ã‚¸ã‚„ã€ãã®è¦‹å‡ºã—(*,**,***)ã®ä¸€è¦§ã‚’è¡¨ç¤ºã™ã‚‹
  * Usage
  *  #ls2(pattern[,title|include|link|reverse|compact, ...],heading title)
  *
- * pattern  : ¾ÊÎ¬¤¹¤ë¤È¤­¤â¥«¥ó¥Ş¤¬É¬Í×
- * 'title'  : ¸«½Ğ¤·¤Î°ìÍ÷¤òÉ½¼¨¤¹¤ë
- * 'include': ¥¤¥ó¥¯¥ë¡¼¥É¤·¤Æ¤¤¤ë¥Ú¡¼¥¸¤Î¸«½Ğ¤·¤òºÆµ¢Åª¤ËÎóµó¤¹¤ë
- * 'link   ': action¥×¥é¥°¥¤¥ó¤ò¸Æ¤Ó½Ğ¤¹¥ê¥ó¥¯¤òÉ½¼¨
- * 'reverse': ¥Ú¡¼¥¸¤ÎÊÂ¤Ó½ç¤òÈ¿Å¾¤·¡¢¹ß½ç¤Ë¤¹¤ë
- * 'compact': ¸«½Ğ¤·¥ì¥Ù¥ë¤òÄ´À°¤¹¤ë
- *     PLUGIN_LS2_LIST_COMPACT¤¬TRUE¤Î»ş¤ÏÌµ¸ú(ÊÑ²½¤·¤Ê¤¤)
- * heading title: ¸«½Ğ¤·¤Î¥¿¥¤¥È¥ë¤ò»ØÄê¤¹¤ë (link¤ò»ØÄê¤·¤¿»ş¤Î¤ß)
+ * pattern  : çœç•¥ã™ã‚‹ã¨ãã‚‚ã‚«ãƒ³ãƒãŒå¿…è¦
+ * 'title'  : è¦‹å‡ºã—ã®ä¸€è¦§ã‚’è¡¨ç¤ºã™ã‚‹
+ * 'include': ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã—ã¦ã„ã‚‹ãƒšãƒ¼ã‚¸ã®è¦‹å‡ºã—ã‚’å†å¸°çš„ã«åˆ—æŒ™ã™ã‚‹
+ * 'link   ': actionãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚’å‘¼ã³å‡ºã™ãƒªãƒ³ã‚¯ã‚’è¡¨ç¤º
+ * 'reverse': ãƒšãƒ¼ã‚¸ã®ä¸¦ã³é †ã‚’åè»¢ã—ã€é™é †ã«ã™ã‚‹
+ * 'compact': è¦‹å‡ºã—ãƒ¬ãƒ™ãƒ«ã‚’èª¿æ•´ã™ã‚‹
+ *     PLUGIN_LS2_LIST_COMPACTãŒTRUEã®æ™‚ã¯ç„¡åŠ¹(å¤‰åŒ–ã—ãªã„)
+ * heading title: è¦‹å‡ºã—ã®ã‚¿ã‚¤ãƒˆãƒ«ã‚’æŒ‡å®šã™ã‚‹ (linkã‚’æŒ‡å®šã—ãŸæ™‚ã®ã¿)
  */
 
-// ¸«½Ğ¤·¥¢¥ó¥«¡¼¤Î½ñ¼°
+// è¦‹å‡ºã—ã‚¢ãƒ³ã‚«ãƒ¼ã®æ›¸å¼
 define('PLUGIN_LS2_ANCHOR_PREFIX', '#content_1_');
 
-// ¸«½Ğ¤·¥¢¥ó¥«¡¼¤Î³«»ÏÈÖ¹æ
+// è¦‹å‡ºã—ã‚¢ãƒ³ã‚«ãƒ¼ã®é–‹å§‹ç•ªå·
 define('PLUGIN_LS2_ANCHOR_ORIGIN', 0);
 
-// ¸«½Ğ¤·¥ì¥Ù¥ë¤òÄ´À°¤¹¤ë(¥Ç¥Õ¥©¥ë¥ÈÃÍ)
+// è¦‹å‡ºã—ãƒ¬ãƒ™ãƒ«ã‚’èª¿æ•´ã™ã‚‹(ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤)
 define('PLUGIN_LS2_LIST_COMPACT', FALSE);
 
 function plugin_ls2_action()
@@ -122,7 +122,7 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 	global $script;
 	static $_ls2_anchor = 0;
 
-	// ¥Ú¡¼¥¸¤¬Ì¤É½¼¨¤Î¤È¤­
+	// ãƒšãƒ¼ã‚¸ãŒæœªè¡¨ç¤ºã®ã¨ã
 	$is_done = (isset($params["page_$page"]) && $params["page_$page"] > 0);
 	if (! $is_done) $params["page_$page"] = ++$_ls2_anchor;
 
@@ -164,7 +164,7 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 	}
 }
 
-//¥ê¥¹¥È¹½Â¤¤ò¹½ÃÛ¤¹¤ë
+//ãƒªã‚¹ãƒˆæ§‹é€ ã‚’æ§‹ç¯‰ã™ã‚‹
 function plugin_ls2_list_push(& $params, $level)
 {
 	global $_ul_left_margin, $_ul_margin, $_list_pad_str;
@@ -180,7 +180,7 @@ function plugin_ls2_list_push(& $params, $level)
 
 	$margin = $level - count($saved);
 
-	// count($saved)¤òÁı¤ä¤¹
+	// count($saved)ã‚’å¢—ã‚„ã™
 	while (count($saved) < ($level - 1)) array_unshift($saved, '');
 
 	if (count($saved) < $level) {
@@ -189,8 +189,8 @@ function plugin_ls2_list_push(& $params, $level)
 
 		$left = ($level == $margin) ? $_ul_left_margin : 0;
 		if ($params['compact']) {
-			$left  += $_ul_margin;   // ¥Ş¡¼¥¸¥ó¤ò¸ÇÄê
-			$level -= ($margin - 1); // ¥ì¥Ù¥ë¤ò½¤Àµ
+			$left  += $_ul_margin;   // ãƒãƒ¼ã‚¸ãƒ³ã‚’å›ºå®š
+			$level -= ($margin - 1); // ãƒ¬ãƒ™ãƒ«ã‚’ä¿®æ­£
 		} else {
 			$left += $margin * $_ul_margin;
 		}
@@ -201,7 +201,7 @@ function plugin_ls2_list_push(& $params, $level)
 	if ($cont) array_push($result, '</li>');
 }
 
-// ¥ª¥×¥·¥ç¥ó¤ò²òÀÏ¤¹¤ë
+// ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’è§£æã™ã‚‹
 function plugin_ls2_check_arg($value, & $params)
 {
 	if ($value == '') {

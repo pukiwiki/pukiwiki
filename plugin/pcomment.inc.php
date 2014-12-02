@@ -18,7 +18,7 @@
 
 // Default recording page name (%s = $vars['page'] = original page name)
 switch (LANG) {
-case 'ja': define('PLUGIN_PCOMMENT_PAGE', '[[¥³¥á¥ó¥È/%s]]'); break;
+case 'ja': define('PLUGIN_PCOMMENT_PAGE', '[[ã‚³ãƒ¡ãƒ³ãƒˆ/%s]]'); break;
 default:   define('PLUGIN_PCOMMENT_PAGE', '[[Comments/%s]]'); break;
 }
 

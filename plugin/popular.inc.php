@@ -13,7 +13,7 @@
  * (C) 2003-2005 PukiWiki Developers Team
  * (C) 2002 Kazunori Mizushima <kazunori@uc.netyou.jp>
  *
- * ÄÌ»»¤ª¤è¤Óº£Æü¤ËÊÌ¤±¤Æ°ìÍ÷¤òºî¤ë¤³¤È¤¬¤Ç¤­¤Ş¤¹¡£
+ * é€šç®—ãŠã‚ˆã³ä»Šæ—¥ã«åˆ¥ã‘ã¦ä¸€è¦§ã‚’ä½œã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚
  *
  * [Usage]
  *   #popular
@@ -22,9 +22,9 @@
  *   #popular(20,FrontPage|MenuBar,true)
  *
  * [Arguments]
- *   1 - É½¼¨¤¹¤ë·ï¿ô                             default 10
- *   2 - É½¼¨¤µ¤»¤Ê¤¤¥Ú¡¼¥¸¤ÎÀµµ¬É½¸½             default ¤Ê¤·
- *   3 - ÄÌ»»(true)¤«º£Æü(false)¤Î°ìÍ÷¤«¤Î¥Õ¥é¥°  default false
+ *   1 - è¡¨ç¤ºã™ã‚‹ä»¶æ•°                             default 10
+ *   2 - è¡¨ç¤ºã•ã›ãªã„ãƒšãƒ¼ã‚¸ã®æ­£è¦è¡¨ç¾             default ãªã—
+ *   3 - é€šç®—(true)ã‹ä»Šæ—¥(false)ã®ä¸€è¦§ã‹ã®ãƒ•ãƒ©ã‚°  default false
  */
 
 define('PLUGIN_POPULAR_DEFAULT', 10);
@@ -58,9 +58,9 @@ function plugin_popular_convert()
 		$today_count = rtrim($array[2]);
 
 		if ($today) {
-			// $page¤¬¿ôÃÍ¤Ë¸«¤¨¤ë(¤¿¤È¤¨¤Ğencode('BBS')=424253)¤È¤­¡¢
-			// array_splice()¤Ë¤è¤Ã¤Æ¥­¡¼ÃÍ¤¬ÊÑ¹¹¤µ¤ì¤Æ¤·¤Ş¤¦¤Î¤òËÉ¤°
-			// ¤¿¤á¡¢¥­¡¼¤Ë '_' ¤òÏ¢·ë¤¹¤ë
+			// $pageãŒæ•°å€¤ã«è¦‹ãˆã‚‹(ãŸã¨ãˆã°encode('BBS')=424253)ã¨ãã€
+			// array_splice()ã«ã‚ˆã£ã¦ã‚­ãƒ¼å€¤ãŒå¤‰æ›´ã•ã‚Œã¦ã—ã¾ã†ã®ã‚’é˜²ã
+			// ãŸã‚ã€ã‚­ãƒ¼ã« '_' ã‚’é€£çµã™ã‚‹
 			if ($today == $date) $counters['_' . $page] = $today_count;
 		} else {
 			$counters['_' . $page] = $count;

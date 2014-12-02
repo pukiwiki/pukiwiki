@@ -21,10 +21,10 @@ function plugin_includesubmenu_convert()
   $SubMenuPageName = '';
 
   $tmppage = strip_bracket($vars['page']);
-  //²¼³¬ÁØ¤ÎSubMenu¥Ú¡¼¥¸Ì¾
+  //ä¸‹éšå±¤ã®SubMenuãƒšãƒ¼ã‚¸å
   $SubMenuPageName1 = $tmppage . '/SubMenu';
 
-  //Æ±³¬ÁØ¤ÎSubMenu¥Ú¡¼¥¸Ì¾
+  //åŒéšå±¤ã®SubMenuãƒšãƒ¼ã‚¸å
   $LastSlash= strrpos($tmppage,'/');
   if ($LastSlash === FALSE) {
     $SubMenuPageName2 = 'SubMenu';
@@ -33,18 +33,18 @@ function plugin_includesubmenu_convert()
   }
   //echo "$SubMenuPageName1 <br />";
   //echo "$SubMenuPageName2 <br />";
-  //²¼³¬ÁØ¤ËSubMenu¤¬¤¢¤ë¤«¥Á¥§¥Ã¥¯
-  //¤¢¤ì¤Ğ¡¢¤½¤ì¤ò»ÈÍÑ
+  //ä¸‹éšå±¤ã«SubMenuãŒã‚ã‚‹ã‹ãƒã‚§ãƒƒã‚¯
+  //ã‚ã‚Œã°ã€ãã‚Œã‚’ä½¿ç”¨
   if (is_page($SubMenuPageName1)) {
-    //²¼³¬ÁØ¤ËSubMenuÍ­¤ê
+    //ä¸‹éšå±¤ã«SubMenuæœ‰ã‚Š
     $SubMenuPageName = $SubMenuPageName1;
   }
   else if (is_page($SubMenuPageName2)) {
-    //Æ±³¬ÁØ¤ËSubMenuÍ­¤ê
+    //åŒéšå±¤ã«SubMenuæœ‰ã‚Š
     $SubMenuPageName = $SubMenuPageName2;
   }
   else {
-    //SubMenuÌµ¤·
+    //SubMenuç„¡ã—
     return "";
   }
 

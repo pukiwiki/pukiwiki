@@ -1,5 +1,5 @@
 * BracketName [#cf801032]
-WikiName�ν񼰤�ɽ���Ǥ��ʤ����ܸ�ʤɤ�ڡ���̾�Ȥ��ư�����褦�ˤ���񼰡�
+WikiNameの書式で表現できない日本語などをページ名として扱えるようにする書式。
  [[BracketName]] 
-�Τ褦�� [[ ]] �ǰϤ���[[BracketName]]�ˤʤ�ޤ���
-����������ܸ��OK��
+のように [[ ]] で囲うと[[BracketName]]になります。
+もちろん日本語もOK。

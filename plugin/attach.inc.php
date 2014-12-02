@@ -19,23 +19,23 @@ ini_set('upload_max_filesize', '2M');
 // Max file size for upload on script of PukiWikiX_FILESIZE
 define('PLUGIN_ATTACH_MAX_FILESIZE', (1024 * 1024)); // default: 1MB
 
-// ┤╔═¤╝╘д└д▒дм┼║╔╒е╒ебедеыдЄеве├е╫еэб╝е╔д╟дндыдшджд╦д╣ды
+// чобчРЖшАЕуБауБСуБМц╖╗ф╗ШуГХуВбуВдуГлуВТуВвуГГуГЧуГнуГ╝уГЙуБзуБНуВЛуВИуБЖуБлуБЩуВЛ
 define('PLUGIN_ATTACH_UPLOAD_ADMIN_ONLY', TRUE); // FALSE or TRUE
 
-// ┤╔═¤╝╘д└д▒дм┼║╔╒е╒ебедеыдЄ║я╜№д╟дндыдшджд╦д╣ды
+// чобчРЖшАЕуБауБСуБМц╖╗ф╗ШуГХуВбуВдуГлуВТхЙКщЩдуБзуБНуВЛуВИуБЖуБлуБЩуВЛ
 define('PLUGIN_ATTACH_DELETE_ADMIN_ONLY', TRUE); // FALSE or TRUE
 
-// ┤╔═¤╝╘дм┼║╔╒е╒ебедеыдЄ║я╜№д╣дыд╚днд╧бве╨е├епеве├е╫дЄ║юдщд╩дд
-// PLUGIN_ATTACH_DELETE_ADMIN_ONLY=TRUEд╬д╚дн═н╕·
+// чобчРЖшАЕуБМц╖╗ф╗ШуГХуВбуВдуГлуВТхЙКщЩдуБЩуВЛуБиуБНуБпуАБуГРуГГуВпуВвуГГуГЧуВТф╜ЬуВЙуБкуБД
+// PLUGIN_ATTACH_DELETE_ADMIN_ONLY=TRUEуБоуБиуБНцЬЙхК╣
 define('PLUGIN_ATTACH_DELETE_ADMIN_NOBACKUP', FALSE); // FALSE or TRUE
 
-// еве├е╫еэб╝е╔/║я╜№╗■д╦е╤е╣еяб╝е╔дЄ═╫╡сд╣ды(ADMIN_ONLYдм═е└ш)
+// уВвуГГуГЧуГнуГ╝уГЙ/хЙКщЩдцЩВуБлуГСуВ╣уГпуГ╝уГЙуВТшжБц▒ВуБЩуВЛ(ADMIN_ONLYуБМхДкхЕИ)
 define('PLUGIN_ATTACH_PASSWORD_REQUIRE', FALSE); // FALSE or TRUE
 
-// ┼║╔╒е╒ебедеы╠╛дЄ╩╤╣╣д╟дндыдшджд╦д╣ды
+// ц╖╗ф╗ШуГХуВбуВдуГлхРНуВТхдЙцЫ┤уБзуБНуВЛуВИуБЖуБлуБЩуВЛ
 define('PLUGIN_ATTACH_RENAME_ENABLE', TRUE); // FALSE or TRUE
 
-// е╒ебедеыд╬евепе╗е╣╕в
+// уГХуВбуВдуГлуБоуВвуВпуВ╗уВ╣ций
 define('PLUGIN_ATTACH_FILE_MODE', 0644);
 //define('PLUGIN_ATTACH_FILE_MODE', 0604); // for XREA.COM
 
@@ -44,7 +44,7 @@ define('PLUGIN_ATTACH_FILE_ICON', '<img src="' . IMAGE_DIR .  'file.png"' .
 	' width="20" height="20" alt="file"' .
 	' style="border-width:0px" />');
 
-// mime-typeдЄ╡н╜╥д╖д┐е┌б╝е╕
+// mime-typeуВТшиШш┐░уБЧуБЯуГЪуГ╝уВ╕
 define('PLUGIN_ATTACH_CONFIG_PAGE_MIME', 'plugin/attach/mime-type');
 
 //-------- convert
@@ -149,10 +149,10 @@ function attach_filelist()
 	}
 }
 
-//-------- ╝┬┬╬
-// е╒ебедеыеве├е╫еэб╝е╔
-// $pass = NULL : е╤е╣еяб╝е╔дм╗╪─ъд╡дьд╞ддд╩дд
-// $pass = TRUE : еве├е╫еэб╝е╔╡Ў▓─
+//-------- хоЯф╜У
+// уГХуВбуВдуГлуВвуГГуГЧуГнуГ╝уГЙ
+// $pass = NULL : уГСуВ╣уГпуГ╝уГЙуБМцМЗхоЪуБХуВМуБжуБДуБкуБД
+// $pass = TRUE : уВвуГГуГЧуГнуГ╝уГЙши▒хПп
 function attach_upload($file, $page, $pass = NULL)
 {
 	global $_attach_messages, $notify, $notify_subject;
@@ -228,7 +228,7 @@ function attach_upload($file, $page, $pass = NULL)
 		'msg'=>$_attach_messages['msg_uploaded']);
 }
 
-// ╛▄║┘е╒ейб╝ердЄ╔╜╝и
+// шй│ч┤░уГХуВйуГ╝уГауВТшбичд║
 function attach_info($err = '')
 {
 	global $vars, $_attach_messages;
@@ -242,7 +242,7 @@ function attach_info($err = '')
 		array('msg'=>$_attach_messages['err_notfound']);
 }
 
-// ║я╜№
+// хЙКщЩд
 function attach_delete()
 {
 	global $vars, $_attach_messages;
@@ -260,7 +260,7 @@ function attach_delete()
 	return $obj->delete($pass);
 }
 
-// ┼р╖ы
+// хЗНч╡Р
 function attach_freeze($freeze)
 {
 	global $vars, $_attach_messages;
@@ -279,7 +279,7 @@ function attach_freeze($freeze)
 	}
 }
 
-// еъе═б╝ер
+// уГкуГНуГ╝уГа
 function attach_rename()
 {
 	global $vars, $_attach_messages;
@@ -299,7 +299,7 @@ function attach_rename()
 
 }
 
-// е└ежеєеэб╝е╔
+// уГАуВжуГ│уГнуГ╝уГЙ
 function attach_open()
 {
 	global $vars, $_attach_messages;
@@ -314,7 +314,7 @@ function attach_open()
 		array('msg'=>$_attach_messages['err_notfound']);
 }
 
-// ░ь═ў╝ш╞└
+// ф╕АшжзхПЦх╛Ч
 function attach_list()
 {
 	global $vars, $_attach_messages;
@@ -331,7 +331,7 @@ function attach_list()
 	return array('msg'=>$msg, 'body'=>$body);
 }
 
-// еве├е╫еэб╝е╔е╒ейб╝ердЄ╔╜╝и (action╗■)
+// уВвуГГуГЧуГнуГ╝уГЙуГХуВйуГ╝уГауВТшбичд║ (actionцЩВ)
 function attach_showform()
 {
 	global $vars, $_attach_messages;
@@ -343,8 +343,8 @@ function attach_showform()
 	return array('msg'=>$_attach_messages['msg_upload'], 'body'=>$body);
 }
 
-//-------- е╡б╝е╙е╣
-// mime-typeд╬╖ш─ъ
+//-------- уВ╡уГ╝уГУуВ╣
+// mime-typeуБоц▒║хоЪ
 function attach_mime_content_type($filename)
 {
 	$type = 'application/octet-stream'; // default
@@ -367,10 +367,10 @@ function attach_mime_content_type($filename)
 
 	$filename = decode($matches[1]);
 
-	// mime-type░ь═ў╔╜дЄ╝ш╞└
+	// mime-typeф╕АшжзшбиуВТхПЦх╛Ч
 	$config = new Config(PLUGIN_ATTACH_CONFIG_PAGE_MIME);
 	$table = $config->read() ? $config->get('mime-type') : array();
-	unset($config); // есетеъ└с╠є
+	unset($config); // уГбуГвуГкчпАч┤Д
 
 	foreach ($table as $row) {
 		$_type = trim($row[0]);
@@ -383,7 +383,7 @@ function attach_mime_content_type($filename)
 	return $type;
 }
 
-// еве├е╫еэб╝е╔е╒ейб╝ерд╬╜╨╬╧
+// уВвуГГуГЧуГнуГ╝уГЙуГХуВйуГ╝уГауБохЗ║хКЫ
 function attach_form($page)
 {
 	global $script, $vars, $_attach_messages;
@@ -427,8 +427,8 @@ EOD;
 EOD;
 }
 
-//-------- епеще╣
-// е╒ебедеы
+//-------- уВпуГйуВ╣
+// уГХуВбуВдуГл
 class AttachFile
 {
 	var $page, $file, $age, $basename, $filename, $logname;
@@ -456,12 +456,12 @@ class AttachFile
 		return $this->exist ? md5_file($this->filename) : '';
 	}
 
-	// е╒ебедеы╛Ё╩є╝ш╞└
+	// уГХуВбуВдуГлцГЕха▒хПЦх╛Ч
 	function getstatus()
 	{
 		if (! $this->exist) return FALSE;
 
-		// еэе░е╒ебедеы╝ш╞└
+		// уГнуВ░уГХуВбуВдуГлхПЦх╛Ч
 		if (file_exists($this->logname)) {
 			$data = file($this->logname);
 			foreach ($this->status as $key=>$value) {
@@ -477,7 +477,7 @@ class AttachFile
 		return TRUE;
 	}
 
-	// е╣е╞б╝е┐е╣╩▌┬╕
+	// уВ╣уГЖуГ╝уВ┐уВ╣ф┐ЭхнШ
 	function putstatus()
 	{
 		$this->status['count'] = join(',', $this->status['count']);
@@ -493,7 +493,7 @@ class AttachFile
 		fclose($fp);
 	}
 
-	// ╞№╔╒д╬╚ц│╙┤╪┐Ї
+	// цЧеф╗ШуБоцпФш╝ГщЦвцХ░
 	function datecomp($a, $b) {
 		return ($a->time == $b->time) ? 0 : (($a->time > $b->time) ? -1 : 1);
 	}
@@ -520,7 +520,7 @@ class AttachFile
 		return "<a href=\"$script?plugin=attach&amp;pcmd=open$param\" title=\"$title\">$label</a>$count$info";
 	}
 
-	// ╛Ё╩є╔╜╝и
+	// цГЕха▒шбичд║
 	function info($err)
 	{
 		global $script, $_attach_messages;
@@ -622,7 +622,7 @@ EOD;
 			}
 		}
 
-		// е╨е├епеве├е╫
+		// уГРуГГуВпуВвуГГуГЧ
 		if ($this->age ||
 			(PLUGIN_ATTACH_DELETE_ADMIN_ONLY && PLUGIN_ATTACH_DELETE_ADMIN_NOBACKUP)) {
 			@unlink($this->filename);
@@ -632,7 +632,7 @@ EOD;
 			} while (file_exists($this->basename . '.' . $age));
 
 			if (! rename($this->basename,$this->basename . '.' . $age)) {
-				// ║я╜№╝║╟╘ why?
+				// хЙКщЩдхд▒цХЧ why?
 				return array('msg'=>$_attach_messages['err_delete']);
 			}
 
@@ -731,7 +731,7 @@ EOD;
 	}
 }
 
-// е╒ебедеые│еєе╞е╩
+// уГХуВбуВдуГлуВ│уГ│уГЖуГК
 class AttachFiles
 {
 	var $page;
@@ -747,7 +747,7 @@ class AttachFiles
 		$this->files[$file][$age] = & new AttachFile($this->page, $file, $age);
 	}
 
-	// е╒ебедеы░ь═ўдЄ╝ш╞└
+	// уГХуВбуВдуГлф╕АшжзуВТхПЦх╛Ч
 	function toString($flat)
 	{
 		global $_title_cannotread;
@@ -782,7 +782,7 @@ class AttachFiles
 		return make_pagelink($this->page) . "\n<ul>\n$ret</ul>\n";
 	}
 
-	// е╒ебедеы░ь═ўдЄ╝ш╞└(inline)
+	// уГХуВбуВдуГлф╕АшжзуВТхПЦх╛Ч(inline)
 	function to_flat()
 	{
 		$ret = '';
@@ -801,7 +801,7 @@ class AttachFiles
 	}
 }
 
-// е┌б╝е╕е│еєе╞е╩
+// уГЪуГ╝уВ╕уВ│уГ│уГЖуГК
 class AttachPages
 {
 	var $pages = array();

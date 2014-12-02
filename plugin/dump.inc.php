@@ -14,10 +14,10 @@
 // Allow using resture function
 define('PLUGIN_DUMP_ALLOW_RESTORE', FALSE); // FALSE, TRUE
 
-// е┌б╝е╕╠╛дЄе╟егеьепе╚еъ╣╜┬дд╦╩╤┤╣д╣ды║▌д╬╩╕╗·е│б╝е╔ (for mbstring)
+// уГЪуГ╝уВ╕хРНуВТуГЗуВгуГмуВпуГИуГкцзЛщАауБлхдЙцПЫуБЩуВЛщЪЫуБоцЦЗхнЧуВ│уГ╝уГЙ (for mbstring)
 define('PLUGIN_DUMP_FILENAME_ENCORDING', 'SJIS');
 
-// ║╟┬чеве├е╫еэб╝е╔е╡еде║
+// цЬАхдзуВвуГГуГЧуГнуГ╝уГЙуВ╡уВдуВ║
 define('PLUGIN_DUMP_MAX_FILESIZE', 1024); // Kbyte
 
 /////////////////////////////////////////////////
@@ -43,7 +43,7 @@ $_STORAGE['BACKUP_DIR']['extract_filter'] =  '^' . preg_quote(BACKUP_DIR, '/') .
 
 
 /////////////////////////////////////////////////
-// е╫еще░едеє╦▄┬╬
+// уГЧуГйуВ░уВдуГ│цЬмф╜У
 function plugin_dump_action()
 {
 	global $vars;
@@ -57,7 +57,7 @@ function plugin_dump_action()
 
 	if ($pass !== NULL) {
 		if (! pkwk_login($pass)) {
-			$body = "<p><strong>е╤е╣еяб╝е╔дм░уддд▐д╣бг</strong></p>\n";
+			$body = "<p><strong>уГСуВ╣уГпуГ╝уГЙуБМщБХуБДуБ╛уБЩуАВ</strong></p>\n";
 		} else {
 			switch($act){
 			case PLUGIN_DUMP_DUMP:
@@ -66,9 +66,9 @@ function plugin_dump_action()
 			case PLUGIN_DUMP_RESTORE:
 				$retcode = plugin_dump_upload();
 				if ($retcode['code'] == TRUE) {
-					$msg = 'еве├е╫еэб╝е╔дм┤░╬╗д╖д▐д╖д┐';
+					$msg = 'уВвуГГуГЧуГнуГ╝уГЙуБМхоМф║ЖуБЧуБ╛уБЧуБЯ';
 				} else {
-					$msg = 'еве├е╫еэб╝е╔д╦╝║╟╘д╖д▐д╖д┐';
+					$msg = 'уВвуГГуГЧуГнуГ╝уГЙуБлхд▒цХЧуБЧуБ╛уБЧуБЯ';
 				}
 				$body .= $retcode['msg'];
 				return array('msg' => $msg, 'body' => $body);
@@ -77,7 +77,7 @@ function plugin_dump_action()
 		}
 	}
 
-	// ╞■╬╧е╒ейб╝ердЄ╔╜╝и
+	// хЕехКЫуГХуВйуГ╝уГауВТшбичд║
 	$body .= plugin_dump_disp_form();
 
 	$msg = '';
@@ -91,18 +91,18 @@ function plugin_dump_action()
 }
 
 /////////////////////////////////////////////////
-// е╒ебедеыд╬е└ежеєеэб╝е╔
+// уГХуВбуВдуГлуБоуГАуВжуГ│уГнуГ╝уГЙ
 function plugin_dump_download()
 {
 	global $vars, $_STORAGE;
 
-	// евб╝еледе╓д╬╝я╬р
+	// уВвуГ╝уВлуВдуГЦуБочиощбЮ
 	$arc_kind = ($vars['pcmd'] == 'tar') ? 'tar' : 'tgz';
 
-	// е┌б╝е╕╠╛д╦╩╤┤╣д╣ды
+	// уГЪуГ╝уВ╕хРНуБлхдЙцПЫуБЩуВЛ
 	$namedecode = isset($vars['namedecode']) ? TRUE : FALSE;
 
-	// е╨е├епеве├е╫е╟егеьепе╚еъ
+	// уГРуГГуВпуВвуГГуГЧуГЗуВгуГмуВпуГИуГк
 	$bk_wiki   = isset($vars['bk_wiki'])   ? TRUE : FALSE;
 	$bk_attach = isset($vars['bk_attach']) ? TRUE : FALSE;
 	$bk_backup = isset($vars['bk_backup']) ? TRUE : FALSE;
@@ -110,7 +110,7 @@ function plugin_dump_download()
 	$filecount = 0;
 	$tar = new tarlib();
 	$tar->create(CACHE_DIR, $arc_kind) or
-		die_message('е╞еєе▌ещеъе╒ебедеыд╬└╕└од╦╝║╟╘д╖д▐д╖д┐бг');
+		die_message('уГЖуГ│уГЭуГйуГкуГХуВбуВдуГлуБочФЯцИРуБлхд▒цХЧуБЧуБ╛уБЧуБЯуАВ');
 
 	if ($bk_wiki)   $filecount += $tar->add_dir(DATA_DIR,   $_STORAGE['DATA_DIR']['add_filter'],   $namedecode);
 	if ($bk_attach) $filecount += $tar->add_dir(UPLOAD_DIR, $_STORAGE['UPLOAD_DIR']['add_filter'], $namedecode);
@@ -120,17 +120,17 @@ function plugin_dump_download()
 
 	if ($filecount === 0) {
 		@unlink($tar->filename);
-		return '<p><strong>е╒ебедеыдмд▀д─длдъд▐д╗дєд╟д╖д┐бг</strong></p>';
+		return '<p><strong>уГХуВбуВдуГлуБМуБ┐уБдуБЛуВКуБ╛уБЫуВУуБзуБЧуБЯуАВ</strong></p>';
 	} else {
-		// е└ежеєеэб╝е╔
+		// уГАуВжуГ│уГнуГ╝уГЙ
 		download_tarfile($tar->filename, $arc_kind);
 		@unlink($tar->filename);
-		exit;	// └╡╛я╜к╬╗
+		exit;	// цнгх╕╕ч╡Вф║Ж
 	}
 }
 
 /////////////////////////////////////////////////
-// е╒ебедеыд╬еве├е╫еэб╝е╔
+// уГХуВбуВдуГлуБоуВвуГГуГЧуГнуГ╝уГЙ
 function plugin_dump_upload()
 {
 	global $vars, $_STORAGE;
@@ -161,7 +161,7 @@ function plugin_dump_upload()
 	if(! move_uploaded_file($_FILES['upload_file']['tmp_name'], $uploadfile) ||
 	   ! $tar->open($uploadfile, $arc_kind)) {
 		@unlink($uploadfile);
-		die_message('е╒ебедеыдмд▀д─длдъд▐д╗дєд╟д╖д┐бг');
+		die_message('уГХуВбуВдуГлуБМуБ┐уБдуБЛуВКуБ╛уБЫуВУуБзуБЧуБЯуАВ');
 	}
 
 	$pattern = "(({$_STORAGE['DATA_DIR']['extract_filter']})|" .
@@ -170,10 +170,10 @@ function plugin_dump_upload()
 	$files = $tar->extract($pattern);
 	if (empty($files)) {
 		@unlink($uploadfile);
-		return array('code' => FALSE, 'msg' => '<p>┼╕│лд╟дндые╒ебедеыдмдвдъд▐д╗дєд╟д╖д┐бг</p>');
+		return array('code' => FALSE, 'msg' => '<p>х▒ХщЦЛуБзуБНуВЛуГХуВбуВдуГлуБМуБВуВКуБ╛уБЫуВУуБзуБЧуБЯуАВ</p>');
 	}
 
-	$msg  = '<p><strong>┼╕│лд╖д┐е╒ебедеы░ь═ў</strong><ul>';
+	$msg  = '<p><strong>х▒ХщЦЛуБЧуБЯуГХуВбуВдуГлф╕Ашжз</strong><ul>';
 	foreach($files as $name) {
 		$msg .= "<li>$name</li>\n";
 	}
@@ -186,7 +186,7 @@ function plugin_dump_upload()
 }
 
 /////////////////////////////////////////////////
-// tarе╒ебедеыд╬е└ежеєеэб╝е╔
+// tarуГХуВбуВдуГлуБоуГАуВжуГ│уГнуГ╝уГЙ
 function download_tarfile($tempnam, $arc_kind)
 {
 	$size = filesize($tempnam);
@@ -207,7 +207,7 @@ function download_tarfile($tempnam, $arc_kind)
 }
 
 /////////////////////////////////////////////////
-// ╞■╬╧е╒ейб╝ердЄ╔╜╝и
+// хЕехКЫуГХуВйуГ╝уГауВТшбичд║
 function plugin_dump_disp_form()
 {
 	global $script, $defaultpage;
@@ -219,21 +219,21 @@ function plugin_dump_disp_form()
 	$data = <<<EOD
 <span class="small">
 </span>
-<h3>е╟б╝е┐д╬е└ежеєеэб╝е╔</h3>
+<h3>уГЗуГ╝уВ┐уБоуГАуВжуГ│уГнуГ╝уГЙ</h3>
 <form action="$script" method="post">
  <div>
   <input type="hidden" name="cmd"  value="dump" />
   <input type="hidden" name="page" value="$defaultpage" />
   <input type="hidden" name="act"  value="$act_down" />
 
-<p><strong>евб╝еледе╓д╬╖┴╝░</strong>
+<p><strong>уВвуГ╝уВлуВдуГЦуБох╜вх╝П</strong>
 <br />
   <input type="radio" name="pcmd" id="_p_dump_tgz" value="tgz" checked="checked" />
-  <label for="_p_dump_tgz"> б┴.tar.gz ╖┴╝░</label><br />
+  <label for="_p_dump_tgz"> я╜Ю.tar.gz х╜вх╝П</label><br />
   <input type="radio" name="pcmd" id="_p_dump_tar" value="tar" />
-  <label for="_p_dump_tar">б┴.tar ╖┴╝░</label>
+  <label for="_p_dump_tar">я╜Ю.tar х╜вх╝П</label>
 </p>
-<p><strong>е╨е├епеве├е╫е╟егеьепе╚еъ</strong>
+<p><strong>уГРуГГуВпуВвуГГуГЧуГЗуВгуГмуВпуГИуГк</strong>
 <br />
   <input type="checkbox" name="bk_wiki" id="_p_dump_d_wiki" checked="checked" />
   <label for="_p_dump_d_wiki">wiki</label><br />
@@ -242,13 +242,13 @@ function plugin_dump_disp_form()
   <input type="checkbox" name="bk_backup" id="_p_dump_d_backup" />
   <label for="_p_dump_d_backup">backup</label><br />
 </p>
-<p><strong>еке╫е╖ечеє</strong>
+<p><strong>уВкуГЧуВ╖уГзуГ│</strong>
 <br />
   <input type="checkbox" name="namedecode" id="_p_dump_namedecode" />
-  <label for="_p_dump_namedecode">еиеєе│б╝е╔д╡дьд╞дддые┌б╝е╕╠╛дЄе╟егеьепе╚еъ│м┴╪д─днд╬е╒ебедеыд╦е╟е│б╝е╔
-  (виеъе╣е╚евд╦╗╚джд│д╚д╧д╟днд╩дпд╩дъд▐д╣бгд▐д┐бв░ь╔Їд╬╩╕╗·д╧ '_' д╦├╓┤╣д╡дьд▐д╣)</label><br />
+  <label for="_p_dump_namedecode">уВиуГ│уВ│уГ╝уГЙуБХуВМуБжуБДуВЛуГЪуГ╝уВ╕хРНуВТуГЗуВгуГмуВпуГИуГкщЪОх▒дуБдуБНуБоуГХуВбуВдуГлуБлуГЗуВ│уГ╝уГЙ
+  (тА╗уГкуВ╣уГИуВвуБлф╜┐уБЖуБУуБиуБпуБзуБНуБкуБПуБкуВКуБ╛уБЩуАВуБ╛уБЯуАБф╕АщГиуБоцЦЗхнЧуБп '_' уБлч╜оцПЫуБХуВМуБ╛уБЩ)</label><br />
 </p>
-<p><label for="_p_dump_adminpass_dump"><strong>┤╔═¤╝╘е╤е╣еяб╝е╔</strong></label>
+<p><label for="_p_dump_adminpass_dump"><strong>чобчРЖшАЕуГСуВ╣уГпуГ╝уГЙ</strong></label>
   <input type="password" name="pass" id="_p_dump_adminpass_dump" size="12" />
   <input type="submit"   name="ok"   value="OK" />
 </p>
@@ -258,20 +258,20 @@ EOD;
 
 	if(PLUGIN_DUMP_ALLOW_RESTORE) {
 		$data .= <<<EOD
-<h3>е╟б╝е┐д╬еъе╣е╚ев (*.tar, *.tar.gz)</h3>
+<h3>уГЗуГ╝уВ┐уБоуГкуВ╣уГИуВв (*.tar, *.tar.gz)</h3>
 <form enctype="multipart/form-data" action="$script" method="post">
  <div>
   <input type="hidden" name="cmd"  value="dump" />
   <input type="hidden" name="page" value="$defaultpage" />
   <input type="hidden" name="act"  value="$act_up" />
-<p><strong>[╜┼═╫] ╞▒д╕╠╛┴░д╬е╟б╝е┐е╒ебедеыд╧╛х╜ёднд╡дьд▐д╣д╬д╟бв╜╜╩мд┤├э░╒дпд└д╡ддбг</strong></p>
+<p><strong>[щЗНшжБ] хРМуБШхРНхЙНуБоуГЗуГ╝уВ┐уГХуВбуВдуГлуБпф╕КцЫ╕уБНуБХуВМуБ╛уБЩуБоуБзуАБхНБхИЖуБФц│ицДПуБПуБауБХуБДуАВ</strong></p>
 <p><span class="small">
-еве├е╫еэб╝е╔▓─╟╜д╩║╟┬че╒ебедеые╡еде║д╧бв$maxsize KByte д▐д╟д╟д╣бг<br />
+уВвуГГуГЧуГнуГ╝уГЙхПпшГ╜уБкцЬАхдзуГХуВбуВдуГлуВ╡уВдуВ║уБпуАБ$maxsize KByte уБ╛уБзуБзуБЩуАВ<br />
 </span>
-  <label for="_p_dump_upload_file">е╒ебедеы:</label>
+  <label for="_p_dump_upload_file">уГХуВбуВдуГл:</label>
   <input type="file" name="upload_file" id="_p_dump_upload_file" size="40" />
 </p>
-<p><label for="_p_dump_adminpass_restore"><strong>┤╔═¤╝╘е╤е╣еяб╝е╔</strong></label>
+<p><label for="_p_dump_adminpass_restore"><strong>чобчРЖшАЕуГСуВ╣уГпуГ╝уГЙ</strong></label>
   <input type="password" name="pass" id="_p_dump_adminpass_restore" size="12" />
   <input type="submit"   name="ok"   value="OK" />
 </p>
@@ -287,31 +287,31 @@ EOD;
 // tarlib: a class library for tar file creation and expansion
 
 // Tar related definition
-define('TARLIB_HDR_LEN',           512);	// е╪е├е└д╬┬чднд╡
-define('TARLIB_BLK_LEN',           512);	// ├▒░╠е╓еэе├еп─╣д╡
-define('TARLIB_HDR_NAME_OFFSET',     0);	// е╒ебедеы╠╛д╬еке╒е╗е├е╚
-define('TARLIB_HDR_NAME_LEN',      100);	// е╒ебедеы╠╛д╬║╟┬ч─╣д╡
-define('TARLIB_HDR_MODE_OFFSET',   100);	// modeд╪д╬еке╒е╗е├е╚
-define('TARLIB_HDR_UID_OFFSET',    108);	// uidд╪д╬еке╒е╗е├е╚
-define('TARLIB_HDR_GID_OFFSET',    116);	// gidд╪д╬еке╒е╗е├е╚
-define('TARLIB_HDR_SIZE_OFFSET',   124);	// е╡еде║д╪д╬еке╒е╗е├е╚
-define('TARLIB_HDR_SIZE_LEN',       12);	// е╡еде║д╬─╣д╡
-define('TARLIB_HDR_MTIME_OFFSET',  136);	// ║╟╜к╣╣┐╖╗■╣яд╬еке╒е╗е├е╚
-define('TARLIB_HDR_MTIME_LEN',      12);	// ║╟╜к╣╣┐╖╗■╣яд╬─╣д╡
-define('TARLIB_HDR_CHKSUM_OFFSET', 148);	// е┴езе├епе╡ерд╬еке╒е╗е├е╚
-define('TARLIB_HDR_CHKSUM_LEN',      8);	// е┴езе├епе╡ерд╬─╣д╡
-define('TARLIB_HDR_TYPE_OFFSET',   156);	// е╒ебедеые┐еде╫д╪д╬еке╒е╗е├е╚
+define('TARLIB_HDR_LEN',           512);	// уГШуГГуГАуБохдзуБНуБХ
+define('TARLIB_BLK_LEN',           512);	// хНШф╜НуГЦуГнуГГуВпщХ╖уБХ
+define('TARLIB_HDR_NAME_OFFSET',     0);	// уГХуВбуВдуГлхРНуБоуВкуГХуВ╗уГГуГИ
+define('TARLIB_HDR_NAME_LEN',      100);	// уГХуВбуВдуГлхРНуБоцЬАхдзщХ╖уБХ
+define('TARLIB_HDR_MODE_OFFSET',   100);	// modeуБ╕уБоуВкуГХуВ╗уГГуГИ
+define('TARLIB_HDR_UID_OFFSET',    108);	// uidуБ╕уБоуВкуГХуВ╗уГГуГИ
+define('TARLIB_HDR_GID_OFFSET',    116);	// gidуБ╕уБоуВкуГХуВ╗уГГуГИ
+define('TARLIB_HDR_SIZE_OFFSET',   124);	// уВ╡уВдуВ║уБ╕уБоуВкуГХуВ╗уГГуГИ
+define('TARLIB_HDR_SIZE_LEN',       12);	// уВ╡уВдуВ║уБощХ╖уБХ
+define('TARLIB_HDR_MTIME_OFFSET',  136);	// цЬАч╡ВцЫ┤цЦ░цЩВхИ╗уБоуВкуГХуВ╗уГГуГИ
+define('TARLIB_HDR_MTIME_LEN',      12);	// цЬАч╡ВцЫ┤цЦ░цЩВхИ╗уБощХ╖уБХ
+define('TARLIB_HDR_CHKSUM_OFFSET', 148);	// уГБуВзуГГуВпуВ╡уГауБоуВкуГХуВ╗уГГуГИ
+define('TARLIB_HDR_CHKSUM_LEN',      8);	// уГБуВзуГГуВпуВ╡уГауБощХ╖уБХ
+define('TARLIB_HDR_TYPE_OFFSET',   156);	// уГХуВбуВдуГлуВ┐уВдуГЧуБ╕уБоуВкуГХуВ╗уГГуГИ
 
 // Status
-define('TARLIB_STATUS_INIT',    0);		// ╜щ┤№╛ї┬╓
-define('TARLIB_STATUS_OPEN',   10);		// ╞╔д▀╝шдъ
-define('TARLIB_STATUS_CREATE', 20);		// ╜ёдн╣■д▀
+define('TARLIB_STATUS_INIT',    0);		// хИЭцЬЯчК╢цЕЛ
+define('TARLIB_STATUS_OPEN',   10);		// шкнуБ┐хПЦуВК
+define('TARLIB_STATUS_CREATE', 20);		// цЫ╕уБНш╛╝уБ┐
 
-define('TARLIB_DATA_MODE',      '100666 ');	// е╒ебедеые╤б╝е▀е├е╖ечеє
+define('TARLIB_DATA_MODE',      '100666 ');	// уГХуВбуВдуГлуГСуГ╝уГЯуГГуВ╖уГзуГ│
 define('TARLIB_DATA_UGID',      '000000 ');	// uid / gid
 define('TARLIB_DATA_CHKBLANKS', '        ');
 
-// GNU│╚─е╗┼══(еэеєе░е╒ебедеы╠╛┬╨▒■)
+// GNUцЛбх╝╡ф╗ХцзШ(уГнуГ│уВ░уГХуВбуВдуГлхРНхп╛х┐Ь)
 define('TARLIB_DATA_LONGLINK', '././@LongLink');
 
 // Type flag
@@ -330,7 +330,7 @@ class tarlib
 	var $arc_kind;
 	var $dummydata;
 
-	// е│еєе╣е╚ещепе┐
+	// уВ│уГ│уВ╣уГИуГйуВпуВ┐
 	function tarlib() {
 		$this->filename = '';
 		$this->fp       = FALSE;
@@ -339,9 +339,9 @@ class tarlib
 	}
 	
 	////////////////////////////////////////////////////////////
-	// ┤╪┐Ї  : tarе╒ебедеыдЄ║ю└од╣ды
-	// ░·┐Ї  : tarе╒ебедеыдЄ║ю└од╣дые╤е╣
-	// ╩╓дъ├═: TRUE .. └о╕∙ , FALSE .. ╝║╟╘
+	// щЦвцХ░  : tarуГХуВбуВдуГлуВТф╜ЬцИРуБЩуВЛ
+	// х╝ХцХ░  : tarуГХуВбуВдуГлуВТф╜ЬцИРуБЩуВЛуГСуВ╣
+	// ш┐ФуВКхАд: TRUE .. цИРхКЯ , FALSE .. хд▒цХЧ
 	////////////////////////////////////////////////////////////
 	function create($tempdir, $kind = 'tgz')
 	{
@@ -369,11 +369,11 @@ class tarlib
 	}
 
 	////////////////////////////////////////////////////////////
-	// ┤╪┐Ї  : tarе╒ебедеыд╦е╟егеьепе╚еъдЄ─╔▓├д╣ды
-	// ░·┐Ї  : $dir    .. е╟егеьепе╚еъ╠╛
-	//         $mask   .. ─╔▓├д╣дые╒ебедеы(└╡╡м╔╜╕╜)
-	//         $decode .. е┌б╝е╕╠╛д╬╩╤┤╣дЄд╣дыдл
-	// ╩╓дъ├═: ║ю└од╖д┐е╒ебедеы┐Ї
+	// щЦвцХ░  : tarуГХуВбуВдуГлуБлуГЗуВгуГмуВпуГИуГкуВТш┐╜хКауБЩуВЛ
+	// х╝ХцХ░  : $dir    .. уГЗуВгуГмуВпуГИуГкхРН
+	//         $mask   .. ш┐╜хКауБЩуВЛуГХуВбуВдуГл(цнгшжПшбичП╛)
+	//         $decode .. уГЪуГ╝уВ╕хРНуБохдЙцПЫуВТуБЩуВЛуБЛ
+	// ш┐ФуВКхАд: ф╜ЬцИРуБЧуБЯуГХуВбуВдуГлцХ░
 	////////////////////////////////////////////////////////////
 	function add_dir($dir, $mask, $decode = FALSE)
 	{
@@ -384,7 +384,7 @@ class tarlib
 
 		unset($files);
 
-		//  ╗╪─ъд╡дьд┐е╤е╣д╬е╒ебедеыд╬еъе╣е╚дЄ╝ш╞└д╣ды
+		//  цМЗхоЪуБХуВМуБЯуГСуВ╣уБоуГХуВбуВдуГлуБоуГкуВ╣уГИуВТхПЦх╛ЧуБЩуВЛ
 		$dp = @opendir($dir);
 		if($dp === FALSE) {
 			@unlink($this->filename);
@@ -402,62 +402,62 @@ class tarlib
 		$matches = array();
 		foreach($files as $name)
 		{
-			// Tarд╦│╩╟╝д╣дые╒ебедеы╠╛дЄdecode
+			// TarуБлца╝ч┤НуБЩуВЛуГХуВбуВдуГлхРНуВТdecode
 			if ($decode === FALSE) {
 				$filename = $name;
 			} else {
 				$dirname  = dirname(trim($name)) . '/';
 				$filename = basename(trim($name));
 				if (preg_match("/^((?:[0-9A-F]{2})+)_((?:[0-9A-F]{2})+)/", $filename, $matches)) {
-					// attachе╒ебедеы╠╛
+					// attachуГХуВбуВдуГлхРН
 					$filename = decode($matches[1]) . '/' . decode($matches[2]);
 				} else {
 					$pattern = '^((?:[0-9A-F]{2})+)((\.txt|\.gz)*)$';
 					if (preg_match("/$pattern/", $filename, $matches)) {
 						$filename = decode($matches[1]) . $matches[2];
 
-						// ┤эд╩дде│б╝е╔д╧├╓┤╣д╖д╞дкдп
+						// хН▒уБкуБДуВ│уГ╝уГЙуБпч╜оцПЫуБЧуБжуБКуБП
 						$filename = str_replace(':',  '_', $filename);
 						$filename = str_replace('\\', '_', $filename);
 					}
 				}
 				$filename = $dirname . $filename;
-				// е╒ебедеы╠╛д╬╩╕╗·е│б╝е╔дЄ╩╤┤╣
+				// уГХуВбуВдуГлхРНуБоцЦЗхнЧуВ│уГ╝уГЙуВТхдЙцПЫ
 				if (function_exists('mb_convert_encoding'))
 					$filename = mb_convert_encoding($filename, PLUGIN_DUMP_FILENAME_ENCORDING);
 			}
 
-			// ║╟╜к╣╣┐╖╗■╣я
+			// цЬАч╡ВцЫ┤цЦ░цЩВхИ╗
 			$mtime = filemtime($name);
 
-			// е╒ебедеы╠╛─╣д╬е┴езе├еп
+			// уГХуВбуВдуГлхРНщХ╖уБоуГБуВзуГГуВп
 			if (strlen($filename) > TARLIB_HDR_NAME_LEN) {
-				// LongLink┬╨▒■
+				// LongLinkхп╛х┐Ь
 				$size = strlen($filename);
-				// LonkLinkе╪е├е└└╕└о
+				// LonkLinkуГШуГГуГАчФЯцИР
 				$tar_data = $this->_make_header(TARLIB_DATA_LONGLINK, $size, $mtime, TARLIB_HDR_LINK);
-				// е╒ебедеы╜╨╬╧
+				// уГХуВбуВдуГлхЗ║хКЫ
 	 			$this->_write_data(join('', $tar_data), $filename, $size);
 			}
 
-			// е╒ебедеые╡еде║дЄ╝ш╞└
+			// уГХуВбуВдуГлуВ╡уВдуВ║уВТхПЦх╛Ч
 			$size = filesize($name);
 			if ($size === FALSE) {
 				@unlink($this->filename);
 				die_message($name . ' is not found or not readable.');
 			}
 
-			// е╪е├е└└╕└о
+			// уГШуГГуГАчФЯцИР
 			$tar_data = $this->_make_header($filename, $size, $mtime, TARLIB_HDR_FILE);
 
-			// е╒ебедеые╟б╝е┐д╬╝ш╞└
+			// уГХуВбуВдуГлуГЗуГ╝уВ┐уБохПЦх╛Ч
 			$fpr = @fopen($name , 'rb');
 			flock($fpr, LOCK_SH);
 			$data = fread($fpr, $size);
 			flock($fpr, LOCK_UN);
 			fclose( $fpr );
 
-			// е╒ебедеы╜╨╬╧
+			// уГХуВбуВдуГлхЗ║хКЫ
 			$this->_write_data(join('', $tar_data), $data, $size);
 			++$retvalue;
 		}
@@ -465,23 +465,23 @@ class tarlib
 	}
 	
 	////////////////////////////////////////////////////////////
-	// ┤╪┐Ї  : tarд╬е╪е├е└╛Ё╩єдЄ└╕└од╣ды (add)
-	// ░·┐Ї  : $filename .. е╒ебедеы╠╛
-	//         $size     .. е╟б╝е┐е╡еде║
-	//         $mtime    .. ║╟╜к╣╣┐╖╞№
+	// щЦвцХ░  : tarуБоуГШуГГуГАцГЕха▒уВТчФЯцИРуБЩуВЛ (add)
+	// х╝ХцХ░  : $filename .. уГХуВбуВдуГлхРН
+	//         $size     .. уГЗуГ╝уВ┐уВ╡уВдуВ║
+	//         $mtime    .. цЬАч╡ВцЫ┤цЦ░цЧе
 	//         $typeflag .. TypeFlag (file/link)
-	// ╠сдъ├═: tarе╪е├е└╛Ё╩є
+	// цИ╗уВКхАд: tarуГШуГГуГАцГЕха▒
 	////////////////////////////////////////////////////////////
 	function _make_header($filename, $size, $mtime, $typeflag)
 	{
 		$tar_data = array_fill(0, TARLIB_HDR_LEN, "\0");
 		
-		// е╒ебедеы╠╛дЄ╩▌┬╕
+		// уГХуВбуВдуГлхРНуВТф┐ЭхнШ
 		for($i = 0; $i < strlen($filename); $i++ ) {
 			if ($i < TARLIB_HDR_NAME_LEN) {
 				$tar_data[$i + TARLIB_HDR_NAME_OFFSET] = $filename{$i};
 			} else {
-				break;	// е╒ебедеы╠╛дм─╣д╣до
+				break;	// уГХуВбуВдуГлхРНуБМщХ╖уБЩуБО
 			}
 		}
 
@@ -498,28 +498,28 @@ class tarlib
 			$tar_data[$i + TARLIB_HDR_GID_OFFSET] = $ugid{$i};
 		}
 
-		// е╡еде║
+		// уВ╡уВдуВ║
 		$strsize = sprintf('%11o', $size);
 		for($i = 0; $i < strlen($strsize); $i++ ) {
 			$tar_data[$i + TARLIB_HDR_SIZE_OFFSET] = $strsize{$i};
 		}
 
-		// ║╟╜к╣╣┐╖╗■╣я
+		// цЬАч╡ВцЫ┤цЦ░цЩВхИ╗
 		$strmtime = sprintf('%o', $mtime);
 		for($i = 0; $i < strlen($strmtime); $i++ ) {
 			$tar_data[$i + TARLIB_HDR_MTIME_OFFSET] = $strmtime{$i};
 		}
 
-		// е┴езе├епе╡ер╖╫╗╗═╤д╬е╓ещеєепдЄ└▀─ъ
+		// уГБуВзуГГуВпуВ╡уГашиИчоЧчФиуБоуГЦуГйуГ│уВпуВТшинхоЪ
 		$chkblanks = TARLIB_DATA_CHKBLANKS;
 		for($i = 0; $i < strlen($chkblanks); $i++ ) {
 			$tar_data[$i + TARLIB_HDR_CHKSUM_OFFSET] = $chkblanks{$i};
 		}
 
-		// е┐еде╫е╒еще░
+		// уВ┐уВдуГЧуГХуГйуВ░
 		$tar_data[TARLIB_HDR_TYPE_OFFSET] = $typeflag;
 
-		// е┴езе├епе╡ерд╬╖╫╗╗
+		// уГБуВзуГГуВпуВ╡уГауБошиИчоЧ
 		$sum = 0;
 		for($i = 0; $i < TARLIB_BLK_LEN; $i++ ) {
 			$sum += 0xff & ord($tar_data[$i]);
@@ -533,11 +533,11 @@ class tarlib
 	}
 	
 	////////////////////////////////////////////////////////////
-	// ┤╪┐Ї  : tarе╟б╝е┐д╬е╒ебедеы╜╨╬╧ (add)
-	// ░·┐Ї  : $header .. tarе╪е├е└╛Ё╩є
-	//         $body   .. tarе╟б╝е┐
-	//         $size   .. е╟б╝е┐е╡еде║
-	// ╠сдъ├═: д╩д╖
+	// щЦвцХ░  : tarуГЗуГ╝уВ┐уБоуГХуВбуВдуГлхЗ║хКЫ (add)
+	// х╝ХцХ░  : $header .. tarуГШуГГуГАцГЕха▒
+	//         $body   .. tarуГЗуГ╝уВ┐
+	//         $size   .. уГЗуГ╝уВ┐уВ╡уВдуВ║
+	// цИ╗уВКхАд: уБкуБЧ
 	////////////////////////////////////////////////////////////
 	function _write_data($header, $body, $size)
 	{
@@ -555,9 +555,9 @@ class tarlib
 	}
 
 	////////////////////////////////////////////////////////////
-	// ┤╪┐Ї  : tarе╒ебедеыдЄ│лдп
-	// ░·┐Ї  : tarе╒ебедеы╠╛
-	// ╩╓дъ├═: TRUE .. └о╕∙ , FALSE .. ╝║╟╘
+	// щЦвцХ░  : tarуГХуВбуВдуГлуВТщЦЛуБП
+	// х╝ХцХ░  : tarуГХуВбуВдуГлхРН
+	// ш┐ФуВКхАд: TRUE .. цИРхКЯ , FALSE .. хд▒цХЧ
 	////////////////////////////////////////////////////////////
 	function open($name = '', $kind = 'tgz')
 	{
@@ -583,10 +583,10 @@ class tarlib
 	}
 
 	////////////////////////////////////////////////////////////
-	// ┤╪┐Ї  : ╗╪─ъд╖д┐е╟егеьепе╚еъд╦tarе╒ебедеыдЄ┼╕│лд╣ды
-	// ░·┐Ї  : ┼╕│лд╣дые╒ебедеые╤е┐б╝еє(└╡╡м╔╜╕╜)
-	// ╩╓дъ├═: ┼╕│лд╖д┐е╒ебедеы╠╛д╬░ь═ў
-	// ╩ф┬н  : ARAIд╡дєд╬attachе╫еще░едеєе╤е├е┴дЄ╗▓╣═д╦д╖д▐д╖д┐
+	// щЦвцХ░  : цМЗхоЪуБЧуБЯуГЗуВгуГмуВпуГИуГкуБлtarуГХуВбуВдуГлуВТх▒ХщЦЛуБЩуВЛ
+	// х╝ХцХ░  : х▒ХщЦЛуБЩуВЛуГХуВбуВдуГлуГСуВ┐уГ╝уГ│(цнгшжПшбичП╛)
+	// ш┐ФуВКхАд: х▒ХщЦЛуБЧуБЯуГХуВбуВдуГлхРНуБоф╕Ашжз
+	// шгЬш╢│  : ARAIуБХуВУуБоattachуГЧуГйуВ░уВдуГ│уГСуГГуГБуВТхПВшАГуБлуБЧуБ╛уБЧуБЯ
 	////////////////////////////////////////////////////////////
 	function extract($pattern)
 	{
@@ -599,10 +599,10 @@ class tarlib
 			$buff = fread($this->fp, TARLIB_HDR_LEN);
 			if (strlen($buff) != TARLIB_HDR_LEN) break;
 
-			// е╒ебедеы╠╛
+			// уГХуВбуВдуГлхРН
 			$name = '';
 			if ($longname != '') {
-				$name     = $longname;	// LongLink┬╨▒■
+				$name     = $longname;	// LongLinkхп╛х┐Ь
 				$longname = '';
 			} else {
 				for ($i = 0; $i < TARLIB_HDR_NAME_LEN; $i++ ) {
@@ -615,9 +615,9 @@ class tarlib
 			}
 			$name = trim($name);
 
-			if ($name == '') break;	// ┼╕│л╜к╬╗
+			if ($name == '') break;	// х▒ХщЦЛч╡Вф║Ж
 
-			// е┴езе├епе╡ердЄ╝ш╞└д╖д─д─бве╓ещеєепд╦├╓┤╣д╖д╞дддп
+			// уГБуВзуГГуВпуВ╡уГауВТхПЦх╛ЧуБЧуБдуБдуАБуГЦуГйуГ│уВпуБлч╜оцПЫуБЧуБжуБДуБП
 			$checksum = '';
 			$chkblanks = TARLIB_DATA_CHKBLANKS;
 			for ($i = 0; $i < TARLIB_HDR_CHKSUM_LEN; $i++ ) {
@@ -641,17 +641,17 @@ class tarlib
 			list($size) = sscanf('0' . trim($size), '%i');
 
 			// ceil
-			// е╟б╝е┐е╓еэе├епд╧512byteд╟е╤е╟егеєе░д╡дьд╞ддды
+			// уГЗуГ╝уВ┐уГЦуГнуГГуВпуБп512byteуБзуГСуГЗуВгуГ│уВ░уБХуВМуБжуБДуВЛ
 			$pdsz = ceil($size / TARLIB_BLK_LEN) * TARLIB_BLK_LEN;
 
-			// ║╟╜к╣╣┐╖╗■╣я
+			// цЬАч╡ВцЫ┤цЦ░цЩВхИ╗
 			$strmtime = '';
 			for ($i = 0; $i < TARLIB_HDR_MTIME_LEN; $i++ ) {
 				$strmtime .= $buff{$i + TARLIB_HDR_MTIME_OFFSET};
 			}
 			list($mtime) = sscanf('0' . trim($strmtime), '%i');
 
-			// е┐еде╫е╒еще░
+			// уВ┐уВдуГЧуГХуГйуВ░
 //			 $type = $buff{TARLIB_HDR_TYPE_OFFSET};
 
 			if ($name == TARLIB_DATA_LONGLINK) {
@@ -662,7 +662,7 @@ class tarlib
 //			} else if ($type == 0 && preg_match("/$pattern/", $name) ) {
 				$buff = fread($this->fp, $pdsz);
 
-				// ┤√д╦╞▒д╕е╒ебедеыдмдвды╛ь╣чд╧╛х╜ёднд╡дьды
+				// цЧвуБлхРМуБШуГХуВбуВдуГлуБМуБВуВЛха┤хРИуБпф╕КцЫ╕уБНуБХуВМуВЛ
 				$fpw = @fopen($name, 'wb');
 				if ($fpw !== FALSE) {
 					flock($fpw, LOCK_EX);
@@ -675,7 +675,7 @@ class tarlib
 					$files[] = $name;
 				}
 			} else {
-				// е╒ебедеые▌едеєе┐дЄ┐╩дсды
+				// уГХуВбуВдуГлуГЭуВдуГ│уВ┐уВТщА▓уВБуВЛ
 				@fseek($this->fp, $pdsz, SEEK_CUR);
 			}
 		}
@@ -683,21 +683,21 @@ class tarlib
 	}
 
 	////////////////////////////////////////////////////////////
-	// ┤╪┐Ї  : tarе╒ебедеыдЄ╩─д╕ды
-	// ░·┐Ї  : д╩д╖
-	// ╩╓дъ├═: д╩д╖
+	// щЦвцХ░  : tarуГХуВбуВдуГлуВТщЦЙуБШуВЛ
+	// х╝ХцХ░  : уБкуБЧ
+	// ш┐ФуВКхАд: уБкуБЧ
 	////////////////////////////////////////////////////////////
 	function close()
 	{
 		if ($this->status == TARLIB_STATUS_CREATE) {
-			// е╒ебедеыдЄ╩─д╕ды
+			// уГХуВбуВдуГлуВТщЦЙуБШуВЛ
 			if ($this->arc_kind == TARLIB_KIND_TGZ) {
-				// е╨еде╩еъб╝е╝еэдЄ1024е╨еде╚╜╨╬╧
+				// уГРуВдуГКуГкуГ╝уВ╝уГнуВТ1024уГРуВдуГИхЗ║хКЫ
 				gzwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
 				gzwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
 				gzclose($this->fp);
 			} else {
-				// е╨еде╩еъб╝е╝еэдЄ1024е╨еде╚╜╨╬╧
+				// уГРуВдуГКуГкуГ╝уВ╝уГнуВТ1024уГРуВдуГИхЗ║хКЫ
 				fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
 				fwrite($this->fp, $this->dummydata, TARLIB_HDR_LEN);
 				fclose($this->fp);

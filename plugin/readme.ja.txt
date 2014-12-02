@@ -1,79 +1,79 @@
 /////////////////////////////////////////////////
-// �ץ饰����ǥ��쥯�ȥ�ˤĤ���
+// プラグインディレクトリについて
 
-  PukiWiki�Υڡ�����HTML�ؤΥ���С��Ȼ��ȡ��ץ饰����ǽ������ͤ������ä�
-  ������Ԥ��ץ饰��������֤��뤳�Ȥ��Ǥ��ޤ���
+  PukiWikiのページのHTMLへのコンバート時と、プラグイン機能からの値を受け取って
+  処理を行うプラグインを設置することができます。
 
-  ���Υƥ����Ȥϡ����Υץ饰����ε�����ˡ�ˤĤ��Ƥ������򤷤ޤ���
-
-
-/////////////////////////////////////////////////
-// �ڡ�����ǤΥץ饰����θƤӽФ�
-
-  #�ץ饰����̾
-  #�ץ饰����̾(arg1,arg2...)
-
-    ��Ƭ�˥��ڡ����ϴޤ�뤳�ȤϤǤ��ʤ���
-    ������˳��()����Ѥ��뤳�Ȥ��Ǥ��롣������ ) ñ�Τ��Բġ�
-    ��������ꤷ�ʤ��Ƥ�ƤӽФ���
+  このテキストは、そのプラグインの記述方法についての説明をします。
 
 
 /////////////////////////////////////////////////
-// �ե�����̾
+// ページ内でのプラグインの呼び出し
 
-  �ץ饰����̾.inc.php
+  #プラグイン名
+  #プラグイン名(arg1,arg2...)
+
+    行頭にスペースは含めることはできない。
+    引数内に括弧()を使用することができる。ただし ) 単体は不可。
+    引数を指定しなくても呼び出せる
 
 
 /////////////////////////////////////////////////
-// �ؿ�
+// ファイル名
 
-  ��function plugin_�ץ饰����̾_convert()
+  プラグイン名.inc.php
 
-    HTML�ؤΥ���С��Ȼ��˸ƤӽФ����
 
-    ������ func_get_args() ������س�Ǽ�Ǥ��롣([0]��[n])
-    func_num_args() �ˤ�äơ��Ϥ��줿�����ο�����뤳�Ȥ��Ǥ��롣
+/////////////////////////////////////////////////
+// 関数
 
-  ��function plugin_�ץ饰����̾_action()
+  ■function plugin_プラグイン名_convert()
 
-    GET��POST�᥽�åɤ�plugin����ꤵ�줿�Ȥ��˸ƤӽФ����
+    HTMLへのコンバート時に呼び出される
 
-    ���ͤ� array("msg" => "$1 is page") �ʤɤ��֤��� $1 ��ڡ���̾�Ȥ���
-    �ڡ��������ȥ���ִ������
+    引数は func_get_args() で配列へ格納できる。([0]～[n])
+    func_num_args() によって、渡された引数の数を求めることができる。
 
-    die() ��¹Ԥ��뤳�Ȥˤ�ꡢ�ڡ��������ʤ��褦�ˤǤ���
+  ■function plugin_プラグイン名_action()
 
-  ��function plugin_�ץ饰����̾_init()
+    GET・POSTメソッドでpluginを指定されたときに呼び出される
 
-    �ץ饰�����ɤ߹��ޤ����˸ƤӽФ���ޤ���
+    返値に array("msg" => "$1 is page") などを返すと $1 をページ名として
+    ページタイトルに置換される
+
+    die() を実行することにより、ページに戻らないようにできる
+
+  ■function plugin_プラグイン名_init()
+
+    プラグインが読み込まれる時に呼び出されます。
 
     $_plugin_recent_messages = array(
-    '_recent_plugin_li'=>'��',
-    '_recent_plugin_frame '=>'<span align="center"><h5 class="side_label">�ǿ���%d��</h5></span><small>%s</small>'
+    '_recent_plugin_li'=>'・',
+    '_recent_plugin_frame '=>'<span align="center"><h5 class="side_label">最新の%d件</h5></span><small>%s</small>'
     );
     set_plugin_messages($_plugin_recent_messages);
 
-    �Ȥ����֤��ȡ�*.lng�ե�����ǥܥ�����å���������ꤷ�Ƥ��ʤ����ˤΤ�
-    ��å������ʤɤ����åȤ���ޤ���
-    �ѿ��ʤɤν������Ԥ��ޤ�����PukiWiki 1.3.1(MASUI'z Edition)�ʹߤΤ�
-    ͭ���Ǥ��Τǡ��Ť�PukiWiki����ϸƤФ�ʤ���ǽ�������뤳�Ȥ򵤤�Ĥ���
-    ����������
-    set_plugin_messages�ؿ���PukiWiki 1.3.1(MASUI'z Edition)�ʹߤΤߤǤ���
+    として置くと、*.lngファイルでボタンやメッセージを指定していない場合にのみ
+    メッセージなどがセットされます。
+    変数などの初期化も行えますが、PukiWiki 1.3.1(MASUI'z Edition)以降のみ
+    有効ですので、古いPukiWikiからは呼ばれない可能性があることを気をつけて
+    ください。
+    set_plugin_messages関数もPukiWiki 1.3.1(MASUI'z Edition)以降のみです。
 
 
 /////////////////////////////////////////////////
-// �ե���������
+// ファイル内容
 
-  �桼�������ꤵ�������ͤʤɤˤĤ��Ƥϡ�define ��������롣
+  ユーザに設定させる初期値などについては、define で定義する。
 
-  ����С��Ȼ���GET��POST�ν������Ƥ�ɬ�פʤ�Τ� refer �� plugin �Ȥ����ͤǡ�
-  refer : ���Υڡ�����̾��($vars["page"])
-  plugin : �ץ饰����̾
-  �Ȥ��ޤ���
+  コンバート時のGET・POSTの出力内容に必要なものは refer と plugin という値で、
+  refer : そのページの名前($vars["page"])
+  plugin : プラグイン名
+  とします。
 
-  �ʲ����ͤ� global �ǥ������Х��ѿ��ˤ��뤳�Ȥˤ�ä��ͤ�����Ǥ��ޤ���
+  以下の値を global でグローバル変数にすることによって値を取得できます。
 
-  $script : ������ץ�̾
-  $vars : GET��POSTξ���Υ᥽�åɤˤ��HTTP����ΰ���
-          ($vars["page"] : �����Ƥ���ڡ���̾)
+  $script : スクリプト名
+  $vars : GET・POST両方のメソッドによるHTTPからの引数
+          ($vars["page"] : 開いているページ名)
 
