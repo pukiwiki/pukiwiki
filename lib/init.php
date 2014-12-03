@@ -71,13 +71,13 @@ if ($die) die_message(nl2br("\n\n" . $die));
 switch (LANG){
 case 'en': define('MB_LANGUAGE', 'English' ); break;
 case 'ja': define('MB_LANGUAGE', 'Japanese'); break;
-case 'ko': define('MB_LANGUAGE', 'Korean'  ); break;
-	// See BugTrack2/13 for all hack about Korean support,
-	// and give us your report!
+case 'ko': define('MB_LANGUAGE', 'Korean'  ); break; //UTF-8 only
+	// See BugTrack2/13 for all hack about Korean support, //UTF-8 only
+	// and give us your report!                            //UTF-8 only
 default: die_message('No such language "' . LANG . '"'); break;
 }
 
-define('PKWK_UTF8_ENABLE', 1);
+define('PKWK_UTF8_ENABLE', 1); //UTF-8 only
 if (defined('PKWK_UTF8_ENABLE')) {
 	define('SOURCE_ENCODING', 'UTF-8');
 	define('CONTENT_CHARSET', 'UTF-8');
