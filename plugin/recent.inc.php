@@ -44,8 +44,12 @@ function plugin_recent_convert()
 		++$exec_count;
 	}
 
-	if (! file_exists(PLUGIN_RECENT_CACHE))
-		return '#recent(): Cache file of RecentChanges not found' . '<br />';
+	if (! file_exists(PLUGIN_RECENT_CACHE)) {
+		put_lastmodified();
+		if (! file_exists(PLUGIN_RECENT_CACHE)) {
+			return '#recent(): Cache file of RecentChanges not found' . '<br />';
+		}
+	}
 
 	// Get latest N changes
 	$lines = file_head(PLUGIN_RECENT_CACHE, $recent_lines);
