@@ -4,3 +4,13 @@
 /cache
 /counter
 /diff
+
+/attach/*.[0-9]
+/attach/*.log
+/backup/*.gz
+/cache/*.ref
+/cache/*.rel
+/counter/*.count
+/diff/*.txt
+/wiki/*.txt
+/wiki.en/*.txt
