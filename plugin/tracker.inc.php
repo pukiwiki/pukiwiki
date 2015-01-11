@@ -654,6 +654,7 @@ class Tracker_list
 	var $pattern_fields;
 	var $rows;
 	var $order;
+	var $sort_keys;
 
 	function Tracker_list($page,$refer,&$config,$list)
 	{
@@ -738,6 +739,22 @@ class Tracker_list
 			}
 		}
 	}
+	function compare($a, $b)
+	{
+		foreach ($this->sort_keys as $sort_key)
+		{
+			$field = $sort_key['field'];
+			$dir = $sort_key['dir'];
+			$f = $this->fields[$field];
+			$sort_type = $f->sort_type;
+			$aVal = isset($a[$field]) ? $f->get_value($a[$field]) : '';
+			$bVal = isset($b[$field]) ? $f->get_value($b[$field]) : '';
+			$c = strnatcmp($aVal, $bVal) * ($dir === SORT_ASC ? 1 : -1);
+			if ($c === 0) continue;
+			return $c;
+		}
+		return 0;
+	}
 	function sort($order)
 	{
 		if ($order == '')
@@ -770,26 +787,17 @@ class Tracker_list
 			}
 			$this->order[$key] = $dir;
 		}
-		$keys = array();
-		$params = array();
+		$sort_keys = array();
 		foreach ($this->order as $field=>$order)
 		{
 			if (!array_key_exists($field,$names))
 			{
 				continue;
 			}
-			foreach ($this->rows as $row)
-			{
-				$keys[$field][] = isset($row[$field])? $this->fields[$field]->get_value($row[$field]) : '';
-			}
-			$params[] = $keys[$field];
-			$params[] = $this->fields[$field]->sort_type;
-			$params[] = $order;
-
+			$sort_keys[] = array('field' => $field, 'dir' => $order);
 		}
-		$params[] = &$this->rows;
-
-		call_user_func_array('array_multisort',$params);
+		$this->sort_keys = $sort_keys;
+		usort(&$this->rows, array($this, 'compare'));
 	}
 	function replace_item($arr)
 	{
@@ -921,4 +929,4 @@ function plugin_tracker_get_source($page)
 	// #freezeを削除
 	return preg_replace('/^#freeze\s*$/im', '', $source);
 }
-?>
+
