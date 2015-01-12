@@ -208,7 +208,7 @@ function attach_upload($file, $page, $pass = NULL)
 		$footer['PAGE']     = & $page;
 
 		$footer['URI']      = get_script_uri() .
-			//'?' . rawurlencode($page);
+			//'?' . pagename_urlencode($page);
 
 			// MD5 may heavy
 			'?plugin=attach' .
@@ -649,7 +649,7 @@ EOD;
 			$footer['FILENAME'] = & $this->file;
 			$footer['PAGE']     = & $this->page;
 			$footer['URI']      = get_script_uri() .
-				'?' . rawurlencode($this->page);
+				'?' . pagename_urlencode($this->page);
 			$footer['USER_AGENT']  = TRUE;
 			$footer['REMOTE_ADDR'] = TRUE;
 			pkwk_mail_notify($notify_subject, "\n", $footer) or
@@ -853,4 +853,4 @@ class AttachPages
 		return "\n" . '<ul>' . "\n" . $ret . '</ul>' . "\n";
 	}
 }
-?>
+

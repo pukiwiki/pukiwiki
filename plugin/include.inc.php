@@ -78,7 +78,7 @@ function plugin_include_convert()
 	}
 
 	$s_page = htmlsc($page);
-	$r_page = rawurlencode($page);
+	$r_page = pagename_urlencode($page);
 	$link = '<a href="' . $script . '?' . $r_page . '">' . $s_page . '</a>'; // Read link
 
 	// I'm stuffed
@@ -118,4 +118,4 @@ function plugin_include_convert()
 
 	return $body;
 }
-?>
+

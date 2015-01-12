@@ -29,7 +29,7 @@ function plugin_random_convert()
 	}
 
 	return "<p><a href=\"$script?plugin=random&amp;refer=" .
-		rawurlencode($vars['page']) . '">' .
+		pagename_urlencode($vars['page']) . '">' .
 		htmlsc($title) . '</a></p>';
 }
 
@@ -51,4 +51,4 @@ function plugin_random_action()
 
 	return array('body'=>'','msg'=>'');
 }
-?>
+

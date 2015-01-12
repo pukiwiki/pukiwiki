@@ -59,7 +59,7 @@ if ($rw) {
 		}
 	}
 }
-$navi[] = '<a href="' . $script . '?' . rawurlencode($menubar) . '" ' . $accesskey . '="4">4.Menu</a>';
+$navi[] = '<a href="' . $script . '?' . pagename_urlencode($menubar) . '" ' . $accesskey . '="4">4.Menu</a>';
 $navi[] = '<a href="' . $link['recent'] . '" ' . $accesskey . '="5">5.Recent</a>';
 
 // Previous / Next block

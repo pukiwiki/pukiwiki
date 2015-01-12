@@ -32,7 +32,7 @@ function plugin_related_action()
 	}
 
 	// Result
-	$r_word = rawurlencode($_page);
+	$r_word = pagename_urlencode($_page);
 	$s_word = htmlsc($_page);
 	$msg = 'Backlinks for: ' . $s_word;
 	$retval  = '<a href="' . $script . '?' . $r_word . '">' .
@@ -45,7 +45,7 @@ function plugin_related_action()
 		ksort($data, SORT_STRING);
 		$retval .= '<ul>' . "\n";
 		foreach ($data as $page=>$time) {
-			$r_page  = rawurlencode($page);
+			$r_page  = pagename_urlencode($page);
 			$s_page  = htmlsc($page);
 			$passage = get_passage($time);
 			$retval .= ' <li><a href="' . $script . '?' . $r_page . '">' . $s_page .
@@ -55,4 +55,4 @@ function plugin_related_action()
 	}
 	return array('msg'=>$msg, 'body'=>$retval);
 }
-?>
+

@@ -77,7 +77,7 @@ function plugin_recent_convert()
 			// No need to link to the page you just read, or notify where you just read
 			$items .= ' <li>' . $s_page . '</li>' . "\n";
 		} else {
-			$r_page = rawurlencode($page);
+			$r_page = pagename_urlencode($page);
 			$passage = $show_passage ? ' ' . get_passage($time) : '';
 			$items .= ' <li><a href="' . $script . '?' . $r_page . '"' . 
 				' title="' . $s_page . $passage . '">' . $s_page . '</a></li>' . "\n";
@@ -88,4 +88,4 @@ function plugin_recent_convert()
 
 	return sprintf($_recent_plugin_frame, count($lines), $items);
 }
-?>
+

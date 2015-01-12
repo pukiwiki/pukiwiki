@@ -217,7 +217,7 @@ function plugin_amazon_action()
 			$title = plugin_amazon_get_asin_title();
 			if ($title == '' || preg_match('#^/#', $s_page)) {
 				// Invalid page name
-				header('Location: ' . get_script_uri() . '?' . rawurlencode($s_page));
+				header('Location: ' . get_script_uri() . '?' . pagename_urlencode($s_page));
 			} else {
 				$body = '#amazon(' . $asin_all . ',,image)' . "\n" .
 					'*' . $title . "\n" . $amazon_body;
@@ -461,4 +461,4 @@ function is_asin()
 		return TRUE;
 	}
 }
-?>
+

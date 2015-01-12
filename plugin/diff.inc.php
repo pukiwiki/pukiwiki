@@ -29,7 +29,7 @@ function plugin_diff_view($page)
 	global $_msg_notfound, $_msg_goto, $_msg_deleted, $_msg_addline, $_msg_delline, $_title_diff;
 	global $_title_diff_delete;
 
-	$r_page = rawurlencode($page);
+	$r_page = pagename_urlencode($page);
 	$s_page = htmlsc($page);
 
 	$menu = array(
@@ -110,4 +110,4 @@ EOD;
 
 	return array('msg'=>$_title_diff_delete, 'body'=>$body);
 }
-?>
+

@@ -32,7 +32,7 @@ function catbody($title, $page, $body)
 	if (! PKWK_ALLOW_JAVASCRIPT) unset($javascript);
 
 	$_page  = isset($vars['page']) ? $vars['page'] : '';
-	$r_page = rawurlencode($_page);
+	$r_page = pagename_urlencode($_page);
 
 	// Set $_LINK for skin
 	$_LINK['add']      = "$script?cmd=add&amp;page=$r_page";
@@ -42,18 +42,18 @@ function catbody($title, $page, $body)
 	$_LINK['edit']     = "$script?cmd=edit&amp;page=$r_page";
 	$_LINK['filelist'] = "$script?cmd=filelist";
 	$_LINK['freeze']   = "$script?cmd=freeze&amp;page=$r_page";
-	$_LINK['help']     = "$script?" . rawurlencode($help_page);
+	$_LINK['help']     = "$script?" . pagename_urlencode($help_page);
 	$_LINK['list']     = "$script?cmd=list";
 	$_LINK['new']      = "$script?plugin=newpage&amp;refer=$r_page";
 	$_LINK['rdf']      = "$script?cmd=rss&amp;ver=1.0";
-	$_LINK['recent']   = "$script?" . rawurlencode($whatsnew);
+	$_LINK['recent']   = "$script?" . pagename_urlencode($whatsnew);
 	$_LINK['reload']   = "$script?$r_page";
 	$_LINK['rename']   = "$script?plugin=rename&amp;refer=$r_page";
 	$_LINK['rss']      = "$script?cmd=rss";
 	$_LINK['rss10']    = "$script?cmd=rss&amp;ver=1.0"; // Same as 'rdf'
 	$_LINK['rss20']    = "$script?cmd=rss&amp;ver=2.0";
 	$_LINK['search']   = "$script?cmd=search";
-	$_LINK['top']      = "$script?" . rawurlencode($defaultpage);
+	$_LINK['top']      = "$script?" . pagename_urlencode($defaultpage);
 	$_LINK['unfreeze'] = "$script?cmd=unfreeze&amp;page=$r_page";
 	$_LINK['upload']   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
 
@@ -285,7 +285,7 @@ function make_related($page, $tag = '')
 	foreach ($links as $page=>$lastmod) {
 		if (check_non_list($page)) continue;
 
-		$r_page   = rawurlencode($page);
+		$r_page   = pagename_urlencode($page);
 		$s_page   = htmlsc($page);
 		$passage  = get_passage($lastmod);
 		$_links[] = $tag ?
@@ -535,4 +535,4 @@ function pkwk_output_dtd($pkwk_dtd = PKWK_DTD_XHTML_1_1, $charset = CONTENT_CHAR
 		return '<meta http-equiv="content-type" content="text/html; charset=' . $charset . '" />' . "\n";
 	}
 }
-?>
+

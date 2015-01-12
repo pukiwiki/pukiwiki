@@ -121,7 +121,7 @@ EOD;
 			$mailbody .= "\n\n" . '---' . "\n";
 			$mailbody .= $_msg_article_mail_sender . $post['name'] . ' (' . $now . ')' . "\n";
 			$mailbody .= $_msg_article_mail_page . $post['refer'] . "\n";
-			$mailbody .= '　 URL: ' . $script . '?' . rawurlencode($post['refer']) . "\n";
+			$mailbody .= '   URL: ' . $script . '?' . pagename_urlencode($post['refer']) . "\n";
 			$mailbody = mb_convert_encoding($mailbody, 'JIS');
 
 			$mailaddheader = 'From: ' . PLUGIN_ARTICLE_MAIL_FROM;
@@ -177,4 +177,4 @@ EOD;
 
 	return $string;
 }
-?>
+

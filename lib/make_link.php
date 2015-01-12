@@ -307,7 +307,7 @@ EOD;
 		if (PKWK_ALLOW_RELATIVE_FOOTNOTE_ANCHOR) {
 			$script = '';
 		} else {
-			$script = get_script_uri() . '?' . rawurlencode($page);
+			$script = get_script_uri() . '?' . pagename_urlencode($page);
 		}
 
 		$id   = ++$note_id;
@@ -519,7 +519,7 @@ EOD;
 
 		$url = get_interwiki_url($name, $this->param);
 		$this->url = ($url === FALSE) ?
-			$script . '?' . rawurlencode('[[' . $name . ':' . $this->param . ']]') :
+			$script . '?' . pagename_urlencode('[[' . $name . ':' . $this->param . ']]') :
 			htmlsc($url);
 
 		return parent::setParam(
@@ -713,7 +713,7 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolin
 
 	if ($page == '') return '<a href="' . $anchor . '">' . $s_alias . '</a>';
 
-	$r_page  = rawurlencode($page);
+	$r_page  = pagename_urlencode($page);
 	$r_refer = ($refer == '') ? '' : '&amp;refer=' . rawurlencode($refer);
 
 	if (! isset($related[$page]) && $page !== $vars['page'] && is_page($page))
@@ -851,4 +851,4 @@ function get_interwiki_url($name, $param)
 
 	return $url;
 }
-?>
+

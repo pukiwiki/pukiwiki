@@ -177,7 +177,7 @@ function plugin_bugtrack_action()
 		$post['version'], $post['body']);
 
 	pkwk_headers_sent();
-	header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
+	header('Location: ' . get_script_uri() . '?' . pagename_urlencode($page));
 	exit;
 }
 
@@ -351,4 +351,4 @@ function plugin_bugtrack_list_pageinfo($page, $no = NULL, $recurse = TRUE)
 
 	return array($page, $no, $summary, $name, $priority, $state, $category);
 }
-?>
+

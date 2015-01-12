@@ -84,7 +84,7 @@ function plugin_paint_action()
 		$r_refer = $s_refer = '';
 		if (array_key_exists('refer',$vars))
 		{
-			$r_refer = rawurlencode($vars['refer']);
+			$r_refer = pagename_urlencode($vars['refer']);
 			$s_refer = htmlsc($vars['refer']);
 		}
 		$link = "<p><a href=\"$script?$r_refer\">$s_refer</a></p>";;
@@ -266,4 +266,4 @@ function paint_insert_ref($filename)
 
 	return $ret;
 }
-?>
+

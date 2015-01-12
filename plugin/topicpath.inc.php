@@ -49,7 +49,7 @@ function plugin_topicpath_inline()
 	$topic_path = array();
 	while (! empty($parts)) {
 		$_landing = join('/', $parts);
-		$landing  = rawurlencode($_landing);
+		$landing  = pagename_urlencode($_landing);
 		$element  = htmlsc(array_pop($parts));
 		if (! $b_link)  {
 			// This page ($_landing == $page)
@@ -70,4 +70,4 @@ function plugin_topicpath_inline()
 
 	return join(PLUGIN_TOPICPATH_TOP_SEPARATOR, array_reverse($topic_path));
 }
-?>
+

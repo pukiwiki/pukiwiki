@@ -173,7 +173,7 @@ function plugin_calendar_viewer_convert()
 			$body = str_replace('$1', $page, $_msg_calendar_viewer_restrict);
 		}
 
-		$r_page = rawurlencode($page);
+		$r_page = pagename_urlencode($page);
 
 		if (PLUGIN_CALENDAR_VIEWER_DATE_FORMAT !== FALSE) {
 			$time = strtotime(basename($page)); // $date_sep must be assumed '-' or ''!
@@ -330,4 +330,4 @@ function plugin_calendar_viewer_isValidDate($aStr, $aSepList = '-/ .')
 		return FALSE;
 	}
 }
-?>
+

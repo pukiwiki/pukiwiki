@@ -236,7 +236,7 @@ function plugin_edit_write()
 
 	page_write($page, $postdata, $notimeupdate != 0 && $notimestamp);
 	pkwk_headers_sent();
-	header('Location: ' . get_script_uri() . '?' . rawurlencode($page));
+	header('Location: ' . get_script_uri() . '?' . pagename_urlencode($page));
 	exit;
 }
 
@@ -245,8 +245,7 @@ function plugin_edit_cancel()
 {
 	global $vars;
 	pkwk_headers_sent();
-	header('Location: ' . get_script_uri() . '?' . rawurlencode($vars['page']));
+	header('Location: ' . get_script_uri() . '?' . pagename_urlencode($vars['page']));
 	exit;
 }
 
-?>

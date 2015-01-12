@@ -38,7 +38,7 @@ function plugin_rss_action()
 
 	foreach (file_head($recent, $rss_max) as $line) {
 		list($time, $page) = explode("\t", rtrim($line));
-		$r_page = rawurlencode($page);
+		$r_page = pagename_urlencode($page);
 		$title  = mb_convert_encoding($page, 'UTF-8', SOURCE_ENCODING);
 
 		switch ($version) {
@@ -82,7 +82,7 @@ EOD;
 	header('Content-type: application/xml');
 	print '<?xml version="1.0" encoding="UTF-8"?>' . "\n\n";
 
-	$r_whatsnew = rawurlencode($whatsnew);
+	$r_whatsnew = pagename_urlencode($whatsnew);
 	switch ($version) {
 	case '0.91':
 		print '<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"' .
@@ -129,4 +129,4 @@ EOD;
 	}
 	exit;
 }
-?>
+

@@ -129,7 +129,7 @@ function plugin_navi_convert()
 			    'prev'=>$prev, 'up'=>$up) as $rel=>$_page) {
 				if ($_page != '') {
 					$s_page = htmlsc($_page);
-					$r_page = rawurlencode($_page);
+					$r_page = pagename_urlencode($_page);
 					$head_tags[] = ' <link rel="' .
 						$rel . '" href="' . $script .
 						'?' . $r_page . '" title="' .
@@ -183,4 +183,4 @@ EOD;
 	}
 	return $ret;
 }
-?>
+

@@ -293,6 +293,16 @@ function arg_check($str)
 	return isset($vars['cmd']) && (strpos($vars['cmd'], $str) === 0);
 }
 
+function _pagename_urlencode_callback($matches)
+{
+	return rawurlencode($matches[0]);
+}
+
+function pagename_urlencode($page)
+{
+	return preg_replace_callback('|[^/:]+|', '_pagename_urlencode_callback', $page);
+}
+
 // Encode page-name
 function encode($str)
 {
@@ -356,7 +366,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 	}
 
 	foreach($pages as $file=>$page) {
-		$r_page  = rawurlencode($page);
+		$r_page  = pagename_urlencode($page);
 		$s_page  = htmlsc($page, ENT_QUOTES);
 		$passage = get_pg_passage($page);
 
@@ -774,4 +784,4 @@ if (! function_exists('sha1')) {
 		}
 	}
 }
-?>
+

@@ -105,7 +105,7 @@ EOD;
 	while (checkdate($m_num, $day, $year)) {
 		$dt     = sprintf('%4d-%02d-%02d', $year, $m_num, $day);
 		$page   = $prefix . $dt;
-		$r_page = rawurlencode($page);
+		$r_page = pagename_urlencode($page);
 		$s_page = htmlsc($page);
 
 		if ($wday == 0 && $day > 1)
@@ -197,4 +197,4 @@ function plugin_calendar2_action()
 
 	return $ret;
 }
-?>
+
