@@ -679,7 +679,7 @@ class Tracker_list
 			{
 				$field = array_shift($pattern);
 				$this->pattern_fields[] = $field;
-				$this->pattern .= '(.*)';
+				$this->pattern .= '(.*?)';
 			}
 		}
 		// ページの列挙と取り込み
