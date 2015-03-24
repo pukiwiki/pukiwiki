@@ -287,7 +287,7 @@ class Link_note extends Link
 	{
 		return <<<EOD
 \(\(
- ((?:(?R)|(?!\)\)).)*) # (1) note body
+ ((?>(?=\(\()(?R)|(?!\)\)).)*) # (1) note body
 \)\)
 EOD;
 	}
