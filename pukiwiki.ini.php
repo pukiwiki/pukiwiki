@@ -224,6 +224,15 @@ $auth_users = array(
 	'hoge'	=> '{SMD5}OzJo/boHwM4q5R+g7LCOx2xGMkFKRVEx',      // LDAP SMD5 'hoge_passwd'
 );
 
+// Group definition
+$auth_groups = array(
+	// Groupname => group members(users)
+	'valid-user' => '', // Reserved 'valid-user' group contains all authenticated users
+	'groupfoo'	=> 'foo',
+	'groupbar'	=> 'bar',
+	'groupboobar'	=> 'foo,bar',
+);
+
 /////////////////////////////////////////////////
 // Authentication type
 // AUTH_TYPE_NONE, AUTH_TYPE_BASIC or AUTH_TYPE_EXTERNAL
@@ -240,7 +249,8 @@ $auth_method_type	= 'pagename';	// By Page name
 $read_auth = 0;
 
 $read_auth_pages = array(
-	// Regex		   Username
+	// Regex		   Groupname or Username
+	'#PageForAllValidUsers#'	=> 'valid-user',
 	'#HogeHoge#'		=> 'hoge',
 	'#(NETABARE|NetaBare)#'	=> 'foo,bar,hoge',
 );
@@ -521,4 +531,3 @@ $agents = array(
 
 	array('pattern'=>'#^#',	'profile'=>'default'),	// Sentinel
 );
-?>

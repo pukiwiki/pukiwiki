@@ -179,8 +179,8 @@ function read_auth($page, $auth_flag = TRUE, $exit_flag = TRUE)
 // Basic authentication
 function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 {
-	global $auth_method_type, $auth_users, $_msg_auth, $auth_user;
-
+	global $auth_method_type, $auth_users, $_msg_auth, $auth_user, $auth_groups;
+	global $auth_user_groups;
 	// Checked by:
 	$target_str = '';
 	if ($auth_method_type == 'pagename') {
@@ -199,7 +199,7 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 	$matches = array();
 	if (PKWK_READONLY ||
 		! $auth_user ||
-		! in_array($auth_user, $user_list))
+		count(array_intersect($auth_user_groups, $user_list)) === 0)
 	{
 		// Auth failed
 		pkwk_common_headers();
@@ -227,7 +227,8 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
  */
 function ensure_valid_auth_user()
 {
-	global $auth_type, $auth_users, $_msg_auth, $auth_pass, $auth_user;
+	global $auth_type, $auth_users, $_msg_auth, $auth_user, $auth_groups;
+	global $auth_user_groups;
 	switch ($auth_type) {
 		case AUTH_TYPE_BASIC:
 		{
@@ -238,6 +239,7 @@ function ensure_valid_auth_user()
 						$_SERVER['PHP_AUTH_PW'],
 						$auth_users[$user]) === $auth_users[$user]) {
 						$auth_user = $user;
+						$auth_user_groups = get_groups_from_username($user);
 						return true;
 					}
 				}
@@ -245,6 +247,7 @@ function ensure_valid_auth_user()
 				header('HTTP/1.0 401 Unauthorized');
 			}
 			$auth_user = '';
+			$auth_user_groups = get_groups_from_username($user);
 			return true; // no auth input
 		}
 		case AUTH_TYPE_EXTERNAL_REMOTE_USER:
@@ -254,7 +257,39 @@ function ensure_valid_auth_user()
 		default: // AUTH_TYPE_NONE
 			$auth_user = '';
 	}
+	$auth_user_groups = get_groups_from_username($auth_user);
 	return true; // is not basic auth
+}
+
+/**
+ * Return group name array whose group contains the user
+ *
+ * Result array contains reserved 'valid-user' group for all authenticated user
+ * @global array $auth_groups
+ * @param string $user
+ * @return array
+ */
+function get_groups_from_username($user)
+{
+	global $auth_groups;
+	if ($user !== '') {
+		$groups = array();
+		foreach ($auth_groups as $group=>$users) {
+			$sp = explode(',', $users);
+			if (in_array($user, $sp)) {
+				$groups[] = $group;
+			}
+		}
+		// Implecit group that has same name as user itself
+		$groups[] = $user;
+		// 'valid-user' group for
+		$valid_user = 'valid-user';
+		if (!in_array($valid_user, $groups)) {
+			$groups[] = $valid_user;
+		}
+		return $groups;
+	}
+	return array();
 }
 
 /**
