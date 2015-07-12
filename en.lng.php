@@ -115,6 +115,8 @@ $_LANG['skin']['search']    = 'Search';
 $_LANG['skin']['top']       = 'Front page';	// Top page
 $_LANG['skin']['unfreeze']  = 'Unfreeze';
 $_LANG['skin']['upload']    = 'Upload';	// Attach a file
+$_LANG['skin']['login']     = 'Log in';
+$_LANG['skin']['logout']    = 'Log out';
 
 ///////////////////////////////////////
 // Plug-in message

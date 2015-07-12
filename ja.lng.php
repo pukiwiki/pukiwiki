@@ -117,6 +117,8 @@ $_LANG['skin']['search']    = '単語検索';
 $_LANG['skin']['top']       = 'トップ';	// Top page
 $_LANG['skin']['unfreeze']  = '凍結解除';
 $_LANG['skin']['upload']    = '添付';	// Attach a file
+$_LANG['skin']['login']     = 'ログイン';
+$_LANG['skin']['logout']    = 'ログアウト';
 
 ///////////////////////////////////////
 // Plug-in message

@@ -14,6 +14,7 @@ define('PKWK_PASSPHRASE_LIMIT_LENGTH', 512);
 define('AUTH_TYPE_NONE', 0);
 define('AUTH_TYPE_BASIC', 1);
 define('AUTH_TYPE_EXTERNAL', 2);
+define('AUTH_TYPE_FORM', 3);
 
 define('AUTH_TYPE_EXTERNAL_REMOTE_USER', 4);
 define('AUTH_TYPE_EXTERNAL_X_FORWARDED_USER', 5);
@@ -180,7 +181,7 @@ function read_auth($page, $auth_flag = TRUE, $exit_flag = TRUE)
 function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 {
 	global $auth_method_type, $auth_users, $_msg_auth, $auth_user, $auth_groups;
-	global $auth_user_groups;
+	global $auth_user_groups, $auth_type, $g_query_string;
 	// Checked by:
 	$target_str = '';
 	if ($auth_method_type == 'pagename') {
@@ -203,9 +204,18 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 	{
 		// Auth failed
 		pkwk_common_headers();
-		if ($auth_flag && $auth_user === '') {
-			header('WWW-Authenticate: Basic realm="' . $_msg_auth . '"');
-			header('HTTP/1.0 401 Unauthorized');
+		if ($auth_flag && !$auth_user) {
+			if (AUTH_TYPE_BASIC === $auth_type) {
+				header('WWW-Authenticate: Basic realm="' . $_msg_auth . '"');
+				header('HTTP/1.0 401 Unauthorized');
+			} elseif (AUTH_TYPE_FORM === $auth_type) {
+				$url_after_login = get_script_uri() . '?' . $g_query_string;
+				$loginurl = get_script_uri() . '?plugin=loginform'
+					. '&page=' . rawurlencode($page)
+					. '&url_after_login=' . rawurlencode($url_after_login);
+				header('HTTP/1.0 302 Found');
+				header('Location: ' . $loginurl);
+			}
 		}
 		if ($exit_flag) {
 			$body = $title = str_replace('$1',
@@ -250,12 +260,26 @@ function ensure_valid_auth_user()
 			$auth_user_groups = get_groups_from_username($user);
 			return true; // no auth input
 		}
+		case AUTH_TYPE_FORM:
+		{
+			session_start();
+			// session_regenerate_id(true);
+			$user = '';
+			if (isset($_SESSION['authenticated_user'])) {
+				$user = $_SESSION['authenticated_user'];
+			}
+			$auth_user = $user;
+			break;
+		}
 		case AUTH_TYPE_EXTERNAL_REMOTE_USER:
 			$auth_user = $_SERVER['REMOTE_USER'];
+			break;
 		case AUTH_TYPE_EXTERNAL_X_FORWARDED_USER:
 			$auth_user =  $_SERVER['HTTP_X_FORWARDED_USER'];
+			break;
 		default: // AUTH_TYPE_NONE
 			$auth_user = '';
+			break;
 	}
 	$auth_user_groups = get_groups_from_username($auth_user);
 	return true; // is not basic auth
@@ -302,4 +326,43 @@ function get_auth_user()
 {
 	global $auth_user;
 	return $auth_user;
+}
+
+/**
+ * Sign in with username and password
+ *
+ * @param String username
+ * @param String password
+ * @return true is sign in is OK
+ */
+function form_auth($username, $password)
+{
+	global $auth_users;
+	$user = $username;
+	if (in_array($user, array_keys($auth_users))) {
+		if (pkwk_hash_compute(
+			$password,
+			$auth_users[$user]) === $auth_users[$user]) {
+			$_SESSION['authenticated_user'] = $user;
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Redirect after login. Need to assing location or page
+ *
+ * @param type $location
+ * @param type $page
+ */
+function form_auth_redirect($location, $page)
+{
+	header('HTTP/1.0 302 Found');
+	if ($location) {
+		header('Location: ' . $location);
+	} else {
+		$url = get_script_uri() . '?' . $page;
+		header('Location: ' . $url);
+	}
 }

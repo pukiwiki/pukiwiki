@@ -267,6 +267,8 @@ if (isset($_GET['encode_hint']) && $_GET['encode_hint'] != '')
 // ページ名かInterWikiNameであるとみなす
 $arg = '';
 if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] != '') {
+	global $g_query_string;
+	$g_query_string = $_SERVER['QUERY_STRING'];
 	$arg = & $_SERVER['QUERY_STRING'];
 } else if (isset($_SERVER['argv']) && ! empty($_SERVER['argv'])) {
 	$arg = & $_SERVER['argv'][0];

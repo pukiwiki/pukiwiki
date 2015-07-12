@@ -16,6 +16,7 @@ function catbody($title, $page, $body)
 	global $search_word_color, $_msg_word, $foot_explain, $note_hr, $head_tags;
 	global $javascript, $nofollow;
 	global $_LANG, $_LINK, $_IMAGE;
+	global $auth_type, $auth_user;
 
 	global $pkwk_dtd;     // XHTML 1.1, XHTML1.0, HTML 4.01 Transitional...
 	global $page_title;   // Title of this site
@@ -23,6 +24,19 @@ function catbody($title, $page, $body)
 	global $modifier;     // Site administrator's  web page
 	global $modifierlink; // Site administrator's name
 
+	$enable_login = false;
+	$enable_logout = false;
+	if (AUTH_TYPE_FORM === $auth_type) {
+		if ($auth_user) {
+			$enable_logout = true;
+		} else {
+			$enable_login = true;
+		}
+	} else if (AUTH_TYPE_BASIC === $auth_type) {
+		if ($auth_user) {
+			$enable_logout = true;
+		}
+	}
 	if (! file_exists(SKIN_FILE) || ! is_readable(SKIN_FILE))
 		die_message('SKIN_FILE is not found');
 
@@ -56,6 +70,8 @@ function catbody($title, $page, $body)
 	$_LINK['top']      = "$script?" . pagename_urlencode($defaultpage);
 	$_LINK['unfreeze'] = "$script?cmd=unfreeze&amp;page=$r_page";
 	$_LINK['upload']   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
+	$_LINK['login']    = "$script?plugin=loginform&amp;pcmd=login&amp;page=$r_page";
+	$_LINK['logout']   = "$script?plugin=loginform&amp;pcmd=logout&amp;page=$r_page";
 
 	// Compat: Skins for 1.4.4 and before
 	$link_add       = & $_LINK['add'];
