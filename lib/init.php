@@ -354,6 +354,7 @@ if (! isset($vars['cmd']) && ! isset($vars['plugin'])) {
 
 	$get['cmd']  = $post['cmd']  = $vars['cmd']  = 'read';
 
+	$arg = preg_replace("#^([^&]*)&.*$#", "$1", $arg);
 	if ($arg == '') $arg = $defaultpage;
 	$arg = rawurldecode($arg);
 	$arg = strip_bracket($arg);
