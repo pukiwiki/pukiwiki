@@ -8,6 +8,17 @@
 
 define('PKWK_PASSPHRASE_LIMIT_LENGTH', 512);
 
+/////////////////////////////////////////////////
+// Auth type
+
+define('AUTH_TYPE_NONE', 0);
+define('AUTH_TYPE_BASIC', 1);
+define('AUTH_TYPE_EXTERNAL', 2);
+
+define('AUTH_TYPE_EXTERNAL_REMOTE_USER', 4);
+define('AUTH_TYPE_EXTERNAL_X_FORWARDED_USER', 5);
+
+
 // Passwd-auth related ----
 
 function pkwk_login($pass = '')
@@ -168,7 +179,7 @@ function read_auth($page, $auth_flag = TRUE, $exit_flag = TRUE)
 // Basic authentication
 function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 {
-	global $auth_method_type, $auth_users, $_msg_auth;
+	global $auth_method_type, $auth_users, $_msg_auth, $auth_user;
 
 	// Checked by:
 	$target_str = '';
@@ -186,29 +197,13 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 	if (empty($user_list)) return TRUE; // No limit
 
 	$matches = array();
-	if (! isset($_SERVER['PHP_AUTH_USER']) &&
-		! isset($_SERVER ['PHP_AUTH_PW']) &&
-		isset($_SERVER['HTTP_AUTHORIZATION']) &&
-		preg_match('/^Basic (.*)$/', $_SERVER['HTTP_AUTHORIZATION'], $matches))
-	{
-
-		// Basic-auth with $_SERVER['HTTP_AUTHORIZATION']
-		list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) =
-			explode(':', base64_decode($matches[1]));
-	}
-
 	if (PKWK_READONLY ||
-		! isset($_SERVER['PHP_AUTH_USER']) ||
-		! in_array($_SERVER['PHP_AUTH_USER'], $user_list) ||
-		! isset($auth_users[$_SERVER['PHP_AUTH_USER']]) ||
-		pkwk_hash_compute(
-			$_SERVER['PHP_AUTH_PW'],
-			$auth_users[$_SERVER['PHP_AUTH_USER']]
-			) !== $auth_users[$_SERVER['PHP_AUTH_USER']])
+		! $auth_user ||
+		! in_array($auth_user, $user_list))
 	{
 		// Auth failed
 		pkwk_common_headers();
-		if ($auth_flag) {
+		if ($auth_flag && $auth_user === '') {
 			header('WWW-Authenticate: Basic realm="' . $_msg_auth . '"');
 			header('HTTP/1.0 401 Unauthorized');
 		}
@@ -224,4 +219,52 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 		return TRUE;
 	}
 }
-?>
+
+/**
+ * Send 401 if client send a invalid credentials
+ *
+ * @return true if valid, false if invalid credentials
+ */
+function ensure_valid_auth_user()
+{
+	global $auth_type, $auth_users, $_msg_auth, $auth_pass, $auth_user;
+	switch ($auth_type) {
+		case AUTH_TYPE_BASIC:
+		{
+			if (isset($_SERVER['PHP_AUTH_USER'])) {
+				$user = $_SERVER['PHP_AUTH_USER'];
+				if (in_array($user, array_keys($auth_users))) {
+					if (pkwk_hash_compute(
+						$_SERVER['PHP_AUTH_PW'],
+						$auth_users[$user]) === $auth_users[$user]) {
+						$auth_user = $user;
+						return true;
+					}
+				}
+				header('WWW-Authenticate: Basic realm="' . $_msg_auth . '"');
+				header('HTTP/1.0 401 Unauthorized');
+			}
+			$auth_user = '';
+			return true; // no auth input
+		}
+		case AUTH_TYPE_EXTERNAL_REMOTE_USER:
+			$auth_user = $_SERVER['REMOTE_USER'];
+		case AUTH_TYPE_EXTERNAL_X_FORWARDED_USER:
+			$auth_user =  $_SERVER['HTTP_X_FORWARDED_USER'];
+		default: // AUTH_TYPE_NONE
+			$auth_user = '';
+	}
+	return true; // is not basic auth
+}
+
+/**
+ * Get authenticated user name.
+ *
+ * @global type $auth_user
+ * @return type
+ */
+function get_auth_user()
+{
+	global $auth_user;
+	return $auth_user;
+}

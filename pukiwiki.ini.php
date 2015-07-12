@@ -225,6 +225,11 @@ $auth_users = array(
 );
 
 /////////////////////////////////////////////////
+// Authentication type
+// AUTH_TYPE_NONE, AUTH_TYPE_BASIC or AUTH_TYPE_EXTERNAL
+// $auth_type = AUTH_TYPE_BASIC;
+
+/////////////////////////////////////////////////
 // Authentication method
 
 $auth_method_type	= 'pagename';	// By Page name
