@@ -273,6 +273,14 @@ $edit_auth_pages = array(
 $search_auth = 0;
 
 /////////////////////////////////////////////////
+// LDAP
+$ldap_user_account = 0;
+// $ldap_user_account = 1; // (0: Disabled, 1: Enabled)
+// $ldap_url = 'ldap://ldapserver:389/ou=Users,dc=ldap,dc=example,dc=com';
+// $ldap_bind_dn = '';
+// $ldap_bind_password = '';
+
+/////////////////////////////////////////////////
 // $whatsnew: Max number of RecentChanges
 $maxshow = 60;
 
