@@ -33,7 +33,8 @@ function plugin_loginform_action()
 		. ($page_after_login_r ? '&page_after_login=' . $page_after_login_r : '');
 	$username = $_POST['username'];
 	$password = $_POST['password'];
-	if (form_auth($username, $password)) {
+	if ($username && $password && form_auth($username, $password)) {
+		// Sign in successfully completed
 		form_auth_redirect($url_after_login, $page_after_login_r);
 		return;
 	}

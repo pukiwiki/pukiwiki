@@ -337,15 +337,95 @@ function get_auth_user()
  */
 function form_auth($username, $password)
 {
-	global $auth_users;
+	global $ldap_user_account, $auth_users;
 	$user = $username;
-	if (in_array($user, array_keys($auth_users))) {
-		if (pkwk_hash_compute(
-			$password,
-			$auth_users[$user]) === $auth_users[$user]) {
-			$_SESSION['authenticated_user'] = $user;
-			return true;
+	if ($ldap_user_account) {
+		// LDAP account
+		return ldap_auth($username, $password);
+	} else {
+		// Defined users in pukiwiki.ini.php
+		if (in_array($user, array_keys($auth_users))) {
+			if (pkwk_hash_compute(
+				$password,
+				$auth_users[$user]) === $auth_users[$user]) {
+				$_SESSION['authenticated_user'] = $user;
+				return true;
+			}
 		}
+	}
+	return false;
+}
+
+function ldap_auth($username, $password)
+{
+	global $ldap_url, $ldap_bind_dn, $ldap_bind_password;
+	if (preg_match('#^(ldap\:\/\/[^/]+/)(.*)$#', $ldap_url, $m)) {
+		$ldap_server = $m[1];
+		$ldap_base_dn = $m[2];
+		$ldapconn = ldap_connect($ldap_server);
+		if ($ldapconn) {
+			ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+			if (preg_match('#\$login\b#', $ldap_bind_dn)) {
+				// Bind by user credential
+				$bind_dn_user = preg_replace('#\$login#', $username, $ldap_bind_dn);
+				$ldap_bind_user = ldap_bind($ldapconn, $bind_dn_user, $password);
+				if ($ldap_bind_user) {
+					$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
+					if ($user_info) {
+						$_SESSION['authenticated_user'] = $user_info['uid'];
+						return true;
+					}
+				}
+			} else {
+				// Bind by bind dn
+				$ldap_bind = ldap_bind($ldapconn, $ldap_bind_dn, $ldap_bind_password);
+				if ($ldap_bind) {
+					$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
+					if ($user_info) {
+						$ldap_bind_user2 = ldap_bind($ldapconn, $user_info['dn'], $password);
+						if ($ldap_bind_user2) {
+							$_SESSION['authenticated_user'] = $user_info['uid'];
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Search user and get 'dn', 'uid', 'fullname' and 'mail'
+ * @param type $ldapconn
+ * @param type $username
+ * @param type $base_dn
+ * @return boolean
+ */
+function get_ldap_user_info($ldapconn, $username, $base_dn) {
+	$filter = "(|(uid=$username)(sAMAccountName=$username))";
+	$result1 = ldap_search($ldapconn, $base_dn, $filter, array('dn', 'uid', 'cn', 'samaccountname', 'displayname', 'mail'));
+	$entries = ldap_get_entries($ldapconn, $result1);
+	$info = $entries[0];
+	if (isset($info['dn'])) {
+		$user_dn = $info['dn'];
+		$cano_username = $username;
+		if (isset($info['uid'][0])) {
+			$cano_username = $info['uid'][0];
+		} elseif (isset($info['samaccountname'][0])) {
+			$cano_username = $info['samaccountname'][0];
+		}
+		$cano_fullname = $username;
+		if (isset($info['displayname'][0])) {
+			$cano_fullname = $info['displayname'][0];
+		} elseif (isset($info['cn'][0])) {
+			$cano_fullname = $info['cn'][0];
+		}
+		return array(
+			'dn' => $user_dn,
+			'uid' => $cano_username,
+			'fullname' => $cano_fullname,
+			'mail' => $info['mail'][0]
+		);
 	}
 	return false;
 }
