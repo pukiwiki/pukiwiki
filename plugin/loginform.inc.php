@@ -19,23 +19,23 @@ function plugin_loginform_convert()
 
 function plugin_loginform_action()
 {
-	global $auth_user, $auth_type;
-	$page_r = $_GET['page'];
-	$page = rawurldecode($page_r);
+	global $auth_user, $auth_type, $_loginform_messages;
+	$page = $_GET['page'];
 	$pcmd = $_GET['pcmd'];
-	$url_after_login_r = $_GET['url_after_login'];
-	$url_after_login = rawurldecode($url_after_login_r);
-	$page_after_login_r = '';
-	if (!$url_after_login_r) $page_after_login_r = $page_r;
+	$url_after_login = $_GET['url_after_login'];
+	$page_after_login = $page;
+	if (!$url_after_login) {
+		$page_after_login = $page;
+	}
 	$action_url = get_script_uri() . '?plugin=loginform'
-		. '&page=' . $page_r
-		. ($url_after_login_r ? '&url_after_login=' . $url_after_login_r : '')
-		. ($page_after_login_r ? '&page_after_login=' . $page_after_login_r : '');
+		. '&page=' . rawurlencode($page)
+		. ($url_after_login ? '&url_after_login=' . rawurlencode($url_after_login) : '')
+		. ($page_after_login ? '&page_after_login=' . rawurlencode($page_after_login) : '');
 	$username = $_POST['username'];
 	$password = $_POST['password'];
 	if ($username && $password && form_auth($username, $password)) {
 		// Sign in successfully completed
-		form_auth_redirect($url_after_login, $page_after_login_r);
+		form_auth_redirect($url_after_login, $page_after_login);
 		return;
 	}
 	if ($pcmd === 'logout') {
@@ -55,20 +55,83 @@ function plugin_loginform_action()
 		return array(
 			'msg' => 'Log out',
 			'body' => 'Logged out completely<br>'
-				. '<a href="'. get_script_uri() . '?' . $page_r . '">'
+				. '<a href="'. get_script_uri() . '?' . pagename_urlencode($page) . '">'
 				. $page . '</a>'
 		);
 	} else {
 		// login
+		$action_url_html = htmlsc($action_url);
+		$username_html = htmlsc($username);
+		$username_label_html = htmlsc($_loginform_messages['username']);
+		$password_label_html = htmlsc($_loginform_messages['password']);
+		$login_label_html = htmlsc($_loginform_messages['login']);
+		$body = <<< EOT
+<style>
+  .loginformcontainer {
+    text-align: center;
+  }
+  .loginform table {
+    margin-top: 1em;
+	margin-left: auto;
+	margin-right: auto;
+  }
+  .loginform tbody td {
+    padding: .5em;
+  }
+  .loginform .label {
+    text-align: right;
+  }
+  .loginform .login-button-container {
+    text-align: right;
+  }
+  .loginform .loginbutton {
+    margin-top: 1em;
+  }
+</style>
+<div class="loginformcontainer">
+<form name="loginform" class="loginform" action="$action_url_html" method="post">
+<div>
+<table style="border:0">
+  <tbody>
+  <tr>
+    <td class="label"><label for="_plugin_loginform_username">$username_label_html</label></td>
+    <td><input type="text" name="username" value="$username_html" id="_plugin_loginform_username"></td>
+  </tr>
+  <tr>
+  <td class="label"><label for="_plugin_loginform_password">$password_label_html</label></td>
+  <td><input type="password" name="password" id="_plugin_loginform_password"></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td class="login-button-container"><input type="submit" value="$login_label_html" class="loginbutton"></td>
+  </tr>
+  </tbody>
+</table>
+</div>
+<div>
+</div>
+</form>
+</div>
+<script><!--
+window.addEventListener && window.addEventListener("DOMContentLoaded", function() {
+  var f = window.document.forms.loginform;
+				console.log(f);
+				console.log(f.username);
+				console.log(f.password);
+  if (f && f.username && f.password) {
+    if (f.username.value) {
+     f.password.focus && f.password.focus();
+	} else {
+     f.username.focus && f.username.focus();
+	}
+  }
+});
+//-->
+</script>
+EOT;
 		return array(
-			'msg' => 'Login',
-			'body' => 'Please input username and password:'
-			. '<form action="' . htmlsc($action_url) . '" method="post">'
-			. 'Username: <input type="text" name="username"><br>'
-			. 'Password: <input type="password" name="password"><br>'
-			. '<input type="submit" value="Login">'
-			. '</form>'
-			. "<br>\n"
+			'msg' => $_loginform_messages['login'],
+			'body' => $body,
 			);
 	}
 }

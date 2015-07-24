@@ -425,4 +425,12 @@ $_vote_plugin_votes  = '投票';
 // yetlist.inc.php
 $_title_yetlist = '未作成のページ一覧';
 $_err_notexist  = '未作成のページはありません。';
-?>
+
+///////////////////////////////////////
+// loginform.inc.php
+$_loginform_messages = array(
+	'username' => 'ユーザー名:',
+	'password' => 'パスワード:',
+	'login' => 'ログイン',
+	'invalid_username_or_password' => 'ユーザー名またはパスワードが違います'
+);
