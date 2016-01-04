@@ -39,7 +39,7 @@ class Config
 		if (! is_page($this->page)) return FALSE;
 
 		$this->objs = array();
-		$obj        = & new ConfigTable('');
+		$obj        = new ConfigTable('');
 		$matches = array();
 
 		foreach (get_source($this->page) as $line) {
@@ -57,22 +57,22 @@ class Config
 
 				if ($level == 1) {
 					$this->objs[$obj->title] = $obj;
-					$obj = & new ConfigTable($line);
+					$obj = new ConfigTable($line);
 				} else {
 					if (! is_a($obj, 'ConfigTable_Direct'))
-						$obj = & new ConfigTable_Direct('', $obj);
+						$obj = new ConfigTable_Direct('', $obj);
 					$obj->set_key($line);
 				}
 				
 			} else if ($head == '-' && $level > 1) {
 				if (! is_a($obj, 'ConfigTable_Direct'))
-					$obj = & new ConfigTable_Direct('', $obj);
+					$obj = new ConfigTable_Direct('', $obj);
 				$obj->add_value($line);
 
 			} else if ($head == '|' && preg_match('/^\|(.+)\|\s*$/', $line, $matches)) {
 				// Table row
 				if (! is_a($obj, 'ConfigTable_Sequential'))
-					$obj = & new ConfigTable_Sequential('', $obj);
+					$obj = new ConfigTable_Sequential('', $obj);
 				// Trim() each table cell
 				$obj->add_value(array_map('trim', explode('|', $matches[1])));
 			} else {
@@ -109,7 +109,7 @@ class Config
 	function & get_object($title)
 	{
 		if (! isset($this->objs[$title]))
-			$this->objs[$title] = & new ConfigTable('*' . trim($title) . "\n");
+			$this->objs[$title] = new ConfigTable('*' . trim($title) . "\n");
 		return $this->objs[$title];
 	}
 
@@ -221,4 +221,4 @@ class ConfigTable_Direct extends ConfigTable
 		return $retval;
 	}
 }
-?>
+
