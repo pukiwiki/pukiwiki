@@ -797,7 +797,7 @@ class Tracker_list
 			$sort_keys[] = array('field' => $field, 'dir' => $order);
 		}
 		$this->sort_keys = $sort_keys;
-		usort(&$this->rows, array($this, 'compare'));
+		usort($this->rows, array($this, 'compare'));
 	}
 	function replace_item($arr)
 	{
