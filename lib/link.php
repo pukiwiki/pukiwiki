@@ -240,9 +240,9 @@ function & links_get_objects($page, $refresh = FALSE)
 	static $obj;
 
 	if (! isset($obj) || $refresh)
-		$obj = & new InlineConverter(NULL, array('note'));
+		$obj = new InlineConverter(NULL, array('note'));
 
 	$result = $obj->get_objects(join('', preg_grep('/^(?!\/\/|\s)./', get_source($page))), $page);
 	return $result;
 }
-?>
+

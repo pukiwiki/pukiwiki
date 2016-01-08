@@ -46,8 +46,9 @@ function plugin_popular_convert()
 	}
 
 	$counters = array();
+	$except_quote = str_replace('#', '\#', $except);
 	foreach (get_existpages(COUNTER_DIR, '.count') as $file=>$page) {
-		if (($except != '' && ereg($except, $page)) ||
+		if (($except != '' && preg_match("#$except_quote#", $page)) ||
 		    $page == $whatsnew || check_non_list($page) ||
 		    ! is_page($page))
 			continue;
@@ -98,4 +99,4 @@ function plugin_popular_convert()
 
 	return sprintf($today ? $_popular_plugin_today_frame : $_popular_plugin_frame, count($counters), $items);
 }
-?>
+

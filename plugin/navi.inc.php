@@ -97,13 +97,19 @@ function plugin_navi_convert()
 		$pages   = array_unique($pages);
 		natcasesort($pages);
 		if ($reverse) $pages = array_reverse($pages);
-
+		$pages = array_values($pages);
 		$prev = $home;
-		foreach ($pages as $page) {
-			if ($page === $current) break;
+		$next = '';
+		foreach ($pages as $index=>$page) {
+			if ($page === $current) {
+				$next_key = $index + 1;
+				if (array_key_exists($next_key, $pages)) {
+					$next = $pages[$next_key];
+				}
+				break;
+			}
 			$prev = $page;
 		}
-		$next = current($pages);
 
 		$pos = strrpos($current, '/');
 		$up = '';
