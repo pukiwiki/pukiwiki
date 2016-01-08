@@ -713,7 +713,7 @@ function csv_implode($glue, $pieces)
 	$_glue = ($glue != '') ? '\\' . $glue{0} : '';
 	$arr = array();
 	foreach ($pieces as $str) {
-		if (ereg('[' . $_glue . '"' . "\n\r" . ']', $str))
+		if (preg_match('/[' . '"' . "\n\r" . $_glue . ']/', $str))
 			$str = '"' . str_replace('"', '""', $str) . '"';
 		$arr[] = $str;
 	}
