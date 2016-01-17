@@ -88,7 +88,7 @@ function plugin_counter_get_count($page)
 	// Anothoer day?
 	if ($counters[$page]['date'] != $default['date']) {
 		$modify = TRUE;
-		$is_yesterday = ($counters[$page]['date'] == get_date('Y/m/d', strtotime('yesterday', UTIME)));
+		$is_yesterday = ($counters[$page]['date'] == get_date('Y/m/d', UTIME - 24 * 60 * 60));
 		$counters[$page]['ip']        = $_SERVER['REMOTE_ADDR'];
 		$counters[$page]['date']      = $default['date'];
 		$counters[$page]['yesterday'] = $is_yesterday ? $counters[$page]['today'] : 0;
@@ -116,4 +116,3 @@ function plugin_counter_get_count($page)
 
 	return $counters[$page];
 }
-?>
