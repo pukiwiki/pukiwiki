@@ -29,13 +29,21 @@ function plugin_new_inline()
 	$retval = '';
 	$args = func_get_args();
 	$date = strip_autolink(array_pop($args)); // {date} always exists
-
 	if($date !== '') {
 		// Show 'New!' message by the time of the $date string
 		if (func_num_args() > 2) return '&new([nodate]){date};';
-
-		$timestamp = strtotime($date);
-		if ($timestamp === -1) return '&new([nodate]){date}: Invalid date string;';
+		$timestamp = -1;
+		$dm = null;
+		if (preg_match('/^\D*(\d{4})\D+(\d{1,2})\D+(\d{1,2})\D+(\d{1,2}:\d{2}:\d{2})\D*$/', $date, $dm)) {
+			$iso8601_date = $dm[1]
+				. '-' . substr('0' . $dm[2], -2)
+				. '-' . substr('0' . $dm[3], -2)
+				. ' ' . $dm[4];
+			$timestamp = strtotime($iso8601_date);
+		}
+		if ($timestamp === -1 || $timestamp === FALSE) {
+			return '&new([nodate]){date}: Invalid date string;';
+		}
 		$timestamp -= ZONETIME;
 
 		$retval = in_array('nodate', $args) ? '' : htmlsc($date);
@@ -89,4 +97,3 @@ function plugin_new_inline()
 		return $retval;
 	}
 }
-?>
