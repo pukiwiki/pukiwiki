@@ -705,24 +705,22 @@ EOD;
 		$filename = $this->file;
 
 		// Care for Japanese-character-included file name
+		$legacy_filename = mb_convert_encoding($filename, 'UTF-8', SOURCE_ENCODING);
 		if (LANG == 'ja') {
 			switch(UA_NAME . '/' . UA_PROFILE){
-			case 'Opera/default':
-				// Care for using _auto-encode-detecting_ function
-				$filename = mb_convert_encoding($filename, 'UTF-8', 'auto');
-				break;
 			case 'MSIE/default':
-				$filename = mb_convert_encoding($filename, 'SJIS', 'auto');
+				$legacy_filename = mb_convert_encoding($filename, 'SJIS', SOURCE_ENCODING);
 				break;
 			}
 		}
-		$utf8filename = mb_convert_encoding($filename, 'UTF-8', 'auto');
+		$utf8filename = mb_convert_encoding($filename, 'UTF-8', SOURCE_ENCODING);
 
 		ini_set('default_charset', '');
 		mb_http_output('pass');
 
 		pkwk_common_headers();
-		header('Content-Disposition: inline; filename="' . $filename . '"; filename*=utf-8\'\'' . rawurlencode($utf8filename));
+		header('Content-Disposition: inline; filename="' . $legacy_filename
+			. '"; filename*=utf-8\'\'' . rawurlencode($utf8filename));
 		header('Content-Length: ' . $this->size);
 		header('Content-Type: '   . $this->type);
 
@@ -853,4 +851,3 @@ class AttachPages
 		return "\n" . '<ul>' . "\n" . $ret . '</ul>' . "\n";
 	}
 }
-
