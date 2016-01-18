@@ -8,7 +8,7 @@ NAME
 
         PukiWiki 1.5.0
         Copyright (C)
-          2001-2006 PukiWiki Developers Team
+          2001-2016 PukiWiki Developement Team
           2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
         License: GPL version 2 or (at your option) any later version
         http://pukiwiki.sourceforge.jp/
@@ -24,7 +24,7 @@ DESCRIPTION
     PukiWiki is a unique Wiki-Engine which is based on the YukiWiki specification 
      created by Mr. Hiroshi Yuki.
     Mr. yu-ji continued its development until the release of PukiWiki 1.3, and 
-    PukiWiki Developers Team inherited the development from him after 1.3.1b.
+    PukiWiki Development Team inherited the development from him after 1.3.1b.
 
     PukiWiki is written in PHP, so it's relatively easy to install
     on a web server which supports PHP.
@@ -136,7 +136,7 @@ TODO
 
 AUTHOR
 
-    PukiWiki Developers Team http://pukiwiki.sourceforge.jp/dev/
+    PukiWiki Development Team http://pukiwiki.sourceforge.jp/dev/
     Based on "PukiWiki" 1.3 by yu-ji
 
     Please send questions, opinions and bug reports to
@@ -150,7 +150,7 @@ LICENCE
 ACKNOWLEDGEMENT
 
     First of all, thanks so much to the users of PukiWiki and the members of
-    PukiWiki Developers Team. 
+    PukiWiki Development Team.
     Special thanks to Mr. yu-ji(aka sng) who developed the first PukiWiki.
     And also thanks to Mr. Hiroshi Yuki who was willing to accept our cloning
     YukiWiki and 

@@ -14,7 +14,7 @@ define('S_VERSION', '1.5.0');
 define('S_COPYRIGHT',
 	'<strong>PukiWiki ' . S_VERSION . '</strong>' .
 	' &copy; 2001-2016' .
-	' <a href="http://pukiwiki.osdn.jp/">PukiWiki Developers Team</a>'
+	' <a href="http://pukiwiki.osdn.jp/">PukiWiki Development Team</a>'
 );
 
 /////////////////////////////////////////////////

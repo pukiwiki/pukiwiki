@@ -3,7 +3,7 @@
 
     Version 1.5.0
     Copyright (C)
-      2001-2006 PukiWiki Developers Team
+      2001-2016 PukiWiki Development Team
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
 
@@ -253,7 +253,7 @@ Wikiの様子を見る
 
     バージョン1.2.1 から、RecentChangesのRDF/RSSを出力できるようになりました。
 
-    バージョン1.3.1b 以降はPukiWiki Developers Team によって開発が続けられて
+    バージョン1.3.1b 以降はPukiWiki Development Team によって開発が続けられて
     います。
 
  　 バージョン1.4.5 から、RSS 2.0 を出力できるようになりました。
