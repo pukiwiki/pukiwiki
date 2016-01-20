@@ -349,6 +349,7 @@ function form_auth($username, $password)
 				$password,
 				$auth_users[$user]) === $auth_users[$user]) {
 				$_SESSION['authenticated_user'] = $user;
+				session_regenerate_id(true); // require: PHP5.1+
 				return true;
 			}
 		}
@@ -373,6 +374,7 @@ function ldap_auth($username, $password)
 					$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
 					if ($user_info) {
 						$_SESSION['authenticated_user'] = $user_info['uid'];
+						session_regenerate_id(true); // require: PHP5.1+
 						return true;
 					}
 				}
@@ -385,6 +387,7 @@ function ldap_auth($username, $password)
 						$ldap_bind_user2 = ldap_bind($ldapconn, $user_info['dn'], $password);
 						if ($ldap_bind_user2) {
 							$_SESSION['authenticated_user'] = $user_info['uid'];
+							session_regenerate_id(true); // require: PHP5.1+
 							return true;
 						}
 					}
