@@ -153,6 +153,12 @@ function _navigator($key, $value = '', $javascript = ''){
  | <?php _navigator('search') ?>
  | <?php _navigator('recent') ?>
  | <?php _navigator('help')   ?>
+ <?php if ($enable_login) { ?>
+ | <?php _navigator('login') ?>
+ <?php } ?>
+ <?php if ($enable_logout) { ?>
+ | <?php _navigator('logout') ?>
+ <?php } ?>
  ]
 <?php } // PKWK_SKIN_SHOW_NAVBAR ?>
 </div>

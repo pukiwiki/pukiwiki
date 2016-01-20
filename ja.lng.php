@@ -117,6 +117,8 @@ $_LANG['skin']['search']    = '単語検索';
 $_LANG['skin']['top']       = 'トップ';	// Top page
 $_LANG['skin']['unfreeze']  = '凍結解除';
 $_LANG['skin']['upload']    = '添付';	// Attach a file
+$_LANG['skin']['login']     = 'ログイン';
+$_LANG['skin']['logout']    = 'ログアウト';
 
 ///////////////////////////////////////
 // Plug-in message
@@ -423,4 +425,12 @@ $_vote_plugin_votes  = '投票';
 // yetlist.inc.php
 $_title_yetlist = '未作成のページ一覧';
 $_err_notexist  = '未作成のページはありません。';
-?>
+
+///////////////////////////////////////
+// loginform.inc.php
+$_loginform_messages = array(
+	'username' => 'ユーザー名:',
+	'password' => 'パスワード:',
+	'login' => 'ログイン',
+	'invalid_username_or_password' => 'ユーザー名またはパスワードが違います'
+);

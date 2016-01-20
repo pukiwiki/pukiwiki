@@ -115,6 +115,8 @@ $_LANG['skin']['search']    = 'Search';
 $_LANG['skin']['top']       = 'Front page';	// Top page
 $_LANG['skin']['unfreeze']  = 'Unfreeze';
 $_LANG['skin']['upload']    = 'Upload';	// Attach a file
+$_LANG['skin']['login']     = 'Log in';
+$_LANG['skin']['logout']    = 'Log out';
 
 ///////////////////////////////////////
 // Plug-in message
@@ -421,4 +423,12 @@ $_vote_plugin_votes  = 'Vote';
 // yetlist.inc.php
 $_title_yetlist = 'List of pages which have not yet been created.';
 $_err_notexist  = 'All pages have been created.';
-?>
+
+///////////////////////////////////////
+// loginform.inc.php
+$_loginform_messages = array(
+	'username' => 'Username',
+	'password' => 'Password',
+	'login' => 'Log in',
+	'invalid_username_or_password' => 'The username or password you entered is incorrect'
+);

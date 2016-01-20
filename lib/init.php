@@ -18,6 +18,13 @@ define('S_COPYRIGHT',
 );
 
 /////////////////////////////////////////////////
+// Session security options
+
+ini_set('session.use_strict_mode', 1);
+ini_set('session.use_cookies', 1);
+ini_set('session.use_only_cookies', 1);
+
+/////////////////////////////////////////////////
 // Init server variables
 
 // Comapat and suppress notices
@@ -267,6 +274,8 @@ if (isset($_GET['encode_hint']) && $_GET['encode_hint'] != '')
 // ページ名かInterWikiNameであるとみなす
 $arg = '';
 if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] != '') {
+	global $g_query_string;
+	$g_query_string = $_SERVER['QUERY_STRING'];
 	$arg = & $_SERVER['QUERY_STRING'];
 } else if (isset($_SERVER['argv']) && ! empty($_SERVER['argv'])) {
 	$arg = & $_SERVER['argv'][0];
@@ -354,6 +363,7 @@ if (! isset($vars['cmd']) && ! isset($vars['plugin'])) {
 
 	$get['cmd']  = $post['cmd']  = $vars['cmd']  = 'read';
 
+	$arg = preg_replace("#^([^&]*)&.*$#", "$1", $arg);
 	if ($arg == '') $arg = $defaultpage;
 	$arg = rawurldecode($arg);
 	$arg = strip_bracket($arg);

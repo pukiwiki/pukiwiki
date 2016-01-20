@@ -224,6 +224,20 @@ $auth_users = array(
 	'hoge'	=> '{SMD5}OzJo/boHwM4q5R+g7LCOx2xGMkFKRVEx',      // LDAP SMD5 'hoge_passwd'
 );
 
+// Group definition
+$auth_groups = array(
+	// Groupname => group members(users)
+	'valid-user' => '', // Reserved 'valid-user' group contains all authenticated users
+	'groupfoo'	=> 'foo',
+	'groupbar'	=> 'bar',
+	'groupboobar'	=> 'foo,bar',
+);
+
+/////////////////////////////////////////////////
+// Authentication type
+// AUTH_TYPE_NONE, AUTH_TYPE_BASIC or AUTH_TYPE_EXTERNAL
+// $auth_type = AUTH_TYPE_BASIC;
+
 /////////////////////////////////////////////////
 // Authentication method
 
@@ -235,7 +249,8 @@ $auth_method_type	= 'pagename';	// By Page name
 $read_auth = 0;
 
 $read_auth_pages = array(
-	// Regex		   Username
+	// Regex		   Groupname or Username
+	'#PageForAllValidUsers#'	=> 'valid-user',
 	'#HogeHoge#'		=> 'hoge',
 	'#(NETABARE|NetaBare)#'	=> 'foo,bar,hoge',
 );
@@ -256,6 +271,14 @@ $edit_auth_pages = array(
 // 0: Disabled (Search read-prohibited page contents)
 // 1: Enabled  (Search only permitted pages for the user)
 $search_auth = 0;
+
+/////////////////////////////////////////////////
+// LDAP
+$ldap_user_account = 0;
+// $ldap_user_account = 1; // (0: Disabled, 1: Enabled)
+// $ldap_url = 'ldap://ldapserver:389/ou=Users,dc=ldap,dc=example,dc=com';
+// $ldap_bind_dn = '';
+// $ldap_bind_password = '';
 
 /////////////////////////////////////////////////
 // $whatsnew: Max number of RecentChanges
@@ -516,4 +539,3 @@ $agents = array(
 
 	array('pattern'=>'#^#',	'profile'=>'default'),	// Sentinel
 );
-?>

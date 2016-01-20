@@ -77,6 +77,7 @@ if (isset($vars['cmd'])) {
 	$plugin = '';
 }
 if ($plugin != '') {
+	ensure_valid_auth_user();
 	if (exist_plugin_action($plugin)) {
 		// Found and exec
 		$retvars = do_plugin_action($plugin);
@@ -121,4 +122,3 @@ if (isset($retvars['body']) && $retvars['body'] != '') {
 // Output
 catbody($title, $page, $body);
 exit;
-?>
