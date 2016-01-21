@@ -182,6 +182,7 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 {
 	global $auth_method_type, $auth_users, $_msg_auth, $auth_user, $auth_groups;
 	global $auth_user_groups, $auth_type, $g_query_string;
+	global $auth_external_login_url;
 	// Checked by:
 	$target_str = '';
 	if ($auth_method_type == 'pagename') {
@@ -211,7 +212,14 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 			} elseif (AUTH_TYPE_FORM === $auth_type) {
 				$url_after_login = get_script_uri() . '?' . $g_query_string;
 				$loginurl = get_script_uri() . '?plugin=loginform'
-					. '&page=' . rawurlencode($page)
+					. '&page=' . pagename_urlencode($page)
+					. '&url_after_login=' . rawurlencode($url_after_login);
+				header('HTTP/1.0 302 Found');
+				header('Location: ' . $loginurl);
+			} elseif (AUTH_TYPE_EXTERNAL === $auth_type) {
+				$url_after_login = get_script_uri() . '?' . $g_query_string;
+				$loginurl = $auth_external_login_url . '?'
+					. '&page=' . pagename_urlencode($page)
 					. '&url_after_login=' . rawurlencode($url_after_login);
 				header('HTTP/1.0 302 Found');
 				header('Location: ' . $loginurl);
@@ -261,6 +269,7 @@ function ensure_valid_auth_user()
 			return true; // no auth input
 		}
 		case AUTH_TYPE_FORM:
+		case AUTH_TYPE_EXTERNAL:
 		{
 			session_start();
 			// session_regenerate_id(true);
