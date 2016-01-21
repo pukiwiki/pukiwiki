@@ -73,7 +73,7 @@ function plugin_counter_get_count($page)
 	$file = COUNTER_DIR . encode($page) . PLUGIN_COUNTER_SUFFIX;
 	pkwk_touch_file($file);
 	$fp = fopen($file, 'r+')
-		or die('counter.inc.php: Cannot open COUTER_DIR/' . basename($file));
+		or die('counter.inc.php: Cannot open COUNTER_DIR/' . basename($file));
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
