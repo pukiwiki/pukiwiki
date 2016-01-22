@@ -237,7 +237,7 @@ $auth_groups = array(
 // Authentication type
 // AUTH_TYPE_FORM, AUTH_TYPE_BASIC or AUTH_TYPE_EXTERNAL
 // $auth_type = AUTH_TYPE_FORM;
-// $auth_external_login_url = './exlogin.php';
+// $auth_external_login_url_base = './exlogin.php';
 
 /////////////////////////////////////////////////
 // Authentication method

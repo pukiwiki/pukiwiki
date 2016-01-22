@@ -26,7 +26,7 @@ function catbody($title, $page, $body)
 
 	$enable_login = false;
 	$enable_logout = false;
-	if (AUTH_TYPE_FORM === $auth_type) {
+	if (AUTH_TYPE_FORM === $auth_type || AUTH_TYPE_EXTERNAL === $auth_type) {
 		if ($auth_user) {
 			$enable_logout = true;
 		} else {
@@ -70,7 +70,15 @@ function catbody($title, $page, $body)
 	$_LINK['top']      = "$script?" . pagename_urlencode($defaultpage);
 	$_LINK['unfreeze'] = "$script?cmd=unfreeze&amp;page=$r_page";
 	$_LINK['upload']   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
-	$_LINK['login']    = "$script?plugin=loginform&amp;pcmd=login&amp;page=$r_page";
+	switch ($auth_type) {
+		case AUTH_TYPE_FORM:
+			$login_link = "$script?plugin=loginform&pcmd=login&page=$r_page";
+			break;
+		case AUTH_TYPE_EXTERNAL:
+			$login_link = get_auth_external_login_url($_page, $_LINK['reload']);
+			break;
+	}
+	$_LINK['login']    = htmlsc($login_link);
 	$_LINK['logout']   = "$script?plugin=loginform&amp;pcmd=logout&amp;page=$r_page";
 
 	// Compat: Skins for 1.4.4 and before
