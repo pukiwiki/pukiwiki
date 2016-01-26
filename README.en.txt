@@ -11,7 +11,7 @@ NAME
           2001-2016 PukiWiki Developement Team
           2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
         License: GPL version 2 or (at your option) any later version
-        http://pukiwiki.sourceforge.jp/
+        http://pukiwiki.osdn.jp/
 
 DESCRIPTION
 
@@ -42,7 +42,7 @@ HOW TO MAKE SITE
 
     1. Download a PukiWiki package.
        The latest package can be obtained from
-       http://sourceforge.jp/projects/pukiwiki/.
+       https://osdn.jp/projects/pukiwiki/.
 
     2. Extract the package on a local system or a target system.
         The default name for the root directory of the system is "pukiwiki". 
@@ -132,15 +132,15 @@ RDF/RSS
 
 TODO
 
-    http://pukiwiki.sourceforge.jp/dev/?BugTrack
+    http://pukiwiki.osdn.jp/dev/?BugTrack
 
 AUTHOR
 
-    PukiWiki Development Team http://pukiwiki.sourceforge.jp/dev/
+    PukiWiki Development Team http://pukiwiki.osdn.jp/dev/
     Based on "PukiWiki" 1.3 by yu-ji
 
     Please send questions, opinions and bug reports to
-    http://pukiwiki.sourceforge.jp/dev/
+    http://pukiwiki.osdn.jp/dev/
 
 LICENCE 
 
@@ -158,8 +158,8 @@ ACKNOWLEDGEMENT
 
 REFERENCE
 
-    * PukiWiki Web Site         http://pukiwiki.sourceforge.jp/
-    * PukiWiki Developer's Site http://pukiwiki.sourceforge.jp/dev/
+    * PukiWiki Web Site         http://pukiwiki.osdn.jp/
+    * PukiWiki Developer's Site http://pukiwiki.osdn.jp/dev/
     * yu-ji's Web Site          http://factage.com/yu-ji/ 
     * Hiroshi Yuki 's Web Site  http://www.hyuki.com/ 
     * YukiWiki                  http://www.hyuki.com/yukiwiki/ 

@@ -6,7 +6,7 @@ CHANGES
 =======
 
 See description at PukiWiki-official
-http://pukiwiki.sourceforge.jp/?PukiWiki/Download
+http://pukiwiki.osdn.jp/?PukiWiki/Download
 
 
 

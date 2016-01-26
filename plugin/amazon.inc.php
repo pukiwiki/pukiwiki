@@ -12,7 +12,7 @@
 // License: GNU/GPL
 //
 // ChangeLog:
-// * 2004/04/03 PukiWiki Developer Team (arino <arino@users.sourceforge.jp>)
+// * 2004/04/03 PukiWiki Developer Team (arino <arino@users.osdn.me>)
 //        - replace plugin_amazon_get_page().
 //        - PLUGIN_AMAZON_XML 'xml.amazon.com' -> 'xml.amazon.co.jp'
 // * 0.6  URL が存在しない場合、No image を表示、画像配置など修正。

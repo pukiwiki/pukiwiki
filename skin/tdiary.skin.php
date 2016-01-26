@@ -58,7 +58,7 @@ if (! defined('TDIARY_THEME') || TDIARY_THEME == '') {
 		echo 'tDiary theme wrapper: ';
 		echo 'Theme not found: ' . htmlsc($theme_css) . '<br />';
 		echo 'You can get tdiary-theme from: ';
-		echo 'http://sourceforge.net/projects/tdiary/';
+		echo 'http://www.tdiary.org/';
 		exit;
 	 }
 }

@@ -7,7 +7,7 @@ $Id: UPDATING.txt,v 1.41 2007/02/11 05:53:29 henoheno Exp $
 
 ※詳細は公式Webサイトを参照して下さい
 
-http://pukiwiki.sourceforge.jp/?PukiWiki/Download
+http://pukiwiki.osdn.jp/?PukiWiki/Download
 
 
 
@@ -236,7 +236,7 @@ PukiWiki 1.4.3: PukiWiki 1.4.2との非互換点
 
     1.  trackbackディレクトリに保存されるファイル名の規則が変わりました
         trackback/referer機能をお使いで、1.4.2から1.4.3へ移行される場合は、
-        PukiWikir-devサイト (http://pukiwiki.sourceforge.jp/dev/)の、
+        PukiWikir-devサイト ( http://pukiwiki.osdn.jp/dev/ )の、
         "開発日記/2004-03-18" を参照して作業を行ってください。
 
 PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
@@ -252,4 +252,4 @@ PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
 
 ※詳細は公式Webサイトを参照して下さい
 
-http://pukiwiki.sourceforge.jp/?PukiWiki/Download
+http://pukiwiki.osdn.jp/?PukiWiki/Download

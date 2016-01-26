@@ -3,12 +3,12 @@
 // $Id: pukiwiki.php,v 1.23 2011/01/25 15:01:01 henoheno Exp $
 //
 // PukiWiki 1.4.*
-//  Copyright (C) 2002-2005 by PukiWiki Developers Team
-//  http://pukiwiki.sourceforge.jp/
+//  Copyright (C) 2002-2005 by PukiWiki Development Team
+//  http://pukiwiki.osdn.jp/
 //
 // PukiWiki 1.3.*
-//  Copyright (C) 2002-2004 by PukiWiki Developers Team
-//  http://pukiwiki.sourceforge.jp/
+//  Copyright (C) 2002-2004 by PukiWiki Development Team
+//  http://pukiwiki.osdn.jp/
 //
 // PukiWiki 1.3 (Base)
 //  Copyright (C) 2001-2002 by yu-ji <sng@factage.com>
