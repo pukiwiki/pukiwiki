@@ -114,7 +114,7 @@ $_LANG['skin']['rss20']     = & $_LANG['skin']['rss'];
 $_LANG['skin']['search']    = 'Search';
 $_LANG['skin']['top']       = 'Front page';	// Top page
 $_LANG['skin']['unfreeze']  = 'Unfreeze';
-$_LANG['skin']['upload']    = 'Upload';	// Attach a file
+$_LANG['skin']['upload']    = 'Attach';	// Attach a file
 $_LANG['skin']['login']     = 'Log in';
 $_LANG['skin']['logout']    = 'Log out';
 
