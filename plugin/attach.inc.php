@@ -677,10 +677,37 @@ EOD;
 		if (file_exists($newbase)) {
 			return array('msg'=>$_attach_messages['err_exists']);
 		}
-		if (! PLUGIN_ATTACH_RENAME_ENABLE || ! rename($this->basename, $newbase)) {
+		if (! PLUGIN_ATTACH_RENAME_ENABLE) {
 			return array('msg'=>$_attach_messages['err_rename']);
 		}
-
+		if (! rename($this->basename, $newbase)) {
+			return array('msg'=>$_attach_messages['err_rename']);
+		}
+		// Rename primary file succeeded.
+		// Then, rename backup(archive) files and log file)
+		$rename_targets = array();
+		$dir = opendir(UPLOAD_DIR);
+		if ($dir) {
+			$matches_leaf = array();
+			if (preg_match('/(((?:[0-9A-F]{2})+)_((?:[0-9A-F]{2})+))$/', $this->basename, $matches_leaf)) {
+				$attachfile_leafname = $matches_leaf[1];
+				$attachfile_leafname_pattern = preg_quote($attachfile_leafname, '/');
+				$pattern = "/^({$attachfile_leafname_pattern})(\.((\d+)|(log)))$/";
+				$matches = array();
+				while ($file = readdir($dir)) {
+					if (! preg_match($pattern, $file, $matches))
+						continue;
+					$basename2 = $matches[0];
+					$newbase2 = $newbase . $matches[2];
+					$rename_targets[$basename2] = $newbase2;
+				}
+			}
+			closedir($dir);
+		}
+		foreach ($rename_targets as $basename2=>$newbase2) {
+			$basename2path = UPLOAD_DIR . $basename2;
+			rename($basename2path, $newbase2);
+		}
 		return array('msg'=>$_attach_messages['msg_renamed']);
 	}
 
