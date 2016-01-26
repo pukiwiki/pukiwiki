@@ -16,9 +16,9 @@ InterWiki用のサーバリストです。
 
 ** PukiWiki [#j0d346fa]
 // PukiWiki Official Main Site
--[http://pukiwiki.sourceforge.jp/? pukiwiki] utf8
+-[http://pukiwiki.osdn.jp/? pukiwiki] utf8
 // PukiWiki Developer Site
--[http://pukiwiki.sourceforge.jp/dev/? pukiwiki.dev] euc
+-[http://pukiwiki.osdn.jp/dev/? pukiwiki.dev] utf8
 
 ** Search Engine [#jaaa4e4c]
 -[http://www.google.co.jp/search?ie=utf8&oe=utf8&q=$1&lr=lang_ja&hl=ja Google] utf8 
@@ -40,4 +40,4 @@ InterWiki用のサーバリストです。
 
 *** その他 [#b69e2eec]
 -[http://www.gembook.jp/tsum/page.pys?wiki= ウヰキエリア] moin
--[http://tdiary-users.sourceforge.jp/cgi-bin/wiki.cgi? tDiaryUsers] euc
+-[http://docs.tdiary.org/users/? tDiaryUsers] euc

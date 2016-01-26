@@ -32,7 +32,7 @@ paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1
 ----
 * Heading2 [#e330e49e]
 ** Heading 2-1 [#jdc9672d]
-http://pukiwiki.sourceforge.jp/
+http://pukiwiki.osdn.jp/
 ** Heading2-2 [#ge656fc5]
 
 [[FrontPage]]
@@ -71,7 +71,7 @@ lolololo2
 
 - Auto hyperlink
 -- URL suffix seems a image, show it as an inline image
---- http://pukiwiki.sourceforge.jp/image/b_pukiwiki-official.png
+--- http://pukiwiki.osdn.jp/image/b_pukiwiki-official.png
 -- Home
 --- http://example.org/
 -- Mail address

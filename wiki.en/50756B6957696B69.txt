@@ -2,8 +2,8 @@
 #norelated
 * PukiWiki
 
-- http://pukiwiki.sourceforge.jp/
-- http://sourceforge.jp/projects/pukiwiki/
+- http://pukiwiki.osdn.jp/
+- https://osdn.jp/projects/pukiwiki/
 
 PukiWiki is one of the WikiEngines ,which enables everyone to edit any pages.
 
@@ -18,15 +18,15 @@ And ,without your learning special knowledge, fomatted sentenses are created jus
 
 ** Links
 
-- [[PukiWiki-official:http://pukiwiki.sourceforge.jp/]] - PukiWiki official site
+- [[PukiWiki-official:http://pukiwiki.osdn.jp/]] - PukiWiki official site
 -- Questions and comments are welcomed :)
 
-- Pukiwiki-dev - http://pukiwiki.sourceforge.jp/dev/
+- Pukiwiki-dev - http://pukiwiki.osdn.jp/dev/
 -- PukiWiki official site for development. We develop next versions, maintain or security fix of older releases here.
--- Our daily works are logged at [[Developer Diaries>http://pukiwiki.sourceforge.jp/dev/?%B3%AB%C8%AF%C6%FC%B5%AD]] (Sorry for  mainly in Japanese)
+-- Our daily works are logged at [[Developer Diaries>http://pukiwiki.osdn.jp/dev/?%B3%AB%C8%AF%C6%FC%B5%AD]] (Sorry for  mainly in Japanese)
 
-- http://sourceforge.jp/projects/pukiwiki/
--- Project summary of Sourceforge.jp. You can download PukiWiki here.
+- http://osdn.jp/projects/pukiwiki/
+-- Project summary of OSDN. You can download PukiWiki here.
 
 ** Related pages [#zf685513]
 

@@ -3,7 +3,7 @@
 -[http://www.hyuki.com/yukiwiki/yukiwiki.cgi? YukiWiki] yw
 -[http://www.jin.gr.jp/~nahi/RWiki/?cmd=view;name= RWiki] euc
 -[http://www.factage.com/sng/pukiwiki/pukiwiki.php? PukiWiki]
--[http://pukiwiki.sourceforge.jp/? pukiwiki] utf8
+-[http://pukiwiki.osdn.jp/? pukiwiki] utf8
 -[http://www.gembook.jp/html/moin/moin.cgi/ MoinMoin] moin
 
 -[http://www.google.co.jp/search?ie=utf8&oe=utf8&q=$1&lr=lang_ja&hl=ja Google] utf8
