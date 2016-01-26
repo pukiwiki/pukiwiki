@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // $Id: attach.inc.php,v 1.92 2011/01/25 15:01:01 henoheno Exp $
 // Copyright (C)
-//   2003-2006 PukiWiki Developers Team
+//   2003-2016 PukiWiki Development Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
 //   2002      Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
 //   2001-2002 Originally written by yu-ji
@@ -459,7 +459,7 @@ class AttachFile
 	// ファイル情報取得
 	function getstatus()
 	{
-		if (! $this->exist) return FALSE;
+		if (! file_exists($this->logname)) return FALSE;
 
 		// ログファイル取得
 		if (file_exists($this->logname)) {
