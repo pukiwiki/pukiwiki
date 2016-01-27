@@ -40,7 +40,7 @@ define('PLUGIN_REF_DIRECT_ACCESS', FALSE); // FALSE or TRUE
 /////////////////////////////////////////////////
 
 // Image suffixes allowed
-define('PLUGIN_REF_IMAGE', '/\.(gif|png|jpe?g)$/i');
+define('PLUGIN_REF_IMAGE', '/\.(gif|png|jpe?g|swf)$/i');
 
 // Usage (a part of)
 define('PLUGIN_REF_USAGE', "([pagename/]attached-file-name[,parameters, ... ][,title])");
@@ -397,6 +397,10 @@ function plugin_ref_action()
 	if(! file_exists($ref))
 		return array('msg'=>'Attach file not found', 'body'=>$usage);
 
+	$is_image = preg_match(PLUGIN_REF_IMAGE, $filename);
+	if (!$is_image) {
+		return array('msg'=>'Seems not an image', 'body'=>$usage);
+	}
 	$got = @getimagesize($ref);
 	if (! isset($got[2])) $got[2] = FALSE;
 	switch ($got[2]) {
