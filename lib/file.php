@@ -161,11 +161,31 @@ function make_str_rules($source)
 
 function add_author_info($wikitext)
 {
-	global $auth_user;
+	global $auth_user, $auth_user_fullname, $auth_type, $ldap_user_account;
 	$author = preg_replace('/"/', '', $auth_user);
-	$displayname = preg_replace('/"/', '', $auth_user);
+	$displayname = preg_replace('/"/', '', $auth_user_fullname);
+	$user_prefix = '';
+	switch ($auth_type) {
+		case AUTH_TYPE_BASIC:
+			$user_prefix = AUTH_PROVIDER_USER_PREFIX_DEFAULT;
+			break;
+		case AUTH_TYPE_EXTERNAL:
+		case AUTH_TYPE_EXTERNAL_REMOTE_USER:
+		case AUTH_TYPE_EXTERNAL_X_FORWARDED_USER:
+			$user_prefix = AUTH_PROVIDER_USER_PREFIX_EXTERNAL;
+			break;
+		case AUTH_TYPE_FORM:
+			if ($ldap_user_account) {
+				$user_prefix = AUTH_PROVIDER_USER_PREFIX_LDAP;
+			} else {
+				$user_prefix = AUTH_PROVIDER_USER_PREFIX_DEFAULT;
+			}
+			break;
+	}
 	$author_text = sprintf('#author("%s","%s","%s")',
-		get_date_atom(UTIME + LOCALZONE), $author, $displayname) . "\n";
+		get_date_atom(UTIME + LOCALZONE),
+		($author ? $user_prefix . $author : ''),
+		$displayname) . "\n";
 	return $author_text . $wikitext;
 }
 

@@ -243,7 +243,8 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 function ensure_valid_auth_user()
 {
 	global $auth_type, $auth_users, $_msg_auth, $auth_user, $auth_groups;
-	global $auth_user_groups;
+	global $auth_user_groups, $auth_user_fullname;
+	global $auth_provider_user_prefix;
 	switch ($auth_type) {
 		case AUTH_TYPE_BASIC:
 		{
@@ -254,6 +255,7 @@ function ensure_valid_auth_user()
 						$_SERVER['PHP_AUTH_PW'],
 						$auth_users[$user]) === $auth_users[$user]) {
 						$auth_user = $user;
+						$auth_user_fullname = $auth_user;
 						$auth_user_groups = get_groups_from_username($user);
 						return true;
 					}
@@ -269,22 +271,37 @@ function ensure_valid_auth_user()
 		case AUTH_TYPE_EXTERNAL:
 		{
 			session_start();
-			// session_regenerate_id(true);
 			$user = '';
+			$fullname = '';
 			if (isset($_SESSION['authenticated_user'])) {
 				$user = $_SESSION['authenticated_user'];
+				if (isset($_SESSION['authenticated_user_fullname'])) {
+					$fullname = $_SESSION['authenticated_user_fullname'];
+				} else {
+					if ($auth_type === AUTH_TYPE_EXTERNAL && $ldap_user_account) {
+						$ldap_user_info = ldap_get_simple_user_info($user);
+						if ($ldap_user_info) {
+							$fullname = $ldap_user_info['fullname'];
+							$_SESSION['authenticated_user_fullname'] = $fullname;
+						}
+					}
+				}
 			}
 			$auth_user = $user;
+			$auth_user_fullname = $fullname;
 			break;
 		}
 		case AUTH_TYPE_EXTERNAL_REMOTE_USER:
 			$auth_user = $_SERVER['REMOTE_USER'];
+			$auth_user_fullname = $auth_user;
 			break;
 		case AUTH_TYPE_EXTERNAL_X_FORWARDED_USER:
 			$auth_user =  $_SERVER['HTTP_X_FORWARDED_USER'];
+			$auth_user_fullname = $auth_user;
 			break;
 		default: // AUTH_TYPE_NONE
 			$auth_user = '';
+			$auth_user_fullname = '';
 			break;
 	}
 	$auth_user_groups = get_groups_from_username($auth_user);
@@ -354,8 +371,10 @@ function form_auth($username, $password)
 			if (pkwk_hash_compute(
 				$password,
 				$auth_users[$user]) === $auth_users[$user]) {
-				$_SESSION['authenticated_user'] = $user;
+				session_start();
 				session_regenerate_id(true); // require: PHP5.1+
+				$_SESSION['authenticated_user'] = $user;
+				$_SESSION['authenticated_user_fullname'] = $user;
 				return true;
 			}
 		}
@@ -379,8 +398,9 @@ function ldap_auth($username, $password)
 				if ($ldap_bind_user) {
 					$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
 					if ($user_info) {
-						$_SESSION['authenticated_user'] = $user_info['uid'];
 						session_regenerate_id(true); // require: PHP5.1+
+						$_SESSION['authenticated_user'] = $user_info['uid'];
+						$_SESSION['authenticated_user_fullname'] = $user_info['fullname'];
 						return true;
 					}
 				}
@@ -392,8 +412,9 @@ function ldap_auth($username, $password)
 					if ($user_info) {
 						$ldap_bind_user2 = ldap_bind($ldapconn, $user_info['dn'], $password);
 						if ($ldap_bind_user2) {
-							$_SESSION['authenticated_user'] = $user_info['uid'];
 							session_regenerate_id(true); // require: PHP5.1+
+							$_SESSION['authenticated_user'] = $user_info['uid'];
+							$_SESSION['authenticated_user_fullname'] = $user_info['fullname'];
 							return true;
 						}
 					}
@@ -401,6 +422,30 @@ function ldap_auth($username, $password)
 			}
 		}
 	}
+	return false;
+}
+
+// Get LDAP user info via bind DN
+function ldap_get_simple_user_info($username)
+{
+	global $ldap_url, $ldap_bind_dn, $ldap_bind_password;
+	if (preg_match('#^(ldap\:\/\/[^/]+/)(.*)$#', $ldap_url, $m)) {
+		$ldap_server = $m[1];
+		$ldap_base_dn = $m[2];
+		$ldapconn = ldap_connect($ldap_server);
+		if ($ldapconn) {
+			ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+			// Bind by bind dn
+			$ldap_bind = ldap_bind($ldapconn, $ldap_bind_dn, $ldap_bind_password);
+			if ($ldap_bind) {
+				$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
+				if ($user_info) {
+					return $user_info;
+				}
+			}
+		}
+	}
+	return false;
 }
 
 /**
