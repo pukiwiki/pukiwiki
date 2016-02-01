@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: backup.inc.php,v 1.29 2011/01/25 15:01:01 henoheno Exp $
+// backup.inc.php
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -218,12 +218,17 @@ EOD;
 			$_anchor_to   = '</a>';
 		}
 		$date = format_date($data['time'], TRUE);
+		$author_info = '';
+		if (isset($data['author'])) {
+			$author_info = htmlsc('by ' . $data['author_fullname']
+				. '(' . $data['author'] . ')');
+		}
 		$retval[1] .= <<<EOD
    <li>$_anchor_from$age $date$_anchor_to
      [ <a href="$href$age&amp;action=diff">$_msg_diff</a>
      | <a href="$href$age&amp;action=nowdiff">$_msg_nowdiff</a>
      | <a href="$href$age&amp;action=source">$_msg_source</a>
-     ]
+     ] $author_info
    </li>
 EOD;
 	}
@@ -244,4 +249,3 @@ function plugin_backup_get_list_all($withfilename = FALSE)
 		return page_list($pages, 'backup', $withfilename);
 	}
 }
-?>
