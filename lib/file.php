@@ -84,6 +84,7 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	if (PKWK_READONLY) return; // Do nothing
 
 	$postdata = make_str_rules($postdata);
+	$postdata = add_author_info(remove_author_info($postdata));
 
 	// Create and write diff
 	$oldpostdata = is_page($page) ? join('', get_source($page)) : '';
@@ -156,6 +157,50 @@ function make_str_rules($source)
 		$lines[] = str_repeat('}', $multiline);
 
 	return implode("\n", $lines);
+}
+
+function add_author_info($wikitext)
+{
+	global $auth_user, $auth_user_fullname, $auth_type, $ldap_user_account;
+	$author = preg_replace('/"/', '', $auth_user);
+	$displayname = preg_replace('/"/', '', $auth_user_fullname);
+	$user_prefix = '';
+	switch ($auth_type) {
+		case AUTH_TYPE_BASIC:
+			$user_prefix = AUTH_PROVIDER_USER_PREFIX_DEFAULT;
+			break;
+		case AUTH_TYPE_EXTERNAL:
+		case AUTH_TYPE_EXTERNAL_REMOTE_USER:
+		case AUTH_TYPE_EXTERNAL_X_FORWARDED_USER:
+			$user_prefix = AUTH_PROVIDER_USER_PREFIX_EXTERNAL;
+			break;
+		case AUTH_TYPE_FORM:
+			if ($ldap_user_account) {
+				$user_prefix = AUTH_PROVIDER_USER_PREFIX_LDAP;
+			} else {
+				$user_prefix = AUTH_PROVIDER_USER_PREFIX_DEFAULT;
+			}
+			break;
+	}
+	$author_text = sprintf('#author("%s","%s","%s")',
+		get_date_atom(UTIME + LOCALZONE),
+		($author ? $user_prefix . $author : ''),
+		$displayname) . "\n";
+	return $author_text . $wikitext;
+}
+
+function remove_author_info($wikitext)
+{
+	return preg_replace('/^\s*#author\([^\n]*(\n|$)/m', '', $wikitext);
+}
+
+function get_date_atom($timestamp)
+{
+	// Compatible with DATE_ATOM format
+	// return date(DATE_ATOM, $timestamp);
+	$zmin = abs(LOCALZONE / 60);
+	return date('Y-m-d\TH:i:s', $timestamp) . sprintf('%s%02d:%02d',
+		(LOCALZONE < 0 ? '-' : '+') , $zmin / 60, $zmin % 60);
 }
 
 // Generate ID

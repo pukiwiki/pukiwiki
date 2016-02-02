@@ -282,6 +282,12 @@ $ldap_user_account = 0;
 // $ldap_bind_password = '';
 
 /////////////////////////////////////////////////
+// User prefix that shows its auth provider
+define('AUTH_PROVIDER_USER_PREFIX_DEFAULT', 'default:');
+define('AUTH_PROVIDER_USER_PREFIX_LDAP', 'ldap:');
+define('AUTH_PROVIDER_USER_PREFIX_EXTERNAL', 'external:');
+
+/////////////////////////////////////////////////
 // $whatsnew: Max number of RecentChanges
 $maxshow = 60;
 

@@ -29,7 +29,7 @@ function plugin_edit_action()
 
 	$postdata = @join('', get_source($page));
 	if ($postdata == '') $postdata = auto_template($page);
-
+	$postdata = remove_author_info($postdata);
 	return array('msg'=>$_title_edit, 'body'=>edit_form($page, $postdata));
 }
 
