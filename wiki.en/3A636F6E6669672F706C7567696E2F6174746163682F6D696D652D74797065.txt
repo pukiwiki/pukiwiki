@@ -28,7 +28,7 @@ The definisions in this table are used by attach.inc.php for the determination o
 |application/x-tar|tar|tar archive|
 |text/plain|txt text dat jis euc sjis sjs asc utf utf8 csv|plain text|
 |text/html|html htm|html document|
-|image/svg-xml|svg|svg(Scalable Vector Graphics)|
+|image/svg+xml|svg svgz|svg(Scalable Vector Graphics)|
 |application/ms-download|exe|Windows executable file|
 |application/ms-word|doc|MS-Word document file|
 |application/ms-excel|xls|MS-Excel document file|

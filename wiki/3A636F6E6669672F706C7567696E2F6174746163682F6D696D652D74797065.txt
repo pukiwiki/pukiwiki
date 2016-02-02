@@ -28,7 +28,7 @@
 |application/x-tar|tar|tar 書庫ファイル|
 |text/plain|txt text dat jis euc sjis sjs asc utf utf8 csv|プレーンテキスト|
 |text/html|html htm|html文書|
-|image/svg-xml|svg|svg(Scalable Vector Graphics)|
+|image/svg+xml|svg svgz|svg(Scalable Vector Graphics)|
 |application/ms-download|exe|Windows 実行ファイル|
 |application/ms-word|doc|MS-Word 文書ファイル|
 |application/ms-excel|xls|MS-Excel 文書ファイル|
