@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: edit.inc.php,v 1.49 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C) 2001-2007 PukiWiki Developers Team
+// edit.inc.php
+// Copyright (C) 2001-2016 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Edit plugin (cmd=edit)
@@ -43,9 +43,7 @@ function plugin_edit_preview()
 
 	// Loading template
 	if (isset($vars['template_page']) && is_page($vars['template_page'])) {
-
-		$vars['msg'] = join('', get_source($vars['template_page']));
-
+		$vars['msg'] = remove_author_info(get_source($vars['template_page'], TRUE, TRUE));
 		// Cut fixed anchors
 		$vars['msg'] = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $vars['msg']);
 	}
@@ -248,4 +246,3 @@ function plugin_edit_cancel()
 	header('Location: ' . get_script_uri() . '?' . pagename_urlencode($vars['page']));
 	exit;
 }
-

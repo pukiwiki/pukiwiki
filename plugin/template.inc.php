@@ -1,5 +1,10 @@
 <?php
-// $Id: template.inc.php,v 1.22 2011/01/25 15:01:01 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone.
+// template.inc.php
+// Copyright
+//   2002-2016 PukiWiki Development Team
+//   2001-2002 Originally written by yu-ji
+// License: GPL v2 or (at your option) any later version
 //
 // Load template plugin
 
@@ -21,6 +26,9 @@ function plugin_template_action()
 
 	// Remove '#freeze'
 	if (! empty($lines) && strtolower(rtrim($lines[0])) == '#freeze')
+		array_shift($lines);
+	// Remove '#author'
+	if (! empty($lines) && preg_match('/^#author\(/', $lines[0]))
 		array_shift($lines);
 
 	$begin = (isset($vars['begin']) && is_numeric($vars['begin'])) ? $vars['begin'] : 0;
@@ -82,4 +90,3 @@ EOD;
 
 	return $retvar;
 }
-?>
