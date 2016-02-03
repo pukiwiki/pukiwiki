@@ -34,3 +34,33 @@ The definisions in this table are used by attach.inc.php for the determination o
 |application/ms-excel|xls|MS-Excel document file|
 |application/ms-access|mdb mde|MS-Access database file|
 |application/ms-powerpoint|ppt pps|MS-Powerpoint presentation file|
+|application/vnd.openxmlformats-officedocument.wordprocessingml.document|docx|Microsoft Office Word 2007 document|
+|application/vnd.ms-word.document.macroEnabled.12|docm|Office Word 2007 macro-enabled document|
+|application/vnd.openxmlformats-officedocument.wordprocessingml.template|dotx|Office Word 2007 template|
+|application/vnd.ms-word.template.macroEnabled.12|dotm|Office Word 2007 macro-enabled document template|
+|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet|xlsx|Microsoft Office Excel 2007 workbook|
+|application/vnd.ms-excel.sheet.macroEnabled.12|xlsm|Office Excel 2007 macro-enabled workbook|
+|application/vnd.openxmlformats-officedocument.spreadsheetml.template|xltx|Office Excel 2007 template|
+|application/vnd.ms-excel.template.macroEnabled.12|xltm|Office Excel 2007 macro-enabled workbook template|
+|application/vnd.ms-excel.sheet.binary.macroEnabled.12|xlsb|Office Excel 2007 binary workbook|
+|application/vnd.ms-excel.addin.macroEnabled.12|xlam|Office Excel 2007 add-in|
+|application/vnd.openxmlformats-officedocument.presentationml.presentation|pptx|Microsoft Office PowerPoint 2007 presentation|
+|application/vnd.ms-powerpoint.presentation.macroEnabled.12|pptm|Office PowerPoint 2007 macro-enabled presentation|
+|application/vnd.openxmlformats-officedocument.presentationml.slideshow|ppsx|Office PowerPoint 2007 slide show|
+|application/vnd.ms-powerpoint.slideshow.macroEnabled.12|ppsm|Office PowerPoint 2007 macro-enabled slide show|
+|application/vnd.openxmlformats-officedocument.presentationml.template|potx|Office PowerPoint 2007 template|
+|application/vnd.ms-powerpoint.template.macroEnabled.12|potm|Office PowerPoint 2007 macro-enabled presentation template|
+|application/vnd.ms-powerpoint.addin.macroEnabled.12|ppam|Office PowerPoint 2007 add-in|
+|application/vnd.openxmlformats-officedocument.presentationml.slide|sldx|Office PowerPoint 2007 slide|
+|application/vnd.ms-powerpoint.slide.macroEnabled.12|sldm|Office PowerPoint 2007 macro-enabled slide|
+|application/msonenote|one .onetoc2 .onetmp .onepkg|Microsoft Office OneNote 2007 section|
+|application/vnd.ms-officetheme|thmx|2007 Office system release theme|
+|application/vnd.oasis.opendocument.text|odt|OpenDocument Text|
+|application/vnd.oasis.opendocument.spreadsheet|ods|OpenDocument Spreadsheet|
+|application/vnd.oasis.opendocument.presentation|odp|OpenDocument Presentation|
+|application/vnd.oasis.opendocument.graphics|odg|OpenDocument Graphics|
+|application/vnd.oasis.opendocument.chart|odc|OpenDocument Chart|
+|application/vnd.oasis.opendocument.formula|odf|OpenDocument Formula|
+|application/vnd.oasis.opendocument.image|odi|OpenDocument Image|
+|application/vnd.oasis.opendocument.text-master|odm|OpenDocument Master Document|
+|application/vnd.oasis.opendocument.database|odb|OpenDocument Database|
