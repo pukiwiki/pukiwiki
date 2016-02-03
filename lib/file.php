@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: file.php,v 1.95 2011/01/25 15:01:01 henoheno Exp $
+// file.php
 // Copyright (C)
-//   2002-2006 PukiWiki Developers Team
+//   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -84,7 +84,9 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	if (PKWK_READONLY) return; // Do nothing
 
 	$postdata = make_str_rules($postdata);
-	$postdata = add_author_info(remove_author_info($postdata));
+	$text_without_author = remove_author_info($postdata);
+	$postdata = add_author_info($text_without_author);
+	$is_delete = empty($text_without_author);
 
 	// Create and write diff
 	$oldpostdata = is_page($page) ? join('', get_source($page)) : '';
@@ -92,10 +94,10 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	file_write(DIFF_DIR, $page, $diffdata);
 
 	// Create backup
-	make_backup($page, $postdata == ''); // Is $postdata null?
+	make_backup($page, $is_delete, $postdata); // Is $postdata null?
 
 	// Create wiki text
-	file_write(DATA_DIR, $page, $postdata, $notimestamp);
+	file_write(DATA_DIR, $page, $postdata, $notimestamp, $is_delete);
 
 	links_update($page);
 }
@@ -236,7 +238,7 @@ function file_head($file, $count = 1, $lock = TRUE, $buffer = 8192)
 }
 
 // Output to a file
-function file_write($dir, $page, $str, $notimestamp = FALSE)
+function file_write($dir, $page, $str, $notimestamp = FALSE, $is_delete = FALSE)
 {
 	global $_msg_invalidiwn, $notify, $notify_diff_only, $notify_subject;
 	global $whatsdeleted, $maxshow_deleted;
@@ -251,7 +253,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	// ----
 	// Delete?
 
-	if ($dir == DATA_DIR && $str === '') {
+	if ($dir == DATA_DIR && $is_delete) {
 		// Page deletion
 		if (! $file_exists) return; // Ignore null posting for DATA_DIR
 
@@ -845,4 +847,3 @@ function pkwk_touch_file($filename, $time = FALSE, $atime = FALSE)
 			htmlsc(basename($filename)));
 	}
 }
-

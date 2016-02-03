@@ -11,7 +11,6 @@
  * @access  public
  * @author
  * @create
- * @version $Id: backup.php,v 1.13 2011/01/25 15:01:01 henoheno Exp $
  * Copyright (C)
  *   2002-2016 PukiWiki Development Team
  *   2001-2002 Originally written by yu-ji
@@ -29,7 +28,7 @@
  * @return    Void
  */
 
-function make_backup($page, $delete = FALSE)
+function make_backup($page, $is_delete, $wikitext)
 {
 	global $cycle, $maxage;
 	global $do_backup, $del_backup;
@@ -37,7 +36,7 @@ function make_backup($page, $delete = FALSE)
 
 	if (PKWK_READONLY || ! $do_backup) return;
 
-	if ($del_backup && $delete) {
+	if ($del_backup && $is_delete) {
 		_backup_delete($page);
 		return;
 	}
@@ -60,11 +59,10 @@ function make_backup($page, $delete = FALSE)
 			}
 		}
 	}
-	if ($need_backup_by_time || $is_author_differ)
+	if ($need_backup_by_time || $is_author_differ || $is_delete)
 	{
 		$backups = get_backup($page);
 		$count   = count($backups) + 1;
-
 		// 直後に1件追加するので、(最大件数 - 1)を超える要素を捨てる
 		if ($count > $maxage)
 			array_splice($backups, 0, $count - $maxage);
@@ -81,12 +79,17 @@ function make_backup($page, $delete = FALSE)
 		$body = preg_replace('/^(' . preg_quote(PKWK_SPLITTER) . "\s\d+)$/", '$1 ', get_source($page));
 		$body = PKWK_SPLITTER . ' ' . get_filetime($page) . "\n" . join('', $body);
 		$body = preg_replace("/\n*$/", "\n", $body);
-
+		$body_on_delete = '';
+		if ($is_delete) {
+			$body_on_delete = PKWK_SPLITTER . ' ' . UTIME . "\n" . $wikitext;
+			$body_on_delete = preg_replace("/\n*$/", "\n", $body_on_delete);
+		}
 		$fp = _backup_fopen($page, 'wb')
 			or die_message('Cannot open ' . htmlsc(_backup_get_filename($page)) .
 			'<br />Maybe permission is not writable or filename is too long');
 		_backup_fputs($fp, $strout);
 		_backup_fputs($fp, $body);
+		_backup_fputs($fp, $body_on_delete);
 		_backup_fclose($fp);
 	}
 }
