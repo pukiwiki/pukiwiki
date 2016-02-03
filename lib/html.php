@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: html.php,v 1.66 2011/01/25 15:01:01 henoheno Exp $
+// html.php
 // Copyright (C)
-//   2002-2006 PukiWiki Developers Team
+//   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -183,6 +183,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel, $_msg_help;
 	global $whatsnew, $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
+	global $_title_list;
 
 	// Newly generate $digest or not
 	if ($digest === FALSE) $digest = md5(join('', get_source($page)));
@@ -203,20 +204,54 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 	}
 
 	if($load_template_func && $b_template) {
-		$pages  = array();
+		$tpage_names = array(); // Pages marked as template
+		$template_page = ':config/Templates';
+		$page_max = 100;
+		foreach(get_source($template_page) as $_templates) {
+			$m = array();
+			if (! preg_match('#\-\s*\[\[([^\[\]]+)\]\]#', $_templates, $m)) continue;
+			$tpage = preg_replace('#^./#', "$template_page/", $m[1]);
+			if (! is_page($tpage)) continue;
+			$tpage_names[] = $tpage;
+		}
+		$page_names = array();
 		foreach(get_existpages() as $_page) {
 			if ($_page == $whatsnew || check_non_list($_page))
 				continue;
-			$s_page = htmlsc($_page);
-			$pages[$_page] = '   <option value="' . $s_page . '">' .
-				$s_page . '</option>';
+			if (preg_match('/template/i', $_page)) {
+				$tpage_names[] = $_page;
+			} else {
+				if (count($page_names) >= $page_max) continue;
+				$page_names[] = $_page;
+			}
 		}
-		ksort($pages, SORT_STRING);
-		$s_pages  = join("\n", $pages);
+		$tpage_names2 = array_values(array_unique($tpage_names));
+		natcasesort($tpage_names2);
+		natcasesort($page_names);
+		$tpages = array(); // Template pages
+		$npages = array(); // Normal pages
+		foreach($tpage_names2 as $p) {
+			$ps = htmlsc($p);
+			$tpages[] = '   <option value="' . $ps . '">' . $ps . '</option>';
+		}
+		foreach($page_names as $p) {
+			$ps = htmlsc($p);
+			$npages[] = '   <option value="' . $ps . '">' . $ps . '</option>';
+		}
+		if (count($page_names) === $page_max) {
+			$npages[] = '   <option value="">...</option>';
+		}
+		$s_tpages  = join("\n", $tpages);
+		$s_npages  = join("\n", $npages);
 		$template = <<<EOD
   <select name="template_page">
    <option value="">-- $_btn_template --</option>
-$s_pages
+   <optgroup label="$_btn_template">
+$s_tpages
+   </optgroup>
+   <optgroup label="$_title_list">
+$s_npages
+   </optgroup>
   </select>
   <input type="submit" name="template" value="$_btn_load" accesskey="r" />
   <br />
@@ -559,4 +594,3 @@ function pkwk_output_dtd($pkwk_dtd = PKWK_DTD_XHTML_1_1, $charset = CONTENT_CHAR
 		return '<meta http-equiv="content-type" content="text/html; charset=' . $charset . '" />' . "\n";
 	}
 }
-
