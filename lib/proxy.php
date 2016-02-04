@@ -1,6 +1,7 @@
 <?php
-// $Id: proxy.php,v 1.9 2005/06/28 14:03:29 henoheno Exp $
-// Copyright (C) 2003-2005 PukiWiki Developers Team
+// PukiWiki - Yet another WikiWikiWeb clone
+// proxy.php
+// Copyright: 2003-2016 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // HTTP-Proxy related functions
@@ -8,8 +9,19 @@
 // Max number of 'track' redirection message with 301 or 302 response
 define('PKWK_HTTP_REQUEST_URL_REDIRECT_MAX', 2);
 
+// We also define deprecated function 'http_request' for backward compatibility
+if (!function_exists('http_request')) {
+	// pecl_http extension also have the function named 'http_request'
+	function http_request($url, $method = 'GET', $headers = '',
+		$post = array(), $redirect_max = PKWK_HTTP_REQUEST_URL_REDIRECT_MAX,
+		$content_charset = '') {
+		return pkwk_http_request($url, $method, $headers, $post,
+			$redirect_max, $content_charset);
+	}
+}
+
 /*
- * http_request($url)
+ * pkwk_http_request($url)
  *     Get / Send data via HTTP request
  * $url     : URI started with http:// (http://user:pass@host:port/path?query)
  * $method  : GET, POST, or HEAD
@@ -18,7 +30,7 @@ define('PKWK_HTTP_REQUEST_URL_REDIRECT_MAX', 2);
  * $redirect_max : Max number of HTTP redirect
  * $content_charset : Content charset. Use '' or CONTENT_CHARSET
 */
-function http_request($url, $method = 'GET', $headers = '', $post = array(),
+function pkwk_http_request($url, $method = 'GET', $headers = '', $post = array(),
 	$redirect_max = PKWK_HTTP_REQUEST_URL_REDIRECT_MAX, $content_charset = '')
 {
 	global $use_proxy, $no_proxy, $proxy_host, $proxy_port;
@@ -114,7 +126,7 @@ function http_request($url, $method = 'GET', $headers = '', $post = array(),
 				$url = $url_base . $url; // Add sheme, host
 			}
 			// Redirect
-			return http_request($url, $method, $headers, $post, $redirect_max);
+			return pkwk_http_request($url, $method, $headers, $post, $redirect_max);
 		}
 	}
 	return array(
@@ -165,4 +177,3 @@ function in_the_net($networks = array(), $host = '')
 
 	return FALSE; // Not found
 }
-?>

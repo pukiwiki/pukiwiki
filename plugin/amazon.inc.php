@@ -1,12 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: amazon.inc.php,v 1.16 2011/01/25 15:01:01 henoheno Exp $
-// Id: amazon.inc.php,v 1.1 2003/07/24 13:00:00 閑舎
+// amazon.inc.php
 //
 // Amazon plugin: Book-review maker via amazon.com/amazon.jp
 //
 // Copyright:
-//	2004-2005 PukiWiki Developers Team
+//	2004-2016 PukiWiki Development Team
 //	2003 閑舎 <raku@rakunet.org> (Original author)
 //
 // License: GNU/GPL
@@ -441,7 +440,7 @@ function plugin_amazon_review_save($page, $data)
 
 function plugin_amazon_get_page($url)
 {
-	$data = http_request($url);
+	$data = pkwk_http_request($url);
 	return ($data['rc'] == 200) ? $data['data'] : '';
 }
 
@@ -461,4 +460,3 @@ function is_asin()
 		return TRUE;
 	}
 }
-

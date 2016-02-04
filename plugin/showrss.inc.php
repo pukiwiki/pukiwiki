@@ -1,9 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: showrss.inc.php,v 1.22 2011/01/25 15:01:01 henoheno Exp $
-//  Id:showrss.inc.php,v 1.40 2003/03/18 11:52:58 hiro Exp
-// Copyright (C):
-//     2002-2006 PukiWiki Developers Team
+// showrss.inc.php
+// Copyright:
+//     2002-2016 PukiWiki Development Team
 //     2002      PANDA <panda@arino.jp>
 //     (Original)hiro_do3ob@yahoo.co.jp
 // License: GPL, same as PukiWiki
@@ -167,7 +166,7 @@ function plugin_showrss_get_rss($target, $cachehour)
 
 	if ($time === NULL) {
 		// Newly get RSS
-		$data = http_request($target);
+		$data = pkwk_http_request($target);
 		if ($data['rc'] !== 200)
 			return array(FALSE, 0);
 
@@ -323,4 +322,3 @@ function plugin_showrss_get_timestamp($str)
 		return ($time == -1) ? UTIME : $time - LOCALZONE;
 	}
 }
-?>
