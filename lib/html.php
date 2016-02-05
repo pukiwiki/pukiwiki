@@ -132,6 +132,13 @@ function catbody($title, $page, $body)
 	// Last modification date (UNIX timestamp) of the page
 	$fmt = $is_read ? get_filetime($_page) + LOCALZONE : 0;
 
+	// Output nofollow / noindex regardless os skin file
+	if (!$is_read || $nofollow) {
+		if (!headers_sent()) {
+			header("X-Robots-Tag: noindex,nofollow");
+		}
+	}
+
 	// Search words
 	if ($search_word_color && isset($vars['word'])) {
 		$body = '<div class="small">' . $_msg_word . htmlsc($vars['word']) .
