@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: make_link.php,v 1.38 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2003-2007 PukiWiki Developers Team
+// make_link.php
+// Copyright
+//   2003-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -355,11 +355,12 @@ class Link_url extends Link
 	{
 		$s1 = $this->start + 1;
 		return <<<EOD
-(\[\[             # (1) open bracket
- ((?:(?!\]\]).)+) # (2) alias
+((?:\[\[))?       # (1) open bracket
+((?($s1)          # (2) alias
+((?:(?!\]\]).)+)  # (3) alias name
  (?:>|:)
-)?
-(                 # (3) url
+))?
+(                 # (4) url
  (?:(?:https?|ftp|news):\/\/|mailto:)[\w\/\@\$()!?&%#:;.,~'=*+-]+
 )
 (?($s1)\]\])      # close bracket
@@ -368,12 +369,12 @@ EOD;
 
 	function get_count()
 	{
-		return 3;
+		return 4;
 	}
 
 	function set($arr, $page)
 	{
-		list(, , $alias, $name) = $this->splice($arr);
+		list(, , , $alias, $name) = $this->splice($arr);
 		return parent::setParam($page, htmlsc($name),
 			'', 'url', $alias == '' ? $name : $alias);
 	}
@@ -851,4 +852,3 @@ function get_interwiki_url($name, $param)
 
 	return $url;
 }
-
