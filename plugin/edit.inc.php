@@ -193,7 +193,8 @@ function plugin_edit_write()
 		$vars['digest'] = $oldpagemd5; // Reset
 
 		$original = isset($vars['original']) ? $vars['original'] : '';
-		list($postdata_input, $auto) = do_update_diff($oldpagesrc, $msg, $original);
+		$old_body = remove_author_info($oldpagesrc);
+		list($postdata_input, $auto) = do_update_diff($old_body, $msg, $original);
 
 		$retvars['msg' ] = $_title_collided;
 		$retvars['body'] = ($auto ? $_msg_collided_auto : $_msg_collided) . "\n";
