@@ -114,6 +114,13 @@ function plugin_tracker_action()
 	}
 	// ページ名を決定
 	$base = $post['_base'];
+	if (!is_pagename($base))
+	{
+		return array(
+			'msg'=>'cannot write',
+			'body'=>'page name ('.htmlsc($base).') is not valid.'
+		);
+	}
 	$num = 0;
 	$name = (array_key_exists('_name',$post)) ? $post['_name'] : '';
 	if (array_key_exists('_page',$post))
