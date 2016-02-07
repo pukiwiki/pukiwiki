@@ -88,8 +88,14 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	$postdata = add_author_info($text_without_author);
 	$is_delete = empty($text_without_author);
 
-	// Create and write diff
+	// Do nothing when it has no changes
 	$oldpostdata = is_page($page) ? join('', get_source($page)) : '';
+	$oldtext_without_author = remove_author_info($oldpostdata);
+	if ($text_without_author === $oldtext_without_author) {
+		// Do nothing on updating with unchanged content
+		return;
+	}
+	// Create and write diff
 	$diffdata    = do_diff($oldpostdata, $postdata);
 	file_write(DIFF_DIR, $page, $diffdata);
 
