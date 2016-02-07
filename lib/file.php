@@ -171,7 +171,12 @@ function add_author_info($wikitext)
 {
 	global $auth_user, $auth_user_fullname, $auth_type, $ldap_user_account;
 	$author = preg_replace('/"/', '', $auth_user);
-	$displayname = preg_replace('/"/', '', $auth_user_fullname);
+	$fullname = $auth_user_fullname;
+	if (!$fullname && $author) {
+		// Fullname is empty, use $author as its fullname
+		$fullname = preg_replace('/^[^:]*:/', '', $author);
+	}
+	$displayname = preg_replace('/"/', '', $fullname);
 	$user_prefix = '';
 	switch ($auth_type) {
 		case AUTH_TYPE_BASIC:

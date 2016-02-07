@@ -49,14 +49,14 @@ function make_backup($page, $is_delete, $wikitext)
 	$need_backup_by_time = $lastmod == 0 || UTIME - $lastmod > 60 * 60 * $cycle;
 	if (!$need_backup_by_time) {
 		// Backup file is saved recently, but the author may differ.
-		$last_content = get_source($page, FALSE, TRUE);
+		$last_content = get_source($page, TRUE, TRUE);
 		$m = array();
-		if (preg_match('/^\s*#author\("([^"]+)","([^"]+)","([^"]*)"\)/m', $last_content, $m)) {
-			$prev_author = $m[2];
-			$simple_author =preg_replace('/^[^:]:/', '', $prev_author);
-			if ($simple_author !== $auth_user) {
-				$is_author_differ = true;
-			}
+		$prev_author = null;
+		if (preg_match('/^#author\("([^"]+)","([^"]*)","([^"]*)"\)/m', $last_content, $m)) {
+			$prev_author = preg_replace('/^[^:]+:/', '', $m[2]);
+		}
+		if ($prev_author !== $auth_user) {
+			$is_author_differ = true;
 		}
 	}
 	if ($need_backup_by_time || $is_author_differ || $is_delete)
