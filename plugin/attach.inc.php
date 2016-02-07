@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: attach.inc.php,v 1.92 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
+// attach.inc.php
+// Copyright
 //   2003-2016 PukiWiki Development Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
 //   2002      Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
@@ -453,8 +453,6 @@ class AttachFile
 	// ファイル情報取得
 	function getstatus()
 	{
-		if (! file_exists($this->logname)) return FALSE;
-
 		// ログファイル取得
 		if (file_exists($this->logname)) {
 			$data = file($this->logname);
@@ -463,11 +461,11 @@ class AttachFile
 			}
 			$this->status['count'] = explode(',', $this->status['count']);
 		}
+		if (! $this->exist) return FALSE;
 		$this->time_str = get_date('Y/m/d H:i:s', $this->time);
 		$this->size     = filesize($this->filename);
 		$this->size_str = sprintf('%01.1f', round($this->size/1024, 1)) . 'KB';
 		$this->type     = attach_mime_content_type($this->filename, $this->file);
-
 		return TRUE;
 	}
 
