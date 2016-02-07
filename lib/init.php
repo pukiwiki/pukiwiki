@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: init.php,v 1.57 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2002-2007, 2009 PukiWiki Developers Team
+// init.php
+// Copyright
+//   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -10,7 +10,7 @@
 
 // PukiWiki version / Copyright / Licence
 
-define('S_VERSION', '1.5.0');
+define('S_VERSION', '1.5.1_beta1');
 define('S_COPYRIGHT',
 	'<strong>PukiWiki ' . S_VERSION . '</strong>' .
 	' &copy; 2001-2016' .
@@ -416,4 +416,3 @@ $line_rules = array_merge(array(
 	'&amp;(#[0-9]+|#x[0-9a-f]+|' . $entity_pattern . ');' => '&$1;',
 	"\r"          => '<br />' . "\n",	/* 行末にチルダは改行 */
 ), $line_rules);
-

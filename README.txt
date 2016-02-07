@@ -1,8 +1,8 @@
 名前
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築スクリプト
 
-    Version 1.5.0
-    Copyright (C)
+    Version 1.5.1
+    Copyright
       2001-2016 PukiWiki Development Team
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
@@ -11,8 +11,6 @@
       http://pukiwiki.osdn.jp/
       http://pukiwiki.osdn.jp/dev/
       https://osdn.jp/projects/pukiwiki/
-
-    $Id: README.txt,v 1.28 2006/05/29 15:16:24 henoheno Exp $
 
 書式
     index.php
@@ -32,7 +30,7 @@
     Webサイト」として情報を提供する構成も可能です。(この場合、Wiki風のデザイ
     ンである必要すらありません)
 
-    PukiWikiはPHP言語で書かれたプログラムなので、PHP(PHP4.1.2～PHP5)が動作す
+    PukiWikiはPHP言語で書かれたプログラムなので、PHP(PHP4.1～PHP7)が動作す
     るWebサーバーであれば容易に設置でき、軽快に動作します。
 
     PukiWikiは、yu-jiさんを含む PukiWiki Develpers Team やその貢献者が、各自の
@@ -259,7 +257,7 @@ Wikiの様子を見る
  　 バージョン1.4.5 から、RSS 2.0 を出力できるようになりました。
 
 謝辞
-    PukiWiki Develpers Teamの皆さん、PukiWikiユーザの皆さんに感謝します。
+    PukiWiki Development Teamの皆さん、PukiWikiユーザの皆さんに感謝します。
     PukiWiki を開発した、yu-ji(旧sng)さんに感謝します。
     YukiWiki のクローン化を許可していただいた結城浩さんに感謝します。
     本家のWikiWikiを作ったCunningham & Cunningham, Inc.に 感謝します。

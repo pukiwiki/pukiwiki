@@ -1,13 +1,11 @@
 名前
     PukiWiki  - 自由にページを追加・削除・編集できるWebページ構築スクリプト
 
-    Version 1.5.0
-    Copyright (C)
+    Version 1.5.1
+    Copyright
       2001-2016 PukiWiki Development Team
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
-
-    $Id: INSTALL.txt,v 1.9 2007/02/11 05:53:30 henoheno Exp $
 
 インストール
     PukiWikiはPHPスクリプトであるため、(例えばPerlのように)スクリプトに実行権
@@ -18,7 +16,7 @@
     まサーバーに転送し、サーバー上で解凍(tar pzxf pukiwiki*.tar.gz) するだけ
     でパーミッションの設定も行われ、すぐに使い始める事ができるでしょう。
 
-    スクリプトの中の日本語は(あれば、基本的に)EUC-JPで、また改行コードはLFで
+    スクリプトの中の日本語は(あれば、基本的に)UTF-8で、また改行コードはLFで
     記述されています。スクリプトを直接編集する場合は、日本語文字コードと改行
     コードの自動判別ができ、それを元のまま保存できるテキストエディタを使用し
     て下さい。
