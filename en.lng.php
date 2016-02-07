@@ -224,6 +224,8 @@ $_msg_comment = 'Comment: ';
 $_title_comment_collided = 'On updating  $1, a collision has occurred.';
 $_msg_comment_collided   = 'It seems that someone has already updated the page you were editing.<br />
  The comment was added, alhough it may be inserted in the wrong position.<br />';
+$_comment_plugin_fail_msg = 'It seems that someone has already updated the page you were editing.<br />
+ Failed to add the comment.<br />';
 
 ///////////////////////////////////////
 // deleted.inc.php

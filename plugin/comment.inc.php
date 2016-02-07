@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: comment.inc.php,v 1.41 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+// comment.inc.php
+// Copyright
+//   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -22,6 +22,7 @@ function plugin_comment_action()
 {
 	global $script, $vars, $now, $_title_updated, $_no_name;
 	global $_msg_comment_collided, $_title_comment_collided;
+	global $_comment_plugin_fail_msg;
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
@@ -51,9 +52,11 @@ function plugin_comment_action()
 	$postdata    = '';
 	$comment_no  = 0;
 	$above       = (isset($vars['above']) && $vars['above'] == '1');
+	$comment_added = FALSE;
 	foreach (get_source($vars['refer']) as $line) {
 		if (! $above) $postdata .= $line;
 		if (preg_match('/^#comment/i', $line) && $comment_no++ == $vars['comment_no']) {
+			$comment_added = TRUE;
 			if ($above) {
 				$postdata = rtrim($postdata) . "\n" .
 					$comment . "\n" .
@@ -65,21 +68,23 @@ function plugin_comment_action()
 		}
 		if ($above) $postdata .= $line;
 	}
-
 	$title = $_title_updated;
 	$body = '';
-	if (md5(get_source($vars['refer'], TRUE, TRUE)) !== $vars['digest']) {
+	if ($comment_added) {
+		// new comment added
+		if (md5(get_source($vars['refer'], TRUE, TRUE)) !== $vars['digest']) {
+			$title = $_title_comment_collided;
+			$body  = $_msg_comment_collided . make_pagelink($vars['refer']);
+		}
+		page_write($vars['refer'], $postdata);
+	} else {
+		// failed to add the comment
 		$title = $_title_comment_collided;
-		$body  = $_msg_comment_collided . make_pagelink($vars['refer']);
+		$body  = $_comment_plugin_fail_msg . make_pagelink($vars['refer']);
 	}
-
-	page_write($vars['refer'], $postdata);
-
 	$retvars['msg']  = $title;
 	$retvars['body'] = $body;
-
 	$vars['page'] = $vars['refer'];
-
 	return $retvars;
 }
 
@@ -130,4 +135,3 @@ EOD;
 
 	return $string;
 }
-?>
