@@ -244,7 +244,7 @@ function ensure_valid_auth_user()
 {
 	global $auth_type, $auth_users, $_msg_auth, $auth_user, $auth_groups;
 	global $auth_user_groups, $auth_user_fullname;
-	global $auth_provider_user_prefix;
+	global $auth_provider_user_prefix, $ldap_user_account;
 	switch ($auth_type) {
 		case AUTH_TYPE_BASIC:
 		{
@@ -278,13 +278,14 @@ function ensure_valid_auth_user()
 				if (isset($_SESSION['authenticated_user_fullname'])) {
 					$fullname = $_SESSION['authenticated_user_fullname'];
 				} else {
+					$fullname = $user;
 					if ($auth_type === AUTH_TYPE_EXTERNAL && $ldap_user_account) {
 						$ldap_user_info = ldap_get_simple_user_info($user);
 						if ($ldap_user_info) {
 							$fullname = $ldap_user_info['fullname'];
-							$_SESSION['authenticated_user_fullname'] = $fullname;
 						}
 					}
+					$_SESSION['authenticated_user_fullname'] = $fullname;
 				}
 			}
 			$auth_user = $user;
