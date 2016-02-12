@@ -245,6 +245,20 @@ function ensure_valid_auth_user()
 	global $auth_type, $auth_users, $_msg_auth, $auth_user, $auth_groups;
 	global $auth_user_groups, $auth_user_fullname;
 	global $auth_provider_user_prefix, $ldap_user_account;
+	global $read_auth, $edit_auth;
+	if ($read_auth || $edit_auth) {
+		switch ($auth_type) {
+			case AUTH_TYPE_BASIC:
+			case AUTH_TYPE_FORM:
+			case AUTH_TYPE_EXTERNAL:
+			case AUTH_TYPE_EXTERNAL_REMOTE_USER:
+			case AUTH_TYPE_EXTERNAL_X_FORWARDED_USER:
+				break;
+			default:
+				// $auth_type is not valid, Set form auth as default
+				$auth_type = AUTH_TYPE_FORM;
+		}
+	}
 	switch ($auth_type) {
 		case AUTH_TYPE_BASIC:
 		{
