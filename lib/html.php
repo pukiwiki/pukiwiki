@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // html.php
-// Copyright (C)
+// Copyright
 //   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
@@ -190,7 +190,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel, $_msg_help;
 	global $whatsnew, $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
-	global $_title_list;
+	global $_title_list, $_label_template_pages;
 
 	// Newly generate $digest or not
 	if ($digest === FALSE) $digest = md5(join('', get_source($page)));
@@ -253,7 +253,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 		$template = <<<EOD
   <select name="template_page">
    <option value="">-- $_btn_template --</option>
-   <optgroup label="$_btn_template">
+   <optgroup label="$_label_template_pages">
 $s_tpages
    </optgroup>
    <optgroup label="$_title_list">

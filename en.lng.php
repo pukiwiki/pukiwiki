@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: en.lng.php,v 1.16 2007/02/11 05:53:29 henoheno Exp $
-// Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+// en.lng.php
+// Copyright
+//   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -71,6 +71,7 @@ $_btn_template  = 'Use page as template';
 $_btn_load      = 'Load';
 $_btn_edit      = 'Edit';
 $_btn_delete    = 'Delete';
+$_label_template_pages	= 'Template pages';
 
 ///////////////////////////////////////
 // Authentication
