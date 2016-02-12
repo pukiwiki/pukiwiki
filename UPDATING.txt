@@ -1,5 +1,4 @@
 PukiWiki UPDATING
-$Id: UPDATING.txt,v 1.41 2007/02/11 05:53:29 henoheno Exp $
 
 
 更新履歴
@@ -14,14 +13,23 @@ http://pukiwiki.osdn.jp/?PukiWiki/Download
 リリース間の互換性に関する記述
 ==============================
 
-PukiWiki 1.4.8: PukiWiki 1.4.7 との非互換点
+PukiWiki 1.5.1: PukiWiki 1.5.0 との非互換点
 
-   1. これまでのTrackBack実装は、著作(創作)の手順が不適切である疑いが強くなっ
-      たため、完全に削除されました。同様にこの実装に依存していた referer 機能
-      も削除されました。
+   1. PukiWiki内でアクセス制限を行う際のデフォルト認証方式がBasic認証から
+      Form認証に変更されました。Basic認証に変更する場合は、
+      pukiwiki.ini.php で $auth_type = AUTH_TYPE_BASIC; を指定してください。
+      多くの場合、Form認証のままでも同じアカウントが利用できます。
+
+
+PukiWiki 1.5.0: PukiWiki 1.4.7_notb との非互換点
+
+   なし
+
+
+PukiWiki 1.4.7_notb: PukiWiki 1.4.7 との非互換点
+
+   1. TrackBack実装・referer機能が削除されました。
       (See BugTrack2/62)
-
-
 
 PukiWiki 1.4.7: PukiWiki 1.4.6 との非互換点
 

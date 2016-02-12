@@ -1,5 +1,4 @@
 PukiWiki UPDATING
-$Id: UPDATING.en.txt,v 1.6 2007/02/11 05:53:29 henoheno Exp $
 
 
 CHANGES
@@ -13,11 +12,20 @@ http://pukiwiki.osdn.jp/?PukiWiki/Download
 INCOMPATIBILITY INFORMATION BETWEEN RELEASES
 ============================================
 
-PukiWiki 1.4.8: Incompatibility from PukiWiki 1.4.7
+PukiWiki 1.5.1: Incompatibility from PukiWiki 1.5.0
 
-   1. TrackBack implimentation had been removed entirely due to extremely
-      strong suspicion of violating copyright. 'referer' function (that use
-      the implimentation), also removed.
+   1. TrackBack implimentation and 'referer' function had been removed.
+      (See BugTrack2/62)
+
+
+PukiWiki 1.5.0: Incompatibility from PukiWiki 1.4.7_notb
+
+    Nothing
+
+
+PukiWiki 1.4.7_notb: Incompatibility from PukiWiki 1.4.7
+
+   1. TrackBack implimentation and 'referer' function had been removed.
       (See BugTrack2/62)
 
 
