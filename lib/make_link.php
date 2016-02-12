@@ -837,7 +837,12 @@ function get_interwiki_url($name, $param)
 		if (isset($encode_aliases[$opt])) $opt = & $encode_aliases[$opt];
 
 		// Encoding conversion into specified encode, and URLencode
-		$param = rawurlencode(mb_convert_encoding($param, $opt, SOURCE_ENCODING));
+		if (strpos($url, '$1') === FALSE && substr($url, -1) === '?') {
+			// PukiWiki site
+			$param = pagename_urlencode(mb_convert_encoding($param, $opt, SOURCE_ENCODING));
+		} else {
+			$param = rawurlencode(mb_convert_encoding($param, $opt, SOURCE_ENCODING));
+		}
 	}
 
 	// Replace or Add the parameter
