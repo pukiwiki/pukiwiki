@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pukiwiki.ini.php,v 1.148 2007/02/11 05:53:30 henoheno Exp $
-// Copyright (C)
-//   2002-2006 PukiWiki Developers Team
+// pukiwiki.ini.php
+// Copyright
+//   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -215,6 +215,28 @@ $pagereading_config_page = ':config/PageReading';
 // Page name of default pronouncing dictionary, used when converter = 'none'
 $pagereading_config_dict = ':config/PageReading/dict';
 
+
+/////////////////////////////////////////////////
+// Authentication type
+// AUTH_TYPE_NONE, AUTH_TYPE_FORM, AUTH_TYPE_BASIC, AUTH_TYPE_EXTERNAL, ...
+// $auth_type = AUTH_TYPE_FORM;
+// $auth_external_login_url_base = './exlogin.php';
+
+/////////////////////////////////////////////////
+// LDAP
+$ldap_user_account = 0; // (0: Disabled, 1: Enabled)
+// $ldap_server = 'ldap://ldapserver:389';
+// $ldap_base_dn = 'ou=Users,dc=ldap,dc=example,dc=com';
+// $ldap_bind_dn = 'uid=$login,dc=example,dc=com';
+// $ldap_bind_password = '';
+
+/////////////////////////////////////////////////
+// User prefix that shows its auth provider
+$auth_provider_user_prefix_default = 'default:';
+$auth_provider_user_prefix_ldap = 'ldap:';
+$auth_provider_user_prefix_external = 'external:';
+
+
 /////////////////////////////////////////////////
 // User definition
 $auth_users = array(
@@ -232,12 +254,6 @@ $auth_groups = array(
 	'groupbar'	=> 'bar',
 	'groupboobar'	=> 'foo,bar',
 );
-
-/////////////////////////////////////////////////
-// Authentication type
-// AUTH_TYPE_FORM, AUTH_TYPE_BASIC or AUTH_TYPE_EXTERNAL
-// $auth_type = AUTH_TYPE_FORM;
-// $auth_external_login_url_base = './exlogin.php';
 
 /////////////////////////////////////////////////
 // Authentication method
@@ -272,20 +288,6 @@ $edit_auth_pages = array(
 // 0: Disabled (Search read-prohibited page contents)
 // 1: Enabled  (Search only permitted pages for the user)
 $search_auth = 0;
-
-/////////////////////////////////////////////////
-// LDAP
-$ldap_user_account = 0;
-// $ldap_user_account = 1; // (0: Disabled, 1: Enabled)
-// $ldap_url = 'ldap://ldapserver:389/ou=Users,dc=ldap,dc=example,dc=com';
-// $ldap_bind_dn = '';
-// $ldap_bind_password = '';
-
-/////////////////////////////////////////////////
-// User prefix that shows its auth provider
-define('AUTH_PROVIDER_USER_PREFIX_DEFAULT', 'default:');
-define('AUTH_PROVIDER_USER_PREFIX_LDAP', 'ldap:');
-define('AUTH_PROVIDER_USER_PREFIX_EXTERNAL', 'external:');
 
 /////////////////////////////////////////////////
 // $whatsnew: Max number of RecentChanges

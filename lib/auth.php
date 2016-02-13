@@ -244,7 +244,7 @@ function ensure_valid_auth_user()
 {
 	global $auth_type, $auth_users, $_msg_auth, $auth_user, $auth_groups;
 	global $auth_user_groups, $auth_user_fullname;
-	global $auth_provider_user_prefix, $ldap_user_account;
+	global $ldap_user_account;
 	global $read_auth, $edit_auth;
 	if ($read_auth || $edit_auth) {
 		switch ($auth_type) {
@@ -399,39 +399,36 @@ function form_auth($username, $password)
 
 function ldap_auth($username, $password)
 {
-	global $ldap_url, $ldap_bind_dn, $ldap_bind_password;
-	if (preg_match('#^(ldap\:\/\/[^/]+/)(.*)$#', $ldap_url, $m)) {
-		$ldap_server = $m[1];
-		$ldap_base_dn = $m[2];
-		$ldapconn = ldap_connect($ldap_server);
-		if ($ldapconn) {
-			ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
-			if (preg_match('#\$login\b#', $ldap_bind_dn)) {
-				// Bind by user credential
-				$bind_dn_user = preg_replace('#\$login#', $username, $ldap_bind_dn);
-				$ldap_bind_user = ldap_bind($ldapconn, $bind_dn_user, $password);
-				if ($ldap_bind_user) {
-					$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
-					if ($user_info) {
+	global $ldap_server, $ldap_base_dn, $ldap_bind_dn, $ldap_bind_password;
+	$ldapconn = ldap_connect($ldap_server);
+	if ($ldapconn) {
+		ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+		ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0);
+		if (preg_match('#\$login\b#', $ldap_bind_dn)) {
+			// Bind by user credential
+			$bind_dn_user = preg_replace('#\$login#', $username, $ldap_bind_dn);
+			$ldap_bind_user = ldap_bind($ldapconn, $bind_dn_user, $password);
+			if ($ldap_bind_user) {
+				$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
+				if ($user_info) {
+					session_regenerate_id(true); // require: PHP5.1+
+					$_SESSION['authenticated_user'] = $user_info['uid'];
+					$_SESSION['authenticated_user_fullname'] = $user_info['fullname'];
+					return true;
+				}
+			}
+		} else {
+			// Bind by bind dn
+			$ldap_bind = ldap_bind($ldapconn, $ldap_bind_dn, $ldap_bind_password);
+			if ($ldap_bind) {
+				$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
+				if ($user_info) {
+					$ldap_bind_user2 = ldap_bind($ldapconn, $user_info['dn'], $password);
+					if ($ldap_bind_user2) {
 						session_regenerate_id(true); // require: PHP5.1+
 						$_SESSION['authenticated_user'] = $user_info['uid'];
 						$_SESSION['authenticated_user_fullname'] = $user_info['fullname'];
 						return true;
-					}
-				}
-			} else {
-				// Bind by bind dn
-				$ldap_bind = ldap_bind($ldapconn, $ldap_bind_dn, $ldap_bind_password);
-				if ($ldap_bind) {
-					$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
-					if ($user_info) {
-						$ldap_bind_user2 = ldap_bind($ldapconn, $user_info['dn'], $password);
-						if ($ldap_bind_user2) {
-							session_regenerate_id(true); // require: PHP5.1+
-							$_SESSION['authenticated_user'] = $user_info['uid'];
-							$_SESSION['authenticated_user_fullname'] = $user_info['fullname'];
-							return true;
-						}
 					}
 				}
 			}
@@ -443,20 +440,17 @@ function ldap_auth($username, $password)
 // Get LDAP user info via bind DN
 function ldap_get_simple_user_info($username)
 {
-	global $ldap_url, $ldap_bind_dn, $ldap_bind_password;
-	if (preg_match('#^(ldap\:\/\/[^/]+/)(.*)$#', $ldap_url, $m)) {
-		$ldap_server = $m[1];
-		$ldap_base_dn = $m[2];
-		$ldapconn = ldap_connect($ldap_server);
-		if ($ldapconn) {
-			ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
-			// Bind by bind dn
-			$ldap_bind = ldap_bind($ldapconn, $ldap_bind_dn, $ldap_bind_password);
-			if ($ldap_bind) {
-				$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
-				if ($user_info) {
-					return $user_info;
-				}
+	global $ldap_server, $ldap_base_dn, $ldap_bind_dn, $ldap_bind_password;
+	$ldapconn = ldap_connect($ldap_server);
+	if ($ldapconn) {
+		ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+		ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0);
+		// Bind by bind dn
+		$ldap_bind = ldap_bind($ldapconn, $ldap_bind_dn, $ldap_bind_password);
+		if ($ldap_bind) {
+			$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
+			if ($user_info) {
+				return $user_info;
 			}
 		}
 	}

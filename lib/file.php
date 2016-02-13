@@ -170,6 +170,9 @@ function make_str_rules($source)
 function add_author_info($wikitext)
 {
 	global $auth_user, $auth_user_fullname, $auth_type, $ldap_user_account;
+	global $auth_provider_user_prefix_default;
+	global $auth_provider_user_prefix_ldap;
+	global $auth_provider_user_prefix_external;
 	$author = preg_replace('/"/', '', $auth_user);
 	$fullname = $auth_user_fullname;
 	if (!$fullname && $author) {
@@ -180,18 +183,18 @@ function add_author_info($wikitext)
 	$user_prefix = '';
 	switch ($auth_type) {
 		case AUTH_TYPE_BASIC:
-			$user_prefix = AUTH_PROVIDER_USER_PREFIX_DEFAULT;
+			$user_prefix = $auth_provider_user_prefix_default;
 			break;
 		case AUTH_TYPE_EXTERNAL:
 		case AUTH_TYPE_EXTERNAL_REMOTE_USER:
 		case AUTH_TYPE_EXTERNAL_X_FORWARDED_USER:
-			$user_prefix = AUTH_PROVIDER_USER_PREFIX_EXTERNAL;
+			$user_prefix = $auth_provider_user_prefix_external;
 			break;
 		case AUTH_TYPE_FORM:
 			if ($ldap_user_account) {
-				$user_prefix = AUTH_PROVIDER_USER_PREFIX_LDAP;
+				$user_prefix = $auth_provider_user_prefix_ldap;
 			} else {
-				$user_prefix = AUTH_PROVIDER_USER_PREFIX_DEFAULT;
+				$user_prefix = $auth_provider_user_prefix_default;
 			}
 			break;
 	}
