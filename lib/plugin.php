@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: plugin.php,v 1.20 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+// plugin.php
+// Copyright
+//   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -87,7 +87,7 @@ function do_plugin_action($name)
 	if (! exist_plugin_action($name)) return array();
 
 	if (do_plugin_init($name) === FALSE) {
-		die_message('Plugin init failed: ' . htmlspecialchars($name));
+		die_message('Plugin init failed: ' . htmlsc($name));
 	}
 
 	$retvar = call_user_func('plugin_' . $name . '_action');
@@ -107,7 +107,7 @@ function do_plugin_convert($name, $args = '')
 	global $digest;
 
 	if (do_plugin_init($name) === FALSE) {
-		return '[Plugin init failed: ' . htmlspecialchars($name) . ']';
+		return '[Plugin init failed: ' . htmlsc($name) . ']';
 	}
 
 	if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK) {
@@ -151,7 +151,7 @@ function do_plugin_inline($name, $args, & $body)
 	global $digest;
 
 	if (do_plugin_init($name) === FALSE) {
-		return '[Plugin init failed: ' . htmlspecialchars($name) . ']';
+		return '[Plugin init failed: ' . htmlsc($name) . ']';
 	}
 
 	if ($args === '') {
@@ -174,4 +174,3 @@ function do_plugin_inline($name, $args, & $body)
 		return $retvar;
 	}
 }
-?>
