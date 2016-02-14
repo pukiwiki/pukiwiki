@@ -250,9 +250,7 @@ $auth_users = array(
 $auth_groups = array(
 	// Groupname => group members(users)
 	'valid-user' => '', // Reserved 'valid-user' group contains all authenticated users
-	'groupfoo'	=> 'foo',
-	'groupbar'	=> 'bar',
-	'groupboobar'	=> 'foo,bar',
+	'groupfoobar'	=> 'foo,bar',
 );
 
 /////////////////////////////////////////////////
