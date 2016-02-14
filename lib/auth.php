@@ -128,6 +128,28 @@ function pkwk_hash_compute($phrase = '', $scheme = '{x-php-md5}', $prefix = TRUE
 	return $hash;
 }
 
+// LDAP related functions
+
+function _pkwk_ldap_escape_callback($matches) {
+	return sprintf('\\%02x', ord($matches[0]));
+}
+
+function pkwk_ldap_escape_filter($value) {
+	if (function_exists('ldap_escape')) {
+		return ldap_escape($value, false, LDAP_ESCAPE_FILTER);
+	}
+	return preg_replace_callback('/[\\\\*()\0]/',
+		'_pkwk_ldap_escape_callback', $value);
+}
+
+function pkwk_ldap_escape_dn($value) {
+	if (function_exists('ldap_escape')) {
+		return ldap_escape($value, false, LDAP_ESCAPE_DN);
+	}
+	return preg_replace_callback('/[\\\\,=+<>;"#]/',
+		'_pkwk_ldap_escape_callback', $value);
+}
+
 
 // Basic-auth related ----
 
@@ -342,7 +364,7 @@ function get_groups_from_username($user)
 				$groups[] = $group;
 			}
 		}
-		// Implecit group that has same name as user itself
+		// Implicit group that has same name as user itself
 		$groups[] = $user;
 		// 'valid-user' group for
 		$valid_user = 'valid-user';
@@ -406,7 +428,8 @@ function ldap_auth($username, $password)
 		ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0);
 		if (preg_match('#\$login\b#', $ldap_bind_dn)) {
 			// Bind by user credential
-			$bind_dn_user = preg_replace('#\$login#', $username, $ldap_bind_dn);
+			$username_esc = pkwk_ldap_escape_dn($username);
+			$bind_dn_user = preg_replace('#\$login\b#', $username_esc, $ldap_bind_dn);
 			$ldap_bind_user = ldap_bind($ldapconn, $bind_dn_user, $password);
 			if ($ldap_bind_user) {
 				$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
@@ -465,9 +488,13 @@ function ldap_get_simple_user_info($username)
  * @return boolean
  */
 function get_ldap_user_info($ldapconn, $username, $base_dn) {
-	$filter = "(|(uid=$username)(sAMAccountName=$username))";
+	$username_esc = pkwk_ldap_escape_filter($username);
+	$filter = "(|(uid=$username_esc)(sAMAccountName=$username_esc))";
 	$result1 = ldap_search($ldapconn, $base_dn, $filter, array('dn', 'uid', 'cn', 'samaccountname', 'displayname', 'mail'));
 	$entries = ldap_get_entries($ldapconn, $result1);
+	if (!isset($entries[0])) {
+		return false;
+	}
 	$info = $entries[0];
 	if (isset($info['dn'])) {
 		$user_dn = $info['dn'];
