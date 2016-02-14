@@ -20,9 +20,9 @@ function plugin_loginform_convert()
 function plugin_loginform_action()
 {
 	global $auth_user, $auth_type, $_loginform_messages;
-	$page = $_GET['page'];
-	$pcmd = $_GET['pcmd'];
-	$url_after_login = $_GET['url_after_login'];
+	$page = isset($_GET['page']) ? $_GET['page'] : '';
+	$pcmd = isset($_GET['pcmd']) ? $_GET['pcmd'] : '';
+	$url_after_login = isset($_GET['url_after_login']) ? $_GET['url_after_login'] : '';
 	$page_after_login = $page;
 	if (!$url_after_login) {
 		$page_after_login = $page;
@@ -31,8 +31,8 @@ function plugin_loginform_action()
 		. '&page=' . rawurlencode($page)
 		. ($url_after_login ? '&url_after_login=' . rawurlencode($url_after_login) : '')
 		. ($page_after_login ? '&page_after_login=' . rawurlencode($page_after_login) : '');
-	$username = $_POST['username'];
-	$password = $_POST['password'];
+	$username = isset($_POST['username']) ? $_POST['username'] : '';
+	$password = isset($_POST['password']) ? $_POST['password'] : '';
 	if ($username && $password && form_auth($username, $password)) {
 		// Sign in successfully completed
 		form_auth_redirect($url_after_login, $page_after_login);
@@ -49,7 +49,7 @@ function plugin_loginform_action()
 			case AUTH_TYPE_EXTERNAL:
 			default:
 				$_SESSION = array();
-				session_regenerate_id(); // require: PHP5.1+
+				session_regenerate_id(true); // require: PHP5.1+
 				session_destroy();
 				break;
 		}
