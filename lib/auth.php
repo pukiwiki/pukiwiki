@@ -281,6 +281,7 @@ function ensure_valid_auth_user()
 				$auth_type = AUTH_TYPE_FORM;
 		}
 	}
+	$auth_dynamic_groups = null;
 	switch ($auth_type) {
 		case AUTH_TYPE_BASIC:
 		{
@@ -309,23 +310,28 @@ function ensure_valid_auth_user()
 			session_start();
 			$user = '';
 			$fullname = '';
+			$dynamic_groups = array();
 			if (isset($_SESSION['authenticated_user'])) {
 				$user = $_SESSION['authenticated_user'];
 				if (isset($_SESSION['authenticated_user_fullname'])) {
 					$fullname = $_SESSION['authenticated_user_fullname'];
+					$dynamic_groups = $_SESSION['dynamic_member_groups'];
 				} else {
 					$fullname = $user;
 					if ($auth_type === AUTH_TYPE_EXTERNAL && $ldap_user_account) {
 						$ldap_user_info = ldap_get_simple_user_info($user);
 						if ($ldap_user_info) {
 							$fullname = $ldap_user_info['fullname'];
+							$dynamic_groups = $ldap_user_info['dynamic_member_groups'];
 						}
 					}
 					$_SESSION['authenticated_user_fullname'] = $fullname;
+					$_SESSION['dynamic_member_groups'] = $dynamic_groups;
 				}
 			}
 			$auth_user = $user;
 			$auth_user_fullname = $fullname;
+			$auth_dynamic_groups = $dynamic_groups;
 			break;
 		}
 		case AUTH_TYPE_EXTERNAL_REMOTE_USER:
@@ -342,6 +348,9 @@ function ensure_valid_auth_user()
 			break;
 	}
 	$auth_user_groups = get_groups_from_username($auth_user);
+	if ($auth_dynamic_groups && is_array($auth_dynamic_groups)) {
+		$auth_user_groups = array_values(array_merge($auth_user_groups, $auth_dynamic_groups));
+	}
 	return true; // is not basic auth
 }
 
@@ -434,9 +443,11 @@ function ldap_auth($username, $password)
 			if ($ldap_bind_user) {
 				$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
 				if ($user_info) {
+					$ldap_groups = get_ldap_groups_with_user($ldapconn, $username, $user_info['is_ad']);
 					session_regenerate_id(true); // require: PHP5.1+
 					$_SESSION['authenticated_user'] = $user_info['uid'];
 					$_SESSION['authenticated_user_fullname'] = $user_info['fullname'];
+					$_SESSION['dynamic_member_groups'] = $ldap_groups;
 					return true;
 				}
 			}
@@ -448,9 +459,11 @@ function ldap_auth($username, $password)
 				if ($user_info) {
 					$ldap_bind_user2 = ldap_bind($ldapconn, $user_info['dn'], $password);
 					if ($ldap_bind_user2) {
+						$ldap_groups = get_ldap_groups_with_user($ldapconn, $username, $user_info['is_ad']);
 						session_regenerate_id(true); // require: PHP5.1+
 						$_SESSION['authenticated_user'] = $user_info['uid'];
 						$_SESSION['authenticated_user_fullname'] = $user_info['fullname'];
+						$_SESSION['dynamic_member_groups'] = $ldap_groups;
 						return true;
 					}
 				}
@@ -473,6 +486,9 @@ function ldap_get_simple_user_info($username)
 		if ($ldap_bind) {
 			$user_info = get_ldap_user_info($ldapconn, $username, $ldap_base_dn);
 			if ($user_info) {
+				$ldap_groups = get_ldap_groups_with_user($ldapconn,
+					$username, $user_info['is_ad']);
+				$user_info['dynamic_member_groups'] = $ldap_groups;
 				return $user_info;
 			}
 		}
@@ -499,10 +515,12 @@ function get_ldap_user_info($ldapconn, $username, $base_dn) {
 	if (isset($info['dn'])) {
 		$user_dn = $info['dn'];
 		$cano_username = $username;
+		$is_active_directory = false;
 		if (isset($info['uid'][0])) {
 			$cano_username = $info['uid'][0];
 		} elseif (isset($info['samaccountname'][0])) {
 			$cano_username = $info['samaccountname'][0];
+			$is_active_directory = true;
 		}
 		$cano_fullname = $username;
 		if (isset($info['displayname'][0])) {
@@ -514,7 +532,8 @@ function get_ldap_user_info($ldapconn, $username, $base_dn) {
 			'dn' => $user_dn,
 			'uid' => $cano_username,
 			'fullname' => $cano_fullname,
-			'mail' => $info['mail'][0]
+			'mail' => $info['mail'][0],
+			'is_ad' => $is_active_directory,
 		);
 	}
 	return false;
@@ -550,4 +569,126 @@ function get_auth_external_login_url($page, $url_after_login) {
 		. 'page=' . rawurlencode($page)
 		. '&url_after_login=' . rawurlencode($url_after_login);
 	return $url;
+}
+
+function get_auth_user_prefix() {
+	global $ldap_user_account, $auth_type;
+	global $auth_provider_user_prefix_default;
+	global $auth_provider_user_prefix_ldap;
+	global $auth_provider_user_prefix_external;
+	$user_prefix = '';
+	switch ($auth_type) {
+		case AUTH_TYPE_BASIC:
+			$user_prefix = $auth_provider_user_prefix_default;
+			break;
+		case AUTH_TYPE_EXTERNAL:
+		case AUTH_TYPE_EXTERNAL_REMOTE_USER:
+		case AUTH_TYPE_EXTERNAL_X_FORWARDED_USER:
+			$user_prefix = $auth_provider_user_prefix_external;
+			break;
+		case AUTH_TYPE_FORM:
+			if ($ldap_user_account) {
+				$user_prefix = $auth_provider_user_prefix_ldap;
+			} else {
+				$user_prefix = $auth_provider_user_prefix_default;
+			}
+			break;
+	}
+	return $user_prefix;
+}
+
+function get_ldap_related_groups() {
+	global $read_auth_pages, $edit_auth_pages;
+	global $auth_provider_user_prefix_ldap;
+	$ldap_groups = array();
+	foreach ($read_auth_pages as $pattern=>$groups) {
+		$sp_groups = explode(',', $groups);
+		foreach ($sp_groups as $group) {
+			if (strpos($group, $auth_provider_user_prefix_ldap) === 0) {
+				$ldap_groups[] = $group;
+			}
+		}
+	}
+	foreach ($edit_auth_pages as $pattern=>$groups) {
+		$sp_groups = explode(',', $groups);
+		foreach ($sp_groups as $group) {
+			if (strpos($group, $auth_provider_user_prefix_ldap) === 0) {
+				$ldap_groups[] = $group;
+			}
+		}
+	}
+	$ldap_groups_unique = array_values(array_unique($ldap_groups));
+	return $ldap_groups_unique;
+}
+
+/**
+ * Get LDAP groups user belongs to
+ *
+ * @param Resource $ldapconn
+ * @param String $user
+ * @param bool $is_ad
+ * @return Array
+ */
+function get_ldap_groups_with_user($ldapconn, $user, $is_ad) {
+	global $auth_provider_user_prefix_ldap;
+	global $ldap_base_dn;
+	$related_groups = get_ldap_related_groups();
+	if (count($related_groups) == 0) {
+		return array();
+	}
+	$gfilter = '(|';
+	foreach ($related_groups as $group_full) {
+		$g = substr($group_full, strlen($auth_provider_user_prefix_ldap));
+		$gfilter .= sprintf('(cn=%s)', pkwk_ldap_escape_filter($g));
+		if ($is_ad) {
+			$gfilter .= sprintf('(sAMAccountName=%s)', pkwk_ldap_escape_filter($g));
+		}
+	}
+	$gfilter .= ')';
+	$result_g = ldap_search($ldapconn, $ldap_base_dn, $gfilter,
+		array('dn', 'uid', 'cn', 'samaccountname'));
+	$entries = ldap_get_entries($ldapconn, $result_g);
+	if (!isset($entries[0])) {
+		return false;
+	}
+	if (!$entries) {
+		return array();
+	}
+	$entry_count = $entries['count'];
+	$group_list = array();
+	for ($i = 0; $i < $entry_count; $i++) {
+		$group_name = $entries[$i]['cn'][0];
+		if ($is_ad) {
+			$group_name = $entries[$i]['samaccountname'][0];
+		}
+		$group_list[] = array(
+			'name' => $group_name,
+			'dn' => $entries[$i]['dn']
+		);
+	}
+	$groups_member = array();
+	$groups_nonmember = array();
+	foreach ($group_list as $gp) {
+		$fmt = '(&(uid=%s)(memberOf=%s))';
+		if ($is_ad) {
+			// LDAP_MATCHING_RULE_IN_CHAIN: Active Directory specific rule
+			$fmt = '(&(sAMAccountName=%s)(memberOf:1.2.840.113556.1.4.1941:=%s))';
+		}
+		$user_gfilter = sprintf($fmt,
+			pkwk_ldap_escape_filter($user),
+			pkwk_ldap_escape_filter($gp['dn']));
+		$result_e = ldap_search($ldapconn, $ldap_base_dn, $user_gfilter,
+			array('dn'), 0, 1);
+		$user_e = ldap_get_entries($ldapconn, $result_e);
+		if (isset($user_e['count']) && $user_e['count'] > 0) {
+			$groups_member[] = $gp['name'];
+		} else {
+			$groups_nonmember[] = $gp['name'];
+		}
+	}
+	$groups_full = array();
+	foreach ($groups_member as $g) {
+		$groups_full[] = $auth_provider_user_prefix_ldap . $g;
+	}
+	return $groups_full;
 }
