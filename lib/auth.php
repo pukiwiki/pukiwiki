@@ -301,7 +301,7 @@ function ensure_valid_auth_user()
 				header('HTTP/1.0 401 Unauthorized');
 			}
 			$auth_user = '';
-			$auth_user_groups = get_groups_from_username($user);
+			$auth_user_groups = array();
 			return true; // no auth input
 		}
 		case AUTH_TYPE_FORM:
