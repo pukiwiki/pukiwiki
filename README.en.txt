@@ -159,7 +159,7 @@ ACKNOWLEDGEMENT
 REFERENCE
 
     * PukiWiki Web Site         http://pukiwiki.osdn.jp/
-    * PukiWiki Developer's Site http://pukiwiki.osdn.jp/dev/
+    * PukiWiki Developers' Site http://pukiwiki.osdn.jp/dev/
     * yu-ji's Web Site          http://factage.com/yu-ji/ 
     * Hiroshi Yuki 's Web Site  http://www.hyuki.com/ 
     * YukiWiki                  http://www.hyuki.com/yukiwiki/ 
