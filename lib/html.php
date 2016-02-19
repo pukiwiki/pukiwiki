@@ -70,6 +70,7 @@ function catbody($title, $page, $body)
 	$_LINK['top']      = "$script?" . pagename_urlencode($defaultpage);
 	$_LINK['unfreeze'] = "$script?cmd=unfreeze&amp;page=$r_page";
 	$_LINK['upload']   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
+	$login_link = "#LOGIN_ERROR"; // dummy link that is not used
 	switch ($auth_type) {
 		case AUTH_TYPE_FORM:
 			$login_link = "$script?plugin=loginform&pcmd=login&page=$r_page";
