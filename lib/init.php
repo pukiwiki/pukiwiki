@@ -10,7 +10,7 @@
 
 // PukiWiki version / Copyright / Licence
 
-define('S_VERSION', '1.5.1_beta1');
+define('S_VERSION', '1.5.1');
 define('S_COPYRIGHT',
 	'<strong>PukiWiki ' . S_VERSION . '</strong>' .
 	' &copy; 2001-2016' .
