@@ -48,6 +48,12 @@ function catbody($title, $page, $body)
 	$_page  = isset($vars['page']) ? $vars['page'] : '';
 	$r_page = pagename_urlencode($_page);
 
+	// Canonical URL
+	$canonical_url = $script;
+	if ($_page !== $defaultpage) {
+		$canonical_url = $script . '?' . $r_page;
+	}
+
 	// Set $_LINK for skin
 	$_LINK['add']      = "$script?cmd=add&amp;page=$r_page";
 	$_LINK['backup']   = "$script?cmd=backup&amp;page=$r_page";
@@ -61,7 +67,7 @@ function catbody($title, $page, $body)
 	$_LINK['new']      = "$script?plugin=newpage&amp;refer=$r_page";
 	$_LINK['rdf']      = "$script?cmd=rss&amp;ver=1.0";
 	$_LINK['recent']   = "$script?" . pagename_urlencode($whatsnew);
-	$_LINK['reload']   = "$script?$r_page";
+	$_LINK['reload']   = $canonical_url;
 	$_LINK['rename']   = "$script?plugin=rename&amp;refer=$r_page";
 	$_LINK['rss']      = "$script?cmd=rss";
 	$_LINK['rss10']    = "$script?cmd=rss&amp;ver=1.0"; // Same as 'rdf'
@@ -138,6 +144,11 @@ function catbody($title, $page, $body)
 		if (!headers_sent()) {
 			header("X-Robots-Tag: noindex,nofollow");
 		}
+	}
+
+	// Send Canonical URL for Search Engine Optimization
+	if ($is_read && !headers_sent()) {
+		header("Link: <$canonical_url>; rel=\"canonical\"");
 	}
 
 	// Search words
