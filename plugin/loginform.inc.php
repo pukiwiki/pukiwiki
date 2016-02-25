@@ -33,6 +33,7 @@ function plugin_loginform_action()
 		. ($page_after_login ? '&page_after_login=' . rawurlencode($page_after_login) : '');
 	$username = isset($_POST['username']) ? $_POST['username'] : '';
 	$password = isset($_POST['password']) ? $_POST['password'] : '';
+	$isset_user_credential = $username || $password ;
 	if ($username && $password && form_auth($username, $password)) {
 		// Sign in successfully completed
 		form_auth_redirect($url_after_login, $page_after_login);
@@ -62,12 +63,8 @@ function plugin_loginform_action()
 		);
 	} else {
 		// login
-		$action_url_html = htmlsc($action_url);
-		$username_html = htmlsc($username);
-		$username_label_html = htmlsc($_loginform_messages['username']);
-		$password_label_html = htmlsc($_loginform_messages['password']);
-		$login_label_html = htmlsc($_loginform_messages['login']);
-		$body = <<< EOT
+		ob_start();
+?>
 <style>
   .loginformcontainer {
     text-align: center;
@@ -89,23 +86,32 @@ function plugin_loginform_action()
   .loginform .loginbutton {
     margin-top: 1em;
   }
+  .loginform .errormessage {
+    color: red;
+  }
 </style>
 <div class="loginformcontainer">
-<form name="loginform" class="loginform" action="$action_url_html" method="post">
+<form name="loginform" class="loginform" action="<?php echo htmlsc($action_url) ?>" method="post">
 <div>
 <table style="border:0">
   <tbody>
   <tr>
-    <td class="label"><label for="_plugin_loginform_username">$username_label_html</label></td>
-    <td><input type="text" name="username" value="$username_html" id="_plugin_loginform_username"></td>
+    <td class="label"><label for="_plugin_loginform_username"><?php echo htmlsc($_loginform_messages['username']) ?></label></td>
+    <td><input type="text" name="username" value="<?php echo htmlsc($username) ?>" id="_plugin_loginform_username"></td>
   </tr>
   <tr>
-  <td class="label"><label for="_plugin_loginform_password">$password_label_html</label></td>
+  <td class="label"><label for="_plugin_loginform_password"><?php echo htmlsc($_loginform_messages['password']) ?></label></td>
   <td><input type="password" name="password" id="_plugin_loginform_password"></td>
   </tr>
+<?php if ($isset_user_credential): ?>
   <tr>
     <td></td>
-    <td class="login-button-container"><input type="submit" value="$login_label_html" class="loginbutton"></td>
+    <td class="errormessage"><?php echo $_loginform_messages['invalid_username_or_password'] ?></td>
+  </tr>
+<?php endif ?>
+  <tr>
+    <td></td>
+    <td class="login-button-container"><input type="submit" value="<?php echo htmlsc($_loginform_messages['login']) ?>" class="loginbutton"></td>
   </tr>
   </tbody>
 </table>
@@ -130,7 +136,9 @@ window.addEventListener && window.addEventListener("DOMContentLoaded", function(
 });
 //-->
 </script>
-EOT;
+<?php
+		$body = ob_get_contents();
+		ob_end_clean();
 		return array(
 			'msg' => $_loginform_messages['login'],
 			'body' => $body,
