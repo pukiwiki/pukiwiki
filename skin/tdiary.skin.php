@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.skin.php,v 1.37 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2002-2006 PukiWiki Developers Team
+// tdiary.skin.php
+// Copyright
+//   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -649,6 +649,12 @@ function _navigator($key, $value = '', $javascript = ''){
    <?php _navigator('search') ?>
    <?php _navigator('recent') ?>
    <?php _navigator('help')   ?>
+   <?php if ($enable_login) { ?>
+     <?php _navigator('login') ?>
+   <?php } ?>
+   <?php if ($enable_logout) { ?>
+     <?php _navigator('logout') ?>
+   <?php } ?>
 </div></div>
 <?php } else { ?>
 <div id="navigator"></div>

@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.skin.php,v 1.56 2007/07/26 00:57:00 henoheno Exp $
-// Copyright (C)
-//   2002-2006 PukiWiki Developers Team
+// pukiwiki.skin.php
+// Copyright
+//   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
