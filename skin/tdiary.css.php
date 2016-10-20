@@ -16,13 +16,6 @@ if(ini_get('zlib.output_compression') && preg_match('/\b(gzip|deflate)\b/i', $_S
 	header('Vary: Accept-Encoding');
 }
 
-// Default charset
-$charset = isset($_GET['charset']) ? $_GET['charset']  : '';
-switch ($charset) {
-	case 'Shift_JIS': break; /* this @charset is for Mozilla's bug */
-	default: $charset ='iso-8859-1';
-}
-
 // Media
 $media = isset($_GET['media']) ? $_GET['media'] : '';
 if ($media != 'print') $media = 'screen';
@@ -95,7 +88,7 @@ default:
 
 // Output CSS ----
 ?>
-@charset "<?php echo $charset ?>";
+@charset "UTF-8";
 
 /* ------------------------------------------ */
 /* PukiWiki abstruction CSS for tDiary themes */

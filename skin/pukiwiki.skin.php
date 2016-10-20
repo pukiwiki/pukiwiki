@@ -44,12 +44,6 @@ $link  = & $_LINK;
 $image = & $_IMAGE['skin'];
 $rw    = ! PKWK_READONLY;
 
-// Decide charset for CSS
-$css_charset = 'iso-8859-1';
-switch(UI_LANG){
-	case 'ja': $css_charset = 'Shift_JIS'; break;
-}
-
 // MenuBar
 $menu = arg_check('read') && exist_plugin_convert('menu') ? do_plugin_convert('menu') : FALSE;
 
@@ -79,8 +73,8 @@ if (isset($pkwk_dtd)) {
  <title><?php echo $title ?> - <?php echo $page_title ?></title>
 
  <link rel="SHORTCUT ICON" href="<?php echo $image['favicon'] ?>" />
- <link rel="stylesheet" type="text/css" media="screen" href="<?php echo SKIN_DIR ?>pukiwiki.css.php?charset=<?php echo $css_charset ?>" charset="<?php echo $css_charset ?>" />
- <link rel="stylesheet" type="text/css" media="print"  href="<?php echo SKIN_DIR ?>pukiwiki.css.php?charset=<?php echo $css_charset ?>&amp;media=print" charset="<?php echo $css_charset ?>" />
+ <link rel="stylesheet" type="text/css" media="screen" href="<?php echo SKIN_DIR ?>pukiwiki.css.php" />
+ <link rel="stylesheet" type="text/css" media="print"  href="<?php echo SKIN_DIR ?>pukiwiki.css.php?media=print" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
 
 <?php echo $head_tag ?>
