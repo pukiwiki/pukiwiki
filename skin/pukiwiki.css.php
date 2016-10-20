@@ -1,24 +1,18 @@
 <?php
-// PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: pukiwiki.css.php,v 1.12 2005/10/12 13:06:27 henoheno Exp $
-// Copyright (C)
-//   2002-2005 PukiWiki Developers Team
-//   2001-2002 Originally written by yu-ji
-// License: GPL v2 or (at your option) any later version
-//
-// Default CSS
-
-// Send header
 header('Content-Type: text/css');
-$matches = array();
-if(ini_get('zlib.output_compression') && preg_match('/\b(gzip|deflate)\b/i', $_SERVER['HTTP_ACCEPT_ENCODING'], $matches)) {
-	header('Content-Encoding: ' . $matches[1]);
-	header('Vary: Accept-Encoding');
-}
-
-// Output CSS ----
 ?>
+
 @charset "UTF-8";
+
+/*!
+ * PukiWiki - Yet another WikiWikiWeb clone.
+ * Copyright (C)
+ *   2002-2016 PukiWiki Development Team
+ *   2001-2002 Originally written by yu-ji
+ * License: GPL v2 or (at your option) any later version
+ *
+ * Default CSS
+ */
 
 pre, dl, ol, p, blockquote { line-height:130%; }
 

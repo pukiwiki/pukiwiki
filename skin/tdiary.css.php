@@ -1,20 +1,13 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: tdiary.css.php,v 1.6 2005/05/01 02:43:27 henoheno Exp $
 // Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+//   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
 // tDiary-css-wrapper
 
-// Send header
 header('Content-Type: text/css');
-$matches = array();
-if(ini_get('zlib.output_compression') && preg_match('/\b(gzip|deflate)\b/i', $_SERVER['HTTP_ACCEPT_ENCODING'], $matches)) {
-	header('Content-Encoding: ' . $matches[1]);
-	header('Vary: Accept-Encoding');
-}
 
 // Color theme
 $color_theme = isset($_GET['color']) ? $_GET['color'] : '';
@@ -85,6 +78,16 @@ default:
 // Output CSS ----
 ?>
 @charset "UTF-8";
+
+/*!
+ * PukiWiki - Yet another WikiWikiWeb clone.
+ * Copyright (C)
+ *   2002-2016 PukiWiki Development Team
+ *   2001-2002 Originally written by yu-ji
+ * License: GPL v2 or (at your option) any later version
+ *
+ * tDiary-css-wrapper
+ */
 
 /* ------------------------------------------ */
 /* PukiWiki abstruction CSS for tDiary themes */
