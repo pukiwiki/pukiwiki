@@ -575,8 +575,7 @@ if (isset($pkwk_dtd)) {
  <link rel="SHORTCUT ICON" href="<?php echo $image['favicon'] ?>" />
  <link rel="stylesheet" type="text/css" media="all" href="<?php echo SKIN_DIR ?>theme/base.css" />
  <link rel="stylesheet" type="text/css" media="all" href="<?php echo SKIN_DIR ?>theme/<?php echo $theme ?>/<?php echo $theme ?>.css" />
- <link rel="stylesheet" type="text/css" media="screen" href="<?php echo SKIN_DIR ?>tdiary.css.php?color=<?php echo $css_theme ?>" />
- <link rel="stylesheet" type="text/css" media="print"  href="<?php echo SKIN_DIR ?>tdiary.css.php?color=<?php echo $css_theme ?>&amp;media=print" />
+ <link rel="stylesheet" type="text/css" href="<?php echo SKIN_DIR ?>tdiary.css.php?color=<?php echo $css_theme ?>" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
 
 <?php echo $head_tag ?>

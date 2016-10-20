@@ -16,10 +16,6 @@ if(ini_get('zlib.output_compression') && preg_match('/\b(gzip|deflate)\b/i', $_S
 	header('Vary: Accept-Encoding');
 }
 
-// Media
-$media   = isset($_GET['media'])   ? $_GET['media']    : '';
-if ($media != 'print') $media = 'screen';
-
 // Output CSS ----
 ?>
 @charset "UTF-8";
@@ -38,13 +34,9 @@ body,td {
 }
 
 a:link {
-<?php	if ($media == 'print') { ?>
-	text-decoration: underline;
-<?php	} else { ?>
 	color:#215dc6;
 	background-color:inherit;
 	text-decoration:none;
-<?php	} ?>
 }
 
 a:active {
@@ -54,13 +46,9 @@ a:active {
 }
 
 a:visited {
-<?php	if ($media == 'print') { ?>
-	text-decoration: underline;
-<?php	} else { ?>
 	color:#a63d21;
 	background-color:inherit;
 	text-decoration:none;
-<?php	} ?>
 }
 
 a:hover {
@@ -328,35 +316,23 @@ div#header {
 }
 
 div#navigator {
-<?php   if ($media == 'print') { ?>
-	display:none;
-<?php   } else { ?>
 	clear:both;
 	padding:4px 0px 0px 0px;
 	margin:0px;
-<?php   } ?>
 }
 
 td.menubar {
-<?php   if ($media == 'print') { ?>
-	display:none;
-<?php   } else { ?>
 	width:9em;
 	vertical-align:top;
-<?php   } ?>
 }
 
 div#menubar {
-<?php   if ($media == 'print') { ?>
-	display:none;
-<?php   } else { ?>
 	width:9em;
 	padding:0px;
 	margin:4px;
 	word-break:break-all;
 	font-size:90%;
 	overflow:hidden;
-<?php   } ?>
 }
 
 div#menubar ul {
@@ -380,24 +356,16 @@ div#note {
 }
 
 div#attach {
-<?php   if ($media == 'print') { ?>
-	display:none;
-<?php   } else { ?>
 	clear:both;
 	padding:0px;
 	margin:0px;
-<?php   } ?>
 }
 
 div#toolbar {
-<?php   if ($media == 'print') { ?>
-        display:none;
-<?php   } else { ?>
 	clear:both;
 	padding:0px;
 	margin:0px;
 	text-align:right;
-<?php   } ?>
 }
 
 div#lastmodified {
@@ -407,13 +375,9 @@ div#lastmodified {
 }
 
 div#related {
-<?php   if ($media == 'print') { ?>
-        display:none;
-<?php   } else { ?>
 	font-size:80%;
 	padding:0px;
 	margin:16px 0px 0px 0px;
-<?php   } ?>
 }
 
 div#footer {
@@ -433,12 +397,8 @@ div#preview {
 }
 
 img#logo {
-<?php   if ($media == 'print') { ?>
-	display:none;
-<?php   } else { ?>
 	float:left;
 	margin-right:20px;
-<?php   } ?>
 }
 
 /* aname.inc.php */
@@ -601,7 +561,6 @@ span.new5 {
 /* popular.inc.php */
 span.counter { font-size:70%; }
 ul.popular_list {
-<?php
 /*
 	padding:0px;
 	border:0px;
@@ -609,12 +568,10 @@ ul.popular_list {
 	word-wrap:break-word;
 	word-break:break-all;
 */
-?>
 }
 
 /* recent.inc.php,showrss.inc.php */
 ul.recent_list {
-<?php
 /*
 	padding:0px;
 	border:0px;
@@ -622,7 +579,6 @@ ul.recent_list {
 	word-wrap:break-word;
 	word-break:break-all;
 */
-?>
 }
 
 /* ref.inc.php */
@@ -643,4 +599,20 @@ td.vote_td1 {
 td.vote_td2 {
 	color:inherit;
 	background-color:#EEF5FF;
+}
+
+@media print {
+  a:link,
+  a:visited {
+    text-decoration: underline;
+  }
+  img#logo,
+  div#navigator,
+  div#menubar,
+  td.menubar,
+  div#related,
+  div#attach,
+  div#toolbar {
+    display: none;
+  }
 }

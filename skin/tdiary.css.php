@@ -16,10 +16,6 @@ if(ini_get('zlib.output_compression') && preg_match('/\b(gzip|deflate)\b/i', $_S
 	header('Vary: Accept-Encoding');
 }
 
-// Media
-$media = isset($_GET['media']) ? $_GET['media'] : '';
-if ($media != 'print') $media = 'screen';
-
 // Color theme
 $color_theme = isset($_GET['color']) ? $_GET['color'] : '';
 
@@ -278,35 +274,23 @@ div#header {
 }
 
 div#navigator {
-<?php   if ($media == 'print') { ?>
-	display:none;
-<?php   } else { ?>
 	clear:both;
 	padding:4px 0px 0px 0px;
 	margin:0px;
-<?php   } ?>
 }
 
 td.menubar {
-<?php   if ($media == 'print') { ?>
-	display:none;
-<?php   } else { ?>
 	width:9em;
 	vertical-align:top;
-<?php   } ?>
 }
 
 div#menubar {
-<?php   if ($media == 'print') { ?>
-	display:none;
-<?php   } else { ?>
 	width:9em;
 	padding:0px;
 	margin:4px;
 	word-break:break-all;
 	font-size:90%;
 	overflow:hidden;
-<?php   } ?>
 }
 
 div#menubar ul {
@@ -328,24 +312,16 @@ div#note {
 }
 
 div#attach {
-<?php   if ($media == 'print') { ?>
-	display:none;
-<?php   } else { ?>
 	clear:both;
 	padding:0px;
 	margin:0px;
-<?php   } ?>
 }
 
 div#toolbar {
-<?php   if ($media == 'print') { ?>
-        display:none;
-<?php   } else { ?>
 	clear:both;
 	padding:0px;
 	margin:0px;
 	text-align:right;
-<?php   } ?>
 }
 
 div#lastmodified {
@@ -356,13 +332,9 @@ div#lastmodified {
 
 /* for tDiary theme */
 div#related {
-<?php   if ($media == 'print') { ?>
-        display:none;
-<?php   } else { ?>
 	font-size:80%;
 	padding:0px;
 	margin:0px 0px 0px 0px;
-<?php   } ?>
 }
 
 div#footer {
@@ -382,12 +354,8 @@ div#preview {
 }
 
 img#logo {
-<?php   if ($media == 'print') { ?>
-	display:none;
-<?php   } else { ?>
 	float:left;
 	margin-right:20px;
-<?php   } ?>
 }
 
 /* aname.inc.php */
@@ -570,4 +538,16 @@ td.vote_td1 {
 td.vote_td2 {
 	color:inherit;
 	background-color:#<?php echo $color['td.vote_td2'] ?>;
+}
+
+@media print {
+  img#logo,
+  div#navigator,
+  div#menubar,
+  td.menubar,
+  div#related,
+  div#attach,
+  div#toolbar {
+    display: none;
+  }
 }
