@@ -547,12 +547,6 @@ $link  = & $_LINK;
 $image = & $_IMAGE['skin'];
 $rw    = ! PKWK_READONLY;
 
-// Decide charset for CSS
-$css_charset = 'iso-8859-1';
-switch(UI_LANG){
-	case 'ja': $css_charset = 'Shift_JIS'; break;
-}
-
 // ------------------------------------------------------------
 // Output
 
@@ -581,8 +575,7 @@ if (isset($pkwk_dtd)) {
  <link rel="SHORTCUT ICON" href="<?php echo $image['favicon'] ?>" />
  <link rel="stylesheet" type="text/css" media="all" href="<?php echo SKIN_DIR ?>theme/base.css" />
  <link rel="stylesheet" type="text/css" media="all" href="<?php echo SKIN_DIR ?>theme/<?php echo $theme ?>/<?php echo $theme ?>.css" />
- <link rel="stylesheet" type="text/css" media="screen" href="<?php echo SKIN_DIR ?>tdiary.css.php?charset=<?php echo $css_charset ?>&amp;color=<?php echo $css_theme ?>" charset="<?php echo $css_charset ?>" />
- <link rel="stylesheet" type="text/css" media="print"  href="<?php echo SKIN_DIR ?>tdiary.css.php?charset=<?php echo $css_charset ?>&amp;color=<?php echo $css_theme ?>&amp;media=print" charset="<?php echo $css_charset ?>" />
+ <link rel="stylesheet" type="text/css" href="<?php echo SKIN_DIR ?>tdiary.css.php?color=<?php echo $css_theme ?>" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
 
 <?php echo $head_tag ?>
