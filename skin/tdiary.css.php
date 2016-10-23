@@ -1,82 +1,3 @@
-<?php
-// PukiWiki - Yet another WikiWikiWeb clone.
-// Copyright (C)
-//   2002-2016 PukiWiki Development Team
-//   2001-2002 Originally written by yu-ji
-// License: GPL v2 or (at your option) any later version
-//
-// tDiary-css-wrapper
-
-header('Content-Type: text/css');
-
-// Color theme
-$color_theme = isset($_GET['color']) ? $_GET['color'] : '';
-
-// Color theme: Design structure
-$c_background = $c_background2 = $c_background3 = $c_background4 = '';
-$c_line1 = $c_line2 = $c_preview = $c_color1 = $c_color2 = $c_color3 = $c_dangling = '';
-$_COLOR['.style_table']      = & $c_line1;
-$_COLOR['thead th.style_th'] = & $c_background4;
-$_COLOR['thead td.style_td'] = & $c_background3;
-$_COLOR['.style_th'   ]      = & $c_background2;
-$_COLOR['.style_td'   ]      = & $c_background;
-$_COLOR['span.noexists'] = & $c_dangling;
-$_COLOR['div#preview']   = & $c_preview;
-$_COLOR['.style_calendar' ] = & $c_line1;
-$_COLOR['.style_td_caltop'] = & $c_background;
-$_COLOR['.style_td_week'  ] = & $c_color1;
-$_COLOR['.style_td_blank' ] = & $c_background;
-$_COLOR['.style_td_day'   ] = & $c_background;
-$_COLOR['.style_td_sat'   ] = & $c_color2; // NOTE: Blue flavour for Saturday
-$_COLOR['.style_td_sun'   ] = & $c_color3; // NOTE: Red  flavour for Sunday
-$_COLOR['.style_td_today' ] = & $c_dangling;
-$_COLOR['hr.short_line'] = & $c_line1;
-$_COLOR['td.vote_label'] = & $c_color1;
-$_COLOR['td.vote_td1'  ] = & $c_color3;
-$_COLOR['td.vote_td2'  ] = & $c_color2;
-$color = & $_COLOR;
-
-// Color theme: Theme selector
-switch($color_theme){
-case 'black':
-	// Beauty black
-	$c_background  = '111111'; //
-	$c_background2 = '333333'; ///
-	$c_background3 = '223333'; ////
-	$c_background4 = '332200'; /////
-	$c_line1       = '999999'; ///////////
-	$c_line2       = '999999';
-	$c_preview     = '222200'; ///
-	$c_color1      = '333333'; ////
-	$c_color2      = '223333'; /////
-	$c_color3      = '332200'; //////
-	$c_dangling    = '333355'; ///////
-	break;
-
-default:
-	// Default skyblue
-	$c_background  = 'EEF5FF';
-	$c_background2 = 'EEEEEE';
-	$c_background3 = 'D0D8E0';
-	$c_background4 = 'E0E8F0';
-	$c_line1       = 'CCD5DD';
-	$c_line2       = '333333';
-	$c_preview     = 'F5F8FF';
-	$c_color1      = 'DDE5EE';
-	$c_color2      = 'DDE5FF';
-	$c_color3      = 'FFEEEE';
-	$c_dangling    = 'FFFACC';
-	$_td_today     = 'FFFFDD';
-	$_vote_label   = 'FFCCCC';
-	$_COLOR['.style_td_today' ] = & $_td_today;
-	$_COLOR['td.vote_label'   ] = & $_vote_label;
-	$_COLOR['td.vote_td1'     ] = & $c_color2;
-	$_COLOR['td.vote_td2'     ] = & $c_background;
-	break;
-}
-
-// Output CSS ----
-?>
 @charset "UTF-8";
 
 /*!
@@ -113,12 +34,12 @@ img { border: 0 }
 thead td.style_td,
 tfoot td.style_td {
 	color:inherit;
-	background-color:#<?php echo $color['thead td.style_td'] ?>;
+	background-color:#D0D8E0;
 }
 thead th.style_th,
 tfoot th.style_th {
 	color:inherit;
-	background-color:#<?php echo $color['thead th.style_th'] ?>;
+	background-color:#E0E8F0;
 }
 .style_table {
 	padding:0px;
@@ -126,20 +47,20 @@ tfoot th.style_th {
 	margin:auto;
 	text-align:left;
 	color:inherit;
-	background-color:#<?php echo $color['.style_table'] ?>;
+	background-color:#CCD5DD;
 }
 .style_th {
 	padding:5px;
 	margin:1px;
 	text-align:center;
 	color:inherit;
-	background-color:#<?php echo $color['.style_th'] ?>;
+	background-color:#EEEEEE;
 }
 .style_td {
 	padding:5px;
 	margin:1px;
 	color:inherit;
-	background-color:#<?php echo $color['.style_td'] ?>;
+	background-color:#EEF5FF;
 }
 
 ul.list1 { list-style-type:disc; }
@@ -154,7 +75,7 @@ div.ie5 { text-align:center; }
 /* NoSuchPage? */
 span.noexists {
 	color:inherit;
-	background-color:#<?php echo $color['span.noexists'] ?>;
+	background-color:#FFFACC;
 }
 
 .small { font-size:80%; }
@@ -353,7 +274,7 @@ div#banner {
 
 div#preview {
 	color:inherit;
-	background-color:#<?php echo $color['div#preview'] ?>;
+	background-color:#F5F8FF;
 }
 
 img#logo {
@@ -377,14 +298,14 @@ br.spacer {}
 	border:0px;
 	margin:3px;
 	color:inherit;
-	background-color:#<?php echo $color['.style_calendar'] ?>;
+	background-color:#CCD5DD;
 	text-align:center;
 }
 .style_td_caltop {
 	padding:5px;
 	margin:1px;
 	color:inherit;
-	background-color:#<?php echo $color['.style_td_caltop'] ?>;
+	background-color:#EEF5FF;
 	font-size:80%;
 	text-align:center;
 }
@@ -392,42 +313,42 @@ br.spacer {}
 	padding:5px;
 	margin:1px;
 	color:inherit;
-	background-color:#<?php echo $color['.style_td_today'] ?>;
+	background-color:#FFFACC;
 	text-align:center;
 }
 .style_td_sat {
 	padding:5px;
 	margin:1px;
 	color:inherit;
-	background-color:#<?php echo $color['.style_td_sat'] ?>;
+	background-color:#DDE5FF;
 	text-align:center;
 }
 .style_td_sun {
 	padding:5px;
 	margin:1px;
 	color:inherit;
-	background-color:#<?php echo $color['.style_td_sun'] ?>;
+	background-color:#FFEEEE;
 	text-align:center;
 }
 .style_td_blank {
 	padding:5px;
 	margin:1px;
 	color:inherit;
-	background-color:#<?php echo $color['.style_td_blank'] ?>;
+	background-color:#EEF5FF;
 	text-align:center;
 }
 .style_td_day {
 	padding:5px;
 	margin:1px;
 	color:inherit;
-	background-color:#<?php echo $color['.style_td_day'] ?>;
+	background-color:#EEF5FF;
 	text-align:center;
 }
 .style_td_week {
 	padding:5px;
 	margin:1px;
 	color:inherit;
-	background-color:#<?php echo $color['.style_td_week'] ?>;
+	background-color:#DDE5EE;
 	font-size:80%;
 	font-weight:bold;
 	text-align:center;
@@ -477,7 +398,7 @@ hr.short_line {
 	text-align:center;
 	width:80%;
 	border-style:solid;
-	border-color:#<?php echo $color['hr.short_line'] ?>;
+	border-color:#CCD5DD;
 	border-width:1px 0px;
 }
 
@@ -532,15 +453,15 @@ div.img_margin {
 /* vote.inc.php */
 td.vote_label {
 	color:inherit;
-	background-color:#<?php echo $color['td.vote_label'] ?>;
+	background-color:#DDE5EE;
 }
 td.vote_td1 {
 	color:inherit;
-	background-color:#<?php echo $color['td.vote_td1'] ?>;
+	background-color:#FFEEEE;
 }
 td.vote_td2 {
 	color:inherit;
-	background-color:#<?php echo $color['td.vote_td2'] ?>;
+	background-color:#DDE5FF;
 }
 
 @media print {
