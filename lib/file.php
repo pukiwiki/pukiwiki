@@ -44,7 +44,7 @@ function get_source($page = NULL, $lock = TRUE, $join = FALSE)
 			} else {
 				$result = fread($fp, $size);
 				if ($result !== FALSE) {
-					// Removing line-feeds
+					// Removing Carriage-Return
 					$result = str_replace("\r", '', $result);
 				}
 			}
@@ -52,7 +52,7 @@ function get_source($page = NULL, $lock = TRUE, $join = FALSE)
 			// Returns an array
 			$result = file($path);
 			if ($result !== FALSE) {
-				// Removing line-feeds
+				// Removing Carriage-Return
 				$result = str_replace("\r", '', $result);
 			}
 		}
