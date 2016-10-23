@@ -73,7 +73,7 @@ if (isset($pkwk_dtd)) {
  <title><?php echo $title ?> - <?php echo $page_title ?></title>
 
  <link rel="SHORTCUT ICON" href="<?php echo $image['favicon'] ?>" />
- <link rel="stylesheet" type="text/css" href="<?php echo SKIN_DIR ?>pukiwiki.css.php" />
+ <link rel="stylesheet" type="text/css" href="<?php echo SKIN_DIR ?>pukiwiki.css" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
 
 <?php echo $head_tag ?>
