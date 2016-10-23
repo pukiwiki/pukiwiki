@@ -576,6 +576,7 @@ if (isset($pkwk_dtd)) {
  <link rel="stylesheet" type="text/css" media="all" href="<?php echo SKIN_DIR ?>theme/base.css" />
  <link rel="stylesheet" type="text/css" media="all" href="<?php echo SKIN_DIR ?>theme/<?php echo $theme ?>/<?php echo $theme ?>.css" />
  <link rel="stylesheet" type="text/css" href="<?php echo SKIN_DIR ?>tdiary.css.php?color=<?php echo $css_theme ?>" />
+<?php if ($css_theme === 'black') { ?> <link rel="stylesheet" type="text/css" href="<?php echo SKIN_DIR ?>tdiary_black.css" /><?php } ?>
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
 
 <?php echo $head_tag ?>
