@@ -1,0 +1,68 @@
+thead td.style_td,
+tfoot td.style_td {
+	background-color:#223333;
+}
+thead th.style_th,
+tfoot th.style_th {
+	background-color:#332200;
+}
+.style_table {
+	background-color:#CCD5DD;
+}
+.style_th {
+	background-color:#333333;
+}
+.style_td {
+	background-color:#111111;
+}
+
+/* NoSuchPage? */
+span.noexists {
+	background-color:#333355;
+}
+
+div#preview {
+	background-color:#222200;
+}
+
+/* calendar*.inc.php */
+.style_calendar {
+	background-color:#999999;
+}
+.style_td_caltop {
+	background-color:#111111;
+}
+.style_td_today {
+	background-color:#333355;
+}
+.style_td_sat {
+	background-color:#223333;
+}
+.style_td_sun {
+	background-color:#332200;
+}
+.style_td_blank {
+	background-color:#111111;
+}
+.style_td_day {
+	background-color:#111111;
+}
+.style_td_week {
+	background-color:#333333;
+}
+
+/* hr.inc.php */
+hr.short_line {
+	border-color:#999999;
+}
+
+/* vote.inc.php */
+td.vote_label {
+	background-color:#333333;
+}
+td.vote_td1 {
+	background-color:#332200;
+}
+td.vote_td2 {
+	background-color:#223333;
+}
