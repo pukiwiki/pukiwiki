@@ -462,13 +462,17 @@ EOD;
 	if(defined('SKIN_FILE') && file_exists(SKIN_FILE) && is_readable(SKIN_FILE)) {
 		catbody($title, $page, $body);
 	} else {
-		header('Content-Type: text/html; charset=euc-jp');
+		$charset = 'utf-8';
+		if(defined('CONTENT_CHARSET')) {
+			$charset = CONTENT_CHARSET;
+		}
+		header("Content-Type: text/html; charset=$charset");
 		print <<<EOD
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
  <head>
+  <meta http-equiv="content-type" content="text/html; charset=$charset">
   <title>$title</title>
-  <meta http-equiv="content-type" content="text/html; charset=euc-jp">
  </head>
  <body>
  $body
