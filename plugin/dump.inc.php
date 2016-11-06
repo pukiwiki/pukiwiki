@@ -1,7 +1,8 @@
 <?php
-// $Id: dump.inc.php,v 1.41 2007/11/03 15:17:52 henoheno Exp $
-// Copyright (C)
-//   2004-2007 PukiWiki Developers Team
+// PukiWiki - Yet another WikiWikiWeb clone
+// dump.inc.php
+// Copyright
+//   2004-2016 PukiWiki Development Team
 //   2004      teanan / Interfair Laboratory
 // License: GPL v2 or (at your option) any later version
 //
@@ -330,7 +331,9 @@ class tarlib
 	var $arc_kind;
 	var $dummydata;
 
-	// コンストラクタ
+	function tarlib() {
+		$this->__construct();
+	}
 	function __construct() {
 		$this->filename = '';
 		$this->fp       = FALSE;
@@ -713,4 +716,3 @@ class tarlib
 		$this->status = TARLIB_STATUS_INIT;
 	}
 }
-?>
