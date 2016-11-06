@@ -434,6 +434,10 @@ class AttachFile
 
 	function AttachFile($page, $file, $age = 0)
 	{
+		$this->__construct($page, $file, $age);
+	}
+	function __construct($page, $file, $age = 0)
+	{
 		$this->page = $page;
 		$this->file = preg_replace('#^.*/#','',$file);
 		$this->age  = is_numeric($age) ? $age : 0;
@@ -756,6 +760,10 @@ class AttachFiles
 
 	function AttachFiles($page)
 	{
+		$this->__construct($page);
+	}
+	function __construct($page)
+	{
 		$this->page = $page;
 	}
 
@@ -824,6 +832,10 @@ class AttachPages
 	var $pages = array();
 
 	function AttachPages($page = '', $age = NULL)
+	{
+		$this->__construct($page, $age);
+	}
+	function __construct($page = '', $age = NULL)
 	{
 
 		$dir = opendir(UPLOAD_DIR) or

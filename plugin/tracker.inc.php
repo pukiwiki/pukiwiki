@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: tracker.inc.php,v 1.124 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
+// tracker.inc.php
+// Copyright 2003-2016 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Issue tracker plugin (See Also bugtrack plugin)
@@ -269,6 +269,10 @@ class Tracker_field
 
 	function Tracker_field($field,$page,$refer,&$config)
 	{
+		$this->__construct($field, $page, $refer, $config);
+	}
+	function __construct($field,$page,$refer,&$config)
+	{
 		global $post;
 		static $id = 0;
 
@@ -375,7 +379,11 @@ class Tracker_field_format extends Tracker_field
 
 	function Tracker_field_format($field,$page,$refer,&$config)
 	{
-		parent::Tracker_field($field,$page,$refer,$config);
+		$this->__construct($field, $page, $refer, $config);
+	}
+	function __construct($field,$page,$refer,&$config)
+	{
+		parent::__construct($field,$page,$refer,$config);
 
 		foreach ($this->config->get($this->name) as $option)
 		{
@@ -665,6 +673,10 @@ class Tracker_list
 
 	function Tracker_list($page,$refer,&$config,$list)
 	{
+		$this->__construct($page, $refer, $config, $list);
+	}
+	function __construct($page,$refer,&$config,$list)
+	{
 		$this->page = $page;
 		$this->config = &$config;
 		$this->list = $list;
@@ -936,4 +948,3 @@ function plugin_tracker_get_source($page)
 	// #freezeを削除
 	return preg_replace('/^#freeze\s*$/im', '', $source);
 }
-

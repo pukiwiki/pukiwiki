@@ -52,6 +52,10 @@ class InlineConverter
 
 	function InlineConverter($converters = NULL, $excludes = NULL)
 	{
+		$this->__construct($converters, $excludes);
+	}
+	function __construct($converters = NULL, $excludes = NULL)
+	{
 		if ($converters === NULL) {
 			$converters = array(
 				'plugin',        // Inline plugins
@@ -150,8 +154,11 @@ class Link
 	var $body;
 	var $alias;
 
-	// Constructor
 	function Link($start)
+	{
+		$this->__construct($start);
+	}
+	function __construct($start)
 	{
 		$this->start = $start;
 	}
@@ -211,7 +218,11 @@ class Link_plugin extends Link
 
 	function Link_plugin($start)
 	{
-		parent::Link($start);
+		$this->__construct($start);
+	}
+	function __construct($start)
+	{
+		parent::__construct($start);
 	}
 
 	function get_pattern()
@@ -280,7 +291,11 @@ class Link_note extends Link
 {
 	function Link_note($start)
 	{
-		parent::Link($start);
+		$this->__construct($start);
+	}
+	function __construct($start)
+	{
+		parent::__construct($start);
 	}
 
 	function get_pattern()
@@ -348,7 +363,11 @@ class Link_url extends Link
 {
 	function Link_url($start)
 	{
-		parent::Link($start);
+		$this->__construct($start);
+	}
+	function __construct($start)
+	{
+		parent::__construct($start);
 	}
 
 	function get_pattern()
@@ -395,7 +414,11 @@ class Link_url_interwiki extends Link
 {
 	function Link_url_interwiki($start)
 	{
-		parent::Link($start);
+		$this->__construct($start);
+	}
+	function __construct($start)
+	{
+		parent::__construct($start);
 	}
 
 	function get_pattern()
@@ -435,7 +458,11 @@ class Link_mailto extends Link
 
 	function Link_mailto($start)
 	{
-		parent::Link($start);
+		$this->__construct($start);
+	}
+	function __construct($start)
+	{
+		parent::__construct($start);
 	}
 
 	function get_pattern()
@@ -477,7 +504,11 @@ class Link_interwikiname extends Link
 
 	function Link_interwikiname($start)
 	{
-		parent::Link($start);
+		$this->__construct($start);
+	}
+	function __construct($start)
+	{
+		parent::__construct($start);
 	}
 
 	function get_pattern()
@@ -546,7 +577,11 @@ class Link_bracketname extends Link
 
 	function Link_bracketname($start)
 	{
-		parent::Link($start);
+		$this->__construct($start);
+	}
+	function __construct($start)
+	{
+		parent::__construct($start);
 	}
 
 	function get_pattern()
@@ -608,7 +643,11 @@ class Link_wikiname extends Link
 {
 	function Link_wikiname($start)
 	{
-		parent::Link($start);
+		$this->__construct($start);
+	}
+	function __construct($start)
+	{
+		parent::__construct($start);
 	}
 
 	function get_pattern()
@@ -649,9 +688,13 @@ class Link_autolink extends Link
 
 	function Link_autolink($start)
 	{
+		$this->__construct($start);
+	}
+	function __construct($start)
+	{
 		global $autolink;
 
-		parent::Link($start);
+		parent::__construct($start);
 
 		if (! $autolink || ! file_exists(CACHE_DIR . 'autolink.dat'))
 			return;
@@ -695,7 +738,11 @@ class Link_autolink_a extends Link_autolink
 {
 	function Link_autolink_a($start)
 	{
-		parent::Link_autolink($start);
+		$this->__construct($start);
+	}
+	function __construct($start)
+	{
+		parent::__construct($start);
 	}
 
 	function get_pattern()

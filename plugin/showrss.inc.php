@@ -79,6 +79,10 @@ class ShowRSS_html
 
 	function ShowRSS_html($rss)
 	{
+		$this->__construct($rss);
+	}
+	function __construct($rss)
+	{
 		foreach ($rss as $date=>$items) {
 			foreach ($items as $item) {
 				$link  = $item['LINK'];

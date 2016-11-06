@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: map.inc.php,v 1.18 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
+// map.inc.php
+// Copyright 2002-2016 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Site map plugin
@@ -106,6 +106,10 @@ class MapNode
 
 	function MapNode($page, $reverse = FALSE)
 	{
+		$this->__construct($page, $reverse);
+	}
+	function __construct($page, $reverse = FALSE)
+	{
 		global $script, $non_list;
 
 		static $id = 0;
@@ -203,4 +207,3 @@ class MapNode
 		return $retval;
 	}
 }
-

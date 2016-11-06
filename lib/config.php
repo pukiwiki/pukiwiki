@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: config.php,v 1.6 2005/04/29 11:24:20 henoheno Exp $
-// Copyright (C) 2003-2005 PukiWiki Developers Team
+// config.php
+// Copyright 2003-2016 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Parse a PukiWiki page as a configuration page
@@ -28,6 +28,10 @@ class Config
 	var $objs = array();
 
 	function Config($name)
+	{
+		$this->__construct($name);
+	}
+	function __construct($name)
 	{
 		$this->name = $name;
 		$this->page = PKWK_CONFIG_PREFIX . $name;
@@ -137,6 +141,10 @@ class ConfigTable
 
 	function ConfigTable($title, $obj = NULL)
 	{
+		$this->__construct($title, $obj);
+	}
+	function __construct($title, $obj = NULL)
+	{
 		if ($obj !== NULL) {
 			$this->title  = $obj->title;
 			$this->before = array_merge($obj->before, $obj->after);
@@ -221,4 +229,3 @@ class ConfigTable_Direct extends ConfigTable
 		return $retval;
 	}
 }
-

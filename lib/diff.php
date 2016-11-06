@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: diff.php,v 1.10 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2003-2005, 2007 PukiWiki Developers Team
+// diff.php
+// Copyright
+//   2003-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -100,6 +100,10 @@ class line_diff
 	var $arr1, $arr2, $m, $n, $pos, $key, $plus, $minus, $equal, $reverse;
 
 	function line_diff($plus = '+', $minus = '-', $equal = ' ')
+	{
+		$this->__construct($plus, $minus, $equal);
+	}
+	function __construct($plus = '+', $minus = '-', $equal = ' ')
 	{
 		$this->plus  = $plus;
 		$this->minus = $minus;
@@ -256,6 +260,10 @@ class DiffLine
 
 	function DiffLine($text)
 	{
+		$this->__construct($text);
+	}
+	function __construct($text)
+	{
 		$this->text   = $text . "\n";
 		$this->status = array();
 	}
@@ -285,4 +293,3 @@ class DiffLine
 		return $this->text;
 	}
 }
-?>
