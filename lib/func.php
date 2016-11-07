@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: func.php,v 1.104 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2002-2006 PukiWiki Developers Team
+// func.php
+// Copyright
+//   2002-2016 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -383,7 +383,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 		// WARNING: Japanese code hard-wired
 		if($pagereading_enable) {
 			if(mb_ereg('^([A-Za-z])', mb_convert_kana($page, 'a'), $matches)) {
-				$head = $matches[1];
+				$head = strtoupper($matches[1]);
 			} elseif (isset($readings[$page]) && mb_ereg('^([ァ-ヶ])', $readings[$page], $matches)) { // here
 				$head = $matches[1];
 			} elseif (mb_ereg('^[ -~]|[^ぁ-ん亜-熙]', $page)) { // and here
@@ -392,13 +392,13 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 				$head = $other;
 			}
 		} else {
-			$head = (preg_match('/^([A-Za-z])/', $page, $matches)) ? $matches[1] :
+			$head = (preg_match('/^([A-Za-z])/', $page, $matches)) ? strtoupper($matches[1]) :
 				(preg_match('/^([ -~])/', $page) ? $symbol : $other);
 		}
 
 		$list[$head][$page] = $str;
 	}
-	ksort($list, SORT_STRING);
+	uksort($pages, 'strnatcmp');
 
 	$cnt = 0;
 	$arr_index = array();
@@ -788,4 +788,3 @@ if (! function_exists('sha1')) {
 		}
 	}
 }
-
