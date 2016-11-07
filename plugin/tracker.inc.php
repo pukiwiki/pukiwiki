@@ -930,7 +930,7 @@ class Tracker_list
 			{
 				if (trim($line) == '')
 				{
-					$source .= $line;
+					// Ignore empty line
 					continue;
 				}
 				$this->pipe = ($line{0} == '|' or $line{0} == ':');
@@ -943,8 +943,11 @@ class Tracker_list
 function plugin_tracker_get_source($page)
 {
 	$source = get_source($page);
-	// 見出しの固有ID部を削除
-	$source = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m','$1$2',$source);
-	// #freezeを削除
-	return preg_replace('/^#freeze\s*$/im', '', $source);
+	// Delete anchor part of Headings (Example: "*Heading1 [#id] AAA" to "*Heading1 AAA")
+	$s2 = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m','$1$2',$source);
+	// Delete #freeze
+	$s3 = preg_replace('/^#freeze\s*$/im', '', $s2);
+	// Delete #author line
+	$s4 = preg_replace('/^#author\b[^\r\n]*$/im', '', $s3);
+	return $s4;
 }
