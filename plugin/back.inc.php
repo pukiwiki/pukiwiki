@@ -1,7 +1,8 @@
 <?php
-// $Id: back.inc.php,v 1.10 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2003-2004 PukiWiki Developers Team
+// PukiWiki - Yet another WikiWikiWeb clone.
+// back.inc.php
+// Copyright
+//   2003-2016 PukiWiki Development Team
 //   2002      Katsumi Saito <katsumi@jo1upk.ymt.prug.or.jp>
 //
 // back plugin
@@ -11,7 +12,7 @@
 define('PLUGIN_BACK_ALLOW_PAGELINK', PKWK_SAFE_MODE); // FALSE(Compat), TRUE
 
 // Allow JavaScript (Compat)
-define('PLUGIN_BACK_ALLOW_JAVASCRIPT', TRUE); // TRUE(Compat), FALSE, PKWK_ALLOW_JAVASCRIPT
+define('PLUGIN_BACK_ALLOW_JAVASCRIPT', TRUE); // TRUE(Compat), FALSE
 
 // ----
 define('PLUGIN_BACK_USAGE', '#back([text],[center|left|right][,0(no hr)[,Page-or-URI-to-back]])');
@@ -70,4 +71,3 @@ function plugin_back_convert()
 			'">?</a></span> ]</div>' . "\n";
 	}
 }
-?>

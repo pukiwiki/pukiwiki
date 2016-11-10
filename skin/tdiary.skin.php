@@ -568,7 +568,7 @@ if (isset($pkwk_dtd)) {
  <?php echo $meta_content_type ?>
  <meta http-equiv="content-style-type" content="text/css" />
 <?php if ($nofollow || ! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
-<?php if (PKWK_ALLOW_JAVASCRIPT && isset($javascript)) { ?> <meta http-equiv="Content-Script-Type" content="text/javascript" /><?php } ?>
+ <meta http-equiv="Content-Script-Type" content="text/javascript" />
 
  <title><?php echo $title ?> - <?php echo $page_title ?></title>
 
@@ -604,7 +604,6 @@ function _navigator($key, $value = '', $javascript = ''){
 	$link = $GLOBALS['_LINK'];
 	if (! isset($lang[$key])) { echo 'LANG NOT FOUND'; return FALSE; }
 	if (! isset($link[$key])) { echo 'LINK NOT FOUND'; return FALSE; }
-	if (! PKWK_ALLOW_JAVASCRIPT) $javascript = '';
 
 	echo '<span class="adminmenu"><a href="' . $link[$key] . '" ' . $javascript . '>' .
 		(($value === '') ? $lang[$key] : $value) .

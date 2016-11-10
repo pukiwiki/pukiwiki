@@ -150,8 +150,8 @@ $nofollow = 0; // 1 = Try hiding from search engines
 
 /////////////////////////////////////////////////
 
-// PKWK_ALLOW_JAVASCRIPT - Allow / Prohibit using JavaScript
-define('PKWK_ALLOW_JAVASCRIPT', 0);
+// PKWK_ALLOW_JAVASCRIPT - Must be 1 only for compatibility
+define('PKWK_ALLOW_JAVASCRIPT', 1);
 
 /////////////////////////////////////////////////
 // _Disable_ WikiName auto-linking

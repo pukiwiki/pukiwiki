@@ -42,9 +42,6 @@ function catbody($title, $page, $body)
 
 	$_LINK = $_IMAGE = array();
 
-	// Add JavaScript header when ...
-	if (! PKWK_ALLOW_JAVASCRIPT) unset($javascript);
-
 	$_page  = isset($vars['page']) ? $vars['page'] : '';
 	$r_page = pagename_urlencode($_page);
 
