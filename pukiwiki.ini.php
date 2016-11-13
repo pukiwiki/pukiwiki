@@ -419,6 +419,13 @@ $non_list = '^\:';
 // Search ignored pages
 $search_non_list = 1;
 
+
+// Page redirect rules
+$page_redirect_rules = array(
+	//'#^FromProject($|(/(.+)$))#' => 'ToProject$1',
+	//'#^FromProject($|(/(.+)$))#' => function($matches) { return 'ToProject' . $matches[1]; },
+);
+
 /////////////////////////////////////////////////
 // Template setting
 

@@ -730,6 +730,29 @@ function htmlsc($string = '', $flags = ENT_COMPAT, $charset = CONTENT_CHARSET)
 	return htmlspecialchars($string, $flags, $charset);	// htmlsc()
 }
 
+// Redirect from an old page to new page
+function manage_page_redirect() {
+	global $page_redirect_rules, $vars;
+	if (isset($vars['page'])) {
+		$page = $vars['page'];
+		foreach ($page_redirect_rules as $rule => $replace) {
+			if (preg_match($rule, $page)) {
+				if (is_string($replace)) {
+					$new_page = preg_replace($rule, $replace, $page);
+				} elseif (is_object($replace) && is_callable($replace)) {
+					$new_page = preg_replace_callback($rule, $replace, $page);
+				} else {
+					die_message('Invalid redirect rule: ' . $rule . '=>' . $replace);
+				}
+				header('Location: ' . get_script_uri() . '?' .
+					pagename_urlencode($new_page));
+				return TRUE;
+			}
+		}
+	}
+	return FALSE;
+}
+
 
 //// Compat ////
 
