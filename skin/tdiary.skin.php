@@ -556,19 +556,12 @@ header('Cache-control: no-cache');
 header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
-// HTML DTD, <html>, and receive content-type
-if (isset($pkwk_dtd)) {
-	$meta_content_type = pkwk_output_dtd($pkwk_dtd);
-} else {
-	$meta_content_type = pkwk_output_dtd();
-}
-
 ?>
+<!DOCTYPE html>
+<html lang="ja">
 <head>
- <?php echo $meta_content_type ?>
- <meta http-equiv="content-style-type" content="text/css" />
+ <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CONTENT_CHARSET ?>" />
 <?php if ($nofollow || ! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
- <meta http-equiv="Content-Script-Type" content="text/javascript" />
 
  <title><?php echo $title ?> - <?php echo $page_title ?></title>
 
