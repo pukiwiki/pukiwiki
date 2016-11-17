@@ -744,9 +744,11 @@ function manage_page_redirect() {
 				} else {
 					die_message('Invalid redirect rule: ' . $rule . '=>' . $replace);
 				}
-				header('Location: ' . get_script_uri() . '?' .
-					pagename_urlencode($new_page));
-				return TRUE;
+				if ($page !== $new_page) {
+					header('Location: ' . get_script_uri() . '?' .
+						pagename_urlencode($new_page));
+					return TRUE;
+				}
 			}
 		}
 	}
