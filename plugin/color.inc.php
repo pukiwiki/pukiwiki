@@ -1,6 +1,9 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: color.inc.php,v 1.25 2011/01/25 15:01:01 henoheno Exp $
+// color.inc.php
+// Copyright
+//   2003-2016 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
 //
 // Text color plugin
 
@@ -14,8 +17,6 @@ define('PLUGIN_COLOR_REGEX', '/^(#[0-9a-f]{3}|#[0-9a-f]{6}|[a-z-]+)$/i');
 
 function plugin_color_inline()
 {
-	global $pkwk_dtd;
-
 	$args = func_get_args();
 	$text = strip_autolink(array_pop($args)); // Already htmlsc(text)
 
@@ -34,7 +35,7 @@ function plugin_color_inline()
 			return '&color():Invalid color: ' . htmlsc($col) . ';';
 	}
 
-	if (PLUGIN_COLOR_ALLOW_CSS === TRUE || ! isset($pkwk_dtd) || $pkwk_dtd == PKWK_DTD_XHTML_1_1) {
+	if (PLUGIN_COLOR_ALLOW_CSS) {
 		$delimiter = '';
 		if ($color != '' && $bgcolor != '') $delimiter = '; ';
 		if ($color   != '') $color   = 'color:' . $color;
@@ -46,4 +47,3 @@ function plugin_color_inline()
 		return '<font color="' . $color . '">' . $text . '</font>';
 	}
 }
-?>

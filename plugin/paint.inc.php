@@ -1,7 +1,9 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-//
-// $Id: paint.inc.php,v 1.20 2011/01/25 15:01:01 henoheno Exp $
+// paint.inc.php
+// Copyright
+//   2002-2016 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
 //
 // Paint plugin
 
@@ -38,7 +40,7 @@ define('PAINT_FORMAT_NOMSG',"\x08NAME\x08 \x08NOW\x08");
 
 function plugin_paint_action()
 {
-	global $script, $vars, $pkwk_dtd, $_paint_messages;
+	global $script, $vars, $_paint_messages;
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 	
@@ -143,9 +145,6 @@ function plugin_paint_action()
  </applet>
  </div>
 EOD;
-		// XHTML 1.0 Transitional
-		if (! isset($pkwk_dtd) || $pkwk_dtd == PKWK_DTD_XHTML_1_1)
-			$pkwk_dtd = PKWK_DTD_XHTML_1_0_TRANSITIONAL;
 	}
 	return $retval;
 }
@@ -266,4 +265,3 @@ function paint_insert_ref($filename)
 
 	return $ret;
 }
-
