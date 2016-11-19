@@ -558,7 +558,7 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
 ?>
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="<?php echo LANG ?>">
 <head>
  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CONTENT_CHARSET ?>" />
 <?php if ($nofollow || ! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
