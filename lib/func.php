@@ -8,6 +8,24 @@
 //
 // General functions
 
+function pkwk_log($message)
+{
+	$log_filepath = 'log/error.log.php';
+	static $dateTimeExists;
+	if (!isset($dateTimeExists)) {
+		$dateTimeExists = class_exists('DateTime');
+		error_log("<?php\n", 3, $log_filepath);
+	}
+	if ($dateTimeExists) {
+		// for PHP5.2+
+		$d = \DateTime::createFromFormat('U.u', sprintf('%6F', microtime(true)));
+		$timestamp = substr($d->format('Y-m-d H:i:s.u'), 0, 23);
+	} else {
+		$timestamp = date('Y-m-d H:i:s');
+	}
+	error_log($timestamp . ' ' . $message . "\n", 3, $log_filepath);
+}
+
 function is_interwiki($str)
 {
 	global $InterWikiName;
