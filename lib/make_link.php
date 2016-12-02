@@ -786,6 +786,11 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolin
 		return $al_left . '<a ' . 'href="' . $script . '?' . $r_page . $anchor .
 			'"' . $title . '>' . $s_alias . '</a>' . $al_right;
 	} else {
+		// Support Page redirection
+		$redirect_page = get_pagename_on_redirect($page);
+		if ($redirect_page !== false) {
+			return make_pagelink($redirect_page, $s_alias);
+		}
 		// Dangling link
 		if (PKWK_READONLY) return $s_alias; // No dacorations
 

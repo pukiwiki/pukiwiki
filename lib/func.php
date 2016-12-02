@@ -748,31 +748,56 @@ function htmlsc($string = '', $flags = ENT_COMPAT, $charset = CONTENT_CHARSET)
 	return htmlspecialchars($string, $flags, $charset);	// htmlsc()
 }
 
-// Redirect from an old page to new page
-function manage_page_redirect() {
-	global $page_redirect_rules, $vars;
-	if (isset($vars['page'])) {
-		$page = $vars['page'];
-		foreach ($page_redirect_rules as $rule => $replace) {
-			if (preg_match($rule, $page)) {
-				if (is_string($replace)) {
-					$new_page = preg_replace($rule, $replace, $page);
-				} elseif (is_object($replace) && is_callable($replace)) {
-					$new_page = preg_replace_callback($rule, $replace, $page);
-				} else {
-					die_message('Invalid redirect rule: ' . $rule . '=>' . $replace);
-				}
-				if ($page !== $new_page) {
-					header('Location: ' . get_script_uri() . '?' .
-						pagename_urlencode($new_page));
-					return TRUE;
-				}
+/**
+ * Get redirect page name on Page Redirect Rules
+ *
+ * This function returns exactly false if it doesn't need redirection.
+ * So callers need check return value is false or not.
+ *
+ * @param $page page name
+ * @return new page name or false
+ */
+function get_pagename_on_redirect($page) {
+	global $page_redirect_rules;
+	foreach ($page_redirect_rules as $rule=>$replace) {
+		if (preg_match($rule, $page)) {
+			if (is_string($replace)) {
+				$new_page = preg_replace($rule, $replace, $page);
+			} elseif (is_object($replace) && is_callable($replace)) {
+				$new_page = preg_replace_callback($rule, $replace, $page);
+			} else {
+				die_message('Invalid redirect rule: ' . $rule . '=>' . $replace);
+			}
+			if ($page !== $new_page) {
+				return $new_page;
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 
+/**
+ * Redirect from an old page to new page
+ *
+ * This function returns true when a redirection occurs.
+ * So callers need check return value is false or true.
+ * And if it is true, then you have to exit PHP script.
+ *
+ * @return bool Inticates a redirection occurred or not
+ */
+function manage_page_redirect() {
+	global $vars;
+	if (isset($vars['page'])) {
+		$page = $vars['page'];
+	}
+	$new_page = get_pagename_on_redirect($page);
+	if ($new_page != false) {
+		header('Location: ' . get_script_uri() . '?' .
+			pagename_urlencode($new_page));
+		return TRUE;
+	}
+	return FALSE;
+}
 
 //// Compat ////
 
