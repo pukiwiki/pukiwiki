@@ -191,16 +191,15 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 	$postdata = plugin_bugtrack_template($base, $summary, $name, $priority,
 		$state, $category, $version, $body);
 
-	$id = $jump = 1;
-	$page = $base . '/' . sprintf(PLUGIN_BUGTRACK_NUMBER_FORMAT, $id);
-	while (is_page($page)) {
-		$id   = $jump;
-		$jump += 50;
-		$page = $base . '/' . sprintf(PLUGIN_BUGTRACK_NUMBER_FORMAT, $jump);
+	$page_list = plugin_bugtrack_get_page_list($base, false);
+	usort($page_list, '_plugin_bugtrack_list_paganame_compare');
+	if (count($page_list) == 0) {
+		$id = 1;
+	} else {
+		$latest_page = $page_list[count($page_list) - 1]['name'];
+		$id = intval(substr($latest_page, strlen($base) + 1)) + 1;
 	}
 	$page = $base . '/' . sprintf(PLUGIN_BUGTRACK_NUMBER_FORMAT, $id);
-	while (is_page($page))
-		$page = $base . '/' . sprintf(PLUGIN_BUGTRACK_NUMBER_FORMAT, ++$id);
 
 	if ($pagename == '') {
 		page_write($page, $postdata);
@@ -255,15 +254,24 @@ function _plugin_bugtrack_list_paganame_compare($a, $b)
 	return strnatcmp($a['name'], $b['name']);
 }
 
-function __pkwk_ctype_digit($s) {
-	static $ctype_digits_exists;
-	if (!isset($ctype_digits_exists)) {
-		$ctype_digits_exists = function_exists('ctype_digit');
+
+/**
+ * Get page list for "$page/"
+ */
+function plugin_bugtrack_get_page_list($page, $needs_filetime) {
+	$page_list = array();
+	$pattern = $page . '/';
+	$pattern_len = strlen($pattern);
+	foreach (get_existpages() as $p) {
+		if (strncmp($p, $pattern, $pattern_len) === 0 && pkwk_ctype_digit(substr($p, $pattern_len))) {
+			if ($needs_filetime) {
+				$page_list[] = array('name'=>$p,'filetime'=>get_filetime($p));
+			} else {
+				$page_list[] = array('name'=>$p);
+			}
+		}
 	}
-	if ($ctype_digits_exists) {
-		return ctype_digit($s);
-	}
-	return preg_match('/^[0-9]+$/', $s) ? true : false;
+	return $page_list;
 }
 
 /**
@@ -291,14 +299,7 @@ function plugin_bugtrack_list_convert()
 		if (is_pagename($_page)) $page = $_page;
 	}
 	$data = array();
-	$page_list = array();
-	$pattern = $page . '/';
-	$pattern_len = strlen($pattern);
-	foreach (get_existpages() as $p) {
-		if (strncmp($p, $pattern, $pattern_len) === 0 && __pkwk_ctype_digit(substr($p, $pattern_len))) {
-			$page_list[] = array('name'=>$p,'filetime'=>get_filetime($p));
-		}
-	}
+	$page_list = plugin_bugtrack_get_page_list($page, true);
 	usort($page_list, '_plugin_bugtrack_list_paganame_compare');
 	$count_list = count($_plugin_bugtrack['state_list']);
 	$data_map = array();

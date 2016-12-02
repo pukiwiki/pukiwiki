@@ -26,6 +26,23 @@ function pkwk_log($message)
 	error_log($timestamp . ' ' . $message . "\n", 3, $log_filepath);
 }
 
+/**
+ * ctype_digit that supports PHP4+.
+ *
+ * PHP official document says PHP4 has ctype_digit() function.
+ * But sometimes it doen't exists on PHP 4.1.
+ */
+function pkwk_ctype_digit($s) {
+	static $ctype_digit_exists;
+	if (!isset($ctype_digit_exists)) {
+		$ctype_digit_exists = function_exists('ctype_digit');
+	}
+	if ($ctype_digit_exists) {
+		return ctype_digit($s);
+	}
+	return preg_match('/^[0-9]+$/', $s) ? true : false;
+}
+
 function is_interwiki($str)
 {
 	global $InterWikiName;
