@@ -307,7 +307,7 @@ function plugin_bugtrack_list_convert()
 		// Cache management
 		$data_updated = true;
 		$cache_filepath = CACHE_DIR . encode($page) . '.bugtrack';
-		$json_cached = file_get_contents($cache_filepath);
+		$json_cached = pkwk_file_get_contents($cache_filepath);
 		if ($json_cached) {
 			$wrapdata = json_decode($json_cached);
 			if (is_object($wrapdata)) {
@@ -394,7 +394,7 @@ EOD;
 			}
 			$json = array('refreshed_at'=>$refreshed_at, 'pages'=>$data, 'version'=>$cache_format_version);
 			$cache_body = json_encode($json, JSON_UNESCAPED_UNICODE + JSON_UNESCAPED_SLASHES);
-			file_put_contents($cache_filepath, $cache_body);
+			file_put_contents($cache_filepath, $cache_body, LOCK_EX);
 		}
 	}
 	$table = array();

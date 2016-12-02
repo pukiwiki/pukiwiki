@@ -841,3 +841,19 @@ function pkwk_touch_file($filename, $time = FALSE, $atime = FALSE)
 			htmlsc(basename($filename)));
 	}
 }
+
+/**
+ * Lock-enabled file_get_contents
+ *
+ * Require: PHP5+
+ */
+function pkwk_file_get_contents($filename) {
+	if (! file_exists($filename)) {
+		return false;
+	}
+	$fp   = fopen($filename, 'rb');
+	flock($fp, LOCK_SH);
+	$file = file_get_contents($filename);
+	flock($fp, LOCK_UN);
+	return $file;
+}
