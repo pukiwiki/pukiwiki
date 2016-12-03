@@ -84,8 +84,12 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	if (PKWK_READONLY) return; // Do nothing
 
 	$postdata = make_str_rules($postdata);
+	$timestamp_to_keep = null;
+	if ($notimestamp) {
+		$timestamp_to_keep = get_filetime($page);
+	}
 	$text_without_author = remove_author_info($postdata);
-	$postdata = add_author_info($text_without_author);
+	$postdata = add_author_info($text_without_author, $timestamp_to_keep);
 	$is_delete = empty($text_without_author);
 
 	// Do nothing when it has no changes
@@ -167,7 +171,13 @@ function make_str_rules($source)
 	return implode("\n", $lines);
 }
 
-function add_author_info($wikitext)
+/**
+ * Add author plugin text for wiki text body
+ *
+ * @param string $wikitext
+ * @param integer $timestamp_to_keep Set null when not to keep timestamp
+ */
+function add_author_info($wikitext, $timestamp_to_keep)
 {
 	global $auth_user, $auth_user_fullname;
 	$author = preg_replace('/"/', '', $auth_user);
@@ -176,10 +186,14 @@ function add_author_info($wikitext)
 		// Fullname is empty, use $author as its fullname
 		$fullname = preg_replace('/^[^:]*:/', '', $author);
 	}
+	$datetime_to_keep = '';
+	if (!is_null($timestamp_to_keep)) {
+		$datetime_to_keep .= ';' . get_date_atom($timestamp_to_keep + LOCALZONE);
+	}
 	$displayname = preg_replace('/"/', '', $fullname);
 	$user_prefix = get_auth_user_prefix();
 	$author_text = sprintf('#author("%s","%s","%s")',
-		get_date_atom(UTIME + LOCALZONE),
+		get_date_atom(UTIME + LOCALZONE) . $datetime_to_keep,
 		($author ? $user_prefix . $author : ''),
 		$displayname) . "\n";
 	return $author_text . $wikitext;
