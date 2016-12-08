@@ -348,6 +348,7 @@ function make_related($page, $tag = '')
 	global $script, $vars, $rule_related_str, $related_str;
 	global $_ul_left_margin, $_ul_margin, $_list_pad_str;
 
+	prepare_links_related($page);
 	$links = links_get_related($page);
 
 	if ($tag) {

@@ -888,3 +888,36 @@ function prepare_display_materials() {
 		}
 	}
 }
+
+/**
+ * Prepare page related links and references for links_get_related()
+ */
+function prepare_links_related($page) {
+	$enc_name = encode($page);
+	$rel_file = CACHE_DIR . encode($page) . '.rel';
+	$ref_file = CACHE_DIR . encode($page) . '.ref';
+	if (file_exists($rel_file)) return;
+	if (file_exists($ref_file)) return;
+	$pattern = '/^((?:[0-9A-F]{2})+)' . '(\.ref|\.rel)' . '$/';
+
+	$dir = CACHE_DIR;
+	$dp = @opendir($dir) or die_message('CACHE_DIR/'. ' is not found or not readable.');
+	$rel_ref_ready = false;
+	$count = 0;
+	while (($file = readdir($dp)) !== FALSE) {
+		if (preg_match($pattern, $file, $matches)) {
+			if ($count++ > 5) {
+				$rel_ref_ready = true;
+				break;
+			}
+		}
+	}
+	closedir($dp);
+	if (!$rel_ref_ready) {
+		if (count(get_existpages()) < 50) {
+			// Make link files automatically only if page count < 50.
+			// Because large number of update links will cause PHP timeout.
+			links_init();
+		}
+	}
+}
