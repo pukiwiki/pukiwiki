@@ -98,6 +98,7 @@ if (isset($retvars['body']) && $retvars['body'] != '') {
 	$vars['cmd']  = 'read';
 	$vars['page'] = & $base;
 
+	prepare_display_materials();
 	$body  = convert_html(get_source($base));
 }
 

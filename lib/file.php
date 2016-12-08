@@ -871,3 +871,20 @@ function pkwk_file_get_contents($filename) {
 	flock($fp, LOCK_UN);
 	return $file;
 }
+
+/**
+ * Prepare some cache files for convert_html()
+ *
+ * * Make cache/autolink.dat if needed
+ */
+function prepare_display_materials() {
+	global $autolink;
+	if ($autolink) {
+		// Make sure 'cache/autolink.dat'
+		$file = CACHE_DIR . PKWK_AUTOLINK_REGEX_CACHE;
+		if (!file_exists($file)) {
+			// Re-create autolink.dat
+			put_lastmodified();
+		}
+	}
+}
