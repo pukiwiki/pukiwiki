@@ -394,6 +394,11 @@ $NotePattern = '/\(\(((?:(?>(?:(?!\(\()(?!\)\)(?:[^\)]|$)).)+)|(?R))*)\)\)/x';
 require(DATA_HOME . 'rules.ini.php');
 
 /////////////////////////////////////////////////
+// Load HTML Entity pattern
+// This pattern is created by 'plugin/update_entities.inc.php'
+require(LIB_DIR . 'html_entities.php');
+
+/////////////////////////////////////////////////
 // 初期設定(その他のグローバル変数)
 
 // 現在時刻
@@ -408,10 +413,7 @@ if ($usefacemark) $line_rules += $facemark_rules;
 unset($facemark_rules);
 
 // 実体参照パターンおよびシステムで使用するパターンを$line_rulesに加える
-//$entity_pattern = '[a-zA-Z0-9]{2,8}';
-$entity_pattern = trim(join('', file(CACHE_DIR . 'entities.dat')));
-
 $line_rules = array_merge(array(
-	'&amp;(#[0-9]+|#x[0-9a-f]+|' . $entity_pattern . ');' => '&$1;',
+	'&amp;(#[0-9]+|#x[0-9a-f]+|' . get_html_entity_pattern() . ');' => '&$1;',
 	"\r"          => '<br />' . "\n",	/* 行末にチルダは改行 */
 ), $line_rules);

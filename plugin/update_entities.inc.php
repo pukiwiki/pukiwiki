@@ -1,7 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: update_entities.inc.php,v 1.15 2007/04/08 10:29:24 henoheno Exp $
-// Copyright (C) 2003-2007 PukiWiki Developers Team
+// update_entities.inc.php
+// Copyright
+//   2003-2007 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Update entities plugin - Update XHTML entities from DTD
@@ -119,4 +120,3 @@ function plugin_update_entities_create($do = FALSE)
 
 	return $items;
 }
-?>
