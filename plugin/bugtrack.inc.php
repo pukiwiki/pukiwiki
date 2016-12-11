@@ -363,7 +363,7 @@ function plugin_bugtrack_list_convert()
 			if (isset($state_no_cached) && isset($html_cached)) {
 				continue;
 			}
-			foreach (array('summary', 'name', 'priority', 'state', 'category') as $item)
+			foreach (array('name', 'priority', 'state', 'category') as $item)
 				$$item = htmlsc($$item);
 			$page_link = make_pagelink($page_name);
 
