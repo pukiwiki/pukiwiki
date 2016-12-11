@@ -22,9 +22,9 @@ function plugin_bugtrack_init()
 
 	$_plugin_bugtrack = array(
 		'priority_list'  => array('緊急', '重要', '普通', '低'),
-		'state_list'     => array('提案', '着手', 'CVS待ち', '完了', '保留', '却下'),
-		'state_sort'     => array('着手', 'CVS待ち', '保留', '完了', '提案', '却下'),
-		'state_bgcolor'  => array('#ccccff', '#ffcc99', '#ccddcc', '#ccffcc', '#ffccff', '#cccccc', '#ff3333'),
+		'state_list'     => array('提案', '着手', '完了', '保留', '却下'),
+		'state_sort'     => array('着手', '保留', '完了', '提案', '却下'),
+		'state_bgcolor'  => array('#ccccff', '#ffcc99', '#ccffcc', '#ffccff', '#cccccc', '#ff3333'),
 		'header_bgcolor' => '#ffffcc',
 		'base'     => 'ページ',
 		'summary'  => 'サマリ',

@@ -26,7 +26,6 @@ These settings below, are used when no tracker configuration is specified. (e.g.
 |Index         |Cell format        |h
 |Proposed      |BGCOLOR(#ffccff):%s|
 |Started       |BGCOLOR(#ccccff):%s|
-|Waiting commit|BGCOLOR(#ffccff):%s|
 |Fixed         |BGCOLOR(#ccffcc):%s|
 |Suspended     |BGCOLOR(#ccddcc):%s|
 |Refused       |BGCOLOR(#cccccc):%s|

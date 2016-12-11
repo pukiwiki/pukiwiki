@@ -26,7 +26,6 @@ trackerプラグインで設定を指定しなかった場合、この設定が�
 |見出し |セルの書式         |h
 |提案   |BGCOLOR(#ffccff):%s|
 |着手   |BGCOLOR(#ccccff):%s|
-|CVS待ち|BGCOLOR(#ffccff):%s|
 |完了   |BGCOLOR(#ccffcc):%s|
 |保留   |BGCOLOR(#ccddcc):%s|
 |却下   |BGCOLOR(#cccccc):%s|
