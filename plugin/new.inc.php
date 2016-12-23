@@ -40,6 +40,8 @@ function plugin_new_inline()
 				. '-' . substr('0' . $dm[3], -2)
 				. ' ' . $dm[4];
 			$timestamp = strtotime($iso8601_date);
+		} else {
+			$timestamp = strtotime($date);
 		}
 		if ($timestamp === -1 || $timestamp === FALSE) {
 			return '&new([nodate]){date}: Invalid date string;';
