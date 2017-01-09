@@ -463,6 +463,10 @@ td.vote_td2 {
 	color:inherit;
 	background-color:#DDE5FF;
 }
+pre {
+	white-space:pre-wrap;
+	word-wrap:break-word;
+}
 
 @media print {
   img#logo,
