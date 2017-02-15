@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: auth.php,v 1.22 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C) 2003-2005, 2007 PukiWiki Developers Team
+// auth.php
+// Copyright 2003-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Authentication related functions
@@ -154,16 +154,16 @@ function pkwk_ldap_escape_dn($value) {
 // Basic-auth related ----
 
 // Check edit-permission
-function check_editable($page, $auth_flag = TRUE, $exit_flag = TRUE)
+function check_editable($page, $auth_enabled = TRUE, $exit_on_fail = TRUE)
 {
 	global $script, $_title_cannotedit, $_msg_unfreeze;
 
-	if (edit_auth($page, $auth_flag, $exit_flag) && is_editable($page)) {
+	if (edit_auth($page, $auth_enabled, $exit_on_fail) && is_editable($page)) {
 		// Editable
 		return TRUE;
 	} else {
 		// Not editable
-		if ($exit_flag === FALSE) {
+		if ($exit_on_fail === FALSE) {
 			return FALSE; // Without exit
 		} else {
 			// With exit
@@ -179,31 +179,32 @@ function check_editable($page, $auth_flag = TRUE, $exit_flag = TRUE)
 	}
 }
 
-// Check read-permission
-function check_readable($page, $auth_flag = TRUE, $exit_flag = TRUE)
-{
-	return read_auth($page, $auth_flag, $exit_flag);
+/**
+ * Whether the page is readable from current user or not.
+ */
+function is_page_readable($page) {
+	global $read_auth_pages;
+	return _is_page_accessible($page, $read_auth_pages);
 }
 
-function edit_auth($page, $auth_flag = TRUE, $exit_flag = TRUE)
-{
-	global $edit_auth, $edit_auth_pages, $_title_cannotedit;
-	return $edit_auth ?  basic_auth($page, $auth_flag, $exit_flag,
-		$edit_auth_pages, $_title_cannotedit) : TRUE;
+/**
+ * Whether the page is writable from current user or not.
+ */
+function is_page_writable($page) {
+	global $edit_auth_pages;
+	return _is_page_accessible($page, $edit_auth_pages);
 }
 
-function read_auth($page, $auth_flag = TRUE, $exit_flag = TRUE)
-{
-	global $read_auth, $read_auth_pages, $_title_cannotread;
-	return $read_auth ?  basic_auth($page, $auth_flag, $exit_flag,
-		$read_auth_pages, $_title_cannotread) : TRUE;
-}
+/**
+ * Get whether a current auth user can access the page
+ *
+ * @param $page page name
+ * @param $auth_pages pagepattern -> groups map
+ * @return true if a current user can access the page
+ */
+function _is_page_accessible($page, $auth_pages) {
+	global $auth_method_type, $auth_user_groups, $auth_user;
 
-// Basic authentication
-function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
-{
-	global $auth_method_type, $auth_users, $_msg_auth, $auth_user, $auth_groups;
-	global $auth_user_groups, $auth_type, $g_query_string;
 	// Checked by:
 	$target_str = '';
 	if ($auth_method_type == 'pagename') {
@@ -211,22 +212,96 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 	} else if ($auth_method_type == 'contents') {
 		$target_str = join('', get_source($page)); // Its contents
 	}
-
 	$user_list = array();
-	foreach($auth_pages as $key=>$val)
-		if (preg_match($key, $target_str))
+	foreach($auth_pages as $key=>$val) {
+		if (preg_match($key, $target_str)) {
 			$user_list = array_merge($user_list, explode(',', $val));
-
+		}
+	}
 	if (empty($user_list)) return TRUE; // No limit
+	if (!$auth_user) {
+		// Current user doesen't yet log in.
+		return FALSE;
+	}
+	if (count(array_intersect($auth_user_groups, $user_list)) === 0) {
+		return FALSE;
+	}
+	return TRUE;
+}
 
-	$matches = array();
-	if (PKWK_READONLY ||
-		! $auth_user ||
-		count(array_intersect($auth_user_groups, $user_list)) === 0)
-	{
+/**
+ * Ensure the page is readable, or show Login UI.
+ * @param $page page
+ */
+function ensure_page_readable($page) {
+	global $read_auth, $read_auth_pages, $_title_cannotread;
+	if (!$read_auth) {
+		return true;
+	}
+	return basic_auth($page, true, true,
+		$read_auth_pages, $_title_cannotread);
+}
+
+/**
+ * Ensure the page is writable, or show Login UI.
+ * @param $page page
+ */
+function ensure_page_writable($page) {
+	global $edit_auth, $edit_auth_pages, $_title_cannotedit;
+	if (!$edit_auth) {
+		return true;
+	}
+	return basic_auth($page, true, true,
+		$edit_auth_pages, $_title_cannotedit);
+}
+
+/**
+ * Check a page is readable or not, show Auth UI in some cases.
+ *
+ * @param $page page name
+ * @param $auth_enabled true if auth is available (Normally true)
+ * @param $exit_on_fail  (Normally true)
+ * @return true if the page is readable
+ */
+function check_readable($page, $auth_enabled = TRUE, $exit_on_fail = TRUE)
+{
+	return read_auth($page, $auth_enabled, $exit_on_fail);
+}
+
+function edit_auth($page, $auth_enabled = TRUE, $exit_on_fail = TRUE)
+{
+	global $edit_auth, $edit_auth_pages, $_title_cannotedit;
+	return $edit_auth ?  basic_auth($page, $auth_enabled, $exit_on_fail,
+		$edit_auth_pages, $_title_cannotedit) : TRUE;
+}
+
+function read_auth($page, $auth_enabled = TRUE, $exit_on_fail = TRUE)
+{
+	global $read_auth, $read_auth_pages, $_title_cannotread;
+	return $read_auth ?  basic_auth($page, $auth_enabled, $exit_on_fail,
+		$read_auth_pages, $_title_cannotread) : TRUE;
+}
+
+/**
+ * Authentication
+ *
+ * @param $page page name
+ * @param $auth_enabled true if auth is available
+ * @param $exit_on_fail Show forbidden message and stop all following processes
+ * @param $auth_pages accessible users -> pages pattern map
+ * @param $title_cannot forbidden message
+ */
+function basic_auth($page, $auth_enabled, $exit_on_fail, $auth_pages, $title_cannot)
+{
+	global $auth_users, $_msg_auth, $auth_user;
+	global $auth_type, $g_query_string;
+	$is_accessible = _is_page_accessible($page, $auth_pages);
+	if ($is_accessible) {
+		return TRUE;
+	} else {
 		// Auth failed
 		pkwk_common_headers();
-		if ($auth_flag && !$auth_user) {
+		if ($auth_enabled && !$auth_user) {
 			if (AUTH_TYPE_BASIC === $auth_type) {
 				header('WWW-Authenticate: Basic realm="' . $_msg_auth . '"');
 				header('HTTP/1.0 401 Unauthorized');
@@ -244,7 +319,7 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 				header('Location: ' . $loginurl);
 			}
 		}
-		if ($exit_flag) {
+		if ($exit_on_fail) {
 			$body = $title = str_replace('$1',
 				htmlsc(strip_bracket($page)), $title_cannot);
 			$page = str_replace('$1', make_search($page), $title_cannot);
@@ -252,8 +327,6 @@ function basic_auth($page, $auth_flag, $exit_flag, $auth_pages, $title_cannot)
 			exit;
 		}
 		return FALSE;
-	} else {
-		return TRUE;
 	}
 }
 

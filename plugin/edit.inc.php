@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // edit.inc.php
-// Copyright (C) 2001-2016 PukiWiki Development Team
+// Copyright 2001-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Edit plugin (cmd=edit)
@@ -42,12 +42,14 @@ function plugin_edit_preview()
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
 	// Loading template
-	if (isset($vars['template_page']) && is_page($vars['template_page'])) {
-		$vars['msg'] = remove_author_info(get_source($vars['template_page'], TRUE, TRUE));
-		// Cut fixed anchors
-		$vars['msg'] = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $vars['msg']);
+	$template_page;
+	if (isset($vars['template_page']) && is_page($template_page = $vars['template_page'])) {
+		if (is_page_readable($template_page)) {
+			$vars['msg'] = remove_author_info(get_source($vars['template_page'], TRUE, TRUE));
+			// Cut fixed anchors
+			$vars['msg'] = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $vars['msg']);
+		}
 	}
-
 	$vars['msg'] = preg_replace(PLUGIN_EDIT_FREEZE_REGEX, '', $vars['msg']);
 	$postdata = $vars['msg'];
 
