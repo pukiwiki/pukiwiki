@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // template.inc.php
 // Copyright
-//   2002-2016 PukiWiki Development Team
+//   2002-2017 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -22,8 +22,10 @@ function plugin_template_action()
 	if (! isset($vars['refer']) || ! is_page($vars['refer']))
 		return FALSE;
 
-	$lines = get_source($vars['refer']);
-
+	$refer = $vars['refer'];
+	// Ensure page is readable, or show Login UI and exit
+	ensure_page_readable($refer);
+	$lines = get_source($refer);
 	// Remove '#freeze'
 	if (! empty($lines) && strtolower(rtrim($lines[0])) == '#freeze')
 		array_shift($lines);
@@ -43,6 +45,8 @@ function plugin_template_action()
 
 	// edit
 	if ($is_pagename = is_pagename($page) && (! $is_page || ! empty($vars['force']))) {
+	// Ensure page is readable, or show Login UI and exit
+		ensure_page_writable($page);
 		$postdata       = join('', array_splice($lines, $begin, $end - $begin + 1));
 		$retvar['msg']  = $_title_edit;
 		$retvar['body'] = edit_form($vars['page'], $postdata);
