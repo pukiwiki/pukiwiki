@@ -28,7 +28,7 @@ function plugin_edit_action()
 	}
 
 	$postdata = @join('', get_source($page));
-	if ($postdata == '') $postdata = auto_template($page);
+	if ($postdata === '') $postdata = auto_template($page);
 	$postdata = remove_author_info($postdata);
 	return array('msg'=>$_title_edit, 'body'=>edit_form($page, $postdata));
 }
@@ -62,7 +62,7 @@ function plugin_edit_preview()
 	}
 
 	$body = $_msg_preview . '<br />' . "\n";
-	if ($postdata == '')
+	if ($postdata === '')
 		$body .= '<strong>' . $_msg_preview_delete . '</strong>';
 	$body .= '<br />' . "\n";
 
@@ -219,7 +219,7 @@ function plugin_edit_write()
 	}
 
 	// NULL POSTING, OR removing existing page
-	if ($postdata == '') {
+	if ($postdata === '') {
 		page_write($page, $postdata);
 		$retvars['msg' ] = $_title_deleted;
 		$retvars['body'] = str_replace('$1', htmlsc($page), $_title_deleted);

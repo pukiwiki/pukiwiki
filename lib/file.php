@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // file.php
-// Copyright (C)
-//   2002-2016 PukiWiki Development Team
+// Copyright
+//   2002-2017 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -95,7 +95,7 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 	// Do nothing when it has no changes
 	$oldpostdata = is_page($page) ? join('', get_source($page)) : '';
 	$oldtext_without_author = remove_author_info($oldpostdata);
-	if ($text_without_author === $oldtext_without_author) {
+	if (!$is_delete && $text_without_author === $oldtext_without_author) {
 		// Do nothing on updating with unchanged content
 		return;
 	}
