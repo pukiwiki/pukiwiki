@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // html.php
 // Copyright
-//   2002-2016 PukiWiki Development Team
+//   2002-2017 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -232,7 +232,8 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 		}
 		$page_names = array();
 		foreach(get_existpages() as $_page) {
-			if ($_page == $whatsnew || check_non_list($_page))
+			if ($_page == $whatsnew || check_non_list($_page) ||
+				!is_page_readable($_page))
 				continue;
 			if (preg_match('/template/i', $_page)) {
 				$tpage_names[] = $_page;
