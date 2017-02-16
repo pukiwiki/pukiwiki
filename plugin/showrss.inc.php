@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // showrss.inc.php
 // Copyright:
-//     2002-2016 PukiWiki Development Team
+//     2002-2017 PukiWiki Development Team
 //     2002      PANDA <panda@arino.jp>
 //     (Original)hiro_do3ob@yahoo.co.jp
 // License: GPL, same as PukiWiki
@@ -282,14 +282,17 @@ class ShowRSS_XML
 			
 		} else if (isset($item['PUBDATE'])) {
 			$time = plugin_showrss_get_timestamp($item['PUBDATE']);
-			
-		} else if (isset($item['DESCRIPTION']) &&
-			($description = trim($item['DESCRIPTION'])) != '' &&
-			($time = strtotime($description)) != -1) {
-				$time -= LOCALZONE;
-
 		} else {
-			$time = time() - LOCALZONE;
+			$time_from_desc = FALSE;
+			if (isset($item['DESCRIPTION']) &&
+				(($description = trim($item['DESCRIPTION'])) != '')) {
+				$time_from_desc = strtotime($description);
+			}
+			if ($time_from_desc !== FALSE && $time_from_desc !== -1) {
+				$time = $time_from_desc - LOCALZONE;
+			} else {
+				$time = time() - LOCALZONE;
+			}
 		}
 		$item['_TIMESTAMP'] = $time;
 		$date = get_date('Y-m-d', $item['_TIMESTAMP']);
@@ -314,7 +317,7 @@ function plugin_showrss_get_timestamp($str)
 	$matches = array();
 	if (preg_match('/(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})(([+-])(\d{2}):(\d{2}))?/', $str, $matches)) {
 		$time = strtotime($matches[1] . ' ' . $matches[2]);
-		if ($time == -1) {
+		if ($time === FALSE || $time === -1) {
 			$time = UTIME;
 		} else if ($matches[3]) {
 			$diff = ($matches[5] * 60 + $matches[6]) * 60;
@@ -323,6 +326,6 @@ function plugin_showrss_get_timestamp($str)
 		return $time;
 	} else {
 		$time = strtotime($str);
-		return ($time == -1) ? UTIME : $time - LOCALZONE;
+		return ($time === FALSE || $time === -1) ? UTIME : $time - LOCALZONE;
 	}
 }

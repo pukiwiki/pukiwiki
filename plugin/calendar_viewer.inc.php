@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: calendar_viewer.inc.php,v 1.37 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
+// calendar_viewer.inc.php
+// Copyright  2002-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Calendar viewer plugin - List pages that calendar/calnedar2 plugin created
@@ -177,7 +177,7 @@ function plugin_calendar_viewer_convert()
 
 		if (PLUGIN_CALENDAR_VIEWER_DATE_FORMAT !== FALSE) {
 			$time = strtotime(basename($page)); // $date_sep must be assumed '-' or ''!
-			if ($time == -1) {
+			if ($time === FALSE || $time === -1) {
 				$s_page = htmlsc($page); // Failed. Why?
 			} else {
 				$week   = $weeklabels[date('w', $time)];
@@ -330,4 +330,3 @@ function plugin_calendar_viewer_isValidDate($aStr, $aSepList = '-/ .')
 		return FALSE;
 	}
 }
-
