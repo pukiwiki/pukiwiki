@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // bugtrack.inc.php
 // Copyright
-//   2002-2016 PukiWiki Development Team
+//   2002-2017 PukiWiki Development Team
 //   2002 Y.MASUI GPL2  http://masui.net/pukiwiki/ masui@masui.net
 //
 // BugTrack plugin
@@ -284,7 +284,7 @@ function plugin_bugtrack_get_page_list($page, $needs_filetime) {
  */
 function plugin_bugtrack_list_convert()
 {
-	global $script, $vars, $_plugin_bugtrack;
+	global $script, $vars, $_plugin_bugtrack, $_title_cannotread;
 	$cache_format_version = 1;
 	$cache_expire_time = 60 * 60 * 24;
 	$cache_refresh_time_prev;
@@ -297,6 +297,10 @@ function plugin_bugtrack_list_convert()
 		list($_page) = func_get_args();
 		$_page = get_fullname(strip_bracket($_page), $page);
 		if (is_pagename($_page)) $page = $_page;
+	}
+	if (!is_page_readable($page)) {
+		$body = str_replace('$1', htmlsc($page), $_title_cannotread);
+		return $body;
 	}
 	$data = array();
 	$page_list = plugin_bugtrack_get_page_list($page, true);
