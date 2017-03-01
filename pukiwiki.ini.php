@@ -288,6 +288,31 @@ $edit_auth_pages = array(
 $search_auth = 0;
 
 /////////////////////////////////////////////////
+// AutoTicketLink
+$ticket_link_sites = array(
+/*
+	array(
+		'key' => 'phpbug',
+		'type' => 'redmine', // type: redmine, jira or git
+		'title' => 'PHP :: Bug #$1',
+		'base_url' => 'https://bugs.php.net/bug.php?id=',
+	),
+	array(
+		'key' => 'asfjira',
+		'type' => 'jira',
+		'title' => 'ASF JIRA [$1]',
+		'base_url' => 'https://issues.apache.org/jira/browse/',
+	),
+	array(
+		'key' => 'pukiwiki-commit',
+		'type' => 'git',
+		'title' => 'PukiWiki revision $1',
+		'base_url' => 'https://ja.osdn.net/projects/pukiwiki/scm/git/pukiwiki/commits/',
+	),
+*/
+);
+
+/////////////////////////////////////////////////
 // $whatsnew: Max number of RecentChanges
 $maxshow = 60;
 

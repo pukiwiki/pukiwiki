@@ -186,10 +186,45 @@ function catbody($title, $page, $body)
 		}
 	}
 
+	// Embed Scripting data
+	$html_scripting_data = get_html_scripting_data();
+
 	// Compat: 'HTML convert time' without time about MenuBar and skin
 	$taketime = elapsedtime();
 
 	require(SKIN_FILE);
+}
+
+/**
+ * Get data used by JavaScript modules
+ */
+function get_html_scripting_data()
+{
+	global $ticket_link_sites;
+	if (!isset($ticket_link_sites) || !is_array($ticket_link_sites)) {
+		return '';
+	}
+	// Require: PHP 5.4+
+	if (!defined('JSON_UNESCAPED_UNICODE')) {
+		return '';
+	};
+	$text = '';
+	foreach ($ticket_link_sites as $s) {
+		if (!preg_match('/^([a-zA-Z0-9]+)([\.\-][a-zA-Z0-9]+)*$/', $s['key'])) {
+			continue;
+		}
+		$site_info_json = htmlsc(json_encode($s, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+		$text .= <<<EOS
+  <span class="pukiwiki-ticketlink-site" data-site="$site_info_json"></span>
+EOS;
+		$text .= "\n";
+	}
+	$data = <<<EOS
+<div class="pukiwiki-ticketlink-def" style="display:none;">
+$text
+</div>
+EOS;
+	return $data;
 }
 
 // Show 'edit' form
