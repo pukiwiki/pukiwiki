@@ -48,6 +48,9 @@ if (window.addEventListener) {
           case 'redmine':
             reText = '(' + regexEscape(site.key) + '):' + '(\\d+)';
             break;
+          case 'git':
+            reText = '(' + regexEscape(site.key) + '):' + '([0-9a-f]{7,40})';
+            break;
           default:
             continue;
         }
