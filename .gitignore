@@ -11,9 +11,14 @@
 /cache/*.ref
 /cache/*.rel
 /counter/*.count
+/counter/*.db
+
 /diff/*.txt
 /wiki/*.txt
 /wiki.en/*.txt
 
 /nbproject/**
+
+# Composer files
+/vendor/
 
