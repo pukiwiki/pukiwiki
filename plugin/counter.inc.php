@@ -89,9 +89,12 @@ function plugin_counter_get_count($page)
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 			$pdo->setAttribute(PDO::ATTR_TIMEOUT, 5);
-			$stmt = $pdo->prepare('SELECT total, update_date,
-					today_viewcount, yesterday_viewcount, remote_addr
-				FROM page_counter WHERE page_name = ?');
+			$stmt = $pdo->prepare(
+'SELECT total, update_date,
+   today_viewcount, yesterday_viewcount, remote_addr
+ FROM page_counter
+ WHERE page_name = ?'
+			);
 			$stmt->execute(array($page));
 			$r = $stmt->fetch();
 			if ($r === false) {
@@ -127,6 +130,7 @@ function plugin_counter_get_count($page)
 
 	// Anothoer day?
 	$remote_addr = $_SERVER['REMOTE_ADDR'];
+	$count_up = FALSE;
 	if ($c['date'] != $default['date']) {
 		$modify = TRUE;
 		$is_yesterday = ($c['date'] == get_date('Y/m/d', UTIME - 24 * 60 * 60));
@@ -135,12 +139,14 @@ function plugin_counter_get_count($page)
 		$c['yesterday'] = $is_yesterday ? $c['today'] : 0;
 		$c['today']     = 1;
 		$c['total']++;
+		$count_up = TRUE;
 	} else if ($c['ip'] != $remote_addr) {
 		// Not the same host
 		$modify = TRUE;
 		$c['ip']        = $remote_addr;
 		$c['today']++;
 		$c['total']++;
+		$count_up = TRUE;
 	}
 
 	if (PLUGIN_COUNTER_USE_DB) {
@@ -148,24 +154,27 @@ function plugin_counter_get_count($page)
 			try {
 				if ($is_new_page) {
 					// Insert
-					$add_stmt = $pdo->prepare('INSERT INTO page_counter
-						(page_name, total, update_date, today_viewcount,
-							yesterday_viewcount, remote_addr)
-						values (?, ?, ?, ?, ?, ?)');
+					$add_stmt = $pdo->prepare(
+'INSERT INTO page_counter
+   (page_name, total, update_date, today_viewcount,
+   yesterday_viewcount, remote_addr)
+ VALUES (?, ?, ?, ?, ?, ?)'
+					);
 					$r_add = $add_stmt->execute(array($page, $c['total'],
 						$c['date'], $c['today'], $c['yesterday'], $c['ip']));
-				} else {
-					// Update
-					$upd_stmt = $pdo->prepare('UPDATE page_counter
-						SET total = ?,
-							update_date = ?,
-							today_viewcount = ?,
-							yesterday_viewcount = ?,
-							remote_addr = ?
-						WHERE page_name = ?');
-					$r_upd = $upd_stmt->execute(array($c['total'],
-						$c['date'], $c['today'], $c['yesterday'], $c['ip'],
-						$page));
+				} else if ($count_up) {
+					// Update on counting up 'total'
+					$upd_stmt = $pdo->prepare(
+'UPDATE page_counter
+ SET total = total + 1,
+   update_date = ?,
+   today_viewcount = ?,
+   yesterday_viewcount = ?,
+   remote_addr = ?
+ WHERE page_name = ?'
+					);
+					$r_upd = $upd_stmt->execute(array($c['date'],
+						$c['today'], $c['yesterday'], $c['ip'], $page));
 				}
 			} catch (PDOException $e) {
 				foreach (array_keys($c) as $key) {
@@ -197,13 +206,15 @@ function plugin_counter_tool_setup_table() {
 		PLUGIN_COUNTER_DB_OPTIONS);
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-	$r = $pdo->exec('CREATE TABLE page_counter (
-		page_name VARCHAR(300) PRIMARY KEY,
-		total INTEGER NOT NULL,
-		update_date VARCHAR(20) NOT NULL,
-		today_viewcount INTEGER NOT NULL,
-		yesterday_viewcount INTEGER NOT NULL,
-		remote_addr VARCHAR(100)
-	)');
+	$r = $pdo->exec(
+'CREATE TABLE page_counter (
+   page_name VARCHAR(300) PRIMARY KEY,
+   total INTEGER NOT NULL,
+   update_date VARCHAR(20) NOT NULL,
+   today_viewcount INTEGER NOT NULL,
+   yesterday_viewcount INTEGER NOT NULL,
+   remote_addr VARCHAR(100)
+ )'
+	);
 	echo "OK\n";
 }
