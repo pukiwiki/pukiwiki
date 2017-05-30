@@ -12,11 +12,13 @@
 define('PLUGIN_COUNTER_SUFFIX', '.count');
 // Use Database (1) or not (0)
 define('PLUGIN_COUNTER_USE_DB', 0);
-// Database Connection string
+// Database Connection setting
 define('PLUGIN_COUNTER_DB_CONNECT_STRING', 'sqlite:counter/counter.db');
 define('PLUGIN_COUNTER_DB_USERNAME', '');
 define('PLUGIN_COUNTER_DB_PASSWORD', '');
 define('PLUGIN_COUNTER_DB_OPTIONS', null);
+
+define('PLUGIN_COUNTER_DB_TABLE_NAME_PREFIX', '');
 
 // Report one
 function plugin_counter_inline()
@@ -60,6 +62,7 @@ function plugin_counter_get_count($page)
 	global $vars;
 	static $counters = array();
 	static $default;
+	$page_counter_t = PLUGIN_COUNTER_DB_TABLE_NAME_PREFIX . 'page_counter';
 
 	if (! isset($default))
 		$default = array(
@@ -90,10 +93,10 @@ function plugin_counter_get_count($page)
 			$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 			$pdo->setAttribute(PDO::ATTR_TIMEOUT, 5);
 			$stmt = $pdo->prepare(
-'SELECT total, update_date,
+"SELECT total, update_date,
    today_viewcount, yesterday_viewcount, remote_addr
- FROM page_counter
- WHERE page_name = ?'
+ FROM $page_counter_t
+ WHERE page_name = ?"
 			);
 			$stmt->execute(array($page));
 			$r = $stmt->fetch();
@@ -155,23 +158,23 @@ function plugin_counter_get_count($page)
 				if ($is_new_page) {
 					// Insert
 					$add_stmt = $pdo->prepare(
-'INSERT INTO page_counter
+"INSERT INTO $page_counter_t
    (page_name, total, update_date, today_viewcount,
    yesterday_viewcount, remote_addr)
- VALUES (?, ?, ?, ?, ?, ?)'
+ VALUES (?, ?, ?, ?, ?, ?)"
 					);
 					$r_add = $add_stmt->execute(array($page, $c['total'],
 						$c['date'], $c['today'], $c['yesterday'], $c['ip']));
 				} else if ($count_up) {
 					// Update on counting up 'total'
 					$upd_stmt = $pdo->prepare(
-'UPDATE page_counter
+"UPDATE $page_counter_t
  SET total = total + 1,
    update_date = ?,
    today_viewcount = ?,
    yesterday_viewcount = ?,
    remote_addr = ?
- WHERE page_name = ?'
+ WHERE page_name = ?"
 					);
 					$r_upd = $upd_stmt->execute(array($c['date'],
 						$c['today'], $c['yesterday'], $c['ip'], $page));
@@ -201,20 +204,21 @@ function plugin_counter_get_count($page)
  * php -r "include 'plugin/counter.inc.php'; plugin_counter_tool_setup_table();"
  */
 function plugin_counter_tool_setup_table() {
+	$page_counter_t = PLUGIN_COUNTER_DB_TABLE_NAME_PREFIX . 'page_counter';
 	$pdo = new PDO(PLUGIN_COUNTER_DB_CONNECT_STRING,
 		PLUGIN_COUNTER_DB_USERNAME, PLUGIN_COUNTER_DB_PASSWORD,
 		PLUGIN_COUNTER_DB_OPTIONS);
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 	$r = $pdo->exec(
-'CREATE TABLE page_counter (
+"CREATE TABLE $page_counter_t (
    page_name VARCHAR(300) PRIMARY KEY,
    total INTEGER NOT NULL,
    update_date VARCHAR(20) NOT NULL,
    today_viewcount INTEGER NOT NULL,
    yesterday_viewcount INTEGER NOT NULL,
    remote_addr VARCHAR(100)
- )'
+ )"
 	);
 	echo "OK\n";
 }
