@@ -16,7 +16,10 @@ define('PLUGIN_COUNTER_USE_DB', 0);
 define('PLUGIN_COUNTER_DB_CONNECT_STRING', 'sqlite:counter/counter.db');
 define('PLUGIN_COUNTER_DB_USERNAME', '');
 define('PLUGIN_COUNTER_DB_PASSWORD', '');
-define('PLUGIN_COUNTER_DB_OPTIONS', null);
+$plugin_counter_db_options = null;
+// For MySQL
+// $plugin_counter_db_options = array(PDO::MYSQL_ATTR_INIT_COMMAND =>
+//   "SET NAMES utf8mb4 COLLATE utf8mb4_bin");
 
 define('PLUGIN_COUNTER_DB_TABLE_NAME_PREFIX', '');
 
@@ -59,7 +62,7 @@ EOD;
 // Return a summary
 function plugin_counter_get_count($page)
 {
-	global $vars;
+	global $vars, $plugin_counter_db_options;
 	static $counters = array();
 	static $default;
 	$page_counter_t = PLUGIN_COUNTER_DB_TABLE_NAME_PREFIX . 'page_counter';
@@ -88,7 +91,7 @@ function plugin_counter_get_count($page)
 		try {
 			$pdo = new PDO(PLUGIN_COUNTER_DB_CONNECT_STRING,
 				PLUGIN_COUNTER_DB_USERNAME, PLUGIN_COUNTER_DB_PASSWORD,
-				PLUGIN_COUNTER_DB_OPTIONS);
+				$plugin_counter_db_options);
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 			$pdo->setAttribute(PDO::ATTR_TIMEOUT, 5);
@@ -204,15 +207,16 @@ function plugin_counter_get_count($page)
  * php -r "include 'plugin/counter.inc.php'; plugin_counter_tool_setup_table();"
  */
 function plugin_counter_tool_setup_table() {
+	global $plugin_counter_db_options;
 	$page_counter_t = PLUGIN_COUNTER_DB_TABLE_NAME_PREFIX . 'page_counter';
 	$pdo = new PDO(PLUGIN_COUNTER_DB_CONNECT_STRING,
 		PLUGIN_COUNTER_DB_USERNAME, PLUGIN_COUNTER_DB_PASSWORD,
-		PLUGIN_COUNTER_DB_OPTIONS);
+		$plugin_counter_db_options);
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 	$r = $pdo->exec(
 "CREATE TABLE $page_counter_t (
-   page_name VARCHAR(300) PRIMARY KEY,
+   page_name VARCHAR(190) PRIMARY KEY,
    total INTEGER NOT NULL,
    update_date VARCHAR(20) NOT NULL,
    today_viewcount INTEGER NOT NULL,
