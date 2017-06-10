@@ -203,6 +203,108 @@ function plugin_counter_get_count($page)
 	return $c;
 }
 
+function plugin_counter_get_popular_list($today, $except, $max) {
+	if (PLUGIN_COUNTER_USE_DB === 0) {
+		return plugin_counter_get_popular_list_file($today, $except, $max);
+	} else {
+		return plugin_counter_get_popular_list_db($today, $except, $max);
+	}
+}
+
+function plugin_counter_get_popular_list_file($today, $except, $max) {
+	global $whatsnew;
+	$counters = array();
+	$except_quote = str_replace('#', '\#', $except);
+	foreach (get_existpages(COUNTER_DIR, '.count') as $file=>$page) {
+		if (($except != '' && preg_match("#$except_quote#", $page)) ||
+				$page == $whatsnew || check_non_list($page) ||
+				! is_page($page))
+			continue;
+
+		$array = file(COUNTER_DIR . $file);
+		$count = rtrim($array[0]);
+		$date  = rtrim($array[1]);
+		$today_count = rtrim($array[2]);
+
+		if ($today) {
+			// $pageが数値に見える(たとえばencode('BBS')=424253)とき、
+			// array_splice()によってキー値が変更されてしまうのを防ぐ
+			// ため、キーに '_' を連結する
+			if ($today == $date) $counters['_' . $page] = $today_count;
+		} else {
+			$counters['_' . $page] = $count;
+		}
+	}
+
+	asort($counters, SORT_NUMERIC);
+
+	// BugTrack2/106: Only variables can be passed by reference from PHP 5.0.5
+	$counters = array_reverse($counters, TRUE); // with array_splice()
+	$counters = array_splice($counters, 0, $max);
+	return $counters;
+}
+
+function plugin_counter_get_popular_list_db($today, $except, $max) {
+	global $whatsnew;
+	$page_counter_t = PLUGIN_COUNTER_DB_TABLE_NAME_PREFIX . 'page_counter';
+	if ($today) {
+		$order_by_c = 'today_viewcount';
+	} else {
+		$order_by_c = 'total';
+	}
+	$counters = array();
+	try {
+		$pdo = new PDO(PLUGIN_COUNTER_DB_CONNECT_STRING,
+			PLUGIN_COUNTER_DB_USERNAME, PLUGIN_COUNTER_DB_PASSWORD,
+			$plugin_counter_db_options);
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+		$pdo->setAttribute(PDO::ATTR_TIMEOUT, 5);
+		if ($today) {
+			$stmt = $pdo->prepare(
+"SELECT page_name, total, update_date,
+   today_viewcount, yesterday_viewcount
+ FROM $page_counter_t
+ WHERE update_date = ?
+ ORDER BY $order_by_c DESC
+ LIMIT ?"
+			);
+		} else {
+			$stmt = $pdo->prepare(
+"SELECT page_name, total, update_date,
+   today_viewcount, yesterday_viewcount
+ FROM $page_counter_t
+ ORDER BY $order_by_c DESC
+ LIMIT ?"
+			);
+		}
+		$except_quote = str_replace('#', '\#', $except);
+		$limit = $max + 100;
+		if ($today) {
+			$stmt->execute(array($today, $limit));
+		} else {
+			$stmt->execute(array($limit));
+		}
+		foreach ($stmt as $r) {
+			$page = $r['page_name'];
+			if (($except != '' && preg_match("#$except_quote#", $page)) ||
+					$page == $whatsnew || check_non_list($page) ||
+					! is_page($page)) {
+				continue;
+			}
+			if ($today) {
+				$counters['_' . $page] = $r['today_viewcount'];
+			} else {
+				$counters['_' . $page] = $r['total'];
+			}
+		}
+		$stmt->closeCursor();
+		return array_splice($counters, 0, $max);
+	} catch (Exception $e) {
+		die('counter.inc.php: Error occurred on getting pupular pages');
+	}
+}
+
 /**
  * php -r "include 'plugin/counter.inc.php'; plugin_counter_tool_setup_table();"
  */
