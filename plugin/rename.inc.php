@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rename.inc.php,v 1.38 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
+// rename.inc.php
+// Copyright 2002-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Rename plugin: Rename page-name and related data
@@ -9,6 +9,9 @@
 // Usage: http://path/to/pukiwikiphp?plugin=rename[&refer=page_name]
 
 define('PLUGIN_RENAME_LOGPAGE', ':RenameLog');
+
+if (file_exists(PLUGIN_DIR . 'counter.inc.php'))
+	require_once(PLUGIN_DIR . 'counter.inc.php');
 
 function plugin_rename_action()
 {
@@ -344,6 +347,12 @@ function plugin_rename_proceed($pages, $files, $exists)
 			links_update($new);
 		}
 	}
+	// Rename counter
+	$pages_decoded = array();
+	foreach ($pages as $old=>$new) {
+		$pages_decoded[decode($old)] = decode($new);
+	}
+	plugin_counter_page_rename($pages_decoded);
 
 	$postdata = get_source(PLUGIN_RENAME_LOGPAGE);
 	$postdata[] = '*' . $now . "\n";
@@ -423,4 +432,3 @@ function plugin_rename_getselecttag($page)
 EOD;
 
 }
-
