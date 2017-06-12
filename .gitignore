@@ -18,6 +18,7 @@
 /wiki.en/*.txt
 
 /nbproject/**
+/.vscode/
 
 # Composer files
 /vendor/

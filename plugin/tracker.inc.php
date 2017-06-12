@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // tracker.inc.php
-// Copyright 2003-2016 PukiWiki Development Team
+// Copyright 2003-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Issue tracker plugin (See Also bugtrack plugin)
@@ -121,26 +121,30 @@ function plugin_tracker_action()
 			'body'=>'page name ('.htmlsc($base).') is not valid.'
 		);
 	}
-	$num = 0;
 	$name = (array_key_exists('_name',$post)) ? $post['_name'] : '';
-	if (array_key_exists('_page',$post))
-	{
-		$page = $real = $post['_page'];
+	$_page = (array_key_exists('_page',$post)) ? $post['_page'] : '';
+	if (is_pagename($_page)) {
+		// Create _page page if _page is in parameters
+		$page = $real = $_page;
+	} else if (is_pagename($name)) {
+		// Create "$base/$name" page if _name is in parameters
+		$real = $name;
+		$page = get_fullname('./' . $name, $base);
+	} else {
+		$page = '';
 	}
-	else
-	{
-		$real = is_pagename($name) ? $name : ++$num;
-		$page = get_fullname('./'.$real,$base);
-	}
-	if (!is_pagename($page))
-	{
-		$page = $base;
-	}
-
-	while (is_page($page))
-	{
-		$real = ++$num;
-		$page = "$base/$real";
+	if (!is_pagename($page) || is_page($page)) {
+		// Need new page name => Get last article number + 1
+		$page_list = plugin_tracker_get_page_list($base, false);
+		usort($page_list, '_plugin_tracker_list_paganame_compare');
+		if (count($page_list) === 0) {
+			$num = 1;
+		} else {
+			$latest_page = $page_list[count($page_list) - 1]['name'];
+			$num = intval(substr($latest_page, strlen($base) + 1)) + 1;
+		}
+		$real = '' . $num;
+		$page = $base . '/' . $num;
 	}
 	// ページデータを生成
 	$postdata = plugin_tracker_get_source($source);
@@ -187,6 +191,35 @@ function plugin_tracker_action()
 	header('Location: ' . get_script_uri() . '?' . $r_page);
 	exit;
 }
+
+/**
+ * Page_list comparator
+ */
+function _plugin_tracker_list_paganame_compare($a, $b)
+{
+	return strnatcmp($a['name'], $b['name']);
+}
+
+/**
+ * Get page list for "$page/"
+ */
+function plugin_tracker_get_page_list($page, $needs_filetime) {
+	$page_list = array();
+	$pattern = $page . '/';
+	$pattern_len = strlen($pattern);
+	foreach (get_existpages() as $p) {
+		if (strncmp($p, $pattern, $pattern_len) === 0 && pkwk_ctype_digit(substr($p, $pattern_len))) {
+			if ($needs_filetime) {
+				$page_list[] = array('name'=>$p,'filetime'=>get_filetime($p));
+			} else {
+				$page_list[] = array('name'=>$p);
+			}
+		}
+	}
+	return $page_list;
+}
+
+
 /*
 function plugin_tracker_inline()
 {
