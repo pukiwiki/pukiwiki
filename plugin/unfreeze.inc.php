@@ -30,7 +30,11 @@ function plugin_unfreeze_action()
 	} else if ($pass !== NULL && pkwk_login($pass)) {
 		// Unfreeze
 		$postdata = get_source($page);
-		array_shift($postdata);
+		for ($i = count($postdata) - 1; $i >= 0; $i--) {
+			if ("#freeze\n" === $postdata[$i]) {
+				$postdata[$i] = '';
+			}
+		}
 		$postdata = join('', $postdata);
 		file_write(DATA_DIR, $page, $postdata, TRUE);
 

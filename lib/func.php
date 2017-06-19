@@ -118,11 +118,10 @@ function is_freeze($page, $clearcache = FALSE)
 			die('is_freeze(): fopen() failed: ' . htmlsc($page));
 		flock($fp, LOCK_SH) or die('is_freeze(): flock() failed');
 		rewind($fp);
-		$buffer = fgets($fp, 9);
+		$buffer = fread($fp, 1000);
 		flock($fp, LOCK_UN) or die('is_freeze(): flock() failed');
 		fclose($fp) or die('is_freeze(): fclose() failed: ' . htmlsc($page));
-
-		$is_freeze[$page] = ($buffer != FALSE && rtrim($buffer, "\r\n") == '#freeze');
+		$is_freeze[$page] = (bool) preg_match('/^#freeze$/m', $buffer);
 		return $is_freeze[$page];
 	}
 }
