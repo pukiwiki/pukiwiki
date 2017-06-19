@@ -235,6 +235,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 	global $whatsnew, $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
 	global $_title_list, $_label_template_pages;
+	global $rule_page;
 
 	// Newly generate $digest or not
 	if ($digest === FALSE) $digest = md5(join('', get_source($page)));
@@ -367,14 +368,9 @@ $template
 </div>
 EOD;
 
-	if (isset($vars['help'])) {
-		$body .= $hr . catrule();
-	} else {
-		$body .= '<ul><li><a href="' .
-			$script . '?cmd=edit&amp;help=true&amp;page=' . $r_page .
-			'">' . $_msg_help . '</a></li></ul>';
-	}
-
+	$body .= '<ul><li><a href="' .
+		$script . '?' . pagename_urlencode($rule_page) .
+		'" target="_blank">' . $_msg_help . '</a></li></ul>';
 	return $body;
 }
 
