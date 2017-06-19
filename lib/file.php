@@ -541,6 +541,14 @@ function put_lastmodified()
 	}
 }
 
+/**
+ * Update RecentChanges page / Invalidate recent.dat
+ */
+function delete_recent_changes_cache() {
+	$file = CACHE_DIR . PKWK_MAXSHOW_CACHE;
+	unlink($file);
+}
+
 // Get elapsed date of the page
 function get_pg_passage($page, $sw = TRUE)
 {

@@ -387,6 +387,9 @@ function plugin_rename_proceed($pages, $files, $exists)
 	// ファイルの書き込み
 	page_write(PLUGIN_RENAME_LOGPAGE, join('', $postdata));
 
+	// Refresh RecentChanges / Delete cache/recent.dat
+	delete_recent_changes_cache();
+
 	//リダイレクト
 	$page = plugin_rename_getvar('page');
 	if ($page == '') $page = PLUGIN_RENAME_LOGPAGE;
