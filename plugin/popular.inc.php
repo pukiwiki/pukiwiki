@@ -39,8 +39,9 @@ function plugin_popular_convert()
 
 	$array = func_get_args();
 	$today = FALSE;
+	$today_param = $array[2];
 	switch (func_num_args()) {
-	case 3: if ($array[2]) $today = get_date('Y/m/d');
+	case 3: if ($today_param && $today_param !== 'false') $today = get_date('Y/m/d');
 	case 2: $except = $array[1];
 	case 1: $max    = (int)$array[0];
 	}
