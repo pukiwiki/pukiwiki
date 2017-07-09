@@ -18,6 +18,7 @@ define('AUTH_TYPE_FORM', 3);
 
 define('AUTH_TYPE_EXTERNAL_REMOTE_USER', 4);
 define('AUTH_TYPE_EXTERNAL_X_FORWARDED_USER', 5);
+define('AUTH_TYPE_SAML', 6);
 
 
 // Passwd-auth related ----
@@ -312,7 +313,8 @@ function basic_auth($page, $auth_enabled, $exit_on_fail, $auth_pages, $title_can
 					. '&url_after_login=' . rawurlencode($url_after_login);
 				header('HTTP/1.0 302 Found');
 				header('Location: ' . $loginurl);
-			} elseif (AUTH_TYPE_EXTERNAL === $auth_type) {
+			} elseif (AUTH_TYPE_EXTERNAL === $auth_type ||
+				AUTH_TYPE_SAML === $auth_type) {
 				$url_after_login = get_script_uri() . '?' . $g_query_string;
 				$loginurl = get_auth_external_login_url($page, $url_after_login);
 				header('HTTP/1.0 302 Found');
@@ -348,6 +350,7 @@ function ensure_valid_auth_user()
 			case AUTH_TYPE_EXTERNAL:
 			case AUTH_TYPE_EXTERNAL_REMOTE_USER:
 			case AUTH_TYPE_EXTERNAL_X_FORWARDED_USER:
+			case AUTH_TYPE_SAML:
 				break;
 			default:
 				// $auth_type is not valid, Set form auth as default
@@ -379,6 +382,7 @@ function ensure_valid_auth_user()
 		}
 		case AUTH_TYPE_FORM:
 		case AUTH_TYPE_EXTERNAL:
+		case AUTH_TYPE_SAML:
 		{
 			session_start();
 			$user = '';
@@ -391,7 +395,8 @@ function ensure_valid_auth_user()
 					$dynamic_groups = $_SESSION['dynamic_member_groups'];
 				} else {
 					$fullname = $user;
-					if ($auth_type === AUTH_TYPE_EXTERNAL && $ldap_user_account) {
+					if (($auth_type === AUTH_TYPE_EXTERNAL || $auth_type === AUTH_TYPE_SAML) &&
+						$ldap_user_account) {
 						$ldap_user_info = ldap_get_simple_user_info($user);
 						if ($ldap_user_info) {
 							$fullname = $ldap_user_info['fullname'];
@@ -649,6 +654,7 @@ function get_auth_user_prefix() {
 	global $auth_provider_user_prefix_default;
 	global $auth_provider_user_prefix_ldap;
 	global $auth_provider_user_prefix_external;
+	global $auth_provider_user_prefix_saml;
 	$user_prefix = '';
 	switch ($auth_type) {
 		case AUTH_TYPE_BASIC:
@@ -658,6 +664,9 @@ function get_auth_user_prefix() {
 		case AUTH_TYPE_EXTERNAL_REMOTE_USER:
 		case AUTH_TYPE_EXTERNAL_X_FORWARDED_USER:
 			$user_prefix = $auth_provider_user_prefix_external;
+			break;
+		case AUTH_TYPE_SAML:
+			$user_prefix = $auth_provider_user_prefix_saml;
 			break;
 		case AUTH_TYPE_FORM:
 			if ($ldap_user_account) {

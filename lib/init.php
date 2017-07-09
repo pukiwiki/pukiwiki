@@ -139,6 +139,12 @@ if (isset($script)) {
 	$script = get_script_uri(); // Init automatically
 }
 
+// INI_FILE: Auth settings
+if (isset($auth_type) && $auth_type === AUTH_TYPE_SAML) {
+	$auth_external_login_url_base = get_script_uri() . '?//cmd.saml//sso';
+}
+
+
 /////////////////////////////////////////////////
 // INI_FILE: $agents:  UserAgentの識別
 
@@ -328,6 +334,36 @@ if (empty($_POST)) {
 } else {
 	$vars = array_merge($_GET, $_POST); // Considered reliable than $_REQUEST
 }
+
+/**
+ * Parse specified format query_string as params.
+ *
+ * For example: ?//key1.value2//key2.value2
+ */
+function parse_query_string_ext($query_string) {
+	$vars = array();
+	$m = null;
+	if (preg_match('#^//[^&]*#', $query_string, $m)) {
+		foreach (explode('//', $m[0]) as $item) {
+			$sp = explode('.', $item, 2);
+			if (isset($sp[0])) {
+				if (isset($sp[1])) {
+					$vars[$sp[0]] = $sp[1];
+				} else {
+					$vars[$sp[0]] = '';
+				}
+			}
+		}
+	}
+	return $vars;
+}
+if (isset($g_query_string) && $g_query_string) {
+	if (substr($g_query_string, 0, 2) === '//') {
+		// Parse ?//key.value//key.value format query string
+		$vars = array_merge($vars, parse_query_string_ext($g_query_string));
+	}
+}
+
 
 // 入力チェック: 'cmd=' and 'plugin=' can't live together
 if (isset($vars['cmd']) && isset($vars['plugin']))

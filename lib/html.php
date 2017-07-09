@@ -26,7 +26,8 @@ function catbody($title, $page, $body)
 
 	$enable_login = false;
 	$enable_logout = false;
-	if (AUTH_TYPE_FORM === $auth_type || AUTH_TYPE_EXTERNAL === $auth_type) {
+	if (AUTH_TYPE_FORM === $auth_type || AUTH_TYPE_EXTERNAL === $auth_type ||
+		AUTH_TYPE_SAML === $auth_type) {
 		if ($auth_user) {
 			$enable_logout = true;
 		} else {
@@ -79,6 +80,7 @@ function catbody($title, $page, $body)
 			$login_link = "$script?plugin=loginform&pcmd=login&page=$r_page";
 			break;
 		case AUTH_TYPE_EXTERNAL:
+		case AUTH_TYPE_SAML:
 			$login_link = get_auth_external_login_url($_page, $_LINK['reload']);
 			break;
 	}

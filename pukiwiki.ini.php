@@ -235,6 +235,7 @@ $ldap_user_account = 0; // (0: Disabled, 1: Enabled)
 $auth_provider_user_prefix_default = 'default:';
 $auth_provider_user_prefix_ldap = 'ldap:';
 $auth_provider_user_prefix_external = 'external:';
+$auth_provider_user_prefix_saml = 'saml:';
 
 
 /////////////////////////////////////////////////

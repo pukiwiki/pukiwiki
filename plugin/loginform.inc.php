@@ -48,6 +48,7 @@ function plugin_loginform_action()
 				break;
 			case AUTH_TYPE_FORM:
 			case AUTH_TYPE_EXTERNAL:
+			case AUTH_TYPE_SAML:
 			default:
 				$_SESSION = array();
 				session_regenerate_id(true); // require: PHP5.1+
