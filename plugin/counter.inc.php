@@ -309,7 +309,6 @@ function plugin_counter_page_rename($pages) {
 	global $plugin_counter_db_options;
 	if (PLUGIN_COUNTER_USE_DB !== 0) {
 		$page_counter_t = PLUGIN_COUNTER_DB_TABLE_NAME_PREFIX . 'page_counter';
-		pkwk_log('plugin_counter_rename() 555');
 		$pdo = new PDO(PLUGIN_COUNTER_DB_CONNECT_STRING,
 			PLUGIN_COUNTER_DB_USERNAME, PLUGIN_COUNTER_DB_PASSWORD,
 			$plugin_counter_db_options);
