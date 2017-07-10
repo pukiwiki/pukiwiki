@@ -23,6 +23,10 @@ $plugin_counter_db_options = null;
 
 define('PLUGIN_COUNTER_DB_TABLE_NAME_PREFIX', '');
 
+if (PLUGIN_COUNTER_USE_DB) {
+	ini_set('default_socket_timeout', 2);
+}
+
 // Report one
 function plugin_counter_inline()
 {
@@ -114,7 +118,14 @@ function plugin_counter_get_count($page)
 				$stmt->closeCursor();
 			}
 		} catch (Exception $e) {
-			die('counter.inc.php: Error occurred');
+			// Error occurred
+			$db_error = '(DBError)';
+			return array(
+				'total' => $db_error,
+				'date' => $db_error,
+				'today' => $db_error,
+				'yesterday' => $db_error,
+				'ip' => $db_error);
 		}
 	} else {
 		// Open
