@@ -64,6 +64,9 @@ if (window.addEventListener) {
     function getSiteListFromBody() {
       var list = [];
       var defRoot = document.querySelector('.pukiwiki-ticketlink-def');
+      if (!defRoot) {
+        return [];
+      }
       var siteNodes = defRoot.querySelectorAll('.pukiwiki-ticketlink-site');
       Array.prototype.forEach.call(siteNodes, function (e) {
         var siteInfoText = e.dataset && e.dataset.site;
