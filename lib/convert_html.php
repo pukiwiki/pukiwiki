@@ -310,8 +310,6 @@ class ListContainer extends Element
 	var $tag2;
 	var $level;
 	var $style;
-	var $margin;
-	var $left_margin;
 
 	function ListContainer($tag, $tag2, $head, $text)
 	{
@@ -320,13 +318,6 @@ class ListContainer extends Element
 	function __construct($tag, $tag2, $head, $text)
 	{
 		parent::__construct();
-
-		$var_margin      = '_' . $tag . '_margin';
-		$var_left_margin = '_' . $tag . '_left_margin';
-		global $$var_margin, $$var_left_margin;
-
-		$this->margin      = $$var_margin;
-		$this->left_margin = $$var_left_margin;
 
 		$this->tag   = $tag;
 		$this->tag2  = $tag2;
@@ -346,19 +337,13 @@ class ListContainer extends Element
 
 	function setParent(& $parent)
 	{
-		global $_list_pad_str;
-
 		parent::setParent($parent);
 
 		$step = $this->level;
 		if (isset($parent->parent) && is_a($parent->parent, 'ListContainer'))
 			$step -= $parent->parent->level;
 
-		$margin = $this->margin * $step;
-		if ($step == $this->level)
-			$margin += $this->left_margin;
-
-		$this->style = sprintf($_list_pad_str, $this->level, $margin, $margin);
+		$this->style = sprintf(pkwk_list_attrs_template(), $this->level, $step);
 	}
 
 	function & insert(& $obj)
@@ -1067,16 +1052,12 @@ class Contents_UList extends ListContainer
 
 	function setParent(& $parent)
 	{
-		global $_list_pad_str;
-
 		parent::setParent($parent);
 		$step   = $this->level;
-		$margin = $this->left_margin;
 		if (isset($parent->parent) && is_a($parent->parent, 'ListContainer')) {
 			$step  -= $parent->parent->level;
-			$margin = 0;
 		}
-		$margin += $this->margin * ($step == $this->level ? 1 : $step);
-		$this->style = sprintf($_list_pad_str, $this->level, $margin, $margin);
+		$indent_level = ($step == $this->level ? 1 : $step);
+		$this->style = sprintf(pkwk_list_attrs_template(), $this->level, $indent_level);
 	}
 }

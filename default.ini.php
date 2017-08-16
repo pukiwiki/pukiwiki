@@ -38,6 +38,7 @@ $_ol_left_margin = 0;   // Must be 0
 $_ol_margin = 1;        // Must be 1
 $_dl_left_margin = 0;   // Must be 0
 $_dl_margin = 1;        // Must be 1
+// Use pkwk_list_attrs_template() instead
 $_list_pad_str = ' class="list%d list-indent%d"';
 
 /////////////////////////////////////////////////

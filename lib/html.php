@@ -380,7 +380,6 @@ EOD;
 function make_related($page, $tag = '')
 {
 	global $script, $vars, $rule_related_str, $related_str;
-	global $_ul_left_margin, $_ul_margin, $_list_pad_str;
 
 	prepare_links_related($page);
 	$links = links_get_related($page);
@@ -407,8 +406,7 @@ function make_related($page, $tag = '')
 	if (empty($_links)) return ''; // Nothing
 
 	if ($tag == 'p') { // From the line-head
-		$margin = $_ul_left_margin + $_ul_margin;
-		$style  = sprintf($_list_pad_str, 1, $margin, $margin);
+		$style  = sprintf(pkwk_list_attrs_template(), 1, 1);
 		$retval =  "\n" . '<ul' . $style . '>' . "\n" .
 			'<li>' . join($rule_related_str, $_links) . '</li>' . "\n" .
 			'</ul>' . "\n";
@@ -644,4 +642,11 @@ function pkwk_output_dtd($pkwk_dtd = PKWK_DTD_XHTML_1_1, $charset = CONTENT_CHAR
 	} else {
 		return '<meta http-equiv="content-type" content="text/html; charset=' . $charset . '" />' . "\n";
 	}
+}
+
+/**
+ * Get template of List (ul, ol, dl) attributes
+ */
+function pkwk_list_attrs_template() {
+	return ' class="list%d list-indent%d"';
 }
