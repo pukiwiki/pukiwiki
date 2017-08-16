@@ -2,8 +2,8 @@
 
 /*!
  * PukiWiki - Yet another WikiWikiWeb clone.
- * Copyright (C)
- *   2002-2016 PukiWiki Development Team
+ * Copyright
+ *   2002-2017 PukiWiki Development Team
  *   2001-2002 Originally written by yu-ji
  * License: GPL v2 or (at your option) any later version
  *
@@ -69,6 +69,24 @@ ul.list3 { list-style-type:square; }
 ol.list1 { list-style-type:decimal; }
 ol.list2 { list-style-type:lower-roman; }
 ol.list3 { list-style-type:lower-alpha; }
+
+.list-indent1 {
+	padding-left: 16px;
+	margin-left: 16px
+}
+/* list-indent2,3,4 are used for leaping list level indentation */
+.list-indent2 {
+	padding-left: 32px;
+	margin-left: 32px
+}
+.list-indent3 {
+	padding-left: 48px;
+	margin-left: 48px
+}
+.list-indent4 {
+	padding-left: 64px;
+	margin-left: 64px
+}
 
 div.ie5 { text-align:center; }
 
