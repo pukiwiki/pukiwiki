@@ -126,10 +126,9 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 	$is_done = (isset($params["page_$page"]) && $params["page_$page"] > 0);
 	if (! $is_done) $params["page_$page"] = ++$_ls2_anchor;
 
-	$r_page = rawurlencode($page);
 	$s_page = htmlsc($page);
 	$title  = $s_page . ' ' . get_pg_passage($page, FALSE);
-	$href   = $script . '?cmd=read&amp;page=' . $r_page;
+	$href   = $script . '?' . pagename_urlencode($page);
 
 	plugin_ls2_list_push($params, $level);
 	$ret = $include ? '<li>include ' : '<li>';
