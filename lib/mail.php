@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: mail.php,v 1.7 2005/06/09 15:16:41 henoheno Exp $
-// Copyright (C)
-//   2003-2005 PukiWiki Developers Team
+// mail.php
+// Copyright
+//   2003-2017 PukiWiki Development Team
 //   2003      Originally written by upk
 // License: GPL v2 or (at your option) any later version
 //
@@ -51,7 +51,7 @@ function pkwk_mail_notify($subject, $message, $footer = array())
 	if (isset($footer['PAGE'])) $subject = str_replace('$page', $footer['PAGE'], $subject);
 
 	// Footer
-	if (isset($footer['REMOTE_ADDR'])) $footer['REMOTE_ADDR'] = & $_SERVER['REMOTE_ADDR'];
+	if (isset($footer['REMOTE_ADDR'])) $footer['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
 	if (isset($footer['USER_AGENT']))
 		$footer['USER_AGENT']  = '(' . UA_PROFILE . ') ' . UA_NAME . '/' . UA_VERS;
 	if (! empty($footer)) {
@@ -152,4 +152,4 @@ function pop_before_smtp($pop_userid = '', $pop_passwd = '',
 		return TRUE;	// Success
 	}
 }
-?>
+

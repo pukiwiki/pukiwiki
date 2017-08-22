@@ -319,14 +319,16 @@ function file_write($dir, $page, $str, $notimestamp = FALSE, $is_delete = FALSE)
 	} else if ($dir == DIFF_DIR && $notify) {
 		if ($notify_diff_only) $str = preg_replace('/^[^-+].*\n/m', '', $str);
 		$footer['ACTION'] = 'Page update';
-		$footer['PAGE']   = & $page;
+		$footer['PAGE']   = $page;
 		$footer['URI']    = get_script_uri() . '?' . pagename_urlencode($page);
 		$footer['USER_AGENT']  = TRUE;
 		$footer['REMOTE_ADDR'] = TRUE;
 		pkwk_mail_notify($notify_subject, $str, $footer) or
 			die('pkwk_mail_notify(): Failed');
 	}
-
+	if ($dir === DIFF_DIR) {
+		pkwk_log_updates($page, $str);
+	}
 	is_page($page, TRUE); // Clear is_page() cache
 }
 

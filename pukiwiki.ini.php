@@ -477,6 +477,11 @@ $line_break = 0;
 $usedatetime = 1;
 
 /////////////////////////////////////////////////
+// Logging updates (0 or 1)
+$logging_updates = 0;
+$logging_updates_log_dir = '/var/log/pukiwiki';
+
+/////////////////////////////////////////////////
 // User-Agent settings
 //
 // If you want to ignore embedded browsers for rich-content-wikisite,

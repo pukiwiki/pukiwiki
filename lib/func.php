@@ -26,6 +26,56 @@ function pkwk_log($message)
 	error_log($timestamp . ' ' . $message . "\n", 3, $log_filepath);
 }
 
+/*
+ * Get LTSV safe string - Remove tab and newline chars.
+ *
+ * @param $s target string
+ */
+function get_ltsv_value($s) {
+	if (!$s) {
+		return '';
+	}
+	return preg_replace('#[\t\r\n]#', '', $s);
+}
+
+/**
+ * Write update_log on updating contents.
+ *
+ * @param $page page name
+ * @param $diff_content diff expression
+ */
+function pkwk_log_updates($page, $diff_content) {
+	global $auth_user, $logging_updates, $logging_updates_log_dir;
+	$log_dir = $logging_updates_log_dir;
+	$timestamp = time();
+	$ymd = gmdate('Ymd', $timestamp);
+	$difflog_file = $log_dir . '/diff.' . $ymd . '.log';
+	$ltsv_file = $log_dir . '/update.' . $ymd . '.log';
+	$d = array(
+		'time' => gmdate('Y-m-d H:i:s', $timestamp),
+		'uri' => $_SERVER['REQUEST_URI'],
+		'method' => $_SERVER['REQUEST_METHOD'],
+		'remote_addr' => $_SERVER['REMOTE_ADDR'],
+		'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+		'page' => $page,
+		'user' => $auth_user,
+		'diff' => $diff_content
+	);
+	if (file_exists($log_dir) && defined('JSON_UNESCAPED_UNICODE')) {
+		// require: PHP5.4+
+		$line = json_encode($d, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n";
+		file_put_contents($difflog_file, $line, FILE_APPEND | LOCK_EX);
+		$keys = array('time', 'uri', 'method', 'remote_addr', 'user_agent',
+			'page', 'user');
+		$ar2 = array();
+		foreach ($keys as $k) {
+			$ar2[] = $k . ':' . get_ltsv_value($d[$k]);
+		}
+		$ltsv = join($ar2, "\t") . "\n";
+		file_put_contents($ltsv_file, $ltsv, FILE_APPEND | LOCK_EX);
+	}
+}
+
 /**
  * ctype_digit that supports PHP4+.
  *
