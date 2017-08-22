@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // attach.inc.php
 // Copyright
-//   2003-2016 PukiWiki Development Team
+//   2003-2017 PukiWiki Development Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
 //   2002      Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
 //   2001-2002 Originally written by yu-ji
@@ -746,7 +746,11 @@ EOD;
 			. '"; filename*=utf-8\'\'' . rawurlencode($utf8filename));
 		header('Content-Length: ' . $this->size);
 		header('Content-Type: '   . $this->type);
-
+		// Disable output bufferring
+		while (ob_get_level()) {
+			ob_end_flush();
+		}
+		flush();
 		@readfile($this->filename);
 		exit;
 	}

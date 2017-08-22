@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // dump.inc.php
 // Copyright
-//   2004-2016 PukiWiki Development Team
+//   2004-2017 PukiWiki Development Team
 //   2004      teanan / Interfair Laboratory
 // License: GPL v2 or (at your option) any later version
 //
@@ -204,6 +204,11 @@ function download_tarfile($tempnam, $arc_kind)
 	header('Content-Length: ' . $size);
 	header('Content-Type: application/octet-stream');
 	header('Pragma: no-cache');
+	// Disable output bufferring
+	while (ob_get_level()) {
+		ob_end_flush();
+	}
+	flush();
 	@readfile($tempnam);
 }
 
