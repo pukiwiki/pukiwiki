@@ -1,14 +1,14 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: topicpath.inc.php,v 1.9 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2004-2005 PukiWiki Developers Team
+// topicpath.inc.php
+// Copyright
+//   2004-2017 PukiWiki Development Team
 //   2003      reimy       (Some bug fix)
 //   2003      t.m         (Migrate to 1.3)
 //   2003      Nibun-no-ni (Originally written for PukiWiki 1.4.x)
-// License: GPL (any version)
+// License: GPL v2 or (at your option) any later version
 //
-// 'topicpath' plugin for PukiWiki, available under GPL
+// 'topicpath' plugin for PukiWiki
 
 // Show a link to $defaultpage or not
 define('PLUGIN_TOPICPATH_TOP_DISPLAY', 1);
@@ -17,7 +17,7 @@ define('PLUGIN_TOPICPATH_TOP_DISPLAY', 1);
 define('PLUGIN_TOPICPATH_TOP_LABEL', 'Top');
 
 // Separetor / of / topic / path
-define('PLUGIN_TOPICPATH_TOP_SEPARATOR', ' / ');
+define('PLUGIN_TOPICPATH_TOP_SEPARATOR', '<span class="topicpath-slash">/</span>');
 
 // Show the page itself or not
 define('PLUGIN_TOPICPATH_THIS_PAGE_DISPLAY', 1);
@@ -32,8 +32,9 @@ function plugin_topicpath_convert()
 
 function plugin_topicpath_inline()
 {
-	global $script, $vars, $defaultpage;
+	global $vars, $defaultpage;
 
+	$script = get_script_uri();
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	if ($page == '' || $page == $defaultpage) return '';
 
@@ -64,10 +65,11 @@ function plugin_topicpath_inline()
 				$element . '</a>';
 		}
 	}
-
-	if (PLUGIN_TOPICPATH_TOP_DISPLAY)
-		$topic_path[] = make_pagelink($defaultpage, PLUGIN_TOPICPATH_TOP_LABEL);
-
-	return join(PLUGIN_TOPICPATH_TOP_SEPARATOR, array_reverse($topic_path));
+	$s = join(PLUGIN_TOPICPATH_TOP_SEPARATOR, array_reverse($topic_path));
+	if (PLUGIN_TOPICPATH_TOP_DISPLAY) {
+		$s = '<span class="topicpath-top">' .
+			make_pagelink($defaultpage, PLUGIN_TOPICPATH_TOP_LABEL) .
+			PLUGIN_TOPICPATH_TOP_SEPARATOR . '</span>' . $s;
+	}
+	return $s;
 }
-
