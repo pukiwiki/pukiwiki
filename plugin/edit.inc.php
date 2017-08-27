@@ -19,8 +19,10 @@ function plugin_edit_action()
 
 	check_editable($page, true, true);
 
-	if (isset($vars['preview']) || ($load_template_func && isset($vars['template']))) {
-		return plugin_edit_preview();
+	if (isset($vars['preview'])) {
+		return plugin_edit_preview($vars['msg']);
+	} else if ($load_template_func && isset($vars['template'])) {
+		return plugin_edit_preview_with_template();
 	} else if (isset($vars['write'])) {
 		return plugin_edit_write();
 	} else if (isset($vars['cancel'])) {
@@ -33,25 +35,40 @@ function plugin_edit_action()
 	return array('msg'=>$_title_edit, 'body'=>edit_form($page, $postdata));
 }
 
-// Preview
-function plugin_edit_preview()
+/**
+ * Preview with template
+ */
+function plugin_edit_preview_with_template()
+{
+	global $vars;
+	$msg = '';
+	$page = isset($vars['page']) ? $vars['page'] : '';
+	// Loading template
+	$template_page;
+	if (isset($vars['template_page']) && is_page($template_page = $vars['template_page'])) {
+		if (is_page_readable($template_page)) {
+			$msg = remove_author_info(get_source($vars['template_page'], TRUE, TRUE));
+			// Cut fixed anchors
+			$msg = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $msg);
+		}
+	}
+	return plugin_edit_preview($msg);
+}
+
+/**
+ * Preview
+ *
+ * @param msg preview target
+ */
+function plugin_edit_preview($msg)
 {
 	global $vars;
 	global $_title_preview, $_msg_preview, $_msg_preview_delete;
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
-	// Loading template
-	$template_page;
-	if (isset($vars['template_page']) && is_page($template_page = $vars['template_page'])) {
-		if (is_page_readable($template_page)) {
-			$vars['msg'] = remove_author_info(get_source($vars['template_page'], TRUE, TRUE));
-			// Cut fixed anchors
-			$vars['msg'] = preg_replace('/^(\*{1,3}.*)\[#[A-Za-z][\w-]+\](.*)$/m', '$1$2', $vars['msg']);
-		}
-	}
-	$vars['msg'] = preg_replace(PLUGIN_EDIT_FREEZE_REGEX, '', $vars['msg']);
-	$postdata = $vars['msg'];
+	$msg = preg_replace(PLUGIN_EDIT_FREEZE_REGEX, '', $msg);
+	$postdata = $msg;
 
 	if (isset($vars['add']) && $vars['add']) {
 		if (isset($vars['add_top']) && $vars['add_top']) {
@@ -72,7 +89,7 @@ function plugin_edit_preview()
 		$postdata = drop_submit(convert_html($postdata));
 		$body .= '<div id="preview">' . $postdata . '</div>' . "\n";
 	}
-	$body .= edit_form($page, $vars['msg'], $vars['digest'], FALSE);
+	$body .= edit_form($page, $msg, $vars['digest'], FALSE);
 
 	return array('msg'=>$_title_preview, 'body'=>$body);
 }
@@ -92,7 +109,7 @@ function plugin_edit_inline()
 	// {label}. Strip anchor tags only
 	$s_label = strip_htmltag(array_pop($args), FALSE);
 
-	$page    = array_shift($args);
+	$page = array_shift($args);
 	if ($page === NULL) $page = '';
 	$_noicon = $_nolabel = FALSE;
 	foreach($args as $arg){
