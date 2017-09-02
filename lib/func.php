@@ -8,6 +8,14 @@
 //
 // General functions
 
+// URI type enum
+/** Relative path. */
+define('PKWK_URI_RELATIVE', 0);
+/** Root relative URI. */
+define('PKWK_URI_ROOT', 1);
+/** Absolute URI. */
+define('PKWK_URI_ABSOLUTE', 2);
+
 function pkwk_log($message)
 {
 	$log_filepath = 'log/error.log.php';
@@ -691,41 +699,99 @@ function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 	return $result;
 }
 
+/**
+ * Get propery URI of this script
+ *
+ * @param $uri_type relative or absolute option
+ *        PKWK_URI_RELATIVE, PKWK_URI_ROOT or PKWK_URI_ABSOLUTE
+ */
+function get_base_uri($uri_type = PKWK_URI_RELATIVE)
+{
+	switch ($uri_type) {
+	case PKWK_URI_RELATIVE:
+		return pkwk_script_uri_base(PKWK_URI_RELATIVE);
+	case PKWK_URI_ROOT:
+		return pkwk_script_uri_base(PKWK_URI_ROOT);
+	case PKWK_URI_ABSOLUTE:
+		return pkwk_script_uri_base(PKWK_URI_ABSOLUTE);
+	default:
+		die_message('Invalid uri_type in get_base_uri()');
+	}
+}
+
+/**
+ * Get URI of the page
+ *
+ * @param page page name
+ * @param $uri_type relative or absolute option
+ *        PKWK_URI_RELATIVE, PKWK_URI_ROOT or PKWK_URI_ABSOLUTE
+ */
+function get_page_uri($page, $uri_type = PKWK_URI_RELATIVE)
+{
+	return get_base_uri($uri_type) . '?' . pagename_urlencode($page);
+}
+
 // Get absolute-URI of this script
-function get_script_uri($init_uri = '')
+function get_script_uri()
+{
+	return get_base_uri(PKWK_URI_ABSOLUTE);
+}
+
+/**
+ * Get or initialize Script URI
+ *
+ * @param $uri_type relative or absolute potion
+ *        PKWK_URI_RELATIVE, PKWK_URI_ROOT or PKWK_URI_ABSOLUTE
+ * @param $initialize true if you initialize URI
+ * @param $uri_set URI set manually
+ */
+function pkwk_script_uri_base($uri_type, $initialize, $uri_set)
 {
 	global $script_directory_index;
-	static $script;
-
-	if ($init_uri == '') {
-		// Get
-		if (isset($script)) return $script;
-
-		// Set automatically
-		$msg     = 'get_script_uri() failed: Please set $script at INI_FILE manually';
-		$script = guess_script_absolute_uri();
-		if (! is_url($script, TRUE) && php_sapi_name() == 'cgi')
-			die_message($msg);
-		unset($msg);
-
-	} else {
-		// Set manually
-		if (isset($script)) die_message('$script: Already init');
-		if (! is_url($init_uri, TRUE)) die_message('$script: Invalid URI');
-		$script = $init_uri;
+	static $initialized = false;
+	static $uri_absolute, $uri_root, $uri_relative;
+	if (! $initialized) {
+		if (isset($initialize) && $initialize) {
+			if (isset($uri_set)) {
+				$uri_absolute = $uri_set;
+			} else {
+				$uri_absolute = guess_script_absolute_uri();
+			}
+			// Support $script_directory_index (cut 'index.php')
+			if (isset($script_directory_index)) {
+				$slash_index = '/' . $script_directory_index;
+				$len = strlen($slash_index);
+				if (substr($uri_absolute,  -1 * $len) === $slash_index) {
+					$uri_absolute = substr($uri_absolute, 0, strlen($uri_absolute) - $len + 1);
+				}
+			}
+			$elements = parse_url($uri_absolute);
+			$uri_root = $elements['path'];
+			if (substr($uri_root, -1) === '/') {
+				$uri_relative = './';
+			} else {
+				$pos = mb_strrpos($uri_root, '/');
+				if ($pos >= 0) {
+					$uri_relative = substr($uri_root, $pos + 1);
+				} else {
+					$uri_relative = $uri_root;
+				}
+			}
+			$initialized = true;
+		} else {
+			die_message('Script URI must be initialized in pkwk_script_uri_base()');
+		}
 	}
-
-	// Cut filename or not
-	if (isset($script_directory_index)) {
-		if (! file_exists($script_directory_index))
-			die_message('Directory index file not found: ' .
-				htmlsc($script_directory_index));
-		$matches = array();
-		if (preg_match('#^(.+/)' . preg_quote($script_directory_index, '#') . '$#',
-			$script, $matches)) $script = $matches[1];
+	switch ($uri_type) {
+	case PKWK_URI_RELATIVE:
+		return $uri_relative;
+	case PKWK_URI_ROOT:
+		return $uri_root;
+	case PKWK_URI_ABSOLUTE:
+		return $uri_absolute;
+	default:
+		die_message('Invalid uri_type in pkwk_script_uri_base()');
 	}
-
-	return $script;
 }
 
 /**

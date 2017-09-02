@@ -134,9 +134,11 @@ $weeklabels = $_msg_week;
 // INI_FILE: Init $script
 
 if (isset($script)) {
-	get_script_uri($script); // Init manually
+	// Init manually
+	pkwk_script_uri_base(PKWK_URI_ABSOLUTE, true, $script);
 } else {
-	$script = get_script_uri(); // Init automatically
+	// Init automatically
+	$script = pkwk_script_uri_base(PKWK_URI_ABSOLUTE, true);
 }
 
 // INI_FILE: Auth settings
