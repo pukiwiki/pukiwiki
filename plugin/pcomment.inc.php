@@ -1,9 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: pcomment.inc.php,v 1.48 2011/01/25 15:01:01 henoheno Exp $
+// pcomment.inc.php
+// Copyright 2002-2017 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
 //
 // pcomment plugin - Show/Insert comments into specified (another) page
-//
+
 // Usage: #pcomment([page][,max][,options])
 //
 //   page -- An another page-name that holds comments
@@ -56,7 +58,7 @@ function plugin_pcomment_action()
 	}
 
 	pkwk_headers_sent();
-	header('Location: ' . get_script_uri() . '?' . pagename_urlencode($refer));
+	header('Location: ' . get_page_uri($refer, PKWK_URI_ROOT));
 	exit;
 }
 
@@ -379,4 +381,3 @@ function plugin_pcomment_get_comments($page, $count, $dir, $reply)
 
 	return array($comments, $digest);
 }
-

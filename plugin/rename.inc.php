@@ -395,7 +395,7 @@ function plugin_rename_proceed($pages, $files, $exists)
 	if ($page == '') $page = PLUGIN_RENAME_LOGPAGE;
 
 	pkwk_headers_sent();
-	header('Location: ' . get_script_uri() . '?' . pagename_urlencode($page));
+	header('Location: ' . get_page_uri($page, PKWK_URI_ROOT));
 	exit;
 }
 

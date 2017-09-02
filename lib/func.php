@@ -928,8 +928,7 @@ function manage_page_redirect() {
 	}
 	$new_page = get_pagename_on_redirect($page);
 	if ($new_page != false) {
-		header('Location: ' . get_script_uri() . '?' .
-			pagename_urlencode($new_page));
+		header('Location: ' . get_page_uri($new_page, PKWK_URI_ROOT));
 		return TRUE;
 	}
 	return FALSE;

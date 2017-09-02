@@ -4,8 +4,8 @@
 //
 // Amazon plugin: Book-review maker via amazon.com/amazon.jp
 //
-// Copyright:
-//	2004-2016 PukiWiki Development Team
+// Copyright
+//	2004-2017 PukiWiki Development Team
 //	2003 閑舎 <raku@rakunet.org> (Original author)
 //
 // License: GNU/GPL
@@ -211,17 +211,17 @@ function plugin_amazon_action()
 		if ($edit_auth && ($auth_user == '' || ! isset($edit_auth_users[$auth_user]) ||
 		    $edit_auth_users[$auth_user] != $_SERVER['PHP_AUTH_PW'])) {
 		    	// Edit-auth failed. Just look the page
-			header('Location: ' . get_script_uri() . '?' . $r_page_url);
+			header('Location: ' . get_page_uri($r_page, PKWK_URI_ROOT));
 		} else {
 			$title = plugin_amazon_get_asin_title();
 			if ($title == '' || preg_match('#^/#', $s_page)) {
 				// Invalid page name
-				header('Location: ' . get_script_uri() . '?' . pagename_urlencode($s_page));
+				header('Location: ' . get_page_uri($s_page, PKWK_URI_ROOT));
 			} else {
 				$body = '#amazon(' . $asin_all . ',,image)' . "\n" .
 					'*' . $title . "\n" . $amazon_body;
 				plugin_amazon_review_save($r_page, $body);
-				header('Location: ' . get_script_uri() .
+				header('Location: ' . get_base_uri(PKWK_URI_ROOT) .
 					'?cmd=edit&page=' . $r_page_url);
 			}
 		}

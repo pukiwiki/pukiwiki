@@ -1,9 +1,11 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: rss.inc.php,v 1.21 2007/02/11 05:53:31 henoheno Exp $
+// rss.inc.php
+// Copyright 2003-2017 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
 //
 // RSS plugin: Publishing RSS of RecentChanges
-//
+
 // Usage: plugin=rss[&ver=[0.91|1.0|2.0]] (Default: 0.91)
 //
 // NOTE for acronyms
@@ -31,7 +33,7 @@ function plugin_rss_action()
 
 	$lang = LANG;
 	$page_title_utf8 = mb_convert_encoding($page_title, 'UTF-8', SOURCE_ENCODING);
-	$self = get_script_uri();
+	$self = get_base_uri(PKWK_URI_ABSOLUTE);
 
 	// Creating <item>
 	$items = $rdf_li = '';
@@ -129,4 +131,3 @@ EOD;
 	}
 	exit;
 }
-

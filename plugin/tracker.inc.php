@@ -184,11 +184,8 @@ function plugin_tracker_action()
 
 	// Writing page data, without touch
 	page_write($page, join('', $postdata));
-
-	$r_page = pagename_urlencode($page);
-
 	pkwk_headers_sent();
-	header('Location: ' . get_script_uri() . '?' . $r_page);
+	header('Location: ' . get_page_uri($page, PKWK_URI_ROOT));
 	exit;
 }
 

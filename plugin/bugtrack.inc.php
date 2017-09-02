@@ -177,7 +177,7 @@ function plugin_bugtrack_action()
 		$post['version'], $post['body']);
 
 	pkwk_headers_sent();
-	header('Location: ' . get_script_uri() . '?' . pagename_urlencode($page));
+	header('Location: ' . get_page_uri($page, PKWK_URI_ROOT));
 	exit;
 }
 
@@ -284,7 +284,7 @@ function plugin_bugtrack_get_page_list($page, $needs_filetime) {
  */
 function plugin_bugtrack_list_convert()
 {
-	global $script, $vars, $_plugin_bugtrack, $_title_cannotread;
+	global $vars, $_plugin_bugtrack, $_title_cannotread;
 	$cache_format_version = 1;
 	$cache_expire_time = 60 * 60 * 24;
 	$cache_refresh_time_prev;

@@ -203,13 +203,11 @@ function attach_upload($file, $page, $pass = NULL)
 
 	if ($notify) {
 		$footer['ACTION']   = 'File attached';
-		$footer['FILENAME'] = & $file['name'];
-		$footer['FILESIZE'] = & $file['size'];
-		$footer['PAGE']     = & $page;
+		$footer['FILENAME'] = $file['name'];
+		$footer['FILESIZE'] = $file['size'];
+		$footer['PAGE']     = $page;
 
-		$footer['URI']      = get_script_uri() .
-			//'?' . pagename_urlencode($page);
-
+		$footer['URI']      = get_base_uri(PKWK_URI_ABSOLUTE) .
 			// MD5 may heavy
 			'?plugin=attach' .
 				'&refer=' . rawurlencode($page) .
@@ -642,10 +640,9 @@ EOD;
 
 		if ($notify) {
 			$footer['ACTION']   = 'File deleted';
-			$footer['FILENAME'] = & $this->file;
-			$footer['PAGE']     = & $this->page;
-			$footer['URI']      = get_script_uri() .
-				'?' . pagename_urlencode($this->page);
+			$footer['FILENAME'] = $this->file;
+			$footer['PAGE']     = $this->page;
+			$footer['URI']      = get_page_uri($this->page, PKWK_URI_ABSOLUTE);
 			$footer['USER_AGENT']  = TRUE;
 			$footer['REMOTE_ADDR'] = TRUE;
 			pkwk_mail_notify($notify_subject, "\n", $footer) or

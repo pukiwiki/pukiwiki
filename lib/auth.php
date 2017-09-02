@@ -315,7 +315,7 @@ function basic_auth($page, $auth_enabled, $exit_on_fail, $auth_pages, $title_can
 				header('Location: ' . $loginurl);
 			} elseif (AUTH_TYPE_EXTERNAL === $auth_type ||
 				AUTH_TYPE_SAML === $auth_type) {
-				$url_after_login = get_script_uri() . '?' . $g_query_string;
+				$url_after_login = get_base_uri(PKWK_URI_ABSOLUTE) . '?' . $g_query_string;
 				$loginurl = get_auth_external_login_url($page, $url_after_login);
 				header('HTTP/1.0 302 Found');
 				header('Location: ' . $loginurl);
@@ -629,7 +629,7 @@ function form_auth_redirect($location, $page)
 	if ($location) {
 		header('Location: ' . $location);
 	} else {
-		$url = get_script_uri() . '?' . $page;
+		$url = get_page_uri($page, PKWK_URI_ROOT);
 		header('Location: ' . $url);
 	}
 }
