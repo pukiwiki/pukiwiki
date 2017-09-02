@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // func.php
 // Copyright
-//   2002-2016 PukiWiki Development Team
+//   2002-2017 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -703,26 +703,7 @@ function get_script_uri($init_uri = '')
 
 		// Set automatically
 		$msg     = 'get_script_uri() failed: Please set $script at INI_FILE manually';
-
-		$script  = (SERVER_PORT == 443 ? 'https://' : 'http://'); // scheme
-		$script .= SERVER_NAME;	// host
-		$script .= (SERVER_PORT == 80 ? '' : ':' . SERVER_PORT);  // port
-
-		// SCRIPT_NAME が'/'で始まっていない場合(cgiなど) REQUEST_URIを使ってみる
-		$path    = SCRIPT_NAME;
-		if ($path{0} != '/') {
-			if (! isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI']{0} != '/')
-				die_message($msg);
-
-			// REQUEST_URIをパースし、path部分だけを取り出す
-			$parse_url = parse_url($script . $_SERVER['REQUEST_URI']);
-			if (! isset($parse_url['path']) || $parse_url['path']{0} != '/')
-				die_message($msg);
-
-			$path = $parse_url['path'];
-		}
-		$script .= $path;
-
+		$script = guess_script_absolute_uri();
 		if (! is_url($script, TRUE) && php_sapi_name() == 'cgi')
 			die_message($msg);
 		unset($msg);
@@ -745,6 +726,29 @@ function get_script_uri($init_uri = '')
 	}
 
 	return $script;
+}
+
+/**
+ * Guess Script Absolute URI.
+ *
+ * SERVER_PORT: $_SERVER['SERVER_PORT'] converted in init.php
+ * SERVER_NAME: $_SERVER['SERVER_NAME'] converted in init.php
+ */
+function guess_script_absolute_uri()
+{
+	$port = SERVER_PORT;
+	$is_ssl = (SERVER_PORT == 443) ||
+		(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ||
+		(isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] === 'https');
+	if ($is_ssl) {
+		$host = 'https://' . SERVER_NAME .
+			($port == 443 ? '' : ':' . $port);
+	} else {
+		$host = 'http://' . SERVER_NAME .
+			($port == 80 ? '' : ':' . $port);
+	}
+	$uri_elements = parse_url($host . $_SERVER['REQUEST_URI']);
+	return $host . $uri_elements['path'];
 }
 
 // Remove null(\0) bytes from variables
