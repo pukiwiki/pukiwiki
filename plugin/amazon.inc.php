@@ -1,15 +1,13 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // amazon.inc.php
-//
-// Amazon plugin: Book-review maker via amazon.com/amazon.jp
-//
 // Copyright
 //	2004-2017 PukiWiki Development Team
 //	2003 閑舎 <raku@rakunet.org> (Original author)
+// License: GPL v2 or (at your option) any later version
 //
-// License: GNU/GPL
-//
+// Amazon plugin: Book-review maker via amazon.com/amazon.jp
+
 // ChangeLog:
 // * 2004/04/03 PukiWiki Developer Team (arino <arino@users.osdn.me>)
 //        - replace plugin_amazon_get_page().
@@ -112,8 +110,9 @@ EOD;
 
 function plugin_amazon_convert()
 {
-	global $script, $vars, $asin, $asin_all;
+	global $vars, $asin, $asin_all;
 
+	$script = get_base_uri();
 	if (func_num_args() > 3) {
 		if (PKWK_READONLY) return ''; // Show nothing
 
@@ -187,7 +186,7 @@ EOD;
 
 function plugin_amazon_action()
 {
-	global $vars, $script, $edit_auth, $edit_auth_users;
+	global $vars, $edit_auth, $edit_auth_users;
 	global $amazon_body, $asin, $asin_all;
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');

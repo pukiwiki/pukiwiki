@@ -1,17 +1,18 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: vote.inc.php,v 1.27 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C) 2002-2005, 2007 PukiWiki Developers Team
+// vote.inc.php
+// Copyright 2002-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Vote box plugin
 
 function plugin_vote_action()
 {
-	global $vars, $script, $cols,$rows;
+	global $vars, $cols,$rows;
 	global $_title_collided, $_msg_collided, $_title_updated;
 	global $_vote_plugin_votes;
 
+	$script = get_base_uri();
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
 	$postdata_old  = get_source($vars['refer']);
@@ -76,7 +77,7 @@ EOD;
 
 function plugin_vote_convert()
 {
-	global $script, $vars,  $digest;
+	global $vars, $digest;
 	global $_vote_plugin_choice, $_vote_plugin_votes;
 	static $number = array();
 
@@ -92,7 +93,7 @@ function plugin_vote_convert()
 		$_script = '';
 		$_submit = 'hidden';
 	} else {
-		$_script = $script;
+		$_script = get_base_uri();
 		$_submit = 'submit';
 	}
 
@@ -149,4 +150,3 @@ EOD;
 
 	return $body;
 }
-?>

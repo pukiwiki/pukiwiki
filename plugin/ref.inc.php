@@ -107,9 +107,10 @@ EOD;
 
 function plugin_ref_body($args)
 {
-	global $script, $vars;
+	global $vars;
 	global $WikiName, $BracketName; // compat
 
+	$script = get_base_uri();
 	// 戻り値
 	$params = array(
 		'left'   => FALSE, // 左寄せ

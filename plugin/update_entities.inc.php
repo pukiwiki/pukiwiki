@@ -1,8 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // update_entities.inc.php
-// Copyright
-//   2003-2007 PukiWiki Development Team
+// Copyright 2003-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Update entities plugin - Update XHTML entities from DTD
@@ -39,9 +38,10 @@ PHPの持つテーブルおよびW3CのDTDをスキャンして、キャッシ�
 
 function plugin_update_entities_action()
 {
-	global $script, $vars;
+	global $vars;
 	global $_entities_messages;
 
+	$script = get_base_uri();
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits this');
 
 	$msg = $body = '';

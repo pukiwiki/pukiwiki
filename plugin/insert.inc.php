@@ -1,5 +1,8 @@
 <?php
-// $Id: insert.inc.php,v 1.16 2011/01/25 15:01:01 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone.
+// insert.inc.php
+// Copyright 2002-2017 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
 //
 // Text inserting box plugin
 
@@ -9,9 +12,10 @@ define('INSERT_INS',   1); // Order of insertion (1:before the textarea, 0:after
 
 function plugin_insert_action()
 {
-	global $script, $vars, $cols, $rows;
+	global $vars, $cols, $rows;
 	global $_title_collided, $_msg_collided, $_title_updated;
 
+	$script = get_base_uri();
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 	if (! isset($vars['msg']) || $vars['msg'] == '') return;
 
@@ -68,10 +72,11 @@ EOD;
 
 function plugin_insert_convert()
 {
-	global $script, $vars, $digest;
+	global $vars, $digest;
 	global $_btn_insert;
 	static $numbers = array();
 
+	$script = get_base_uri();
 	if (PKWK_READONLY) return ''; // Show nothing
 
 	if (! isset($numbers[$vars['page']])) $numbers[$vars['page']] = 0;
@@ -97,4 +102,3 @@ EOD;
 
 	return $string;
 }
-?>

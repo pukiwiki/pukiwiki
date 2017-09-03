@@ -216,8 +216,9 @@ function download_tarfile($tempnam, $arc_kind)
 // 入力フォームを表示
 function plugin_dump_disp_form()
 {
-	global $script, $defaultpage;
+	global $defaultpage;
 
+	$script   = get_base_uri();
 	$act_down = PLUGIN_DUMP_DUMP;
 	$act_up   = PLUGIN_DUMP_RESTORE;
 	$maxsize  = PLUGIN_DUMP_MAX_FILESIZE;

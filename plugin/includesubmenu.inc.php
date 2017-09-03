@@ -1,14 +1,16 @@
 <?php
-// $Id: includesubmenu.inc.php,v 1.7 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C) 2002-2004, 2007 PukiWiki Developers Team
+// PukiWiki - Yet another WikiWikiWeb clone.
+// includesubmenu.inc
+// Copyright 2002-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Including submenu 
 
 function plugin_includesubmenu_convert()
 {
-  global $script,$vars;
+  global $vars;
 
+  $script = get_base_uri();
   $ShowPageName = FALSE;
 
   if (func_num_args()) {
@@ -58,4 +60,3 @@ function plugin_includesubmenu_convert()
   }
   return $body;
 }
-?>

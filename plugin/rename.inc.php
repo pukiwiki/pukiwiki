@@ -92,8 +92,9 @@ function plugin_rename_err($err, $page = '')
 //第一段階:ページ名または正規表現の入力
 function plugin_rename_phase1($err = '', $page = '')
 {
-	global $script, $_rename_messages;
+	global $_rename_messages;
 
+	$script = get_base_uri();
 	$msg    = plugin_rename_err($err, $page);
 	$refer  = plugin_rename_getvar('refer');
 	$method = plugin_rename_getvar('method');
@@ -134,8 +135,9 @@ EOD;
 //第二段階:新しい名前の入力
 function plugin_rename_phase2($err = '')
 {
-	global $script, $_rename_messages;
+	global $_rename_messages;
 
+	$script = get_base_uri();
 	$msg   = plugin_rename_err($err);
 	$page  = plugin_rename_getvar('page');
 	$refer = plugin_rename_getvar('refer');
@@ -213,8 +215,9 @@ function plugin_rename_regex($arr_from, $arr_to)
 
 function plugin_rename_phase3($pages)
 {
-	global $script, $_rename_messages;
+	global $_rename_messages;
 
+	$script = get_base_uri();
 	$msg = $input = '';
 	$files = plugin_rename_get_files($pages);
 

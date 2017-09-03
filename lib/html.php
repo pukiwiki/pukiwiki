@@ -11,7 +11,7 @@
 // Show page-content
 function catbody($title, $page, $body)
 {
-	global $script, $vars, $arg, $defaultpage, $whatsnew, $help_page, $hr;
+	global $vars, $arg, $defaultpage, $whatsnew, $help_page, $hr;
 	global $attach_link, $related_link, $cantedit, $function_freeze;
 	global $search_word_color, $_msg_word, $foot_explain, $note_hr, $head_tags;
 	global $javascript, $nofollow;
@@ -24,6 +24,7 @@ function catbody($title, $page, $body)
 	global $modifier;     // Site administrator's  web page
 	global $modifierlink; // Site administrator's name
 
+	$script = get_base_uri();
 	$enable_login = false;
 	$enable_logout = false;
 	if (AUTH_TYPE_FORM === $auth_type || AUTH_TYPE_EXTERNAL === $auth_type ||
@@ -232,13 +233,14 @@ EOS;
 // Show 'edit' form
 function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 {
-	global $script, $vars, $rows, $cols, $hr, $function_freeze;
+	global $vars, $rows, $cols, $hr, $function_freeze;
 	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel, $_msg_help;
 	global $whatsnew, $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
 	global $_title_list, $_label_template_pages;
 	global $rule_page;
 
+	$script = get_base_uri();
 	// Newly generate $digest or not
 	if ($digest === FALSE) $digest = md5(join('', get_source($page)));
 
@@ -379,8 +381,9 @@ EOD;
 // Related pages
 function make_related($page, $tag = '')
 {
-	global $script, $vars, $rule_related_str, $related_str;
+	global $vars, $rule_related_str, $related_str;
 
+	$script = get_base_uri();
 	prepare_links_related($page);
 	$links = links_get_related($page);
 
@@ -466,12 +469,9 @@ function strip_autolink($str)
 // Make a backlink. searching-link of the page name, by the page name, for the page name
 function make_search($page)
 {
-	global $script;
-
 	$s_page = htmlsc($page);
 	$r_page = rawurlencode($page);
-
-	return '<a href="' . $script . '?plugin=related&amp;page=' . $r_page .
+	return '<a href="' . get_base_uri() . '?plugin=related&amp;page=' . $r_page .
 		'">' . $s_page . '</a> ';
 }
 

@@ -8,9 +8,10 @@
 
 function plugin_newpage_convert()
 {
-	global $script, $vars, $_btn_edit, $_msg_newpage, $BracketName;
+	global $vars, $_btn_edit, $_msg_newpage, $BracketName;
 	static $id = 0;
 
+	$script = get_base_uri();
 	if (PKWK_READONLY) return ''; // Show nothing
 
 	$newpage = '';

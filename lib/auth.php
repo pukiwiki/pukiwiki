@@ -157,7 +157,7 @@ function pkwk_ldap_escape_dn($value) {
 // Check edit-permission
 function check_editable($page, $auth_enabled = TRUE, $exit_on_fail = TRUE)
 {
-	global $script, $_title_cannotedit, $_msg_unfreeze;
+	global $_title_cannotedit, $_msg_unfreeze;
 
 	if (edit_auth($page, $auth_enabled, $exit_on_fail) && is_editable($page)) {
 		// Editable
@@ -171,7 +171,7 @@ function check_editable($page, $auth_enabled = TRUE, $exit_on_fail = TRUE)
 			$body = $title = str_replace('$1',
 				htmlsc(strip_bracket($page)), $_title_cannotedit);
 			if (is_freeze($page))
-				$body .= '(<a href="' . $script . '?cmd=unfreeze&amp;page=' .
+				$body .= '(<a href="' . get_base_uri() . '?cmd=unfreeze&amp;page=' .
 					rawurlencode($page) . '">' . $_msg_unfreeze . '</a>)';
 			$page = str_replace('$1', make_search($page), $_title_cannotedit);
 			catbody($title, $page, $body);

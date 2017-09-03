@@ -51,7 +51,7 @@ function plugin_ls2_action()
 
 function plugin_ls2_convert()
 {
-	global $script, $vars, $_ls2_msg_title;
+	global $vars, $_ls2_msg_title;
 
 	$params = array(
 		'link'    => FALSE,
@@ -85,7 +85,7 @@ function plugin_ls2_convert()
 	if (isset($params['title']))   $tmp[] = 'title=1';
 	if (isset($params['include'])) $tmp[] = 'include=1';
 
-	return '<p><a href="' . $script . '?' . join('&amp;', $tmp) . '">' .
+	return '<p><a href="' . get_base_uri() . '?' . join('&amp;', $tmp) . '">' .
 		$title . '</a></p>' . "\n";
 }
 
@@ -119,7 +119,6 @@ function plugin_ls2_show_lists($prefix, & $params)
 
 function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 {
-	global $script;
 	static $_ls2_anchor = 0;
 
 	// ページが未表示のとき
@@ -128,7 +127,7 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 
 	$s_page = htmlsc($page);
 	$title  = $s_page . ' ' . get_pg_passage($page, FALSE);
-	$href   = $script . '?' . pagename_urlencode($page);
+	$href   = get_page_uri($page);
 
 	plugin_ls2_list_push($params, $level);
 	$ret = $include ? '<li>include ' : '<li>';

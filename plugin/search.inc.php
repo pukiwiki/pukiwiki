@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: search.inc.php,v 1.14 2011/01/25 15:01:01 henoheno Exp $
+// search.inc.php
+// Copyright 2003-2017 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
 //
 // Search plugin
 
@@ -62,9 +64,10 @@ function plugin_search_action()
 
 function plugin_search_search_form($s_word = '', $type = '', $bases = array())
 {
-	global $script, $_btn_and, $_btn_or, $_btn_search;
+	global $_btn_and, $_btn_or, $_btn_search;
 	global $_search_pages, $_search_all;
 
+	$script = get_base_uri();
 	$and_check = $or_check = '';
 	if ($type == 'OR') {
 		$or_check  = ' checked="checked"';
@@ -113,4 +116,3 @@ $base_option
 </form>
 EOD;
 }
-?>

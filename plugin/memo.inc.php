@@ -1,5 +1,8 @@
 <?php
-// $Id: memo.inc.php,v 1.17 2011/01/25 15:01:01 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone.
+// memo.inc.php
+// Copyright 2002-2017 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
 //
 // Memo box plugin
 
@@ -8,9 +11,10 @@ define('MEMO_ROWS',  5); // Rows of textarea
 
 function plugin_memo_action()
 {
-	global $script, $vars, $cols, $rows;
+	global $vars, $cols, $rows;
 	global $_title_collided, $_msg_collided, $_title_updated;
 
+	$script = get_base_uri();
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 	if (! isset($vars['msg']) || $vars['msg'] == '') return;
 
@@ -68,7 +72,7 @@ EOD;
 
 function plugin_memo_convert()
 {
-	global $script, $vars, $digest;
+	global $vars, $digest;
 	global $_btn_memo_update;
 	static $numbers = array();
 
@@ -85,7 +89,7 @@ function plugin_memo_convert()
 		$_script = '';
 		$_submit = '';	
 	} else {
-		$_script = & $script;
+		$_script = get_base_uri();
 		$_submit = '<input type="submit" name="memo"    value="' . $_btn_memo_update . '" />';
 	}
 
@@ -108,4 +112,3 @@ EOD;
 
 	return $string;
 }
-?>

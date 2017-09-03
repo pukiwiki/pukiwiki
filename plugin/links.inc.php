@@ -1,8 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // links.inc.php
-// Copyright
-//   2003-2005, 2007 PukiWiki Development Team
+// Copyright 2003-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Update link cache plugin
@@ -35,9 +34,10 @@ function plugin_links_init()
 
 function plugin_links_action()
 {
-	global $script, $post, $vars, $foot_explain;
+	global $post, $vars, $foot_explain;
 	global $_links_messages;
 
+	$script = get_base_uri();
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits this');
 
 	$msg = $body = '';

@@ -1,5 +1,8 @@
 <?php
-// $Id: calendar2.inc.php,v 1.24 2011/01/25 15:01:01 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone
+// calendar2.inc.php
+// Copyright 2002-2017 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
 //
 // Calendar2 plugin
 //
@@ -9,9 +12,10 @@
 
 function plugin_calendar2_convert()
 {
-	global $script, $vars, $post, $get, $weeklabels, $WikiName, $BracketName;
+	global $vars, $post, $get, $weeklabels, $WikiName, $BracketName;
 	global $_calendar2_plugin_edit, $_calendar2_plugin_empty;
 
+	$script = get_base_uri();
 	$date_str = get_date('Ym');
 	$base     = strip_bracket($vars['page']);
 
@@ -86,7 +90,7 @@ function plugin_calendar2_convert()
 EOD;
 
 	if ($prefix) $ret .= "\n" .
-		'      <br />[<a href="' . $script . '?' . $r_base . '">' . $s_base . '</a>]';
+		'      <br />[<a href="' . get_page_uri($base) . '">' . $s_base . '</a>]';
 
 	$ret .= "\n" .
 		'     </td>' . "\n" .
@@ -123,7 +127,7 @@ EOD;
 		}
 
 		if (is_page($page)) {
-			$link = '<a href="' . $script . '?' . $r_page . '" title="' . $s_page .
+			$link = '<a href="' . get_page_uri($page) . '" title="' . $s_page .
 				'"><strong>' . $day . '</strong></a>';
 		} else {
 			if (PKWK_READONLY) {
@@ -197,4 +201,3 @@ function plugin_calendar2_action()
 
 	return $ret;
 }
-

@@ -1,9 +1,10 @@
 <?php
-/////////////////////////////////////////////////
-// PukiWiki - Yet another WikiWikiWeb clone.
+// PukiWiki - Yet another WikiWikiWeb clone
+// random.inc.php
+// Copyright 2002-2017 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
 //
-// $Id: random.inc.php,v 1.9 2011/01/25 15:01:01 henoheno Exp $
-//
+// Show random page plugin
 
 /*
  *プラグイン random
@@ -20,8 +21,9 @@
 
 function plugin_random_convert()
 {
-	global $script, $vars;
+	global $vars;
 
+	$script = $get_base_uri();
 	$title = '[Random Link]'; // default
 	if (func_num_args()) {
 		$args  = func_get_args();
@@ -51,4 +53,3 @@ function plugin_random_action()
 
 	return array('body'=>'','msg'=>'');
 }
-

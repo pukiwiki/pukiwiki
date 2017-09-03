@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: diff.inc.php,v 1.20 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+// diff.inc.php
+// Copyright
+//   2002-2017 PukiWiki Development Team
 //   2002      Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -25,10 +25,11 @@ function plugin_diff_action()
 
 function plugin_diff_view($page)
 {
-	global $script, $hr;
+	global $hr;
 	global $_msg_notfound, $_msg_goto, $_msg_deleted, $_msg_addline, $_msg_delline, $_title_diff;
 	global $_title_diff_delete;
 
+	$script = get_base_uri();
 	$r_page = pagename_urlencode($page);
 	$s_page = htmlsc($page);
 
@@ -39,7 +40,7 @@ function plugin_diff_view($page)
 
 	$is_page = is_page($page);
 	if ($is_page) {
-		$menu[] = ' <li>' . str_replace('$1', '<a href="' . $script . '?' . $r_page . '">' .
+		$menu[] = ' <li>' . str_replace('$1', '<a href="' . get_page_uri($page) . '">' .
 			$s_page . '</a>', $_msg_goto) . '</li>';
 	} else {
 		$menu[] = ' <li>' . str_replace('$1', $s_page, $_msg_deleted) . '</li>';
@@ -72,10 +73,11 @@ EOD;
 
 function plugin_diff_delete($page)
 {
-	global $script, $vars;
+	global $vars;
 	global $_title_diff_delete, $_msg_diff_deleted;
 	global $_msg_diff_adminpass, $_btn_delete, $_msg_invalidpass;
 
+	$script = get_base_uri();
 	$filename = DIFF_DIR . encode($page) . '.txt';
 	$body = '';
 	if (! is_pagename($page))     $body = 'Invalid page name';
@@ -110,4 +112,3 @@ EOD;
 
 	return array('msg'=>$_title_diff_delete, 'body'=>$body);
 }
-

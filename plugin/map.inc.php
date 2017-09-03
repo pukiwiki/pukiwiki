@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // map.inc.php
-// Copyright 2002-2016 PukiWiki Development Team
+// Copyright 2002-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Site map plugin
@@ -110,7 +110,7 @@ class MapNode
 	}
 	function __construct($page, $reverse = FALSE)
 	{
-		global $script, $non_list;
+		global $non_list;
 
 		static $id = 0;
 
@@ -124,7 +124,7 @@ class MapNode
 
 		$this->rels = $reverse ? $this->ref() : $this->rel();
 		$mark       = $reverse ? '' : '<sup>+</sup>';
-		$this->mark = '<a id="rel_' . $this->id . '" href="' . $script .
+		$this->mark = '<a id="rel_' . $this->id . '" href="' . get_base_uri() .
 			'?plugin=map&amp;refer=' . rawurlencode($this->page) . '">' .
 			$mark . '</a>';
 	}

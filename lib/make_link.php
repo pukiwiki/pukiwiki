@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // make_link.php
 // Copyright
-//   2003-2016 PukiWiki Development Team
+//   2003-2017 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -541,8 +541,6 @@ EOD;
 
 	function set($arr, $page)
 	{
-		global $script;
-
 		list(, $alias, , $name, $this->param) = $this->splice($arr);
 
 		$matches = array();
@@ -551,7 +549,7 @@ EOD;
 
 		$url = get_interwiki_url($name, $this->param);
 		$this->url = ($url === FALSE) ?
-			$script . '?' . pagename_urlencode('[[' . $name . ':' . $this->param . ']]') :
+			get_base_uri() . '?' . pagename_urlencode('[[' . $name . ':' . $this->param . ']]') :
 			htmlsc($url);
 
 		return parent::setParam(
@@ -754,8 +752,9 @@ class Link_autolink_a extends Link_autolink
 // Make hyperlink for the page
 function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolink = FALSE)
 {
-	global $script, $vars, $link_compact, $related, $_symbol_noexists;
+	global $vars, $link_compact, $related, $_symbol_noexists;
 
+	$script = get_base_uri();
 	$s_page = htmlsc(strip_bracket($page));
 	$s_alias = ($alias == '') ? $s_page : $alias;
 

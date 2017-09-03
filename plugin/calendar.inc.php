@@ -1,7 +1,8 @@
 <?php
-// $Id: calendar.inc.php,v 1.22 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2002-2003,2005 PukiWiki Developers Team
+// PukiWiki - Yet another WikiWikiWeb clone
+// calendar.inc.php
+// Copyright
+//   2002-2017 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -9,8 +10,9 @@
 
 function plugin_calendar_convert()
 {
-	global $script, $weeklabels, $vars, $command;
+	global $weeklabels, $vars, $command;
 
+	$script   = get_base_uri();
 	$args     = func_get_args();
 	$date_str = get_date('Ym');
 	$page     = '';
@@ -68,15 +70,15 @@ function plugin_calendar_convert()
 
 	$m_name = $year . '.' . $m_num . ' (' . $cmd . ')';
 
-	$prefix_url = rawurlencode(is_pagename($pre) ? $pre : '[[' . $pre . ']]');
 	$pre = strip_bracket($pre);
+	$page_uri = get_page_uri($pre);
 
 	$ret = <<<EOD
 <table class="style_calendar" cellspacing="1" width="150" border="0">
  <tr>
   <td class="style_td_caltop" colspan="7">
    <strong>$m_name</strong><br />
-   [<a href="$script?$prefix_url">$pre</a>]
+   [<a href="$page_uri">$pre</a>]
   </td>
  </tr>
  <tr>
@@ -149,4 +151,3 @@ EOD;
 
 	return $ret;
 }
-?>

@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: include.inc.php,v 1.23 2011/01/25 15:01:01 henoheno Exp $
+// include.inc.php
+// Copyright 2002-2017 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
 //
 // Include-once plugin
 
@@ -52,10 +54,11 @@ define('PLUGIN_INCLUDE_USAGE', '#include(): Usage: (a-page-name-you-want-to-incl
 
 function plugin_include_convert()
 {
-	global $script, $vars, $get, $post, $menubar, $_msg_include_restrict;
+	global $vars, $get, $post, $menubar, $_msg_include_restrict;
 	static $included = array();
 	static $count = 1;
 
+	$script = get_base_uri();
 	if (func_num_args() == 0) return PLUGIN_INCLUDE_USAGE . '<br />' . "\n";;
 
 	// $menubar will already be shown via menu plugin
@@ -79,7 +82,7 @@ function plugin_include_convert()
 
 	$s_page = htmlsc($page);
 	$r_page = pagename_urlencode($page);
-	$link = '<a href="' . $script . '?' . $r_page . '">' . $s_page . '</a>'; // Read link
+	$link = '<a href="' . get_page_uri($page) . '">' . $s_page . '</a>'; // Read link
 
 	// I'm stuffed
 	if (isset($included[$page])) {

@@ -20,7 +20,7 @@ define('PLUGIN_COMMENT_FORMAT_STRING', "\x08MSG\x08 -- \x08NAME\x08 \x08NOW\x08"
 
 function plugin_comment_action()
 {
-	global $script, $vars, $now, $_title_updated, $_no_name;
+	global $vars, $now, $_title_updated, $_no_name;
 	global $_msg_comment_collided, $_title_comment_collided;
 	global $_comment_plugin_fail_msg;
 

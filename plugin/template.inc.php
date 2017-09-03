@@ -12,12 +12,13 @@ define('MAX_LEN', 60);
 
 function plugin_template_action()
 {
-	global $script, $vars;
+	global $vars;
 	global $_title_edit;
 	global $_msg_template_start, $_msg_template_end, $_msg_template_page, $_msg_template_refer;
 	global $_btn_template_create, $_title_template;
 	global $_err_template_already, $_err_template_invalid, $_msg_template_force;
 
+	$script = get_base_uri();
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 	if (! isset($vars['refer']) || ! is_page($vars['refer']))
 		return FALSE;
