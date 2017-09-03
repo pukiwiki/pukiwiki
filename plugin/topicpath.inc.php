@@ -34,7 +34,6 @@ function plugin_topicpath_inline()
 {
 	global $vars, $defaultpage;
 
-	$script = get_script_uri();
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	if ($page == '' || $page == $defaultpage) return '';
 
@@ -50,7 +49,6 @@ function plugin_topicpath_inline()
 	$topic_path = array();
 	while (! empty($parts)) {
 		$_landing = join('/', $parts);
-		$landing  = pagename_urlencode($_landing);
 		$element  = htmlsc(array_pop($parts));
 		if (! $b_link)  {
 			// This page ($_landing == $page)
@@ -61,7 +59,7 @@ function plugin_topicpath_inline()
 			$topic_path[] = $element;
 		} else {
 			// Page exists or not exists
-			$topic_path[] = '<a href="' . $script . '?' . $landing . '">' .
+			$topic_path[] = '<a href="' . get_page_uri($_landing) . '">' .
 				$element . '</a>';
 		}
 	}

@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // comment.inc.php
 // Copyright
-//   2002-2016 PukiWiki Development Team
+//   2002-2017 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -114,7 +114,7 @@ function plugin_comment_convert()
 	$above  = in_array('above',  $options) ? '1' :
 		(in_array('below', $options) ? '0' : PLUGIN_COMMENT_DIRECTION_DEFAULT);
 
-	$script = get_script_uri();
+	$script = get_base_uri();
 	$s_page = htmlsc($vars['page']);
 	$string = <<<EOD
 <br />

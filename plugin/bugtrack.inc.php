@@ -99,7 +99,7 @@ function plugin_bugtrack_print_form($base, $category)
 		$encoded_category .= '</select>';
 	}
 
-	$script     = get_script_uri();
+	$script     = get_base_uri();
 	$s_base     = htmlsc($base);
 	$s_name     = htmlsc($_plugin_bugtrack['name']);
 	$s_category = htmlsc($_plugin_bugtrack['category']);

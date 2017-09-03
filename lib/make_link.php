@@ -322,7 +322,7 @@ EOD;
 		if (PKWK_ALLOW_RELATIVE_FOOTNOTE_ANCHOR) {
 			$script = '';
 		} else {
-			$script = get_script_uri() . '?' . pagename_urlencode($page);
+			$script = get_page_uri($page);
 		}
 
 		$id   = ++$note_id;

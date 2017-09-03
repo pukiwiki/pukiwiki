@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: lookup.inc.php,v 1.23 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+// lookup.inc.php
+// Copyright
+//   2002-2017 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -26,7 +26,7 @@ function plugin_lookup_convert()
 	$s_page    = htmlsc($vars['page']);
 	++$id;
 
-	$script = get_script_uri();
+	$script = get_base_uri();
 	$ret = <<<EOD
 <form action="$script" method="post">
  <div>
@@ -62,4 +62,3 @@ function plugin_lookup_action()
 	header('Location: ' . $url); // Publish as GET method
 	exit;
 }
-?>

@@ -307,8 +307,8 @@ function basic_auth($page, $auth_enabled, $exit_on_fail, $auth_pages, $title_can
 				header('WWW-Authenticate: Basic realm="' . $_msg_auth . '"');
 				header('HTTP/1.0 401 Unauthorized');
 			} elseif (AUTH_TYPE_FORM === $auth_type) {
-				$url_after_login = get_script_uri() . '?' . $g_query_string;
-				$loginurl = get_script_uri() . '?plugin=loginform'
+				$url_after_login = get_base_uri() . '?' . $g_query_string;
+				$loginurl = get_base_uri() . '?plugin=loginform'
 					. '&page=' . rawurlencode($page)
 					. '&url_after_login=' . rawurlencode($url_after_login);
 				header('HTTP/1.0 302 Found');

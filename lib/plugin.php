@@ -30,9 +30,9 @@ function exist_plugin($name)
 			die('Alert: plugin "' . htmlsc($name) .
 			'" was called over ' . PKWK_PLUGIN_CALL_TIME_LIMIT .
 			' times. SPAM or someting?<br />' . "\n" .
-			'<a href="' . get_script_uri() . '?cmd=edit&amp;page='.
+			'<a href="' . get_base_uri() . '?cmd=edit&amp;page='.
 			rawurlencode($vars['page']) . '">Try to edit this page</a><br />' . "\n" .
-			'<a href="' . get_script_uri() . '">Return to frontpage</a>');
+			'<a href="' . get_base_uri() . '">Return to frontpage</a>');
 		return $exist[$name];
 	}
 

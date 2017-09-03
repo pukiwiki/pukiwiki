@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: md5.inc.php,v 1.25 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C) 2001-2006 PukiWiki Developers Team
+// md5.inc.php
+// Copyright 2001-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 //  MD5 plugin: Allow to convert password/passphrase
@@ -70,7 +70,7 @@ function plugin_md5_show_form($nophrase = FALSE, $value = '')
 		$md5_checked  = 'checked="checked" ';
 	}
 
-	$self = get_script_uri();
+	$self = get_base_uri();
 
 	$form = <<<EOD
 <p><strong>NOTICE: Don't use this feature via untrustful or unsure network</strong></p>
@@ -131,4 +131,3 @@ EOD;
 
 	return $form;
 }
-?>

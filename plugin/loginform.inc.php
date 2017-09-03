@@ -1,7 +1,6 @@
 <?php
-
 // PukiWiki - Yet another WikiWikiWeb clone
-// Copyright (C) 2015 PukiWiki Development Team
+// Copyright 2015-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // "Login form" plugin
@@ -9,7 +8,7 @@
 function plugin_loginform_inline()
 {
 	$logout_param = '?plugin=basicauthlogout';
-	return '<a href="' . htmlsc(get_script_uri() . $logout_param) . '">Log out</a>';
+	return '<a href="' . htmlsc(get_base_uri() . $logout_param) . '">Log out</a>';
 }
 
 function plugin_loginform_convert()
@@ -27,7 +26,7 @@ function plugin_loginform_action()
 	if (!$url_after_login) {
 		$page_after_login = $page;
 	}
-	$action_url = get_script_uri() . '?plugin=loginform'
+	$action_url = get_base_uri() . '?plugin=loginform'
 		. '&page=' . rawurlencode($page)
 		. ($url_after_login ? '&url_after_login=' . rawurlencode($url_after_login) : '')
 		. ($page_after_login ? '&page_after_login=' . rawurlencode($page_after_login) : '');
@@ -59,7 +58,7 @@ function plugin_loginform_action()
 		return array(
 			'msg' => 'Log out',
 			'body' => 'Logged out completely<br>'
-				. '<a href="'. get_script_uri() . '?' . pagename_urlencode($page) . '">'
+				. '<a href="'. get_page_uri($page) . '">'
 				. $page . '</a>'
 		);
 	} else {

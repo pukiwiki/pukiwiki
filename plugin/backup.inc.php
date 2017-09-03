@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // backup.inc.php
-// Copyright (C)
-//   2002-2016 PukiWiki Development Team
+// Copyright
+//   2002-2017 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -40,7 +40,7 @@ function plugin_backup_action()
 	$s_age  = (isset($vars['age']) && is_numeric($vars['age'])) ? $vars['age'] : 0;
 	if ($s_age <= 0) return array( 'msg'=>$_title_pagebackuplist, 'body'=>plugin_backup_get_list($page));
 
-	$script = get_script_uri();
+	$script = get_base_uri();
 
 	$body  = '<ul>' . "\n";
 	$body .= ' <li><a href="' . $script . '?cmd=backup">' . $_msg_backuplist . '</a></li>' ."\n";
@@ -144,7 +144,7 @@ function plugin_backup_delete($page)
 		}
 	}
 
-	$script = get_script_uri();
+	$script = get_base_uri();
 	$s_page = htmlsc($page);
 	$body .= <<<EOD
 <p>$_msg_backup_adminpass</p>
@@ -180,7 +180,7 @@ function plugin_backup_get_list($page)
 	global $_msg_backuplist, $_msg_diff, $_msg_nowdiff, $_msg_source, $_msg_nobackup;
 	global $_title_backup_delete;
 
-	$script = get_script_uri();
+	$script = get_base_uri();
 	$r_page = rawurlencode($page);
 	$s_page = htmlsc($page);
 	$retval = array();

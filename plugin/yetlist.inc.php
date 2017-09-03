@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: yetlist.inc.php,v 1.29 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C) 2001-2006 PukiWiki Developers Team
+// yetlist.inc.php
+// Copyright 2001-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Yet list plugin - Show a list of dangling links (not yet created)
@@ -23,7 +23,7 @@ function plugin_yetlist_action()
 	$empty = TRUE;
 
 	// Load .ref files and Output
-	$script      = get_script_uri();
+	$script      = get_base_uri();
 	$refer_regex = '/' . $non_list . '|^' . preg_quote($whatsdeleted, '/') . '$/S';
 	asort($pages, SORT_STRING);
 	foreach ($pages as $file=>$page) {
@@ -43,7 +43,7 @@ function plugin_yetlist_action()
 			$link_refs = array();
 			foreach ($refer as $_refer) {
 				$r_refer = pagename_urlencode($_refer);
-				$link_refs[] = '<a href="' . $script . '?' . $r_refer . '">' .
+				$link_refs[] = '<a href="' . get_page_uri($_refer) . '">' .
 					htmlsc($_refer) . '</a>';
 			}
 			$link_ref = join(' ', $link_refs);
@@ -73,4 +73,3 @@ function plugin_yetlist_action()
 
 	return $retval;
 }
-

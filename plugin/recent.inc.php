@@ -1,9 +1,10 @@
 <?php
-// $Id: recent.inc.php,v 1.27 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2002-2007 PukiWiki Developers Team
+// PukiWiki - Yet another WikiWikiWeb clone
+// recent.inc.php
+// Copyright
+//   2002-2017 PukiWiki Development Team
 //   2002      Y.MASUI http://masui.net/pukiwiki/ masui@masui.net
-// License: GPL version 2
+// License: GPL v2 or (at your option) any later version
 //
 // Recent plugin -- Show RecentChanges list
 //   * Usually used at 'MenuBar' page
@@ -54,8 +55,6 @@ function plugin_recent_convert()
 	// Get latest N changes
 	$lines = file_head(PLUGIN_RECENT_CACHE, $recent_lines);
 	if ($lines == FALSE) return '#recent(): File can not open' . '<br />' . "\n";
-
-	$script = get_script_uri();
 	$date = $items = '';
 	foreach ($lines as $line) {
 		list($time, $page) = explode("\t", rtrim($line));
@@ -77,9 +76,8 @@ function plugin_recent_convert()
 			// No need to link to the page you just read, or notify where you just read
 			$items .= ' <li>' . $s_page . '</li>' . "\n";
 		} else {
-			$r_page = pagename_urlencode($page);
 			$passage = $show_passage ? ' ' . get_passage($time) : '';
-			$items .= ' <li><a href="' . $script . '?' . $r_page . '"' . 
+			$items .= ' <li><a href="' . get_page_uri($page) . '"' .
 				' title="' . $s_page . $passage . '">' . $s_page . '</a></li>' . "\n";
 		}
 	}
@@ -88,4 +86,3 @@ function plugin_recent_convert()
 
 	return sprintf($_recent_plugin_frame, count($lines), $items);
 }
-

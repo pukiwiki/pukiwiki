@@ -1,7 +1,7 @@
 <?php
-
 // PukiWiki - Yet another WikiWikiWeb clone
-// Copyright (C) 2016 PukiWiki Development Team
+// basicauthlogout.inc.php
+// Copyright 2016-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // "Basic auth logout" plugin
@@ -9,7 +9,7 @@
 function plugin_basicauthlogout_inline()
 {
 	$logout_param = '?plugin=basicauthlogout';
-	return '<a href="' . htmlsc(get_script_uri() . $logout_param) . '">Log out</a>';
+	return '<a href="' . htmlsc(get_base_uri() . $logout_param) . '">Log out</a>';
 }
 
 function plugin_basicauthlogout_convert()

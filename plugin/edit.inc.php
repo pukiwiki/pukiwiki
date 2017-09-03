@@ -169,7 +169,7 @@ function plugin_edit_inline()
 	}
 
 	// URL
-	$script = get_script_uri();
+	$script = get_base_uri();
 	if ($isfreeze) {
 		$url   = $script . '?cmd=unfreeze&amp;page=' . rawurlencode($s_page);
 	} else {

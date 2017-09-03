@@ -143,7 +143,7 @@ if (isset($script)) {
 
 // INI_FILE: Auth settings
 if (isset($auth_type) && $auth_type === AUTH_TYPE_SAML) {
-	$auth_external_login_url_base = get_script_uri() . '?//cmd.saml//sso';
+	$auth_external_login_url_base = get_base_uri() . '?//cmd.saml//sso';
 }
 
 

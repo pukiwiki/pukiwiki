@@ -102,7 +102,7 @@ function plugin_aname_tag($args = array(), $convert = TRUE)
 	$id = htmlsc($id); // Insurance
 	$class   = $f_super ? 'anchor_super' : 'anchor';
 	$attr_id = $f_noid  ? '' : ' id="' . $id . '"';
-	$url     = $f_full  ? get_script_uri() . '?' . pagename_urlencode($vars['page']) : '';
+	$url     = $f_full  ? get_page_uri($vars['page']) : '';
 	if ($body != '') {
 		$href  = ' href="' . $url . '#' . $id . '"';
 		$title = ' title="' . $id . '"';
