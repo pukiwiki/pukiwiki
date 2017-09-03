@@ -709,7 +709,9 @@ function get_autolink_pattern_sub(& $pages, $start, $end, $pos)
  */
 function get_base_uri($uri_type = PKWK_URI_RELATIVE)
 {
-	switch ($uri_type) {
+	$base_type = pkwk_base_uri_type_stack_peek();
+	$type = max($base_type, $uri_type);
+	switch ($type) {
 	case PKWK_URI_RELATIVE:
 		return pkwk_script_uri_base(PKWK_URI_RELATIVE);
 	case PKWK_URI_ROOT:
@@ -793,6 +795,80 @@ function pkwk_script_uri_base($uri_type, $initialize, $uri_set)
 		return $uri_absolute;
 	default:
 		die_message('Invalid uri_type in pkwk_script_uri_base()');
+	}
+}
+
+/**
+ * Create uri_type context
+ *
+ * @param $uri_type relative or absolute option
+ *        PKWK_URI_RELATIVE, PKWK_URI_ROOT or PKWK_URI_ABSOLUTE
+ */
+function pkwk_base_uri_type_stack_push($uri_type)
+{
+	_pkwk_base_uri_type_stack(false, true, $uri_type);
+}
+
+/**
+ * Stop current active uri_type context
+ */
+function pkwk_base_uri_type_stack_pop()
+{
+	_pkwk_base_uri_type_stack(false, false);
+}
+
+/**
+ * Get current active uri_type status
+ */
+function pkwk_base_uri_type_stack_peek()
+{
+	$type = _pkwk_base_uri_type_stack(true, false);
+	if (is_null($type)) {
+		return PKWK_URI_RELATIVE;
+	} elseif ($type === PKWK_URI_ABSOLUTE) {
+		return PKWK_URI_ABSOLUTE;
+	} elseif ($type === PKWK_URI_ROOT) {
+		return PKWK_URI_ROOT;
+	} else {
+		return PKWK_URI_RELATIVE;
+	}
+}
+
+/**
+ * uri_type context internal function
+ *
+ * @param $peek is peek action or not
+ * @param $push push(true) or pop(false) on not peeking
+ * @param $uri_type uri_type on push and non-peeking
+ * @return $uri_type uri_type for peeking
+ */
+function _pkwk_base_uri_type_stack($peek, $push, $uri_type)
+{
+	static $uri_types = array();
+	if ($peek) {
+		// Peek: get latest value
+		if (count($uri_types) === 0) {
+			return null;
+		} else {
+			return $uri_types[0];
+		}
+	} else {
+		if ($push) {
+			// Push $uri_type
+			if (count($uri_types) === 0) {
+				array_unshift($uri_types, $uri_type);
+			} else {
+				$prev_type = $uri_types[0];
+				if ($uri_type >= $prev_type) {
+					array_unshift($uri_types, $uri_type);
+				} else {
+					array_unshift($uri_types, $prev_type);
+				}
+			}
+		} else {
+			// Pop $uri_type
+			return array_shift($uri_types);
+		}
 	}
 }
 
