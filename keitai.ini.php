@@ -100,12 +100,6 @@ $usefacemark = 1;
 $accesskey = 'accesskey';
 
 /////////////////////////////////////////////////
-// $scriptを短縮
-if (preg_match('#([^/]+)$#', $script, $matches)) {
-	$script = $matches[1];
-}
-
-/////////////////////////////////////////////////
 // ブラウザ調整前のデフォルト値
 
 // max_size (SKINで使用)
