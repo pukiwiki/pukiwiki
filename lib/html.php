@@ -48,9 +48,10 @@ function catbody($title, $page, $body)
 	$r_page = pagename_urlencode($_page);
 
 	// Canonical URL
-	$canonical_url = $script;
-	if ($_page !== $defaultpage) {
-		$canonical_url = $script . '?' . $r_page;
+	if ($_page === $defaultpage) {
+		$canonical_url = get_base_uri(PKWK_URI_ABSOLUTE);
+	} else {
+		$canonical_url = get_page_uri($_page, PKWK_URI_ABSOLUTE);
 	}
 
 	// Set $_LINK for skin
