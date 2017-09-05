@@ -16,15 +16,8 @@ define('PLUGIN_SEARCH_MAX_BASE',   16); // #search(1,2,3,...,15,16)
 // Show a search box on a page
 function plugin_search_convert()
 {
-	static $done;
-
-	if (isset($done)) {
-		return '#search(): You already view a search box<br />' . "\n";
-	} else {
-		$done = TRUE;
-		$args = func_get_args();
-		return plugin_search_search_form('', '', $args);
-	}
+	$args = func_get_args();
+	return plugin_search_search_form('', '', $args);
 }
 
 function plugin_search_action()
@@ -83,21 +76,18 @@ function plugin_search_search_form($s_word = '', $type = '', $bases = array())
 		foreach($bases as $base) {
 			++$_num;
 			if (PLUGIN_SEARCH_MAX_BASE < $_num) break;
-			$label_id = '_p_search_base_id_' . $_num;
 			$s_base   = htmlsc($base);
 			$base_str = '<strong>' . $s_base . '</strong>';
 			$base_label = str_replace('$1', $base_str, $_search_pages);
 			$base_msg  .=<<<EOD
  <div>
-  <input type="radio" name="base" id="$label_id" value="$s_base" $check />
-  <label for="$label_id">$base_label</label>
+  <label><input type="radio" name="base" value="$s_base" $check /> $base_label</label>
  </div>
 EOD;
 			$check = '';
 		}
 		$base_msg .=<<<EOD
-  <input type="radio" name="base" id="_p_search_base_id_all" value="" />
-  <label for="_p_search_base_id_all">$_search_all</label>
+  <label><input type="radio" name="base" value="" /> $_search_all</label>
 EOD;
 		$base_option = '<div class="small">' . $base_msg . '</div>';
 	}
@@ -106,10 +96,8 @@ EOD;
 <form action="$script?cmd=search" method="post">
  <div>
   <input type="text"  name="word" value="$s_word" size="20" />
-  <input type="radio" name="type" id="_p_search_AND" value="AND" $and_check />
-  <label for="_p_search_AND">$_btn_and</label>
-  <input type="radio" name="type" id="_p_search_OR"  value="OR"  $or_check  />
-  <label for="_p_search_OR">$_btn_or</label>
+  <label><input type="radio" name="type" value="AND" $and_check /> $_btn_and</label>
+  <label><input type="radio" name="type" value="OR" $or_check /> $_btn_or</label>
   &nbsp;<input type="submit" value="$_btn_search" />
  </div>
 $base_option
