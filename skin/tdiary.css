@@ -27,9 +27,13 @@ form textarea { width: 30em }
 /* Image border = 0 */
 img { border: 0 }
 
-
 /* --------------------- */
 /* PukiWiki original CSS */
+
+pre {
+	white-space:pre-wrap;
+	word-wrap:break-word;
+}
 
 thead td.style_td,
 tfoot td.style_td {
@@ -481,9 +485,13 @@ td.vote_td2 {
 	color:inherit;
 	background-color:#DDE5FF;
 }
-pre {
-	white-space:pre-wrap;
-	word-wrap:break-word;
+
+/* topicpath.inc.php */
+span.topicpath-slash {
+	margin: 0 0.4em;
+}
+span.topicpath-top {
+	user-select: none;
 }
 
 @media print {
