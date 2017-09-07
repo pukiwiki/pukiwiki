@@ -219,10 +219,10 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 // Generate new page contents
 function plugin_bugtrack_template($base, $summary, $name, $priority, $state, $category, $version, $body)
 {
-	global $_plugin_bugtrack, $WikiName;
+	global $_plugin_bugtrack;
 
-	if (! preg_match("/^$WikiName$$/",$base)) $base = '[[' . $base . ']]';
-	if ($name != '' && ! preg_match("/^$WikiName$$/",$name)) $name = '[[' . $name . ']]';
+	$base = '[[' . $base . ']]';
+	if ($name != '') $name = '[[' . $name . ']]';
 
 	if ($name    == '') $name    = $_plugin_bugtrack['noname'];
 	if ($summary == '') $summary = $_plugin_bugtrack['nosummary'];
