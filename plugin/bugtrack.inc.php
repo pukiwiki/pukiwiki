@@ -24,8 +24,9 @@ function plugin_bugtrack_init()
 		'priority_list'  => array('緊急', '重要', '普通', '低'),
 		'state_list'     => array('提案', '着手', '完了', '保留', '却下'),
 		'state_sort'     => array('着手', '保留', '完了', '提案', '却下'),
-		'state_bgcolor'  => array('#ccccff', '#ffcc99', '#ccffcc', '#ffccff', '#cccccc', '#ff3333'),
-		'header_bgcolor' => '#ffffcc',
+		'state_class'  => array('bugtrack_state_proposal', 'bugtrack_state_accept',
+			'bugrack_state_resolved', 'bugtrack_state_pending',
+			'bugtrack_state_cancel', 'bugtrack_state_undef'),
 		'base'     => 'ページ',
 		'summary'  => 'サマリ',
 		'nosummary'=> 'ここにサマリを記入して下さい',
@@ -373,18 +374,19 @@ function plugin_bugtrack_list_convert()
 
 			$state_no = array_search($state, $_plugin_bugtrack['state_sort']);
 			if ($state_no === NULL || $state_no === FALSE) $state_no = $count_list;
-			$bgcolor = htmlsc($_plugin_bugtrack['state_bgcolor'][$state_no]);
+			$cssclass = htmlsc($_plugin_bugtrack['state_class'][$state_no]);
 
 			$row = <<<EOD
- <tr>
-  <td style="background-color:$bgcolor">$page_link</td>
-  <td style="background-color:$bgcolor">$state</td>
-  <td style="background-color:$bgcolor">$priority</td>
-  <td style="background-color:$bgcolor">$category</td>
-  <td style="background-color:$bgcolor">$name</td>
-  <td style="background-color:$bgcolor">$summary</td>
+ <tr class="$cssclass">
+  <td>$page_link</td>
+  <td>$state</td>
+  <td>$priority</td>
+  <td>$category</td>
+  <td>$name</td>
+  <td>$summary</td>
  </tr>
 EOD;
+			$row = preg_replace('#(?<=>)\n\s+#', '', $row) . "\n"; // Reduce space size
 			$rec = &$data[$i];
 			$rec[] = $state_no; // color number
 			$rec[] = $row; // HTML content
@@ -407,15 +409,13 @@ EOD;
 		list($page_name, $no, $summary, $name, $priority, $state, $category, $filetime, $state_no, $html) = $line;
 		$table[$state_no][$no] = $html;
 	}
-	$table_html = ' <tr>' . "\n";
-	$bgcolor = htmlsc($_plugin_bugtrack['header_bgcolor']);
+	$table_html = ' <tr class="bugtrack_list_header">';
 	foreach (array('pagename', 'state', 'priority', 'category', 'name', 'summary') as $item)
-		$table_html .= '  <th style="background-color:' . $bgcolor . '">' .
-			htmlsc($_plugin_bugtrack[$item]) . '</th>' . "\n";
-	$table_html .= ' </tr>' . "\n";
+		$table_html .= '<th>' . htmlsc($_plugin_bugtrack[$item]) . '</th>';
+	$table_html .= '</tr>' . "\n";
 	for ($i = 0; $i <= $count_list; ++$i) {
 		ksort($table[$i], SORT_NUMERIC);
-		$table_html .= join("\n", $table[$i]);
+		$table_html .= join('', $table[$i]);
 	}
 	return '<table border="1" width="100%">' . "\n" .
 		$table_html . "\n" .
@@ -451,11 +451,10 @@ function plugin_bugtrack_list_pageinfo($page, $no = NULL, $recurse = TRUE, $file
 				$$item = ''; // Data not found
 		}
 	}
-
 	if (preg_match("/\*([^\n]*)/", $body, $matches)) {
 		$summary = $matches[1];
 		make_heading($summary);
+		$summary = trim($summary);
 	}
-
 	return array($page, $no, $summary, $name, $priority, $state, $category, $filetime);
 }

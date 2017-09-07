@@ -618,6 +618,29 @@ span.topicpath-top {
 	user-select: none;
 }
 
+/* bugtrack.inc.php */
+tr.bugtrack_list_header th {
+	background-color: #ffffcc;
+}
+tr.bugtrack_state_proposal td {
+	background-color: #ccccff;
+}
+tr.bugtrack_state_accept td {
+	background-color: #ffcc99;
+}
+tr.bugrack_state_resolved td {
+	background-color: #ccffcc;
+}
+tr.bugtrack_state_pending td {
+	background-color: #ffccff;
+}
+tr.bugtrack_state_cancel td {
+	background-color: #cccccc;
+}
+tr.bugtrack_state_undef td {
+	background-color: #ff3333;
+}
+
 @media print {
   a:link,
   a:visited {
