@@ -123,7 +123,8 @@ function catbody($title, $page, $body)
 		' ' . get_pg_passage($_page, FALSE) : '';
 
 	// List of attached files to the page
-	$attaches = ($attach_link && $is_read && exist_plugin_action('attach')) ?
+	$show_attaches = $is_read || arg_check('edit');
+	$attaches = ($attach_link && $show_attaches && exist_plugin_action('attach')) ?
 		attach_filelist() : '';
 
 	// List of related pages
