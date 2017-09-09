@@ -204,6 +204,18 @@ function remove_author_info($wikitext)
 	return preg_replace('/^\s*#author\([^\n]*(\n|$)/m', '', $wikitext);
 }
 
+function remove_author_lines($lines)
+{
+	$author_head = '#author(';
+	$len = strlen($author_head);
+	for ($i = 0; $i < 5; $i++) {
+		if (substr($lines[$i], 0, $len) === $author_head) {
+			unset($lines[$i]);
+		}
+	}
+	return $lines;
+}
+
 function get_date_atom($timestamp)
 {
 	// Compatible with DATE_ATOM format

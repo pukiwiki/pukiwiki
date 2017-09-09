@@ -345,7 +345,8 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 
 		// Search for page contents
 		foreach ($keys as $key) {
-			$b_match = preg_match($key, get_source($page, TRUE, TRUE));
+			$lines = remove_author_lines(get_source($page, TRUE, FALSE));
+			$b_match = preg_match($key, join('', $lines));
 			if ($b_type xor $b_match) break; // OR
 		}
 		if ($b_match) continue;
