@@ -24,7 +24,7 @@ function plugin_unfreeze_action()
 	$msg = $body = '';
 	if (! is_freeze($page)) {
 		// Unfreezed already
-		$msg  = & $_title_isunfreezed;
+		$msg  = $_title_isunfreezed;
 		$body = str_replace('$1', htmlsc(strip_bracket($page)),
 			$_title_isunfreezed);
 
@@ -43,17 +43,17 @@ function plugin_unfreeze_action()
 		is_freeze($page, TRUE);
 		if (PLUGIN_UNFREEZE_EDIT) {
 			$vars['cmd'] = 'read'; // To show 'Freeze' link
-			$msg  = & $_title_unfreezed;
+			$msg  = $_title_unfreezed;
+			$postdata = remove_author_info($postdata);
 			$body = edit_form($page, $postdata);
 		} else {
 			$vars['cmd'] = 'read';
-			$msg  = & $_title_unfreezed;
+			$msg  = $_title_unfreezed;
 			$body = '';
 		}
-
 	} else {
 		// Show unfreeze form
-		$msg    = & $_title_unfreeze;
+		$msg    = $_title_unfreeze;
 		$s_page = htmlsc($page);
 		$body   = ($pass === NULL) ? '' : "<p><strong>$_msg_invalidpass</strong></p>\n";
 		$body  .= <<<EOD
@@ -68,6 +68,5 @@ function plugin_unfreeze_action()
 </form>
 EOD;
 	}
-
 	return array('msg'=>$msg, 'body'=>$body);
 }
