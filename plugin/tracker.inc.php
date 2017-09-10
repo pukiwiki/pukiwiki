@@ -160,6 +160,7 @@ function plugin_tracker_action()
 
 	$fields = plugin_tracker_get_fields($page,$refer,$config);
 
+	check_editable($page, true, true);
 	// Creating an empty page, before attaching files
 	touch(get_filename($page));
 
@@ -625,7 +626,7 @@ class Tracker_field_past extends Tracker_field
 // 一覧表示
 function plugin_tracker_list_convert()
 {
-	global $vars;
+	global $vars, $_title_cannotread;
 
 	$config = 'default';
 	$page = $refer = $vars['page'];
@@ -650,11 +651,15 @@ function plugin_tracker_list_convert()
 				list($config,$list) = array_pad(explode('/',$config,2),2,$list);
 		}
 	}
+	if (!is_page_readable($page)) {
+		$body = str_replace('$1', htmlsc($page), $_title_cannotread);
+		return $body;
+	}
 	return plugin_tracker_getlist($page,$refer,$config,$list,$order,$limit);
 }
 function plugin_tracker_list_action()
 {
-	global $vars,$_tracker_messages;
+	global $vars, $_tracker_messages, $_title_cannotread;
 
 	$page = $refer = $vars['refer'];
 	$s_page = make_pagelink($page);
@@ -662,6 +667,13 @@ function plugin_tracker_list_action()
 	$list = array_key_exists('list',$vars) ? $vars['list'] : 'list';
 	$order = array_key_exists('order',$vars) ? $vars['order'] : '_real:SORT_DESC';
 
+	if (!is_page_readable($page)) {
+		$body = str_replace('$1', htmlsc($page), $_title_cannotread);
+		return array(
+			'msg' => $body,
+			'body' => $body
+		);
+	}
 	return array(
 		'msg' => $_tracker_messages['msg_list'],
 		'body'=> str_replace('$1',$s_page,$_tracker_messages['msg_back']).
@@ -879,7 +891,6 @@ class Tracker_list
 	}
 	function replace_title($arr)
 	{
-		$script = get_base_uri();
 		$field = $sort = $arr[1];
 		if ($sort == '_name' or $sort == '_page')
 		{
@@ -917,6 +928,7 @@ class Tracker_list
 				$_order[] = "$key:$value";
 		$r_order = rawurlencode(join(';',$_order));
 
+		$script = get_base_uri(PKWK_URI_ABSOLUTE);
 		return "[[$title$arrow>$script?plugin=tracker_list&refer=$r_page&config=$r_config&list=$r_list&order=$r_order]]";
 	}
 	function toString($limit=NULL)

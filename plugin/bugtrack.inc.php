@@ -202,6 +202,7 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 	}
 	$page = $base . '/' . sprintf(PLUGIN_BUGTRACK_NUMBER_FORMAT, $id);
 
+	check_editable($page, true, true);
 	if ($pagename == '') {
 		page_write($page, $postdata);
 	} else {
@@ -209,6 +210,7 @@ function plugin_bugtrack_write($base, $pagename, $summary, $name, $priority, $st
 		if (is_page($pagename) || ! is_pagename($pagename)) {
 			$pagename = $page; // Set default
 		} else {
+			check_editable($pagename, true, true);
 			page_write($page, 'move to [[' . $pagename . ']]');
 		}
 		page_write($pagename, $postdata);
