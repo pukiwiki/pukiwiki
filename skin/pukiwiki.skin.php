@@ -81,7 +81,7 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
 <?php if ($is_page) { ?>
  <?php if(SKIN_DEFAULT_DISABLE_TOPICPATH) { ?>
-   <a href="<?php echo $link['reload'] ?>"><span class="small"><?php echo $link['reload'] ?></span></a>
+   <a href="<?php echo $link['canonical_url'] ?>"><span class="small"><?php echo $link['canonical_url'] ?></span></a>
  <?php } else { ?>
    <span class="small">
    <?php require_once(PLUGIN_DIR . 'topicpath.inc.php'); echo plugin_topicpath_inline(); ?>

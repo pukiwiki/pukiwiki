@@ -733,6 +733,10 @@ function get_base_uri($uri_type = PKWK_URI_RELATIVE)
  */
 function get_page_uri($page, $uri_type = PKWK_URI_RELATIVE)
 {
+	global $defaultpage;
+	if ($page === $defaultpage) {
+		return get_base_uri($uri_type);
+	}
 	return get_base_uri($uri_type) . '?' . pagename_urlencode($page);
 }
 

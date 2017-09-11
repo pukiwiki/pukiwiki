@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // tdiary.skin.php
 // Copyright
-//   2002-2016 PukiWiki Development Team
+//   2002-2017 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -651,7 +651,7 @@ function _navigator($key, $value = '', $javascript = ''){
 <div class="calendar">
 <?php if ($is_page && TDIARY_CALENDAR_DESIGN !== NULL) { ?>
 	<?php if(TDIARY_CALENDAR_DESIGN) { ?>
-		<a href="<?php echo $link['reload'] ?>"><span class="small"><?php echo $link['reload'] ?></span></a>
+		<a href="<?php echo $link['canonical_url'] ?>"><span class="small"><?php echo $link['canonical_url'] ?></span></a>
 	<?php } else { ?>
 		<?php require_once(PLUGIN_DIR . 'topicpath.inc.php'); echo plugin_topicpath_inline(); ?>
 	<?php } ?>

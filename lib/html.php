@@ -48,11 +48,7 @@ function catbody($title, $page, $body)
 	$r_page = pagename_urlencode($_page);
 
 	// Canonical URL
-	if ($_page === $defaultpage) {
-		$canonical_url = get_base_uri(PKWK_URI_ABSOLUTE);
-	} else {
-		$canonical_url = get_page_uri($_page, PKWK_URI_ABSOLUTE);
-	}
+	$canonical_url = get_page_uri($_page, PKWK_URI_ABSOLUTE);
 
 	// Set $_LINK for skin
 	$_LINK['add']      = "$script?cmd=add&amp;page=$r_page";
@@ -62,20 +58,21 @@ function catbody($title, $page, $body)
 	$_LINK['edit']     = "$script?cmd=edit&amp;page=$r_page";
 	$_LINK['filelist'] = "$script?cmd=filelist";
 	$_LINK['freeze']   = "$script?cmd=freeze&amp;page=$r_page";
-	$_LINK['help']     = "$script?" . pagename_urlencode($help_page);
+	$_LINK['help']     = get_page_uri($help_page);
 	$_LINK['list']     = "$script?cmd=list";
 	$_LINK['new']      = "$script?plugin=newpage&amp;refer=$r_page";
 	$_LINK['rdf']      = "$script?cmd=rss&amp;ver=1.0";
-	$_LINK['recent']   = "$script?" . pagename_urlencode($whatsnew);
-	$_LINK['reload']   = $canonical_url;
+	$_LINK['recent']   = get_page_uri($whatsnew);
+	$_LINK['reload']   = get_page_uri($_page);
 	$_LINK['rename']   = "$script?plugin=rename&amp;refer=$r_page";
 	$_LINK['rss']      = "$script?cmd=rss";
 	$_LINK['rss10']    = "$script?cmd=rss&amp;ver=1.0"; // Same as 'rdf'
 	$_LINK['rss20']    = "$script?cmd=rss&amp;ver=2.0";
 	$_LINK['search']   = "$script?cmd=search";
-	$_LINK['top']      = "$script?" . pagename_urlencode($defaultpage);
+	$_LINK['top']      = get_page_uri($defaultpage);
 	$_LINK['unfreeze'] = "$script?cmd=unfreeze&amp;page=$r_page";
 	$_LINK['upload']   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
+	$_LINK['canonical_url'] = $canonical_url;
 	$login_link = "#LOGIN_ERROR"; // dummy link that is not used
 	switch ($auth_type) {
 		case AUTH_TYPE_FORM:
@@ -375,7 +372,7 @@ $template
 EOD;
 
 	$body .= '<ul><li><a href="' .
-		$script . '?' . pagename_urlencode($rule_page) .
+		get_page_uri($rule_page) .
 		'" target="_blank">' . $_msg_help . '</a></li></ul>';
 	return $body;
 }
@@ -399,13 +396,13 @@ function make_related($page, $tag = '')
 	foreach ($links as $page=>$lastmod) {
 		if (check_non_list($page)) continue;
 
-		$r_page   = pagename_urlencode($page);
+		$page_uri = get_page_uri($page);
 		$s_page   = htmlsc($page);
 		$passage  = get_passage($lastmod);
 		$_links[] = $tag ?
-			'<a href="' . $script . '?' . $r_page . '" title="' .
+			'<a href="' . $page_uri . '" title="' .
 			$s_page . ' ' . $passage . '">' . $s_page . '</a>' :
-			'<a href="' . $script . '?' . $r_page . '">' .
+			'<a href="' . $page_uri . '">' .
 			$s_page . '</a>' . $passage;
 	}
 	if (empty($_links)) return ''; // Nothing
