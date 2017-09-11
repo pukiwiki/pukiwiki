@@ -96,8 +96,9 @@ function plugin_comment_convert()
 
 	if (PKWK_READONLY) return ''; // Show nothing
 
-	if (! isset($numbers[$vars['page']])) $numbers[$vars['page']] = 0;
-	$comment_no = $numbers[$vars['page']]++;
+	$page = $vars['page'];
+	if (! isset($numbers[$page])) $numbers[$page] = 0;
+	$comment_no = $numbers[$page]++;
 
 	$options = func_num_args() ? func_get_args() : array();
 	if (in_array('noname', $options)) {
@@ -114,8 +115,8 @@ function plugin_comment_convert()
 	$above  = in_array('above',  $options) ? '1' :
 		(in_array('below', $options) ? '0' : PLUGIN_COMMENT_DIRECTION_DEFAULT);
 
-	$script = get_base_uri();
-	$s_page = htmlsc($vars['page']);
+	$script = get_page_uri($page);
+	$s_page = htmlsc($page);
 	$string = <<<EOD
 <br />
 <form action="$script" method="post">
