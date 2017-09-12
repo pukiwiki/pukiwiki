@@ -99,15 +99,14 @@ function links_update($page)
 	links_add($page, array_diff($rel_new, $rel_old), $rel_auto);
 	links_delete($page, array_diff($rel_old, $rel_new));
 
-	global $WikiName, $autolink, $nowikiname, $search_non_list;
+	global $WikiName, $autolink, $nowikiname;
 
 	// $pageが新規作成されたページで、AutoLinkの対象となり得る場合
 	if ($time && ! $rel_file_exist && $autolink
 		&& (preg_match("/^$WikiName$/", $page) ? $nowikiname : strlen($page) >= $autolink))
 	{
 		// $pageを参照していそうなページを一斉更新する(おい)
-		$search_non_list = 1;
-		$pages           = do_search($page, 'AND', TRUE);
+		$pages = links_do_search_page($page);
 		foreach ($pages as $_page) {
 			if ($_page !== $page)
 				links_update($_page);
@@ -244,4 +243,35 @@ function & links_get_objects($page, $refresh = FALSE)
 
 	$result = $obj->get_objects(join('', preg_grep('/^(?!\/\/|\s)./', get_source($page))), $page);
 	return $result;
+}
+
+/**
+ * Search function for AutoLink updating
+ *
+ * @param $word page name
+ * @return list of page name that contains $word
+ */
+function links_do_search_page($word)
+{
+	global $whatsnew;
+
+	$keys = get_search_words(preg_split('/\s+/', $word, -1, PREG_SPLIT_NO_EMPTY));
+	foreach ($keys as $key=>$value)
+		$keys[$key] = '/' . $value . '/S';
+	$pages = get_existpages();
+	$pages = array_flip($pages);
+	unset($pages[$whatsnew]);
+	$count = count($pages);
+	foreach (array_keys($pages) as $page) {
+		$b_match = FALSE;
+		// Search for page contents
+		foreach ($keys as $key) {
+			$lines = remove_author_lines(get_source($page, TRUE, FALSE));
+			$b_match = preg_match($key, join('', $lines));
+			if (! $b_match) break; // OR
+		}
+		if ($b_match) continue;
+		unset($pages[$page]); // Miss
+	}
+	return array_keys($pages);
 }
