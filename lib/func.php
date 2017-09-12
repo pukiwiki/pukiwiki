@@ -341,6 +341,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 		if ($search_auth && ! check_readable($page, false, false)) {
 			unset($pages[$page]);
 			--$count;
+			continue;
 		}
 
 		// Search for page contents
