@@ -217,13 +217,15 @@ function get_html_scripting_data()
 		}
 		$site_info_json = htmlsc(json_encode($s, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 		$text .= <<<EOS
-  <span class="pukiwiki-ticketlink-site" data-site="$site_info_json"></span>
+  <span class="ticketlink-site" data-site="$site_info_json"></span>
 EOS;
 		$text .= "\n";
 	}
 	$data = <<<EOS
-<div class="pukiwiki-ticketlink-def" style="display:none;">
+<div id="pukiwiki-site-properties" style="display:none;">
+<div class="ticketlink-def">
 $text
+</div>
 </div>
 EOS;
 	return $data;

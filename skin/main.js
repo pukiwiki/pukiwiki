@@ -154,11 +154,11 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
     }
     function getSiteListFromBody() {
       var list = [];
-      var defRoot = document.querySelector('.pukiwiki-ticketlink-def');
+      var defRoot = document.querySelector('#pukiwiki-site-properties .ticketlink-def');
       if (!defRoot) {
         return [];
       }
-      var siteNodes = defRoot.querySelectorAll('.pukiwiki-ticketlink-site');
+      var siteNodes = defRoot.querySelectorAll('.ticketlink-site');
       Array.prototype.forEach.call(siteNodes, function (e) {
         var siteInfoText = e.dataset && e.dataset.site;
         if (!siteInfoText) return;

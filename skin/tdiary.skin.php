@@ -574,7 +574,9 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
 <?php echo $head_tag ?>
 </head>
-<body><!-- Theme:<?php echo htmlsc($theme) . ' Sidebar:' . $sidebar ?> -->
+<body>
+<?php echo $html_scripting_data ?>
+<!-- Theme:<?php echo htmlsc($theme) . ' Sidebar:' . $sidebar ?> -->
 
 <?php if ($menu && $sidebar == 'strict') { ?>
 <!-- Sidebar top -->
@@ -891,18 +893,18 @@ function _toolbar($key, $x = 20, $y = 20){
 <?php } // PKWK_SKIN_SHOW_TOOLBAR ?>
 
 <!-- Copyright etc -->
- Site admin: <a href="<?php echo $modifierlink ?>"><?php echo $modifier ?></a><p />
+ Site admin: <a href="<?php echo $modifierlink ?>"><?php echo $modifier ?></a>
+ <p>
  <?php echo S_COPYRIGHT ?>.
  Powered by PHP <?php echo PHP_VERSION ?><br />
  HTML convert time: <?php echo elapsedtime() ?> sec.
-
+ </p>
 </div><!-- class="footer" -->
 
 <?php if ($menu && ($sidebar != 'top' && $sidebar != 'bottom')) { ?>
 </div><!-- class="main" -->
 </div><!-- class="pkwk_body" -->
 <?php } ?>
-
 
 </body>
 </html>

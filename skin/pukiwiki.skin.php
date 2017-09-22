@@ -73,7 +73,7 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 <?php echo $head_tag ?>
 </head>
 <body>
-
+<?php echo $html_scripting_data ?>
 <div id="header">
  <a href="<?php echo $link['top'] ?>"><img id="logo" src="<?php echo IMAGE_DIR . $image['logo'] ?>" width="80" height="80" alt="[PukiWiki]" title="[PukiWiki]" /></a>
 
@@ -264,11 +264,11 @@ function _toolbar($key, $x = 20, $y = 20){
 <?php } ?>
 
 <div id="footer">
- Site admin: <a href="<?php echo $modifierlink ?>"><?php echo $modifier ?></a><p />
+ Site admin: <a href="<?php echo $modifierlink ?>"><?php echo $modifier ?></a>
+ <p>
  <?php echo S_COPYRIGHT ?>.
  Powered by PHP <?php echo PHP_VERSION ?>. HTML convert time: <?php echo elapsedtime() ?> sec.
+ </p>
 </div>
-<?php echo $html_scripting_data ?>
-
 </body>
 </html>
