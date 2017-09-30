@@ -5,16 +5,23 @@
 // License: GPL v2 or (at your option) any later version
 //
 // PukiWiki search2 pluign - JavaScript client script
-window.addEventListener && window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener && window.addEventListener('DOMContentLoaded', function() { // eslint-disable-line no-unused-expressions
+  'use strict';
   function enableSearch2() {
     var aroundLines = 2;
     var maxResultLines = 20;
-    var minBlockLines = 5;
-    var minSearchWaitMilliseconds = 100;
+    var defaultSearchWaitMilliseconds = 100;
+    var defaultMaxResults = 1000;
     var kanaMap = null;
-    function escapeHTML (s) {
-      if(typeof s !== 'string') {
-        s = '' + s;
+    var searchProps = {};
+    /**
+     * Escape HTML special charactors
+     *
+     * @param {string} s
+     */
+    function escapeHTML(s) {
+      if (typeof s !== 'string') {
+        return '' + s;
       }
       return s.replace(/[&"<>]/g, function(m) {
         return {
@@ -25,179 +32,184 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         }[m];
       });
     }
-    function doSearch(searchText, session, startIndex) {
-      var url = './?cmd=search2&action=query';
-      var props = getSiteProps();
-      url += '&encode_hint=' + encodeURIComponent('\u3077');
-      if (searchText) {
-        url += '&q=' + encodeURIComponent(searchText);
-      }
-      if (session.base) {
-        url += '&base=' + encodeURIComponent(session.base);
-      }
-      url += '&start=' + startIndex;
-      fetch (url
-      ).then(function(response){
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error(response.status + ': ' +
-            + response.statusText + ' on ' + url);
-        }
-      }).then(function(obj) {
-        showResult(obj, session, searchText);
-      })['catch'](function(err){
-        console.log(err);
-        console.log('Error! Please check JavaScript console' + '\n' + JSON.stringify(err) + '|' + err);
-      });
-    }
-    function getMessageTemplate(idText, defaultText) {
-      var messageHolder = document.querySelector('#' + idText);
-      var messageTemplate = (messageHolder && messageHolder.value) || defaultText;
-      return messageTemplate;
-    }
-    function getAuthorInfo(text) {
-
-    }
-    function getPassage(now, dateText) {
-      if (! dateText) {
-        return '';
-      }
-      var units = [{u: 'm', max: 60}, {u: 'h', max: 24}, {u: 'd', max: 1}];
-      var d = new Date();
-      d.setTime(Date.parse(dateText));
-      var t = (now.getTime() - d.getTime()) / (1000 * 60); // minutes
-      var unit = units[0].u, card = units[0].max;
-      for (var i = 0; i < units.length; i++) {
-        unit = units[i].u, card = units[i].max;
-        if (t < card) break;
-        t = t / card;
-      }
-      return '(' + Math.floor(t) + unit + ')';
-    }
-    function removeSearchOperators(searchText) {
-      var sp = searchText.split(/\s+/);
-      if (sp.length <= 1) {
-        return searchText;
-      }
-      var hasOr = false;
-      for (var i = sp.length - 1; i >= 0; i--) {
-        if (sp[i] === 'OR') {
-          hasOr = true;
-          sp.splice(i, 1);
-        }
-      }
-      return sp.join(' ');
-    }
-    function showResult(obj, session, searchText) {
-      var searchRegex = textToRegex(removeSearchOperators(searchText));
-      var ul = document.querySelector('#result-list');
-      if (!ul) return;
-      if (obj.start_index === 0) {
-        ul.innerHTML = '';
-      }
-      if (! session.scan_page_count) session.scan_page_count = 0;
-      if (! session.read_page_count) session.read_page_count = 0;
-      if (! session.hit_page_count) session.hit_page_count = 0;
-      var prevHitPageCount = session.hit_page_count;
-      session.scan_page_count += obj.scan_page_count;
-      session.read_page_count += obj.read_page_count;
-      session.hit_page_count += obj.results.length;
-      session.page_count = obj.page_count;
-      if (prevHitPageCount === 0 && session.hit_page_count > 0) {
-        var div = document.querySelector('._plugin_search2_second_form');
-        if (div) {
-          div.style.display = 'block';
-        }
-      }
-      var msg = obj.message;
-      var notFoundMessageTemplate = getMessageTemplate('_plugin_search2_msg_result_notfound',
-        'No page which contains $1 has been found.');
-      var foundMessageTemplate = getMessageTemplate('_plugin_search2_msg_result_found',
-        'In the page <strong>$2</strong>, <strong>$3</strong> pages that contain all the terms $1 were found.');
-      var searchTextDecorated = findAndDecorateText(searchText, searchRegex);
-      if (searchTextDecorated === null) searchTextDecorated = escapeHTML(searchText);
-      var messageTemplate = foundMessageTemplate;
-      if (obj.search_done && session.hit_page_count === 0) {
-        messageTemplate = notFoundMessageTemplate;
-      }
-      msg = messageTemplate.replace(/\$1|\$2|\$3/g, function(m){
-        return {
-          '$1': searchTextDecorated,
-          '$2': session.hit_page_count,
-          '$3': session.read_page_count
-        }[m];
-      });
-      setSearchMessage(msg);
-      var progress = ' (read:' + session.read_page_count + ', scanned:' +
-        session.scan_page_count + ', all:' + session.page_count + ')';
-      var e = document.querySelector('#_plugin_search2_msg_searching');
-      var msg = e && e.value || 'Searching...';
-      setSearchStatus(msg + progress);
-      if (obj.search_done) {
-        setTimeout(function(){
-          setSearchStatus('');
-        }, 5000);
-      }
-      var results = obj.results;
-      var now = new Date();
-      results.forEach(function(val, index) {
-        var fragment = document.createDocumentFragment();
-        var li = document.createElement('li');
-        var hash = '#q=' + encodeSearchTextForHash(searchText);
-        var href = val.url + hash;
-        var decoratedName = findAndDecorateText(val.name, searchRegex);
-        if (! decoratedName) {
-          decoratedName = escapeHTML(val.name);
-        }
-        var author = getAuthorHeader(val.body);
-        var updatedAt = '';
-        if (author) {
-          updatedAt = getUpdateTimeFromAuthorInfo(author);
-        } else {
-          updatedAt = val.updated_at;
-        }
-        var liHtml = '<a href="' + escapeHTML(href) + '">' + decoratedName + '</a> ' +
-          getPassage(now, updatedAt);
-        li.innerHTML = liHtml;
-        var a = li.querySelector('a');
-        if (a && a.hash) {
-          if (a.hash !== hash) {
-            // Some browser execute encodeHTML(hash) automatically. Support them.
-            a.href = val.url + '#encq=' + encodeSearchTextForHash(searchText);
+    /**
+     * @param {string} idText
+     * @param {number} defaultValue
+     * @type number
+     */
+    function getIntById(idText, defaultValue) {
+      var value = defaultValue;
+      try {
+        var element = document.getElementById(idText);
+        if (element) {
+          value = parseInt(element.value, 10);
+          if (isNaN(value)) { // eslint-disable-line no-restricted-globals
+            value = defaultValue;
           }
         }
-        fragment.appendChild(li);
-        var div = document.createElement('div');
-        div.classList.add('search-result-detail');
-        var head = document.createElement('div');
-        head.classList.add('search-result-page-summary');
-        head.innerHTML = escapeHTML(getBodySummary(val.body));
-        div.appendChild(head);
-        var summary = getSummary(val.body, searchRegex);
-        for (var i = 0; i < summary.length; i++) {
-          var pre = document.createElement('pre');
-          pre.innerHTML = summary[i].lines.join('\n');
-          div.appendChild(pre);
-        }
-        fragment.appendChild(div);
-        ul.appendChild(fragment);
-      });
-      if (!obj.search_done && obj.next_start_index) {
-        var waitE = document.querySelector('#_search2_search_wait_milliseconds');
-        var interval = minSearchWaitMilliseconds;
-        try {
-          interval = parseInt(waitE.value);
-        } catch (e) {
-          interval = minSearchWaitMilliseconds;
-        }
-        if (interval < minSearchWaitMilliseconds) {
-          interval = minSearchWaitMilliseconds;
-        }
-        setTimeout(function(){
-          doSearch(searchText, session, obj.next_start_index);
-        }, interval);
+      } catch (e) {
+        value = defaultValue;
       }
+      return value;
+    }
+    /**
+     * @param {string} idText
+     * @param {string} defaultValue
+     * @type string
+     */
+    function getTextById(idText, defaultValue) {
+      var value = defaultValue;
+      try {
+        var element = document.getElementById(idText);
+        if (element.value) {
+          value = element.value;
+        }
+      } catch (e) {
+        value = defaultValue;
+      }
+      return value;
+    }
+    function prepareSearchProps() {
+      var p = {};
+      p.errorMsg = getTextById('_plugin_search2_msg_error',
+        'An error occurred while processing.');
+      p.searchingMsg = getTextById('_plugin_search2_msg_searching',
+        'Searching...');
+      p.showingResultMsg = getTextById('_plugin_search2_msg_showing_result',
+        'Showing search results');
+      p.prevOffset = getTextById('_plugin_search2_prev_offset', '');
+      var baseUrlDefault = document.location.pathname + document.location.search;
+      baseUrlDefault = baseUrlDefault.replace(/&offset=\d+/, '');
+      p.baseUrl = getTextById('_plugin_search2_base_url', baseUrlDefault);
+      p.msgPrevResultsTemplate = getTextById('_plugin_search2_msg_prev_results', 'Previous $1 pages');
+      p.msgMoreResultsTemplate = getTextById('_plugin_search2_msg_more_results', 'Next $1 pages');
+      p.user = getTextById('_plugin_search2_auth_user', '');
+      p.showingResultMsg = getTextById('_plugin_search2_msg_showing_result', 'Showing search results');
+      p.notFoundMessageTemplate = getTextById('_plugin_search2_msg_result_notfound',
+        'No page which contains $1 has been found.');
+      p.foundMessageTemplate = getTextById('_plugin_search2_msg_result_found',
+        'In the page <strong>$2</strong>, <strong>$3</strong> pages that contain all the terms $1 were found.');
+      p.maxResults = getIntById('_plugin_search2_max_results', defaultMaxResults);
+      p.searchInterval = getIntById('_plugin_search2_search_wait_milliseconds', defaultSearchWaitMilliseconds);
+      p.offset = getIntById('_plugin_search2_offset', 0);
+      searchProps = p;
+    }
+    function getSiteProps() {
+      var empty = {};
+      var propsDiv = document.getElementById('pukiwiki-site-properties');
+      if (!propsDiv) return empty;
+      var jsonE = propsDiv.querySelector('div[data-key="site-props"]');
+      if (!jsonE) return empty;
+      var props = JSON.parse(jsonE.getAttribute('data-value'));
+      return props || empty;
+    }
+    /**
+     * @param {NodeList} nodeList
+     * @param {function(Node, number): void} func
+     */
+    function forEach(nodeList, func) {
+      if (nodeList.forEach) {
+        nodeList.forEach(func);
+      } else {
+        for (var i = 0, n = nodeList.length; i < n; i++) {
+          func(nodeList[i], i);
+        }
+      }
+    }
+    /**
+     * @param {string} text
+     * @param {RegExp} searchRegex
+     */
+    function findAndDecorateText(text, searchRegex) {
+      var isReplaced = false;
+      var lastIndex = 0;
+      var m;
+      var decorated = '';
+      if (!searchRegex) return null;
+      searchRegex.lastIndex = 0;
+      while ((m = searchRegex.exec(text)) !== null) {
+        if (m[0] === '') {
+          // Fail-safe
+          console.log('Invalid searchRegex ' + searchRegex);
+          return null;
+        }
+        isReplaced = true;
+        var pre = text.substring(lastIndex, m.index);
+        decorated += escapeHTML(pre);
+        for (var i = 1; i < m.length; i++) {
+          if (m[i]) {
+            decorated += '<strong class="word' + (i - 1) + '">' + escapeHTML(m[i]) + '</strong>';
+          }
+        }
+        lastIndex = searchRegex.lastIndex;
+      }
+      if (isReplaced) {
+        decorated += escapeHTML(text.substr(lastIndex));
+        return decorated;
+      }
+      return null;
+    }
+    /**
+     * @param {Object} session
+     * @param {string} searchText
+     * @param {RegExp} searchRegex
+     * @param {boolean} nowSearching
+     */
+    function getSearchResultMessage(session, searchText, searchRegex, nowSearching) {
+      var searchTextDecorated = findAndDecorateText(searchText, searchRegex);
+      if (searchTextDecorated === null) searchTextDecorated = escapeHTML(searchText);
+      var messageTemplate = searchProps.foundMessageTemplate;
+      if (!nowSearching && session.hitPageCount === 0) {
+        messageTemplate = searchProps.notFoundMessageTemplate;
+      }
+      var msg = messageTemplate.replace(/\$1|\$2|\$3/g, function(m) {
+        return {
+          $1: searchTextDecorated,
+          $2: session.hitPageCount,
+          $3: session.readPageCount
+        }[m];
+      });
+      return msg;
+    }
+    /**
+     * @param {Object} session
+     */
+    function getSearchProgress(session) {
+      var progress = '(read:' + session.readPageCount + ', scan:' +
+        session.scanPageCount + ', all:' + session.pageCount;
+      if (session.offset) {
+        progress += ', offset: ' + session.offset;
+      }
+      progress += ')';
+      return progress;
+    }
+    /**
+     * @param {Object} session
+     * @param {number} maxResults
+     */
+    function getOffsetLinks(session, maxResults) {
+      var baseUrl = searchProps.baseUrl;
+      var links = [];
+      if ('prevOffset' in session) {
+        var prevResultUrl = baseUrl;
+        if (session.prevOffset > 0) {
+          prevResultUrl += '&offset=' + session.prevOffset;
+        }
+        var msgPrev = searchProps.msgPrevResultsTemplate.replace(/\$1/, maxResults);
+        var prevResultHtml = '<a href="' + prevResultUrl + '">' + msgPrev + '</a>';
+        links.push(prevResultHtml);
+      }
+      if ('nextOffset' in session) {
+        var nextResultUrl = baseUrl + '&offset=' + session.nextOffset +
+          '&prev_offset=' + session.offset;
+        var msgMore = searchProps.msgMoreResultsTemplate.replace(/\$1/, maxResults);
+        var moreResultHtml = '<a href="' + nextResultUrl + '">' + msgMore + '</a>';
+        links.push(moreResultHtml);
+      }
+      if (links.length > 0) {
+        return links.join(' ');
+      }
+      return '';
     }
     function prepareKanaMap() {
       if (kanaMap !== null) return;
@@ -208,102 +220,146 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       var dakuten = '\uFF9E';
       var maru = '\uFF9F';
       var map = {};
-      for (var c = 0xFF61; c <=0xFF9F; c++) {
+      for (var c = 0xFF61; c <= 0xFF9F; c++) {
         var han = String.fromCharCode(c);
         var zen = han.normalize('NFKC');
         map[zen] = han;
         var hanDaku = han + dakuten;
         var zenDaku = hanDaku.normalize('NFKC');
         if (zenDaku.length === 1) { // +Handaku-ten OK
-            map[zenDaku] = hanDaku;
+          map[zenDaku] = hanDaku;
         }
         var hanMaru = han + maru;
         var zenMaru = hanMaru.normalize('NFKC');
         if (zenMaru.length === 1) { // +Maru OK
-            map[zenMaru] = hanMaru;
+          map[zenMaru] = hanMaru;
         }
       }
       kanaMap = map;
     }
+    /**
+     * @param {searchText} searchText
+     * @type RegExp
+     */
     function textToRegex(searchText) {
       if (!searchText) return null;
-      var regEscape = /[\\^$.*+?()[\]{}|]/g;
       //             1:Symbol             2:Katakana        3:Hiragana
       var regRep = /([\\^$.*+?()[\]{}|])|([\u30a1-\u30f6])|([\u3041-\u3096])/g;
+      var replacementFunc = function(m, m1, m2, m3) {
+        if (m1) {
+          // Symbol - escape with prior backslach
+          return '\\' + m1;
+        } else if (m2) {
+          // Katakana
+          var r = '(?:' + String.fromCharCode(m2.charCodeAt(0) - 0x60) +
+            '|' + m2;
+          if (kanaMap[m2]) {
+            r += '|' + kanaMap[m2];
+          }
+          r += ')';
+          return r;
+        } else if (m3) {
+          // Hiragana
+          var katakana = String.fromCharCode(m3.charCodeAt(0) + 0x60);
+          var r2 = '(?:' + m3 + '|' + katakana;
+          if (kanaMap[katakana]) {
+            r2 += '|' + kanaMap[katakana];
+          }
+          r2 += ')';
+          return r2;
+        }
+        return m;
+      };
       var s1 = searchText.replace(/^\s+|\s+$/g, '');
+      if (!s1) return null;
       var sp = s1.split(/\s+/);
       var rText = '';
       prepareKanaMap();
       for (var i = 0; i < sp.length; i++) {
         if (rText !== '') {
-          rText += '|'
+          rText += '|';
         }
         var s = sp[i];
         if (s.normalize) {
           s = s.normalize('NFKC');
         }
-        var s2 = s.replace(regRep, function(m, m1, m2, m3){
-          if (m1) {
-            // Symbol - escape with prior backslach
-            return '\\' + m1;
-          } else if (m2) {
-            // Katakana
-            var r = '(?:' + String.fromCharCode(m2.charCodeAt(0) - 0x60) +
-              '|' + m2;
-            if (kanaMap[m2]) {
-              r += '|' + kanaMap[m2];
-            }
-            r += ')';
-            return r;
-          } else if (m3) {
-            // Hiragana
-            var katakana = String.fromCharCode(m3.charCodeAt(0) + 0x60);
-            var r = '(?:' + m3 + '|' + katakana;
-            if (kanaMap[katakana]) {
-              r += '|' + kanaMap[katakana];
-            }
-            r += ')';
-            return r;
-          }
-          return m;
-        });
+        var s2 = s.replace(regRep, replacementFunc);
         rText += '(' + s2 + ')';
       }
       return new RegExp(rText, 'ig');
     }
-    function getAuthorHeader(body) {
-      var start = 0;
-      var pos;
-      while ((pos = body.indexOf('\n', start)) >= 0) {
-        var line = body.substring(start, pos);
-        if (line.match(/^#author\(/, line)) {
-          return line;
-        } else if (line.match(/^#freeze(\W|$)/, line)) {
-          // Found #freeze still in header
+    /**
+     * @param {string} statusText
+     */
+    function setSearchStatus(statusText) {
+      var statusList = document.querySelectorAll('._plugin_search2_search_status');
+      forEach(statusList, function(statusObj) {
+        statusObj.textContent = statusText;
+      });
+    }
+    /**
+     * @param {string} msgHTML
+     */
+    function setSearchMessage(msgHTML) {
+      var objList = document.querySelectorAll('._plugin_search2_message');
+      forEach(objList, function(obj) {
+        obj.innerHTML = msgHTML;
+      });
+    }
+    function showSecondSearchForm() {
+      // Show second search form
+      var div = document.querySelector('._plugin_search2_second_form');
+      if (div) {
+        div.style.display = 'block';
+      }
+    }
+    /**
+     * @param {Element} form
+     * @type string
+     */
+    function getSearchBase(form) {
+      var f = form || document.querySelector('._plugin_search2_form');
+      var base = '';
+      forEach(f.querySelectorAll('input[name="base"]'), function(radio) {
+        if (radio.checked) base = radio.value;
+      });
+      return base;
+    }
+    /**
+     * Decorate found block (for pre innerHTML)
+     *
+     * @param {Object} block
+     * @param {RegExp} searchRegex
+     */
+    function decorateFoundBlock(block, searchRegex) {
+      var lines = [];
+      for (var j = 0; j < block.lines.length; j++) {
+        var line = block.lines[j];
+        var decorated = findAndDecorateText(line, searchRegex);
+        if (decorated === null) {
+          lines.push('' + (block.startIndex + j + 1) + ':\t' + escapeHTML(line));
         } else {
-          // other line, #author not found
-          return null;
+          lines.push('' + (block.startIndex + j + 1) + ':\t' + decorated);
         }
-        start = pos + 1;
       }
-      return null;
-    }
-    function getUpdateTimeFromAuthorInfo(authorInfo) {
-      var m = authorInfo.match(/^#author\("([^;"]+)(;[^;"]+)?/);
-      if (m) {
-        return m[1];
+      if (block.beyondLimit) {
+        lines.push('...');
       }
-      return '';
+      return lines.join('\n');
     }
-    function getTargetLines(body, searchRegex) {
+    /**
+     * @param {string} body
+     * @param {RegExp} searchRegex
+     */
+    function getSummaryInfo(body, searchRegex) {
       var lines = body.split('\n');
-      var found = [];
       var foundLines = [];
       var isInAuthorHeader = true;
       var lastFoundLineIndex = -1 - aroundLines;
       var lastAddedLineIndex = lastFoundLineIndex;
       var blocks = [];
       var lineCount = 0;
+      var currentBlock = null;
       for (var index = 0, length = lines.length; index < length; index++) {
         var line = lines[index];
         if (isInAuthorHeader) {
@@ -318,10 +374,10 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
             isInAuthorHeader = false;
           }
         }
-        var decorated = findAndDecorateText(line, searchRegex);
-        if (decorated === null) {
+        var match = line.match(searchRegex);
+        if (!match) {
           if (index < lastFoundLineIndex + aroundLines + 1) {
-            foundLines.push('' + (index + 1) + ':\t' + escapeHTML(lines[index]));
+            foundLines.push(lines[index]);
             lineCount++;
             lastAddedLineIndex = index;
           }
@@ -334,41 +390,114 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
               foundLineIndex: index,
               lines: []
             };
+            currentBlock = block;
             foundLines = block.lines;
             blocks.push(block);
           }
           if (lineCount >= maxResultLines) {
-            foundLines.push('...');
+            currentBlock.beyondLimit = true;
             return blocks;
           }
           for (var i = startIndex; i < index; i++) {
-            foundLines.push('' + (i + 1) + ':\t' + escapeHTML(lines[i]));
+            foundLines.push(lines[i]);
             lineCount++;
           }
-          foundLines.push('' + (index + 1) + ':\t' + decorated);
+          foundLines.push(line);
           lineCount++;
           lastFoundLineIndex = lastAddedLineIndex = index;
         }
       }
       return blocks;
     }
-    function getSummary(bodyText, searchRegex) {
-      return getTargetLines(bodyText, searchRegex);
+    /**
+     * @param {Date} now
+     * @param {string} dateText
+     */
+    function getPassage(now, dateText) {
+      if (!dateText) {
+        return '';
+      }
+      var units = [{u: 'm', max: 60}, {u: 'h', max: 24}, {u: 'd', max: 1}];
+      var d = new Date();
+      d.setTime(Date.parse(dateText));
+      var t = (now.getTime() - d.getTime()) / (1000 * 60); // minutes
+      var unit = units[0].u; var card = units[0].max;
+      for (var i = 0; i < units.length; i++) {
+        unit = units[i].u; card = units[i].max;
+        if (t < card) break;
+        t = t / card;
+      }
+      return '(' + Math.floor(t) + unit + ')';
     }
-    function hookSearch2(e) {
-      var form = document.querySelector('form');
-      if (form && form.q) {
-        var q = form.q;
-        if (q.value === '') {
-          q.focus();
+    /**
+     * @param {string} searchText
+     */
+    function removeSearchOperators(searchText) {
+      var sp = searchText.split(/\s+/);
+      if (sp.length <= 1) {
+        return searchText;
+      }
+      for (var i = sp.length - 2; i >= 1; i--) {
+        if (sp[i] === 'OR') {
+          sp.splice(i, 1);
         }
       }
+      return sp.join(' ');
     }
+    /**
+     * @param {string} pathname
+     */
+    function getSearchCacheKeyBase(pathname) {
+      return 'path.' + pathname + '.search2.';
+    }
+    /**
+     * @param {string} pathname
+     */
+    function getSearchCacheKeyDateBase(pathname) {
+      var now = new Date();
+      var dateKey = now.getFullYear() + '_0' + (now.getMonth() + 1) + '_0' + now.getDate();
+      dateKey = dateKey.replace(/_\d?(\d\d)/g, '$1');
+      return getSearchCacheKeyBase(pathname) + dateKey + '.';
+    }
+    /**
+     * @param {string} pathname
+     * @param {string} searchText
+     * @param {number} offset
+     */
+    function getSearchCacheKey(pathname, searchText, offset) {
+      return getSearchCacheKeyDateBase(pathname) + 'offset=' + offset +
+        '.' + searchText;
+    }
+    /**
+     * @param {string} pathname
+     * @param {string} searchText
+     */
+    function clearSingleCache(pathname, searchText) {
+      if (!window.localStorage) return;
+      var removeTargets = [];
+      var keyBase = getSearchCacheKeyDateBase(pathname);
+      for (var i = 0, n = localStorage.length; i < n; i++) {
+        var key = localStorage.key(i);
+        if (key.substr(0, keyBase.length) === keyBase) {
+          // Search result Cache
+          var subKey = key.substr(keyBase.length);
+          var m = subKey.match(/^offset=\d+\.(.+)$/);
+          if (m && m[1] === searchText) {
+            removeTargets.push(key);
+          }
+        }
+      }
+      removeTargets.forEach(function(target) {
+        localStorage.removeItem(target);
+      });
+    }
+    /**
+     * @param {string} body
+     */
     function getBodySummary(body) {
       var lines = body.split('\n');
       var isInAuthorHeader = true;
       var summary = [];
-      var lineCount = 0;
       for (var index = 0, length = lines.length; index < length; index++) {
         var line = lines[index];
         if (isInAuthorHeader) {
@@ -389,7 +518,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         if (line.match(/^#\w+/)) continue; // Block-type plugin
         if (line.match(/^\/\//)) continue; // Comment
         if (line.substr(0, 1) === '*') {
-          line = line.replace(/\s*\[\#\w+\]$/, ''); // Remove anchor
+          line = line.replace(/\s*\[#\w+\]$/, ''); // Remove anchor
         }
         summary.push(line);
         if (summary.length >= 10) {
@@ -398,12 +527,388 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       }
       return summary.join(' ').substring(0, 150);
     }
+    /**
+     * @param {string} q searchText
+     */
+    function encodeSearchText(q) {
+      var sp = q.split(/\s+/);
+      for (var i = 0; i < sp.length; i++) {
+        sp[i] = encodeURIComponent(sp[i]);
+      }
+      return sp.join('+');
+    }
+    /**
+     * @param {string} q searchText
+     */
+    function encodeSearchTextForHash(q) {
+      var sp = q.split(/\s+/);
+      return sp.join('+');
+    }
+    function getSearchTextInLocationHash() {
+      var hash = document.location.hash;
+      if (!hash) return '';
+      var q = '';
+      if (hash.substr(0, 3) === '#q=') {
+        q = hash.substr(3).replace(/\+/g, ' ');
+      } else {
+        return '';
+      }
+      var decodedQ = decodeURIComponent(q);
+      if (q !== decodedQ) {
+        q = decodedQ + ' OR ' + q;
+      }
+      return q;
+    }
+    function colorSearchTextInBody() {
+      var searchText = getSearchTextInLocationHash();
+      if (!searchText) return;
+      var searchRegex = textToRegex(removeSearchOperators(searchText));
+      if (!searchRegex) return;
+      var ignoreTags = ['INPUT', 'TEXTAREA', 'BUTTON',
+        'SCRIPT', 'FRAME', 'IFRAME'];
+      /**
+       * @param {Element} element
+       */
+      function colorSearchText(element) {
+        var decorated = findAndDecorateText(element.nodeValue, searchRegex);
+        if (decorated) {
+          var span = document.createElement('span');
+          span.innerHTML = decorated;
+          element.parentNode.replaceChild(span, element);
+        }
+      }
+      /**
+       * @param {Element} element
+       */
+      function walkElement(element) {
+        var e = element.firstChild;
+        while (e) {
+          if (e.nodeType === 3 && e.nodeValue &&
+              e.nodeValue.length >= 2 && /\S/.test(e.nodeValue)) {
+            var next = e.nextSibling;
+            colorSearchText(e, searchRegex);
+            e = next;
+          } else {
+            if (e.nodeType === 1 && ignoreTags.indexOf(e.tagName) === -1) {
+              walkElement(e);
+            }
+            e = e.nextSibling;
+          }
+        }
+      }
+      var target = document.getElementById('body');
+      walkElement(target);
+    }
+    /**
+     * @param {Array<Object>} newResults
+     * @param {Element} ul
+     */
+    function removePastResults(newResults, ul) {
+      var removedCount = 0;
+      var nodes = ul.childNodes;
+      for (var i = nodes.length - 1; i >= 0; i--) {
+        var node = nodes[i];
+        if (node.tagName !== 'LI' && node.tagName !== 'DIV') continue;
+        var nodePagename = node.getAttribute('data-pagename');
+        var isRemoveTarget = false;
+        for (var j = 0, n = newResults.length; j < n; j++) {
+          var r = newResults[j];
+          if (r.name === nodePagename) {
+            isRemoveTarget = true;
+            break;
+          }
+        }
+        if (isRemoveTarget) {
+          if (node.tagName === 'LI') {
+            removedCount++;
+          }
+          ul.removeChild(node);
+        }
+      }
+      return removedCount;
+    }
+    /**
+     * @param {Array<Object>} results
+     * @param {string} searchText
+     * @param {RegExp} searchRegex
+     * @param {Element} parentElement
+     * @param {boolean} insertTop
+     */
+    function addSearchResult(results, searchText, searchRegex, parentElement, insertTop) {
+      var now = new Date();
+      var parentFragment = document.createDocumentFragment();
+      results.forEach(function(val) {
+        var fragment = document.createDocumentFragment();
+        var li = document.createElement('li');
+        var hash = '#q=' + encodeSearchTextForHash(searchText);
+        var href = val.url + hash;
+        var decoratedName = findAndDecorateText(val.name, searchRegex);
+        if (!decoratedName) {
+          decoratedName = escapeHTML(val.name);
+        }
+        var updatedAt = val.updatedAt;
+        var liHtml = '<a href="' + escapeHTML(href) + '">' + decoratedName + '</a> ' +
+          getPassage(now, updatedAt);
+        li.innerHTML = liHtml;
+        li.setAttribute('data-pagename', val.name);
+        fragment.appendChild(li);
+        var div = document.createElement('div');
+        div.classList.add('search-result-detail');
+        var head = document.createElement('div');
+        head.classList.add('search-result-page-summary');
+        head.innerHTML = escapeHTML(val.bodySummary);
+        div.appendChild(head);
+        var summaryInfo = val.hitSummary;
+        for (var i = 0; i < summaryInfo.length; i++) {
+          var pre = document.createElement('pre');
+          pre.innerHTML = decorateFoundBlock(summaryInfo[i], searchRegex);
+          div.appendChild(pre);
+        }
+        div.setAttribute('data-pagename', val.name);
+        fragment.appendChild(div);
+        parentFragment.appendChild(fragment);
+      });
+      if (insertTop && parentElement.firstChild) {
+        parentElement.insertBefore(parentFragment, parentElement.firstChild);
+      } else {
+        parentElement.appendChild(parentFragment);
+      }
+    }
+    /**
+     * @param {Object} obj
+     * @param {Object} session
+     * @param {string} searchText
+     * @param {number} prevTimestamp
+     */
+    function showResult(obj, session, searchText, prevTimestamp) {
+      var props = getSiteProps();
+      var searchRegex = textToRegex(removeSearchOperators(searchText));
+      var ul = document.querySelector('#_plugin_search2_result-list');
+      if (!ul) return;
+      if (obj.start_index === 0 && !prevTimestamp) {
+        ul.innerHTML = '';
+      }
+      var searchDone = obj.search_done;
+      if (!session.scanPageCount) session.scanPageCount = 0;
+      if (!session.readPageCount) session.readPageCount = 0;
+      if (!session.hitPageCount) session.hitPageCount = 0;
+      var prevHitPageCount = session.hitPageCount;
+      session.hitPageCount += obj.results.length;
+      if (!prevTimestamp) {
+        session.scanPageCount += obj.scan_page_count;
+        session.readPageCount += obj.read_page_count;
+        session.pageCount = obj.page_count;
+      }
+      session.searchStartTime = obj.search_start_time;
+      session.authUser = obj.auth_user;
+      if (prevHitPageCount === 0 && session.hitPageCount > 0) {
+        showSecondSearchForm();
+      }
+      var results = obj.results;
+      var cachedResults = [];
+      results.forEach(function(val) {
+        var cache = {};
+        cache.name = val.name;
+        cache.url = val.url;
+        cache.updatedAt = val.updated_at;
+        cache.updatedTime = val.updated_time;
+        cache.bodySummary = getBodySummary(val.body);
+        cache.hitSummary = getSummaryInfo(val.body, searchRegex);
+        cachedResults.push(cache);
+      });
+      if (prevTimestamp) {
+        var removedCount = removePastResults(cachedResults, ul);
+        session.hitPageCount -= removedCount;
+      }
+      var msg = getSearchResultMessage(session, searchText, searchRegex, !searchDone);
+      setSearchMessage(msg);
+      if (prevTimestamp) {
+        setSearchStatus(searchProps.searchingMsg);
+      } else {
+        setSearchStatus(searchProps.searchingMsg + ' ' +
+          getSearchProgress(session));
+      }
+      if (searchDone) {
+        var singlePageResult = session.offset === 0 && !session.nextOffset;
+        var progress = getSearchProgress(session);
+        setTimeout(function() {
+          if (singlePageResult) {
+            setSearchStatus('');
+          } else {
+            setSearchStatus(searchProps.showingResultMsg + ' ' + progress);
+          }
+        }, 2000);
+      }
+      if (session.results) {
+        if (prevTimestamp) {
+          var newResult = [].concat(cachedResults);
+          Array.prototype.push.apply(newResult, session.results);
+          session.results = newResult;
+        } else {
+          Array.prototype.push.apply(session.results, cachedResults);
+        }
+      } else {
+        session.results = cachedResults;
+      }
+      addSearchResult(cachedResults, searchText, searchRegex, ul, prevTimestamp);
+      var maxResults = searchProps.maxResults;
+      if (searchDone) {
+        session.searchText = searchText;
+        var prevOffset = searchProps.prevOffset;
+        if (prevOffset) {
+          session.prevOffset = parseInt(prevOffset, 10);
+        }
+        var json = JSON.stringify(session);
+        var cacheKey = getSearchCacheKey(props.base_uri_pathname, searchText, session.offset);
+        if (window.localStorage) {
+          localStorage[cacheKey] = json;
+        }
+        if ('prevOffset' in session || 'nextOffset' in session) {
+          setSearchMessage(msg + ' ' + getOffsetLinks(session, maxResults));
+        }
+      }
+      if (!searchDone && obj.next_start_index) {
+        if (session.results.length >= maxResults) {
+          // Save results
+          session.nextOffset = obj.next_start_index;
+          var prevOffset2 = searchProps.prevOffset;
+          if (prevOffset2) {
+            session.prevOffset = parseInt(prevOffset2, 10);
+          }
+          var key = getSearchCacheKey(props.base_uri_pathname, searchText, session.offset);
+          localStorage[key] = JSON.stringify(session);
+          // Stop API calling
+          setSearchMessage(msg + ' ' + getOffsetLinks(session, maxResults));
+          setSearchStatus(searchProps.showingResultMsg + ' ' +
+            getSearchProgress(session));
+        } else {
+          setTimeout(function() {
+            doSearch(searchText, // eslint-disable-line no-use-before-define
+              session, obj.next_start_index,
+              obj.search_start_time);
+          }, searchProps.searchInterval);
+        }
+      }
+    }
+    /**
+     * @param {string} searchText
+     * @param {string} base
+     * @param {number} offset
+     */
+    function showCachedResult(searchText, base, offset) {
+      var props = getSiteProps();
+      var searchRegex = textToRegex(removeSearchOperators(searchText));
+      var ul = document.querySelector('#_plugin_search2_result-list');
+      if (!ul) return null;
+      var searchCacheKey = getSearchCacheKey(props.base_uri_pathname, searchText, offset);
+      var cache1 = localStorage[searchCacheKey];
+      if (!cache1) {
+        return null;
+      }
+      var session = JSON.parse(cache1);
+      if (!session) return null;
+      if (base !== session.base) {
+        return null;
+      }
+      var user = searchProps.user;
+      if (user !== session.authUser) {
+        return null;
+      }
+      if (session.hitPageCount > 0) {
+        showSecondSearchForm();
+      }
+      var msg = getSearchResultMessage(session, searchText, searchRegex, false);
+      setSearchMessage(msg);
+      addSearchResult(session.results, searchText, searchRegex, ul);
+      var maxResults = searchProps.maxResults;
+      if ('prevOffset' in session || 'nextOffset' in session) {
+        var moreResultHtml = getOffsetLinks(session, maxResults);
+        setSearchMessage(msg + ' ' + moreResultHtml);
+        var progress = getSearchProgress(session);
+        setSearchStatus(searchProps.showingResultMsg + ' ' + progress);
+      } else {
+        setSearchStatus('');
+      }
+      return session;
+    }
+    function removeCachedResults() {
+      var props = getSiteProps();
+      if (!props || !props.base_uri_pathname) return;
+      var keyPrefix = getSearchCacheKeyDateBase(props.base_uri_pathname);
+      var keyBase = getSearchCacheKeyBase(props.base_uri_pathname);
+      var removeTargets = [];
+      for (var i = 0, n = localStorage.length; i < n; i++) {
+        var key = localStorage.key(i);
+        if (key.substr(0, keyBase.length) === keyBase) {
+          // Search result Cache
+          if (key.substr(0, keyPrefix.length) !== keyPrefix) {
+            removeTargets.push(key);
+          }
+        }
+      }
+      removeTargets.forEach(function(target) {
+        localStorage.removeItem(target);
+      });
+    }
+    /**
+     * @param {string} searchText
+     * @param {object} session
+     * @param {number} startIndex
+     * @param {number} searchStartTime
+     * @param {number} prevTimestamp
+     */
+    function doSearch(searchText, session, startIndex, searchStartTime, prevTimestamp) {
+      var url = './?cmd=search2&action=query';
+      url += '&encode_hint=' + encodeURIComponent('\u3077');
+      if (searchText) {
+        url += '&q=' + encodeURIComponent(searchText);
+      }
+      if (session.base) {
+        url += '&base=' + encodeURIComponent(session.base);
+      }
+      if (prevTimestamp) {
+        url += '&modified_since=' + prevTimestamp;
+      } else {
+        url += '&start=' + startIndex;
+        if (searchStartTime) {
+          url += '&search_start_time=' + encodeURIComponent(searchStartTime);
+        }
+        if (!('offset' in session)) {
+          session.offset = startIndex;
+        }
+      }
+      fetch(url, {credentials: 'same-origin'}
+      ).then(function(response) {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error(response.status + ': ' +
+          response.statusText + ' on ' + url);
+      }).then(function(obj) {
+        showResult(obj, session, searchText, prevTimestamp);
+      })['catch'](function(err) { // eslint-disable-line dot-notation
+        if (window.console && console.log) {
+          console.log(err);
+          console.log('Error! Please check JavaScript console\n' + JSON.stringify(err) + '|' + err);
+        }
+        setSearchStatus(searchProps.errorMsg);
+      });
+    }
+    function hookSearch2() {
+      var form = document.querySelector('form');
+      if (form && form.q) {
+        var q = form.q;
+        if (q.value === '') {
+          q.focus();
+        }
+      }
+    }
     function removeEncodeHint() {
       // Remove 'encode_hint' if site charset is UTF-8
       var props = getSiteProps();
       if (!props.is_utf8) return;
       var forms = document.querySelectorAll('form');
-      forEach(forms, function(form){
+      forEach(forms, function(form) {
         if (form.cmd && form.cmd.value === 'search2') {
           if (form.encode_hint && (typeof form.encode_hint.removeAttribute === 'function')) {
             form.encode_hint.removeAttribute('name');
@@ -416,44 +921,44 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       var searchText = form && form.q;
       if (!searchText) return;
       if (searchText && searchText.value) {
-        var e = document.querySelector('#_plugin_search2_msg_searching');
-        var msg = e && e.value || 'Searching...';
-        setSearchStatus(msg);
-        var base = '';
-        forEach(form.querySelectorAll('input[name="base"]'), function(radio){
-          if (radio.checked) base = radio.value;
-        });
-        doSearch(searchText.value, {base: base}, 0);
-      }
-    }
-    function setSearchStatus(statusText) {
-      var statusList = document.querySelectorAll('._plugin_search2_search_status');
-      forEach(statusList, function(statusObj){
-        statusObj.textContent = statusText;
-      });
-    }
-    function setSearchMessage(msgHTML) {
-      var objList = document.querySelectorAll('._plugin_search2_message');
-      forEach(objList, function(obj){
-        obj.innerHTML = msgHTML;
-      });
-    }
-    function forEach(nodeList, func) {
-      if (nodeList.forEach) {
-        nodeList.forEach(func);
-      } else {
-        for (var i = 0, n = nodeList.length; i < n; i++) {
-          func(nodeList[i], i);
+        var offset = searchProps.offset;
+        var base = getSearchBase(form);
+        var prevSession = showCachedResult(searchText.value, base, offset);
+        if (prevSession) {
+          // Display Cache results, then search only modified pages
+          if (!('offset' in prevSession) || prevSession.offset === 0) {
+            doSearch(searchText.value, prevSession, offset, null,
+              prevSession.searchStartTime);
+          } else {
+            // Show search results
+          }
+        } else {
+          doSearch(searchText.value, {base: base, offset: offset}, offset, null);
         }
+        removeCachedResults();
       }
     }
     function replaceSearchWithSearch2() {
-      forEach(document.querySelectorAll('form'), function(f){
+      forEach(document.querySelectorAll('form'), function(f) {
+        function onAndRadioClick() {
+          var sp = removeSearchOperators(f.word.value).split(/\s+/);
+          var newText = sp.join(' ');
+          if (f.word.value !== newText) {
+            f.word.value = newText;
+          }
+        }
+        function onOrRadioClick() {
+          var sp = removeSearchOperators(f.word.value).split(/\s+/);
+          var newText = sp.join(' OR ');
+          if (f.word.value !== newText) {
+            f.word.value = newText;
+          }
+        }
         if (f.action.match(/cmd=search$/)) {
           f.addEventListener('submit', function(e) {
             var q = e.target.word.value;
             var base = '';
-            forEach(f.querySelectorAll('input[name="base"]'), function(radio){
+            forEach(f.querySelectorAll('input[name="base"]'), function(radio) {
               if (radio.checked) base = radio.value;
             });
             var props = getSiteProps();
@@ -470,115 +975,30 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
               (base ? '&base=' + encodeURIComponent(base) : '');
             e.preventDefault();
             setTimeout(function() {
-              location.href = url;
+              window.location.href = url;
             }, 1);
             return false;
           });
           var radios = f.querySelectorAll('input[type="radio"][name="type"]');
-          forEach(radios, function(radio){
+          forEach(radios, function(radio) {
             if (radio.value === 'AND') {
               radio.addEventListener('click', onAndRadioClick);
             } else if (radio.value === 'OR') {
               radio.addEventListener('click', onOrRadioClick);
             }
           });
-          function onAndRadioClick(e) {
-            var sp = removeSearchOperators(f.word.value).split(/\s+/);
-            var newText = sp.join(' ');
-            if (f.word.value !== newText) {
-              f.word.value = newText;
+        } else if (f.cmd && f.cmd.value === 'search2') {
+          f.addEventListener('submit', function() {
+            var newSearchText = f.q.value;
+            var prevSearchText = f.q.getAttribute('data-original-q');
+            if (newSearchText === prevSearchText) {
+              // Clear resultCache to search same text again
+              var props = getSiteProps();
+              clearSingleCache(props.base_uri_pathname, prevSearchText);
             }
-          }
-          function onOrRadioClick(e) {
-            var sp = removeSearchOperators(f.word.value).split(/\s+/);
-            var newText = sp.join(' OR ');
-            if (f.word.value !== newText) {
-              f.word.value = newText;
-            }
-          }
+          });
         }
       });
-    }
-    function encodeSearchText(q) {
-      var sp = q.split(/\s+/);
-      for (var i = 0; i < sp.length; i++) {
-        sp[i] = encodeURIComponent(sp[i]);
-      }
-      return sp.join('+');
-    }
-    function encodeSearchTextForHash(q) {
-      var sp = q.split(/\s+/);
-      return sp.join('+');
-    }
-    function findAndDecorateText(text, searchRegex) {
-      var isReplaced = false;
-      var lastIndex = 0;
-      var m;
-      var decorated = '';
-      searchRegex.lastIndex = 0;
-      while ((m = searchRegex.exec(text)) !== null) {
-        isReplaced = true;
-        var pre = text.substring(lastIndex, m.index);
-        decorated += escapeHTML(pre);
-        for (var i = 1; i < m.length; i++) {
-          if (m[i]) {
-            decorated += '<strong class="word' + (i - 1) + '">' + escapeHTML(m[i]) + '</strong>'
-          }
-        }
-        lastIndex = searchRegex.lastIndex;
-      }
-      if (isReplaced) {
-        decorated += escapeHTML(text.substr(lastIndex));
-        return decorated;
-      }
-      return null;
-    }
-    function getSearchTextInLocationHash() {
-      // TODO Cross browser
-      var hash = location.hash;
-      if (!hash) return '';
-      var q = '';
-      if (hash.substr(0, 3) === '#q=') {
-        q = hash.substr(3).replace(/\+/g, ' ');
-      } else if (hash.substr(0, 6) === '#encq=') {
-        q = decodeURIComponent(hash.substr(6).replace(/\+/g, ' '));
-      }
-      return q;
-    }
-    function colorSearchTextInBody() {
-      var searchText = getSearchTextInLocationHash();
-      if (!searchText) return;
-      var searchRegex = textToRegex(removeSearchOperators(searchText));
-      var headReText = '([\\s\\b]|^)';
-      var tailReText = '\\b';
-      var ignoreTags = ['INPUT', 'TEXTAREA', 'BUTTON',
-        'SCRIPT', 'FRAME', 'IFRAME'];
-      function colorSearchText(element, searchRegex) {
-        var decorated = findAndDecorateText(element.nodeValue, searchRegex);
-        if (decorated) {
-          var span = document.createElement('span');
-          span.innerHTML = decorated;
-          element.parentNode.replaceChild(span, element);
-        }
-      }
-      function walkElement(element) {
-        var e = element.firstChild;
-        while (e) {
-          if (e.nodeType == 3 && e.nodeValue &&
-              e.nodeValue.length >= 2 && /\S/.test(e.nodeValue)) {
-            var next = e.nextSibling;
-            colorSearchText(e, searchRegex);
-            e = next;
-          } else {
-            if (e.nodeType == 1 && ignoreTags.indexOf(e.tagName) == -1) {
-              walkElement(e);
-            }
-            e = e.nextSibling;
-          }
-        }
-      }
-      var target = document.getElementById('body');
-      walkElement(target);
     }
     function showNoSupportMessage() {
       var pList = document.getElementsByClassName('_plugin_search2_nosupport_message');
@@ -598,21 +1018,13 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       if (props.json_enabled) return true;
       return false;
     }
-    function getSiteProps() {
-      var empty = {};
-      var propsDiv = document.getElementById('pukiwiki-site-properties');
-      if (!propsDiv) return empty;
-      var jsonE = propsDiv.querySelector('div[data-key="site-props"]');
-      if (!jsonE) return emptry;
-      var props = JSON.parse(jsonE.getAttribute('data-value'));
-      return props || empty;
-    }
+    prepareSearchProps();
     colorSearchTextInBody();
-    if (! isEnabledFetchFunctions()) {
+    if (!isEnabledFetchFunctions()) {
       showNoSupportMessage();
       return;
     }
-    if (! isEnableServerFunctions()) return;
+    if (!isEnableServerFunctions()) return;
     replaceSearchWithSearch2();
     hookSearch2();
     removeEncodeHint();

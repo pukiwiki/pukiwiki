@@ -257,11 +257,26 @@ function get_author_info($wikitext)
 			// Found #freeze still in header
 		} else {
 			// other line, #author not found
-			return false;
+			return null;
 		}
 		$start = $pos + 1;
 	}
-	return false;
+	return null;
+}
+
+/**
+ * Get updated datetime from author
+ */
+function get_update_datetime_from_author($author_line) {
+	$m = null;
+	if (preg_match('/^#author\(\"([^\";]+)(?:;([^\";]+))?/', $author_line, $m)) {
+		if ($m[2]) {
+			return $m[2];
+		} else if ($m[1]) {
+			return $m[1];
+		}
+	}
+	return null;
 }
 
 function get_date_atom($timestamp)
@@ -601,6 +616,24 @@ function put_lastmodified()
 		flock($fp, LOCK_UN);
 		fclose($fp);
 	}
+}
+
+/**
+ * Get recent files
+ *
+ * @return Array of (file => time)
+ */
+function get_recent_files()
+{
+	$recentfile = CACHE_DIR . PKWK_MAXSHOW_CACHE;
+	$lines = file($recentfile);
+	if (!$lines) return array();
+	$files = array();
+	foreach ($lines as $line) {
+		list ($time, $file) = explode("\t", rtrim($line));
+		$files[$file] = $time;
+	}
+	return $files;
 }
 
 /**

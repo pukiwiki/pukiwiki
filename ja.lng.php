@@ -49,6 +49,8 @@ $_msg_goto           = '$1 へ行く。';
 $_msg_andresult      = '$1 のすべてを含むページは <strong>$3</strong> ページ中、 <strong>$2</strong> ページ見つかりました。';
 $_msg_orresult       = '$1 のいずれかを含むページは <strong>$3</strong> ページ中、 <strong>$2</strong> ページ見つかりました。';
 $_msg_notfoundresult = '$1 を含むページは見つかりませんでした。';
+$_msg_prev_results   = '&lt;&lt; 前の $1 ページ';
+$_msg_more_results   = '次の $1 ページ &gt;&gt;';
 $_msg_symbol         = '記号';
 $_msg_other          = '日本語';
 $_msg_help           = 'テキスト整形のルールを表示する';
@@ -57,6 +59,7 @@ $_msg_content_back_to_top = '<div class="jumpmenu"><a href="#navigator">&uarr;</
 $_msg_word           = 'これらのキーワードがハイライトされています：';
 $_msg_unsupported_webbrowser = 'この機能はお使いのWebブラウザには対応していません。';
 $_msg_use_alternative_link = 'リンク先の機能をご利用ください: $1';
+$_msg_general_error  = '処理中にエラーが発生しました。';
 
 ///////////////////////////////////////
 // Symbols
@@ -372,6 +375,7 @@ $_btn_or        = 'OR検索';
 $_search_pages  = '$1 から始まるページを検索';
 $_search_all    = '全てのページを検索';
 $_search_searching = '検索中...';
+$_search_showing_result = '検索結果表示';
 $_search_detail = '詳細表示';
 
 ///////////////////////////////////////

@@ -519,17 +519,20 @@ tr.bugtrack_state_undef td {
 
 /* search2.inc.php  */
 input#_plugin_search2_detail:checked ~ ul > div.search-result-detail {
-	display: block;
+  display: block;
 }
 input#_plugin_search2_detail ~ ul > div.search-result-detail {
-	display: none;
+  display: none;
+}
+._plugin_search2_search_status {
+  min-height: 1.5em;
 }
 .search-result-page-summary {
-	font-size: 70%;
-	color: gray;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+  font-size: 70%;
+  color: gray;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media print {

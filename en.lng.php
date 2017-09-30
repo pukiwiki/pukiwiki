@@ -47,6 +47,8 @@ $_msg_goto        = 'Go to $1.';
 $_msg_andresult   = 'In the page <strong> $2</strong>, <strong> $3</strong> pages that contain all the terms $1 were found.';
 $_msg_orresult    = 'In the page <strong> $2</strong>, <strong> $3</strong> pages that contain at least one of the terms $1 were found.';
 $_msg_notfoundresult = 'No page which contains $1 has been found.';
+$_msg_prev_results = '&lt;&lt; Previous $1 pages';
+$_msg_more_results = 'Next $1 pages &gt;&gt;';
 $_msg_symbol      = 'Symbols';
 $_msg_other       = 'Others';
 $_msg_help        = 'View Text Formatting Rules';
@@ -55,6 +57,7 @@ $_msg_content_back_to_top = '<div class="jumpmenu"><a href="#navigator">&uarr;</
 $_msg_word        = 'These search terms have been highlighted:';
 $_msg_unsupported_webbrowser = 'This function doesn\'t support your current Web browser.';
 $_msg_use_alternative_link = 'Please go to the following link destination: $1';
+$_msg_general_error  = 'An error occurred while processing.';
 
 ///////////////////////////////////////
 // Symbols
@@ -370,6 +373,7 @@ $_btn_or        = 'OR';
 $_search_pages  = 'Search for page starts from $1';
 $_search_all    = 'Search for all pages';
 $_search_searching = 'Searching...';
+$_search_showing_result = 'Showing search results';
 $_search_detail = 'Show details';
 
 ///////////////////////////////////////
