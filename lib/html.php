@@ -206,10 +206,28 @@ function get_html_scripting_data()
 	if (!isset($ticket_link_sites) || !is_array($ticket_link_sites)) {
 		return '';
 	}
+	$is_utf8 = (bool)defined('PKWK_UTF8_ENABLE');
 	// Require: PHP 5.4+
-	if (!defined('JSON_UNESCAPED_UNICODE')) {
-		return '';
-	};
+	$json_enabled = defined('JSON_UNESCAPED_UNICODE');
+	if (!$json_enabled) {
+		$empty_data = <<<EOS
+<div id="pukiwiki-site-properties" style="display:none;">
+</div>
+EOS;
+		return $empty_data;
+	}
+	// Site basic Properties
+	$props = array(
+		'is_utf8' => $is_utf8,
+		'json_enabled' => $json_enabled,
+		'base_uri_pathname' => get_base_uri(PKWK_URI_ROOT),
+		'base_uri_absolute' => get_base_uri(PKWK_URI_ABSOLUTE)
+	);
+	$props_json = htmlsc(json_encode($props, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+	$site_props = <<<EOS
+<div data-key="site-props" data-value="$props_json"></div>
+EOS;
+	// AutoTicketLink
 	$text = '';
 	foreach ($ticket_link_sites as $s) {
 		if (!preg_match('/^([a-zA-Z0-9]+)([\.\-][a-zA-Z0-9]+)*$/', $s['key'])) {
@@ -221,11 +239,15 @@ function get_html_scripting_data()
 EOS;
 		$text .= "\n";
 	}
-	$data = <<<EOS
-<div id="pukiwiki-site-properties" style="display:none;">
+	$ticketlink_data = <<<EOS
 <div class="ticketlink-def">
 $text
 </div>
+EOS;
+	$data = <<<EOS
+<div id="pukiwiki-site-properties" style="display:none;">
+$site_props
+$ticketlink_data
 </div>
 EOS;
 	return $data;

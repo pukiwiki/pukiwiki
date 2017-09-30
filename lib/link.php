@@ -266,8 +266,8 @@ function links_do_search_page($word)
 		$b_match = FALSE;
 		// Search for page contents
 		foreach ($keys as $key) {
-			$lines = remove_author_lines(get_source($page, TRUE, FALSE));
-			$b_match = preg_match($key, join('', $lines));
+			$body = get_source($page, TRUE, TRUE, TRUE);
+			$b_match = preg_match($key, remove_author_header($body));
 			if (! $b_match) break; // OR
 		}
 		if ($b_match) continue;

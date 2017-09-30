@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // en.lng.php
 // Copyright
-//   2002-2016 PukiWiki Development Team
+//   2002-2017 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -53,6 +53,8 @@ $_msg_help        = 'View Text Formatting Rules';
 $_msg_week        = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 $_msg_content_back_to_top = '<div class="jumpmenu"><a href="#navigator">&uarr;</a></div>';
 $_msg_word        = 'These search terms have been highlighted:';
+$_msg_unsupported_webbrowser = 'This function doesn\'t support your current Web browser.';
+$_msg_use_alternative_link = 'Please go to the following link destination: $1';
 
 ///////////////////////////////////////
 // Symbols
@@ -367,6 +369,8 @@ $_btn_and       = 'AND';
 $_btn_or        = 'OR';
 $_search_pages  = 'Search for page starts from $1';
 $_search_all    = 'Search for all pages';
+$_search_searching = 'Searching...';
+$_search_detail = 'Show details';
 
 ///////////////////////////////////////
 // source.inc.php

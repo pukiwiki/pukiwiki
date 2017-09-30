@@ -160,7 +160,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       }
       var siteNodes = defRoot.querySelectorAll('.ticketlink-site');
       Array.prototype.forEach.call(siteNodes, function (e) {
-        var siteInfoText = e.dataset && e.dataset.site;
+        var siteInfoText = e.getAttribute('data-site');
         if (!siteInfoText) return;
         var info = textToSiteInfo(siteInfoText);
         if (info) {

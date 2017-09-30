@@ -15,9 +15,16 @@ define('PKWK_MAXSHOW_CACHE', 'recent.dat');
 // AutoLink
 define('PKWK_AUTOLINK_REGEX_CACHE', 'autolink.dat');
 
-// Get source(wiki text) data of the page
-// Returns FALSE if error occurerd
-function get_source($page = NULL, $lock = TRUE, $join = FALSE)
+/**
+ * Get source(wiki text) data of the page
+ *
+ * @param $page page name
+ * @param $lock lock
+ * @param $join true: return string, false: return array of string
+ * @param $raw true: return file content as-is
+ * @return FALSE if error occurerd
+ */
+function get_source($page = NULL, $lock = TRUE, $join = FALSE, $raw = FALSE)
 {
 	//$result = NULL;	// File is not found
 	$result = $join ? '' : array();
@@ -44,6 +51,9 @@ function get_source($page = NULL, $lock = TRUE, $join = FALSE)
 			} else {
 				$result = fread($fp, $size);
 				if ($result !== FALSE) {
+					if ($raw) {
+						return $result;
+					}
 					// Removing Carriage-Return
 					$result = str_replace("\r", '', $result);
 				}
@@ -204,16 +214,54 @@ function remove_author_info($wikitext)
 	return preg_replace('/^\s*#author\([^\n]*(\n|$)/m', '', $wikitext);
 }
 
-function remove_author_lines($lines)
+/**
+ * Remove author line from wikitext
+ */
+function remove_author_header($wikitext)
 {
-	$author_head = '#author(';
-	$len = strlen($author_head);
-	for ($i = 0; $i < 5; $i++) {
-		if (substr($lines[$i], 0, $len) === $author_head) {
-			unset($lines[$i]);
+	$start = 0;
+	while (($pos = strpos($wikitext, "\n", $start)) != false) {
+		$line = substr($wikitext, $start, $pos);
+		$m = null;
+		if (preg_match('/^#author\(/', $line, $m)) {
+			// fond #author line, Remove this line only
+			if ($start === 0) {
+				return substr($wikitext, $pos + 1);
+			} else {
+				return substr($wikitext, 0, $start - 1) .
+					substr($wikitext, $pos + 1);
+			}
+		} else if (preg_match('/^#freeze(\W|$)/', $line, $m)) {
+			// Found #freeze still in header
+		} else {
+			// other line, #author not found
+			return $wikitext;
 		}
+		$start = $pos + 1;
 	}
-	return $lines;
+	return $wikitext;
+}
+
+/**
+ * Get author info from wikitext
+ */
+function get_author_info($wikitext)
+{
+	$start = 0;
+	while (($pos = strpos($wikitext, "\n", $start)) != false) {
+		$line = substr($wikitext, $start, $pos);
+		$m = null;
+		if (preg_match('/^#author\(/', $line, $m)) {
+			return $line;
+		} else if (preg_match('/^#freeze(\W|$)/', $line, $m)) {
+			// Found #freeze still in header
+		} else {
+			// other line, #author not found
+			return false;
+		}
+		$start = $pos + 1;
+	}
+	return false;
 }
 
 function get_date_atom($timestamp)

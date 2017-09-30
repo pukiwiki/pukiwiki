@@ -69,6 +69,7 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
  <link rel="stylesheet" type="text/css" href="<?php echo SKIN_DIR ?>pukiwiki.css" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
  <script type="text/javascript" src="skin/main.js" defer></script>
+ <script type="text/javascript" src="skin/search2.js" defer></script>
 
 <?php echo $head_tag ?>
 </head>

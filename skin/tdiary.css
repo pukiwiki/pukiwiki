@@ -517,6 +517,21 @@ tr.bugtrack_state_undef td {
 	background-color: #ff3333;
 }
 
+/* search2.inc.php  */
+input#_plugin_search2_detail:checked ~ ul > div.search-result-detail {
+	display: block;
+}
+input#_plugin_search2_detail ~ ul > div.search-result-detail {
+	display: none;
+}
+.search-result-page-summary {
+	font-size: 70%;
+	color: gray;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 @media print {
   img#logo,
   div#navigator,
