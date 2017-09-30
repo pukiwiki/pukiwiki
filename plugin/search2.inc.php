@@ -9,6 +9,10 @@
 define('PLUGIN_SEARCH2_MAX_LENGTH', 80);
 define('PLUGIN_SEARCH2_MAX_BASE',   16); // #search(1,2,3,...,15,16)
 
+define('PLUGIN_SEARCH2_RESULT_RECORD_LIMIT', 500);
+define('PLUGIN_SEARCH2_RESULT_RECORD_LIMIT_START', 100);
+define('PLUGIN_SEARCH2_SEARCH_WAIT_MILLISECONDS', 1000);
+
 // Show a search box on a page
 function plugin_search2_convert()
 {
@@ -22,6 +26,8 @@ function plugin_search2_action()
 
 	$action = isset($vars['action']) ? $vars['action'] : '';
 	$base = isset($vars['base']) ? $vars['base'] : '';
+	$start_s = isset($vars['start']) ? $vars['start'] : '';
+	$start_index = pkwk_ctype_digit($start_s) ? intval($start_s) : 0;
 	$bases = array();
 	if ($base !== '') {
 		$bases[] = $base;
@@ -39,17 +45,19 @@ function plugin_search2_action()
 	} else if ($action === 'query') {
 		$text = isset($vars['q']) ? $vars['q'] : '';
 		header('Content-Type: application/json; charset=UTF-8');
-		plugin_search2_do_search($text, $base);
+		plugin_search2_do_search($text, $base, $start_index);
 		exit;
 	}
 }
 
-function plugin_search2_do_search($query_text, $base)
+function plugin_search2_do_search($query_text, $base, $start_index)
 {
 	global $whatsnew, $non_list, $search_non_list;
 	global $_msg_andresult, $_msg_orresult, $_msg_notfoundresult;
 	global $search_auth;
 
+	$result_record_limit = $start_index === 0 ?
+		PLUGIN_SEARCH2_RESULT_RECORD_LIMIT_START : PLUGIN_SEARCH2_RESULT_RECORD_LIMIT;
 	$retval = array();
 
 	$b_type_and = true; // AND:TRUE OR:FALSE
@@ -82,6 +90,7 @@ function plugin_search2_do_search($query_text, $base)
 	$found_pages = array();
 	$readable_page_index = -1;
 	$scan_page_index = -1;
+	$saved_scan_start_index = -1;
 	$last_read_page_name = null;
 	foreach ($page_names as $page) {
 		$b_match = FALSE;
@@ -96,6 +105,13 @@ function plugin_search2_do_search($query_text, $base)
 			$pagename_only = true;
 		}
 		$readable_page_index++;
+		if ($readable_page_index < $start_index) {
+			// Skip: It's not time to read
+			continue;
+		}
+		if ($saved_scan_start_index === -1) {
+			$saved_scan_start_index = $scan_page_index;
+		}
 		// Search for page name and contents
 		$body = get_source($page, TRUE, TRUE, TRUE);
 		$target = $page . "\n" . remove_author_header($body);
@@ -122,6 +138,10 @@ function plugin_search2_do_search($query_text, $base)
 			}
 		}
 		$last_read_page_name = $page;
+		if ($start_index + $result_record_limit <= $readable_page_index + 1) {
+			// Read page limit
+			break;
+		}
 	}
 	$message = str_replace('$1', htmlsc($query_text), str_replace('$2', count($found_pages),
 		str_replace('$3', count($page_names), $b_type_and ? $_msg_andresult : $_msg_orresult)));
@@ -129,10 +149,13 @@ function plugin_search2_do_search($query_text, $base)
 	$result_obj = array(
 		'message' => $message,
 		'q' => $query_text,
-		'read_page_count' => $readable_page_index + 1,
-		'scan_page_count' => $scan_page_index + 1,
+		'start_index' => $start_index,
+		'limit' => $result_record_limit,
+		'read_page_count' => $readable_page_index - $start_index + 1,
+		'scan_page_count' => $scan_page_index - $saved_scan_start_index + 1,
 		'page_count' => count($page_names),
 		'last_read_page_name' => $last_read_page_name,
+		'next_start_index' => $readable_page_index + 1,
 		'search_done' => $search_done,
 		'results' => $found_pages);
 	$obj = $result_obj;
@@ -186,8 +209,6 @@ EOD;
 	$_search2_result_found = htmlsc($_msg_andresult);
 	$_search2_search_wait_milliseconds = PLUGIN_SEARCH2_SEARCH_WAIT_MILLISECONDS;
 	$result_page_panel =<<<EOD
-<div id="_plugin_search2_search_status"></div>
-<div id="_plugin_search2_message"></div>
 <input type="checkbox" id="_plugin_search2_detail" checked><label for="_plugin_search2_detail">$_search_detail</label>
 <input type="hidden" id="_plugin_search2_msg_searching" value="$_search_searching">
 <input type="hidden" id="_plugin_search2_msg_result_notfound" value="$_search2_result_notfound">
@@ -200,13 +221,7 @@ EOD;
 
 	$plain_search_link = '<a href="' . $script . '?cmd=search' . '">' . htmlsc($_btn_search) . '</a>';
 	$alt_msg = str_replace('$1', $plain_search_link, $_msg_use_alternative_link);
-	return <<<EOD
-<noscript>
- <p>$_msg_unsupported_webbrowser $alt_msg</p>
-</noscript>
-<p class="_plugin_search2_nosupport_message" style="display:none;">
-  $_msg_unsupported_webbrowser $alt_msg
-</p>
+	$form =<<<EOD
 <form action="$script" method="GET" class="_plugin_search2_form">
  <div>
   <input type="hidden" name="cmd" value="search2">
@@ -215,8 +230,29 @@ EOD;
  </div>
 $base_option
 </form>
+EOD;
+	$second_form =<<<EOD
+<div class="_plugin_search2_second_form" style="display:none;">
+<div class="_plugin_search2_search_status"></div>
+<div class="_plugin_search2_message"></div>
+$form
+</div>
+EOD;
+
+
+	return <<<EOD
+<noscript>
+ <p>$_msg_unsupported_webbrowser $alt_msg</p>
+</noscript>
+<p class="_plugin_search2_nosupport_message" style="display:none;">
+  $_msg_unsupported_webbrowser $alt_msg
+</p>
+$form
+<div class="_plugin_search2_search_status"></div>
+<div class="_plugin_search2_message"></div>
 $result_page_panel
 <ul id="result-list">
 </ul>
+$second_form
 EOD;
 }

@@ -93,15 +93,23 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       var searchRegex = textToRegex(removeSearchOperators(searchText));
       var ul = document.querySelector('#result-list');
       if (!ul) return;
-      ul.innerHTML = '';
+      if (obj.start_index === 0) {
+        ul.innerHTML = '';
+      }
       if (! session.scan_page_count) session.scan_page_count = 0;
       if (! session.read_page_count) session.read_page_count = 0;
       if (! session.hit_page_count) session.hit_page_count = 0;
+      var prevHitPageCount = session.hit_page_count;
       session.scan_page_count += obj.scan_page_count;
       session.read_page_count += obj.read_page_count;
       session.hit_page_count += obj.results.length;
       session.page_count = obj.page_count;
-
+      if (prevHitPageCount === 0 && session.hit_page_count > 0) {
+        var div = document.querySelector('._plugin_search2_second_form');
+        if (div) {
+          div.style.display = 'block';
+        }
+      }
       var msg = obj.message;
       var notFoundMessageTemplate = getMessageTemplate('_plugin_search2_msg_result_notfound',
         'No page which contains $1 has been found.');
@@ -110,7 +118,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       var searchTextDecorated = findAndDecorateText(searchText, searchRegex);
       if (searchTextDecorated === null) searchTextDecorated = escapeHTML(searchText);
       var messageTemplate = foundMessageTemplate;
-      if (session.hit_page_count === 0) {
+      if (obj.search_done && session.hit_page_count === 0) {
         messageTemplate = notFoundMessageTemplate;
       }
       msg = messageTemplate.replace(/\$1|\$2|\$3/g, function(m){
@@ -120,9 +128,17 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
           '$3': session.read_page_count
         }[m];
       });
-      document.querySelector('#_plugin_search2_message').innerHTML = msg;
-
-      setSearchStatus('');
+      setSearchMessage(msg);
+      var progress = ' (read:' + session.read_page_count + ', scanned:' +
+        session.scan_page_count + ', all:' + session.page_count + ')';
+      var e = document.querySelector('#_plugin_search2_msg_searching');
+      var msg = e && e.value || 'Searching...';
+      setSearchStatus(msg + progress);
+      if (obj.search_done) {
+        setTimeout(function(){
+          setSearchStatus('');
+        }, 5000);
+      }
       var results = obj.results;
       var now = new Date();
       results.forEach(function(val, index) {
@@ -167,6 +183,21 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         fragment.appendChild(div);
         ul.appendChild(fragment);
       });
+      if (!obj.search_done && obj.next_start_index) {
+        var waitE = document.querySelector('#_search2_search_wait_milliseconds');
+        var interval = minSearchWaitMilliseconds;
+        try {
+          interval = parseInt(waitE.value);
+        } catch (e) {
+          interval = minSearchWaitMilliseconds;
+        }
+        if (interval < minSearchWaitMilliseconds) {
+          interval = minSearchWaitMilliseconds;
+        }
+        setTimeout(function(){
+          doSearch(searchText, session, obj.next_start_index);
+        }, interval);
+      }
     }
     function prepareKanaMap() {
       if (kanaMap !== null) return;
@@ -396,10 +427,16 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       }
     }
     function setSearchStatus(statusText) {
-      var statusObj = document.querySelector('#_plugin_search2_search_status');
-      if (statusObj) {
+      var statusList = document.querySelectorAll('._plugin_search2_search_status');
+      forEach(statusList, function(statusObj){
         statusObj.textContent = statusText;
-      }
+      });
+    }
+    function setSearchMessage(msgHTML) {
+      var objList = document.querySelectorAll('._plugin_search2_message');
+      forEach(objList, function(obj){
+        obj.innerHTML = msgHTML;
+      });
     }
     function forEach(nodeList, func) {
       if (nodeList.forEach) {
