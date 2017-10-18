@@ -46,9 +46,9 @@ $_msg_notfound       = '指定されたページは見つかりませんでし�
 $_msg_addline        = '追加された行は<span class="diff_added">この色</span>です。';
 $_msg_delline        = '削除された行は<span class="diff_removed">この色</span>です。';
 $_msg_goto           = '$1 へ行く。';
-$_msg_andresult      = '$1 のすべてを含むページは <strong>$3</strong> ページ中、 <strong>$2</strong> ページ見つかりました。';
-$_msg_orresult       = '$1 のいずれかを含むページは <strong>$3</strong> ページ中、 <strong>$2</strong> ページ見つかりました。';
-$_msg_notfoundresult = '$1 を含むページは見つかりませんでした。';
+$_msg_andresult      = '$1 を含むページは <strong>$3</strong> ページ中、<strong>$2</strong> ページ見つかりました。';
+$_msg_orresult       = '$1 のいずれかを含むページは <strong>$3</strong> ページ中、<strong>$2</strong> ページ見つかりました。';
+$_msg_notfoundresult = '<strong>$3</strong> ページ中、$1 を含むページは見つかりませんでした。';
 $_msg_prev_results   = '&lt;&lt; 前の $1 ページ';
 $_msg_more_results   = '次の $1 ページ &gt;&gt;';
 $_msg_symbol         = '記号';

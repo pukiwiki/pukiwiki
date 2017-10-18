@@ -96,7 +96,7 @@ function plugin_search2_do_search($query_text, $base, $start_index,
 	$search_start_time, $modified_since)
 {
 	global $whatsnew, $non_list, $search_non_list;
-	global $_msg_andresult, $_msg_orresult, $_msg_notfoundresult;
+	global $_msg_andresult, $_msg_orresult;
 	global $search_auth, $auth_user;
 
 	$result_record_limit = $start_index === 0 ?

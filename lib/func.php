@@ -359,7 +359,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 	$r_word = rawurlencode($word);
 	$s_word = htmlsc($word);
 	if (empty($pages))
-		return str_replace('$1', $s_word, $_msg_notfoundresult);
+		return str_replace('$1', $s_word, str_replace('$3', $count, $_msg_notfoundresult));
 
 	ksort($pages, SORT_STRING);
 
