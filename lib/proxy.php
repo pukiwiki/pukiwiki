@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // proxy.php
-// Copyright: 2003-2016 PukiWiki Development Team
+// Copyright: 2003-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // HTTP-Proxy related functions
@@ -35,7 +35,6 @@ function pkwk_http_request($url, $method = 'GET', $headers = '', $post = array()
 {
 	global $use_proxy, $no_proxy, $proxy_host, $proxy_port;
 	global $need_proxy_auth, $proxy_auth_user, $proxy_auth_pass;
-
 	$rc  = array();
 	$arr = parse_url($url);
 
@@ -44,7 +43,13 @@ function pkwk_http_request($url, $method = 'GET', $headers = '', $post = array()
 	// query
 	$arr['query'] = isset($arr['query']) ? '?' . $arr['query'] : '';
 	// port
-	$arr['port']  = isset($arr['port'])  ? $arr['port'] : 80;
+	if (!isset($arr['port'])) {
+		if ($arr['scheme'] === 'https') {
+			$arr['port'] = 443;
+		} else {
+			$arr['port'] = 80;
+		}
+	}
 
 	$url_base = $arr['scheme'] . '://' . $arr['host'] . ':' . $arr['port'];
 	$url_path = isset($arr['path']) ? $arr['path'] : '/';
@@ -90,8 +95,12 @@ function pkwk_http_request($url, $method = 'GET', $headers = '', $post = array()
 
 	$errno  = 0;
 	$errstr = '';
+	$ssl_prefix = '';
+	if ($arr['scheme'] === 'https') {
+		$ssl_prefix = 'ssl://';
+	}
 	$fp = fsockopen(
-		$via_proxy ? $proxy_host : $arr['host'],
+		$ssl_prefix . ($via_proxy ? $proxy_host : $arr['host']),
 		$via_proxy ? $proxy_port : $arr['port'],
 		$errno, $errstr, 30);
 	if ($fp === FALSE) {
