@@ -58,17 +58,24 @@ function plugin_showrss_convert()
 	if (! is_url($uri))
 		return '#showrss: Seems not URI: ' . htmlsc($uri) . '<br />' . "\n";
 
+	// Remove old caches in 5% rate
+	if (mt_rand(1, 20) === 1) {
+		plugin_showrss_cache_expire(24);
+	}
 	list($rss, $time) = plugin_showrss_get_rss($uri, $cachehour);
 	if ($rss === FALSE) return '#showrss: Failed fetching RSS from the server<br />' . "\n";
-
-	$time = '';
+	if (! is_array($rss)) {
+		// Show XML error message
+		return '#showrss: Error - ' . htmlsc($rss) . '<br />' . "\n";
+	}
+	$time_display = '';
 	if ($timestamp > 0) {
-		$time = '<p style="font-size:10px; font-weight:bold">Last-Modified:' .
+		$time_display = '<p style="font-size:10px; font-weight:bold">Last-Modified:' .
 			get_date('Y/m/d H:i:s', $time) .  '</p>';
 	}
 
 	$obj = new $class($rss);
-	return $obj->toString($time);
+	return $obj->toString($time_display);
 }
 
 // Create HTML from RSS array()
@@ -157,23 +164,22 @@ function plugin_showrss_get_rss($target, $cachehour)
 	$buf  = '';
 	$time = NULL;
 	if ($cachehour) {
-		// Remove expired cache
-		plugin_showrss_cache_expire($cachehour);
-
-		// Get the cache not expired
 		$filename = CACHE_DIR . encode($target) . '.tmp';
+		// Remove expired cache
+		plugin_showrss_cache_expire_file($filename, $cachehour);
+		// Get the cache not expired
 		if (is_readable($filename)) {
 			$buf  = join('', file($filename));
 			$time = filemtime($filename) - LOCALZONE;
 		}
 	}
 
-	if ($time === NULL) {
+	if (is_null($time)) {
 		// Newly get RSS
 		$data = pkwk_http_request($target);
-		if ($data['rc'] !== 200)
+		if ($data['rc'] !== 200) {
 			return array(FALSE, 0);
-
+		}
 		$buf = $data['data'];
 		$time = UTIME;
 
@@ -184,9 +190,9 @@ function plugin_showrss_get_rss($target, $cachehour)
 			fclose($fp);
 		}
 	}
-
 	// Parse
 	$obj = new ShowRSS_XML();
+	$obj->modified_date = (is_null($time) ? UTIME : $time);
 	return array($obj->parse($buf),$time);
 }
 
@@ -204,6 +210,20 @@ function plugin_showrss_cache_expire($cachehour)
 	$dh->close();
 }
 
+/**
+ * Remove single file cache if expired limit exeed
+ * @param $filename
+ * @param $cachehour
+ */
+function plugin_showrss_cache_expire_file($filename, $cachehour)
+{
+	$expire = $cachehour * 60 * 60; // Hour
+	$last = time() - filemtime($filename);
+	if ($last > $expire) {
+		unlink($filename);
+	}
+}
+
 // Get RSS and array() them
 class ShowRSS_XML
 {
@@ -212,6 +232,7 @@ class ShowRSS_XML
 	var $is_item;
 	var $tag;
 	var $encoding;
+	var $modified_date;
 
 	function parse($buf)
 	{
@@ -219,32 +240,30 @@ class ShowRSS_XML
 		$this->item    = array();
 		$this->is_item = FALSE;
 		$this->tag     = '';
-
+		$utf8 = 'UTF-8';
+		$this->encoding = $utf8;
 		// Detect encoding
 		$matches = array();
 		if(preg_match('/<\?xml [^>]*\bencoding="([a-z0-9-_]+)"/i', $buf, $matches)) {
-			$this->encoding = $matches[1];
-		} else {
-			$this->encoding = mb_detect_encoding($buf);
+			$encoding = $matches[1];
+			if (strtoupper($encoding) !== $utf8) {
+				// xml_parse() fails on non UTF-8 encoding attr in XML decLaration
+				$buf = preg_replace('/<\?xml ([^>]*)\bencoding="[a-z0-9-_]+"/i', '<?xml $1', $buf);
+				// xml_parse() requires UTF-8 compatible encoding
+				$buf = mb_convert_encoding($buf, $utf8, $encoding);
+			}
 		}
-
-		// Normalize to UTF-8 / ASCII
-		if (! in_array(strtolower($this->encoding), array('us-ascii', 'iso-8859-1', 'utf-8'))) {
-			$buf = mb_convert_encoding($buf, 'utf-8', $this->encoding);
-			$this->encoding = 'utf-8';
-		}
-
 		// Parsing
-		$xml_parser = xml_parser_create($this->encoding);
+		$xml_parser = xml_parser_create($utf8);
 		xml_set_element_handler($xml_parser, array(& $this, 'start_element'), array(& $this, 'end_element'));
 		xml_set_character_data_handler($xml_parser, array(& $this, 'character_data'));
 		if (! xml_parse($xml_parser, $buf, 1)) {
-			return(sprintf('XML error: %s at line %d in %s',
+			return sprintf('XML error: %s at line %d in %s',
 				xml_error_string(xml_get_error_code($xml_parser)),
-				xml_get_current_line_number($xml_parser), $buf));
+				xml_get_current_line_number($xml_parser),
+				(strlen($buf) < 500 ? $buf : substr($buf, 0, 500) . '...'));
 		}
 		xml_parser_free($xml_parser);
-
 		return $this->items;
 	}
 
@@ -278,10 +297,10 @@ class ShowRSS_XML
 		$this->item = array();
 
 		if (isset($item['DC:DATE'])) {
-			$time = plugin_showrss_get_timestamp($item['DC:DATE']);
+			$time = plugin_showrss_get_timestamp($item['DC:DATE'], $this->modified_date);
 			
 		} else if (isset($item['PUBDATE'])) {
-			$time = plugin_showrss_get_timestamp($item['PUBDATE']);
+			$time = plugin_showrss_get_timestamp($item['PUBDATE'], $this->modified_date);
 		} else {
 			$time_from_desc = FALSE;
 			if (isset($item['DESCRIPTION']) &&
@@ -309,7 +328,7 @@ class ShowRSS_XML
 	}
 }
 
-function plugin_showrss_get_timestamp($str)
+function plugin_showrss_get_timestamp($str, $default_date)
 {
 	$str = trim($str);
 	if ($str == '') return UTIME;
@@ -318,14 +337,14 @@ function plugin_showrss_get_timestamp($str)
 	if (preg_match('/(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})(([+-])(\d{2}):(\d{2}))?/', $str, $matches)) {
 		$time = strtotime($matches[1] . ' ' . $matches[2]);
 		if ($time === FALSE || $time === -1) {
-			$time = UTIME;
-		} else if ($matches[3]) {
+			$time = $default_date;
+		} else if (isset($matches[3])) {
 			$diff = ($matches[5] * 60 + $matches[6]) * 60;
 			$time += ($matches[4] == '-' ? $diff : -$diff);
 		}
 		return $time;
 	} else {
 		$time = strtotime($str);
-		return ($time === FALSE || $time === -1) ? UTIME : $time - LOCALZONE;
+		return ($time === FALSE || $time === -1) ? $default_date : $time - LOCALZONE;
 	}
 }
