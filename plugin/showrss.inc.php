@@ -51,10 +51,10 @@ function plugin_showrss_convert()
 	}
 
 	$class = ($template == '' || $template == 'default') ? 'ShowRSS_html' : 'ShowRSS_html_' . $template;
+	if (! class_exists($class)) $class = 'ShowRSS_html';
+
 	if (! is_numeric($cachehour))
 		return '#showrss: Cache-lifetime seems not numeric: ' . htmlsc($cachehour) . '<br />' . "\n";
-	if (! class_exists($class))
-		return '#showrss: Template not found: ' . htmlsc($template) . '<br />' . "\n";
 	if (! is_url($uri))
 		return '#showrss: Seems not URI: ' . htmlsc($uri) . '<br />' . "\n";
 
