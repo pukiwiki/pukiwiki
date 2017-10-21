@@ -281,26 +281,33 @@ class ShowRSS_XML
 	// Tag start
 	function start_element($parser, $name, $attrs)
 	{
-		if ($this->is_item) {
-			$this->tag     = $name;
-		} else if ($name == 'ITEM') {
-			$this->is_item = TRUE;
+		if ($this->is_item !== FALSE) {
+			$this->tag = $name;
+			if ($this->is_item === 'ENTRY' && $name === 'LINK' && isset($attrs['HREF'])) {
+				if (! isset($this->item[$name])) $this->item[$name] = '';
+				$this->item[$name] .= $attrs['HREF'];
+			}
+		} else if ($name === 'ITEM') {
+			$this->is_item = 'ITEM';
+		} else if ($name === 'ENTRY') {
+			$this->is_item = 'ENTRY';
 		}
 	}
 
 	// Tag end
 	function end_element($parser, $name)
 	{
-		if (! $this->is_item || $name != 'ITEM') return;
+		if ($this->is_item === FALSE || $name !== $this->is_item) return;
 
 		$item = array_map(array(& $this, 'escape'), $this->item);
 		$this->item = array();
 
 		if (isset($item['DC:DATE'])) {
 			$time = plugin_showrss_get_timestamp($item['DC:DATE'], $this->modified_date);
-			
 		} else if (isset($item['PUBDATE'])) {
 			$time = plugin_showrss_get_timestamp($item['PUBDATE'], $this->modified_date);
+		} else if (isset($item['UPDATED'])) {
+			$time = plugin_showrss_get_timestamp($item['UPDATED'], $this->time);
 		} else {
 			$time_from_desc = FALSE;
 			if (isset($item['DESCRIPTION']) &&
@@ -322,7 +329,7 @@ class ShowRSS_XML
 
 	function character_data($parser, $data)
 	{
-		if (! $this->is_item) return;
+		if ($this->is_item === FALSE) return;
 		if (! isset($this->item[$this->tag])) $this->item[$this->tag] = '';
 		$this->item[$this->tag] .= $data;
 	}
