@@ -272,7 +272,7 @@ class ShowRSS_XML
 		// Unescape already-escaped chars (&lt;, &gt;, &amp;, ...) in RSS body before htmlsc()
 		$str = strtr($str, array_flip(get_html_translation_table(ENT_COMPAT)));
 		// Escape
-		$str = htmlsc($str);
+		$str = htmlsc($str, ENT_COMPAT, $this->encoding);
 		// Encoding conversion
 		$str = mb_convert_encoding($str, SOURCE_ENCODING, $this->encoding);
 		return trim($str);
