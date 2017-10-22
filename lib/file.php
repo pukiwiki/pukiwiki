@@ -685,12 +685,41 @@ function get_existfiles($dir = DATA_DIR, $ext = '.txt')
 	return $aryret;
 }
 
+/**
+ * Get/Set pagelist cache enabled for get_existpages()
+ *
+ * @param $newvalue Set true when the system can cache the page list
+ * @return true if can use page list cache
+ */
+function is_pagelist_cache_enabled($newvalue = null)
+{
+	static $cache_enabled = null;
+
+	if (!is_null($newvalue)) {
+		$cache_enabled = $newvalue;
+		return; // Return nothing on setting newvalue call
+	}
+	if (is_null($cache_enabled)) {
+		return false;
+	}
+	return $cache_enabled;
+}
+
 // Get a page list of this wiki
 function get_existpages($dir = DATA_DIR, $ext = '.txt')
 {
+	static $cached_list = null; // Cached wikitext page list
+	$use_cache = false;
+
+	if ($dir === DATA_DIR && $ext === '.txt' && is_pagelist_cache_enabled()) {
+		// Use pagelist cache for "wiki/*.txt" files
+		if (!is_null($cached_list)) {
+			return $cached_list;
+		}
+		$use_cache = true;
+	}
 	$aryret = array();
 	$pattern = '/^((?:[0-9A-F]{2})+)' . preg_quote($ext, '/') . '$/';
-
 	$dp = @opendir($dir) or die_message($dir . ' is not found or not readable.');
 	$matches = array();
 	while (($file = readdir($dp)) !== FALSE) {
@@ -699,7 +728,9 @@ function get_existpages($dir = DATA_DIR, $ext = '.txt')
 		}
 	}
 	closedir($dp);
-
+	if ($use_cache) {
+		$cached_list = $aryret;
+	}
 	return $aryret;
 }
 
