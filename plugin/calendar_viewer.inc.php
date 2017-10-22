@@ -55,7 +55,7 @@ function plugin_calendar_viewer_convert()
 	global $_msg_calendar_viewer_right, $_msg_calendar_viewer_left;
 	global $_msg_calendar_viewer_restrict, $_err_calendar_viewer_param2;
 
-	static $viewed = array();
+	static $show_count = array();
 
 	if (func_num_args() < 2)
 		return PLUGIN_CALENDAR_VIEWER_USAGE . '<br />' . "\n";
@@ -102,11 +102,13 @@ function plugin_calendar_viewer_convert()
 	if (isset($func_args[3])) $date_sep = $func_args[3];
 
 	// Avoid Loop etc.
-	if (isset($viewed[$pagename])) {
+	if (!isset($show_count[$pagename])) {
+		$show_count[$pagename] = 0;
+	}
+	$show_count[$pagename] += 1;
+	if ($show_count[$pagename] > 4) {
 		$s_page = htmlsc($pagename);
-		return "#calendar_viewer(): You already view: $s_page<br />";
-	} else {
-		$viewed[$pagename] = TRUE; // Valid
+		return "#calendar_viewer(): Exceeded the limit of show count: $s_page<br />";
 	}
 
 	// 一覧表示するページ名とファイル名のパターン　ファイル名には年月を含む
