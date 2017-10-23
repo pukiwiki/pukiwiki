@@ -18,6 +18,7 @@ function plugin_edit_action()
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
 	check_editable($page, true, true);
+	check_readable($page, true, true);
 
 	if (isset($vars['preview'])) {
 		return plugin_edit_preview($vars['msg']);
