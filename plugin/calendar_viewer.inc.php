@@ -110,52 +110,34 @@ function plugin_calendar_viewer_convert()
 		$s_page = htmlsc($pagename);
 		return "#calendar_viewer(): Exceeded the limit of show count: $s_page<br />";
 	}
-
-	// 一覧表示するページ名とファイル名のパターン　ファイル名には年月を含む
-	if ($pagename == '') {
-		// pagename無しのyyyy-mm-ddに対応するための処理
-		$pagepattern     = '';
-		$pagepattern_len = 0;
-		$filepattern     = encode($page_YM);
-		$filepattern_len = strlen($filepattern);
-	} else {
-		$pagepattern     = strip_bracket($pagename) . '/';
-		$pagepattern_len = strlen($pagepattern);
-		$filepattern     = encode($pagepattern . $page_YM);
-		$filepattern_len = strlen($filepattern);
+	// page name pattern
+	$pagepattern = strip_bracket($pagename) . '/';
+	if ($pagename === '') {
+		// Support non-pagename yyyy-mm-dd pattern
+		$pagepattern = '';
 	}
-
-	// ページリストの取得
+	$pagepattern_len = strlen($pagepattern);
+	// Get pagelist
 	$pagelist = array();
-	if ($dir = @opendir(DATA_DIR)) {
-		$_date = get_date('Y' . $date_sep . 'm' . $date_sep . 'd');
-		$page_date  = '';
-		while($file = readdir($dir)) {
-			if ($file == '..' || $file == '.') continue;
-			if (substr($file, 0, $filepattern_len) != $filepattern) continue;
-
-			$page      = decode(trim(preg_replace('/\.txt$/', ' ', $file)));
-			$page_date = substr($page, $pagepattern_len);
-
-			// Verify the $page_date pattern (Default: yyyy-mm-dd).
-			// Past-mode hates the future, and
-			// Future-mode hates the past.
-			if ((plugin_calendar_viewer_isValidDate($page_date, $date_sep) == FALSE) || 
-				($page_date > $_date && ($mode == 'past')) ||
-				($page_date < $_date && ($mode == 'future')))
-					continue;
-
-			$pagelist[] = $page;
+	$_date = get_date('Y' . $date_sep . 'm' . $date_sep . 'd');
+	foreach (get_existpages() as $page) {
+		if (strncmp($page, $pagepattern, $pagepattern_len) !== 0) continue;
+		$page_date = substr($page, $pagepattern_len);
+		// Verify the $page_date pattern (Default: yyyy-mm-dd).
+		// Past-mode hates the future, and
+		// Future-mode hates the past.
+		if ((plugin_calendar_viewer_isValidDate($page_date, $date_sep) === FALSE) ||
+			($page_date > $_date && ($mode === 'past')) ||
+			($page_date < $_date && ($mode === 'future'))) {
+				continue;
 		}
+		$pagelist[] = $page;
 	}
-	closedir($dir);
-
 	if ($mode == 'past') {
 		rsort($pagelist, SORT_STRING);	// New => Old
 	} else {
 		sort($pagelist, SORT_STRING);	// Old => New
 	}
-
 	// Include start
 	$tmppage     = $vars['page'];
 	$return_body = '';
