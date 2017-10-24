@@ -496,25 +496,25 @@ span.topicpath-top {
 
 /* bugtrack.inc.php */
 tr.bugtrack_list_header th {
-	background-color: #ffffcc;
+  background-color: #ffffcc;
 }
 tr.bugtrack_state_proposal td {
-	background-color: #ccccff;
+  background-color: #ccccff;
 }
 tr.bugtrack_state_accept td {
-	background-color: #ffcc99;
+  background-color: #ffcc99;
 }
 tr.bugrack_state_resolved td {
-	background-color: #ccffcc;
+  background-color: #ccffcc;
 }
 tr.bugtrack_state_pending td {
-	background-color: #ffccff;
+  background-color: #ffccff;
 }
 tr.bugtrack_state_cancel td {
-	background-color: #cccccc;
+  background-color: #cccccc;
 }
 tr.bugtrack_state_undef td {
-	background-color: #ff3333;
+  background-color: #ff3333;
 }
 
 /* search2.inc.php  */
