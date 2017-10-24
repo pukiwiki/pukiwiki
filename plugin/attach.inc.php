@@ -95,6 +95,9 @@ function plugin_attach_action()
 	$pass  = isset($vars['pass'])  ? $vars['pass']  : NULL;
 	$page  = isset($vars['page'])  ? $vars['page']  : '';
 
+	if ($refer === '' && $page !== '') {
+		$refer = $page;
+	}
 	if ($refer != '' && is_pagename($refer)) {
 		if(in_array($pcmd, array('info', 'open', 'list'))) {
 			check_readable($refer);
@@ -337,7 +340,6 @@ function attach_showform()
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	$vars['refer'] = $page;
 	$body = attach_form($page);
-
 	return array('msg'=>$_attach_messages['msg_upload'], 'body'=>$body);
 }
 
