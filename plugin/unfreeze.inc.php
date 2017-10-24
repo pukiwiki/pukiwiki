@@ -42,7 +42,7 @@ function plugin_unfreeze_action()
 		// Update 
 		is_freeze($page, TRUE);
 		if (PLUGIN_UNFREEZE_EDIT) {
-			$vars['cmd'] = 'read'; // To show 'Freeze' link
+			$vars['cmd'] = 'edit'; // To show 'Freeze' link
 			$msg  = $_title_unfreezed;
 			$postdata = remove_author_info($postdata);
 			$body = edit_form($page, $postdata);
