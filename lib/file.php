@@ -291,7 +291,7 @@ function get_date_atom($timestamp)
 // Generate ID
 function generate_fixed_heading_anchor_id($seed)
 {
-	// A random alphabetic letter + 7 letters of random strings from md()
+	// A random alphabetic letter + 7 letters of random strings from md5()
 	return chr(mt_rand(ord('a'), ord('z'))) .
 		substr(md5(uniqid(substr($seed, 0, 100), TRUE)),
 		mt_rand(0, 24), 7);

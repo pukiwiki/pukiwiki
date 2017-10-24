@@ -6,7 +6,7 @@
 //
 // Rename plugin: Rename page-name and related data
 //
-// Usage: http://path/to/pukiwikiphp?plugin=rename[&refer=page_name]
+// Usage: http://path/to/index.php?plugin=rename[&refer=page_name]
 
 define('PLUGIN_RENAME_LOGPAGE', ':RenameLog');
 
