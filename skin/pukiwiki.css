@@ -108,8 +108,8 @@ pre {
 	padding:.5em;
 	margin-left:1em;
 	margin-right:2em;
-	white-space:pre-wrap;
-	word-wrap:break-word;
+  white-space:pre-wrap;
+  word-wrap:break-word;
 	color:black;
 	background-color:#F0F8FF;
 }

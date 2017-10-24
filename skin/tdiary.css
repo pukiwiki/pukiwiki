@@ -31,8 +31,8 @@ img { border: 0 }
 /* PukiWiki original CSS */
 
 pre {
-	white-space:pre-wrap;
-	word-wrap:break-word;
+  white-space:pre-wrap;
+  word-wrap:break-word;
 }
 
 thead td.style_td,
