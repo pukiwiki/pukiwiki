@@ -488,10 +488,10 @@ td.vote_td2 {
 
 /* topicpath.inc.php */
 span.topicpath-slash {
-	margin: 0 0.4em;
+  margin: 0 0.4em;
 }
 span.topicpath-top {
-	user-select: none;
+  user-select: none;
 }
 
 /* bugtrack.inc.php */
