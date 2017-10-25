@@ -17,6 +17,10 @@ define('PLUGIN_CALENDAR_VIEWER_DATE_FORMAT',
 	//	'[Y-m-d]'     // '[2004-02-09]'
 		'Y/n/j ($\w)' // '2004/2/9 (Mon)'
 	);
+/**
+ * Limit of show count per pagename
+ */
+define('PLUGIN_CALENDAR_VIEWER_MAX_SHOW_COUNT', 4);
 
 // ----
 
@@ -106,7 +110,7 @@ function plugin_calendar_viewer_convert()
 		$show_count[$pagename] = 0;
 	}
 	$show_count[$pagename] += 1;
-	if ($show_count[$pagename] > 4) {
+	if ($show_count[$pagename] > PLUGIN_CALENDAR_VIEWER_MAX_SHOW_COUNT) {
 		$s_page = htmlsc($pagename);
 		return "#calendar_viewer(): Exceeded the limit of show count: $s_page<br />";
 	}
