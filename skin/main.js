@@ -1,11 +1,11 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // main.js
-// Copyright
-//   2017 PukiWiki Development Team
+// Copyright 2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // PukiWiki JavaScript client script
-window.addEventListener && window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener && window.addEventListener('DOMContentLoaded', function() { // eslint-disable-line no-unused-expressions
+  'use strict';
   // Name for comment
   function setYourName() {
     var NAME_KEY_ID = 'pukiwiki_comment_plugin_name';
@@ -19,7 +19,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         return u2.pathname;
       } catch (e) {
         // Note: Internet Explorer doesn't support URL class
-        var m = formAction.match(/^https?:\/\/([^\/]+)(\/([^\?&]+\/)?)/);
+        var m = formAction.match(/^https?:\/\/([^/]+)(\/([^?&]+\/)?)/);
         if (m) {
           actionPathname = m[2]; // pathname
         } else {
@@ -33,14 +33,8 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       var key = 'path.' + pathname + '.' + NAME_KEY_ID;
       return key;
     }
-    function isEmpty(s) {
-      if (s.match(/^\s*$/)) {
-        return true;
-      }
-      return false;
-    }
     function getForm(element) {
-      if (element.form && element.form.tagName === 'FORM' && false) {
+      if (element.form && element.form.tagName === 'FORM') {
         return element.form;
       }
       var e = element.parentElement;
@@ -65,16 +59,17 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       };
       var addOnForcusForm = function(eNullable) {
         if (!eNullable) return;
-        var e = eNullable;
-        e.addEventListener && e.addEventListener('focus', onFocusForm);
-      }
+        if (eNullable.addEventListener) {
+          eNullable.addEventListener('focus', onFocusForm);
+        }
+      };
       if (namePrevious) {
         var textList = form.querySelectorAll('input[type=text],textarea');
         textList.forEach(function (v) {
           addOnForcusForm(v);
         });
       }
-      form.addEventListener('submit', function(evt) {
+      form.addEventListener('submit', function() {
         if (typeof localStorage !== 'undefined') {
           localStorage[nameKey] = form.name.value;
         }
@@ -90,7 +85,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       for (var i = 0; i < elements.length; i++) {
         var form = getForm(elements[i]);
         if (form) {
-          handleCommentPlugin(form)
+          handleCommentPlugin(form);
         }
       }
     }
@@ -98,12 +93,49 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
   }
   // AutoTicketLink
   function autoTicketLink() {
-    if (!Array.prototype.indexOf || !document.createDocumentFragment) {
-      return;
-    }
     var headReText = '([\\s\\b]|^)';
     var tailReText = '\\b';
-    var _siteList = getSiteListFromBody();
+    var ignoreTags = ['A', 'INPUT', 'TEXTAREA', 'BUTTON',
+      'SCRIPT', 'FRAME', 'IFRAME'];
+    var ticketSiteList = [];
+    function regexEscape(key) {
+      return key.replace(/[-.]/g, function (m) {
+        return '\\' + m;
+      });
+    }
+    function setupSites(siteList) {
+      for (var i = 0, length = siteList.length; i < length; i++) {
+        var site = siteList[i];
+        var reText = '';
+        switch (site.type) {
+          case 'jira':
+            reText = '(' + regexEscape(site.key) + '):([A-Z][A-Z0-9_]+-\\d+)';
+            break;
+          case 'redmine':
+            reText = '(' + regexEscape(site.key) + '):(\\d+)';
+            break;
+          case 'git':
+            reText = '(' + regexEscape(site.key) + '):([0-9a-f]{7,40})';
+            break;
+          default:
+            continue;
+        }
+        site.reText = reText;
+        site.re = new RegExp(headReText + reText + tailReText);
+      }
+    }
+    function getSiteListFromBody() {
+      var defRoot = document.querySelector('#pukiwiki-site-properties .ticketlink-def');
+      if (defRoot && defRoot.value) {
+        var list = JSON.parse(defRoot.value);
+        setupSites(list);
+        return list;
+      }
+      return [];
+    }
+    function getSiteList() {
+      return ticketSiteList;
+    }
     function ticketToLink(keyText) {
       var siteList = getSiteList();
       for (var i = 0; i < siteList.length; i++) {
@@ -111,7 +143,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         var m = keyText.match(site.re);
         if (m) {
           var title = site.title;
-          var ticketKey = m[3]
+          var ticketKey = m[3];
           if (title) {
             title = title.replace(/\$1/g, ticketKey);
           }
@@ -123,72 +155,11 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       }
       return null;
     }
-    function regexEscape(key) {
-      return key.replace(/[\-\.]/g, function (m) {
-        return '\\' + m;
-      });
-    }
-    function setupSites(siteList) {
-      for (var i = 0, length = siteList.length; i < length; i++) {
-        var site = siteList[i];
-        var reText = '';
-        switch (site.type) {
-          case 'jira':
-            reText = '(' + regexEscape(site.key) + '):' + '([A-Z][A-Z0-9_]+-\\d+)';
-            break;
-          case 'redmine':
-            reText = '(' + regexEscape(site.key) + '):' + '(\\d+)';
-            break;
-          case 'git':
-            reText = '(' + regexEscape(site.key) + '):' + '([0-9a-f]{7,40})';
-            break;
-          default:
-            continue;
-        }
-        site.reText = reText;
-        site.re = new RegExp(headReText + reText + tailReText);
-      }
-    }
-    function getSiteList() {
-      return _siteList;
-    }
-    function getSiteListFromBody() {
-      var list = [];
-      var defRoot = document.querySelector('#pukiwiki-site-properties .ticketlink-def');
-      if (!defRoot) {
-        return [];
-      }
-      var siteNodes = defRoot.querySelectorAll('.ticketlink-site');
-      Array.prototype.forEach.call(siteNodes, function (e) {
-        var siteInfoText = e.getAttribute('data-site');
-        if (!siteInfoText) return;
-        var info = textToSiteInfo(siteInfoText);
-        if (info) {
-          list.push(info);
-        }
-      });
-      setupSites(list);
-      return list;
-    }
-    function textToSiteInfo(siteDef) {
-      if (!siteDef) return null;
-      var info = JSON.parse(siteDef);
-      if (info && info.key && info.type && info.base_url) {
-        return info;
-      }
-      return null;
-    }
-    function startsWith(s, searchString) {
-      if (String.prototype.startsWith) {
-        return s.startsWith(searchString);
-      }
-      return s.substr(0, searchString.length) === searchString;
-    }
     function getRegex(list) {
       var reText = '';
       for (var i = 0, length = list.length; i < length; i++) {
         if (reText.length > 0) {
-          reText += '|'
+          reText += '|';
         }
         reText += list[i].reText;
       }
@@ -200,10 +171,14 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         return;
       }
       var re = getRegex(siteList);
-      var f, m, text = element.nodeValue;
-      while (m = text.match(re)) {
+      var f;
+      var m;
+      var text = element.nodeValue;
+      while (m = text.match(re)) { // eslint-disable-line no-cond-assign
         // m[1]: head, m[2]: keyText
-        f || (f = document.createDocumentFragment());
+        if (!f) {
+          f = document.createDocumentFragment();
+        }
         if (m.index > 0 || m[1].length > 0) {
           f.appendChild(document.createTextNode(text.substr(0, m.index) + m[1]));
         }
@@ -216,28 +191,32 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         text = text.substr(m.index + m[0].length);
       }
       if (f) {
-        text.length > 0 && f.appendChild(document.createTextNode(text));
-        element.parentNode.replaceChild(f, element)
+        if (text.length > 0) {
+          f.appendChild(document.createTextNode(text));
+        }
+        element.parentNode.replaceChild(f, element);
       }
     }
-    var ignoreTags = ['A', 'INPUT', 'TEXTAREA', 'BUTTON',
-      'SCRIPT', 'FRAME', 'IFRAME'];
     function walkElement(element) {
       var e = element.firstChild;
       while (e) {
-        if (e.nodeType == 3 && e.nodeValue &&
+        if (e.nodeType === 3 && e.nodeValue &&
             e.nodeValue.length > 5 && /\S/.test(e.nodeValue)) {
           var next = e.nextSibling;
           makeTicketLink(e);
           e = next;
         } else {
-          if (e.nodeType == 1 && ignoreTags.indexOf(e.tagName) == -1) {
+          if (e.nodeType === 1 && ignoreTags.indexOf(e.tagName) === -1) {
             walkElement(e);
           }
           e = e.nextSibling;
         }
       }
     }
+    if (!Array.prototype.indexOf || !document.createDocumentFragment) {
+      return;
+    }
+    ticketSiteList = getSiteListFromBody();
     var target = document.getElementById('body');
     walkElement(target);
   }

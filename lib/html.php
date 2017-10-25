@@ -228,21 +228,17 @@ EOS;
 <div data-key="site-props" data-value="$props_json"></div>
 EOS;
 	// AutoTicketLink
-	$text = '';
+	$filtered_ticket_link_sites = array();
 	foreach ($ticket_link_sites as $s) {
 		if (!preg_match('/^([a-zA-Z0-9]+)([\.\-][a-zA-Z0-9]+)*$/', $s['key'])) {
 			continue;
 		}
-		$site_info_json = htmlsc(json_encode($s, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-		$text .= <<<EOS
-  <span class="ticketlink-site" data-site="$site_info_json"></span>
-EOS;
-		$text .= "\n";
+		array_push($filtered_ticket_link_sites, $s);
 	}
+	$h_ticket_link_sites = htmlsc(json_encode($filtered_ticket_link_sites,
+		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 	$ticketlink_data = <<<EOS
-<div class="ticketlink-def">
-$text
-</div>
+<input type="hidden" class="ticketlink-def" value="$h_ticket_link_sites" />
 EOS;
 	$data = <<<EOS
 <div id="pukiwiki-site-properties" style="display:none;">
