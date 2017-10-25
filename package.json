@@ -1,0 +1,22 @@
+{
+  "name": "pukiwiki",
+  "version": "1.0.0",
+  "description": "PukiWiki client JavaScript",
+  "main": "skin/main.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "eslint skin/main.js skin/search2.js"
+  },
+  "author": "umorigu",
+  "license": "GPL-2.0",
+  "devDependencies": {
+    "eslint": "*",
+    "eslint-config-airbnb": "*",
+    "eslint-plugin-import": "*",
+    "eslint-plugin-jsx-a11y": "*",
+    "eslint-plugin-react": "*"
+  }
+}
+
