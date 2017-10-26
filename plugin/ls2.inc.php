@@ -145,15 +145,20 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 
 	$anchor = PLUGIN_LS2_ANCHOR_ORIGIN;
 	$matches = array();
+	$is_title = $params['title'];
+	$is_include = $params['include'];
+	if (!$is_title && !$is_include) {
+		return;
+	}
 	foreach (get_source($page) as $line) {
-		if ($params['title'] && preg_match('/^(\*{1,3})/', $line, $matches)) {
+		if ($is_title && preg_match('/^(\*{1,3})/', $line, $matches)) {
 			$id    = make_heading($line);
 			$level = strlen($matches[1]);
 			$id    = PLUGIN_LS2_ANCHOR_PREFIX . $anchor++;
 			plugin_ls2_list_push($params, $level + strlen($level));
 			array_push($params['result'],
 				'<li><a href="' . $href . $id . '">' . $line . '</a>');
-		} else if ($params['include'] &&
+		} else if ($is_include &&
 			preg_match('/^#include\((.+)\)/', $line, $matches) &&
 			is_page($matches[1]))
 		{
