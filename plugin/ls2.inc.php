@@ -153,9 +153,9 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 	foreach (get_source($page) as $line) {
 		if ($is_title && preg_match('/^(\*{1,3})/', $line, $matches)) {
 			$id    = make_heading($line);
-			$level = strlen($matches[1]);
+			$heading_level = strlen($matches[1]);
 			$id    = PLUGIN_LS2_ANCHOR_PREFIX . $anchor++;
-			plugin_ls2_list_push($params, $level + strlen($level));
+			plugin_ls2_list_push($params, $level + $heading_level);
 			array_push($params['result'],
 				'<li><a href="' . $href . $id . '">' . $line . '</a>');
 		} else if ($is_include &&
