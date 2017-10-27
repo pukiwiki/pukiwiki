@@ -117,12 +117,13 @@ function plugin_ls2_show_lists($prefix, & $params)
 	}
 }
 
-function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
+function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE,
+	&$read_pages = array())
 {
 	static $_ls2_anchor = 0;
 
 	// ページが未表示のとき
-	$is_done = (isset($params["page_$page"]) && $params["page_$page"] > 0);
+	$is_done = isset($read_pages[$page]);
 	if (! $is_done) $params["page_$page"] = ++$_ls2_anchor;
 
 	$s_page = htmlsc($page);
@@ -132,7 +133,7 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 	plugin_ls2_list_push($params, $level);
 	$ret = $include ? '<li>include ' : '<li>';
 
-	if ($params['title'] && $is_done) {
+	if ($is_done) {
 		$ret .= '<a href="' . $href . '" title="' . $title . '">' . $s_page . '</a> ';
 		$ret .= '<a href="#list_' . $params["page_$page"] . '"><sup>&uarr;</sup></a>';
 		array_push($params['result'], $ret);
@@ -162,7 +163,11 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE)
 			preg_match('/^#include\((.+)\)/', $line, $matches) &&
 			is_page($matches[1]))
 		{
-			plugin_ls2_get_headings($matches[1], $params, $level + 1, TRUE);
+			$read_pages[$page] = 1;
+			$sub_page = $matches[1];
+			if (!isset($read_pages[$sub_page])) {
+				plugin_ls2_get_headings($sub_page, $params, $level + 1, TRUE, $read_pages);
+			}
 		}
 	}
 }
