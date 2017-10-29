@@ -755,7 +755,7 @@ function get_script_uri()
  * @param $initialize true if you initialize URI
  * @param $uri_set URI set manually
  */
-function pkwk_script_uri_base($uri_type, $initialize, $uri_set)
+function pkwk_script_uri_base($uri_type, $initialize = null, $uri_set = null)
 {
 	global $script_directory_index;
 	static $initialized = false;
@@ -848,7 +848,7 @@ function pkwk_base_uri_type_stack_peek()
  * @param $uri_type uri_type on push and non-peeking
  * @return $uri_type uri_type for peeking
  */
-function _pkwk_base_uri_type_stack($peek, $push, $uri_type)
+function _pkwk_base_uri_type_stack($peek, $push, $uri_type = null)
 {
 	static $uri_types = array();
 	if ($peek) {
