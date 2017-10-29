@@ -324,10 +324,8 @@ EOD;
 		} else {
 			$script = get_page_uri($page);
 		}
-
 		$id   = ++$note_id;
 		$note = make_link($body);
-		$page = isset($vars['page']) ? rawurlencode($vars['page']) : '';
 
 		// Footnote
 		$foot_explain[$id] = '<a id="notefoot_' . $id . '" href="' .
@@ -342,7 +340,7 @@ EOD;
 			$title = strip_tags($note);
 			$count = mb_strlen($title, SOURCE_ENCODING);
 			$title = mb_substr($title, 0, PKWK_FOOTNOTE_TITLE_MAX, SOURCE_ENCODING);
-			$abbr  = (mb_strlen($title) < $count) ? '...' : '';
+			$abbr  = (PKWK_FOOTNOTE_TITLE_MAX < $count) ? '...' : '';
 			$title = ' title="' . $title . $abbr . '"';
 		}
 		$name = '<a id="notetext_' . $id . '" href="' . $script .
