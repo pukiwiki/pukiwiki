@@ -660,7 +660,7 @@ function get_autolink_pattern(& $pages)
 			$auto_pages[] = $page;
 
 	if (empty($auto_pages)) {
-		$result = $result_a = $nowikiname ? '(?!)' : $WikiName;
+		$result = $result_a = '(?!)';
 	} else {
 		$auto_pages = array_unique($auto_pages);
 		sort($auto_pages, SORT_STRING);
