@@ -160,13 +160,24 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE,
 			array_push($params['result'],
 				'<li><a href="' . $href . $id . '">' . $line . '</a>');
 		} else if ($is_include &&
-			preg_match('/^#include\((.+)\)/', $line, $matches) &&
-			is_page($matches[1]))
-		{
-			$read_pages[$page] = 1;
-			$sub_page = $matches[1];
-			if (!isset($read_pages[$sub_page])) {
-				plugin_ls2_get_headings($sub_page, $params, $level + 1, TRUE, $read_pages);
+			preg_match('/^#include\((.+)\)/', $line, $matches)) {
+			$include_args = $matches[1];
+			$page2 = $include_args;
+			$m2 = null;
+			if (preg_match('#^(("([^"]+)")|([^",]+))#', $include_args, $m2)) {
+				if ($m2[3]) {
+					$page2 = $m2[3];
+				} else if ($m2[4]) {
+					$page2 = $m2[4];
+				}
+			}
+			$sub_page = get_fullname($page2, $page);
+			if (is_page($sub_page)) {
+				$read_pages[$page] = 1;
+				if (!isset($read_pages[$sub_page])) {
+					plugin_ls2_get_headings($sub_page, $params,
+						$level + 1, TRUE, $read_pages);
+				}
 			}
 		}
 	}
