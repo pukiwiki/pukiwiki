@@ -25,7 +25,7 @@ function plugin_rename_action()
 		if ($src == '') return plugin_rename_phase1();
 
 		$src_pattern = '/' . preg_quote($src, '/') . '/';
-		$arr0 = preg_grep($src_pattern, get_existpages());
+		$arr0 = preg_grep($src_pattern, plugin_rename_get_existpages());
 		if (! is_array($arr0) || empty($arr0))
 			return plugin_rename_phase1('nomatch');
 
@@ -45,7 +45,7 @@ function plugin_rename_action()
 		if ($refer == '') {
 			return plugin_rename_phase1();
 
-		} else if (! is_page($refer)) {
+		} else if (! plugin_rename_is_page($refer)) {
 			return plugin_rename_phase1('notpage', $refer);
 
 		} else if ($refer === $whatsnew) {
@@ -405,7 +405,7 @@ function plugin_rename_proceed($pages, $files, $exists)
 function plugin_rename_getrelated($page)
 {
 	$related = array();
-	$pages = get_existpages();
+	$pages = plugin_rename_get_existpages();
 	$pattern = '/(?:^|\/)' . preg_quote(strip_bracket($page), '/') . '(?:\/|$)/';
 	foreach ($pages as $name) {
 		if ($name === $page) continue;
@@ -419,7 +419,7 @@ function plugin_rename_getselecttag($page)
 	global $whatsnew;
 
 	$pages = array();
-	foreach (get_existpages() as $_page) {
+	foreach (plugin_rename_get_existpages() as $_page) {
 		if ($_page === $whatsnew) continue;
 
 		$selected = ($_page === $page) ? ' selected' : '';
@@ -437,4 +437,41 @@ function plugin_rename_getselecttag($page)
 </select>
 EOD;
 
+}
+
+/**
+ * List exist pages and deleted pages
+ */
+function plugin_rename_get_existpages() {
+	$list1 = array_values(get_existpages());
+	$list2 = array_values(get_existpages(DIFF_DIR, '.txt'));
+	$list3 = array_values(get_existpages(BACKUP_DIR, '.txt'));
+	$list4 = array_values(get_existpages(BACKUP_DIR, '.gz'));
+	$list5 = array_values(get_existpages(COUNTER_DIR, '.count'));
+	$wholelist = array_merge($list1, $list2, $list3, $list4, $list5);
+	$list = array_unique($wholelist);
+	return $list;
+}
+
+/**
+ * Return where the page exists or existed
+ */
+function plugin_rename_is_page($page) {
+	$enc = encode($page);
+	if (is_page($page)) {
+		return true;
+	}
+	if (file_exists(DIFF_DIR . $enc . '.txt')) {
+		return true;
+	}
+	if (file_exists(BACKUP_DIR . $enc . '.txt')) {
+		return true;
+	}
+	if (file_exists(BACKUP_DIR . $enc . '.gz')) {
+		return true;
+	}
+	if (file_exists(COUNTER_DIR . $enc . '.count')) {
+		return true;
+	}
+	return false;
 }
