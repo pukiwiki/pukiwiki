@@ -402,6 +402,7 @@ class Tracker_field_textarea extends Tracker_field
 		return $str;
 	}
 }
+
 class Tracker_field_format extends Tracker_field
 {
 	var $sort_type = SORT_STRING;
@@ -419,7 +420,7 @@ class Tracker_field_format extends Tracker_field
 
 		foreach ($this->config->get($this->name) as $option)
 		{
-			list($key,$style,$format) = array_pad(array_map(create_function('$a','return trim($a);'),$option),3,'');
+			list($key,$style,$format) = array_pad(array_map('trim',$option),3,'');
 			if ($style != '')
 			{
 				$this->styles[$key] = $style;
@@ -511,7 +512,8 @@ class Tracker_field_radio extends Tracker_field_format
 		static $options = array();
 		if (!array_key_exists($this->name,$options))
 		{
-			$options[$this->name] = array_flip(array_map(create_function('$arr','return $arr[0];'),$this->config->get($this->name)));
+			// 'reset' means function($arr) { return $arr[0]; }
+			$options[$this->name] = array_flip(array_map('reset',$this->config->get($this->name)));
 		}
 		return array_key_exists($value,$options[$this->name]) ? $options[$this->name][$value] : $value;
 	}

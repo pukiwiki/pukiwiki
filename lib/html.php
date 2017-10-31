@@ -166,28 +166,24 @@ function catbody($title, $page, $body)
 		arsort($keys, SORT_NUMERIC);
 		$keys = get_search_words(array_keys($keys), TRUE);
 		$id = 0;
+		$patterns = '';
 		foreach ($keys as $key=>$pattern) {
-			$s_key    = htmlsc($key);
-			$pattern  = '/' .
+			if (strlen($patterns) > 0) {
+				$patterns .= '|';
+			}
+			$patterns .= '(' . $pattern . ')';
+		}
+		if ($pattern) {
+			$whole_pattern  = '/' .
 				'<textarea[^>]*>.*?<\/textarea>' .	// Ignore textareas
 				'|' . '<[^>]*>' .			// Ignore tags
 				'|' . '&[^;]+;' .			// Ignore entities
-				'|' . '(' . $pattern . ')' .		// $matches[1]: Regex for a search word
+				'|' . '(' . $patterns . ')' .		// $matches[1]: Regex for a search word
 				'/sS';
-			$decorate_Nth_word = create_function(
-				'$matches',
-				'return (isset($matches[1])) ? ' .
-					'\'<strong class="word' .
-						$id .
-					'">\' . $matches[1] . \'</strong>\' : ' .
-					'$matches[0];'
-			);
-			$body  = preg_replace_callback($pattern, $decorate_Nth_word, $body);
-			$notes = preg_replace_callback($pattern, $decorate_Nth_word, $notes);
-			++$id;
+			$body  = preg_replace_callback($whole_pattern, '_decorate_Nth_word', $body);
+			$notes = preg_replace_callback($whole_pattern, '_decorate_Nth_word', $notes);
 		}
 	}
-
 	// Embed Scripting data
 	$html_scripting_data = get_html_scripting_data();
 
@@ -195,6 +191,26 @@ function catbody($title, $page, $body)
 	$taketime = elapsedtime();
 
 	require(SKIN_FILE);
+}
+
+function _decorate_Nth_word($matches)
+{
+	// $matches[0]: including both words to skip and to decorate
+	// $matches[1]: word to decorate
+	// $matches[2+]: indicates which keyword to decorate
+	$index = -1;
+	for ($i = 2; $i < count($matches); $i++) {
+		if (isset($matches[$i]) && $matches[$i]) {
+			$index = $i - 2;
+			break;
+		}
+	}
+	if (isset($matches[1])) {
+		// wordN highlight class: N=0...n
+		return '<strong class="word' . $index . '">' .
+			$matches[0] . '</strong>';
+	}
+	return $matches[0];
 }
 
 /**
@@ -264,7 +280,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 	if ($digest === FALSE) $digest = md5(join('', get_source($page)));
 
 	$refer = $template = '';
- 
+
  	// Add plugin
 	$addtag = $add_top = '';
 	if(isset($vars['add'])) {
@@ -441,6 +457,11 @@ function make_related($page, $tag = '')
 	return $retval;
 }
 
+function _convert_line_rule_to_regex($a)
+{
+	return '/' . $a . '/';
+}
+
 // User-defined rules (convert without replacing source)
 function make_line_rules($str)
 {
@@ -448,8 +469,7 @@ function make_line_rules($str)
 	static $pattern, $replace;
 
 	if (! isset($pattern)) {
-		$pattern = array_map(create_function('$a',
-			'return \'/\' . $a . \'/\';'), array_keys($line_rules));
+		$pattern = array_map('_convert_line_rule_to_regex', array_keys($line_rules));
 		$replace = array_values($line_rules);
 		unset($line_rules);
 	}

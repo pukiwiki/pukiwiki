@@ -30,16 +30,18 @@ class InlineConverter
 	var $result;
 
 	function get_clone($obj) {
-		static $clone_func;
-
-		if (! isset($clone_func)) {
+		static $clone_exists;
+		if (! isset($clone_exists)) {
 			if (version_compare(PHP_VERSION, '5.0.0', '<')) {
-				$clone_func = create_function('$a', 'return $a;');
+				$clone_exists = false;
 			} else {
-				$clone_func = create_function('$a', 'return clone $a;');
+				$clone_exists = true;
 			}
 		}
-		return $clone_func($obj);
+		if ($clone_exists) {
+			return clone ($obj);
+		}
+		return $obj;
 	}
 
 	function __clone() {
