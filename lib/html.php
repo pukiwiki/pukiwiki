@@ -218,7 +218,7 @@ function _decorate_Nth_word($matches)
  */
 function get_html_scripting_data()
 {
-	global $ticket_link_sites;
+	global $ticket_link_sites, $plugin;
 	if (!isset($ticket_link_sites) || !is_array($ticket_link_sites)) {
 		return '';
 	}
@@ -243,6 +243,11 @@ EOS;
 	$site_props = <<<EOS
 <div data-key="site-props" data-value="$props_json"></div>
 EOS;
+	$h_plugin = htmlsc($plugin);
+	$plugin_prop = <<<EOS
+<input type="hidden" class="plugin-name" value="$h_plugin" />
+EOS;
+
 	// AutoTicketLink
 	$filtered_ticket_link_sites = array();
 	foreach ($ticket_link_sites as $s) {
@@ -259,6 +264,7 @@ EOS;
 	$data = <<<EOS
 <div id="pukiwiki-site-properties" style="display:none;">
 $site_props
+$plugin_prop
 $ticketlink_data
 </div>
 EOS;
@@ -273,6 +279,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 	global $whatsnew, $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
 	global $_title_list, $_label_template_pages;
+	global $_msg_edit_cancel_confirm, $_msg_edit_unloadbefore_message;
 	global $rule_page;
 
 	$script = get_base_uri();
@@ -381,14 +388,18 @@ EOD;
 
 	// 'margin-bottom', 'float:left', and 'margin-top'
 	// are for layout of 'cancel button'
+	$h_msg_edit_cancel_confirm = htmlsc($_msg_edit_cancel_confirm);
+	$h_msg_edit_unloadbefore_message = htmlsc($_msg_edit_unloadbefore_message);
 	$body = <<<EOD
 <div class="edit_form">
- <form action="$script" method="post" style="margin-bottom:0px;">
+ <form action="$script" method="post" class="_plugin_edit_edit_form" style="margin-bottom:0px;">
 $template
   $addtag
   <input type="hidden" name="cmd"    value="edit" />
   <input type="hidden" name="page"   value="$s_page" />
   <input type="hidden" name="digest" value="$s_digest" />
+  <input type="hidden" id="_msg_edit_cancel_confirm" value="$h_msg_edit_cancel_confirm" />
+  <input type="hidden" id="_msg_edit_unloadbefore_message" value="$h_msg_edit_unloadbefore_message" />
   <textarea name="msg" rows="$rows" cols="$cols">$s_postdata</textarea>
   <br />
   <div style="float:left;">
@@ -399,7 +410,7 @@ $template
   </div>
   <textarea name="original" rows="1" cols="1" style="display:none">$s_original</textarea>
  </form>
- <form action="$script" method="post" style="margin-top:0px;">
+ <form action="$script" method="post" class="_plugin_edit_cancel" style="margin-top:0px;">
   <input type="hidden" name="cmd"    value="edit" />
   <input type="hidden" name="page"   value="$s_page" />
   <input type="submit" name="cancel" value="$_btn_cancel" accesskey="c" />

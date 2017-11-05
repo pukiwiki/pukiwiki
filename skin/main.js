@@ -220,6 +220,63 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
     var target = document.getElementById('body');
     walkElement(target);
   }
+  function confirmEditFormLeaving() {
+    function trim(s) {
+      if (typeof s !== 'string') {
+        return s;
+      }
+      return s.replace(/^\s+|\s+$/g, '');
+    }
+    if (!document.querySelector) return;
+    var canceled = false;
+    var pluginNameE = document.querySelector('#pukiwiki-site-properties .plugin-name');
+    if (!pluginNameE) return;
+    var originalText = null;
+    if (pluginNameE.value !== 'edit') return;
+    var editForm = document.querySelector('.edit_form form._plugin_edit_edit_form');
+    if (!editForm) return;
+    var cancelMsgE = editForm.querySelector('#_msg_edit_cancel_confirm');
+    var unloadBeforeMsgE = editForm.querySelector('#_msg_edit_unloadbefore_message');
+    var textArea = editForm.querySelector('textarea[name="msg"]');
+    if (!textArea) return;
+    originalText = textArea.value;
+    var cancelForm = document.querySelector('.edit_form form._plugin_edit_cancel');
+    var submited = false;
+    editForm.addEventListener('submit', function() {
+      canceled = false;
+      submited = true;
+    });
+    cancelForm.addEventListener('submit', function(e) {
+      submited = false;
+      canceled = false;
+      if (trim(textArea.value) === trim(originalText)) {
+        canceled = true;
+        return false;
+      }
+      var message = 'The text you have entered will be discarded. Is it OK?';
+      if (cancelMsgE && cancelMsgE.value) {
+        message = cancelMsgE.value;
+      }
+      if (window.confirm(message)) { // eslint-disable-line no-alert
+        // Execute "Cancel"
+        canceled = true;
+        return true;
+      }
+      e.preventDefault();
+      return false;
+    });
+    window.addEventListener('beforeunload', function(e) {
+      if (canceled) return;
+      if (submited) return;
+      if (trim(textArea.value) === trim(originalText)) return;
+      var message = 'Data you have entered will not be saved.';
+      if (unloadBeforeMsgE && unloadBeforeMsgE.value) {
+        message = unloadBeforeMsgE.value;
+      }
+      e.returnValue = message;
+    }, false);
+  }
   setYourName();
   autoTicketLink();
+  confirmEditFormLeaving();
 });
