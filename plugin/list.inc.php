@@ -1,6 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: list.inc.php,v 1.6 2006/05/13 07:36:41 henoheno Exp $
+// list.inc.php
+// Copyright 2003-2017 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
 //
 // IndexPages plugin: Show a list of page names
 
@@ -9,7 +11,7 @@ function plugin_list_action()
 	global $vars, $_title_list, $_title_filelist, $whatsnew;
 
 	// Redirected from filelist plugin?
-	$filelist = (isset($vars['cmd']) && $vars['cmd'] == 'filelist');
+	$filelist = (isset($vars['cmd']) && $vars['cmd'] === 'filelist');
 
 	return array(
 		'msg'=>$filelist ? $_title_filelist : $_title_list,
@@ -28,4 +30,3 @@ function plugin_list_getlist($withfilename = FALSE)
 
 	return page_list($pages, 'read', $withfilename);
 }
-?>

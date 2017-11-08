@@ -388,6 +388,9 @@ div#related {
   padding:0px;
   margin:16px 0px 0px 0px;
 }
+div#related .page_passage {
+  font-size:60%;
+}
 
 div#footer {
   font-size:70%;
@@ -415,6 +418,11 @@ img#logo {
 .anchor_super {
   font-size:xx-small;
   vertical-align:super;
+}
+
+/* list.inc.php */
+.page_passage {
+  font-size: small;
 }
 
 /* br.inc.php */

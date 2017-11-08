@@ -132,21 +132,24 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE,
 	if (! $is_done) $params["page_$page"] = ++$_ls2_anchor;
 
 	$s_page = htmlsc($page);
-	$title  = $s_page . ' ' . get_pg_passage($page, FALSE);
+	$attrs = get_page_link_a_attrs($page);
 	$href   = get_page_uri($page);
 
 	plugin_ls2_list_push($params, $level);
 	$ret = $include ? '<li>include ' : '<li>';
 
 	if ($is_done) {
-		$ret .= '<a href="' . $href . '" title="' . $title . '">' . $s_page . '</a> ';
+		$ret .= '<a href="' . $href . '" class="' .
+			$attrs['class'] . '" data-mtime="' . $attrs['data_mtime'] .
+			'">' . $s_page . '</a> ';
 		$ret .= '<a href="#list_' . $params["page_$page"] . '"><sup>&uarr;</sup></a>';
 		array_push($params['result'], $ret);
 		return;
 	}
 
 	$ret .= '<a id="list_' . $params["page_$page"] . '" href="' . $href .
-		'" title="' . $title . '">' . $s_page . '</a>';
+		'" class="' . $attrs['class'] . '" data-mtime="' .
+		$attrs['data_mtime'] . '">' . $s_page . '</a>';
 	array_push($params['result'], $ret);
 
 	$anchor = PLUGIN_LS2_ANCHOR_ORIGIN;

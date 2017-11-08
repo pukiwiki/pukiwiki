@@ -117,7 +117,7 @@ function catbody($title, $page, $body)
 
 	// Last modification date (string) of the page
 	$lastmodified = $is_read ?  format_date(get_filetime($_page)) .
-		' ' . get_pg_passage($_page, FALSE) : '';
+		get_passage_html_span($_page) : '';
 
 	// List of attached files to the page
 	$show_attaches = $is_read || arg_check('edit');
@@ -442,15 +442,18 @@ function make_related($page, $tag = '')
 	$_links = array();
 	foreach ($links as $page=>$lastmod) {
 		if (check_non_list($page)) continue;
-
 		$page_uri = get_page_uri($page);
 		$s_page   = htmlsc($page);
-		$passage  = get_passage($lastmod);
-		$_links[] = $tag ?
-			'<a href="' . $page_uri . '" title="' .
-			$s_page . ' ' . $passage . '">' . $s_page . '</a>' :
-			'<a href="' . $page_uri . '">' .
-			$s_page . '</a>' . $passage;
+		if ($tag) {
+			$attrs = get_page_link_a_attrs($page);
+			$_links[] = '<a href="' . $page_uri . '" class="' .
+				$attrs['class'] . '" data-mtime="' . $attrs['data_mtime'] .
+				'">' . $s_page . '</a>';
+		} else {
+			$mtime_span = get_passage_mtime_html_span($lastmod + LOCALZONE);
+			$_links[] = '<a href="' . $page_uri . '">' .
+			$s_page . '</a>' . $mtime_span;
+		}
 	}
 	if (empty($_links)) return ''; // Nothing
 

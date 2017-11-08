@@ -303,6 +303,53 @@ function get_search_words($words = array(), $do_escape = FALSE)
 	return $regex; // For all words
 }
 
+function get_passage_date_html_span($date_atom)
+{
+	return '<span class="page_passage" data-mtime="' . $date_atom . '"></span>';
+}
+
+function get_passage_mtime_html_span($mtime)
+{
+	$date_atom = get_date_atom($mtime);
+	return get_passage_date_html_span($date_atom);
+}
+
+/**
+ * Get passage span html
+ *
+ * @param $page
+ */
+function get_passage_html_span($page)
+{
+	$date_atom = get_page_date_atom($page);
+	return get_passage_date_html_span($date_atom);
+}
+
+function get_link_passage_class() {
+	return 'link_page_passage';
+}
+
+/**
+ * Get page link general attributes
+ * @param $page
+ * @return array('data_mtime' => page mtime or null, 'class' => additinal classes)
+ */
+function get_page_link_a_attrs($page)
+{
+	global $show_passage;
+	if ($show_passage) {
+		$pagemtime = get_page_date_atom($page);
+		return array(
+			'data_mtime' => $pagemtime,
+			'class' => get_link_passage_class(),
+		);
+	}
+	return array(
+		'data_mtime' => '',
+		'class' => ''
+	);
+}
+
 // 'Search' main function
 function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 {
@@ -372,7 +419,7 @@ function do_search($word, $type = 'AND', $non_format = FALSE, $base = '')
 	foreach (array_keys($pages) as $page) {
 		$r_page  = rawurlencode($page);
 		$s_page  = htmlsc($page);
-		$passage = $show_passage ? ' ' . get_passage(get_filetime($page)) : '';
+		$passage = $show_passage ? ' ' . get_passage_html_span($page) : '';
 		$retval .= ' <li><a href="' . get_base_uri() . '?cmd=read&amp;page=' .
 			$r_page . '&amp;word=' . $r_word . '">' . $s_page .
 			'</a>' . $passage . '</li>' . "\n";
@@ -469,11 +516,8 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 	foreach($pages as $file=>$page) {
 		$r_page  = pagename_urlencode($page);
 		$s_page  = htmlsc($page, ENT_QUOTES);
-		$passage = get_pg_passage($page);
-
 		$str = '   <li><a href="' . $href . $r_page . '">' .
-			$s_page . '</a>' . $passage;
-
+			$s_page . '</a>' . get_passage_html_span($page);
 		if ($withfilename) {
 			$s_file = htmlsc($file);
 			$str .= "\n" . '    <ul><li>' . $s_file . '</li></ul>' .
@@ -496,7 +540,6 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 			$head = (preg_match('/^([A-Za-z])/', $page, $matches)) ? strtoupper($matches[1]) :
 				(preg_match('/^([ -~])/', $page) ? $symbol : $other);
 		}
-
 		$list[$head][$page] = $str;
 	}
 	uksort($pages, 'strnatcmp');
@@ -622,6 +665,18 @@ function format_date($val, $paren = FALSE)
 		date($time_format, $val);
 
 	return $paren ? '(' . $date . ')' : $date;
+}
+
+/**
+ * Format date in DATE_ATOM format.
+ */
+function get_date_atom($timestamp)
+{
+	// Compatible with DATE_ATOM format
+	// return date(DATE_ATOM, $timestamp);
+	$zmin = abs(LOCALZONE / 60);
+	return date('Y-m-d\TH:i:s', $timestamp) . sprintf('%s%02d:%02d',
+		(LOCALZONE < 0 ? '-' : '+') , $zmin / 60, $zmin % 60);
 }
 
 // Get short string of the passage, 'N seconds/minutes/hours/days/years ago'

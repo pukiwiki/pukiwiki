@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: related.inc.php,v 1.11 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C) 2005, 2007 PukiWiki Developers Team
+// related.inc.php
+// Copyright 2005-2017 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Related plugin: Show Backlinks for the page
@@ -16,7 +16,7 @@ function plugin_related_convert()
 // Show Backlinks: via related caches for the page
 function plugin_related_action()
 {
-	global $vars, $script, $defaultpage, $whatsnew;
+	global $vars, $defaultpage, $whatsnew;
 
 	$_page = isset($vars['page']) ? $vars['page'] : '';
 	if ($_page == '') $_page = $defaultpage;
@@ -30,14 +30,11 @@ function plugin_related_action()
 			    check_non_list($page))
 				unset($data[$page]);
 	}
-
 	// Result
-	$r_word = pagename_urlencode($_page);
 	$s_word = htmlsc($_page);
 	$msg = 'Backlinks for: ' . $s_word;
-	$retval  = '<a href="' . $script . '?' . $r_word . '">' .
+	$retval  = '<a href="' . get_page_uri($_page) . '">' .
 		'Return to ' . $s_word .'</a><br />'. "\n";
-
 	if (empty($data)) {
 		$retval .= '<ul><li>No related pages found.</li></ul>' . "\n";	
 	} else {
@@ -45,14 +42,12 @@ function plugin_related_action()
 		ksort($data, SORT_STRING);
 		$retval .= '<ul>' . "\n";
 		foreach ($data as $page=>$time) {
-			$r_page  = pagename_urlencode($page);
 			$s_page  = htmlsc($page);
-			$passage = get_passage($time);
-			$retval .= ' <li><a href="' . $script . '?' . $r_page . '">' . $s_page .
-				'</a> ' . $passage . '</li>' . "\n";
+			$mtime_span = get_passage_mtime_html_span($time + LOCALZONE);
+			$retval .= ' <li><a href="' . get_page_uri($page) . '">' . $s_page .
+				'</a>' . $mtime_span . '</li>' . "\n";
 		}
 		$retval .= '</ul>' . "\n";
 	}
 	return array('msg'=>$msg, 'body'=>$retval);
 }
-

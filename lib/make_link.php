@@ -768,12 +768,7 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolin
 
 	if ($isautolink || is_page($page)) {
 		// Hyperlink to the page
-		if ($link_compact) {
-			$title   = '';
-		} else {
-			$title   = ' title="' . $s_page . get_pg_passage($page, FALSE) . '"';
-		}
-
+		$attrs = get_page_link_a_attrs($page);
 		// AutoLink marker
 		if ($isautolink) {
 			$al_left  = '<!--autolink-->';
@@ -781,9 +776,14 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolin
 		} else {
 			$al_left = $al_right = '';
 		}
-
+		$title_attr_html = '';
+		if ($s_page !== $s_alias) {
+			$title_attr_html = ' title="' . $s_page . '"';
+		}
 		return $al_left . '<a ' . 'href="' . $script . '?' . $r_page . $anchor .
-			'"' . $title . '>' . $s_alias . '</a>' . $al_right;
+			'"' . $title_attr_html . ' class="' .
+			$attrs['class'] . '" data-mtime="' . $attrs['data_mtime'] .
+			'">' . $s_alias . '</a>' . $al_right;
 	} else {
 		// Support Page redirection
 		$redirect_page = get_pagename_on_redirect($page);

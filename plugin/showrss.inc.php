@@ -94,9 +94,10 @@ class ShowRSS_html
 			foreach ($items as $item) {
 				$link  = $item['LINK'];
 				$title = $item['TITLE'];
-				$passage = get_passage($item['_TIMESTAMP']);
-				$link = '<a href="' . $link . '" title="' .  $title . ' ' .
-					$passage . '" rel="nofollow">' . $title . '</a>';
+				$date = get_date_atom($item['_TIMESTAMP'] + LOCALZONE);
+				$link = '<a href="' . $link . '" data-mtime="' .
+					 $date . '" class="' . get_link_passage_class() .
+					 '" rel="nofollow">' . $title . '</a>';
 				$this->items[$date][] = $this->format_link($link);
 			}
 		}

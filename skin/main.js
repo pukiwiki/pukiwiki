@@ -6,6 +6,19 @@
 // PukiWiki JavaScript client script
 window.addEventListener && window.addEventListener('DOMContentLoaded', function() { // eslint-disable-line no-unused-expressions
   'use strict';
+  /**
+   * @param {NodeList} nodeList
+   * @param {function(Node, number): void} func
+   */
+  function forEach(nodeList, func) {
+    if (nodeList.forEach) {
+      nodeList.forEach(func);
+    } else {
+      for (var i = 0, n = nodeList.length; i < n; i++) {
+        func(nodeList[i], i);
+      }
+    }
+  }
   // Name for comment
   function setYourName() {
     var NAME_KEY_ID = 'pukiwiki_comment_plugin_name';
@@ -276,7 +289,51 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       e.returnValue = message;
     }, false);
   }
+  function showPagePassage() {
+    /**
+     * @param {Date} now
+     * @param {string} dateText
+     */
+    function getPassage(dateText, now) {
+      if (!dateText) {
+        return '';
+      }
+      var units = [{u: 'm', max: 60}, {u: 'h', max: 24}, {u: 'd', max: 1}];
+      var d = new Date();
+      d.setTime(Date.parse(dateText));
+      var t = (now.getTime() - d.getTime()) / (1000 * 60); // minutes
+      var unit = units[0].u; var card = units[0].max;
+      for (var i = 0; i < units.length; i++) {
+        unit = units[i].u; card = units[i].max;
+        if (t < card) break;
+        t = t / card;
+      }
+      return '(' + Math.floor(t) + unit + ')';
+    }
+    var now = new Date();
+    var elements = document.getElementsByClassName('page_passage');
+    forEach(elements, function(e) {
+      var dt = e.getAttribute('data-mtime');
+      if (dt) {
+        var d = new Date(dt);
+        e.textContent = ' ' + getPassage(d, now);
+      }
+    });
+    var links = document.getElementsByClassName('link_page_passage');
+    forEach(links, function(e) {
+      var dt = e.getAttribute('data-mtime');
+      if (dt) {
+        var d = new Date(dt);
+        if (e.title) {
+          e.title = e.title + ' ' + getPassage(d, now);
+        } else {
+          e.title = e.textContent + ' ' + getPassage(d, now);
+        }
+      }
+    });
+  }
   setYourName();
   autoTicketLink();
   confirmEditFormLeaving();
+  showPagePassage();
 });

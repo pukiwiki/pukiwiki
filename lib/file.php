@@ -82,6 +82,19 @@ function get_filetime($page)
 	return is_page($page) ? filemtime(get_filename($page)) - LOCALZONE : 0;
 }
 
+/**
+ * Get last-modified filemtime (plain value) of the page.
+ *
+ * @param $page
+ */
+function get_page_date_atom($page)
+{
+	if (is_page($page)) {
+		return get_date_atom(filemtime(get_filename($page)));
+	}
+	return null;
+}
+
 // Get physical file name of the page
 function get_filename($page)
 {
@@ -277,15 +290,6 @@ function get_update_datetime_from_author($author_line) {
 		}
 	}
 	return null;
-}
-
-function get_date_atom($timestamp)
-{
-	// Compatible with DATE_ATOM format
-	// return date(DATE_ATOM, $timestamp);
-	$zmin = abs(LOCALZONE / 60);
-	return date('Y-m-d\TH:i:s', $timestamp) . sprintf('%s%02d:%02d',
-		(LOCALZONE < 0 ? '-' : '+') , $zmin / 60, $zmin % 60);
 }
 
 // Generate ID

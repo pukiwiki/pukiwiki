@@ -25,7 +25,7 @@ define('PLUGIN_RECENT_CACHE', CACHE_DIR . 'recent.dat');
 
 function plugin_recent_convert()
 {
-	global $vars, $date_format, $_recent_plugin_frame, $show_passage;
+	global $vars, $date_format, $_recent_plugin_frame;
 	static $exec_count = 1;
 
 	$recent_lines = PLUGIN_RECENT_DEFAULT_LINES;
@@ -76,9 +76,10 @@ function plugin_recent_convert()
 			// No need to link to the page you just read, or notify where you just read
 			$items .= ' <li>' . $s_page . '</li>' . "\n";
 		} else {
-			$passage = $show_passage ? ' ' . get_passage($time) : '';
-			$items .= ' <li><a href="' . get_page_uri($page) . '"' .
-				' title="' . $s_page . $passage . '">' . $s_page . '</a></li>' . "\n";
+			$attrs = get_page_link_a_attrs($page);
+			$items .= ' <li><a href="' . get_page_uri($page) . '" class="' .
+				$attrs['class'] . '" data-mtime="' . $attrs['data_mtime'] .
+				'">' . $s_page . '</a></li>' . "\n";
 		}
 	}
 	// End of the day
