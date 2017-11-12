@@ -617,7 +617,7 @@ class Tracker_field_past extends Tracker_field
 
 	function format_cell($timestamp)
 	{
-		return get_passage($timestamp,FALSE);
+		return '&passage("' . get_date_atom($timestamp + LOCALZONE) . '");';
 	}
 	function get_value($value)
 	{

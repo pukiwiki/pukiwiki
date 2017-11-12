@@ -294,7 +294,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
      * @param {Date} now
      * @param {string} dateText
      */
-    function getPassage(dateText, now) {
+    function getSimplePassage(dateText, now) {
       if (!dateText) {
         return '';
       }
@@ -308,7 +308,14 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         if (t < card) break;
         t = t / card;
       }
-      return '(' + Math.floor(t) + unit + ')';
+      return '' + Math.floor(t) + unit;
+    }
+    /**
+     * @param {Date} now
+     * @param {string} dateText
+     */
+    function getPassage(dateText, now) {
+      return '(' + getSimplePassage(dateText, now) + ')';
     }
     var now = new Date();
     var elements = document.getElementsByClassName('page_passage');
@@ -329,6 +336,14 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         } else {
           e.title = e.textContent + ' ' + getPassage(d, now);
         }
+      }
+    });
+    var simplePassages = document.getElementsByClassName('simple_passage');
+    forEach(simplePassages, function(e) {
+      var dt = e.getAttribute('data-mtime');
+      if (dt) {
+        var d = new Date(dt);
+        e.textContent = getSimplePassage(d, now);
       }
     });
   }
