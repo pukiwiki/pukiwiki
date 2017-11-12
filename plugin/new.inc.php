@@ -15,18 +15,9 @@
 
 define('PLUGIN_NEW_DATE_FORMAT', '<span class="comment_date">%s</span>');
 
-function plugin_new_init()
-{
-	// Elapsed time => New! message with CSS
-	$messages['_plugin_new_elapses'] = array(
-		60 * 60 * 24 * 1 => ' <span class="new1" title="%s">New!</span>',  // 1day
-		60 * 60 * 24 * 5 => ' <span class="new5" title="%s">New</span>');  // 5days
-	set_plugin_messages($messages);
-}
-
 function plugin_new_inline()
 {
-	global $vars, $_plugin_new_elapses;
+	global $vars;
 
 	$retval = '';
 	$args = func_get_args();
@@ -83,17 +74,10 @@ function plugin_new_inline()
 			}
 		}
 	}
-
-	// Add 'New!' string by the elapsed time
-	$erapse = UTIME - $timestamp;
-	foreach ($_plugin_new_elapses as $limit=>$tag) {
-		if ($erapse <= $limit) {
-			$retval .= sprintf($tag, get_passage($timestamp));
-			break;
-		}
-	}
-
 	if($date !== '') {
+		// 1 day hot: <span class="new1">New!</span>
+		// 5 days hot: <span class="new5">New</span>
+		$retval .= '<span class="__plugin_new" data-mtime="' . get_date_atom($timestamp + LOCALZONE) . '"></span>';
 		// Show a date string
 		return sprintf(PLUGIN_NEW_DATE_FORMAT, $retval);
 	} else {

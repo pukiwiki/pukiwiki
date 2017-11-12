@@ -346,6 +346,29 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         e.textContent = getSimplePassage(d, now);
       }
     });
+    // new plugin
+    var newItems = document.getElementsByClassName('__plugin_new');
+    forEach(newItems, function(e) {
+      var dt = e.getAttribute('data-mtime');
+      if (dt) {
+        var d = new Date(dt);
+        var diff = now.getTime() - d.getTime();
+        var daySpan = diff / 1000 / 60 / 60 / 24;
+        if (daySpan < 1) {
+          e.textContent = ' New!';
+          e.title = getPassage(d, now);
+          if (e.classList && e.classList.add) {
+            e.classList.add('new1');
+          }
+        } else if (daySpan < 5) {
+          e.textContent = ' New';
+          e.title = getPassage(d, now);
+          if (e.classList && e.classList.add) {
+            e.classList.add('new5');
+          }
+        }
+      }
+    });
   }
   setYourName();
   autoTicketLink();
