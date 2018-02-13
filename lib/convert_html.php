@@ -681,7 +681,7 @@ class Table extends Element
 				$row_string = '';
 				foreach (array_keys($row) as $ncol)
 					$row_string .= $row[$ncol]->toString();
-				$part_string .= $this->wrap($row_string, 'tr');
+				$part_string .= $this->wrap($row_string, 'tr') . "\n";
 			}
 			$string .= $this->wrap($part_string, $part);
 		}
