@@ -2,11 +2,28 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // make_link.php
 // Copyright
-//   2003-2017 PukiWiki Development Team
+//   2003-2018 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
 // Hyperlink-related functions
+
+// To get page exists or filetimes without accessing filesystem
+// Type: array (page => filetime)
+$_cached_page_filetime = null;
+
+// Get filetime from cache
+function fast_get_filetime($page)
+{
+	global $_cached_page_filetime;
+	if (is_null($_cached_page_filetime)) {
+		return get_filetime($page);
+	}
+	if (isset($_cached_page_filetime[$page])) {
+		return $_cached_page_filetime[$page];
+	}
+	return get_filetime($page);
+}
 
 // Hyperlink decoration
 function make_link($string, $page = '')
@@ -763,12 +780,14 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolin
 	$r_page  = pagename_urlencode($page);
 	$r_refer = ($refer == '') ? '' : '&amp;refer=' . rawurlencode($refer);
 
-	if (! isset($related[$page]) && $page !== $vars['page'] && is_page($page))
-		$related[$page] = get_filetime($page);
+	$page_filetime = fast_get_filetime($page);
+	$is_page = $page_filetime !== 0;
+	if (! isset($related[$page]) && $page !== $vars['page'] && is_page)
+		$related[$page] = $page_filetime;
 
-	if ($isautolink || is_page($page)) {
+	if ($isautolink || $is_page) {
 		// Hyperlink to the page
-		$attrs = get_page_link_a_attrs($page);
+		$attrs = get_filetime_a_attrs($page_filetime);
 		// AutoLink marker
 		if ($isautolink) {
 			$al_left  = '<!--autolink-->';

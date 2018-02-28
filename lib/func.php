@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // func.php
 // Copyright
-//   2002-2017 PukiWiki Development Team
+//   2002-2018 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -339,6 +339,27 @@ function get_page_link_a_attrs($page)
 	global $show_passage;
 	if ($show_passage) {
 		$pagemtime = get_page_date_atom($page);
+		return array(
+			'data_mtime' => $pagemtime,
+			'class' => get_link_passage_class(),
+		);
+	}
+	return array(
+		'data_mtime' => '',
+		'class' => ''
+	);
+}
+
+/**
+ * Get page link general attributes from filetime
+ * @param $filetime
+ * @return array('data_mtime' => page mtime or null, 'class' => additinal classes)
+ */
+function get_filetime_a_attrs($filetime)
+{
+	global $show_passage;
+	if ($show_passage) {
+		$pagemtime = get_date_atom($filetime + LOCALZONE);
 		return array(
 			'data_mtime' => $pagemtime,
 			'class' => get_link_passage_class(),
