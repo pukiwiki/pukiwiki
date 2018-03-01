@@ -221,36 +221,6 @@ function plugin_tracker_get_page_list($page, $needs_filetime) {
 	return $page_list;
 }
 
-
-/*
-function plugin_tracker_inline()
-{
-	global $vars;
-
-	if (PKWK_READONLY) return ''; // Show nothing
-
-	$args = func_get_args();
-	if (count($args) < 3)
-	{
-		return FALSE;
-	}
-	$body = array_pop($args);
-	list($config_name,$field) = $args;
-
-	$config = new Config('plugin/tracker/'.$config_name);
-
-	if (!$config->read())
-	{
-		return "config file '".htmlsc($config_name)."' not found.";
-	}
-
-	$config->config_name = $config_name;
-
-	$fields = plugin_tracker_get_fields($vars['page'],$vars['page'],$config);
-	$fields[$field]->default_value = $body;
-	return $fields[$field]->get_tag();
-}
-*/
 // フィールドオブジェクトを構築する
 function plugin_tracker_get_fields($base,$refer,&$config)
 {
@@ -703,7 +673,13 @@ function plugin_tracker_getlist($page,$refer,$config_name,$list,$order='',$limit
 
 	$cache_enabled = defined('TRACKER_LIST_USE_CACHE') && TRACKER_LIST_USE_CACHE &&
 		defined('JSON_UNESCAPED_UNICODE') && defined('PKWK_UTF8_ENABLE');
-	$cache_filepath = CACHE_DIR . encode($page) . '.tracker';
+	if (is_null($limit)) {
+		$cache_filepath = CACHE_DIR . encode($page) . '.tracker';
+	} else if (pkwk_ctype_digit($limit) && 0 < $limit && $limit <= 1000) {
+		$cache_filepath = CACHE_DIR . encode($page) . '.' . $limit . '.tracker';
+	} else {
+		$cache_enabled = false;
+	}
 	$cachedata = null;
 	$cache_format_version = 1;
 	if ($cache_enabled) {
