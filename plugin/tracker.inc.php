@@ -602,20 +602,29 @@ class Tracker_field_past extends Tracker_field
 function plugin_tracker_list_convert()
 {
 	global $vars, $_title_cannotread;
-
 	$config = 'default';
 	$page = $refer = $vars['page'];
 	$field = '_page';
 	$order = '';
 	$list = 'list';
 	$limit = NULL;
+	$start_n = NULL;
+	$last_n = NULL;
 	if (func_num_args())
 	{
 		$args = func_get_args();
 		switch (count($args))
 		{
 			case 4:
-				$limit = is_numeric($args[3]) ? $args[3] : $limit;
+				$range_m = null;
+				if (is_numeric($args[3])) {
+					$limit = $args[3];
+				} else {
+					if (preg_match('#^(\d+)-(\d+)$#', $args[3], $range_m)) {
+						$start_n = intval($range_m[1]);
+						$last_n = intval($range_m[2]);
+					}
+				}
 			case 3:
 				$order = $args[2];
 			case 2:
@@ -630,7 +639,7 @@ function plugin_tracker_list_convert()
 		$body = str_replace('$1', htmlsc($page), $_title_cannotread);
 		return $body;
 	}
-	return plugin_tracker_getlist($page,$refer,$config,$list,$order,$limit);
+	return plugin_tracker_getlist($page,$refer,$config,$list,$order,$limit,$start_n,$last_n);
 }
 function plugin_tracker_list_action()
 {
@@ -655,10 +664,9 @@ function plugin_tracker_list_action()
 			plugin_tracker_getlist($page,$refer,$config,$list,$order)
 	);
 }
-function plugin_tracker_getlist($page,$refer,$config_name,$list,$order='',$limit=NULL)
+function plugin_tracker_getlist($page,$refer,$config_name,$list,$order='',$limit=NULL,$start_n=NULL,$last_n=NULL)
 {
 	global $whatsdeleted;
-
 	$config = new Config('plugin/tracker/'.$config_name);
 	if (!$config->read())
 	{
@@ -670,13 +678,14 @@ function plugin_tracker_getlist($page,$refer,$config_name,$list,$order='',$limit
 	{
 		return "<p>config file '".make_pagelink($config->page.'/'.$list)."' not found.</p>";
 	}
-
 	$cache_enabled = defined('TRACKER_LIST_USE_CACHE') && TRACKER_LIST_USE_CACHE &&
 		defined('JSON_UNESCAPED_UNICODE') && defined('PKWK_UTF8_ENABLE');
-	if (is_null($limit)) {
+	if (is_null($limit) && is_null($start_n)) {
 		$cache_filepath = CACHE_DIR . encode($page) . '.tracker';
 	} else if (pkwk_ctype_digit($limit) && 0 < $limit && $limit <= 1000) {
 		$cache_filepath = CACHE_DIR . encode($page) . '.' . $limit . '.tracker';
+	} else if (!is_null($start_n) && !is_null($last_n)) {
+		$cache_filepath = CACHE_DIR . encode($page) . '.' . $start_n . '-' . $last_n . '.tracker';
 	} else {
 		$cache_enabled = false;
 	}
@@ -728,11 +737,12 @@ function plugin_tracker_getlist($page,$refer,$config_name,$list,$order='',$limit
 	if ($order === $cache_holder['order'] &&
 		empty($tracker_list->newly_deleted_pages) &&
 		empty($tracker_list->newly_updated_pages) &&
-		!$tracker_list->link_update_required) {
+		!$tracker_list->link_update_required &&
+		is_null($start_n) && is_null($last_n)) {
 		$result = $cache_holder['html'];
 	} else {
 		$tracker_list->sort($order);
-		$result = $tracker_list->toString($limit);
+		$result = $tracker_list->toString($limit,$start_n,$last_n);
 	}
 	if ($cache_enabled) {
 		$refreshed_at = time();
@@ -1172,7 +1182,7 @@ class Tracker_list
 		$script = get_base_uri(PKWK_URI_ABSOLUTE);
 		return "[[$title$arrow>$script?plugin=tracker_list&refer=$r_page&config=$r_config&list=$r_list&order=$r_order]]";
 	}
-	function toString($limit=NULL)
+	function toString($limit=NULL,$start_n=NULL,$last_n=NULL)
 	{
 		global $_tracker_messages;
 
@@ -1186,6 +1196,15 @@ class Tracker_list
 				array(count($this->rows),$limit),
 				$_tracker_messages['msg_limit'])."\n";
 			$this->rows = array_splice($this->rows,0,$limit);
+		} else if (!is_null($start_n) && !is_null($last_n)) {
+			// sublist (range "start-last")
+			$sublist = array();
+			foreach ($this->rows as $row) {
+				if ($start_n <= $row['_real'] && $row['_real'] <= $last_n) {
+					$sublist[] = $row;
+				}
+			}
+			$this->rows = $sublist;
 		}
 		if (count($this->rows) == 0)
 		{
