@@ -315,11 +315,11 @@ $ticket_link_sites = array(
 
 /////////////////////////////////////////////////
 // $whatsnew: Max number of RecentChanges
-$maxshow = 60;
+$maxshow = 500;
 
 // $whatsdeleted: Max number of RecentDeleted
 // (0 = Disabled)
-$maxshow_deleted = 60;
+$maxshow_deleted = 200;
 
 /////////////////////////////////////////////////
 // Page names can't be edit via PukiWiki
