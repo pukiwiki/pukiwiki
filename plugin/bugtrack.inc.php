@@ -288,6 +288,7 @@ function plugin_bugtrack_get_page_list($page, $needs_filetime) {
 function plugin_bugtrack_list_convert()
 {
 	global $vars, $_plugin_bugtrack, $_title_cannotread;
+	global $whatsdeleted;
 	$cache_format_version = 1;
 	$cache_expire_time = 60 * 60 * 24;
 	$cache_refresh_time_prev;
@@ -305,6 +306,22 @@ function plugin_bugtrack_list_convert()
 		$body = str_replace('$1', htmlsc($page), $_title_cannotread);
 		return $body;
 	}
+	if ($cache_enabled) {
+		$cache_filepath = CACHE_DIR . encode($page) . '.bugtrack';
+		$json_cached = pkwk_file_get_contents($cache_filepath);
+		$wrapdata = json_decode($json_cached);
+		if (is_object($wrapdata) && $wrapdata) {
+			$recent_deleted_filetime = get_filetime($whatsdeleted);
+			$recent_dat_filemtime = filemtime(CACHE_DIR . PKWK_MAXSHOW_CACHE);
+			if ($recent_deleted_filetime === $wrapdata->recent_deleted_filetime &&
+				$recent_dat_filemtime === $wrapdata->recent_dat_filemtime &&
+				$recent_dat_filemtime !== false &&
+				$recent_deleted_filetime !== 0) {
+				return $wrapdata->html;
+			}
+		}
+	}
+	$cache_data = null;
 	$data = array();
 	$page_list = plugin_bugtrack_get_page_list($page, true);
 	usort($page_list, '_plugin_bugtrack_list_paganame_compare');
@@ -400,9 +417,7 @@ EOD;
 			} else {
 				$refreshed_at = time();
 			}
-			$json = array('refreshed_at'=>$refreshed_at, 'pages'=>$data, 'version'=>$cache_format_version);
-			$cache_body = json_encode($json, JSON_UNESCAPED_UNICODE + JSON_UNESCAPED_SLASHES);
-			file_put_contents($cache_filepath, $cache_body, LOCK_EX);
+			$cache_data = array('refreshed_at'=>$refreshed_at, 'pages'=>$data, 'version'=>$cache_format_version);
 		}
 	}
 	$table = array();
@@ -419,9 +434,17 @@ EOD;
 		ksort($table[$i], SORT_NUMERIC);
 		$table_html .= join('', $table[$i]);
 	}
-	return '<table border="1" width="100%">' . "\n" .
+	$result_html = '<table border="1" width="100%">' . "\n" .
 		$table_html . "\n" .
 		'</table>';
+	if ($cache_enabled) {
+		$cache_data['recent_deleted_filetime'] = get_filetime($whatsdeleted);
+		$cache_data['recent_dat_filemtime'] = filemtime(CACHE_DIR . PKWK_MAXSHOW_CACHE);
+		$cache_data['html'] = $result_html;
+		$cache_body = json_encode($cache_data, JSON_UNESCAPED_UNICODE + JSON_UNESCAPED_SLASHES);
+		file_put_contents($cache_filepath, $cache_body, LOCK_EX);
+	}
+	return $result_html;
 }
 
 // Get one set of data from a page (or a page moved to $page)
