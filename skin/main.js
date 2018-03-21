@@ -370,8 +370,105 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       }
     });
   }
+  function convertExternalLinkToCushionPageLink() {
+    function domainQuote(domain) {
+      return domain.replace(/\./g, '\\.');
+    }
+    function domainsToRegex(domains) {
+      var regexList = [];
+      domains.forEach(function(domain) {
+        if (domain.substr(0, 2) === '*.') {
+          // Wildcard domain
+          var apex = domain.substr(2);
+          var r = new RegExp('((^.*\\.)|^)' + domainQuote(apex) + '$', 'i');
+          regexList.push(r);
+        } else {
+          // Normal domain
+          regexList.push(new RegExp('^' + domainQuote(domain) + '$', 'i'));
+        }
+      });
+      return regexList;
+    }
+    function domainMatch(domain, regexList) {
+      for (var i = 0, n = regexList.length; i < n; i++) {
+        if (regexList[i].test(domain)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    function removeCushionPageLinks() {
+      var links = document.querySelectorAll('a.external-link');
+      forEach(links, function(link) {
+        var originalUrl = link.getAttribute('data-original-url');
+        if (originalUrl) {
+          link.setAttribute('href', originalUrl);
+        }
+      });
+    }
+    if (!document.querySelector || !JSON) return;
+    if (!Array || !Array.prototype || !Array.prototype.indexOf) return;
+    var extLinkDef = document.querySelector('#pukiwiki-site-properties .external-link-cushion');
+    if (!extLinkDef || !extLinkDef.value) return;
+    var extLinkInfo = JSON.parse(extLinkDef.value);
+    if (!extLinkInfo) return;
+    var refInternalDomains = extLinkInfo.internal_domains;
+    var silentExternalDomains = extLinkInfo.silent_external_domains;
+    if (!Array.isArray(refInternalDomains)) {
+      refInternalDomains = [];
+    }
+    var internalDomains = refInternalDomains.slice();
+    var location = document.location;
+    if (location.protocol === 'file:') {
+      removeCushionPageLinks();
+      return;
+    }
+    if (location.protocol !== 'http:' && location.protocol !== 'https:') return;
+    if (internalDomains.indexOf(location.hostname) < 0) {
+      internalDomains.push(location.hostname);
+    }
+    if (!Array.isArray(silentExternalDomains)) {
+      silentExternalDomains = [];
+    }
+    var propsE = document.querySelector('#pukiwiki-site-properties .site-props');
+    if (!propsE || !propsE.value) return;
+    var siteProps = JSON.parse(propsE.value);
+    var sitePathname = siteProps && siteProps.base_uri_pathname;
+    if (!sitePathname) return;
+    var internalDomainsR = domainsToRegex(internalDomains);
+    var silentExternalDomainsR = domainsToRegex(silentExternalDomains);
+    var links = document.querySelectorAll('a:not(.external-link):not(.internal-link)');
+    var classListEnabled = null;
+    forEach(links, function(link) {
+      if (classListEnabled === null) {
+        classListEnabled = link.classList && link.classList.add && true;
+      }
+      if (!classListEnabled) return;
+      var href = link.getAttribute('href');
+      var m = href.match(/^https?:\/\/([0-9a-zA-Z.-]+)(:\d+)?/);
+      if (m) {
+        var host = m[1];
+        if (domainMatch(host, internalDomainsR)) {
+          link.classList.add('internal-link');
+        } else {
+          if (domainMatch(host, silentExternalDomainsR) ||
+            link.innerText.replace(/\s+/g, '') === '') {
+            // Don't show extenal link icons on these domains
+            link.classList.add('external-link-silent');
+          }
+          link.classList.add('external-link');
+          link.setAttribute('title', href);
+          link.setAttribute('data-original-url', href);
+          link.setAttribute('href', sitePathname + '?cmd=external_link&url=' + encodeURIComponent(href));
+        }
+      } else {
+        link.classList.add('internal-link');
+      }
+    });
+  }
   setYourName();
   autoTicketLink();
   confirmEditFormLeaving();
   showPagePassage();
+  convertExternalLinkToCushionPageLink();
 });

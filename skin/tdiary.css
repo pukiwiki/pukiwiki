@@ -30,6 +30,11 @@ img { border: 0 }
 /* --------------------- */
 /* PukiWiki original CSS */
 
+a.external-link:not(.external-link-silent)::after {
+  content:url(../image/external-link.png);
+  margin:3px;
+}
+
 pre {
   white-space:pre-wrap;
   word-wrap:break-word;

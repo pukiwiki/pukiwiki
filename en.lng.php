@@ -446,3 +446,11 @@ $_loginform_messages = array(
 	'login' => 'Log in',
 	'invalid_username_or_password' => 'The username or password you entered is incorrect'
 );
+
+///////////////////////////////////////
+// external_link.inc.php
+$_external_link_messages = array(
+	'page_title' => 'External link: %s',
+	'desc' => 'The selected URL is not the contents of this site.',
+	'wait_n_seconds' => 'It will move to the page automatically after %s seconds.',
+);

@@ -314,6 +314,26 @@ $ticket_link_sites = array(
 );
 
 /////////////////////////////////////////////////
+// Show External Link Cushion Page
+// 0: Disabled
+// 1: Enabled
+$external_link_cushion_page = 0;
+$external_link_cushion = array(
+	// Wait N seconds before jumping to an external site
+	'wait_seconds' => 5,
+	// Internal site domain list
+	'internal_domains' => array(
+		'localhost',
+		// '*.example.com',
+	),
+	// Don't show extenal link icons on these domains
+	'silent_external_domains' => array(
+		'pukiwiki.osdn.jp',
+		'pukiwiki.example.com',
+	),
+);
+
+/////////////////////////////////////////////////
 // $whatsnew: Max number of RecentChanges
 $maxshow = 500;
 

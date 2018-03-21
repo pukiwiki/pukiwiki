@@ -448,3 +448,11 @@ $_loginform_messages = array(
 	'login' => 'ログイン',
 	'invalid_username_or_password' => 'ユーザー名またはパスワードが違います'
 );
+
+///////////////////////////////////////
+// external_link.inc.php
+$_external_link_messages = array(
+	'page_title' => '外部リンク: %s',
+	'desc' => '選択されたURLは本サイトのコンテンツではありません。',
+	'wait_n_seconds' => '%s 秒後に自動的に移動します。',
+);

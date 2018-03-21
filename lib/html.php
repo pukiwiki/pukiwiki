@@ -219,6 +219,7 @@ function _decorate_Nth_word($matches)
 function get_html_scripting_data()
 {
 	global $ticket_link_sites, $plugin;
+	global $external_link_cushion_page, $external_link_cushion;
 	if (!isset($ticket_link_sites) || !is_array($ticket_link_sites)) {
 		return '';
 	}
@@ -261,11 +262,21 @@ EOS;
 	$ticketlink_data = <<<EOS
 <input type="hidden" class="ticketlink-def" value="$h_ticket_link_sites" />
 EOS;
+	// External link cushion page
+	$external_link_cushion_data = '';
+	if ($external_link_cushion_page) {
+		$h_cushion = htmlsc(json_encode($external_link_cushion,
+			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+		$external_link_cushion_data = <<<EOS
+<input type="hidden" class="external-link-cushion" value="$h_cushion" />
+EOS;
+	}
 	$data = <<<EOS
 <div id="pukiwiki-site-properties" style="display:none;">
 $site_props
 $plugin_prop
 $ticketlink_data
+$external_link_cushion_data
 </div>
 EOS;
 	return $data;

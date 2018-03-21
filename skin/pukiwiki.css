@@ -47,6 +47,11 @@ a:hover {
   text-decoration:underline;
 }
 
+a.external-link:not(.external-link-silent)::after {
+  content:url(../image/external-link.png);
+  margin:3px;
+}
+
 h1, h2 {
   font-family:verdana, arial, helvetica, Sans-Serif;
   color:inherit;
