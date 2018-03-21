@@ -96,11 +96,9 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
     }
     function getSiteProps() {
       var empty = {};
-      var propsDiv = document.getElementById('pukiwiki-site-properties');
-      if (!propsDiv) return empty;
-      var jsonE = propsDiv.querySelector('div[data-key="site-props"]');
-      if (!jsonE) return empty;
-      var props = JSON.parse(jsonE.getAttribute('data-value'));
+      var propsE = document.querySelector('#pukiwiki-site-properties .site-props');
+      if (!propsE) return empty;
+      var props = JSON.parse(propsE.value);
       return props || empty;
     }
     /**
