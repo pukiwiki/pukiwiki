@@ -606,8 +606,11 @@ function pkwk_headers_sent()
 // Output common HTTP headers
 function pkwk_common_headers()
 {
+	global $http_response_custom_headers;
 	if (! PKWK_OPTIMISE) pkwk_headers_sent();
-
+	foreach ($http_response_custom_headers as $header) {
+		header($header);
+	}
 	if(defined('PKWK_ZLIB_LOADABLE_MODULE')) {
 		$matches = array();
 		if(ini_get('zlib.output_compression') &&

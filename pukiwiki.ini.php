@@ -340,6 +340,13 @@ $external_link_cushion = array(
 $html_meta_referrer_policy = '';
 
 /////////////////////////////////////////////////
+// Output custom HTTP response headers
+$http_response_custom_headers = array(
+	// 'Strict-Transport-Security: max-age=86400',
+	// 'X-Content-Type-Options: nosniff',
+);
+
+/////////////////////////////////////////////////
 // $whatsnew: Max number of RecentChanges
 $maxshow = 500;
 
