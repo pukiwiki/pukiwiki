@@ -334,6 +334,12 @@ $external_link_cushion = array(
 );
 
 /////////////////////////////////////////////////
+// Output HTML meta Referrer Policy
+// Value: '' (default), no-referrer, origin, same-origin, ...
+// Reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
+$html_meta_referrer_policy = '';
+
+/////////////////////////////////////////////////
 // $whatsnew: Max number of RecentChanges
 $maxshow = 500;
 

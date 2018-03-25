@@ -62,6 +62,7 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 <head>
  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CONTENT_CHARSET ?>" />
 <?php if ($nofollow || ! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
+<?php if ($html_meta_referrer_policy) { ?> <meta name="referrer" content="<?php echo htmlsc(html_meta_referrer_policy) ?>" /><?php } ?>
 
  <title><?php echo $title ?> - <?php echo $page_title ?></title>
 
