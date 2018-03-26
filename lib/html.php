@@ -186,7 +186,7 @@ function catbody($title, $page, $body)
 		}
 	}
 	// Embed Scripting data
-	$html_scripting_data = get_html_scripting_data();
+	$html_scripting_data = get_html_scripting_data($_page);
 
 	// Compat: 'HTML convert time' without time about MenuBar and skin
 	$taketime = elapsedtime();
@@ -217,10 +217,11 @@ function _decorate_Nth_word($matches)
 /**
  * Get data used by JavaScript modules
  */
-function get_html_scripting_data()
+function get_html_scripting_data($page)
 {
 	global $ticket_link_sites, $plugin;
 	global $external_link_cushion_page, $external_link_cushion;
+	global $topicpath_title;
 	if (!isset($ticket_link_sites) || !is_array($ticket_link_sites)) {
 		return '';
 	}
@@ -272,12 +273,23 @@ EOS;
 <input type="hidden" class="external-link-cushion" value="$h_cushion" />
 EOS;
 	}
+	// Topicpath title
+	$topicpath_data = '';
+	if ($topicpath_title && exist_plugin('topicpath')) {
+		$parents = plugin_topicpath_parent_links($page);
+		$h_topicpath = htmlsc(json_encode($parents,
+		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+		$topicpath_data = <<<EOS
+<input type="hidden" class="topicpath-links" value="$h_topicpath" />
+EOS;
+	}
 	$data = <<<EOS
 <div id="pukiwiki-site-properties" style="display:none;">
 $site_props
 $plugin_prop
 $ticketlink_data
 $external_link_cushion_data
+$topicpath_data
 </div>
 EOS;
 	return $data;

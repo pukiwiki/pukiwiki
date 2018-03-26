@@ -334,6 +334,12 @@ $external_link_cushion = array(
 );
 
 /////////////////////////////////////////////////
+// Show Topicpath title
+// 0: Disabled
+// 1: Enabled
+$topicpath_title = 1;
+
+/////////////////////////////////////////////////
 // Output HTML meta Referrer Policy
 // Value: '' (default), no-referrer, origin, same-origin, ...
 // Reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy

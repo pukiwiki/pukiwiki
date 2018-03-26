@@ -452,7 +452,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
           link.classList.add('internal-link');
         } else {
           if (domainMatch(host, silentExternalDomainsR) ||
-            link.innerText.replace(/\s+/g, '') === '') {
+            link.textContent.replace(/\s+/g, '') === '') {
             // Don't show extenal link icons on these domains
             link.classList.add('external-link-silent');
           }
@@ -466,9 +466,41 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       }
     });
   }
+  function makeTopicpathTitle() {
+    var topicpathE = document.querySelector('#pukiwiki-site-properties .topicpath-links');
+    if (!topicpathE || !topicpathE.value) return;
+    var topicpathLinks = JSON.parse(topicpathE.value);
+    if (!topicpathLinks) return;
+    var titleH1 = document.querySelector('h1.title');
+    if (!titleH1) return;
+    var aList = titleH1.querySelectorAll('a');
+    if (!aList || aList.length > 1) return;
+    var a = titleH1.querySelector('a');
+    if (!a) return;
+    var fragment = document.createDocumentFragment();
+    for (var i = 0, n = topicpathLinks.length; i < n; i++) {
+      var path = topicpathLinks[i];
+      var a1 = document.createElement('a');
+      a1.setAttribute('href', path.uri);
+      a1.setAttribute('title', path.page);
+      a1.textContent = path.leaf;
+      fragment.appendChild(a1);
+      var span = document.createElement('span');
+      span.className = 'topicpath-slash';
+      span.textContent = '/';
+      fragment.appendChild(span);
+    }
+    var a2 = document.createElement('a');
+    a2.setAttribute('href', a.getAttribute('href'));
+    a2.setAttribute('title', 'Backlinks');
+    a2.textContent = a.textContent.replace(/^.+\//, '');
+    fragment.appendChild(a2);
+    titleH1.replaceChild(fragment, a);
+  }
   setYourName();
   autoTicketLink();
   confirmEditFormLeaving();
   showPagePassage();
   convertExternalLinkToCushionPageLink();
+  makeTopicpathTitle();
 });
