@@ -12,10 +12,17 @@ http://pukiwiki.osdn.jp/?PukiWiki/Download
 INCOMPATIBILITY INFORMATION BETWEEN RELEASES
 ============================================
 
+PukiWiki 1.5.2: Incompatibility from PukiWiki 1.5.1
+
+   1. CSS file "skin/pukiwiki.css.php" has been renamed to "skin/pukiwiki.css".
+      (See BugTrack/2448, BugTrack/2367)
+
+
 PukiWiki 1.5.1: Incompatibility from PukiWiki 1.5.0
 
-   1. TrackBack implimentation and 'referer' function had been removed.
-      (See BugTrack2/62)
+   1. Default authentication method from AUTH_TYPE_BASIC to
+      AUTY_TYPE_FORM.
+      (See PukiWiki/Authentication)
 
 
 PukiWiki 1.5.0: Incompatibility from PukiWiki 1.4.7_notb

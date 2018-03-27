@@ -6,9 +6,9 @@ NAME
     PukiWiki - PHP scripts for Web pages which can be edited by anyone, 
                at any time, from anywhere. 
 
-        PukiWiki 1.5.1
+        PukiWiki 1.5.2
         Copyright
-          2001-2016 PukiWiki Developement Team
+          2001-2018 PukiWiki Developement Team
           2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
         License: GPL version 2 or (at your option) any later version
         http://pukiwiki.osdn.jp/

@@ -13,6 +13,11 @@ http://pukiwiki.osdn.jp/?PukiWiki/Download
 リリース間の互換性に関する記述
 ==============================
 
+PukiWiki 1.5.2: PukiWiki 1.5.1 との非互換点
+
+   1. CSSファイル skin/pukiwiki.css.php が skin/pukiwiki.css に変更されました。
+
+
 PukiWiki 1.5.1: PukiWiki 1.5.0 との非互換点
 
    1. PukiWiki内でアクセス制限を行う際のデフォルト認証方式がBasic認証から

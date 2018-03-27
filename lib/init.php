@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // init.php
 // Copyright
-//   2002-2017 PukiWiki Development Team
+//   2002-2018 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -10,10 +10,10 @@
 
 // PukiWiki version / Copyright / Licence
 
-define('S_VERSION', '1.5.1');
+define('S_VERSION', '1.5.2');
 define('S_COPYRIGHT',
 	'<strong>PukiWiki ' . S_VERSION . '</strong>' .
-	' &copy; 2001-2016' .
+	' &copy; 2001-2018' .
 	' <a href="http://pukiwiki.osdn.jp/">PukiWiki Development Team</a>'
 );
 
@@ -454,4 +454,3 @@ $line_rules = array_merge(array(
 	'&amp;(#[0-9]+|#x[0-9a-f]+|' . get_html_entity_pattern() . ');' => '&$1;',
 	"\r"          => '<br />' . "\n",	/* 行末にチルダは改行 */
 ), $line_rules);
-
