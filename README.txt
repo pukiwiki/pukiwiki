@@ -235,7 +235,6 @@ Wikiの様子を見る
 
     FAQ        http://pukiwiki.osdn.jp/?FAQ
     質問箱     http://pukiwiki.osdn.jp/?%E8%B3%AA%E5%95%8F%E7%AE%B1
-    続・質問箱 http://pukiwiki.osdn.jp/?%E7%B6%9A%E3%83%BB%E8%B3%AA%E5%95%8F%E7%AE%B1
 
 バグ
     PukiWikiのセキュリティに関する情報は以下でまとめられています。
@@ -243,7 +242,7 @@ Wikiの様子を見る
 
     バグ報告は devサイトまでお願いします。
     (我々はPukiWikiでPukiWikiのバグトラッキングを行っています)
-    http://pukiwiki.osdn.jp/dev/?BugTrack2
+    http://pukiwiki.osdn.jp/dev/?BugTrack
 
 歴史
     PukiWikiは、結城浩さんが作られたYukiWikiの仕様を参考に独自に開発されまし
