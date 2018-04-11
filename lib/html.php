@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // html.php
 // Copyright
-//   2002-2017 PukiWiki Development Team
+//   2002-2018 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -81,7 +81,8 @@ function catbody($title, $page, $body)
 			break;
 		case AUTH_TYPE_EXTERNAL:
 		case AUTH_TYPE_SAML:
-			$login_link = get_auth_external_login_url($_page, $_LINK['reload']);
+			$login_link = get_auth_external_login_url($_page,
+				get_page_uri($_page, PKWK_URL_ROOT));
 			break;
 	}
 	$_LINK['login']    = htmlsc($login_link);
