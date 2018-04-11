@@ -467,7 +467,13 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
     });
   }
   function makeTopicpathTitle() {
-    var topicpathE = document.querySelector('#pukiwiki-site-properties .topicpath-links');
+    if (!document.createDocumentFragment || !window.JSON) return;
+    var sitePropE = document.querySelector('#pukiwiki-site-properties');
+    if (!sitePropE) return;
+    var pageNameE = sitePropE.querySelector('.page-name');
+    if (!pageNameE || !pageNameE.value) return;
+    var pageName = pageNameE.value;
+    var topicpathE = sitePropE.querySelector('.topicpath-links');
     if (!topicpathE || !topicpathE.value) return;
     var topicpathLinks = JSON.parse(topicpathE.value);
     if (!topicpathLinks) return;
@@ -477,6 +483,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
     if (!aList || aList.length > 1) return;
     var a = titleH1.querySelector('a');
     if (!a) return;
+    if (a.textContent !== pageName) return;
     var fragment = document.createDocumentFragment();
     for (var i = 0, n = topicpathLinks.length; i < n; i++) {
       var path = topicpathLinks[i];

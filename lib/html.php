@@ -250,7 +250,11 @@ EOS;
 	$plugin_prop = <<<EOS
 <input type="hidden" class="plugin-name" value="$h_plugin" />
 EOS;
-
+	// Page name
+	$h_page_name = htmlsc($page);
+	$page_name_data = <<<EOS
+<input type="hidden" class="page-name" value="$h_page_name" />
+EOS;
 	// AutoTicketLink
 	$filtered_ticket_link_sites = array();
 	foreach ($ticket_link_sites as $s) {
@@ -287,6 +291,7 @@ EOS;
 <div id="pukiwiki-site-properties" style="display:none;">
 $site_props
 $plugin_prop
+$page_name_data
 $ticketlink_data
 $external_link_cushion_data
 $topicpath_data
