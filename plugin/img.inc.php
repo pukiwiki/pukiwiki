@@ -37,6 +37,21 @@ function plugin_img_get_style($args)
 	return $style;
 }
 
+/**
+ * Determine link or not.
+ */
+function plugin_img_get_islink($args)
+{
+	for ($i = 1; $i <= 4; $i++) {
+		if (isset($args[$i])) {
+			if ($args[$i] === 'nolink') {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 function plugin_img_inline()
 {
 	$args = func_get_args();
@@ -53,8 +68,14 @@ function plugin_img_inline()
 	if (is_url($url)) {
 		$h_url = htmlsc($url);
 		$style = plugin_img_get_style($args);
+		$a_begin = '';
+		$a_end = '';
+		if (plugin_img_get_islink($args)) {
+			$a_begin = "<a href=\"$h_url\" class=\"image-link\">";
+			$a_end = '</a>';
+		}
 		return <<<EOD
-<img class="plugin-img-inline" src="$h_url" style="$style" alt="" />
+$a_begin<img class="plugin-img-inline" src="$h_url" style="$style" alt="" />$a_end
 EOD;
 	}
 }
@@ -91,9 +112,15 @@ function plugin_img_convert()
 	$arg = isset($args[2]) ? strtoupper($args[2]) : '';
 	$clear = ($arg == 'C' || $arg == 'CLEAR') ? PLUGIN_IMG_CLEAR : '';
 	$style = plugin_img_get_style($args);
+	$a_begin = '';
+	$a_end = '';
+	if (plugin_img_get_islink($args)) {
+		$a_begin = "<a href=\"$h_url\" class=\"image-link\">";
+		$a_end = '</a>';
+	}
 	return <<<EOD
 <div style="float:$align;padding:.5em 1.5em .5em 1.5em;">
- <img class="plugin-img-block" src="$h_url" style="$style" alt="" />
+ $a_begin<img class="plugin-img-block" src="$h_url" style="$style" alt="" />$a_end
 </div>$clear
 EOD;
 }
