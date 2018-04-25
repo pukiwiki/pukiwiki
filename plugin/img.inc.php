@@ -52,65 +52,45 @@ function plugin_img_get_islink($args)
 	return true;
 }
 
-function plugin_img_inline()
+/**
+ * @param[in] $args func_get_args() of xxx_inline() and xxx_convert()
+ * @return array(url, is_url, file_path, page, style, a_begin, a_end)
+ */
+function plugin_img_get_props($args)
 {
-	$args = func_get_args();
-	$url = isset($args[0]) ? $args[0] : '';
-	if (!PLUGIN_IMG_SHOW_IMAGE) {
-		if (is_url($url)) {
-			$h_url = htmlsc($url);
-			$title = '#img(): PLUGIN_IMG_SHOW_IMAGE prohibits this';
-			return "<a href=\"$h_url\" title=\"$title\">$h_url</a>";
+	global $vars;
+	$is_file = false;
+	$is_url = false;
+	$file_path = isset($args[0]) ? $args[0] : '';
+	$page = isset($vars['page']) ? $vars['page'] : '';
+	if (is_url($file_path)) {
+		$url = $file_path;
+		$is_url = true;
+	} else if (isset($file_path)) {
+		// $file_path s not an URL. It should be attached-file path
+		$matches = null;
+		if (preg_match('#^(.+)/([^/]+)$#', $file_path, $matches)) {
+			// (Page_name/maybe-separated-with/slashes/ATTACHED_FILENAME)
+			if ($matches[1] == '.' || $matches[1] == '..') {
+				$matches[1] .= '/'; // Restore relative paths
+			}
+			$attach_name = $matches[2];
+			$attach_page = get_fullname($matches[1], $page);
+		} else {
+			// Simple single argument
+			$attach_name = $file_path;
+			$attach_page = $page;
 		}
-		return '&amp;img(): PLUGIN_IMG_SHOW_IMAGE prohibits this' . "\n";
-	}
-	$size = isset($args[2]) ? strtolower($args[2]) : '';
-	if (is_url($url)) {
-		$h_url = htmlsc($url);
-		$style = plugin_img_get_style($args);
-		$a_begin = '';
-		$a_end = '';
-		if (plugin_img_get_islink($args)) {
-			$a_begin = "<a href=\"$h_url\" class=\"image-link\">";
-			$a_end = '</a>';
+		$file = UPLOAD_DIR . encode($attach_page) . '_' . encode($attach_name);
+		$is_file = is_file($file);
+		if ($is_file) {
+			$url = get_base_uri() . '?plugin=attach' .
+				'&refer=' . rawurlencode($attach_page) .
+				'&openfile=' . rawurlencode($attach_name);
+			$is_url = true;
 		}
-		return <<<EOD
-$a_begin<img class="plugin-img-inline" src="$h_url" style="$style" alt="" />$a_end
-EOD;
-	}
-}
-
-function plugin_img_convert()
-{
-	$args = func_get_args();
-	$url = isset($args[0]) ? $args[0] : '';
-	$h_url = htmlsc($url);
-	if (!PLUGIN_IMG_SHOW_IMAGE) {
-		if (is_url($url)) {
-			$title = '#img(): PLUGIN_IMG_SHOW_IMAGE prohibits this';
-			return "<div><a href=\"$h_url\" title=\"$title\">$h_url</a></div>";
-		}
-		return '#img(): PLUGIN_IMG_SHOW_IMAGE prohibits this' .
-			'<br />' . "\n";
-	}
-	// Check the 2nd argument first, for compatibility
-	$arg = isset($args[1]) ? strtoupper($args[1]) : '';
-	if ($arg == '' || $arg == 'L' || $arg == 'LEFT') {
-		$align = 'left';
-	} else if ($arg == 'R' || $arg == 'RIGHT') {
-		$align = 'right';
-	} else if ($url === '' && $arg == 'CLEAR') {
-		// Stop word-wrapping only (Ugly but compatible)
-		// Short usage: #img(,clear)
-		return PLUGIN_IMG_CLEAR;
-	}
-	$url = isset($args[0]) ? $args[0] : '';
-	if (! is_url($url)) {
-		return PLUGIN_IMG_USAGE;
 	}
 	$h_url = htmlsc($url);
-	$arg = isset($args[2]) ? strtoupper($args[2]) : '';
-	$clear = ($arg == 'C' || $arg == 'CLEAR') ? PLUGIN_IMG_CLEAR : '';
 	$style = plugin_img_get_style($args);
 	$a_begin = '';
 	$a_end = '';
@@ -118,9 +98,72 @@ function plugin_img_convert()
 		$a_begin = "<a href=\"$h_url\" class=\"image-link\">";
 		$a_end = '</a>';
 	}
-	return <<<EOD
+	return (object)array('url' => $url, 'is_url' => $is_url,
+		'file_path' => $file_path, 'is_file' => $is_file,
+		'style' => $style,
+		'a_begin' => $a_begin, 'a_end' => $a_end,);
+}
+
+function plugin_img_inline()
+{
+	$args = func_get_args();
+	$p = plugin_img_get_props($args);
+	if (!PLUGIN_IMG_SHOW_IMAGE) {
+		if ($p->is_url) {
+			$h_url = htmlsc($p->url);
+			$title = '&amp;img(): PLUGIN_IMG_SHOW_IMAGE prohibits this';
+			return "<a href=\"$h_url\" title=\"$title\">$h_url</a>";
+		}
+		return '&amp;img(): File not found: ' . htmlsc($p->file_path) . "\n";
+	}
+	if ($p->is_url) {
+		$h_url = htmlsc($p->url);
+		$style = $p->style;
+		$a_begin = $p->a_begin;
+		$a_end = $p->a_end;
+		return <<<EOD
+$a_begin<img class="plugin-img-inline" src="$h_url" style="$style" alt="" />$a_end
+EOD;
+	}
+	return '&amp;img(): File not found: ' . htmlsc($p->file_path) . "\n";
+}
+
+function plugin_img_convert()
+{
+	$args = func_get_args();
+	$p = plugin_img_get_props($args);
+	// Check the 2nd argument first, for compatibility
+	$arg = isset($args[1]) ? strtoupper($args[1]) : '';
+	if ($a->file_path === '' && $arg == 'CLEAR') {
+		// Stop word-wrapping only (Ugly but compatible)
+		// Short usage: #img(,clear)
+		return PLUGIN_IMG_CLEAR;
+	}
+	if ($arg === '' || $arg === 'L' || $arg === 'LEFT') {
+		$align = 'left';
+	} else if ($arg === 'R' || $arg === 'RIGHT') {
+		$align = 'right';
+	}
+	$arg2 = isset($args[2]) ? strtoupper($args[2]) : '';
+	$clear = ($arg2 === 'C' || $arg2 === 'CLEAR') ? PLUGIN_IMG_CLEAR : '';
+	if (!PLUGIN_IMG_SHOW_IMAGE) {
+		if ($p->is_url) {
+			$h_url = htmlsc($p->url);
+			$title = '#img(): PLUGIN_IMG_SHOW_IMAGE prohibits this';
+			return "<div><a href=\"$h_url\" title=\"$title\">$h_url</a></div>";
+		}
+		return '#img(): File not found: ' . htmlsc($p->file_path) . "\n";
+	}
+	if ($p->is_url) {
+		$h_url = htmlsc($p->url);
+		$style = $p->style;
+		$a_begin = $p->a_begin;
+		$a_end = $p->a_end;
+		return <<<EOD
 <div style="float:$align;padding:.5em 1.5em .5em 1.5em;">
  $a_begin<img class="plugin-img-block" src="$h_url" style="$style" alt="" />$a_end
 </div>$clear
 EOD;
+	}
+	return '#img(): File not found: ' . htmlsc($p->file_path) . "\n";
 }
