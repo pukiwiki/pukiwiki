@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // auth.php
-// Copyright 2003-2017 PukiWiki Development Team
+// Copyright 2003-2018 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Authentication related functions
@@ -51,8 +51,8 @@ function pkwk_hash_compute($phrase = '', $scheme = '{x-php-md5}', $prefix = TRUE
 	// With a {scheme}salt or not
 	$matches = array();
 	if (preg_match('/^(\{.+\})(.*)$/', $scheme, $matches)) {
-		$scheme = & $matches[1];
-		$salt   = & $matches[2];
+		$scheme = $matches[1];
+		$salt   = $matches[2];
 	} else if ($scheme != '') {
 		$scheme  = ''; // Cleartext
 		$salt    = '';
@@ -77,6 +77,18 @@ function pkwk_hash_compute($phrase = '', $scheme = '{x-php-md5}', $prefix = TRUE
 	case '{x-php-sha1}'  :
 		$hash = ($prefix ? ($canonical ? '{x-php-sha1}' : $scheme) : '') .
 			sha1($phrase);
+		break;
+
+	// PHP sha256
+	case '{x-php-sha256}'  :
+		$hash = ($prefix ? ($canonical ? '{x-php-sha256}' : $scheme) : '') .
+			hash('sha256', $phrase);
+		break;
+
+	// PHP sha512
+	case '{x-php-sha512}'  :
+		$hash = ($prefix ? ($canonical ? '{x-php-sha512}' : $scheme) : '') .
+			hash('sha512', $phrase);
 		break;
 
 	// LDAP CRYPT
