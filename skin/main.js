@@ -253,6 +253,11 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
     var textArea = editForm.querySelector('textarea[name="msg"]');
     if (!textArea) return;
     originalText = textArea.value;
+    var isPreview = false;
+    var inEditE = document.querySelector('#pukiwiki-site-properties .page-in-edit');
+    if (inEditE && inEditE.value) {
+      isPreview = (inEditE.value === 'true');
+    }
     var cancelForm = document.querySelector('.edit_form form._plugin_edit_cancel');
     var submited = false;
     editForm.addEventListener('submit', function() {
@@ -281,7 +286,9 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
     window.addEventListener('beforeunload', function(e) {
       if (canceled) return;
       if (submited) return;
-      if (trim(textArea.value) === trim(originalText)) return;
+      if (!isPreview) {
+        if (trim(textArea.value) === trim(originalText)) return;
+      }
       var message = 'Data you have entered will not be saved.';
       if (unloadBeforeMsgE && unloadBeforeMsgE.value) {
         message = unloadBeforeMsgE.value;

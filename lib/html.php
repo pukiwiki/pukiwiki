@@ -47,7 +47,7 @@ function catbody($title, $page, $body)
 
 	$_page  = isset($vars['page']) ? $vars['page'] : '';
 	$r_page = pagename_urlencode($_page);
-
+	$is_edit_preview = isset($vars['preview']);
 	// Canonical URL
 	$canonical_url = get_page_uri($_page, PKWK_URI_ABSOLUTE);
 
@@ -187,7 +187,7 @@ function catbody($title, $page, $body)
 		}
 	}
 	// Embed Scripting data
-	$html_scripting_data = get_html_scripting_data($_page);
+	$html_scripting_data = get_html_scripting_data($_page, $is_edit_preview);
 
 	// Compat: 'HTML convert time' without time about MenuBar and skin
 	$taketime = elapsedtime();
@@ -217,8 +217,11 @@ function _decorate_Nth_word($matches)
 
 /**
  * Get data used by JavaScript modules
+ *
+ * @param $page page name
+ * @param $in_editing true if preview in editing
  */
-function get_html_scripting_data($page)
+function get_html_scripting_data($page, $in_editing)
 {
 	global $ticket_link_sites, $plugin;
 	global $external_link_cushion_page, $external_link_cushion;
@@ -255,6 +258,11 @@ EOS;
 	$h_page_name = htmlsc($page);
 	$page_name_data = <<<EOS
 <input type="hidden" class="page-name" value="$h_page_name" />
+EOS;
+	// Page is editing (preview)
+	$in_editing_value = ($plugin === 'edit' && $in_editing) ? 'true' : 'false';
+	$page_edit_data = <<<EOS
+<input type="hidden" class="page-in-edit" value="$in_editing_value" />
 EOS;
 	// AutoTicketLink
 	$filtered_ticket_link_sites = array();
@@ -293,6 +301,7 @@ EOS;
 $site_props
 $plugin_prop
 $page_name_data
+$page_edit_data
 $ticketlink_data
 $external_link_cushion_data
 $topicpath_data
