@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // default.ini.php
 // Copyright
-//   2003-2017 PukiWiki Development Team
+//   2003-2018 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -75,7 +75,7 @@ $hr = '<hr class="full_hr" />';
 // 脚注機能関連
 
 // 脚注のアンカーに埋め込む本文の最大長
-define('PKWK_FOOTNOTE_TITLE_MAX', 16); // Characters
+define('PKWK_FOOTNOTE_TITLE_MAX', 100); // Characters
 
 // 脚注のアンカーを相対パスで表示する (0 = 絶対パス)
 //  * 相対パスの場合、以前のバージョンのOperaで問題になることがあります
