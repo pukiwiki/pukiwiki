@@ -16,16 +16,16 @@
 /* <--> Expand textarea height (for editing only) */
 /* <<-- textarea with not-so-long margin          */
 form.update textarea {
-  height: 25em;
-  margin-left:   1em;
-  margin-bottom: 0;
+  height:25em;
+  margin-left:1em;
+  margin-bottom:0;
 }
 
 /* >--< Shrink textarea width (for #memo, etc) */
-form textarea { width: 30em }
+form textarea { width:30em; }
 
 /* Image border = 0 */
-img { border: 0 }
+img { border:0; }
 
 /* --------------------- */
 /* PukiWiki original CSS */
@@ -80,21 +80,21 @@ ol.list2 { list-style-type:lower-roman; }
 ol.list3 { list-style-type:lower-alpha; }
 
 .list-indent1 {
-  padding-left: 16px;
-  margin-left: 16px
+  padding-left:16px;
+  margin-left:16px;
 }
 /* list-indent2,3,4 are used for leaping list level indentation */
 .list-indent2 {
-  padding-left: 32px;
-  margin-left: 32px
+  padding-left:32px;
+  margin-left:32px;
 }
 .list-indent3 {
-  padding-left: 48px;
-  margin-left: 48px
+  padding-left:48px;
+  margin-left:48px;
 }
 .list-indent4 {
-  padding-left: 64px;
-  margin-left: 64px
+  padding-left:64px;
+  margin-left:64px;
 }
 
 div.ie5 { text-align:center; }
@@ -128,7 +128,7 @@ div.jumpmenu {
 
 /* for tDiary themes */
 hr.full_hr {}
-hr.note_hr { display:none }
+hr.note_hr { display:none; }
 
 span.size1 {
   font-size:xx-small;
@@ -321,7 +321,7 @@ img#logo {
 
 /* list.inc.php */
 .page_passage {
-  font-size: small;
+  font-size:small;
 }
 
 /* br.inc.php */
@@ -501,51 +501,51 @@ td.vote_td2 {
 
 /* topicpath.inc.php */
 span.topicpath-slash {
-  margin: 0 0.4em;
+  margin:0 0.4em;
 }
 span.topicpath-top {
-  user-select: none;
+  user-select:none;
 }
 
 /* bugtrack.inc.php */
 tr.bugtrack_list_header th {
-  background-color: #ffffcc;
+  background-color:#ffffcc;
 }
 tr.bugtrack_state_proposal td {
-  background-color: #ccccff;
+  background-color:#ccccff;
 }
 tr.bugtrack_state_accept td {
-  background-color: #ffcc99;
+  background-color:#ffcc99;
 }
 tr.bugrack_state_resolved td {
-  background-color: #ccffcc;
+  background-color:#ccffcc;
 }
 tr.bugtrack_state_pending td {
-  background-color: #ffccff;
+  background-color:#ffccff;
 }
 tr.bugtrack_state_cancel td {
-  background-color: #cccccc;
+  background-color:#cccccc;
 }
 tr.bugtrack_state_undef td {
-  background-color: #ff3333;
+  background-color:#ff3333;
 }
 
 /* search2.inc.php  */
 input#_plugin_search2_detail:checked ~ ul > div.search-result-detail {
-  display: block;
+  display:block;
 }
 input#_plugin_search2_detail ~ ul > div.search-result-detail {
-  display: none;
+  display:none;
 }
 ._plugin_search2_search_status {
-  min-height: 1.5em;
+  min-height:1.5em;
 }
 .search-result-page-summary {
-  font-size: 70%;
-  color: gray;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size:70%;
+  color:gray;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 @media print {
@@ -556,6 +556,6 @@ input#_plugin_search2_detail ~ ul > div.search-result-detail {
   div#related,
   div#attach,
   div#toolbar {
-    display: none;
+    display:none;
   }
 }
