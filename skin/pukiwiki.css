@@ -62,10 +62,10 @@ h1, h2 {
 }
 h3 {
   font-family:verdana, arial, helvetica, Sans-Serif;
-  border-bottom:  3px solid #DDEEFF;
-  border-top:     1px solid #DDEEFF;
-  border-left:   10px solid #DDEEFF;
-  border-right:   5px solid #DDEEFF;
+  border-bottom:3px solid #DDEEFF;
+  border-top:1px solid #DDEEFF;
+  border-left:10px solid #DDEEFF;
+  border-right:5px solid #DDEEFF;
 
   color:inherit;
   background-color:#FFFFFF;
@@ -74,7 +74,7 @@ h3 {
 }
 h4 {
   font-family:verdana, arial, helvetica, Sans-Serif;
-  border-left:   18px solid #DDEEFF;
+  border-left:18px solid #DDEEFF;
 
   color:inherit;
   background-color:#FFFFFF;
@@ -91,12 +91,12 @@ h5, h6 {
 }
 
 h1.title {
-  font-size: 30px;
+  font-size:30px;
   font-weight:bold;
   background-color:transparent;
-  padding: 12px 0px 0px 0px;
-  border: 0px;
-  margin: 12px 0px 0px 0px;
+  padding:12px 0px 0px 0px;
+  border:0px;
+  margin:12px 0px 0px 0px;
 }
 
 dt {
@@ -675,7 +675,7 @@ input#_plugin_search2_detail ~ ul > div.search-result-detail {
 @media print {
   a:link,
   a:visited {
-    text-decoration: underline;
+    text-decoration:underline;
   }
   img#logo,
   div#navigator,
@@ -684,6 +684,6 @@ input#_plugin_search2_detail ~ ul > div.search-result-detail {
   div#related,
   div#attach,
   div#toolbar {
-    display: none;
+    display:none;
   }
 }

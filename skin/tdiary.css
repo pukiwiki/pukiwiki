@@ -16,16 +16,16 @@
 /* <--> Expand textarea height (for editing only) */
 /* <<-- textarea with not-so-long margin          */
 form.update textarea {
-  height: 25em;
-  margin-left:   1em;
-  margin-bottom: 0;
+  height:25em;
+  margin-left:1em;
+  margin-bottom:0;
 }
 
 /* >--< Shrink textarea width (for #memo, etc) */
-form textarea { width: 30em }
+form textarea { width:30em; }
 
 /* Image border = 0 */
-img { border: 0 }
+img { border:0; }
 
 /* --------------------- */
 /* PukiWiki original CSS */
@@ -128,7 +128,7 @@ div.jumpmenu {
 
 /* for tDiary themes */
 hr.full_hr {}
-hr.note_hr { display:none }
+hr.note_hr { display:none; }
 
 span.size1 {
   font-size:xx-small;
@@ -556,6 +556,6 @@ input#_plugin_search2_detail ~ ul > div.search-result-detail {
   div#related,
   div#attach,
   div#toolbar {
-    display: none;
+    display:none;
   }
 }
