@@ -80,21 +80,21 @@ ol.list2 { list-style-type:lower-roman; }
 ol.list3 { list-style-type:lower-alpha; }
 
 .list-indent1 {
-  padding-left: 16px;
-  margin-left: 16px
+  padding-left:16px;
+  margin-left:16px;
 }
 /* list-indent2,3,4 are used for leaping list level indentation */
 .list-indent2 {
-  padding-left: 32px;
-  margin-left: 32px
+  padding-left:32px;
+  margin-left:32px;
 }
 .list-indent3 {
-  padding-left: 48px;
-  margin-left: 48px
+  padding-left:48px;
+  margin-left:48px;
 }
 .list-indent4 {
-  padding-left: 64px;
-  margin-left: 64px
+  padding-left:64px;
+  margin-left:64px;
 }
 
 div.ie5 { text-align:center; }
