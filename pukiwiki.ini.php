@@ -185,6 +185,7 @@ $adminpass = '{x-php-md5}!';
 //$adminpass = '{CRYPT}$1$AR.Gk94x$uCe8fUUGMfxAPH83psCZG/';   // LDAP CRYPT 'pass'
 //$adminpass = '{MD5}Gh3JHJBzJcaScd3wyUS8cg==';               // LDAP MD5   'pass'
 //$adminpass = '{SMD5}o7lTdtHFJDqxFOVX09C8QnlmYmZnd2Qx';      // LDAP SMD5  'pass'
+//$adminpass = '{SHA256}10/w7o2juYBrGMh32/KbveULW9jk2tejpyUAD+uC6PE=' // LDAP SHA256 'pass'
 
 /////////////////////////////////////////////////
 // Page-reading feature settings

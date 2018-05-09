@@ -37,10 +37,10 @@ function plugin_md5_action()
 			array_push($scheme_list, 'x-php-sha1', 'SHA', 'SSHA');
 		}
 		if ($algos_enabled->sha256) {
-			array_push($scheme_list, 'x-php-sha256');
+			array_push($scheme_list, 'x-php-sha256', 'SHA256', 'SSHA256');
 		}
 		if ($algos_enabled->sha512) {
-			array_push($scheme_list, 'x-php-sha512');
+			array_push($scheme_list, 'x-php-sha512', 'SHA512', 'SSHA512');
 		}
 		if (!in_array($scheme, $scheme_list)) {
 			return array(
@@ -113,7 +113,20 @@ EOD;
   <label for="_p_md5_lsmd5">LDAP SMD5 (md5 with a seed) *</label><br />
   <input type="radio" name="scheme" id="_p_md5_lmd5" value="MD5" />
   <label for="_p_md5_lmd5">LDAP MD5</label><br />
-
+EOD;
+	if ($algos_enabled->sha256) $form .= <<<EOD
+  <input type="radio" name="scheme" id="_p_md5_lssha256" value="SSHA256"/>
+  <label for="_p_md5_lssha256">LDAP SSHA256 (sha256 with a seed) *</label><br />
+  <input type="radio" name="scheme" id="_p_md5_lsha256" value="SHA256" />
+  <label for="_p_md5_lsha256">LDAP SHA256</label><br />
+EOD;
+	if ($algos_enabled->sha512) $form .= <<<EOD
+  <input type="radio" name="scheme" id="_p_md5_lssha512" value="SSHA512"/>
+  <label for="_p_md5_lssha512">LDAP SSHA512 (sha512 with a seed) *</label><br />
+  <input type="radio" name="scheme" id="_p_md5_lsha512" value="SHA512" />
+  <label for="_p_md5_lsha512">LDAP SHA512</label><br />
+EOD;
+	$form .= <<<EOD
   <input type="checkbox" name="prefix" id="_p_md5_prefix" checked="checked" />
   <label for="_p_md5_prefix">Add scheme prefix (RFC2307, Using LDAP as NIS)</label><br />
 

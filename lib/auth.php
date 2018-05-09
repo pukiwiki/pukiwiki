@@ -85,6 +85,12 @@ function pkwk_hash_compute($phrase = '', $scheme = '{x-php-md5}', $prefix = TRUE
 			hash('sha256', $phrase);
 		break;
 
+	// PHP sha384
+	case '{x-php-sha384}'  :
+		$hash = ($prefix ? ($canonical ? '{x-php-sha384}' : $scheme) : '') .
+			hash('sha384', $phrase);
+		break;
+
 	// PHP sha512
 	case '{x-php-sha512}'  :
 		$hash = ($prefix ? ($canonical ? '{x-php-sha512}' : $scheme) : '') .
@@ -123,6 +129,48 @@ function pkwk_hash_compute($phrase = '', $scheme = '{x-php-md5}', $prefix = TRUE
 		$salt = ($salt != '' ? substr(base64_decode($salt), 20) : substr(crypt(''), -8));
 		$hash = ($prefix ? ($canonical ? '{SSHA}' : $scheme) : '') .
 			base64_encode(pkwk_hex2bin(sha1($phrase . $salt)) . $salt);
+		break;
+
+	// LDAP SHA256
+	case '{sha256}'        :
+		$hash = ($prefix ? ($canonical ? '{SHA256}' : $scheme) : '') .
+			base64_encode(hash('sha256', $phrase, TRUE));
+		break;
+
+	// LDAP SSHA256
+	case '{ssha256}'        :
+		// SHA-2 SHA-256 Key length = 256bits = 32bytes
+		$salt = ($salt != '' ? substr(base64_decode($salt), 32) : substr(crypt(''), -8));
+		$hash = ($prefix ? ($canonical ? '{SSHA256}' : $scheme) : '') .
+			base64_encode(hash('sha256', $phrase . $salt, TRUE) . $salt);
+		break;
+
+	// LDAP SHA384
+	case '{sha384}'        :
+		$hash = ($prefix ? ($canonical ? '{SHA384}' : $scheme) : '') .
+			base64_encode(hash('sha384', $phrase, TRUE));
+		break;
+
+	// LDAP SSHA384
+	case '{ssha384}'        :
+		// SHA-2 SHA-384 Key length = 384bits = 48bytes
+		$salt = ($salt != '' ? substr(base64_decode($salt), 48) : substr(crypt(''), -8));
+		$hash = ($prefix ? ($canonical ? '{SSHA384}' : $scheme) : '') .
+			base64_encode(hash('sha384', $phrase . $salt, TRUE) . $salt);
+		break;
+
+	// LDAP SHA512
+	case '{sha512}'        :
+		$hash = ($prefix ? ($canonical ? '{SHA512}' : $scheme) : '') .
+			base64_encode(hash('sha512', $phrase, TRUE));
+		break;
+
+	// LDAP SSHA512
+	case '{ssha512}'        :
+		// SHA-2 SHA-512 Key length = 512bits = 64bytes
+		$salt = ($salt != '' ? substr(base64_decode($salt), 64) : substr(crypt(''), -8));
+		$hash = ($prefix ? ($canonical ? '{SSHA512}' : $scheme) : '') .
+			base64_encode(hash('sha512', $phrase . $salt, TRUE) . $salt);
 		break;
 
 	// LDAP CLEARTEXT and just cleartext
