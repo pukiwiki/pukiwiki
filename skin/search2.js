@@ -289,10 +289,35 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
     /**
      * @param {string} statusText
      */
-    function setSearchStatus(statusText) {
+    function setSearchStatus(statusText, statusText2) {
       var statusList = document.querySelectorAll('._plugin_search2_search_status');
       forEach(statusList, function(statusObj) {
-        statusObj.textContent = statusText;
+        var textObj1 = statusObj.querySelector('._plugin_search2_search_status_text1');
+        var textObj2 = statusObj.querySelector('._plugin_search2_search_status_text2');
+        if (textObj1) {
+          var prevText = textObj1.getAttribute('data-text');
+          if (prevText !== statusText) {
+            textObj1.setAttribute('data-text', statusText);
+            if (statusText.substr(statusText.length - 3) === '...') {
+              var firstHalf = statusText.substr(0, statusText.length - 3);
+              textObj1.textContent = firstHalf;
+              var span = document.createElement('span');
+              span.innerHTML = '<span class="plugin-search2-progress plugin-search2-progress1">.</span>'
+                + '<span class="plugin-search2-progress plugin-search2-progress2">.</span>'
+                + '<span class="plugin-search2-progress plugin-search2-progress3">.</span>';
+              textObj1.appendChild(span);
+            } else {
+              textObj1.textContent = statusText;
+            }
+          }
+        }
+        if (textObj2) {
+          if (statusText2) {
+            textObj2.textContent = ' ' + statusText2;
+          } else {
+            textObj2.textContent = '';
+          }
+        }
       });
     }
     /**
@@ -723,7 +748,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       if (prevTimestamp) {
         setSearchStatus(searchProps.searchingMsg);
       } else {
-        setSearchStatus(searchProps.searchingMsg + ' ' +
+        setSearchStatus(searchProps.searchingMsg,
           getSearchProgress(session));
       }
       if (searchDone) {
@@ -733,7 +758,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
           if (singlePageResult) {
             setSearchStatus('');
           } else {
-            setSearchStatus(searchProps.showingResultMsg + ' ' + progress);
+            setSearchStatus(searchProps.showingResultMsg, progress);
           }
         }, 2000);
       }
@@ -777,7 +802,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
           localStorage[key] = JSON.stringify(session);
           // Stop API calling
           setSearchMessage(msg + ' ' + getOffsetLinks(session, maxResults));
-          setSearchStatus(searchProps.showingResultMsg + ' ' +
+          setSearchStatus(searchProps.showingResultMsg,
             getSearchProgress(session));
         } else {
           setTimeout(function() {
@@ -823,7 +848,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         var moreResultHtml = getOffsetLinks(session, maxResults);
         setSearchMessage(msg + ' ' + moreResultHtml);
         var progress = getSearchProgress(session);
-        setSearchStatus(searchProps.showingResultMsg + ' ' + progress);
+        setSearchStatus(searchProps.showingResultMsg, progress);
       } else {
         setSearchStatus('');
       }

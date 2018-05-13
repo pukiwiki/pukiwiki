@@ -300,6 +300,8 @@ EOD;
 
 	$plain_search_link = '<a href="' . $script . '?cmd=search' . '">' . htmlsc($_btn_search) . '</a>';
 	$alt_msg = str_replace('$1', $plain_search_link, $_msg_use_alternative_link);
+	$status_span_text = '<span class="_plugin_search2_search_status_text1"></span>' .
+		'<span class="_plugin_search2_search_status_text2"></span>';
 	$form =<<<EOD
 <form action="$script" method="GET" class="_plugin_search2_form">
  <div>
@@ -312,7 +314,7 @@ $base_option
 EOD;
 	$second_form =<<<EOD
 <div class="_plugin_search2_second_form" style="display:none;">
-<div class="_plugin_search2_search_status"></div>
+<div class="_plugin_search2_search_status">$status_span_text</span></div>
 <div class="_plugin_search2_message"></div>
 $form
 </div>
@@ -349,12 +351,41 @@ EOD;
 <noscript>
  <p>$_msg_unsupported_webbrowser $alt_msg</p>
 </noscript>
+<style>
+input#_plugin_search2_detail:checked ~ ul > div.search-result-detail {
+  display:block;
+}
+input#_plugin_search2_detail ~ ul > div.search-result-detail {
+  display:none;
+}
+._plugin_search2_search_status {
+  min-height:1.5em;
+}
+@keyframes plugin-search2-searching {
+  10% { opacity: 1; }
+  40% { opacity: 0; }
+  70% { opacity: 0; }
+  90% { opacity: 1; }
+}
+span.plugin-search2-progress {
+  animation: plugin-search2-searching 1.5s infinite ease-out;
+}
+span.plugin-search2-progress1 {
+  animation-delay: -1s;
+}
+span.plugin-search2-progress2 {
+  animation-delay: -0.8s;
+}
+span.plugin-search2-progress3 {
+  animation-delay: -0.6s;
+}
+</style>
 <p class="_plugin_search2_nosupport_message" style="display:none;">
   $_msg_unsupported_webbrowser $alt_msg
 </p>
 $search_props
 $form
-<div class="_plugin_search2_search_status"></div>
+<div class="_plugin_search2_search_status">$status_span_text</div>
 <div class="_plugin_search2_message"></div>
 $result_page_panel
 $second_form
