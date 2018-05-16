@@ -82,7 +82,7 @@ function catbody($title, $page, $body)
 		case AUTH_TYPE_EXTERNAL:
 		case AUTH_TYPE_SAML:
 			$login_link = get_auth_external_login_url($_page,
-				get_page_uri($_page, PKWK_URL_ROOT));
+				get_page_uri($_page, PKWK_URI_ROOT));
 			break;
 	}
 	$_LINK['login']    = htmlsc($login_link);
