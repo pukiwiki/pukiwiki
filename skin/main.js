@@ -452,6 +452,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       }
       if (!classListEnabled) return;
       var href = link.getAttribute('href');
+      if (!href) return; // anchor without href attribute (a name)
       var m = href.match(/^https?:\/\/([0-9a-zA-Z.-]+)(:\d+)?/);
       if (m) {
         var host = m[1];
