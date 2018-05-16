@@ -510,7 +510,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
     a2.setAttribute('title', 'Backlinks');
     a2.textContent = a.textContent.replace(/^.+\//, '');
     fragment.appendChild(a2);
-    titleH1.replaceChild(fragment, a);
+    a.parentNode.replaceChild(fragment, a);
   }
   setYourName();
   autoTicketLink();
