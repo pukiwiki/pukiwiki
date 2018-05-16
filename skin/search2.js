@@ -697,6 +697,35 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         parentElement.appendChild(parentFragment);
       }
     }
+    function removeCachedResultsBase(keepTodayCache) {
+      var props = getSiteProps();
+      if (!props || !props.base_uri_pathname) return;
+      var keyPrefix = getSearchCacheKeyDateBase(props.base_uri_pathname);
+      var keyBase = getSearchCacheKeyBase(props.base_uri_pathname);
+      var removeTargets = [];
+      for (var i = 0, n = localStorage.length; i < n; i++) {
+        var key = localStorage.key(i);
+        if (key.substr(0, keyBase.length) === keyBase) {
+          // Search result Cache
+          if (keepTodayCache) {
+            if (key.substr(0, keyPrefix.length) !== keyPrefix) {
+              removeTargets.push(key);
+            }
+          } else {
+            removeTargets.push(key);
+          }
+        }
+      }
+      removeTargets.forEach(function(target) {
+        localStorage.removeItem(target);
+      });
+    }
+    function removeCachedResults() {
+      removeCachedResultsBase(true);
+    }
+    function removeAllCachedResults() {
+      removeCachedResultsBase(false);
+    }
     /**
      * @param {Object} obj
      * @param {Object} session
@@ -784,7 +813,13 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         var json = JSON.stringify(session);
         var cacheKey = getSearchCacheKey(props.base_uri_pathname, searchText, session.offset);
         if (window.localStorage) {
-          localStorage[cacheKey] = json;
+          try {
+            localStorage[cacheKey] = json;
+          } catch (e) {
+            // QuotaExceededError "exceeded the quota."
+            console.log(e);
+            removeAllCachedResults();
+          }
         }
         if ('prevOffset' in session || 'nextOffset' in session) {
           setSearchMessage(msg + ' ' + getOffsetLinks(session, maxResults));
@@ -853,25 +888,6 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         setSearchStatus('');
       }
       return session;
-    }
-    function removeCachedResults() {
-      var props = getSiteProps();
-      if (!props || !props.base_uri_pathname) return;
-      var keyPrefix = getSearchCacheKeyDateBase(props.base_uri_pathname);
-      var keyBase = getSearchCacheKeyBase(props.base_uri_pathname);
-      var removeTargets = [];
-      for (var i = 0, n = localStorage.length; i < n; i++) {
-        var key = localStorage.key(i);
-        if (key.substr(0, keyBase.length) === keyBase) {
-          // Search result Cache
-          if (key.substr(0, keyPrefix.length) !== keyPrefix) {
-            removeTargets.push(key);
-          }
-        }
-      }
-      removeTargets.forEach(function(target) {
-        localStorage.removeItem(target);
-      });
     }
     /**
      * @param {string} searchText
