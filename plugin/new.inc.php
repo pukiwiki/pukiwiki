@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // new.inc.php
-// Copyright  2003-2017 PukiWiki Development Team
+// Copyright  2003-2018 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // New! plugin
@@ -14,6 +14,16 @@
 //		// and show the latest one
 
 define('PLUGIN_NEW_DATE_FORMAT', '<span class="comment_date">%s</span>');
+
+function plugin_new_init()
+{
+	// Backword compatibility: Keep plugin_new_init() and the messages
+	// Elapsed time => New! message with CSS
+	$messages['_plugin_new_elapses'] = array(
+		60 * 60 * 24 * 1 => ' <span class="new1" title="%s">New!</span>',  // 1day
+		60 * 60 * 24 * 5 => ' <span class="new5" title="%s">New</span>');  // 5days
+	set_plugin_messages($messages);
+}
 
 function plugin_new_inline()
 {
