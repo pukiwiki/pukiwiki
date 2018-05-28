@@ -563,7 +563,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 		}
 		$list[$head][$page] = $str;
 	}
-	uksort($pages, 'strnatcmp');
+	uksort($list, 'strnatcmp');
 
 	$cnt = 0;
 	$arr_index = array();
