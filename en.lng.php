@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // en.lng.php
 // Copyright
-//   2002-2017 PukiWiki Development Team
+//   2002-2018 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -79,7 +79,6 @@ $_btn_template  = 'Use page as template';
 $_btn_load      = 'Load';
 $_btn_edit      = 'Edit';
 $_btn_delete    = 'Delete';
-$_label_template_pages	= 'Template pages';
 
 ///////////////////////////////////////
 // Authentication

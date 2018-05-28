@@ -317,7 +317,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel, $_msg_help;
 	global $whatsnew, $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
-	global $_title_list, $_label_template_pages;
+	global $_title_list;
 	global $_msg_edit_cancel_confirm, $_msg_edit_unloadbefore_message;
 	global $rule_page;
 
@@ -352,44 +352,41 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 			$tpage_names[] = $tpage;
 		}
 		$page_names = array();
-		foreach(get_existpages() as $_page) {
-			if ($_page == $whatsnew || check_non_list($_page) ||
-				!is_page_readable($_page))
-				continue;
-			if (preg_match('/template/i', $_page)) {
-				$tpage_names[] = $_page;
-			} else {
-				if (count($page_names) >= $page_max) continue;
-				$page_names[] = $_page;
+		$page_list = get_existpages();
+		if (count($page_list) > $page_max) {
+			// Extract only template name pages
+			$target_pages = array();
+			foreach ($page_list as $_page) {
+				if (preg_match('/template/i', $_page)) {
+					$target_pages[] = $_page;
+				}
 			}
+		} else {
+			$target_pages = $page_list;
+		}
+		foreach ($target_pages as $_page) {
+			if ($_page == $whatsnew || check_non_list($_page) ||
+				!is_page_readable($_page)) {
+				continue;
+			}
+			$tpage_names[] = $_page;
 		}
 		$tpage_names2 = array_values(array_unique($tpage_names));
 		natcasesort($tpage_names2);
-		natcasesort($page_names);
 		$tpages = array(); // Template pages
-		$npages = array(); // Normal pages
 		foreach($tpage_names2 as $p) {
 			$ps = htmlsc($p);
 			$tpages[] = '   <option value="' . $ps . '">' . $ps . '</option>';
 		}
-		foreach($page_names as $p) {
-			$ps = htmlsc($p);
-			$npages[] = '   <option value="' . $ps . '">' . $ps . '</option>';
+		if (count($tpage_names2) > 0) {
+			$s_tpages = join("\n", $tpages);
+		} else {
+			$s_tpages = '   <option value="">(no template pages)</option>';
 		}
-		if (count($page_names) === $page_max) {
-			$npages[] = '   <option value="">...</option>';
-		}
-		$s_tpages  = join("\n", $tpages);
-		$s_npages  = join("\n", $npages);
 		$template = <<<EOD
   <select name="template_page">
    <option value="">-- $_btn_template --</option>
-   <optgroup label="$_label_template_pages">
 $s_tpages
-   </optgroup>
-   <optgroup label="$_title_list">
-$s_npages
-   </optgroup>
   </select>
   <input type="submit" name="template" value="$_btn_load" accesskey="r" />
   <br />
