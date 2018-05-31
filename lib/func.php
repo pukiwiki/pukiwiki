@@ -533,7 +533,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 	} else {
 		$href = $script . '?cmd=' . $cmd . '&amp;page=';
 	}
-
+	uasort($pages, 'strnatcmp');
 	foreach($pages as $file=>$page) {
 		$r_page  = pagename_urlencode($page);
 		$s_page  = htmlsc($page, ENT_QUOTES);
@@ -568,7 +568,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 	$cnt = 0;
 	$arr_index = array();
 	$retval .= '<ul>' . "\n";
-	foreach ($list as $head=>$pages) {
+	foreach ($list as $head=>$sub_pages) {
 		if ($head === $symbol) {
 			$head = $_msg_symbol;
 		} else if ($head === $other) {
@@ -584,8 +584,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 				'"><strong>' . $head . '</strong></a>' . "\n" .
 				'  <ul>' . "\n";
 		}
-		ksort($pages, SORT_STRING);
-		$retval .= join("\n", $pages);
+		$retval .= join("\n", $sub_pages);
 		if ($list_index)
 			$retval .= "\n  </ul>\n </li>\n";
 	}
