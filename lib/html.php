@@ -313,20 +313,17 @@ EOS;
 // Show 'edit' form
 function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 {
-	global $vars, $rows, $cols, $hr, $function_freeze;
+	global $vars, $rows, $cols;
 	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel, $_msg_help;
-	global $whatsnew, $_btn_template, $_btn_load, $load_template_func;
+	global $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
-	global $_title_list;
 	global $_msg_edit_cancel_confirm, $_msg_edit_unloadbefore_message;
 	global $rule_page;
 
 	$script = get_base_uri();
 	// Newly generate $digest or not
 	if ($digest === FALSE) $digest = md5(join('', get_source($page)));
-
 	$refer = $template = '';
-
  	// Add plugin
 	$addtag = $add_top = '';
 	if(isset($vars['add'])) {
@@ -339,46 +336,14 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 				'<span class="small">' . $_btn_addtop . '</span>' .
 			'</label>';
 	}
-
 	if($load_template_func && $b_template) {
-		$tpage_names = array(); // Pages marked as template
-		$template_page = ':config/Templates';
-		$page_max = 100;
-		foreach(get_source($template_page) as $_templates) {
-			$m = array();
-			if (! preg_match('#\-\s*\[\[([^\[\]]+)\]\]#', $_templates, $m)) continue;
-			$tpage = preg_replace('#^./#', "$template_page/", $m[1]);
-			if (! is_page($tpage)) continue;
-			$tpage_names[] = $tpage;
-		}
-		$page_names = array();
-		$page_list = get_existpages();
-		if (count($page_list) > $page_max) {
-			// Extract only template name pages
-			$target_pages = array();
-			foreach ($page_list as $_page) {
-				if (preg_match('/template/i', $_page)) {
-					$target_pages[] = $_page;
-				}
-			}
-		} else {
-			$target_pages = $page_list;
-		}
-		foreach ($target_pages as $_page) {
-			if ($_page == $whatsnew || check_non_list($_page) ||
-				!is_page_readable($_page)) {
-				continue;
-			}
-			$tpage_names[] = $_page;
-		}
-		$tpage_names2 = array_values(array_unique($tpage_names));
-		natcasesort($tpage_names2);
+		$template_page_list = get_template_page_list();
 		$tpages = array(); // Template pages
-		foreach($tpage_names2 as $p) {
+		foreach($template_page_list as $p) {
 			$ps = htmlsc($p);
 			$tpages[] = '   <option value="' . $ps . '">' . $ps . '</option>';
 		}
-		if (count($tpage_names2) > 0) {
+		if (count($template_page_list) > 0) {
 			$s_tpages = join("\n", $tpages);
 		} else {
 			$s_tpages = '   <option value="">(no template pages)</option>';
@@ -458,6 +423,47 @@ EOD;
 		get_page_uri($rule_page) .
 		'" target="_blank">' . $_msg_help . '</a></li></ul>';
 	return $body;
+}
+
+/**
+ * Get template page list.
+ */
+function get_template_page_list()
+{
+	global $whatsnew;
+	$tpage_names = array(); // Pages marked as template
+	$template_page = ':config/Templates';
+	$page_max = 100;
+	foreach(get_source($template_page) as $_templates) {
+		$m = array();
+		if (! preg_match('#\-\s*\[\[([^\[\]]+)\]\]#', $_templates, $m)) continue;
+		$tpage = preg_replace('#^./#', "$template_page/", $m[1]);
+		if (! is_page($tpage)) continue;
+		$tpage_names[] = $tpage;
+	}
+	$page_names = array();
+	$page_list = get_existpages();
+	if (count($page_list) > $page_max) {
+		// Extract only template name pages
+		$target_pages = array();
+		foreach ($page_list as $_page) {
+			if (preg_match('/template/i', $_page)) {
+				$target_pages[] = $_page;
+			}
+		}
+	} else {
+		$target_pages = $page_list;
+	}
+	foreach ($target_pages as $_page) {
+		if ($_page == $whatsnew || check_non_list($_page) ||
+			!is_page_readable($_page)) {
+			continue;
+		}
+		$tpage_names[] = $_page;
+	}
+	$tempalte_page_list = array_values(array_unique($tpage_names));
+	natcasesort($tempalte_page_list);
+	return $tempalte_page_list;
 }
 
 // Related pages

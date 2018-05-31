@@ -20,9 +20,13 @@ function plugin_template_action()
 
 	$script = get_base_uri();
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
-	if (! isset($vars['refer']) || ! is_page($vars['refer']))
+	if (! isset($vars['refer']) || ! is_page($vars['refer'])) {
+		if (isset($vars['action']) && $vars['action'] === 'list') {
+			plugin_template_output_list();
+			exit;
+		}
 		return FALSE;
-
+	}
 	$refer = $vars['refer'];
 	// Ensure page is readable, or show Login UI and exit
 	ensure_page_readable($refer);
@@ -94,4 +98,21 @@ EOD;
 	$retvar['body'] = $ret;
 
 	return $retvar;
+}
+
+function plugin_template_output_list()
+{
+	$template_page_key = 'template_pages';
+	$empty_result = '{"' . $template_page_key . '":[]}';
+	header('Content-Type: application/json; charset=UTF-8');
+	// PHP 5.4+
+	$enabled = defined('JSON_UNESCAPED_UNICODE') && defined('PKWK_UTF8_ENABLE');
+	if (!$enabled) {
+		print($empty_result);
+		exit;
+	}
+	$template_pages = array_values(get_template_page_list());
+	$ar = array($template_page_key => $template_pages);
+	print(json_encode($ar, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+	exit;
 }
