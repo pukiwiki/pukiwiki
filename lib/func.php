@@ -538,7 +538,7 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 		$r_page  = pagename_urlencode($page);
 		$s_page  = htmlsc($page, ENT_QUOTES);
 		$str = '   <li><a href="' . $href . $r_page . '">' .
-			$s_page . '</a>' . get_passage_html_span($page);
+			$s_page . '</a> ' . get_pg_passage($page);
 		if ($withfilename) {
 			$s_file = htmlsc($file);
 			$str .= "\n" . '    <ul><li>' . $s_file . '</li></ul>' .
