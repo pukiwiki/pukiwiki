@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // edit.inc.php
-// Copyright 2001-2017 PukiWiki Development Team
+// Copyright 2001-2018 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Edit plugin (cmd=edit)
@@ -11,7 +11,7 @@ define('PLUGIN_EDIT_FREEZE_REGEX', '/^(?:#freeze(?!\w)\s*)+/im');
 
 function plugin_edit_action()
 {
-	global $vars, $_title_edit, $load_template_func;
+	global $vars, $_title_edit;
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
@@ -22,7 +22,7 @@ function plugin_edit_action()
 
 	if (isset($vars['preview'])) {
 		return plugin_edit_preview($vars['msg']);
-	} else if ($load_template_func && isset($vars['template'])) {
+	} else if (isset($vars['template'])) {
 		return plugin_edit_preview_with_template();
 	} else if (isset($vars['write'])) {
 		return plugin_edit_write();
