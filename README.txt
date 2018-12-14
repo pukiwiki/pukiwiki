@@ -30,7 +30,7 @@
     Webサイト」として情報を提供する構成も可能です。(この場合、Wiki風のデザイ
     ンである必要すらありません)
 
-    PukiWikiはPHP言語で書かれたプログラムなので、PHP(PHP4.1～PHP7)が動作す
+    PukiWikiはPHP言語で書かれたプログラムなので、PHP(PHP4.1～PHP7.3)が動作す
     るWebサーバーであれば容易に設置でき、軽快に動作します。
 
     PukiWikiは、yu-jiさんを含む PukiWiki Develpers Team やその貢献者が、各自の
