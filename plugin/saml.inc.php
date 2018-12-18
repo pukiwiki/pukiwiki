@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // saml.inc.php
 // Copyright
-//   2017 PukiWiki Development Team
+//   2018 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // PukiWiki SAML Plugin
@@ -20,7 +20,7 @@ function plugin_saml_action() {
 	global $vars;
 	require 'saml_settings.php';
 
-	$auth = new OneLogin_Saml2_Auth($settingsInfo);
+	$auth = new OneLogin\Saml2\Auth($settingsInfo);
 
 	if (isset($vars['sso'])) {
 		// sso: Sign in endpoint before IdP
@@ -67,7 +67,7 @@ function plugin_saml_action() {
 			$_SESSION['authenticated_user_fullname'] = $attrs[PLUGIN_SAML_AUTHUSER_DISPLAYNAME_ATTR][0];
 		}
 
-		if (isset($_POST['RelayState']) && OneLogin_Saml2_Utils::getSelfURL() != $_POST['RelayState']) {
+		if (isset($_POST['RelayState']) && OneLogin\Saml2\Utils::getSelfURL() != $_POST['RelayState']) {
 			$auth->redirectTo($_POST['RelayState']);
 		}
 		return array('msg' => 'SAML sign in', 'body' => 'SAML Sined in. but no redirection');
@@ -92,7 +92,7 @@ function plugin_saml_action() {
 	} else if (isset($vars['metadata'])) {
 		// metadata: SP metadata endpoint
 		try {
-			$auth = new OneLogin_Saml2_Auth($settingsInfo);
+			$auth = new OneLogin\Saml2\Auth($settingsInfo);
 			$settings = $auth->getSettings();
 			$metadata = $settings->getSPMetadata();
 			$errors = $settings->validateMetadata($metadata);
@@ -100,9 +100,9 @@ function plugin_saml_action() {
 				header('Content-Type: text/xml');
 				echo $metadata;
 			} else {
-				throw new OneLogin_Saml2_Error(
+				throw new OneLogin\Saml2\Error(
 					'Invalid SP metadata: '.implode(', ', $errors),
-					OneLogin_Saml2_Error::METADATA_SP_INVALID
+					OneLogin\Saml2\Error::METADATA_SP_INVALID
 				);
 			}
 		} catch (Exception $e) {
