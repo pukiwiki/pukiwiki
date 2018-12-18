@@ -16,9 +16,9 @@ InterWiki用のサーバリストです。
 
 ** PukiWiki [#j0d346fa]
 // PukiWiki Official Main Site
--[http://pukiwiki.osdn.jp/? pukiwiki] utf8
+-[https://pukiwiki.osdn.jp/? pukiwiki] utf8
 // PukiWiki Developer Site
--[http://pukiwiki.osdn.jp/dev/? pukiwiki.dev] utf8
+-[https://pukiwiki.osdn.jp/dev/? pukiwiki.dev] utf8
 
 ** Search Engine [#jaaa4e4c]
 -[http://www.google.co.jp/search?ie=utf8&oe=utf8&q=$1&lr=lang_ja&hl=ja Google] utf8 

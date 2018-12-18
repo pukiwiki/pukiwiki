@@ -3,7 +3,7 @@
 #norelated
 * PukiWiki [#v1621880]
 
-- http://pukiwiki.osdn.jp/
+- https://pukiwiki.osdn.jp/
 - https://osdn.jp/projects/pukiwiki/
 
 PukiWikiは Wiki([[WikiWikiWeb]]) と呼ばれているもののひとつで、基本的に誰でも全てのページを作成・編集することができます。
@@ -20,10 +20,10 @@ PukiWikiは Wiki([[WikiWikiWeb]]) と呼ばれているもののひとつで、�
 
 ** リンク [#nf50e667]
 
-- [[PukiWiki-official:http://pukiwiki.osdn.jp/]] からPukiWiki 公式サイトへ飛べます
+- [[PukiWiki-official:https://pukiwiki.osdn.jp/]] からPukiWiki 公式サイトへ飛べます
 -- ご質問や御意見は、こちらへどうぞ。 :)
 
-- Pukiwiki-dev - http://pukiwiki.osdn.jp/dev/
+- Pukiwiki-dev - https://pukiwiki.osdn.jp/dev/
 -- こちらはPukiWiki開発サイトです。PukiWiki開発サイトでは、次期バージョンの開発だけでなく、現行バージョンの1.4系や1.3系の修正、セキュリティfixが行なわれています。[[pukiwiki.dev:開発日記]]で日々の作業の内容が掲載されていますので、PukiWikiを運用されている方は目を通すようお願いします。
 
 - https://osdn.jp/projects/pukiwiki/

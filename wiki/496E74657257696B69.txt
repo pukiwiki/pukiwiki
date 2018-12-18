@@ -17,18 +17,18 @@ InterWiki は、[[PukiWiki]] と 他のサーバーを接続する機能です�
 サーバーリストに追加することができます。
 
  [URL サーバ名] タイプ
- [http://pukiwiki.osdn.jp/index.php pukiwiki] utf8
+ [https://pukiwiki.osdn.jp/index.php pukiwiki] utf8
 
 ** WikiNameの挿入位置 [#q7ad1d6d]
 要求しようとするURLへの[[WikiName]]の挿入位置を $1 で指定することができます。省略するとお尻にくっつきます。
 
- -[http://pukiwiki.osdn.jp/index.php?cmd=backup&page=$1&age=1 pukiwiki] utf8
+ -[https://pukiwiki.osdn.jp/index.php?cmd=backup&page=$1&age=1 pukiwiki] utf8
 
 ** 文字コード変換タイプ [#k34801d3]
 
 [[PukiWiki]]内のページ以外にも飛ばせます。日本語をURLに含む可能性もあるのでその場合のエンコーディングの指定をタイプとして指定できます。
 
- -[http://pukiwiki.osdn.jp/index.php?cmd=read&page=$1 somewhere] utf8
+ -[https://pukiwiki.osdn.jp/index.php?cmd=read&page=$1 somewhere] utf8
 
 :std 省略時|内部文字エンコーディング(標準はSJIS)のままURLエンコードします。
 :raw asis|URLエンコードしないでそのまま使用。

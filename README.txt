@@ -8,8 +8,8 @@
     License: GPL version 2 or (at your option) any later version
 
     URL:
-      http://pukiwiki.osdn.jp/
-      http://pukiwiki.osdn.jp/dev/
+      https://pukiwiki.osdn.jp/
+      https://pukiwiki.osdn.jp/dev/
       https://osdn.jp/projects/pukiwiki/
 
 書式
@@ -233,16 +233,16 @@ Wikiの様子を見る
     その他、リリース版の基本的な使い方に関する情報はPukiWiki公式サイト
     をご覧下さい。以下のようなコンテンツが特に有用です。
 
-    FAQ        http://pukiwiki.osdn.jp/?FAQ
-    質問箱     http://pukiwiki.osdn.jp/?%E8%B3%AA%E5%95%8F%E7%AE%B1
+    FAQ        https://pukiwiki.osdn.jp/?FAQ
+    質問箱     https://pukiwiki.osdn.jp/?%E8%B3%AA%E5%95%8F%E7%AE%B1
 
 バグ
     PukiWikiのセキュリティに関する情報は以下でまとめられています。
-    http://pukiwiki.osdn.jp/?PukiWiki/Errata
+    https://pukiwiki.osdn.jp/?PukiWiki/Errata
 
     バグ報告は devサイトまでお願いします。
     (我々はPukiWikiでPukiWikiのバグトラッキングを行っています)
-    http://pukiwiki.osdn.jp/dev/?BugTrack
+    https://pukiwiki.osdn.jp/dev/?BugTrack
 
 歴史
     PukiWikiは、結城浩さんが作られたYukiWikiの仕様を参考に独自に開発されまし

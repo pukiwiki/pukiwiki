@@ -92,7 +92,7 @@ URLやメールアドレスは自動的にリンクになります
 - URL -- http://example.org/
 - メールアドレス -- foo@example.org
 - URLが各種画像ファイルであればそのまま表示します
--- http://pukiwiki.osdn.jp/image/b_pukiwiki.official.png
+-- https://pukiwiki.osdn.jp/image/b_pukiwiki.official.png
 
 
 * ''その他の文字装飾'' [#l89b765d]

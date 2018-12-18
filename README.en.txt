@@ -11,7 +11,7 @@ NAME
           2001-2018 PukiWiki Developement Team
           2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
         License: GPL version 2 or (at your option) any later version
-        http://pukiwiki.osdn.jp/
+        https://pukiwiki.osdn.jp/
 
 DESCRIPTION
 
@@ -132,15 +132,15 @@ RDF/RSS
 
 TODO
 
-    http://pukiwiki.osdn.jp/dev/?BugTrack
+    https://pukiwiki.osdn.jp/dev/?BugTrack
 
 AUTHOR
 
-    PukiWiki Development Team http://pukiwiki.osdn.jp/dev/
+    PukiWiki Development Team https://pukiwiki.osdn.jp/dev/
     Based on "PukiWiki" 1.3 by yu-ji
 
     Please send questions, opinions and bug reports to
-    http://pukiwiki.osdn.jp/dev/
+    https://pukiwiki.osdn.jp/dev/
 
 LICENCE 
 
@@ -158,8 +158,8 @@ ACKNOWLEDGEMENT
 
 REFERENCE
 
-    * PukiWiki Web Site         http://pukiwiki.osdn.jp/
-    * PukiWiki Developers' Site http://pukiwiki.osdn.jp/dev/
+    * PukiWiki Web Site         https://pukiwiki.osdn.jp/
+    * PukiWiki Developers' Site https://pukiwiki.osdn.jp/dev/
     * yu-ji's Web Site          http://factage.com/yu-ji/ 
     * Hiroshi Yuki 's Web Site  http://www.hyuki.com/ 
     * YukiWiki                  http://www.hyuki.com/yukiwiki/ 
