@@ -3,7 +3,7 @@
 
     Version 1.5.2
     Copyright
-      2001-2018 PukiWiki Development Team
+      2001-2019 PukiWiki Development Team
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
 

@@ -8,7 +8,7 @@ NAME
 
         PukiWiki 1.5.2
         Copyright
-          2001-2018 PukiWiki Developement Team
+          2001-2019 PukiWiki Developement Team
           2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
         License: GPL version 2 or (at your option) any later version
         https://pukiwiki.osdn.jp/
