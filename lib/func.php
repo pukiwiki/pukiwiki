@@ -462,7 +462,7 @@ function arg_check($str)
 
 function _pagename_urlencode_callback($matches)
 {
-	return rawurlencode($matches[0]);
+	return urlencode($matches[0]);
 }
 
 function pagename_urlencode($page)

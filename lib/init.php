@@ -402,7 +402,7 @@ if (! isset($vars['cmd']) && ! isset($vars['plugin'])) {
 	$arg = preg_replace("#^([^&]*)&.*$#", "$1", $arg);
 	if ($arg == '') $arg = $defaultpage;
 	if (strpos($arg, '=') !== false) $arg = $defaultpage; // Found '/?key=value'
-	$arg = rawurldecode($arg);
+	$arg = urldecode($arg);
 	$arg = strip_bracket($arg);
 	$arg = input_filter($arg);
 	$get['page'] = $post['page'] = $vars['page'] = $arg;
