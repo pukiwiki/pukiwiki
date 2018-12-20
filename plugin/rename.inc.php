@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // rename.inc.php
-// Copyright 2002-2017 PukiWiki Development Team
+// Copyright 2002-2018 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Rename plugin: Rename page-name and related data
@@ -326,7 +326,6 @@ function plugin_rename_get_files($pages)
 			}
 		}
 	}
-
 	return $files;
 }
 
@@ -344,11 +343,11 @@ function plugin_rename_proceed($pages, $files, $exists)
 			if (isset($exists[$page][$old]) && $exists[$page][$old])
 				unlink($new);
 			rename($old, $new);
-
-			// linkデータベースを更新する BugTrack/327 arino
-			links_update($old);
-			links_update($new);
 		}
+		// linkデータベースを更新する BugTrack/327 arino
+		$new_page = $pages[$page];
+		links_update(decode($page));
+		links_update(decode($new_page));
 	}
 	// Rename counter
 	$pages_decoded = array();
