@@ -1031,13 +1031,16 @@ function prepare_display_materials() {
  * Prepare page related links and references for links_get_related()
  */
 function prepare_links_related($page) {
-	$enc_name = encode($page);
-	$rel_file = CACHE_DIR . encode($page) . '.rel';
-	$ref_file = CACHE_DIR . encode($page) . '.ref';
-	if (file_exists($rel_file)) return;
-	if (file_exists($ref_file)) return;
-	$pattern = '/^((?:[0-9A-F]{2})+)' . '(\.ref|\.rel)' . '$/';
+	global $defaultpage;
 
+	$enc_defaultpage = encode($defaultpage);
+	if (file_exists(CACHE_DIR . $enc_defaultpage . '.rel')) return;
+	if (file_exists(CACHE_DIR . $enc_defaultpage . '.ref')) return;
+	$enc_name = encode($page);
+	if (file_exists(CACHE_DIR . $enc_name . '.rel')) return;
+	if (file_exists(CACHE_DIR . $enc_name . '.ref')) return;
+
+	$pattern = '/^((?:[0-9A-F]{2})+)' . '(\.ref|\.rel)' . '$/';
 	$dir = CACHE_DIR;
 	$dp = @opendir($dir) or die_message('CACHE_DIR/'. ' is not found or not readable.');
 	$rel_ref_ready = false;
