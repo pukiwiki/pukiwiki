@@ -15,8 +15,10 @@ function plugin_edit_action()
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
-	$page = isset($vars['page']) ? $vars['page'] : '';
+	// Create initial pages
+	plugin_edit_setup_initial_pages();
 
+	$page = isset($vars['page']) ? $vars['page'] : '';
 	check_editable($page, true, true);
 	check_readable($page, true, true);
 
@@ -266,4 +268,15 @@ function plugin_edit_cancel()
 	pkwk_headers_sent();
 	header('Location: ' . get_page_uri($vars['page'], PKWK_URI_ROOT));
 	exit;
+}
+
+/**
+ * Setup initial pages
+ */
+function plugin_edit_setup_initial_pages()
+{
+	// Related: Rename plugin
+	if (exist_plugin('rename') && function_exists('plugin_rename_setup_initial_pages')) {
+		plugin_rename_setup_initial_pages();
+	}
 }

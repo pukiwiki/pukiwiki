@@ -474,3 +474,14 @@ function plugin_rename_is_page($page) {
 	}
 	return false;
 }
+
+/**
+ * Setup initial pages (:RenameLog)
+ */
+function plugin_rename_setup_initial_pages() {
+	if (!is_page(PLUGIN_RENAME_LOGPAGE)) {
+		// Create :RenameLog
+		$body = "#freeze\n// :RenameLog (rename plugin)\n";
+		page_write(PLUGIN_RENAME_LOGPAGE, $body);
+	}
+}
