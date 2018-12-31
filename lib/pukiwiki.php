@@ -90,6 +90,7 @@ if (isset($retvars['body']) && $retvars['body'] != '') {
 	$body = & $retvars['body'];
 } else {
 	if ($base == '' || ! is_page($base)) {
+		check_readable($defaultpage, true, true);
 		$base  = & $defaultpage;
 		$title = htmlsc(strip_bracket($base));
 		$page  = make_search($base);
