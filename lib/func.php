@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // func.php
 // Copyright
-//   2002-2018 PukiWiki Development Team
+//   2002-2019 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -1045,6 +1045,21 @@ function csv_implode($glue, $pieces)
 function htmlsc($string = '', $flags = ENT_COMPAT, $charset = CONTENT_CHARSET)
 {
 	return htmlspecialchars($string, $flags, $charset);	// htmlsc()
+}
+
+/**
+ * Get JSON string with htmlspecialchars().
+ */
+function htmlsc_json($obj)
+{
+	// json_encode: PHP 5.2+
+	// JSON_UNESCAPED_UNICODE: PHP 5.4+
+	// JSON_UNESCAPED_SLASHES: PHP 5.4+
+	if (defined('JSON_UNESCAPED_UNICODE')) {
+		return htmlsc(json_encode($obj,
+			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+	}
+	return '';
 }
 
 /**

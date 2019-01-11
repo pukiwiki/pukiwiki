@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // edit.inc.php
-// Copyright 2001-2018 PukiWiki Development Team
+// Copyright 2001-2019 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Edit plugin (cmd=edit)
@@ -279,4 +279,6 @@ function plugin_edit_setup_initial_pages()
 	if (exist_plugin('rename') && function_exists('plugin_rename_setup_initial_pages')) {
 		plugin_rename_setup_initial_pages();
 	}
+	// AutoTicketLinkName page
+	init_autoticketlink_def_page();
 }

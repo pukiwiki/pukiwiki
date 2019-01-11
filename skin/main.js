@@ -1,6 +1,6 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // main.js
-// Copyright 2017 PukiWiki Development Team
+// Copyright 2017-2019 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // PukiWiki JavaScript client script
@@ -106,11 +106,13 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
   }
   // AutoTicketLink
   function autoTicketLink() {
-    var headReText = '([\\s\\b]|^)';
+    var headReText = '([\\s\\b:\\[]|^)';
     var tailReText = '\\b';
     var ignoreTags = ['A', 'INPUT', 'TEXTAREA', 'BUTTON',
       'SCRIPT', 'FRAME', 'IFRAME'];
     var ticketSiteList = [];
+    var jiraProjects = null;
+    var jiraDefaultInfo = null;
     function regexEscape(key) {
       return key.replace(/[-.]/g, function (m) {
         return '\\' + m;
@@ -137,6 +139,17 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         site.re = new RegExp(headReText + reText + tailReText);
       }
     }
+    function getJiraSite() {
+      var reText = '()([A-Z][A-Z0-9]{1,20}-\\d{1,10})';
+      var site = {
+        title: 'Builtin JIRA',
+        type: '_jira_',
+        key: '_jira_',
+        reText: reText,
+        re: new RegExp(headReText + reText + tailReText)
+      };
+      return site;
+    }
     function getSiteListFromBody() {
       var defRoot = document.querySelector('#pukiwiki-site-properties .ticketlink-def');
       if (defRoot && defRoot.value) {
@@ -146,8 +159,36 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       }
       return [];
     }
+    function getJiraProjectsFromBody() {
+      var defRoot = document.querySelector('#pukiwiki-site-properties .ticketlink-jira-def');
+      if (defRoot && defRoot.value) {
+        try {
+          return JSON.parse(defRoot.value); // List
+        } catch (e) {
+          return null;
+        }
+      }
+      return null;
+    }
+    function getJiraDefaultInfoFromBody() {
+      var defRoot = document.querySelector('#pukiwiki-site-properties .ticketlink-jira-default-def');
+      if (defRoot && defRoot.value) {
+        try {
+          return JSON.parse(defRoot.value); // object
+        } catch (e) {
+          return null;
+        }
+      }
+      return null;
+    }
     function getSiteList() {
       return ticketSiteList;
+    }
+    function getJiraProjectList() {
+      return jiraProjects;
+    }
+    function getDefaultJira() {
+      return jiraDefaultInfo;
     }
     function ticketToLink(keyText) {
       var siteList = getSiteList();
@@ -155,13 +196,49 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         var site = siteList[i];
         var m = keyText.match(site.re);
         if (m) {
-          var title = site.title;
           var ticketKey = m[3];
-          if (title) {
-            title = title.replace(/\$1/g, ticketKey);
+          var title = ticketKey;
+          var ticketUrl;
+          if (site.type === '_jira_') {
+            // JIRA issue
+            var projects = getJiraProjectList();
+            var hyphen = keyText.indexOf('-');
+            if (hyphen > 0) {
+              var projectKey = keyText.substr(0, hyphen);
+              if (projects) {
+                for (var j = 0; j < projects.length; j++) {
+                  var p = projects[j];
+                  if (p.key === projectKey) {
+                    if (p.title) {
+                      title = p.title.replace(/\$1/g, ticketKey);
+                    }
+                    ticketUrl = p.base_url + ticketKey;
+                    break;
+                  }
+                }
+              }
+              if (!ticketUrl) {
+                var defaultJira = getDefaultJira();
+                if (defaultJira) {
+                  if (defaultJira.title) {
+                    title = defaultJira.title.replace(/\$1/g, ticketKey);
+                  }
+                  ticketUrl = defaultJira.base_url + ticketKey;
+                }
+              }
+            }
+            if (!ticketUrl) {
+              return null;
+            }
+          } else {
+            // Explicit TicketLink
+            if (site.title) {
+              title = site.title.replace(/\$1/g, ticketKey);
+            }
+            ticketUrl = site.base_url + ticketKey;
           }
           return {
-            url: site.base_url + m[3],
+            url: ticketUrl,
             title: title
           };
         }
@@ -195,12 +272,17 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         if (m.index > 0 || m[1].length > 0) {
           f.appendChild(document.createTextNode(text.substr(0, m.index) + m[1]));
         }
-        var a = document.createElement('a');
-        a.textContent = m[2];
-        var linkInfo = ticketToLink(a.textContent);
-        a.href = linkInfo.url;
-        a.title = linkInfo.title;
-        f.appendChild(a);
+        var linkKey = m[2];
+        var linkInfo = ticketToLink(linkKey);
+        if (linkInfo) {
+          var a = document.createElement('a');
+          a.textContent = linkKey;
+          a.href = linkInfo.url;
+          a.title = linkInfo.title;
+          f.appendChild(a);
+        } else {
+          f.appendChild(document.createTextNode(m[2]));
+        }
         text = text.substr(m.index + m[0].length);
       }
       if (f) {
@@ -230,6 +312,11 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       return;
     }
     ticketSiteList = getSiteListFromBody();
+    jiraProjects = getJiraProjectsFromBody();
+    jiraDefaultInfo = getJiraDefaultInfoFromBody();
+    if (jiraDefaultInfo || (jiraProjects && jiraProjects.length > 0)) {
+      ticketSiteList.push(getJiraSite());
+    }
     var target = document.getElementById('body');
     walkElement(target);
   }

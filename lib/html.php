@@ -226,6 +226,7 @@ function get_html_scripting_data($page, $in_editing)
 	global $ticket_link_sites, $plugin;
 	global $external_link_cushion_page, $external_link_cushion;
 	global $topicpath_title;
+	global $ticket_jira_default_site;
 	if (!isset($ticket_link_sites) || !is_array($ticket_link_sites)) {
 		return '';
 	}
@@ -277,6 +278,22 @@ EOS;
 	$ticketlink_data = <<<EOS
 <input type="hidden" class="ticketlink-def" value="$h_ticket_link_sites" />
 EOS;
+	// AutoTicketLink - JIRA
+	$ticket_jira_projects = get_ticketlink_jira_projects();
+	$ticketlink_jira_data = '';
+	if (count($ticket_jira_projects) > 0) {
+		$h_ticket_jira_projects = htmlsc_json($ticket_jira_projects);
+		$ticketlink_jira_data = <<<EOS
+<input type="hidden" class="ticketlink-jira-def" value="$h_ticket_jira_projects" />
+EOS;
+	}
+	$ticketlink_jira_default_data = '';
+	if (isset($ticket_jira_default_site) && is_array($ticket_jira_default_site)) {
+		$h_ticket_jira_default_site = htmlsc_json($ticket_jira_default_site);
+		$ticketlink_jira_default_data = <<<EOS
+<input type="hidden" class="ticketlink-jira-default-def" value="$h_ticket_jira_default_site" />
+EOS;
+	}
 	// External link cushion page
 	$external_link_cushion_data = '';
 	if ($external_link_cushion_page) {
@@ -303,6 +320,8 @@ $plugin_prop
 $page_name_data
 $page_edit_data
 $ticketlink_data
+$ticketlink_jira_data
+$ticketlink_jira_default_data
 $external_link_cushion_data
 $topicpath_data
 </div>

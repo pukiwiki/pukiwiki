@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // make_link.php
 // Copyright
-//   2003-2018 PukiWiki Development Team
+//   2003-2019 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -926,4 +926,69 @@ function get_interwiki_url($name, $param)
 	if ($len > 512) die_message('InterWiki URL too long: ' . $len . ' characters');
 
 	return $url;
+}
+
+function get_autoticketlink_def_page()
+{
+	return 'AutoTicketLinkName';
+}
+
+/**
+ * Get AutoTicketLink - JIRA projects from AutoTiketLinkName page
+ */
+function get_ticketlink_jira_projects()
+{
+	$autoticketlink_def_page = get_autoticketlink_def_page();
+	$active_jira_base_url = null;
+	$jira_projects = array();
+	foreach (get_source($autoticketlink_def_page) as $line) {
+		if (substr($line, 0, 1) !== '-') {
+			$active_jira_base_url = null;
+			continue;
+		}
+		$m = null;
+		if (preg_match('/^-\s*(jira)\s+(https?:\/\/[!~*\'();\/?:\@&=+\$,%#\w.-]+)\s*$/', $line, $m)) {
+			$active_jira_base_url = $m[2];
+		} else if (preg_match('/^--\s*([A-Z][A-Z0-9]+)(\s+(.+?))?\s*$/', $line, $m)) {
+			if ($active_jira_base_url) {
+				$project_key = $m[1];
+				$title = $m[2];
+				array_push($jira_projects, array(
+					'key' => $m[1],
+					'title' => $title,
+					'base_url' => $active_jira_base_url,
+				));
+			}
+		} else {
+			$active_jira_base_url = null;
+		}
+	}
+	return $jira_projects;
+}
+
+function init_autoticketlink_def_page()
+{
+	$autoticketlink_def_page = get_autoticketlink_def_page();
+	if (is_page($autoticketlink_def_page)) {
+		return;
+	}
+	$body = <<<'EOS'
+#freeze
+* AutoTicketLink definition [#def]
+
+Reference: https://pukiwiki.osdn.jp/?AutoTicketLink
+
+ - jira https://site1.example.com/jira/browse/
+ -- AAA Project title $1
+ -- BBB Project title $1
+ - jira https://site2.example.com/jira/browse/
+ -- PROJECTA Site2 $1
+
+ (Default definition) pukiwiki.ini.php
+ $ticket_jira_default_site = array(
+   'title' => 'My JIRA - $1',
+   'base_url' => 'https://issues.example.com/jira/browse/',
+ );
+EOS;
+	page_write($autoticketlink_def_page, $body);
 }

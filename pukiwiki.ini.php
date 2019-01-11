@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // pukiwiki.ini.php
 // Copyright
-//   2002-2016 PukiWiki Development Team
+//   2002-2019 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -314,6 +314,13 @@ $ticket_link_sites = array(
 	),
 */
 );
+// AutoTicketLink - JIRA Default site
+/*
+$ticket_jira_default_site = array(
+	'title' => 'My JIRA - $1',
+	'base_url' => 'https://issues.example.com/jira/browse/',
+);
+//*/
 
 /////////////////////////////////////////////////
 // Show External Link Cushion Page
