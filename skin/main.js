@@ -124,10 +124,10 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         var reText = '';
         switch (site.type) {
           case 'jira':
-            reText = '(' + regexEscape(site.key) + '):([A-Z][A-Z0-9_]+-\\d+)';
+            reText = '(' + regexEscape(site.key) + '):([A-Z][A-Z0-9]{1,20}-\\d{1,10})';
             break;
           case 'redmine':
-            reText = '(' + regexEscape(site.key) + '):(\\d+)';
+            reText = '(' + regexEscape(site.key) + '):(\\d{1,10})';
             break;
           case 'git':
             reText = '(' + regexEscape(site.key) + '):([0-9a-f]{7,40})';

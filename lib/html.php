@@ -247,7 +247,7 @@ EOS;
 		'base_uri_pathname' => get_base_uri(PKWK_URI_ROOT),
 		'base_uri_absolute' => get_base_uri(PKWK_URI_ABSOLUTE)
 	);
-	$h_props = htmlsc(json_encode($props, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+	$h_props = htmlsc_json($props);
 	$site_props = <<<EOS
 <input type="hidden" class="site-props" value="$h_props" />
 EOS;
@@ -273,8 +273,7 @@ EOS;
 		}
 		array_push($filtered_ticket_link_sites, $s);
 	}
-	$h_ticket_link_sites = htmlsc(json_encode($filtered_ticket_link_sites,
-		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+	$h_ticket_link_sites = htmlsc_json($filtered_ticket_link_sites);
 	$ticketlink_data = <<<EOS
 <input type="hidden" class="ticketlink-def" value="$h_ticket_link_sites" />
 EOS;
