@@ -296,8 +296,7 @@ EOS;
 	// External link cushion page
 	$external_link_cushion_data = '';
 	if ($external_link_cushion_page) {
-		$h_cushion = htmlsc(json_encode($external_link_cushion,
-			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+		$h_cushion = htmlsc_json($external_link_cushion);
 		$external_link_cushion_data = <<<EOS
 <input type="hidden" class="external-link-cushion" value="$h_cushion" />
 EOS;
