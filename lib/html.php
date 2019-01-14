@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // html.php
 // Copyright
-//   2002-2018 PukiWiki Development Team
+//   2002-2019 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -305,8 +305,7 @@ EOS;
 	$topicpath_data = '';
 	if ($topicpath_title && exist_plugin('topicpath')) {
 		$parents = plugin_topicpath_parent_links($page);
-		$h_topicpath = htmlsc(json_encode($parents,
-		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+		$h_topicpath = htmlsc_json($parents);
 		$topicpath_data = <<<EOS
 <input type="hidden" class="topicpath-links" value="$h_topicpath" />
 EOS;
