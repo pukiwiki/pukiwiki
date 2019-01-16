@@ -106,7 +106,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
   }
   // AutoTicketLink
   function autoTicketLink() {
-    var headReText = '([\\s\\b:\\[]|^)';
+    var headReText = '([\\s\\b:\\[\\(,;]|^)';
     var tailReText = '\\b';
     var ignoreTags = ['A', 'INPUT', 'TEXTAREA', 'BUTTON',
       'SCRIPT', 'FRAME', 'IFRAME'];
