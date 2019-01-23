@@ -972,21 +972,21 @@ function init_autoticketlink_def_page()
 	if (is_page($autoticketlink_def_page)) {
 		return;
 	}
-	$body = <<<'EOS'
+	$body = <<<EOS
 #freeze
 * AutoTicketLink definition [#def]
 
 Reference: https://pukiwiki.osdn.jp/?AutoTicketLink
 
  - jira https://site1.example.com/jira/browse/
- -- AAA Project title $1
- -- BBB Project title $1
+ -- AAA Project title \$1
+ -- BBB Project title \$1
  - jira https://site2.example.com/jira/browse/
- -- PROJECTA Site2 $1
+ -- PROJECTA Site2 \$1
 
  (Default definition) pukiwiki.ini.php
  $ticket_jira_default_site = array(
-   'title' => 'My JIRA - $1',
+   'title' => 'My JIRA - \$1',
    'base_url' => 'https://issues.example.com/jira/browse/',
  );
 EOS;
