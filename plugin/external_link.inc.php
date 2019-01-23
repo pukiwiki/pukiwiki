@@ -20,7 +20,7 @@ function plugin_external_link_action()
 		}
 	}
 	if (!$valid_url) {
-		$error_message = <<< 'EOM'
+		$error_message = <<< EOM
 <html>
   <body>
     The URL is invalid.
