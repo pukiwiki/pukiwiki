@@ -10,9 +10,6 @@
 
 define('PLUGIN_RENAME_LOGPAGE', ':RenameLog');
 
-if (file_exists(PLUGIN_DIR . 'counter.inc.php'))
-	require_once(PLUGIN_DIR . 'counter.inc.php');
-
 function plugin_rename_action()
 {
 	global $whatsnew;
@@ -354,7 +351,9 @@ function plugin_rename_proceed($pages, $files, $exists)
 	foreach ($pages as $old=>$new) {
 		$pages_decoded[decode($old)] = decode($new);
 	}
-	plugin_counter_page_rename($pages_decoded);
+	if (exist_plugin('counter')) {
+		plugin_counter_page_rename($pages_decoded);
+	}
 
 	$postdata = get_source(PLUGIN_RENAME_LOGPAGE);
 	$postdata[] = '*' . $now . "\n";

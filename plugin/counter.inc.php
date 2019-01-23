@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // counter.inc.php
 // Copyright
-//   2002-2017 PukiWiki Development Team
+//   2002-2019 PukiWiki Development Team
 //   2002 Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net
 // License: GPL2
 //
@@ -16,6 +16,7 @@ define('PLUGIN_COUNTER_USE_DB', 0);
 define('PLUGIN_COUNTER_DB_CONNECT_STRING', 'sqlite:counter/counter.db');
 define('PLUGIN_COUNTER_DB_USERNAME', '');
 define('PLUGIN_COUNTER_DB_PASSWORD', '');
+global $plugin_counter_db_options;
 $plugin_counter_db_options = null;
 // For MySQL
 // $plugin_counter_db_options = array(PDO::MYSQL_ATTR_INIT_COMMAND =>
