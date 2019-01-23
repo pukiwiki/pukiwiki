@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // popular.inc.php
 // Copyright
-//   2003-2017 PukiWiki Development Team
+//   2003-2019 PukiWiki Development Team
 //   2002 Kazunori Mizushima <kazunori@uc.netyou.jp>
 // License: WHERE IS THE RECORD?
 //
@@ -27,8 +27,6 @@
 
 define('PLUGIN_POPULAR_DEFAULT', 10);
 
-require_once(PLUGIN_DIR . 'counter.inc.php');
-
 function plugin_popular_convert()
 {
 	global $vars;
@@ -45,7 +43,11 @@ function plugin_popular_convert()
 	case 2: $except = $array[1];
 	case 1: $max    = (int)$array[0];
 	}
-	$counters = plugin_counter_get_popular_list($today, $except, $max);
+	if (exist_plugin('counter')) {
+		$counters = plugin_counter_get_popular_list($today, $except, $max);
+	} else {
+		$counters = array();
+	}
 
 	$items = '';
 	if (! empty($counters)) {
