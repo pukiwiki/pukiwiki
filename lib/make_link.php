@@ -949,7 +949,7 @@ function get_ticketlink_jira_projects()
 		$m = null;
 		if (preg_match('/^-\s*(jira)\s+(https?:\/\/[!~*\'();\/?:\@&=+\$,%#\w.-]+)\s*$/', $line, $m)) {
 			$active_jira_base_url = $m[2];
-		} else if (preg_match('/^--\s*([A-Z][A-Z0-9]+)(\s+(.+?))?\s*$/', $line, $m)) {
+		} else if (preg_match('/^--\s*([A-Z][A-Z0-9]{1,10}(?:_[A-Z0-9]{1,10}){0,2})(\s+(.+?))?\s*$/', $line, $m)) {
 			if ($active_jira_base_url) {
 				$project_key = $m[1];
 				$title = $m[2];

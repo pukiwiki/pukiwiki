@@ -124,7 +124,8 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
         var reText = '';
         switch (site.type) {
           case 'jira':
-            reText = '(' + regexEscape(site.key) + '):([A-Z][A-Z0-9]{1,20}-\\d{1,10})';
+            reText = '(' + regexEscape(site.key) +
+              '):([A-Z][A-Z0-9]{1,20}(?:_[A-Z0-9]{1,10}){0,2}-\\d{1,10})';
             break;
           case 'redmine':
             reText = '(' + regexEscape(site.key) + '):(\\d{1,10})';
@@ -140,7 +141,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
       }
     }
     function getJiraSite() {
-      var reText = '()([A-Z][A-Z0-9]{1,20}-\\d{1,10})';
+      var reText = '()([A-Z][A-Z0-9]{1,20}(?:_[A-Z0-9]{1,10}){0,2}-\\d{1,10})';
       var site = {
         title: 'Builtin JIRA',
         type: '_jira_',
