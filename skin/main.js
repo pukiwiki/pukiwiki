@@ -583,11 +583,17 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
     var fragment = document.createDocumentFragment();
     for (var i = 0, n = topicpathLinks.length; i < n; i++) {
       var path = topicpathLinks[i];
-      var a1 = document.createElement('a');
-      a1.setAttribute('href', path.uri);
-      a1.setAttribute('title', path.page);
-      a1.textContent = path.leaf;
-      fragment.appendChild(a1);
+      if (path.uri) {
+        var a1 = document.createElement('a');
+        a1.setAttribute('href', path.uri);
+        a1.setAttribute('title', path.page);
+        a1.textContent = path.leaf;
+        fragment.appendChild(a1);
+      } else {
+        var s1 = document.createElement('span');
+        s1.textContent = path.leaf;
+        fragment.appendChild(s1);
+      }
       var span = document.createElement('span');
       span.className = 'topicpath-slash';
       span.textContent = '/';

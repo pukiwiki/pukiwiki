@@ -303,7 +303,8 @@ EOS;
 	}
 	// Topicpath title
 	$topicpath_data = '';
-	if ($topicpath_title && exist_plugin('topicpath')) {
+	if ($topicpath_title && exist_plugin('topicpath') &&
+		function_exists('plugin_topicpath_parent_links')) {
 		$parents = plugin_topicpath_parent_links($page);
 		$h_topicpath = htmlsc_json($parents);
 		$topicpath_data = <<<EOS

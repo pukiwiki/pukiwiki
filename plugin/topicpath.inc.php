@@ -32,6 +32,26 @@ function plugin_topicpath_convert()
 
 function plugin_topicpath_parent_links($page)
 {
+	$links = plugin_topicpath_parent_all_links($page);
+	if (PKWK_READONLY) {
+		$active_links = array();
+		foreach ($links as $link) {
+			if (is_page($link['page'])) {
+				$active_links[] = $link;
+			} else {
+				$active_links[] = array(
+					'page' => $link['page'],
+					'leaf' => $link['leaf'],
+				);
+			}
+		}
+		return $active_links;
+	}
+	return $links;
+}
+
+function plugin_topicpath_parent_all_links($page)
+{
 	$parts = explode('/', $page);
 	$parents = array();
 	for ($i = 0, $pos = 0; $pos = strpos($page, '/', $i); $i = $pos + 1) {
@@ -50,7 +70,7 @@ function plugin_topicpath_inline()
 	global $vars, $defaultpage;
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	if ($page == '' || $page == $defaultpage) return '';
-	$parents = plugin_topicpath_parent_links($page);
+	$parents = plugin_topicpath_parent_all_links($page);
 	$topic_path = array();
 	foreach ($parents as $p) {
 		if (PKWK_READONLY && !is_page($p['page'])) {
