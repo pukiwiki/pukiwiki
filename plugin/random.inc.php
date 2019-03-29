@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // random.inc.php
-// Copyright 2002-2017 PukiWiki Development Team
+// Copyright 2002-2019 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Show random page plugin
@@ -23,7 +23,7 @@ function plugin_random_convert()
 {
 	global $vars;
 
-	$script = $get_base_uri();
+	$script = get_base_uri();
 	$title = '[Random Link]'; // default
 	if (func_num_args()) {
 		$args  = func_get_args();
