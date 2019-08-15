@@ -227,6 +227,7 @@ function get_html_scripting_data($page, $in_editing)
 	global $external_link_cushion_page, $external_link_cushion;
 	global $topicpath_title;
 	global $ticket_jira_default_site;
+	global $show_passage;
 	if (!isset($ticket_link_sites) || !is_array($ticket_link_sites)) {
 		return '';
 	}
@@ -240,10 +241,12 @@ function get_html_scripting_data($page, $in_editing)
 EOS;
 		return $empty_data;
 	}
+	$is_show_passage = (bool)($show_passage !== 0);
 	// Site basic Properties
 	$props = array(
 		'is_utf8' => $is_utf8,
 		'json_enabled' => $json_enabled,
+		'show_passage' => $is_show_passage,
 		'base_uri_pathname' => get_base_uri(PKWK_URI_ROOT),
 		'base_uri_absolute' => get_base_uri(PKWK_URI_ABSOLUTE)
 	);

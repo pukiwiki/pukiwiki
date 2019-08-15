@@ -658,6 +658,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
      * @param {boolean} insertTop
      */
     function addSearchResult(results, searchText, searchRegex, parentElement, insertTop) {
+      var props = getSiteProps();
       var now = new Date();
       var parentFragment = document.createDocumentFragment();
       results.forEach(function(val) {
@@ -670,8 +671,12 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
           decoratedName = escapeHTML(val.name);
         }
         var updatedAt = val.updatedAt;
-        var liHtml = '<a href="' + escapeHTML(href) + '">' + decoratedName + '</a> ' +
-          getPassage(now, updatedAt);
+        var passageHtml = '';
+        if (props.show_passage) {
+          passageHtml = ' ' + getPassage(now, updatedAt);
+        }
+        var liHtml = '<a href="' + escapeHTML(href) + '">' +
+          decoratedName + '</a>' + passageHtml;
         li.innerHTML = liHtml;
         li.setAttribute('data-pagename', val.name);
         fragment.appendChild(li);
