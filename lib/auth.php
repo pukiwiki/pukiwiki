@@ -367,7 +367,11 @@ function basic_auth($page, $auth_enabled, $exit_on_fail, $auth_pages, $title_can
 				header('WWW-Authenticate: Basic realm="' . $_msg_auth . '"');
 				header('HTTP/1.0 401 Unauthorized');
 			} elseif (AUTH_TYPE_FORM === $auth_type) {
-				$url_after_login = get_base_uri() . '?' . $g_query_string;
+				if (is_null($g_query_string)) {
+					$url_after_login = get_base_uri();
+				} else {
+					$url_after_login = get_base_uri() . '?' . $g_query_string;
+				}
 				$loginurl = get_base_uri() . '?plugin=loginform'
 					. '&page=' . rawurlencode($page)
 					. '&url_after_login=' . rawurlencode($url_after_login);
@@ -375,7 +379,11 @@ function basic_auth($page, $auth_enabled, $exit_on_fail, $auth_pages, $title_can
 				header('Location: ' . $loginurl);
 			} elseif (AUTH_TYPE_EXTERNAL === $auth_type ||
 				AUTH_TYPE_SAML === $auth_type) {
-				$url_after_login = get_base_uri(PKWK_URI_ABSOLUTE) . '?' . $g_query_string;
+				if (is_null($g_query_string)) {
+					$url_after_login = get_base_uri(PKWK_URI_ABSOLUTE);
+				} else {
+					$url_after_login = get_base_uri(PKWK_URI_ABSOLUTE) . '?' . $g_query_string;
+				}
 				$loginurl = get_auth_external_login_url($page, $url_after_login);
 				header('HTTP/1.0 302 Found');
 				header('Location: ' . $loginurl);

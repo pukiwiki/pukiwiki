@@ -36,7 +36,7 @@ function plugin_loginform_action()
 	if ($username && $password && form_auth($username, $password)) {
 		// Sign in successfully completed
 		form_auth_redirect($url_after_login, $page_after_login);
-		return;
+		exit; // or 'return FALSE;' - Don't double check for FORM_AUTH
 	}
 	if ($pcmd === 'logout') {
 		// logout
