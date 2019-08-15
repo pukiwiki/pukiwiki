@@ -567,10 +567,12 @@ li.navi_none {
 }
 li.navi_left {
   display:inline;
+  float:left;
   text-align:left;
 }
 li.navi_right {
   display:inline;
+  float:right;
   text-align:right;
 }
 
