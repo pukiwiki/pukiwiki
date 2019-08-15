@@ -654,15 +654,14 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
      * @param {Array<Object>} results
      * @param {string} searchText
      * @param {RegExp} searchRegex
-     * @param {Element} parentElement
+     * @param {Element} parentUlElement
      * @param {boolean} insertTop
      */
-    function addSearchResult(results, searchText, searchRegex, parentElement, insertTop) {
+    function addSearchResult(results, searchText, searchRegex, parentUlElement, insertTop) {
       var props = getSiteProps();
       var now = new Date();
       var parentFragment = document.createDocumentFragment();
       results.forEach(function(val) {
-        var fragment = document.createDocumentFragment();
         var li = document.createElement('li');
         var hash = '#q=' + encodeSearchTextForHash(searchText);
         var href = val.url + hash;
@@ -679,7 +678,7 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
           decoratedName + '</a>' + passageHtml;
         li.innerHTML = liHtml;
         li.setAttribute('data-pagename', val.name);
-        fragment.appendChild(li);
+        // Page detail div
         var div = document.createElement('div');
         div.classList.add('search-result-detail');
         var head = document.createElement('div');
@@ -693,13 +692,14 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
           div.appendChild(pre);
         }
         div.setAttribute('data-pagename', val.name);
-        fragment.appendChild(div);
-        parentFragment.appendChild(fragment);
+        // Add li to ul (parentUlElement)
+        li.appendChild(div);
+        parentFragment.appendChild(li);
       });
-      if (insertTop && parentElement.firstChild) {
-        parentElement.insertBefore(parentFragment, parentElement.firstChild);
+      if (insertTop && parentUlElement.firstChild) {
+        parentUlElement.insertBefore(parentFragment, parentUlElement.firstChild);
       } else {
-        parentElement.appendChild(parentFragment);
+        parentUlElement.appendChild(parentFragment);
       }
     }
     function removeCachedResultsBase(keepTodayCache) {

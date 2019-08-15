@@ -352,10 +352,10 @@ EOD;
  <p>$_msg_unsupported_webbrowser $alt_msg</p>
 </noscript>
 <style>
-input#_plugin_search2_detail:checked ~ ul > div.search-result-detail {
+input#_plugin_search2_detail:checked ~ ul > li > div.search-result-detail {
   display:block;
 }
-input#_plugin_search2_detail ~ ul > div.search-result-detail {
+input#_plugin_search2_detail ~ ul > li > div.search-result-detail {
   display:none;
 }
 ._plugin_search2_search_status {
