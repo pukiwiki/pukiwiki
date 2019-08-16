@@ -902,7 +902,12 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function(
      * @param {number} prevTimestamp
      */
     function doSearch(searchText, session, startIndex, searchStartTime, prevTimestamp) {
-      var url = './?cmd=search2&action=query';
+      var props = getSiteProps();
+      var baseUrl = './';
+      if (props.base_uri_pathname) {
+        baseUrl = props.base_uri_pathname;
+      }
+      var url = baseUrl + '?cmd=search2&action=query';
       url += '&encode_hint=' + encodeURIComponent('\u3077');
       if (searchText) {
         url += '&q=' + encodeURIComponent(searchText);
