@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // html.php
 // Copyright
-//   2002-2019 PukiWiki Development Team
+//   2002-2020 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -413,7 +413,7 @@ EOD;
 	$h_msg_edit_unloadbefore_message = htmlsc($_msg_edit_unloadbefore_message);
 	$body = <<<EOD
 <div class="edit_form">
- <form action="$script" method="post" class="_plugin_edit_edit_form" style="margin-bottom:0px;">
+ <form action="$script" method="post" class="_plugin_edit_edit_form" style="margin-bottom:0;">
 $template
   $addtag
   <input type="hidden" name="cmd"    value="edit" />
@@ -431,7 +431,7 @@ $template
   </div>
   <textarea name="original" rows="1" cols="1" style="display:none">$s_original</textarea>
  </form>
- <form action="$script" method="post" class="_plugin_edit_cancel" style="margin-top:0px;">
+ <form action="$script" method="post" class="_plugin_edit_cancel" style="margin-top:0;">
   <input type="hidden" name="cmd"    value="edit" />
   <input type="hidden" name="page"   value="$s_page" />
   <input type="submit" name="cancel" value="$_btn_cancel" accesskey="c" />

@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // ref.inc.php
 // Copyright
-//   2002-2017 PukiWiki Development Team
+//   2002-2020 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -13,7 +13,7 @@
 if (! defined('FILE_ICON'))
 	define('FILE_ICON',
 	'<img src="' . IMAGE_DIR . 'file.png" width="20" height="20"' .
-	' alt="file" style="border-width:0px" />');
+	' alt="file" style="border-width:0" />');
 
 /////////////////////////////////////////////////
 // Default settings
@@ -79,13 +79,13 @@ function plugin_ref_convert()
 		//	Opera 6      = o
 		//	Netscape 6   = x (wrap,aroundが効かない)
 		//	IE 6         = x (wrap,aroundが効かない)
-		// margin:0px
+		// margin:0
 		//	Mozilla 1.x  = x (wrapで寄せが効かない)
 		//	Opera 6      = x (wrapで寄せが効かない)
 		//	Netscape 6   = x (wrapで寄せが効かない)
 		//	IE6          = o
-		$margin = ($params['around'] ? '0px' : 'auto');
-		$margin_align = ($params['_align'] == 'center') ? '' : ";margin-{$params['_align']}:0px";
+		$margin = ($params['around'] ? '0' : 'auto');
+		$margin_align = ($params['_align'] == 'center') ? '' : ";margin-{$params['_align']}:0";
 		$params['_body'] = <<<EOD
 <table class="style_table" style="margin:$margin$margin_align">
  <tr>

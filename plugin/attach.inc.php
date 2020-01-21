@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // attach.inc.php
 // Copyright
-//   2003-2017 PukiWiki Development Team
+//   2003-2020 PukiWiki Development Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
 //   2002      Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
 //   2001-2002 Originally written by yu-ji
@@ -42,7 +42,7 @@ define('PLUGIN_ATTACH_FILE_MODE', 0644);
 // File icon image
 define('PLUGIN_ATTACH_FILE_ICON', '<img src="' . IMAGE_DIR .  'file.png"' .
 	' width="20" height="20" alt="file"' .
-	' style="border-width:0px" />');
+	' style="border-width:0" />');
 
 // mime-typeを記述したページ
 define('PLUGIN_ATTACH_CONFIG_PAGE_MIME', 'plugin/attach/mime-type');

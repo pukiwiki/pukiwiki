@@ -3,7 +3,7 @@
 /*!
  * PukiWiki - Yet another WikiWikiWeb clone.
  * Copyright
- *   2002-2017 PukiWiki Development Team
+ *   2002-2020 PukiWiki Development Team
  *   2001-2002 Originally written by yu-ji
  * License: GPL v2 or (at your option) any later version
  *
@@ -55,8 +55,8 @@ h1, h2 {
   color:inherit;
   background-color:#DDEEFF;
   padding:.3em;
-  border:0px;
-  margin:0px 0px .5em 0px;
+  border:0;
+  margin:0 0 .5em 0;
 }
 h3 {
   font-family:verdana, arial, helvetica, Sans-Serif;
@@ -68,7 +68,7 @@ h3 {
   color:inherit;
   background-color:#FFFFFF;
   padding:.3em;
-  margin:0px 0px .5em 0px;
+  margin:0 0 .5em 0;
 }
 h4 {
   font-family:verdana, arial, helvetica, Sans-Serif;
@@ -77,23 +77,23 @@ h4 {
   color:inherit;
   background-color:#FFFFFF;
   padding:.3em;
-  margin:0px 0px .5em 0px;
+  margin:0 0 .5em 0;
 }
 h5, h6 {
   font-family:verdana, arial, helvetica, Sans-Serif;
   color:inherit;
   background-color:#DDEEFF;
   padding:.3em;
-  border:0px;
-  margin:0px 0px .5em 0px;
+  border:0;
+  margin:0 0 .5em 0;
 }
 h1.title {
   font-size:30px;
   font-weight:bold;
   background-color:transparent;
-  padding:12px 0px 0px 0px;
-  border:0px;
-  margin:12px 0px 0px 0px;
+  padding:12px 0 0 0;
+  border:0;
+  margin:12px 0 0 0;
 }
 
 dt {
@@ -146,8 +146,8 @@ tfoot th.style_th {
   background-color:#E0E8F0;
 }
 .style_table {
-  padding:0px;
-  border:0px;
+  padding:0;
+  border:0;
   margin:auto;
   text-align:left;
   color:inherit;
@@ -240,13 +240,13 @@ div.jumpmenu {
 hr.full_hr {
   border-style:ridge;
   border-color:#333333;
-  border-width:1px 0px;
+  border-width:1px 0;
 }
 hr.note_hr {
   width:90%;
   border-style:ridge;
   border-color:#333333;
-  border-width:1px 0px;
+  border-width:1px 0;
   text-align:center;
   margin:1em auto 0em auto;
 }
@@ -254,43 +254,43 @@ hr.note_hr {
 span.size1 {
   font-size:xx-small;
   line-height:130%;
-  text-indent:0px;
+  text-indent:0;
   display:inline;
 }
 span.size2 {
   font-size:x-small;
   line-height:130%;
-  text-indent:0px;
+  text-indent:0;
   display:inline;
 }
 span.size3 {
   font-size:small;
   line-height:130%;
-  text-indent:0px;
+  text-indent:0;
   display:inline;
 }
 span.size4 {
   font-size:medium;
   line-height:130%;
-  text-indent:0px;
+  text-indent:0;
   display:inline;
 }
 span.size5 {
   font-size:large;
   line-height:130%;
-  text-indent:0px;
+  text-indent:0;
   display:inline;
 }
 span.size6 {
   font-size:x-large;
   line-height:130%;
-  text-indent:0px;
+  text-indent:0;
   display:inline;
 }
 span.size7 {
   font-size:xx-large;
   line-height:130%;
-  text-indent:0px;
+  text-indent:0;
   display:inline;
 }
 
@@ -343,14 +343,14 @@ strong.word9 {
 
 /* pukiwiki.skin.php */
 div#header {
-  padding:0px;
-  margin:0px;
+  padding:0;
+  margin:0;
 }
 
 div#navigator {
   clear:both;
-  padding:4px 0px 0px 0px;
-  margin:0px;
+  padding:4px 0 0 0;
+  margin:0;
 }
 
 td.menubar {
@@ -360,15 +360,15 @@ td.menubar {
 
 div#menubar {
   width:9em;
-  padding:0px;
+  padding:0;
   margin:4px;
   word-break:break-all;
   font-size:90%;
   overflow:hidden;
 }
 div#menubar ul {
-  margin:0px 0px 0px .5em;
-  padding:0px 0px 0px .5em;
+  margin:0 0 0 .5em;
+  padding:0 0 0 .5em;
 }
 div#menubar ul li {
   line-height:110%;
@@ -378,42 +378,42 @@ div#menubar h4 {
 }
 
 div#body {
-  padding:0px;
-  margin:0px 0px 0px .5em;
+  padding:0;
+  margin:0 0 0 .5em;
 }
 div#note {
   clear:both;
-  padding:0px;
-  margin:0px;
+  padding:0;
+  margin:0;
 }
 div#attach {
   clear:both;
-  padding:0px;
-  margin:0px;
+  padding:0;
+  margin:0;
 }
 div#toolbar {
   clear:both;
-  padding:0px;
-  margin:0px;
+  padding:0;
+  margin:0;
   text-align:right;
 }
 div#lastmodified {
   font-size:80%;
-  padding:0px;
-  margin:0px;
+  padding:0;
+  margin:0;
 }
 div#related {
   font-size:80%;
-  padding:0px;
-  margin:16px 0px 0px 0px;
+  padding:0;
+  margin:16px 0 0 0;
 }
 div#related .page_passage {
   font-size:60%;
 }
 div#footer {
   font-size:70%;
-  padding:0px;
-  margin:16px 0px 0px 0px;
+  padding:0;
+  margin:16px 0 0 0;
 }
 div#banner {
   float:right;
@@ -441,8 +441,8 @@ img#logo {
 
 /* calendar*.inc.php */
 .style_calendar {
-  padding:0px;
-  border:0px;
+  padding:0;
+  border:0;
   margin:3px;
   color:inherit;
   background-color:#CCD5DD;
@@ -522,7 +522,7 @@ span.calendar_viewer_right {
 
 /* clear.inc.php */
 .clear {
-  margin:0px;
+  margin:0;
   clear:both;
 }
 
@@ -547,7 +547,7 @@ hr.short_line {
   width:80%;
   border-style:solid;
   border-color:#333333;
-  border-width:1px 0px;
+  border-width:1px 0;
 }
 
 /* include.inc.php */
@@ -557,8 +557,8 @@ h5.side_label {
 
 /* navi.inc.php */
 ul.navi {
-  margin:0px;
-  padding:0px;
+  margin:0;
+  padding:0;
   text-align:center;
 }
 li.navi_none {
