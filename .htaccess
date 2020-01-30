@@ -1,27 +1,24 @@
 # Apache .htaccess for PukiWiki
 #
-# $Id: .htaccess,v 1.14 2005/04/29 11:51:31 henoheno Exp $
-# Copyright (C)
-#   2002-2005 PukiWiki Developers Team
+# Copyright
+#   2002-2020 PukiWiki Development Team
 #   2001      Originally written by yu-ji
 # License: GPL v2 or (at your option) any later version
 #
 # NOTE: Correct permission of this file 644(or 604)
 
-## Access control by Order/Allow/Deny directives
+## Access control by Require directive
 ## needs 'AllowOverride Limit' at httpd.conf
 
 # Prohibit direct access to .htaccess, .htpasswd or others
 # (If it's not set by default)
 #<FilesMatch "^\.ht">
-#	Order allow,deny
-#	Deny from all
+#  Require all denied
 #</FilesMatch>
 
 # Prohibit direct access
 <FilesMatch "\.(ini\.php|lng\.php|txt|gz|tgz|zip)$">
-	Order allow,deny
-	Deny from all
+  Require all denied
 </FilesMatch>
 
 ## Authentication to this directory with basic-auth
