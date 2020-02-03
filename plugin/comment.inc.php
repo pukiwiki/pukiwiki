@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // comment.inc.php
 // Copyright
-//   2002-2017 PukiWiki Development Team
+//   2002-2020 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -119,7 +119,7 @@ function plugin_comment_convert()
 	$s_page = htmlsc($page);
 	$string = <<<EOD
 <br />
-<form action="$script" method="post">
+<form action="$script" method="post" class="_p_comment_form">
  <div>
   <input type="hidden" name="plugin" value="comment" />
   <input type="hidden" name="refer"  value="$s_page" />

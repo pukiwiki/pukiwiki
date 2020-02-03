@@ -24,6 +24,10 @@ body,td {
   font-size:90%;
   font-family:verdana, arial, helvetica, Sans-Serif;
 }
+textarea {
+  box-sizing:border-box;
+  max-width:99.5%;
+}
 
 a:link {
   color:#215dc6;
@@ -340,11 +344,15 @@ strong.word9 {
 .edit_form {
   clear:both;
 }
+.edit_form textarea,.edit_form select {
+  width:95%;
+}
 
 /* pukiwiki.skin.php */
 div#header {
   padding:0;
   margin:0;
+  word-break:break-all;
 }
 
 div#navigator {
@@ -353,18 +361,23 @@ div#navigator {
   margin:0;
 }
 
-td.menubar {
-  width:9em;
-  vertical-align:top;
+div#contents {
+  display:flex;
+  flex-flow:row nowrap;
+  word-break:break-all;
+  overflow-wrap:break-word;
+  word-wrap:break-word;
 }
 
 div#menubar {
-  width:9em;
+  min-width:9em;
+  max-width:9em;
   padding:0;
   margin:4px;
-  word-break:break-all;
   font-size:90%;
   overflow:hidden;
+  order:1;
+  flex-grow:0;
 }
 div#menubar ul {
   margin:0 0 0 .5em;
@@ -380,11 +393,16 @@ div#menubar h4 {
 div#body {
   padding:0;
   margin:0 0 0 .5em;
+  max-width:98%;
+  order:2;
+  flex-grow:1;
 }
+
 div#note {
   clear:both;
   padding:0;
   margin:0;
+  word-break:break-all;
 }
 div#attach {
   clear:both;
@@ -591,6 +609,21 @@ span.new5 {
   font-size:xx-small;
 }
 
+/* comment.inc.php */
+._p_comment_form input[name="msg"] {
+  max-width:90%;
+}
+
+/* pcomment.inc.php */
+._p_pcomment_form input[name="msg"] {
+  max-width:90%;
+}
+
+/* article.inc.php */
+._p_article_form input[name="subject"] {
+  max-width:82%;
+}
+
 /* popular.inc.php */
 span.counter {
   font-size:70%;
@@ -646,6 +679,17 @@ tr.bugtrack_state_cancel td {
 tr.bugtrack_state_undef td {
   background-color:#ff3333;
 }
+._p_bugtrack_form input[name="summary"],
+._p_bugtrack_form textarea {
+  box-sizing:border-box;
+  width:35em;
+  max-width:99.5%;
+}
+
+/* tracker.inc.php */
+._p_tracker_form th {
+  min-width:5em;
+}
 
 /* search2.inc.php  */
 .search-result-page-summary {
@@ -656,6 +700,49 @@ tr.bugtrack_state_undef td {
   white-space:nowrap;
 }
 
+/* Mobile-friendly Responsive layout */
+@media (max-width:767px) {
+  div#contents {
+    flex-flow:column wrap;
+  }
+  div#menubar {
+    width:auto;
+    max-width:none;
+    font-size:100%;
+    order:2;
+  }
+  div#body {
+    order:1;
+  }
+  div#body img {
+    max-width:95%;
+    height:auto;
+  }
+
+  ._p_tracker_form th,._p_tracker_form td {
+    display:block;
+    text-align:left !important;
+    width:auto !important;
+    margin:0;
+  }
+  ._p_tracker_form td input[type=text],
+  ._p_tracker_form td textarea {
+    box-sizing:border-box;
+    width:99.5%;
+  }
+
+  ._p_bugtrack_form th,._p_bugtrack_form td {
+    display:block;
+    text-align:left !important;
+    margin:0;
+  }
+  ._p_bugtrack_form input[name="summary"],
+  ._p_bugtrack_form textarea {
+    box-sizing:border-box;
+    width:99.5%;
+  }
+}
+
 @media print {
   a:link,
   a:visited {
@@ -664,7 +751,6 @@ tr.bugtrack_state_undef td {
   img#logo,
   div#navigator,
   div#menubar,
-  td.menubar,
   div#related,
   div#attach,
   div#toolbar {

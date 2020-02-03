@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // pcomment.inc.php
-// Copyright 2002-2017 PukiWiki Development Team
+// Copyright 2002-2020 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // pcomment plugin - Show/Insert comments into specified (another) page
@@ -133,7 +133,8 @@ function plugin_pcomment_convert()
 		$s_nodate = htmlsc($params['nodate']);
 		$s_count  = htmlsc($count);
 
-		$form_start = '<form action="' . get_base_uri() . '" method="post">' . "\n";
+		$form_start = '<form action="' . get_base_uri() .
+			'" method="post" class="_p_pcomment_form">' . "\n";
 		$form = <<<EOD
   <div>
   <input type="hidden" name="digest" value="$digest" />

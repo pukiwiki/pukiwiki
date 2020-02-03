@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // bugtrack.inc.php
 // Copyright
-//   2002-2017 PukiWiki Development Team
+//   2002-2020 PukiWiki Development Team
 //   2002 Y.MASUI GPL2  http://masui.net/pukiwiki/ masui@masui.net
 //
 // BugTrack plugin
@@ -114,7 +114,7 @@ function plugin_bugtrack_print_form($base, $category)
 	$s_body     = htmlsc($_plugin_bugtrack['body']);
 	$s_submit   = htmlsc($_plugin_bugtrack['submit']);
 	$body = <<<EOD
-<form action="$script" method="post">
+<form action="$script" method="post" class="_p_bugtrack_form">
  <table border="0">
   <tr>
    <th><label for="_p_bugtrack_name_$id">$s_name</label></th>

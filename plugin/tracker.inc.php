@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // tracker.inc.php
-// Copyright 2003-2018 PukiWiki Development Team
+// Copyright 2003-2020 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Issue tracker plugin (See Also bugtrack plugin)
@@ -76,7 +76,8 @@ function plugin_tracker_convert()
 		$retval = str_replace("[$name]",$replace,$retval);
 	}
 	return <<<EOD
-<form enctype="multipart/form-data" action="$script" method="post">
+<form enctype="multipart/form-data" action="$script" method="post"
+ class="_p_tracker_form">
 <div>
 $retval
 $hiddens

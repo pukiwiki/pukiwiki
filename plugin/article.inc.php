@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // article.inc.php
 // Copyright
-//   2002-2017 PukiWiki Development Team
+//   2002-2020 PukiWiki Development Team
 //   2002      Originally written by OKAWARA,Satoshi <kawara@dml.co.jp>
 //             http://www.dml.co.jp/~kawara/pukiwiki/pukiwiki.php
 // License: GPL v2 or (at your option) any later version
@@ -163,7 +163,7 @@ function plugin_article_convert()
 	$article_rows = PLUGIN_ARTICLE_ROWS;
 	$article_cols = PLUGIN_ARTICLE_COLS;
 	$string = <<<EOD
-<form action="$script" method="post">
+<form action="$script" method="post" class="_p_article_form">
  <div>
   <input type="hidden" name="article_no" value="$article_no" />
   <input type="hidden" name="plugin" value="article" />
