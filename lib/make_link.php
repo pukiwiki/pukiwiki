@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // make_link.php
 // Copyright
-//   2003-2019 PukiWiki Development Team
+//   2003-2020 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -811,15 +811,18 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolin
 		}
 		// Dangling link
 		if (PKWK_READONLY) return $s_alias; // No dacorations
-
-		$retval = $s_alias . '<a href="' .
-			$script . '?cmd=edit&amp;page=' . $r_page . $r_refer . '">' .
-			$_symbol_noexists . '</a>';
-
-		if ($link_compact) {
+		$symbol_html = '';
+		if ($_symbol_noexists !== '') {
+			$symbol_html = '<span style="user-select:none;">' .
+				htmlsc($_symbol_noexists) . '</span>';
+		}
+		$href = $script . '?cmd=edit&amp;page=' . $r_page . $r_refer;
+		if ($link_compact && $_symbol_noexists != '') {
+			$retval = '<a href="' . $href . '">' . $_symbol_noexists . '</a>';
 			return $retval;
 		} else {
-			return '<span class="noexists">' . $retval . '</span>';
+			$retval = '<a href="' . $href . '">' . $s_alias . '</a>';
+			return '<span class="noexists">' . $retval . $symbol_html . '</span>';
 		}
 	}
 }

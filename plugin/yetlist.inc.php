@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // yetlist.inc.php
-// Copyright 2001-2017 PukiWiki Development Team
+// Copyright 2001-2020 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Yet list plugin - Show a list of dangling links (not yet created)
@@ -54,10 +54,15 @@ function plugin_yetlist_action()
 				$href = $s_page;
 			} else {
 				// Dangling link
-				$href = '<span class="noexists">' . $s_page . '<a href="' .
+				$symbol_html = '';
+				if ($_symbol_noexists !== '') {
+					$symbol_html = '<span style="user-select:none;">' .
+						htmlsc($_symbol_noexists) . '</span>';
+				}
+				$href = '<span class="noexists"><a href="' .
 					$script . '?cmd=edit&amp;page=' . rawurlencode($page) .
-					'&amp;refer=' . $r_refer . '">' . $_symbol_noexists .
-					'</a></span>';
+					'&amp;refer=' . $r_refer . '">' . $s_page .
+					'</a>' . $symbol_html . '</span>';
 			}
 			$retval['body'] .= '<li>' . $href . ' <em>(' . $link_ref . ')</em></li>' . "\n";
 		}

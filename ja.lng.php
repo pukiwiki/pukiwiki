@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // ja.lng.php
 // Copyright
-//   2002-2018 PukiWiki Development Team
+//   2002-2020 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -67,7 +67,7 @@ $_msg_edit_unloadbefore_message = '入力したデータは保存されません
 ///////////////////////////////////////
 // Symbols
 $_symbol_anchor   = '&dagger;';
-$_symbol_noexists = '?';
+$_symbol_noexists = '';
 
 ///////////////////////////////////////
 // Form buttons

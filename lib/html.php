@@ -559,13 +559,18 @@ function strip_htmltag($str, $all = TRUE)
 	global $_symbol_noexists;
 	static $noexists_pattern;
 
-	if (! isset($noexists_pattern))
-		$noexists_pattern = '#<span class="noexists">([^<]*)<a[^>]+>' .
-			preg_quote($_symbol_noexists, '#') . '</a></span>#';
-
-	// Strip Dagnling-Link decoration (Tags and "$_symbol_noexists")
-	$str = preg_replace($noexists_pattern, '$1', $str);
-
+	if (! isset($noexists_pattern)) {
+		if ($_symbol_noexists != '') {
+			$noexists_pattern = '#<span class="noexists">([^<]*)<a[^>]+>' .
+				preg_quote($_symbol_noexists, '#') . '</a></span>#';
+		} else {
+			$noexists_pattern = '';
+		}
+	}
+	if ($noexists_pattern != '') {
+		// Strip Dagnling-Link decoration (Tags and "$_symbol_noexists")
+		$str = preg_replace($noexists_pattern, '$1', $str);
+	}
 	if ($all) {
 		// All other HTML tags
 		return preg_replace('#<[^>]+>#',        '', $str);
