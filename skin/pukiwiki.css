@@ -580,16 +580,16 @@ ul.navi {
   text-align:center;
 }
 li.navi_none {
-  display:inline;
+  display:block;
   float:none;
 }
 li.navi_left {
-  display:inline;
+  display:block;
   float:left;
   text-align:left;
 }
 li.navi_right {
-  display:inline;
+  display:block;
   float:right;
   text-align:right;
 }
