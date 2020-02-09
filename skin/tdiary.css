@@ -131,6 +131,7 @@ span.noexists {
 div.jumpmenu {
   font-size:60%;
   text-align:right;
+  user-select:none;
 }
 
 hr.note_hr {
