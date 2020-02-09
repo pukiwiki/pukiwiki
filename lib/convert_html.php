@@ -993,7 +993,7 @@ class Body extends Element
 			$id     = & $autoid;
 			$anchor = '';
 		} else {
-			$anchor = ' &aname(' . $id . ',super,full){' . $_symbol_anchor . '};';
+			$anchor = ' &aname(' . $id . ',super,full,nouserselect){' . $_symbol_anchor . '};';
 		}
 
 		$text = ' ' . $text;

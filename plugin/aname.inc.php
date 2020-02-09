@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// $Id: aname.inc.php,v 1.28 2011/01/25 15:01:01 henoheno Exp $
-// Copyright (C)
-//   2002-2005 PukiWiki Developers Team
+// aname.inc.php
+// Copyright
+//   2002-2020 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -33,7 +33,7 @@ function plugin_aname_usage($convert = TRUE, $message = '')
 		}
 	} else {
 		if ($message == '') {
-			return '&amp;aname(anchorID[,super][,full][,noid]){[Link title]};';
+			return '&amp;aname(anchorID[,super][,full][,noid][,nouserselect]){[Link title]};';
 		} else {
 			return '&amp;aname: ' . $message . ';';
 		}
@@ -80,6 +80,7 @@ function plugin_aname_tag($args = array(), $convert = TRUE)
 	$f_noid  = in_array('noid',  $args); // Option: Without id attribute
 	$f_super = in_array('super', $args); // Option: CSS class
 	$f_full  = in_array('full',  $args); // Option: With full(absolute) URI
+	$f_nouserselect = in_array('nouserselect', $args); // Option: user-select:none;
 
 	if ($body == '') {
 		if ($f_noid)  return plugin_aname_usage($convert, 'Meaningless(No link-title with \'noid\')');
@@ -103,14 +104,17 @@ function plugin_aname_tag($args = array(), $convert = TRUE)
 	$class   = $f_super ? 'anchor_super' : 'anchor';
 	$attr_id = $f_noid  ? '' : ' id="' . $id . '"';
 	$url     = $f_full  ? get_page_uri($vars['page']) : '';
+	$astyle = '';
 	if ($body != '') {
 		$href  = ' href="' . $url . '#' . $id . '"';
 		$title = ' title="' . $id . '"';
+		if ($f_nouserselect) {
+			$astyle = ' style="user-select:none;"';
+		}
 	} else {
 		$href = $title = '';
 	}
-
-	return '<a class="' . $class . '"' . $attr_id . $href . $title . '>' .
+	return '<a class="' . $class . '"' . $attr_id . $href . $title .
+		$astyle . '>' .
 		$body . '</a>';
 }
-
