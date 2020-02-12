@@ -126,7 +126,8 @@ function plugin_pcomment_convert()
 
 		$radio   = $params['reply'] ?
 			'<input type="radio" name="reply" value="0" tabindex="0" checked="checked" />' : '';
-		$comment = '<input type="text" name="msg" size="' . PLUGIN_PCOMMENT_SIZE_MSG . '" />';
+		$comment = '<input type="text" name="msg" size="' .
+			PLUGIN_PCOMMENT_SIZE_MSG . '" required />';
 
 		$s_page   = htmlsc($page);
 		$s_refer  = htmlsc($vars_page);

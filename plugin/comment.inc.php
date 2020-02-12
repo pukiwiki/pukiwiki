@@ -128,7 +128,8 @@ function plugin_comment_convert()
   <input type="hidden" name="above"  value="$above" />
   <input type="hidden" name="digest" value="$digest" />
   $nametags
-  <input type="text"   name="msg" id="_p_comment_comment_{$comment_no}" size="$comment_cols" />
+  <input type="text"   name="msg" id="_p_comment_comment_{$comment_no}"
+   size="$comment_cols" required />
   <input type="submit" name="comment" value="$_btn_comment" />
  </div>
 </form>
