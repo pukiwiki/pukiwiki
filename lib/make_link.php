@@ -805,7 +805,7 @@ class Link_autoalias extends Link
 	{
 		list($name) = $this->splice($arr);
 		// Ignore pages listed
-		if (in_array($name, $this->forceignorepages)) {
+		if (in_array($name, $this->forceignorepages) || get_autoalias_right_link($name) == '') {
 			return FALSE;
 		}
 		return parent::setParam($page,$name,'','pagename',$name);
