@@ -8,7 +8,7 @@
 
 function plugin_read_action()
 {
-	global $vars, $_title_invalidwn, $_msg_invalidiwn;
+	global $vars, $_title_invalidwn, $_msg_invalidiwn, $autoalias;
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	if (is_page($page)) {
@@ -22,6 +22,19 @@ function plugin_read_action()
 		return do_plugin_action('interwiki'); // Process InterWikiName
 
 	} else if (is_pagename($page)) {
+		if ($autoalias) {
+			$real = get_autoalias_right_link($page);
+			if ($real != '') {
+				if (is_page($real)) {
+					$uri = get_page_uri($real, PKWK_URI_ROOT);
+				} else {
+					$uri = get_base_uri(PKWK_URI_ROOT) . '?cmd=edit&page=' . rawurlencode($real);
+				}
+				header('HTTP/1.0 302 Found');
+				header('Location: ' . $uri);
+				return;
+			}
+		}
 		$vars['cmd'] = 'edit';
 		return do_plugin_action('edit'); // Page not found, then show edit form
 
