@@ -14,7 +14,7 @@ And ,without your learning special knowledge, fomatted sentenses are created jus
 - InterWiki function is supported.
 - Periodic Backup is supported.
 - All data are stored in text format.
-- Distributed under GPL(( http://www.gnu.org/licenses/gpl.html )).
+- Distributed under GPL(( https://www.gnu.org/licenses/gpl.html )).
 
 ** Links
 

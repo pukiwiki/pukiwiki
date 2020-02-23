@@ -5,14 +5,8 @@ InterWiki用のサーバリストです。
 の形式で記述してください。
 
 ** WikiEngines [#c3e04f1c]
--[http://www.c2.com/cgi/wiki? WikiWikiWeb] raw WikiNameのみなのでraw。
--[http://www.todo.org/cgi-bin/jp/tiki.cgi?c=v&p= Tiki] euc
--[http://www.hyuki.com/yukiwiki/wiki.cgi? YukiWiki] euc
--[http://www.jin.gr.jp/~nahi/RWiki/?cmd=view;name= RWiki] euc
--[http://digit.que.ne.jp/work/index.cgi? WalWiki] euc
--[http://fswiki.poi.jp/wiki.cgi? FSWiki] euc
--[http://www.namaraii.com/hiki/? Hiki] euc
--[http://xiki.mitsuki.no-ip.com/? Xiki] utf8
+-[https://wiki.c2.com/? WikiWikiWeb] raw WikiNameのみなのでraw
+-[https://fswiki.osdn.jp/cgi-bin/wiki.cgi?page= FSWiki] euc
 
 ** PukiWiki [#j0d346fa]
 // PukiWiki Official Main Site
@@ -21,12 +15,11 @@ InterWiki用のサーバリストです。
 -[https://pukiwiki.osdn.jp/dev/? pukiwiki.dev] utf8
 
 ** Search Engine [#jaaa4e4c]
--[http://www.google.co.jp/search?ie=utf8&oe=utf8&q=$1&lr=lang_ja&hl=ja Google] utf8 
-//IEのGoogleツールバー対策でUTF-8になってます。
--[http://search.yahoo.co.jp/bin/search?p= Yahoo] euc
--[http://www.wikipedia.org/wiki/ WikiPedia] utf8
--[http://en.wikipedia.org/wiki/ WikiPedia.en] utf8
--[http://ja.wikipedia.org/wiki/ WikiPedia.ja] utf8
+-[https://www.google.com/search?q=$1 Google] utf8
+-[https://search.yahoo.co.jp/search?p=$1 Yahoo] utf8
+-[https://www.wikipedia.org/wiki/ WikiPedia] utf8
+-[https://en.wikipedia.org/wiki/ WikiPedia.en] utf8
+-[https://ja.wikipedia.org/wiki/ WikiPedia.ja] utf8
 
 ** 拡張InterWikiName [#q192ea38]
 -[./?cmd=add&page= 新規]
@@ -35,9 +28,8 @@ InterWiki用のサーバリストです。
 -[./?cmd=read&page= View]
 -[./?cmd=edit&page= 編集]
 -[./?cmd=edit&page= Edit]
--[./?cmd=search&word=$1&type=OR 検索]
--[./?cmd=search&word=$1&type=OR Search]
+-[./?cmd=search2&q=$1 検索]
+-[./?cmd=search2&q=$1 Search]
 
 *** その他 [#b69e2eec]
--[http://www.gembook.jp/tsum/page.pys?wiki= ウヰキエリア] moin
 -[http://docs.tdiary.org/users/? tDiaryUsers] euc

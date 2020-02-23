@@ -1,7 +1,4 @@
 -[[WikiWikiWeb:FrontPage]]
--[[Tiki:WelcomeVisitors]] 
--[[YukiWiki:FrontPage]] 
--[[RWiki:top]] 
 -[[PukiWiki:FrontPage]] 
 -[[Google:pukiwiki]]
 -[[Yahoo:PHP]]

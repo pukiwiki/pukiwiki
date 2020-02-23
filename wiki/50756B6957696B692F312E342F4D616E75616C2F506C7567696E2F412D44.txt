@@ -44,7 +44,7 @@
 [&color(blue){タイトル};|&color(blue){image};|&color(blue){delimage};|&color(blue){deltitle};|&color(blue){delete};]
 '')''
 :概要|
-~アマゾン（http://www.amazon.co.jp）が提供する商品のイメージと、商品名を表示します。
+~アマゾン( https://www.amazon.co.jp ) が提供する商品のイメージと、商品名を表示します。
 ~アマゾンのアソシエイト ID（紹介文などを書くことで副収入がもらえるかもしれない仕組み）に対応しています。 ASIN を入力するだけで、予め作成した定型作品紹介フォーマットを自動生成することができます。
 :引数|
 ~全ての引数を省略すると、ブックレビュー作成フォームが現れます。「書評」というページにこれを置くと「書評/ASIN番号」という子ページを作ります。
@@ -69,7 +69,7 @@
 ~著作権が関連する為、アマゾンのアソシエイトプログラムを確認の上ご利用下さい。
 ~イメージなしの場合に使用する画像が別途必要です。デフォルトは image/noimage.jpg を使用します。
 ~ASIN は書籍の場合 ISBN と全く同じです。書籍以外の場合は、アマゾンのサイトで対象を表示した際の写真のプロパティで判断します。例えば下のような場合だと、最後の 01 を含め、B000002G6J.01 とします。B000002G6J とすると、デフォルトの 09 が適用されてしまい、画像なしとなります（画像だけでなくタイトルも呼ぶのであれば 10 桁で Ok）。
- http://images-jp.amazon.com/images/P/B000002G6J.01.LZZZZZZZ.jpg
+ https://images-jp.amazon.com/images/P/B000002G6J.01.LZZZZZZZ.jpg
 
 
 **aname [#n9f7bab5]
@@ -410,7 +410,7 @@
 --PLUGIN_COLOR_USAGE　エラー時に表示される使用方法
 --PLUGIN_COLOR_REGEX　引数に指定できる色の正規表現
 :備考|
-~以下、[[W3C勧告書:http://www.w3.org/TR/1999/REC-html401-19991224/types.html#h-6.5]]より抜粋した色名。
+~以下、[[W3C勧告書:https://www.w3.org/TR/1999/REC-html401-19991224/types.html#h-6.5]]より抜粋した色名。
 Aqua = "#00FFFF",
 Black = "#000000",
 Blue = "#0000FF",

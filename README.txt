@@ -261,9 +261,9 @@ Wikiの様子を見る
     YukiWiki のクローン化を許可していただいた結城浩さんに感謝します。
     本家のWikiWikiを作ったCunningham & Cunningham, Inc.に 感謝します。
 
-    * yu-jiさんのホームページ   http://factage.com/yu-ji/
-    * 結城浩さんのホームページ  http://www.hyuki.com/
-    * YukiWikiホームページ      http://www.hyuki.com/yukiwiki/
-    * Tiki          http://todo.org/cgi-bin/tiki/tiki.cgi
-    * 本家WikiWikiWeb       http://c2.com/cgi/wiki?WikiWikiWeb
-    * WikiWikiWebの作者(Cunningham & Cunningham, Inc.) http://c2.com/
+    * yu-jiさんのホームページ   https://factage.com/yu-ji/
+    * 結城浩さんのホームページ  https://www.hyuki.com/
+    * YukiWikiホームページ      https://www.hyuki.com/yukiwiki/
+    * Tiki                      https://tiki.org/
+    * 本家WikiWikiWeb           https://wiki.c2.com/?WikiWikiWeb
+    * WikiWikiWebの作者(Cunningham & Cunningham, Inc.) https://c2.com/

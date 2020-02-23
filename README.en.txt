@@ -145,7 +145,7 @@ AUTHOR
 LICENCE 
 
     PukiWiki is distributed under GNU GPL/2 (GNU General Public License) .
-     (http://www.gnu.org)
+     (https://www.gnu.org)
 
 ACKNOWLEDGEMENT
 
@@ -160,9 +160,9 @@ REFERENCE
 
     * PukiWiki Web Site         https://pukiwiki.osdn.jp/
     * PukiWiki Developers' Site https://pukiwiki.osdn.jp/dev/
-    * yu-ji's Web Site          http://factage.com/yu-ji/ 
-    * Hiroshi Yuki 's Web Site  http://www.hyuki.com/ 
-    * YukiWiki                  http://www.hyuki.com/yukiwiki/ 
-    * Tiki                      http://todo.org/cgi-bin/jp/tiki.cgi 
-    * Original WikiWikiWeb      http://c2.com/cgi/wiki?WikiWikiWeb 
-    * Author of WikiWikiWeb(Cunningham & Cunningham, Inc.) http://c2.com/
+    * yu-ji's Web Site          https://factage.com/yu-ji/
+    * Hiroshi Yuki 's Web Site  https://www.hyuki.com/
+    * YukiWiki                  https://www.hyuki.com/yukiwiki/
+    * Tiki                      https://tiki.org/
+    * Original WikiWikiWeb      https://wiki.c2.com/?WikiWikiWeb
+    * Author of WikiWikiWeb(Cunningham & Cunningham, Inc.) https://c2.com/

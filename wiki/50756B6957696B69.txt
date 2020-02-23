@@ -16,7 +16,7 @@ PukiWikiは Wiki([[WikiWikiWeb]]) と呼ばれているもののひとつで、�
 - ページ単位の凍結なども可能です
 - URLを短く表現できる[[InterWiki]]をサポート
 - [[PHP]]で書かれています
-- ライセンスはGPL(( http://www.gnu.org/licenses/gpl.html ))です
+- ライセンスはGPL(( https://www.gnu.org/licenses/gpl.html ))です
 
 ** リンク [#nf50e667]
 
