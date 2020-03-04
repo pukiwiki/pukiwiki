@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // calendar2.inc.php
-// Copyright 2002-2017 PukiWiki Development Team
+// Copyright 2002-2020 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Calendar2 plugin
@@ -81,7 +81,7 @@ function plugin_calendar2_convert()
 			'  <td valign="top">' . "\n";
 	}
 	$ret .= <<<EOD
-   <table class="style_calendar" cellspacing="1" width="150" border="0" summary="calendar body">
+   <table class="style_calendar" cellspacing="1" width="200" border="0" summary="calendar body">
     <tr>
      <td class="style_td_caltop" colspan="7">
       <a href="$script?plugin=calendar2&amp;file=$r_base&amp;date=$prev_date_str">&lt;&lt;</a>

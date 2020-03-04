@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // calendar.inc.php
 // Copyright
-//   2002-2017 PukiWiki Development Team
+//   2002-2020 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -74,7 +74,7 @@ function plugin_calendar_convert()
 	$page_uri = get_page_uri($pre);
 
 	$ret = <<<EOD
-<table class="style_calendar" cellspacing="1" width="150" border="0">
+<table class="style_calendar" cellspacing="1" width="200" border="0">
  <tr>
   <td class="style_td_caltop" colspan="7">
    <strong>$m_name</strong><br />
