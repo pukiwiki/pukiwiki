@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // calendar_viewer.inc.php
-// Copyright  2002-2017 PukiWiki Development Team
+// Copyright  2002-2020 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Calendar viewer plugin - List pages that calendar/calnedar2 plugin created
@@ -115,10 +115,14 @@ function plugin_calendar_viewer_convert()
 		return "#calendar_viewer(): Exceeded the limit of show count: $s_page<br />";
 	}
 	// page name pattern
-	$pagepattern = strip_bracket($pagename) . '/';
+	$simple_pagename = strip_bracket($pagename);
 	if ($pagename === '') {
 		// Support non-pagename yyyy-mm-dd pattern
-		$pagepattern = '';
+		$pagepattern = $page_YM;
+		$page_datestart_idx = 0;
+	} else {
+		$pagepattern = $simple_pagename . '/' . $page_YM;
+		$page_datestart_idx = strlen($simple_pagename) + 1;
 	}
 	$pagepattern_len = strlen($pagepattern);
 	// Get pagelist
@@ -126,7 +130,7 @@ function plugin_calendar_viewer_convert()
 	$_date = get_date('Y' . $date_sep . 'm' . $date_sep . 'd');
 	foreach (get_existpages() as $page) {
 		if (strncmp($page, $pagepattern, $pagepattern_len) !== 0) continue;
-		$page_date = substr($page, $pagepattern_len);
+		$page_date = substr($page, $page_datestart_idx);
 		// Verify the $page_date pattern (Default: yyyy-mm-dd).
 		// Past-mode hates the future, and
 		// Future-mode hates the past.
@@ -194,8 +198,6 @@ function plugin_calendar_viewer_convert()
 
 	// ここで、前後のリンクを表示
 	// ?plugin=calendar_viewer&file=ページ名&date=yyyy-mm
-	$enc_pagename = rawurlencode(substr($pagepattern, 0, $pagepattern_len - 1));
-
 	if ($page_YM != '') {
 		// 年月表示時
 		$date_sep_len = strlen($date_sep);
@@ -252,7 +254,8 @@ function plugin_calendar_viewer_convert()
 		$s_date_sep = htmlsc($date_sep);
 		$left_link = $right_link = '';
 		$link = $script . '?plugin=calendar_viewer&amp;mode=' . $mode .
-			'&amp;file=' . $enc_pagename . '&amp;date_sep=' . $s_date_sep . '&amp;';
+			'&amp;file=' . rawurlencode($simple_pagename) .
+			'&amp;date_sep=' . $s_date_sep . '&amp;';
 		if ($left_YM != '')
 			$left_link = '<a href="' . $link .
 				'date=' . $left_YM . '">' . $left_text . '</a>';
