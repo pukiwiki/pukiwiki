@@ -46,7 +46,11 @@ $rw    = ! PKWK_READONLY;
 
 // MenuBar
 $menu = arg_check('read') && exist_plugin_convert('menu') ? do_plugin_convert('menu') : FALSE;
-
+// RightBar
+$rightbar = FALSE;
+if (arg_check('read') && exist_plugin_convert('rightbar')) {
+	$rightbar = do_plugin_convert('rightbar');
+}
 // ------------------------------------------------------------
 // Output
 
@@ -158,6 +162,9 @@ function _navigator($key, $value = '', $javascript = ''){
  <div id="body"><?php echo $body ?></div>
 <?php if ($menu !== FALSE) { ?>
  <div id="menubar"><?php echo $menu ?></div>
+<?php } ?>
+<?php if ($rightbar) { ?>
+ <div id="rightbar"><?php echo $rightbar ?></div>
 <?php } ?>
 </div>
 

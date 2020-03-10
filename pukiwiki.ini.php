@@ -131,6 +131,7 @@ $whatsdeleted = 'RecentDeleted'; // Removeed page list
 $interwiki    = 'InterWikiName'; // Set InterWiki definition here
 $aliaspage    = 'AutoAliasName'; // Set AutoAlias definition here
 $menubar      = 'MenuBar';       // Menu
+$rightbar_name = 'RightBar';     // RightBar
 
 /////////////////////////////////////////////////
 // Change default Document Type Definition

@@ -391,6 +391,27 @@ div#menubar h4 {
   font-size:110%;
 }
 
+#rightbar {
+  min-width:14em;
+  max-width:14em;
+  padding:0;
+  margin:4px;
+  font-size:90%;
+  overflow:hidden;
+  order:3;
+  flex-grow:0;
+}
+#rightbar ul {
+  margin:0 0 0 1em;
+  padding:0 0 0 .5em;
+}
+#rightbar ul li {
+  line-height:110%;
+}
+#rightbar h4 {
+  font-size:110%;
+}
+
 div#body {
   padding:0;
   margin:0 0 0 .5em;
@@ -712,6 +733,12 @@ tr.bugtrack_state_undef td {
     font-size:100%;
     order:2;
   }
+  div#rightbar {
+    width:auto;
+    max-width:none;
+    font-size:100%;
+    order:3;
+  }
   div#body {
     order:1;
   }
@@ -752,6 +779,7 @@ tr.bugtrack_state_undef td {
   img#logo,
   div#navigator,
   div#menubar,
+  div#rightbar,
   div#related,
   div#attach,
   div#toolbar {
