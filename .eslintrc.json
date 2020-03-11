@@ -13,6 +13,7 @@
         "vars-on-top": 0,
         "prefer-template": 0,
         "prefer-arrow-callback": 0,
+        "semi": 0,
         "space-before-function-paren": 0,
         "no-plusplus": 0,
         "prefer-destructuring": 0,
