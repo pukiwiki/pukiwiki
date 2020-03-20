@@ -238,17 +238,36 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function 
       kanaMap = map
     }
     /**
+     * Hankaku to Zenkaku.
+     *
+     * @param {String} hankakuChar
+     * @returns {String}
+     */
+    function toZenkaku (hankakuChar) {
+      if (hankakuChar.length !== 1) {
+        return hankakuChar
+      }
+      var zenkakuChar = String.fromCharCode(hankakuChar.charCodeAt(0) + 0xfee0)
+      if (!String.prototype.normalize) {
+        return hankakuChar
+      }
+      if (zenkakuChar.normalize('NFKC') === hankakuChar) {
+        return zenkakuChar
+      }
+      return hankakuChar
+    }
+    /**
      * @param {searchText} searchText
      * @type RegExp
      */
     function textToRegex (searchText) {
       if (!searchText) return null
-      //             1:Symbol             2:Katakana        3:Hiragana
-      var regRep = /([\\^$.*+?()[\]{}|])|([\u30a1-\u30f6])|([\u3041-\u3096])/g
-      var replacementFunc = function (m, m1, m2, m3) {
+      //            1: Alphabet   2:Katakana        3:Hiragana        4:Other symbols
+      var regRep = /([a-zA-Z0-9])|([\u30a1-\u30f6])|([\u3041-\u3096])|([\u0021-\u007e])/ig
+      var replacementFunc = function (m, m1, m2, m3, m4) {
         if (m1) {
-          // Symbol - escape with prior backslach
-          return '\\' + m1
+          // [a-zA-Z0-9]
+          return '[' + m1 + toZenkaku(m1) + ']'
         } else if (m2) {
           // Katakana
           var r = '(?:' + String.fromCharCode(m2.charCodeAt(0) - 0x60) +
@@ -267,6 +286,9 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function 
           }
           r2 += ')'
           return r2
+        } else if (m4) {
+          // Other symbols
+          return '[' + '\\' + m4 + toZenkaku(m4) + ']'
         }
         return m
       }
