@@ -683,6 +683,21 @@ span.topicpath-top {
 tr.bugtrack_list_header th {
   background-color:#ffffcc;
 }
+tr.bugtrack_list_header th:nth-child(1) {
+  min-width: 7em;
+}
+tr.bugtrack_list_header th:nth-child(2) {
+  min-width: 2em;
+}
+tr.bugtrack_list_header th:nth-child(3) {
+  min-width: 4em;
+}
+tr.bugtrack_list_header th:nth-child(4) {
+  min-width: 4em;
+}
+tr.bugtrack_list_header th:nth-child(5) {
+  min-width: 3em;
+}
 tr.bugtrack_state_proposal td {
   background-color:#ccccff;
 }
@@ -759,6 +774,21 @@ tr.bugtrack_state_undef td {
     width:99.5%;
   }
 
+  tr.bugtrack_list_header th:nth-child(1) {
+    min-width: 4em;
+  }
+  tr.bugtrack_list_header th:nth-child(2) {
+    min-width: 1em;
+  }
+  tr.bugtrack_list_header th:nth-child(3) {
+    min-width: 1em;
+  }
+  tr.bugtrack_list_header th:nth-child(4) {
+    min-width: 3em;
+  }
+  tr.bugtrack_list_header th:nth-child(5) {
+    min-width: 3em;
+  }
   ._p_bugtrack_form th,._p_bugtrack_form td {
     display:block;
     text-align:left !important;
