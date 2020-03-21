@@ -262,9 +262,9 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function 
      */
     function textToRegex (searchText) {
       if (!searchText) return null
-      //            1: Alphabet   2:Katakana        3:Hiragana        4:Other symbols
-      var regRep = /([a-zA-Z0-9])|([\u30a1-\u30f6])|([\u3041-\u3096])|([\u0021-\u007e])/ig
-      var replacementFunc = function (m, m1, m2, m3, m4) {
+      //            1: Alphabet   2:Katakana        3:Hiragana        4:Wa kigo                                5:Other symbols
+      var regRep = /([a-zA-Z0-9])|([\u30a1-\u30f6])|([\u3041-\u3096])|([\u30fb\u30fc\u300c\u300d\u3001\u3002])|([\u0021-\u007e])/ig
+      var replacementFunc = function (m, m1, m2, m3, m4, m5) {
         if (m1) {
           // [a-zA-Z0-9]
           return '[' + m1 + toZenkaku(m1) + ']'
@@ -287,8 +287,14 @@ window.addEventListener && window.addEventListener('DOMContentLoaded', function 
           r2 += ')'
           return r2
         } else if (m4) {
+          // Wa kigo
+          if (kanaMap[m4]) {
+            return '[' + m4 + kanaMap[m4] + ']'
+          }
+          return m4
+        } else if (m5) {
           // Other symbols
-          return '[' + '\\' + m4 + toZenkaku(m4) + ']'
+          return '[' + '\\' + m5 + toZenkaku(m5) + ']'
         }
         return m
       }
