@@ -800,6 +800,7 @@ function get_autoaliases()
 {
 	global $aliaspage, $autoalias_max_words;
 	static $pairs;
+	$preg_u = get_preg_u();
 
 	if (! isset($pairs)) {
 		$pairs = array();
@@ -813,7 +814,8 @@ EOD;
 		$matches  = array();
 		$count = 0;
 		$max   = max($autoalias_max_words, 0);
-		if (preg_match_all('/' . $pattern . '/x', $postdata, $matches, PREG_SET_ORDER)) {
+		if (preg_match_all('/' . $pattern . '/x' . get_preg_u(), $postdata,
+			$matches, PREG_SET_ORDER)) {
 			foreach($matches as $key => $value) {
 				if ($count ==  $max) break;
 				$name = trim($value[1]);
@@ -1155,6 +1157,22 @@ function manage_page_redirect() {
 		return TRUE;
 	}
 	return FALSE;
+}
+
+/**
+ * Return 'u' (PCRE_UTF8) if PHP7+ and UTF-8.
+ */
+function get_preg_u() {
+	static $utf8u; // 'u'(PCRE_UTF8) or ''
+	if (! isset($utf8u)) {
+		if (version_compare('7.0.0', PHP_VERSION, '<=')
+			&& defined('PKWK_UTF8_ENABLE')) {
+			$utf8u = 'u';
+		} else {
+			$utf8u = '';
+		}
+	}
+	return $utf8u;
 }
 
 //// Compat ////
