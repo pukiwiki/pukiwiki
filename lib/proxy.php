@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // proxy.php
-// Copyright: 2003-2017 PukiWiki Development Team
+// Copyright: 2003-2021 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // HTTP-Proxy related functions
@@ -130,7 +130,7 @@ function pkwk_http_request($url, $method = 'GET', $headers = '', $post = array()
 			$url = trim($matches[1]);
 			if (! preg_match('/^https?:\//', $url)) {
 				// Relative path to Absolute
-				if ($url{0} != '/')
+				if ($url[0] != '/')
 					$url = substr($url_path, 0, strrpos($url_path, '/')) . '/' . $url;
 				$url = $url_base . $url; // Add sheme, host
 			}

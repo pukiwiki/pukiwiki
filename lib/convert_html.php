@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // convert_html.php
 // Copyright
-//   2002-2016 PukiWiki Development Team
+//   2002-2021 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -64,7 +64,7 @@ class Element
 		return $this->last = & $obj->last;
 	}
 
-	function canContain($obj)
+	function canContain(& $obj)
 	{
 		return TRUE;
 	}
@@ -186,7 +186,7 @@ class Inline extends Element
 		return $this;
 	}
 
-	function canContain($obj)
+	function canContain(& $obj)
 	{
 		return is_a($obj, 'Inline');
 	}
@@ -226,7 +226,7 @@ class Paragraph extends Element
 		$this->insert(Factory_Inline($text));
 	}
 
-	function canContain($obj)
+	function canContain(& $obj)
 	{
 		return is_a($obj, 'Inline');
 	}
@@ -531,7 +531,7 @@ class TableCell extends Element
 				$name = $matches[2] ? 'background-color' : 'color';
 				$this->style[$name] = $name . ':' . htmlsc($matches[3]) . ';';
 				$text = $matches[5];
-			} else if ($matches[4]) {
+			} else if (isset($matches[4])) {
 				$this->style['size'] = 'font-size:' . htmlsc($matches[4]) . 'px;';
 				$text = $matches[5];
 			}
@@ -548,7 +548,7 @@ class TableCell extends Element
 			$text      = substr($text, 1);
 		}
 
-		if ($text != '' && $text{0} == '#') {
+		if ($text != '' && $text[0] == '#') {
 			// Try using Div class for this $text
 			$obj = & Factory_Div($this, $text);
 			if (is_a($obj, 'Paragraph'))
@@ -788,7 +788,7 @@ class Pre extends Element
 		global $preformat_ltrim;
 		parent::__construct();
 		$this->elements[] = htmlsc(
-			(! $preformat_ltrim || $text == '' || $text{0} != ' ') ? $text : substr($text, 1));
+			(! $preformat_ltrim || $text == '' || $text[0] != ' ') ? $text : substr($text, 1));
 	}
 
 	function canContain(& $obj)
@@ -941,7 +941,7 @@ class Body extends Element
 			}
 
 			// The first character
-			$head = $line{0};
+			$head = $line[0];
 
 			// Heading
 			if ($head == '*') {

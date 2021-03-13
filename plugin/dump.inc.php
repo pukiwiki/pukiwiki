@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // dump.inc.php
 // Copyright
-//   2004-2017 PukiWiki Development Team
+//   2004-2021 PukiWiki Development Team
 //   2004      teanan / Interfair Laboratory
 // License: GPL v2 or (at your option) any later version
 //
@@ -488,7 +488,7 @@ class tarlib
 		// ファイル名を保存
 		for($i = 0; $i < strlen($filename); $i++ ) {
 			if ($i < TARLIB_HDR_NAME_LEN) {
-				$tar_data[$i + TARLIB_HDR_NAME_OFFSET] = $filename{$i};
+				$tar_data[$i + TARLIB_HDR_NAME_OFFSET] = $filename[$i];
 			} else {
 				break;	// ファイル名が長すぎ
 			}
@@ -497,32 +497,32 @@ class tarlib
 		// mode
 		$modeid = TARLIB_DATA_MODE;
 		for($i = 0; $i < strlen($modeid); $i++ ) {
-			$tar_data[$i + TARLIB_HDR_MODE_OFFSET] = $modeid{$i};
+			$tar_data[$i + TARLIB_HDR_MODE_OFFSET] = $modeid[$i];
 		}
 
 		// uid / gid
 		$ugid = TARLIB_DATA_UGID;
 		for($i = 0; $i < strlen($ugid); $i++ ) {
-			$tar_data[$i + TARLIB_HDR_UID_OFFSET] = $ugid{$i};
-			$tar_data[$i + TARLIB_HDR_GID_OFFSET] = $ugid{$i};
+			$tar_data[$i + TARLIB_HDR_UID_OFFSET] = $ugid[$i];
+			$tar_data[$i + TARLIB_HDR_GID_OFFSET] = $ugid[$i];
 		}
 
 		// サイズ
 		$strsize = sprintf('%11o', $size);
 		for($i = 0; $i < strlen($strsize); $i++ ) {
-			$tar_data[$i + TARLIB_HDR_SIZE_OFFSET] = $strsize{$i};
+			$tar_data[$i + TARLIB_HDR_SIZE_OFFSET] = $strsize[$i];
 		}
 
 		// 最終更新時刻
 		$strmtime = sprintf('%o', $mtime);
 		for($i = 0; $i < strlen($strmtime); $i++ ) {
-			$tar_data[$i + TARLIB_HDR_MTIME_OFFSET] = $strmtime{$i};
+			$tar_data[$i + TARLIB_HDR_MTIME_OFFSET] = $strmtime[$i];
 		}
 
 		// チェックサム計算用のブランクを設定
 		$chkblanks = TARLIB_DATA_CHKBLANKS;
 		for($i = 0; $i < strlen($chkblanks); $i++ ) {
-			$tar_data[$i + TARLIB_HDR_CHKSUM_OFFSET] = $chkblanks{$i};
+			$tar_data[$i + TARLIB_HDR_CHKSUM_OFFSET] = $chkblanks[$i];
 		}
 
 		// タイプフラグ
@@ -535,7 +535,7 @@ class tarlib
 		}
 		$strchksum = sprintf('%7o',$sum);
 		for($i = 0; $i < strlen($strchksum); $i++ ) {
-			$tar_data[$i + TARLIB_HDR_CHKSUM_OFFSET] = $strchksum{$i};
+			$tar_data[$i + TARLIB_HDR_CHKSUM_OFFSET] = $strchksum[$i];
 		}
 
 		return $tar_data;
@@ -615,8 +615,8 @@ class tarlib
 				$longname = '';
 			} else {
 				for ($i = 0; $i < TARLIB_HDR_NAME_LEN; $i++ ) {
-					if ($buff{$i + TARLIB_HDR_NAME_OFFSET} != "\0") {
-						$name .= $buff{$i + TARLIB_HDR_NAME_OFFSET};
+					if ($buff[$i + TARLIB_HDR_NAME_OFFSET] != "\0") {
+						$name .= $buff[$i + TARLIB_HDR_NAME_OFFSET];
 					} else {
 						break;
 					}
@@ -630,22 +630,22 @@ class tarlib
 			$checksum = '';
 			$chkblanks = TARLIB_DATA_CHKBLANKS;
 			for ($i = 0; $i < TARLIB_HDR_CHKSUM_LEN; $i++ ) {
-				$checksum .= $buff{$i + TARLIB_HDR_CHKSUM_OFFSET};
-				$buff{$i + TARLIB_HDR_CHKSUM_OFFSET} = $chkblanks{$i};
+				$checksum .= $buff[$i + TARLIB_HDR_CHKSUM_OFFSET];
+				$buff[$i + TARLIB_HDR_CHKSUM_OFFSET] = $chkblanks[$i];
 			}
 			list($checksum) = sscanf('0' . trim($checksum), '%i');
 
 			// Compute checksum
 			$sum = 0;
 			for($i = 0; $i < TARLIB_BLK_LEN; $i++ ) {
-				$sum += 0xff & ord($buff{$i});
+				$sum += 0xff & ord($buff[$i]);
 			}
 			if ($sum != $checksum) break; // Error
 				
 			// Size
 			$size = '';
 			for ($i = 0; $i < TARLIB_HDR_SIZE_LEN; $i++ ) {
-				$size .= $buff{$i + TARLIB_HDR_SIZE_OFFSET};
+				$size .= $buff[$i + TARLIB_HDR_SIZE_OFFSET];
 			}
 			list($size) = sscanf('0' . trim($size), '%i');
 
@@ -656,12 +656,12 @@ class tarlib
 			// 最終更新時刻
 			$strmtime = '';
 			for ($i = 0; $i < TARLIB_HDR_MTIME_LEN; $i++ ) {
-				$strmtime .= $buff{$i + TARLIB_HDR_MTIME_OFFSET};
+				$strmtime .= $buff[$i + TARLIB_HDR_MTIME_OFFSET];
 			}
 			list($mtime) = sscanf('0' . trim($strmtime), '%i');
 
 			// タイプフラグ
-//			 $type = $buff{TARLIB_HDR_TYPE_OFFSET};
+//			 $type = $buff[TARLIB_HDR_TYPE_OFFSET];
 
 			if ($name == TARLIB_DATA_LONGLINK) {
 				// LongLink

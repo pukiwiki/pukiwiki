@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // tracker.inc.php
-// Copyright 2003-2020 PukiWiki Development Team
+// Copyright 2003-2021 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Issue tracker plugin (See Also bugtrack plugin)
@@ -1236,7 +1236,7 @@ class Tracker_list
 					// Ignore empty line
 					continue;
 				}
-				$this->pipe = ($line{0} == '|' or $line{0} == ':');
+				$this->pipe = ($line[0] == '|' or $line[0] == ':');
 				$source .= preg_replace_callback('/\[([^\[\]]+)\]/',array(&$this,'replace_item'),$line);
 			}
 		}

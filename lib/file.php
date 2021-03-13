@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // file.php
 // Copyright
-//   2002-2020 PukiWiki Development Team
+//   2002-2021 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -160,7 +160,7 @@ function make_str_rules($source)
 		$line = & $lines[$i]; // Modify directly
 
 		// Ignore null string and preformatted texts
-		if ($line == '' || $line{0} == ' ' || $line{0} == "\t") continue;
+		if ($line == '' || $line[0] == ' ' || $line[0] == "\t") continue;
 
 		// Modify this line?
 		if ($modify) {

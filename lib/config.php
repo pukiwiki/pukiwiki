@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // config.php
-// Copyright 2003-2016 PukiWiki Development Team
+// Copyright 2003-2021 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Parse a PukiWiki page as a configuration page
@@ -49,7 +49,7 @@ class Config
 		foreach (get_source($this->page) as $line) {
 			if ($line == '') continue;
 
-			$head  = $line{0};	// The first letter
+			$head  = $line[0];	// The first letter
 			$level = strspn($line, $head);
 
 			if ($level > 3) {

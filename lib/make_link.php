@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // make_link.php
 // Copyright
-//   2003-2020 PukiWiki Development Team
+//   2003-2021 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -851,8 +851,9 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolin
 
 	$page_filetime = fast_get_filetime($page);
 	$is_page = $page_filetime !== 0;
-	if (! isset($related[$page]) && $page !== $vars['page'] && is_page)
+	if (! isset($related[$page]) && $page !== $vars['page'] && $is_page) {
 		$related[$page] = $page_filetime;
+	}
 
 	if ($isautolink || $is_page) {
 		// Hyperlink to the page
@@ -905,7 +906,7 @@ function get_fullname($name, $refer)
 	if ($name == '' || $name == './') return $refer;
 
 	// Absolute path
-	if ($name{0} == '/') {
+	if ($name[0] == '/') {
 		$name = substr($name, 1);
 		return ($name == '') ? $defaultpage : $name;
 	}
@@ -1024,7 +1025,7 @@ function get_ticketlink_jira_projects()
 		} else if (preg_match('/^--\s*([A-Z][A-Z0-9]{1,10}(?:_[A-Z0-9]{1,10}){0,2})(\s+(.+?))?\s*$/', $line, $m)) {
 			if ($active_jira_base_url) {
 				$project_key = $m[1];
-				$title = $m[2];
+				$title = isset($m[2]) ? $m[2] : '';
 				array_push($jira_projects, array(
 					'key' => $m[1],
 					'title' => $title,

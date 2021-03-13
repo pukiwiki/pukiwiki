@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // func.php
 // Copyright
-//   2002-2020 PukiWiki Development Team
+//   2002-2021 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -1039,9 +1039,14 @@ function guess_script_absolute_uri()
 function input_filter($param)
 {
 	static $magic_quotes_gpc = NULL;
-	if ($magic_quotes_gpc === NULL)
-	    $magic_quotes_gpc = get_magic_quotes_gpc();
-
+	if ($magic_quotes_gpc === NULL) {
+		if (function_exists('get_magic_quotes_gpc')) {
+			// No 'get_magic_quotes_gpc' function in PHP8
+			$magic_quotes_gpc = get_magic_quotes_gpc();
+		} else {
+			$magic_quotes_gpc = 0;
+		}
+	}
 	if (is_array($param)) {
 		return array_map('input_filter', $param);
 	} else {
@@ -1068,7 +1073,7 @@ function csv_explode($separator, $string)
 
 	foreach ($matches[1] as $str) {
 		$len = strlen($str);
-		if ($len > 1 && $str{0} == '"' && $str{$len - 1} == '"')
+		if ($len > 1 && $str[0] == '"' && $str[$len - 1] == '"')
 			$str = str_replace('""', '"', substr($str, 1, -1));
 		$retval[] = $str;
 	}
@@ -1078,7 +1083,7 @@ function csv_explode($separator, $string)
 // Implode an array with CSV data format (escape double quotes)
 function csv_implode($glue, $pieces)
 {
-	$_glue = ($glue != '') ? '\\' . $glue{0} : '';
+	$_glue = ($glue != '') ? '\\' . $glue[0] : '';
 	$arr = array();
 	foreach ($pieces as $str) {
 		if (preg_match('/[' . '"' . "\n\r" . $_glue . ']/', $str))

@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // plugin.php
 // Copyright
-//   2002-2016 PukiWiki Development Team
+//   2002-2021 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -51,20 +51,35 @@ function exist_plugin($name)
 
 // Check if plugin API 'action' exists
 function exist_plugin_action($name) {
-	return	function_exists('plugin_' . $name . '_action') ? TRUE : exist_plugin($name) ?
-		function_exists('plugin_' . $name . '_action') : FALSE;
+	if (function_exists('plugin_' . $name . '_action')) {
+		return TRUE;
+	}
+	if (exist_plugin($name)) {
+		return function_exists('plugin_' . $name . '_action');
+	}
+	return FALSE;
 }
 
 // Check if plugin API 'convert' exists
 function exist_plugin_convert($name) {
-	return	function_exists('plugin_' . $name . '_convert') ? TRUE : exist_plugin($name) ?
-		function_exists('plugin_' . $name . '_convert') : FALSE;
+	if (function_exists('plugin_' . $name . '_convert')) {
+		return TRUE;
+	}
+	if (exist_plugin($name)) {
+		return function_exists('plugin_' . $name . '_convert');
+	}
+	return FALSE;
 }
 
 // Check if plugin API 'inline' exists
 function exist_plugin_inline($name) {
-	return	function_exists('plugin_' . $name . '_inline') ? TRUE : exist_plugin($name) ?
-		function_exists('plugin_' . $name . '_inline') : FALSE;
+	if (function_exists('plugin_' . $name . '_inline')) {
+		return TRUE;
+	}
+	if (exist_plugin($name)) {
+		return function_exists('plugin_' . $name . '_inline');
+	}
+	return FALSE;
 }
 
 // Call 'init' function for the plugin
