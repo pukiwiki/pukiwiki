@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // search2.inc.php
-// Copyright 2017 PukiWiki Development Team
+// Copyright 2017-2021 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Search2 plugin - Show detail result using JavaScript
@@ -16,8 +16,7 @@ define('PLUGIN_SEARCH2_SEARCH_MAX_RESULTS', 1000);
 // Show a search box on a page
 function plugin_search2_convert()
 {
-	$args = func_get_args();
-	return plugin_search_search_form('', '', $args);
+	return 'Usage: Please use #search()';
 }
 
 function plugin_search2_action()
