@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // attach.inc.php
 // Copyright
-//   2003-2020 PukiWiki Development Team
+//   2003-2021 PukiWiki Development Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
 //   2002      Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
 //   2001-2002 Originally written by yu-ji
@@ -490,11 +490,6 @@ class AttachFile
 		fclose($fp);
 	}
 
-	// 日付の比較関数
-	function datecomp($a, $b) {
-		return ($a->time == $b->time) ? 0 : (($a->time > $b->time) ? -1 : 1);
-	}
-
 	function toString($showicon, $showinfo)
 	{
 		global $_attach_messages;
@@ -778,6 +773,12 @@ class AttachFiles
 		$this->files[$file][$age] = new AttachFile($this->page, $file, $age);
 	}
 
+	// date comparison function for uasort()
+	// $a, $b: AttachFile object
+	function datecomp($a, $b) {
+		return ($a->time == $b->time) ? 0 : (($a->time > $b->time) ? -1 : 1);
+	}
+
 	// ファイル一覧を取得
 	function toString($flat)
 	{
@@ -823,11 +824,10 @@ class AttachFiles
 				$files[$file] = & $this->files[$file][0];
 			}
 		}
-		uasort($files, array('AttachFile', 'datecomp'));
+		uasort($files, array($this, 'datecomp'));
 		foreach (array_keys($files) as $file) {
 			$ret .= $files[$file]->toString(TRUE, TRUE) . ' ';
 		}
-
 		return $ret;
 	}
 }
