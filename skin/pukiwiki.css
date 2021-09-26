@@ -3,7 +3,7 @@
 /*!
  * PukiWiki - Yet another WikiWikiWeb clone.
  * Copyright
- *   2002-2020 PukiWiki Development Team
+ *   2002-2021 PukiWiki Development Team
  *   2001-2002 Originally written by yu-ji
  * License: GPL v2 or (at your option) any later version
  *
@@ -472,6 +472,7 @@ img#logo {
 .anchor_super {
   font-size:xx-small;
   vertical-align:super;
+  margin-left:.5em;
 }
 
 /* list.inc.php */

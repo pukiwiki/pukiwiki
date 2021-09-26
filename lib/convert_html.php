@@ -993,14 +993,11 @@ class Body extends Element
 			$id     = & $autoid;
 			$anchor = '';
 		} else {
-			$anchor = ' &aname(' . $id . ',super,full,nouserselect){' . $_symbol_anchor . '};';
+			$anchor = '&aname(' . $id . ',super,full,nouserselect){' . $_symbol_anchor . '};';
 		}
-
-		$text = ' ' . $text;
-
+		$text = trim($text);
 		// Add 'page contents' link to its heading
 		$this->contents_last = & $this->contents_last->add(new Contents_UList($text, $level, $id));
-
 		// Add heding
 		return array($text . $anchor, $this->count > 1 ? "\n" . $top : '', $autoid);
 	}
