@@ -779,9 +779,13 @@ class Link_autoalias extends Link
 
 	function Link_autoalias($start)
 	{
+		$this->__construct($start);
+	}
+	function __construct($start)
+	{
 		global $autoalias, $aliaspage;
 
-		parent::Link($start);
+		parent::__construct($start);
 
 		if (! $autoalias || ! file_exists(CACHE_DIR . PKWK_AUTOALIAS_REGEX_CACHE) || $this->page == $aliaspage)
 		{
@@ -827,7 +831,11 @@ class Link_autoalias_a extends Link_autoalias
 {
 	function Link_autoalias_a($start)
 	{
-		parent::Link_autoalias($start);
+		$this->__construct($start);
+	}
+	function __construct($start)
+	{
+		parent::__construct($start);
 	}
 	function get_pattern()
 	{
