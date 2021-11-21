@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // pukiwiki.skin.php
 // Copyright
-//   2002-2020 PukiWiki Development Team
+//   2002-2021 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -160,7 +160,7 @@ function _navigator($key, $value = '', $javascript = ''){
 
 <div id="contents">
  <div id="body"><?php echo $body ?></div>
-<?php if ($menu !== FALSE) { ?>
+<?php if ($menu) { ?>
  <div id="menubar"><?php echo $menu ?></div>
 <?php } ?>
 <?php if ($rightbar) { ?>
