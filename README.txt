@@ -1,9 +1,9 @@
 名前
     PukiWiki - 自由にページを追加・削除・編集できるWebページ構築スクリプト
 
-    Version 1.5.3
+    Version 1.5.4
     Copyright
-      2001-2020 PukiWiki Development Team
+      2001-2021 PukiWiki Development Team
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
 
@@ -30,7 +30,7 @@
     Webサイト」として情報を提供する構成も可能です。(この場合、Wiki風のデザイ
     ンである必要すらありません)
 
-    PukiWikiはPHP言語で書かれたプログラムなので、PHP(PHP4.1 - PHP7.4)が動作す
+    PukiWikiはPHP言語で書かれたプログラムなので、PHP(PHP4.1 - PHP8.1)が動作す
     るWebサーバーであれば容易に設置でき、軽快に動作します。
 
     PukiWikiは、yu-jiさんを含む PukiWiki Develpers Team やその貢献者が、各自の

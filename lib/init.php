@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // init.php
 // Copyright
-//   2002-2020 PukiWiki Development Team
+//   2002-2021 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -10,10 +10,10 @@
 
 // PukiWiki version / Copyright / Licence
 
-define('S_VERSION', '1.5.3');
+define('S_VERSION', '1.5.4');
 define('S_COPYRIGHT',
 	'<strong>PukiWiki ' . S_VERSION . '</strong>' .
-	' &copy; 2001-2020' .
+	' &copy; 2001-2021' .
 	' <a href="https://pukiwiki.osdn.jp/">PukiWiki Development Team</a>'
 );
 
