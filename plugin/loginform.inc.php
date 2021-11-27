@@ -1,6 +1,6 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// Copyright 2015-2017 PukiWiki Development Team
+// Copyright 2015-2021 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // "Login form" plugin
@@ -13,7 +13,7 @@ function plugin_loginform_inline()
 
 function plugin_loginform_convert()
 {
-	return '<div>' . plugin_basicauthlogout_inline() . '</div>';
+	return '<div>' . plugin_loginform_inline() . '</div>';
 }
 
 function plugin_loginform_action()
@@ -123,9 +123,6 @@ function plugin_loginform_action()
 <script><!--
 window.addEventListener && window.addEventListener("DOMContentLoaded", function() {
   var f = window.document.forms.loginform;
-				console.log(f);
-				console.log(f.username);
-				console.log(f.password);
   if (f && f.username && f.password) {
     if (f.username.value) {
      f.password.focus && f.password.focus();
