@@ -63,6 +63,12 @@ if (! file_exists(INI_FILE) || ! is_readable(INI_FILE)) {
 if ($die) die_message(nl2br("\n\n" . $die));
 
 /////////////////////////////////////////////////
+// Page-URI mapping handler (default)
+if (! $page_uri_handler) {
+	$page_uri_handler = new PukiWikiStandardPageURIHandler();
+}
+
+/////////////////////////////////////////////////
 // INI_FILE: LANG に基づくエンコーディング設定
 
 // MB_LANGUAGE: mb_language (for mbstring extension)
@@ -295,6 +301,21 @@ if (PKWK_QUERY_STRING_MAX && strlen($arg) > PKWK_QUERY_STRING_MAX) {
 }
 $arg = input_filter($arg); // \0 除去
 
+// Convert QueryString by PageURIHandler
+$arg_replaced = $page_uri_handler->filter_raw_query_string($arg);
+if ($arg_replaced !== $arg) {
+	$_GET = array();
+	$m = array();
+	foreach (explode('&', $arg_replaced) as $kv) {
+		if (preg_match('/^([^=]+)(=(.+))?/', $kv, $m)) {
+			$_GET[$m[1]] = is_null($m[3]) ? '' : $m[3];
+		}
+	}
+	unset($m);
+	$arg = $arg_replaced;
+}
+unset($arg_replaced);
+
 // unset QUERY_STRINGs
 foreach (array('QUERY_STRING', 'argv', 'argc') as $key) {
 	unset(${$key}, $_SERVER[$key], $HTTP_SERVER_VARS[$key]);
@@ -398,13 +419,14 @@ if (isset($get['md5']) && $get['md5'] != '' &&
 if (! isset($vars['cmd']) && ! isset($vars['plugin'])) {
 
 	$get['cmd']  = $post['cmd']  = $vars['cmd']  = 'read';
-
-	$arg = preg_replace("#^([^&]*)&.*$#", "$1", $arg);
-	if ($arg == '') $arg = $defaultpage;
-	if (strpos($arg, '=') !== false) $arg = $defaultpage; // Found '/?key=value'
-	$arg = urldecode($arg);
-	$arg = strip_bracket($arg);
-	$arg = input_filter($arg);
+	$arg = $page_uri_handler->get_page_from_query_string($arg);
+	if ($arg === FALSE) {
+		// page is FALSE if page name is not valid
+		// Keep $arg is FALSE
+	} else if (!$arg) {
+		// if $arg is null or '' ($arg is NOT FALSE)
+		$arg = $defaultpage;
+	}
 	$get['page'] = $post['page'] = $vars['page'] = $arg;
 }
 

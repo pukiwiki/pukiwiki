@@ -854,9 +854,6 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolin
 
 	if ($page == '') return '<a href="' . $anchor . '">' . $s_alias . '</a>';
 
-	$r_page  = pagename_urlencode($page);
-	$r_refer = ($refer == '') ? '' : '&amp;refer=' . rawurlencode($refer);
-
 	$page_filetime = fast_get_filetime($page);
 	$is_page = $page_filetime !== 0;
 	if (! isset($related[$page]) && $page !== $vars['page'] && $is_page) {
@@ -877,12 +874,14 @@ function make_pagelink($page, $alias = '', $anchor = '', $refer = '', $isautolin
 		if ($s_page !== $s_alias) {
 			$title_attr_html = ' title="' . $s_page . '"';
 		}
-		return $al_left . '<a ' . 'href="' . $script . '?' . $r_page . $anchor .
+		return $al_left . '<a ' . 'href="' . get_page_uri($page) . $anchor .
 			'"' . $title_attr_html . ' class="' .
 			$attrs['class'] . '" data-mtime="' . $attrs['data_mtime'] .
 			'">' . $s_alias . '</a>' . $al_right;
 	} else {
 		// Support Page redirection
+		$r_page  = rawurlencode($page);
+		$r_refer = ($refer == '') ? '' : '&amp;refer=' . rawurlencode($refer);
 		$redirect_page = get_pagename_on_redirect($page);
 		if ($redirect_page !== false) {
 			return make_pagelink($redirect_page, $s_alias);

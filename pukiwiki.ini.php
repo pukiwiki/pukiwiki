@@ -543,6 +543,11 @@ $logging_updates = 0;
 $logging_updates_log_dir = '/var/log/pukiwiki';
 
 /////////////////////////////////////////////////
+// Page-URI mapping handler ( See https://pukiwiki.osdn.jp/?PukiWiki/PageURI )
+$page_uri_handler = null; // default
+// $page_uri_handler = new PukiWikiStandardPageURIHandler();
+
+/////////////////////////////////////////////////
 // User-Agent settings
 //
 // If you want to ignore embedded browsers for rich-content-wikisite,

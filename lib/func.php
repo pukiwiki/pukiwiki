@@ -524,20 +524,17 @@ function page_list($pages, $cmd = 'read', $withfilename = FALSE)
 		mb_regex_encoding(SOURCE_ENCODING);
 		$readings = get_readings($pages);
 	}
-
 	$list = $matches = array();
-
-	// Shrink URI for read
-	if ($cmd == 'read') {
-		$href = $script . '?';
-	} else {
-		$href = $script . '?cmd=' . $cmd . '&amp;page=';
-	}
 	uasort($pages, 'strnatcmp');
 	foreach($pages as $file=>$page) {
-		$r_page  = pagename_urlencode($page);
 		$s_page  = htmlsc($page, ENT_QUOTES);
-		$str = '   <li><a href="' . $href . $r_page . '">' .
+		// Shrink URI for read
+		if ($cmd == 'read') {
+			$href = get_page_uri($page);
+		} else {
+			$href = $script . '?cmd=' . $cmd . '&amp;page=' . rawurlencode($page);
+		}
+		$str = '   <li><a href="' . $href . '">' .
 			$s_page . '</a> ' . get_pg_passage($page);
 		if ($withfilename) {
 			$s_file = htmlsc($file);
@@ -646,6 +643,21 @@ EOD;
 	}
 	exit;
 }
+
+function die_invalid_pagename() {
+	$title = 'Error';
+	$page = 'Error: Invlid page name';
+	$body = <<<EOD
+<h3>Error</h3>
+<strong>Error message: Invalid page name</strong>
+EOD;
+
+	pkwk_common_headers();
+	header('HTTP/1.0 400 Bad request');
+	catbody($title, $page, $body);
+	exit;
+}
+
 
 // Have the time (as microtime)
 function getmicrotime()
@@ -861,11 +873,8 @@ function get_base_uri($uri_type = PKWK_URI_RELATIVE)
  */
 function get_page_uri($page, $uri_type = PKWK_URI_RELATIVE)
 {
-	global $defaultpage;
-	if ($page === $defaultpage) {
-		return get_base_uri($uri_type);
-	}
-	return get_base_uri($uri_type) . '?' . pagename_urlencode($page);
+	global $page_uri_handler;
+	return get_base_uri($uri_type) . $page_uri_handler->get_page_uri_virtual_query($page);
 }
 
 // Get absolute-URI of this script
@@ -1178,6 +1187,34 @@ function get_preg_u() {
 		}
 	}
 	return $utf8u;
+}
+
+// Default Page name - URI mapping handler
+class PukiWikiStandardPageURIHandler {
+	function filter_raw_query_string($query_string) {
+		return $query_string;
+	}
+
+	function get_page_uri_virtual_query($page) {
+		return '?' . pagename_urlencode($page);
+	}
+
+	function get_page_from_query_string($query_string) {
+		$param1st = preg_replace("#^([^&]*)&.*$#", "$1", $query_string);
+		if ($param1st == '') {
+			return null; // default page
+		}
+		if (strpos($param1st, '=') !== FALSE) {
+			// Found '/?key=value' (NG chars)
+			return FALSE; // Error page
+		}
+		$page = urldecode($param1st);
+		$page2 = input_filter($page);
+		if ($page !== $page2) {
+			return FALSE; // Error page
+		}
+		return $page2;
+	}
 }
 
 //// Compat ////
