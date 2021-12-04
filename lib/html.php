@@ -70,7 +70,7 @@ function catbody($title, $page, $body)
 	$_LINK['rss10']    = "$script?cmd=rss&amp;ver=1.0"; // Same as 'rdf'
 	$_LINK['rss20']    = "$script?cmd=rss&amp;ver=2.0";
 	$_LINK['search']   = "$script?cmd=search";
-	$_LINK['top']      = get_page_uri($defaultpage);
+	$_LINK['top']      = get_base_uri();
 	$_LINK['unfreeze'] = "$script?cmd=unfreeze&amp;page=$r_page";
 	$_LINK['upload']   = "$script?plugin=attach&amp;pcmd=upload&amp;page=$r_page";
 	$_LINK['canonical_url'] = $canonical_url;
