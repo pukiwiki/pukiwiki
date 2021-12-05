@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // calendar_viewer.inc.php
-// Copyright  2002-2020 PukiWiki Development Team
+// Copyright  2002-2021 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Calendar viewer plugin - List pages that calendar/calnedar2 plugin created
@@ -55,7 +55,7 @@ define('PLUGIN_CALENDAR_VIEWER_USAGE',
 
 function plugin_calendar_viewer_convert()
 {
-	global $vars, $get, $post, $script, $weeklabels;
+	global $vars, $get, $post, $weeklabels;
 	global $_msg_calendar_viewer_right, $_msg_calendar_viewer_left;
 	global $_msg_calendar_viewer_restrict, $_err_calendar_viewer_param2;
 
@@ -164,9 +164,6 @@ function plugin_calendar_viewer_convert()
 		} else {
 			$body = str_replace('$1', $page, $_msg_calendar_viewer_restrict);
 		}
-
-		$r_page = pagename_urlencode($page);
-
 		if (PLUGIN_CALENDAR_VIEWER_DATE_FORMAT !== FALSE) {
 			$time = strtotime(basename($page)); // $date_sep must be assumed '-' or ''!
 			if ($time === FALSE || $time === -1) {
@@ -184,15 +181,13 @@ function plugin_calendar_viewer_convert()
 		}
 
 		if (PKWK_READONLY) {
-			$link   = $script . '?' . $r_page;
+			$link = get_page_uri($page);
 		} else {
-			$link   = $script . '?cmd=edit&amp;page=' . $r_page;
+			$link = get_base_uri() . '?cmd=edit&amp;page=' . pagename_urlencode($page);
 		}
-		$link   = '<a href="' . $link . '">' . $s_page . '</a>';
-
-		$head   = '<h1>' . $link . '</h1>' . "\n";
+		$link_html = '<a href="' . $link . '">' . $s_page . '</a>';
+		$head = '<h1>' . $link_html . '</h1>' . "\n";
 		$return_body .= $head . $body;
-
 		++$tmp;
 	}
 
@@ -253,7 +248,7 @@ function plugin_calendar_viewer_convert()
 	if ($left_YM != '' || $right_YM != '') {
 		$s_date_sep = htmlsc($date_sep);
 		$left_link = $right_link = '';
-		$link = $script . '?plugin=calendar_viewer&amp;mode=' . $mode .
+		$link = get_base_uri() . '?plugin=calendar_viewer&amp;mode=' . $mode .
 			'&amp;file=' . rawurlencode($simple_pagename) .
 			'&amp;date_sep=' . $s_date_sep . '&amp;';
 		if ($left_YM != '')
@@ -277,7 +272,7 @@ function plugin_calendar_viewer_convert()
 
 function plugin_calendar_viewer_action()
 {
-	global $vars, $get, $post, $script;
+	global $vars, $get, $post;
 
 	$date_sep = '-';
 

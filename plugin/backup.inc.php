@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // backup.inc.php
 // Copyright
-//   2002-2017 PukiWiki Development Team
+//   2002-2021 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -70,7 +70,7 @@ function plugin_backup_action()
 
 	if ($is_page) {
 		$body .= ' <li>' . str_replace('$1',
-			'<a href="' . $script . '?' . $r_page . '">' . $s_page . '</a>',
+			'<a href="' . get_page_uri($page) . '">' . $s_page . '</a>',
 			$_msg_goto) . "\n";
 	} else {
 		$body .= ' <li>' . str_replace('$1', $s_page, $_msg_deleted) . "\n";

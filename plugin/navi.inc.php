@@ -1,6 +1,10 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: navi.inc.php,v 1.24 2011/01/25 15:01:01 henoheno Exp $
+// navi.inc.php
+// Copyright
+//   2002-2021 PukiWiki Development Team
+//   2002      Originally written by PANDA
+// License: GPL v2 or (at your option) any later version
 //
 // Navi plugin: Show DocBook-like navigation bar and contents
 
@@ -46,7 +50,7 @@ define('PLUGIN_NAVI_LINK_TAGS', FALSE);	// FALSE, TRUE
 
 function plugin_navi_convert()
 {
-	global $vars, $script, $head_tags;
+	global $vars, $head_tags;
 	global $_navi_prev, $_navi_next, $_navi_up, $_navi_home;
 	static $navi = array();
 
@@ -135,11 +139,10 @@ function plugin_navi_convert()
 			    'prev'=>$prev, 'up'=>$up) as $rel=>$_page) {
 				if ($_page != '') {
 					$s_page = htmlsc($_page);
-					$r_page = pagename_urlencode($_page);
+					$r_page_link = htmlsc(get_page_uri($_page));
 					$head_tags[] = ' <link rel="' .
-						$rel . '" href="' . $script .
-						'?' . $r_page . '" title="' .
-						$s_page . '" />';
+						$rel . '" href="' . $r_page_link .
+						'" title="' . $s_page . '" />';
 				}
 			}
 		}
@@ -189,4 +192,3 @@ EOD;
 	}
 	return $ret;
 }
-

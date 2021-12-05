@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // rss.inc.php
-// Copyright 2003-2017 PukiWiki Development Team
+// Copyright 2003-2021 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // RSS plugin: Publishing RSS of RecentChanges
@@ -33,14 +33,13 @@ function plugin_rss_action()
 
 	$lang = LANG;
 	$page_title_utf8 = mb_convert_encoding($page_title, 'UTF-8', SOURCE_ENCODING);
-	$self = get_base_uri(PKWK_URI_ABSOLUTE);
 
 	// Creating <item>
 	$items = $rdf_li = '';
 
 	foreach (file_head($recent, $rss_max) as $line) {
 		list($time, $page) = explode("\t", rtrim($line));
-		$r_page = pagename_urlencode($page);
+		$r_page_link = htmlsc(get_page_uri($page, PKWK_URI_ABSOLUTE));
 		$title  = mb_convert_encoding($page, 'UTF-8', SOURCE_ENCODING);
 
 		switch ($version) {
@@ -53,7 +52,7 @@ function plugin_rss_action()
 			$items .= <<<EOD
 <item>
  <title>$title</title>
- <link>$self?$r_page</link>
+ <link>$r_page_link</link>
 $date
 </item>
 
@@ -62,16 +61,16 @@ EOD;
 
 		case '1.0':
 			// Add <item> into <items>
-			$rdf_li .= '    <rdf:li rdf:resource="' . $self .
-				'?' . $r_page . '" />' . "\n";
+			$rdf_li .= '    <rdf:li rdf:resource="' . $r_page_link .
+				'" />' . "\n";
 
 			$date = substr_replace(get_date('Y-m-d\TH:i:sO', $time), ':', -2, 0);
 			$items .= <<<EOD
-<item rdf:about="$self?$r_page">
+<item rdf:about="$r_page_link">
  <title>$title</title>
- <link>$self?$r_page</link>
+ <link>$r_page_link</link>
  <dc:date>$date</dc:date>
- <dc:identifier>$self?$r_page</dc:identifier>
+ <dc:identifier>$r_page_link</dc:identifier>
 </item>
 
 EOD;
@@ -84,7 +83,7 @@ EOD;
 	header('Content-type: application/xml');
 	print '<?xml version="1.0" encoding="UTF-8"?>' . "\n\n";
 
-	$r_whatsnew = pagename_urlencode($whatsnew);
+	$r_whatsnew_link = htmlsc(get_page_uri($whatsnew, PKWK_URI_ABSOLUTE));
 	switch ($version) {
 	case '0.91':
 		print '<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"' .
@@ -96,7 +95,7 @@ EOD;
 <rss version="$version">
  <channel>
   <title>$page_title_utf8</title>
-  <link>$self?$r_whatsnew</link>
+  <link>$r_whatsnew_link</link>
   <description>PukiWiki RecentChanges</description>
   <language>$lang</language>
 
@@ -113,9 +112,9 @@ EOD;
   xmlns="http://purl.org/rss/1.0/"
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xml:lang="$lang">
- <channel rdf:about="$self?$r_whatsnew">
+ <channel rdf:about="$r_whatsnew_link">
   <title>$page_title_utf8</title>
-  <link>$self?$r_whatsnew</link>
+  <link>$r_whatsnew_link</link>
   <description>PukiWiki RecentChanges</description>
   <items>
    <rdf:Seq>

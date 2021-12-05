@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: keitai.skin.php,v 1.16 2006/01/09 10:37:05 henoheno Exp $
-// Copyright (C) 2003-2006 PukiWiki Developers Team
+// keitai.skin.php
+// Copyright 2003-2021 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Skin for Embedded devices
@@ -59,7 +59,7 @@ if ($rw) {
 		}
 	}
 }
-$navi[] = '<a href="' . $script . '?' . pagename_urlencode($menubar) . '" ' . $accesskey . '="4">4.Menu</a>';
+$navi[] = '<a href="' . get_page_uri($menubar) . '" ' . $accesskey . '="4">4.Menu</a>';
 $navi[] = '<a href="' . $link['recent'] . '" ' . $accesskey . '="5">5.Recent</a>';
 
 // Previous / Next block
