@@ -1,6 +1,7 @@
 #freeze
 #nofollow
 #norelated
+#setlinebreak(off)
 #navi(../)
 #contents
 ------------------------------
@@ -338,3 +339,4 @@ stationaryプラグインは単純な文字列を表示する以外は何もし�
 
 
 #navi(../)
+#setlinebreak(default)

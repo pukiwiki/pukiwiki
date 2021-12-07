@@ -1,6 +1,7 @@
 #freeze
 #nofollow
 #norelated
+#setlinebreak(off)
 #navi(../)
 #contents
 ------------------------------
@@ -69,3 +70,4 @@
 
 
 #navi(../)
+#setlinebreak(default)

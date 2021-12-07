@@ -1,6 +1,7 @@
 #freeze
 #nofollow
 #norelated
+#setlinebreak(off)
 #navi(../)
 #contents
 ------------------------------
@@ -390,3 +391,4 @@
 ~ルビに対応していないブラウザではルビをふる文字列の直後にルビが( )に入れられて表示されます。
 
 #navi(../)
+#setlinebreak(default)

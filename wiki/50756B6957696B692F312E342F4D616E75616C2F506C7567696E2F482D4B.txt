@@ -1,6 +1,7 @@
 #freeze
 #nofollow
 #norelated
+#setlinebreak(off)
 #navi(../)
 #contents
 ------------------------------
@@ -130,3 +131,4 @@ refプラグインと異なり、拡張子(末尾文字列)に関わらずURLを
 
 
 #navi(../)
+#setlinebreak(default)

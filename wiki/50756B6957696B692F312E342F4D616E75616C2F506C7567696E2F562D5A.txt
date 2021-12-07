@@ -1,6 +1,7 @@
 #freeze
 #nofollow
 #norelated
+#setlinebreak(off)
 #navi(../)
 #contents
 ------------------------------
@@ -70,3 +71,4 @@
 ~自分以外の誰かがページを書くかもしれないという点は非常にWiki的ですが、実際の運用面ではcommentに記述された一見さんの名前やWikiName同様のパラメータ名など、ページ化しにくいキーワードが大量に引っかかってしまいます。
 
 #navi(../)
+#setlinebreak(default)

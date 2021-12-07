@@ -1,6 +1,7 @@
 #freeze
 #nofollow
 #norelated
+#setlinebreak(off)
 #navi(../)
 #contents
 ------------------------------
@@ -343,3 +344,4 @@ SHA-1 アルゴリズムを利用するためには、PHP 4.3.0 以降を使用�
 
 
 #navi(../)
+#setlinebreak(default)

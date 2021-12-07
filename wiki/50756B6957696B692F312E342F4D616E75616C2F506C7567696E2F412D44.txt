@@ -1,6 +1,7 @@
 #freeze
 #nofollow
 #norelated
+#setlinebreak(off)
 #navi(../)
 #contents
 ------------------------------
@@ -571,3 +572,4 @@ Yellow = "#FFFF00"
 
 
 #navi(../)
+#setlinebreak(default)
