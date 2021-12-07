@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // img.inc.php
-// Copyright 2002-2018 PukiWiki Development Team
+// Copyright 2002-2021 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Inline-image plugin (Output inline-image tag from a URI)
@@ -26,6 +26,18 @@ function plugin_img_get_style($args)
 				break;
 			} else if (preg_match('#^(\d+)px$#', $arg, $m)) {
 				$style = 'max-width:' . $m[1] . 'px;max-height:' . $m[1] . 'px;';
+				break;
+			} else if (preg_match('#^(\d+)x$#', $arg, $m)) {
+				$style = 'max-width:' . $m[1] . 'px;height:auto;';
+				break;
+			} if (preg_match('#^x(\d+)$#', $arg, $m)) {
+				$style = 'width:auto;max-height:' . $m[1] . 'px;';
+				break;
+			} else if (preg_match('#^(\d+)w$#', $arg, $m)) {
+				$style = 'max-width:' . $m[1] . 'px;height:auto;';
+				break;
+			} if (preg_match('#^(\d+)h$#', $arg, $m)) {
+				$style = 'width:auto;max-height:' . $m[1] . 'px;';
 				break;
 			} else if (preg_match('#^(\d+)%$#', $arg, $m)) {
 				// Note: zoom is not standard. Recommend using MAXpx or WIDTHxHEIGHT
