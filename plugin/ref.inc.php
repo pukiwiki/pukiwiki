@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // ref.inc.php
 // Copyright
-//   2002-2020 PukiWiki Development Team
+//   2002-2021 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -124,6 +124,7 @@ function plugin_ref_body($args)
 		'noimg'  => FALSE, // 画像を展開しない
 		'zoom'   => FALSE, // 縦横比を保持する
 		'_size'  => FALSE, // サイズ指定あり
+		'_size_auto_aspect_ratio' => FALSE, // Size with auto aspect ratio
 		'_w'     => 0,       // 幅
 		'_h'     => 0,       // 高さ
 		'_%'     => 0,     // 拡大率
@@ -300,7 +301,18 @@ function plugin_ref_body($args)
 
 			} else if (preg_match('/^([0-9.]+)%$/', $arg, $matches) && $matches[1] > 0) {
 				$params['_%'] = $matches[1];
-
+			} else if (preg_match('/^([0-9]+)x$/', $arg, $matches)) {
+				$params['_size_auto_aspect_ratio'] = TRUE;
+				$params['_w'] = $matches[1];
+			} else if (preg_match('/^x([0-9]+)$/', $arg, $matches)) {
+				$params['_size_auto_aspect_ratio'] = TRUE;
+				$params['_h'] = $matches[1];
+			} else if (preg_match('/^([0-9]+)w$/', $arg, $matches)) {
+				$params['_size_auto_aspect_ratio'] = TRUE;
+				$params['_w'] = $matches[1];
+			} else if (preg_match('/^([0-9]+)h$/', $arg, $matches)) {
+				$params['_size_auto_aspect_ratio'] = TRUE;
+				$params['_h'] = $matches[1];
 			} else {
 				$_title[] = $arg;
 			}
@@ -347,7 +359,16 @@ function plugin_ref_body($args)
 			break;
 		}
 	}
-
+	// Size with auto aspect ratio
+	if ($is_image) {
+		if ($params['_size_auto_aspect_ratio']) {
+			if ($params['_w']) {
+				$info = trim($info) . " style=\"width:" . $params['_w'] . "px;height:auto;\"";
+			} else if ($params['_h']) {
+				$info = trim($info) . " style=\"width:auto;height:" . $params['_h'] . "px;\"";
+			}
+		}
+	}
 	if ($is_image) { // 画像
 		$params['_body'] = "<img src=\"$url\" alt=\"$title\" title=\"$title\" $info/>";
 		if (! $params['nolink'] && $url2)
