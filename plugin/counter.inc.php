@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // counter.inc.php
 // Copyright
-//   2002-2019 PukiWiki Development Team
+//   2002-2021 PukiWiki Development Team
 //   2002 Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net
 // License: GPL2
 //
@@ -10,6 +10,8 @@
 
 // Counter file's suffix
 define('PLUGIN_COUNTER_SUFFIX', '.count');
+// Ignore REMOTE_ADDR : TRUE for reverse proxy / load balancer environment
+define('PLUGIN_COUNTER_IGNORE_REMOTE_ADDR', FALSE);
 // Use Database (1) or not (0)
 define('PLUGIN_COUNTER_USE_DB', 0);
 // Database Connection setting
@@ -148,6 +150,9 @@ function plugin_counter_get_count($page)
 
 	// Anothoer day?
 	$remote_addr = $_SERVER['REMOTE_ADDR'];
+	if (! $remote_addr) {
+		$remote_addr = '_';
+	}
 	$count_up = FALSE;
 	if ($c['date'] != $default['date']) {
 		$modify = TRUE;
@@ -158,7 +163,7 @@ function plugin_counter_get_count($page)
 		$c['today']     = 1;
 		$c['total']++;
 		$count_up = TRUE;
-	} else if ($c['ip'] != $remote_addr) {
+	} else if ($c['ip'] != $remote_addr || PLUGIN_COUNTER_IGNORE_REMOTE_ADDR) {
 		// Not the same host
 		$modify = TRUE;
 		$c['ip']        = $remote_addr;
