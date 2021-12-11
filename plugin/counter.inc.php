@@ -10,8 +10,8 @@
 
 // Counter file's suffix
 define('PLUGIN_COUNTER_SUFFIX', '.count');
-// Ignore REMOTE_ADDR : TRUE for reverse proxy / load balancer environment
-define('PLUGIN_COUNTER_IGNORE_REMOTE_ADDR', FALSE);
+// Ignore REMOTE_ADDR : FALSE(0) or TRUE(1) for reverse proxy / load balancer environment
+define('PLUGIN_COUNTER_IGNORE_REMOTE_ADDR', 0);
 // Use Database (1) or not (0)
 define('PLUGIN_COUNTER_USE_DB', 0);
 // Database Connection setting
