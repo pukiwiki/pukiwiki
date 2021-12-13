@@ -305,6 +305,8 @@ $search_auth = 0;
 
 /////////////////////////////////////////////////
 // AutoTicketLink
+// (0:Create AutoTicketLinkName page automatically, 1:Don't create the page)
+$no_autoticketlinkname = 0;
 $ticket_link_sites = array(
 /*
 	array(
