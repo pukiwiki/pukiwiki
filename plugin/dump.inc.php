@@ -32,15 +32,18 @@ global $_STORAGE;
 
 // DATA_DIR (wiki/*.txt)
 $_STORAGE['DATA_DIR']['add_filter']     = '^[0-9A-F]+\.txt';
-$_STORAGE['DATA_DIR']['extract_filter'] = '^' . preg_quote(DATA_DIR, '/')   . '((?:[0-9A-F])+)(\.txt){0,1}';
+$_STORAGE['DATA_DIR']['extract_filter'] = '^' . preg_quote(DATA_DIR, '/')
+	. '((?:[0-9A-F])+)(\.txt){0,1}$';
 
 // UPLOAD_DIR (attach/*)
 $_STORAGE['UPLOAD_DIR']['add_filter']     = '^[0-9A-F_]+';
-$_STORAGE['UPLOAD_DIR']['extract_filter'] = '^' . preg_quote(UPLOAD_DIR, '/') . '((?:[0-9A-F]{2})+)_((?:[0-9A-F])+)';
+$_STORAGE['UPLOAD_DIR']['extract_filter'] = '^' . preg_quote(UPLOAD_DIR, '/')
+	. '((?:[0-9A-F]{2})+)_((?:[0-9A-F])+)(\.(log|[0-9]{1,3})){0,1}$';
 
 // BACKUP_DIR (backup/*.gz)
 $_STORAGE['BACKUP_DIR']['add_filter']     = '^[0-9A-F]+\.gz';
-$_STORAGE['BACKUP_DIR']['extract_filter'] =  '^' . preg_quote(BACKUP_DIR, '/') . '((?:[0-9A-F])+)(\.gz){0,1}';
+$_STORAGE['BACKUP_DIR']['extract_filter'] =  '^' . preg_quote(BACKUP_DIR, '/')
+	. '((?:[0-9A-F])+)(\.gz){0,1}$';
 
 
 /////////////////////////////////////////////////
@@ -391,7 +394,7 @@ class tarlib
 		if ($this->status != TARLIB_STATUS_CREATE)
 			return ''; // File is not created
 
-		unset($files);
+		$files = array();
 
 		//  指定されたパスのファイルのリストを取得する
 		$dp = @opendir($dir);
@@ -462,7 +465,12 @@ class tarlib
 			// ファイルデータの取得
 			$fpr = @fopen($name , 'rb');
 			flock($fpr, LOCK_SH);
-			$data = fread($fpr, $size);
+			if ($size === 0) {
+				// Avoid error on fread($fp, 0);
+				$data = '';
+			} else {
+				$data = fread($fpr, $size);
+			}
 			flock($fpr, LOCK_UN);
 			fclose( $fpr );
 
@@ -600,7 +608,6 @@ class tarlib
 	function extract($pattern)
 	{
 		if ($this->status != TARLIB_STATUS_OPEN) return ''; // Not opened
-		
 		$files = array();
 		$longname = '';
 
@@ -665,12 +672,21 @@ class tarlib
 
 			if ($name == TARLIB_DATA_LONGLINK) {
 				// LongLink
-				$buff     = fread($this->fp, $pdsz);
+				if ($pdsz) {
+					$buff = fread($this->fp, $pdsz);
+				} else {
+					// 0 or invalid
+					$buff = '';
+				}
 				$longname = substr($buff, 0, $size);
 			} else if (preg_match("/$pattern/", $name) ) {
 //			} else if ($type == 0 && preg_match("/$pattern/", $name) ) {
-				$buff = fread($this->fp, $pdsz);
-
+				if ($pdsz) {
+					$buff = fread($this->fp, $pdsz);
+				} else {
+					// 0 or invalid
+					$buff = '';
+				}
 				// 既に同じファイルがある場合は上書きされる
 				$fpw = @fopen($name, 'wb');
 				if ($fpw !== FALSE) {
