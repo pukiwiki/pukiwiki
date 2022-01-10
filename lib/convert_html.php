@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // convert_html.php
 // Copyright
-//   2002-2021 PukiWiki Development Team
+//   2002-2022 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -522,7 +522,7 @@ class TableCell extends Element
 		parent::__construct();
 		$this->style = $matches = array();
 
-		while (preg_match('/^(?:(LEFT|CENTER|RIGHT)|(BG)?COLOR\(([#\w]+)\)|SIZE\((\d+)\)|(BOLD)):(.*)$/',
+		while (preg_match('/^(?:(LEFT|CENTER|RIGHT)|(BG)?COLOR\(([#\w]+)\)|SIZE\((\d{1,2})\)|(BOLD)):(.*)$/',
 		    $text, $matches)) {
 			if ($matches[1]) {
 				$this->style['align'] = 'text-align:' . strtolower($matches[1]) . ';';
