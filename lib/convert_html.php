@@ -522,7 +522,7 @@ class TableCell extends Element
 		parent::__construct();
 		$this->style = $matches = array();
 
-		while (preg_match('/^(?:(LEFT|CENTER|RIGHT)|(BG)?COLOR\(([#\w]+)\)|SIZE\((\d{1,2})\)|(BOLD)):(.*)$/',
+		while (preg_match('/^(?:(LEFT|CENTER|RIGHT)|(BG)?COLOR\((#?\w{1,20})\)|SIZE\((\d{1,2})\)|(BOLD)):(.*)$/',
 		    $text, $matches)) {
 			if ($matches[1]) {
 				$this->style['align'] = 'text-align:' . strtolower($matches[1]) . ';';

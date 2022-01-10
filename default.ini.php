@@ -111,9 +111,11 @@ $usefacemark = 1;
 /////////////////////////////////////////////////
 // ユーザ定義ルール(コンバート時に置換)
 $line_rules = array(
-	'COLOR\(([^\(\)]*)\){([^}]*)}'	=> '<span style="color:$1">$2</span>',
+	'COLOR\(((?:[a-zA-Z]{1,20})|(?:#[0-9a-fA-F]{3,6}))\){([^}]*)}'
+		=> '<span style="color:$1">$2</span>',
 	'SIZE\((\d{1,2})\){([^}]*)}' => '<span style="font-size:$1px">$2</span>',
-	'COLOR\(([^\(\)]*)\):((?:(?!COLOR\([^\)]+\)\:).)*)'	=> '<span style="color:$1">$2</span>',
+	'COLOR\(((?:[a-zA-Z]{1,20})|(?:#[0-9a-fA-F]{3,6}))\):((?:(?!COLOR\([^\)]+\)\:).)*)'
+		=> '<span style="color:$1">$2</span>',
 	// "SIZE(n):" PukiWiki 1.3 compatible notation
 	'SIZE\(([1-7])\):((?:(?!SIZE\([^\)]+\)\:).)*)' => '<span class="size$1">$2</span>',
 	'%%%(?!%)((?:(?!%%%).)*)%%%'	=> '<ins>$1</ins>',

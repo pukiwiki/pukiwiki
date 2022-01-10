@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // color.inc.php
 // Copyright
-//   2003-2016 PukiWiki Development Team
+//   2003-2022 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Text color plugin
@@ -13,7 +13,7 @@ define('PLUGIN_COLOR_ALLOW_CSS', TRUE); // TRUE, FALSE
 
 // ----
 define('PLUGIN_COLOR_USAGE', '&color(foreground[,background]){text};');
-define('PLUGIN_COLOR_REGEX', '/^(#[0-9a-f]{3}|#[0-9a-f]{6}|[a-z-]+)$/i');
+define('PLUGIN_COLOR_REGEX', '/^(#[0-9a-f]{3}|#[0-9a-f]{6}|[a-z-]{1,20})$/i');
 
 function plugin_color_inline()
 {
