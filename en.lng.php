@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // en.lng.php
 // Copyright
-//   2002-2020 PukiWiki Development Team
+//   2002-2022 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -23,7 +23,7 @@ $_title_updated    = ' $1 was updated';
 $_title_deleted    = ' $1 was deleted';
 $_title_help       = 'Help';
 $_title_invalidwn  = 'It is not a valid WikiName';
-$_title_backuplist = 'Backup list';
+$_title_backuplist = 'History';
 
 ///////////////////////////////////////
 // Messages
@@ -103,7 +103,7 @@ $_no_name = '';
 /////////////////////////////////////////////////
 
 $_LANG['skin']['add']       = 'Add';
-$_LANG['skin']['backup']    = 'Backup';
+$_LANG['skin']['backup']    = 'History';
 $_LANG['skin']['copy']      = 'Copy';
 $_LANG['skin']['diff']      = 'Diff';
 $_LANG['skin']['edit']      = 'Edit';
@@ -194,21 +194,21 @@ $_msg_back_word = 'Back';
 
 ///////////////////////////////////////
 // backup.inc.php
-$_title_backup_delete  = 'Deleting backup of  $1';
-$_title_backupdiff     = 'Backup diff of  $1(No. $2)';
-$_title_backupnowdiff  = 'Backup diff of  $1 vs current(No. $2)';
-$_title_backupsource   = 'Backup source of  $1(No. $2)';
-$_title_backup         = 'Backup of  $1(No. $2)';
-$_title_pagebackuplist = 'Backup list of  $1';
-$_title_backuplist     = 'Backup list';
-$_msg_backup_deleted   = 'Backup of  $1 has been deleted.';
+$_title_backup_delete  = 'Deleting history of  $1';
+$_title_backupdiff     = 'History diff of  $1(No. $2)';
+$_title_backupnowdiff  = 'History diff of  $1 vs current(No. $2)';
+$_title_backupsource   = 'History source of  $1(No. $2)';
+$_title_backup         = 'History of  $1(No. $2)';
+$_title_pagebackuplist = 'History of  $1';
+$_title_backuplist     = 'History';
+$_msg_backup_deleted   = 'History of  $1 has been deleted.';
 $_msg_backup_adminpass = 'Please input the password for deleting.';
-$_msg_backuplist       = 'List of Backups';
-$_msg_nobackup         = 'There are no backup(s) of  $1.';
+$_msg_backuplist       = 'History';
+$_msg_nobackup         = 'There are no history of  $1.';
 $_msg_diff             = 'diff';
 $_msg_nowdiff          = 'diff current';
 $_msg_source           = 'source';
-$_msg_backup           = 'backup';
+$_msg_backup           = 'history';
 $_msg_view             = 'View the  $1.';
 $_msg_deleted          = ' $1 has been deleted.';
 

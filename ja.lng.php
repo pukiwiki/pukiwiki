@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // ja.lng.php
 // Copyright
-//   2002-2020 PukiWiki Development Team
+//   2002-2022 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -24,7 +24,7 @@ $_title_updated    = '$1 を更新しました';
 $_title_deleted    = '$1 を削除しました';
 $_title_help       = 'ヘルプ';
 $_title_invalidwn  = '有効なWikiNameではありません';
-$_title_backuplist = 'バックアップ一覧';
+$_title_backuplist = '履歴一覧';
 
 ///////////////////////////////////////
 // Messages
@@ -105,7 +105,7 @@ $_no_name = '';
 /////////////////////////////////////////////////
 
 $_LANG['skin']['add']       = '追加';
-$_LANG['skin']['backup']    = 'バックアップ';
+$_LANG['skin']['backup']    = '履歴';
 $_LANG['skin']['copy']      = '複製';
 $_LANG['skin']['diff']      = '差分';
 $_LANG['skin']['edit']      = '編集';
@@ -196,21 +196,21 @@ $_msg_back_word = '戻る';
 
 ///////////////////////////////////////
 // backup.inc.php
-$_title_backup_delete  = '$1 のバックアップを削除';
-$_title_backupdiff     = '$1 のバックアップ差分(No.$2)';
-$_title_backupnowdiff  = '$1 のバックアップの現在との差分(No.$2)';
-$_title_backupsource   = '$1 のバックアップソース(No.$2)';
-$_title_backup         = '$1 のバックアップ(No.$2)';
-$_title_pagebackuplist = '$1 のバックアップ一覧';
-$_title_backuplist     = 'バックアップ一覧';
-$_msg_backup_deleted   = '$1 のバックアップを削除しました。';
+$_title_backup_delete  = '$1 の履歴を削除';
+$_title_backupdiff     = '$1 の履歴差分(No.$2)';
+$_title_backupnowdiff  = '$1 の履歴の現在との差分(No.$2)';
+$_title_backupsource   = '$1 の履歴ソース(No.$2)';
+$_title_backup         = '$1 の履歴(No.$2)';
+$_title_pagebackuplist = '$1 の履歴一覧';
+$_title_backuplist     = '履歴一覧';
+$_msg_backup_deleted   = '$1 の履歴を削除しました。';
 $_msg_backup_adminpass = '削除用のパスワードを入力してください。';
-$_msg_backuplist       = 'バックアップ一覧';
-$_msg_nobackup         = '$1 のバックアップはありません。';
+$_msg_backuplist       = '履歴一覧';
+$_msg_nobackup         = '$1 の履歴はありません。';
 $_msg_diff             = '差分';
 $_msg_nowdiff          = '現在との差分';
 $_msg_source           = 'ソース';
-$_msg_backup           = 'バックアップ';
+$_msg_backup           = '履歴';
 $_msg_view             = '$1 を表示';
 $_msg_deleted          = '$1 は削除されています。';
 
