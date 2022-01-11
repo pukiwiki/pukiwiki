@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // func.php
 // Copyright
-//   2002-2021 PukiWiki Development Team
+//   2002-2022 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -873,7 +873,10 @@ function get_base_uri($uri_type = PKWK_URI_RELATIVE)
  */
 function get_page_uri($page, $uri_type = PKWK_URI_RELATIVE)
 {
-	global $page_uri_handler;
+	global $page_uri_handler, $defaultpage;
+	if ($page === $defaultpage) {
+		return get_base_uri($uri_type);
+	}
 	return get_base_uri($uri_type) . $page_uri_handler->get_page_uri_virtual_query($page);
 }
 
