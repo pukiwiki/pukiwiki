@@ -1208,8 +1208,8 @@ class PukiWikiStandardPageURIHandler {
 			return null; // default page
 		}
 		if (strpos($param1st, '=') !== FALSE) {
-			// Found '/?key=value' (NG chars)
-			return FALSE; // Error page
+			// Found '/?key=value' (Top page with additional query params)
+			return null; // default page
 		}
 		$page = urldecode($param1st);
 		$page2 = input_filter($page);
