@@ -1,13 +1,22 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
-// Copyright 2015-2021 PukiWiki Development Team
+// Copyright 2015-2022 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // "Login form" plugin
 
 function plugin_loginform_inline()
 {
-	$logout_param = '?plugin=basicauthlogout';
+	global $vars, $read_auth, $edit_auth;
+	$page = isset($vars['page']) ? $vars['page'] : '';
+	if (! is_pagename($page)) {
+		$page = '';
+	}
+	if (! ($read_auth || $edit_auth)) {
+		// non auth site
+		return 'Note: loginform is for auth enabled site';
+	}
+	$logout_param = '?plugin=loginform&pcmd=logout&page=' . pagename_urlencode($page);
 	return '<a href="' . htmlsc(get_base_uri() . $logout_param) . '">Log out</a>';
 }
 
@@ -19,8 +28,17 @@ function plugin_loginform_convert()
 function plugin_loginform_action()
 {
 	global $auth_user, $auth_type, $_loginform_messages;
+	global $read_auth, $edit_auth;
 	$page = isset($_GET['page']) ? $_GET['page'] : '';
 	$pcmd = isset($_GET['pcmd']) ? $_GET['pcmd'] : '';
+	if (! is_pagename($page)) {
+		$page = '';
+	}
+	if (! ($read_auth || $edit_auth)) {
+		// non auth site
+		die_message('Invalid action');
+		exit;
+	}
 	$url_after_login = isset($_GET['url_after_login']) ? $_GET['url_after_login'] : '';
 	$page_after_login = $page;
 	if (!$url_after_login) {
@@ -55,11 +73,13 @@ function plugin_loginform_action()
 				break;
 		}
 		$auth_user = '';
+		$page_link = '';
+		if ($page) {
+			$page_link = '<br>' . make_pagelink($page);
+		}
 		return array(
 			'msg' => 'Log out',
-			'body' => 'Logged out completely<br>'
-				. '<a href="'. get_page_uri($page) . '">'
-				. $page . '</a>'
+			'body' => 'Logged out completely' . $page_link,
 		);
 	} else {
 		// login
