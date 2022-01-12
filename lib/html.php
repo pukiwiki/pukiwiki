@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone.
 // html.php
 // Copyright
-//   2002-2020 PukiWiki Development Team
+//   2002-2022 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -535,7 +535,7 @@ function make_related($page, $tag = '')
 
 function _convert_line_rule_to_regex($a)
 {
-	return '/' . $a . '/';
+	return '/' . $a . '/' . get_preg_u();
 }
 
 // User-defined rules (convert without replacing source)
