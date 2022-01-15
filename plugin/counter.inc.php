@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // counter.inc.php
 // Copyright
-//   2002-2021 PukiWiki Development Team
+//   2002-2022 PukiWiki Development Team
 //   2002 Y.MASUI GPL2 http://masui.net/pukiwiki/ masui@masui.net
 // License: GPL2
 //
@@ -25,6 +25,15 @@ $plugin_counter_db_options = null;
 //   "SET NAMES utf8mb4 COLLATE utf8mb4_bin");
 
 define('PLUGIN_COUNTER_DB_TABLE_NAME_PREFIX', '');
+// Async Counter by JavaScript: FALSE(0; Default) or TRUE(1)
+define('PLUGIN_COUNTER_ASYNC', 0);
+
+define('PLUGIN_COUNTER_ASYNC_HTML_TOTAL',
+	'<span class="_plugin_counter_item _plugin_counter_item_total"></span>');
+define('PLUGIN_COUNTER_ASYNC_HTML_TODAY',
+	'<span class="_plugin_counter_item _plugin_counter_item_today"></span>');
+define('PLUGIN_COUNTER_ASYNC_HTML_YESTERDAY',
+	'<span class="_plugin_counter_item _plugin_counter_item_yesterday"></span>');
 
 if (PLUGIN_COUNTER_USE_DB) {
 	ini_set('default_socket_timeout', 2);
@@ -39,6 +48,19 @@ function plugin_counter_inline()
 	$args = func_get_args(); // with array_shift()
 
 	$arg = strtolower(array_shift($args));
+	if (PLUGIN_COUNTER_ASYNC) {
+		switch ($arg) {
+		case ''     : /*FALLTHROUGH*/
+		case 'total':
+			return PLUGIN_COUNTER_ASYNC_HTML_TOTAL;
+		case 'today':
+			return PLUGIN_COUNTER_ASYNC_HTML_TODAY;
+		case 'yesterday':
+			return PLUGIN_COUNTER_ASYNC_HTML_YESTERDAY;
+		default:
+			return htmlsc('&counter([total|today|yesterday]);');
+		}
+	}
 	switch ($arg) {
 	case ''     : $arg = 'total'; /*FALLTHROUGH*/
 	case 'total': /*FALLTHROUGH*/
@@ -47,7 +69,7 @@ function plugin_counter_inline()
 		$counter = plugin_counter_get_count($vars['page']);
 		return $counter[$arg];
 	default:
-		return '&counter([total|today|yesterday]);';
+		return htmlsc('&counter([total|today|yesterday]);');
 	}
 }
 
@@ -55,21 +77,57 @@ function plugin_counter_inline()
 function plugin_counter_convert()
 {
 	global $vars;
-
+	if (PLUGIN_COUNTER_ASYNC) {
+		$total_html = PLUGIN_COUNTER_ASYNC_HTML_TOTAL;
+		$today_html = PLUGIN_COUNTER_ASYNC_HTML_TODAY;
+		$yesterday_html = PLUGIN_COUNTER_ASYNC_HTML_YESTERDAY;
+		return <<<EOD
+<div class="counter">
+Counter: ${total_html},
+today: ${today_html},
+yesterday: ${yesterday_html}
+</div>
+EOD;
+	}
 	$counter = plugin_counter_get_count($vars['page']);
 	return <<<EOD
 <div class="counter">
-Counter:   {$counter['total']},
-today:     {$counter['today']},
+Counter: {$counter['total']},
+today: {$counter['today']},
 yesterday: {$counter['yesterday']}
 </div>
 EOD;
 }
 
+function plugin_counter_action()
+{
+	global $vars;
+	if (! PLUGIN_COUNTER_ASYNC) {
+		die('Invalid counter action');
+		exit;
+	}
+	$page = isset($vars['page']) ? $vars['page'] : '';
+	if ($page && is_page($page) && is_page_readable($page)) {
+		$c = plugin_counter_get_count($page);
+		$obj = array(
+			'page' => $page,
+			'total' => '' . $c['total'],
+			'today' => '' . $c['today'],
+			'yesterday' => '' . $c['yesterday'],
+		);
+	} else {
+		$obj = array();
+	}
+	header('Content-Type: application/json; charset=UTF-8');
+	print(json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+		| JSON_FORCE_OBJECT));
+	exit;
+}
+
 // Return a summary
 function plugin_counter_get_count($page)
 {
-	global $vars, $plugin_counter_db_options;
+	global $vars, $plugin_counter_db_options, $plugin;
 	static $counters = array();
 	static $default;
 	$page_counter_t = PLUGIN_COUNTER_DB_TABLE_NAME_PREFIX . 'page_counter';
@@ -171,9 +229,9 @@ function plugin_counter_get_count($page)
 		$c['total']++;
 		$count_up = TRUE;
 	}
-
+	$is_count_target_plugin = ($plugin == 'read' || $plugin == 'counter');
 	if (PLUGIN_COUNTER_USE_DB) {
-		if ($modify && $vars['cmd'] == 'read') {
+		if ($modify && $is_count_target_plugin) {
 			try {
 				if ($is_new_page) {
 					// Insert
@@ -207,7 +265,7 @@ function plugin_counter_get_count($page)
 		}
 	} else {
 		// Modify
-		if ($modify && $vars['cmd'] == 'read') {
+		if ($modify && $is_count_target_plugin) {
 			rewind($fp);
 			ftruncate($fp, 0);
 			foreach (array_keys($default) as $key)
