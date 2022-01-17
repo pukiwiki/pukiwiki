@@ -5,17 +5,20 @@
 //   2005-2022 PukiWiki Development Team
 //
 // Output an index for 'TouchGraph WikiBrowser'
-// http://www.touchgraph.com/
+// https://sourceforge.net/projects/touchgraph/
+// https://www.touchgraph.com/
+//
+// Prepare:
+//   On Windows OS, change console active codepage by chcp command
+//   UTF-8:
+//     chcp 65001
+//   EUC-JP:
+//     chcp 20932
 //
 // Usage: (Check also TGWikiBrowser's sample)
-//    java -Dfile.encoding=EUC-JP \
-//    -cp TGWikiBrowser.jar;BrowserLauncher.jar com.touchgraph.wikibrowser.TGWikiBrowser \
-//    http://<pukiwiki site>/index.php?plugin=touchgraph \
-//    http://<pukiwiki site>/index.php? FrontPage 2 true
-//
-// Note: -Dfile.encoding=EUC-JP (or UTF-8) may not work with Windows OS
-//   http://www.simeji.com/wiki/pukiwiki.php?Java%A4%CE%CD%AB%DD%B5 (in Japanese)
-
+//    java -Dfile.encoding=UTF-8 -jar TGWikiBrowser.jar \
+//    "http://<pukiwiki site>/?plugin=touchgraph" \
+//    "http://<pukiwiki site>/?" FrontPage 2 true
 
 function plugin_touchgraph_action()
 {
