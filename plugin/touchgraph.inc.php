@@ -45,6 +45,9 @@ function plugin_touchgraph_rel()
 			$data = file($file);
 			foreach(explode("\t", trim($data[0])) as $name) {
 				if (check_non_list($name)) continue;
+				if (! is_page($name)) {
+					continue;
+				}
 				echo ' ', $name;
 			}
 			echo "\n";
@@ -64,6 +67,9 @@ function plugin_touchgraph_ref()
 			foreach (file($file) as $line) {
 				list($name) = explode("\t", $line);
 				if (check_non_list($name)) continue;
+				if (! is_page($name)) {
+					continue;
+				}
 				echo ' ', $name;
 			}
 			echo "\n";
