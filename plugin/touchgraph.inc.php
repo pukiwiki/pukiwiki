@@ -1,6 +1,8 @@
 <?php
-// PukiWiki - Yet another WikiWikiWeb clone.
-// $Id: touchgraph.inc.php,v 1.10 2005/12/18 15:28:55 henoheno Exp $
+// PukiWiki - Yet another WikiWikiWeb clone
+// touchgraph.inc.php
+// Copyright
+//   2005-2022 PukiWiki Development Team
 //
 // Output an index for 'TouchGraph WikiBrowser'
 // http://www.touchgraph.com/
@@ -18,9 +20,8 @@
 function plugin_touchgraph_action()
 {
 	global $vars;
-
 	pkwk_headers_sent();
-	header('Content-type: text/plain');
+	header('Content-Type: text/plain; charset=' . SOURCE_ENCODING);
 	if (isset($vars['reverse'])) {
 		plugin_touchgraph_ref();
 	} else {
@@ -66,4 +67,3 @@ function plugin_touchgraph_ref()
 		}
 	}
 }
-?>
