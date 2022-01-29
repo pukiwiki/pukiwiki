@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // pukiwiki.ini.php
 // Copyright
-//   2002-2020 PukiWiki Development Team
+//   2002-2022 PukiWiki Development Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -39,7 +39,7 @@ if (! defined('PKWK_DISABLE_INLINE_IMAGE_FROM_URI'))
 // PKWK_QUERY_STRING_MAX
 //   Max length of GET method, prohibits some worm attack ASAP
 //   NOTE: Keep (page-name + attach-file-name) <= PKWK_QUERY_STRING_MAX
-define('PKWK_QUERY_STRING_MAX', 640); // Bytes, 0 = OFF
+define('PKWK_QUERY_STRING_MAX', 2000); // Bytes, 0 = OFF
 
 /////////////////////////////////////////////////
 // Experimental features
