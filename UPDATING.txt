@@ -34,7 +34,7 @@ PukiWiki 1.5.0: PukiWiki 1.4.7_notb との非互換点
 PukiWiki 1.4.7_notb: PukiWiki 1.4.7 との非互換点
 
    1. TrackBack実装・referer機能が削除されました。
-      (See BugTrack2/62)
+      (See BugTrack/2062)
 
 PukiWiki 1.4.7: PukiWiki 1.4.6 との非互換点
 
@@ -53,7 +53,7 @@ PukiWiki 1.4.7: PukiWiki 1.4.6 との非互換点
      ("OSコマンドインジェクション" と呼ばれる脆弱性につながります)
 
    3. 初期コンテンツ:
-      (See BugTrack2/118)
+      (See BugTrack/2118)
 
      (ja)
        マルチバイト文字列に依存したファイル名が初期コンテンツに含まれていた問
@@ -82,7 +82,7 @@ PukiWiki 1.4.7: PukiWiki 1.4.6 との非互換点
      文ではなく、決められた文字数だけ出力します。 (See BugTrack/420)
 
    6. プラグイン: 以下の付プラグインは、$non_list(一覧しないパターン) に合致
-     するページを表示しません。 (See BugTrack2/140, BugTrack2/175)
+     するページを表示しません。 (See BugTrack/2140, BugTrack/2175)
        attach, popular, related, touchgraph, yetlist
 
 
@@ -179,7 +179,7 @@ PukiWiki 1.4.6: PukiWiki 1.4.5_1 との非互換点
 
     8. 画像のように見えるURIを「インライン画像としてリンク」しないための定数
        PKWK_DISABLE_INLINE_IMAGE_FROM_URI を有効にすることにより、まさに該当の
-       機能を実現する「imgプラグイン」は機能が無効になります。(BugTrack2/69)
+       機能を実現する「imgプラグイン」は機能が無効になります。(BugTrack/2069)
 
        その結果、#img(,clear) という表記で「テキストの回り込み指定を解除」する
        機能も無効になります。この機能は img プラグイン とセットで用いるために

@@ -1,9 +1,9 @@
 名前
     PukiWiki  - 自由にページを追加・削除・編集できるWebページ構築スクリプト
 
-    Version 1.5.3
+    Version 1.5.4
     Copyright
-      2001-2020 PukiWiki Development Team
+      2001-2022 PukiWiki Development Team
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
 
@@ -13,8 +13,8 @@
     正する必要もありません。
 
     Webサーバーへのシェルアクセスが可能であれば、PukiWikiのアーカイブをそのま
-    まサーバーに転送し、サーバー上で解凍(tar pzxf pukiwiki*.tar.gz) するだけ
-    でパーミッションの設定も行われ、すぐに使い始める事ができるでしょう。
+    まサーバーに転送し、サーバー上で解凍 (unzip pukiwiki-*.zip) するだけで
+    パーミッションの設定も行われ、すぐに使い始める事ができるでしょう。
 
     スクリプトの中の日本語は(あれば、基本的に)UTF-8で、また改行コードはLFで
     記述されています。スクリプトを直接編集する場合は、日本語文字コードと改行
@@ -38,7 +38,6 @@
 
         デスクトップPC     : default.ini.php
         携帯電話およびPDA  : keitai.ini.php
-           (旧 i_mode.ini.php/jphone.ini.php)
 
       PukiWikiの管理者パスワードは、pukiwiki.ini.php にある変数 $adminpass
       です。簡単に試すだけであるならば、以下のような内容で充分でしょう。
@@ -77,30 +76,30 @@
       skin           755	スキン、CSS、JavaScirptファイル
       wiki           777	データの格納ディレクトリ
 
-    ファイル    パーミッション データの種類(参考)
-      .htaccess      644       ASCII
-      .htpasswd      644       ASCII
-      */.htaccess    644       ASCII
+    ファイル    パーミッション
+      .htaccess      644
+      .htpasswd      644
+      */.htaccess    644
 
-    ファイル    パーミッション データの種類(参考)
-      *.php          644       ASCII
-      */*.php        644       ASCII
-      attach/*       666       BINARY (はじめは存在せず)
-      backup/*.gz    666       BINARY (インストール時は存在せず)
-      backup/*.txt   666       ASCII  (多くの環境では存在せず)
-      cache/*        666       ASCII
+    ファイル    パーミッション
+      *.php          644
+      */*.php        644
+      attach/*       666 (はじめは存在せず)
+      backup/*.gz    666 (インストール時は存在せず)
+      backup/*.txt   666 (多くの環境では存在せず)
+      cache/*        666
         (一部のプラグインはバイナリファイルを保存します)
-      counter/*      666       ASCII  (はじめは存在せず)
-      diff/*.txt     666       ASCII  (はじめは存在せず)
-      wiki/*.txt     666       ASCII
-      image/*        644       BINARY
-      image/face/*   644       BINARY
-      lib/*          644       ASCII
-      plugin/*       644       ASCII
-      skin/*         644       ASCII
+      counter/*      666 (はじめは存在せず)
+      diff/*.txt     666 (はじめは存在せず)
+      wiki/*.txt     666
+      image/*        644
+      image/face/*   644
+      lib/*          644
+      plugin/*       644
+      skin/*         644
 
-    5. サーバーに設置した PukiWiki の index.php あるいは pukiwiki.php に、Web
-      ブラウザからアクセスし、PukiWikiが動作するか様子を見ます。
+    5. サーバーに設置した PukiWiki の index.php に、Web ブラウザからアクセスし、
+      PukiWikiが動作するか様子を見ます。
 
       ※エラーが出る場合: 下記を参照して下さい
 
@@ -120,7 +119,7 @@
     す。詳しくはサーバー管理者がPHPスクリプト向けに提供している情報を確認して
     下さい。
 
-      1. 実行するPHPスクリプト(PukiWikiの場合 index.php か pukiwiki.php)の
+      1. 実行するPHPスクリプト ( PukiWikiの場合 index.php ) の
         一行目に、PHPバイナリへのパスを追加する必要があるかもしれません。
         (例: #!/usr/local/bin/php)この値はサーバーにより異なります。
 
@@ -176,7 +175,7 @@
        (中断する)場合があります。
     2. cache/*.rel ファイルがPukiWikiに全くない時に既存のページを編集すると、
       linksプラグインを実行した状態とほぼ同等の負荷がかかります。
-      (詳細:BugTrack2/56)
+      (詳細:BugTrack/2056)
     3. amazonプラグインはここに画像(のキャッシュ)を保存します。
 
     データを配置した時は、ファイルのパーミッションが期待されている通りかどう

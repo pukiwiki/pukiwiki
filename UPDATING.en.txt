@@ -33,7 +33,7 @@ PukiWiki 1.5.0: Incompatibility from PukiWiki 1.4.7_notb
 PukiWiki 1.4.7_notb: Incompatibility from PukiWiki 1.4.7
 
    1. TrackBack implimentation and 'referer' function had been removed.
-      (See BugTrack2/62)
+      (See BugTrack/2062)
 
 
 PukiWiki 1.4.7: Incompatibility from PukiWiki 1.4.6
@@ -56,7 +56,7 @@ PukiWiki 1.4.7: Incompatibility from PukiWiki 1.4.6
      correctly
 
      And the setting "$rule_page" now specifies not "Text Formatting Rules"
-     (No such page ...) but "FormattingRules".  (See BugTrack2/118)
+     (No such page ...) but "FormattingRules".  (See BugTrack/2118)
 
      If you add the page by hand, please don't forget to "freeze" the page!
 
@@ -69,5 +69,5 @@ PukiWiki 1.4.7: Incompatibility from PukiWiki 1.4.6
 
    6. Plugins: These plugins will follow $non_list (non-listing filter
      pattern) setting: attach, popular, related, touchgraph, yetlist
-     (See BugTrack2/140, BugTrack2/175)
+     (See BugTrack/2140, BugTrack/2175)
 
