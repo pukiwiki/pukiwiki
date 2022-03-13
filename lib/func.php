@@ -16,6 +16,11 @@ define('PKWK_URI_ROOT', 1);
 /** Absolute URI. */
 define('PKWK_URI_ABSOLUTE', 2);
 
+/** New page name - its length is need to be within the soft limit. */
+define('PKWK_PAGENAME_BYTES_SOFT_LIMIT', 115);
+/** Page name - its length is need to be within the hard limit. */
+define('PKWK_PAGENAME_BYTES_HARD_LIMIT', 125);
+
 function pkwk_log($message)
 {
 	$log_filepath = 'log/error.log.php';
@@ -142,6 +147,32 @@ function is_page($page, $clearcache = FALSE)
 {
 	if ($clearcache) clearstatcache();
 	return file_exists(get_filename($page));
+}
+
+function is_pagename_bytes_within_soft_limit($page)
+{
+	return strlen($page) <= PKWK_PAGENAME_BYTES_SOFT_LIMIT;
+}
+
+function is_pagename_bytes_within_hard_limit($page)
+{
+	return strlen($page) <= PKWK_PAGENAME_BYTES_SOFT_LIMIT;
+}
+
+function page_exists_in_history($page)
+{
+	if (is_page($page)) {
+		return true;
+	}
+	$diff_file = DIFF_DIR . encode($page) . '.txt';
+	if (file_exists($diff_file)) {
+		return true;
+	}
+	$backup_file = BACKUP_DIR . encode($page) . BACKUP_EXT;
+	if (file_exists($backup_file)) {
+		return true;
+	}
+	return false;
 }
 
 function is_editable($page)

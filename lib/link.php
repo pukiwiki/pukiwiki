@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone
 // link.php
-// Copyright 2003-2020 PukiWiki Development Team
+// Copyright 2003-2022 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Backlinks / AutoLinks related functions
@@ -210,6 +210,11 @@ function links_add($page, $add, $rel_auto)
 				if ($ref_page !== $page) $ref .= $line;
 			}
 			unlink($ref_file);
+		}
+		if (! $is_page) {
+			if (! is_pagename_bytes_within_soft_limit($_page)) {
+				continue;
+			}
 		}
 		if ($is_page || ! $all_auto) {
 			$fp = fopen($ref_file, 'w')
