@@ -732,24 +732,14 @@ EOD;
 		$this->status['count'][$this->age]++;
 		$this->putstatus();
 		$filename = $this->file;
-
-		// Care for Japanese-character-included file name
-		$legacy_filename = mb_convert_encoding($filename, 'UTF-8', SOURCE_ENCODING);
-		if (LANG == 'ja') {
-			switch(UA_NAME . '/' . UA_PROFILE){
-			case 'MSIE/default':
-				$legacy_filename = mb_convert_encoding($filename, 'SJIS', SOURCE_ENCODING);
-				break;
-			}
-		}
+		// RFC6266 attachement file name
 		$utf8filename = mb_convert_encoding($filename, 'UTF-8', SOURCE_ENCODING);
 
 		ini_set('default_charset', '');
 		mb_http_output('pass');
 
 		pkwk_common_headers();
-		header('Content-Disposition: inline; filename="' . $legacy_filename
-			. '"; filename*=utf-8\'\'' . rawurlencode($utf8filename));
+		header('Content-Disposition: inline; filename*=utf-8\'\'' . rawurlencode($utf8filename));
 		header('Content-Length: ' . $this->size);
 		header('Content-Type: '   . $this->type);
 		// Disable output bufferring
