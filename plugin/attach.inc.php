@@ -2,7 +2,7 @@
 // PukiWiki - Yet another WikiWikiWeb clone
 // attach.inc.php
 // Copyright
-//   2003-2021 PukiWiki Development Team
+//   2003-2022 PukiWiki Development Team
 //   2002-2003 PANDA <panda@arino.jp> http://home.arino.jp/
 //   2002      Y.MASUI <masui@hisec.co.jp> http://masui.net/pukiwiki/
 //   2001-2002 Originally written by yu-ji
@@ -46,6 +46,9 @@ define('PLUGIN_ATTACH_FILE_ICON', '<img src="' . IMAGE_DIR .  'file.png"' .
 
 // mime-typeを記述したページ
 define('PLUGIN_ATTACH_CONFIG_PAGE_MIME', 'plugin/attach/mime-type');
+
+// Limit attach file name length
+define('PLUGIN_ATTACH_MAX_LEAF_BASE_NAME_LENGTH', 240);
 
 //-------- convert
 function plugin_attach_convert()
@@ -190,10 +193,15 @@ function attach_upload($file, $page, $pass = NULL)
 	}
 
 	$obj = new AttachFile($page, $file['name']);
-	if ($obj->exist)
+	if ($obj->exist) {
 		return array('result'=>FALSE,
 			'msg'=>$_attach_messages['err_exists']);
-
+	}
+	$leafbasename_len = strlen($obj->leafbasename);
+	if (PLUGIN_ATTACH_MAX_LEAF_BASE_NAME_LENGTH < $leafbasename_len) {
+		die_message('Too long file name (' . $leafbasename_len . ' bytes)');
+		exit;
+	}
 	if (move_uploaded_file($file['tmp_name'], $obj->filename))
 		chmod($obj->filename, PLUGIN_ATTACH_FILE_MODE);
 
@@ -443,7 +451,8 @@ class AttachFile
 		$this->file = preg_replace('#^.*/#','',$file);
 		$this->age  = is_numeric($age) ? $age : 0;
 
-		$this->basename = UPLOAD_DIR . encode($page) . '_' . encode($this->file);
+		$this->leafbasename = encode($page) . '_' . encode($this->file);
+		$this->basename = UPLOAD_DIR . $this->leafbasename;
 		$this->filename = $this->basename . ($age ? '.' . $age : '');
 		$this->logname  = $this->basename . '.log';
 		$this->exist    = file_exists($this->filename);
