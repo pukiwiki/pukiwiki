@@ -33,7 +33,7 @@
     PukiWikiはPHP言語で書かれたプログラムなので、PHP(PHP4.1 - PHP8.1)が動作す
     るWebサーバーであれば容易に設置でき、軽快に動作します。
 
-    PukiWikiは、yu-jiさんを含む PukiWiki Develpers Team やその貢献者が、各自の
+    PukiWikiは、yu-jiさんを含む PukiWiki Development Team やその貢献者が、各自の
     著作物にGPLバージョン2(または _あなたの選択で_ それ以降のGPL)を適用してい
     る「フリーソフトウェア(自由なソフトウェア)」です。最新版はPukiWiki公式サイ
     トから入手できます。
