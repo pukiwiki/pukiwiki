@@ -3,7 +3,7 @@
 
     Version 1.5.4
     Copyright
-      2001-2021 PukiWiki Development Team
+      2001-2022 PukiWiki Development Team
       2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
     License: GPL version 2 or (at your option) any later version
 
@@ -252,7 +252,7 @@ Wikiの様子を見る
     バージョン1.3.1b 以降はPukiWiki Development Team によって開発が続けられて
     います。
 
- 　 バージョン1.4.5 から、RSS 2.0 を出力できるようになりました。
+    バージョン1.4.5 から、RSS 2.0 を出力できるようになりました。
 
 謝辞
     PukiWiki Development Teamの皆さん、PukiWikiユーザの皆さんに感謝します。
