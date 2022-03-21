@@ -1,7 +1,7 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
 // search2.inc.php
-// Copyright 2017-2021 PukiWiki Development Team
+// Copyright 2017-2022 PukiWiki Development Team
 // License: GPL v2 or (at your option) any later version
 //
 // Search2 plugin - Show detail result using JavaScript
@@ -41,9 +41,14 @@ function plugin_search2_action()
 				'body' => "<br>" . $_msg_searching . "\n" .
 				plugin_search2_search_form($q, $bases, $offset));
 		} else {
-			$msg  = str_replace('$1', htmlsc($q), $_title_result);
+			$q2 = $q;
+			if (defined('PKWK_UTF8_ENABLE')) {
+				$zen_space = "\xE3\x80\x80"; // IDEOGRAPHIC SPACE in UTF-8 - &#x3000;
+				$q2 = str_replace($zen_space, ' ', $q);
+			}
+			$msg  = str_replace('$1', htmlsc($q2), $_title_result);
 			return array('msg' => $msg,
-				'body' => plugin_search2_search_form($q, $bases, $offset, $prev_offset_s));
+				'body' => plugin_search2_search_form($q2, $bases, $offset, $prev_offset_s));
 		}
 	} else if ($action === 'query') {
 		$q = isset($vars['q']) ? $vars['q'] : '';
