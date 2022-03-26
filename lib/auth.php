@@ -244,7 +244,10 @@ function check_editable($page, $auth_enabled = TRUE, $exit_on_fail = TRUE)
  * Whether the page is readable from current user or not.
  */
 function is_page_readable($page) {
-	global $read_auth_pages;
+	global $read_auth_pages, $read_auth;
+	if (!$read_auth) {
+		return TRUE;
+	}
 	return _is_page_accessible($page, $read_auth_pages);
 }
 
@@ -252,7 +255,10 @@ function is_page_readable($page) {
  * Whether the page is writable from current user or not.
  */
 function is_page_writable($page) {
-	global $edit_auth_pages;
+	global $edit_auth_pages, $edit_auth;
+	if (!$edit_auth) {
+		return TRUE;
+	}
 	return _is_page_accessible($page, $edit_auth_pages);
 }
 
