@@ -1,8 +1,8 @@
 <?php
 // PLugin for site management
-// sites plugin (cmd=sites)
-// or (cmd=sites&act=<act>)
-// <act>= create|delete|copy|modify
+// site plugin (cmd=site)
+// or (cmd=site&act=<act>)
+// <act>= new|copy|modify|delete|list|passwd
 
 function plugin_site_action(){
   global $vars;
@@ -10,13 +10,13 @@ function plugin_site_action(){
   $msg  = '';
   $body = '';
 
-  $actions = array(// show the input form
+  $actions = array(
+    'list',   // list all wiki sites
     'new',    // create a new wiki site from scrach 
     'copy',   // create a copy of the specified wiki site
     'modify', // modify the definition of a site (except site id)  
     'delete', // delete a site (move data to trash folder)
-    'list',   // list all wiki sites
-    'passwd'  // change password of a site
+    'passwd',  // change password of a site
   );
   $act  = 'list'; // default action
   if (isset($vars['act']) and in_array($vars['act'], $actions)){
@@ -25,17 +25,11 @@ function plugin_site_action(){
   $data_ready = isset($vars['dataready']) ? true : false;
   $site_id   = isset($vars['site_id'])   ? $vars['site_id'] : null; 
   $body .= '<h3>' . m('manage') .'::'. m($act) . '</h3>';
-
   if ($data_ready) {
     $body .= plugin_site_go($act);
   }else {
-    if (in_array($act, array('delete','modify','copy','passwd')) and $site_id==null){
-      $body .= 'Site id was not specified';
-    }else{
-      $body .= plugin_site_form($site_id, $act) ;
-    }
+    $body .= plugin_site_form($site_id, $act) ;
   }
-
   return array('msg'=>$msg, 'body'=>$body);
 }
 
@@ -45,7 +39,7 @@ function plugin_site_form($site_id, $act='modify'){
   if ($act=='list'){
     return list_sites();
   }
-  $title = $detail = $admin = $passwd = $toppage = '';
+  $title = $admin = $passwd = $toppage = '';
   $skin = 'default';
 
   if ($site_id){
@@ -102,16 +96,16 @@ $skin_select .= '</select>';
       $body .= $show_id  . $input_pass;
       break;
     case 'passwd' :
-      $body .= $show_id  . $input_pass . $input_pass1 . $input_pass2;
+      $body .= $show_id . $input_pass . $input_pass1 . $input_pass2;
       break;
     case 'modify':
-      $body .= $show_id  . $input_pass . $input_form;
+      $body .= $show_id . $input_form . $input_pass;
       break;
     case 'copy':
-      $body .= $hidden_id . $input_id . $input_pass . $input_form;
+      $body .= $hidden_id . $input_id . $input_form . $input_pass;
       break;
     case 'new':
-      $body .= $input_id . $input_pass . $input_form;
+      $body .= $input_id  . $input_form . $input_pass;
       break;    
   }
   $_btn_save = m('btn_save');
@@ -124,7 +118,6 @@ $skin_select .= '</select>';
 EOD;
   return $body;
 }
-
 
 function list_sites(){
   global $vars, $script;
@@ -179,9 +172,9 @@ function plugin_site_go($act='modify'){
   $pass2   = isset($vars['pass2']) ? trim($vars['passwd2']) : null;
   $title   = $vars['title'];
   $admin   = $vars['admin'];
-  $lastmod = date('Y-n-d H:i:s');
   $skin    = $vars['skin'];
   $toppage = $vars['toppage'];
+  $lastmod = date('Y-n-d H:i:s');
   $msg = '';
   try{
     switch ($act){
@@ -199,11 +192,10 @@ function plugin_site_go($act='modify'){
       case 'copy':
         if ($old_site){
           $ok = copy_r(WIKI_DIR . $old_site, WIKI_DIR . $site_id);
-          
         }else{
           $msg = m('unknown_site');
         }
-        break 
+        break; 
       case 'new':
         $cpy_from = SITE_TEMPLATE;
         // TODO: Update yaml config file
@@ -215,7 +207,7 @@ function plugin_site_go($act='modify'){
       default:
         die_message(m('invalidact'));
     }
-  }catch(PDOException $e){
+  }catch(Exception $e){
     $msg = 'Exception : '.$e->getMessage();
     die_message($msg);
   }
@@ -238,7 +230,6 @@ function _img_link($img,  $title, $site, $act){
   $link .= '<img src=' . p(IMAGE_DIR. $img) . ' height="20px" title='. p($title) . '/></a>' ;
   return $link;
 }
-
 
 // double quoting a string
 function p($str){  // abc --> "abc"

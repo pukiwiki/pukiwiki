@@ -13,6 +13,7 @@
 /counter/*.db
 
 /diff/*.txt
+/wiki/__template__/*.txt
 /wiki/*.txt
 /wiki.en/*.txt
 
@@ -21,6 +22,7 @@
 
 # Composer files
 /vendor/
+composer.lock
 
 # Log
 /log/
