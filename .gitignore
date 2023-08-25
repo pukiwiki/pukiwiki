@@ -1,4 +1,3 @@
-/wiki
 /attach
 /backup
 /cache
@@ -16,9 +15,6 @@
 /diff/*.txt
 /wiki/*.txt
 /wiki.en/*.txt
-/wiki/__template__
-/wiki/site1
-/wiki/site2
 
 /nbproject/**
 /.vscode/

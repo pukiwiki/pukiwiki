@@ -1,0 +1,35 @@
+[[PukiWiki]]
+* InterWikiName [#bf2d416a]
+InterWiki用のサーバリストです。
+  [URL サーバ名] タイプ
+の形式で記述してください。
+
+** WikiEngines [#c3e04f1c]
+-[https://wiki.c2.com/? WikiWikiWeb] raw WikiNameのみなのでraw
+-[https://fswiki.osdn.jp/cgi-bin/wiki.cgi?page= FSWiki] euc
+
+** PukiWiki [#j0d346fa]
+// PukiWiki Official Main Site
+-[https://pukiwiki.osdn.jp/? pukiwiki] utf8
+// PukiWiki Developer Site
+-[https://pukiwiki.osdn.jp/dev/? pukiwiki.dev] utf8
+
+** Search Engine [#jaaa4e4c]
+-[https://www.google.com/search?q=$1 Google] utf8
+-[https://search.yahoo.co.jp/search?p=$1 Yahoo] utf8
+-[https://www.wikipedia.org/wiki/ WikiPedia] utf8
+-[https://en.wikipedia.org/wiki/ WikiPedia.en] utf8
+-[https://ja.wikipedia.org/wiki/ WikiPedia.ja] utf8
+
+** 拡張InterWikiName [#q192ea38]
+-[./?cmd=add&page= 新規]
+-[./?cmd=add&page= New]
+-[./?cmd=read&page= 参照]
+-[./?cmd=read&page= View]
+-[./?cmd=edit&page= 編集]
+-[./?cmd=edit&page= Edit]
+-[./?cmd=search2&q=$1 検索]
+-[./?cmd=search2&q=$1 Search]
+
+*** その他 [#b69e2eec]
+-[http://docs.tdiary.org/users/? tDiaryUsers] euc

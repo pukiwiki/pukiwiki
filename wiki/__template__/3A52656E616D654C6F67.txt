@@ -1,0 +1,3 @@
+#author("2023-08-25T03:05:37+02:00","","")
+#freeze
+// :RenameLog (rename plugin)

@@ -1,0 +1,85 @@
+#freeze
+*mime-type
+
+この表は、attach.inc.phpがファイルのContent-typeを決定するときに使用します。
+
+|~Content-type|~拡張子|~説明|h
+|text/plain|txt text dat jis euc sjis sjs asc utf utf8|プレーンテキスト|
+|text/csv|csv|コンマ区切り値|
+|text/html|html htm|HTML 文書|
+|text/css|css|スタイルシート|
+|text/javascript|js|JavaScript|
+|image/jpeg|jpeg jpg|JPEG 画像|
+|image/gif|gif|GIF 画像|
+|image/png|png|PNG 画像|
+|image/apng|apng|アニメーションPNG 画像|
+|image/bmp|bmp|Bitmap 画像|
+|image/svg+xml|svg svgz|SVG 画像|
+|image/tiff|tiff tif|TIFF 画像|
+|image/webp|webp|WebP 画像|
+|image/vnd.microsoft.icon|ico cur|アイコン画像|
+|audio/aac|aac|AAC オーディオ|
+|audio/mp3|mp3|MP3 オーディオ|
+|audio/webm|weba|WebM オーディオ|
+|audio/ogg|oga|Ogg オーディオ|
+|audio/wav|wav wave|Waveform オーディオ|
+|audio/x-ms-wma|wma asf|Windows Media オーディオ|
+|audio/vnd.rn-realaudio|ra ram|RealPlay オーディオ|
+|audio/midi|mid midi|MIDI オーディオ|
+|video/mp4|mp4|MP4 ビデオ|
+|video/mpeg|mpg mpeg|MPEG ビデオ|
+|video/ogg|ogv|Ogg ビデオ|
+|video/quicktime|mov qt|QuickTime ビデオ|
+|video/avi|avi|AVI ビデオ|
+|video/x-ms-wmv|wmv|Windows Media ビデオ|
+|application/ogg|ogg|Ogg ファイル|
+|application/vnd.rn-realmedia|rm|RealPlay ビデオ|
+|application/pdf|pdf|PDF 文書|
+|application/x-shockwave-flash|swf|フラッシュファイル|
+|application/xml|xml|XML 文書|
+|application/json|json|JSON ファイル|
+|application/x-zip-compressed|zip|zip 圧縮ファイル|
+|application/x-lzh-compressed|lzh|lzh 圧縮ファイル|
+|application/x-gzip|gz|g-zip 圧縮ファイル|
+|application/x-bz2-compressed|bz2|bz2 圧縮ファイル|
+|application/x-compress|z tgz|compress 圧縮ファイル|
+|application/x-xz|xz|xz 圧縮ファイル|
+|application/x-cab-compressed|cab|cab 圧縮ファイル|
+|application/x-stuffit|sit|stuff it 圧縮ファイル|
+|application/x-tar|tar|tar 書庫ファイル|
+|application/ms-download|exe|Windows 実行ファイル|
+|application/msword|doc|Microsoft Word 文書|
+|application/vnd.ms-excel|xls|Microsoft Excel 文書|
+|application/x-msaccess|mdb mde|Microsoft Access データベース|
+|application/vnd.ms-powerpoint|ppt pps|Microsoft PowerPoint プレゼンテーション|
+|application/vnd.visio|vsd|Microsoft Visio 文書|
+|application/vnd.openxmlformats-officedocument.wordprocessingml.document|docx|Microsoft Office Word 2007 document|
+|application/vnd.ms-word.document.macroEnabled.12|docm|Office Word 2007 macro-enabled document|
+|application/vnd.openxmlformats-officedocument.wordprocessingml.template|dotx|Office Word 2007 template|
+|application/vnd.ms-word.template.macroEnabled.12|dotm|Office Word 2007 macro-enabled document template|
+|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet|xlsx|Microsoft Office Excel 2007 workbook|
+|application/vnd.ms-excel.sheet.macroEnabled.12|xlsm|Office Excel 2007 macro-enabled workbook|
+|application/vnd.openxmlformats-officedocument.spreadsheetml.template|xltx|Office Excel 2007 template|
+|application/vnd.ms-excel.template.macroEnabled.12|xltm|Office Excel 2007 macro-enabled workbook template|
+|application/vnd.ms-excel.sheet.binary.macroEnabled.12|xlsb|Office Excel 2007 binary workbook|
+|application/vnd.ms-excel.addin.macroEnabled.12|xlam|Office Excel 2007 add-in|
+|application/vnd.openxmlformats-officedocument.presentationml.presentation|pptx|Microsoft Office PowerPoint 2007 presentation|
+|application/vnd.ms-powerpoint.presentation.macroEnabled.12|pptm|Office PowerPoint 2007 macro-enabled presentation|
+|application/vnd.openxmlformats-officedocument.presentationml.slideshow|ppsx|Office PowerPoint 2007 slide show|
+|application/vnd.ms-powerpoint.slideshow.macroEnabled.12|ppsm|Office PowerPoint 2007 macro-enabled slide show|
+|application/vnd.openxmlformats-officedocument.presentationml.template|potx|Office PowerPoint 2007 template|
+|application/vnd.ms-powerpoint.template.macroEnabled.12|potm|Office PowerPoint 2007 macro-enabled presentation template|
+|application/vnd.ms-powerpoint.addin.macroEnabled.12|ppam|Office PowerPoint 2007 add-in|
+|application/vnd.openxmlformats-officedocument.presentationml.slide|sldx|Office PowerPoint 2007 slide|
+|application/vnd.ms-powerpoint.slide.macroEnabled.12|sldm|Office PowerPoint 2007 macro-enabled slide|
+|application/msonenote|one .onetoc2 .onetmp .onepkg|Microsoft Office OneNote 2007 section|
+|application/vnd.ms-officetheme|thmx|2007 Office system release theme|
+|application/vnd.oasis.opendocument.text|odt|OpenDocument Text|
+|application/vnd.oasis.opendocument.spreadsheet|ods|OpenDocument Spreadsheet|
+|application/vnd.oasis.opendocument.presentation|odp|OpenDocument Presentation|
+|application/vnd.oasis.opendocument.graphics|odg|OpenDocument Graphics|
+|application/vnd.oasis.opendocument.chart|odc|OpenDocument Chart|
+|application/vnd.oasis.opendocument.formula|odf|OpenDocument Formula|
+|application/vnd.oasis.opendocument.image|odi|OpenDocument Image|
+|application/vnd.oasis.opendocument.text-master|odm|OpenDocument Master Document|
+|application/vnd.oasis.opendocument.database|odb|OpenDocument Database|

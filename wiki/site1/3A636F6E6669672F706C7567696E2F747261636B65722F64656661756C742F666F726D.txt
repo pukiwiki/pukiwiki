@@ -1,0 +1,11 @@
+#freeze
+|RIGHT:      |LEFT:     |c
+|~投稿者     |[Proposer]|
+|~カテゴリー |[Category]|
+|~優先順位   |[Severity]|
+|~状態       |[Status]  |
+|~ページ名   |[_name] &size(12){空欄のままだと自動的にページ名が振られます。};|
+|~バージョン |[Version] &size(12){空白でも構いません};|
+|~サマリ     |[Summary] |
+|~メッセージ |[Messages]|
+|>|CENTER:[_submit]     |

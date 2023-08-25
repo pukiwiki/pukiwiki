@@ -1,0 +1,16 @@
+''InterWiki用の練習ページです。''
+**他のWikiのページに飛んでみよう。 [#t20eea48]
+-[[WikiWikiWeb:FrontPage]]
+-[[Tiki:WelcomeVisitors]] 
+-[[YukiWiki:FrontPage]] 
+-[[RWiki:top]] 
+//-[[PukiWiki:FrontPage]] 
+//-[[ウヰキエリア:FrontPage]]
+**PukiWikiのページで飛んでみよう。 [#sfce4c27]
+-[[pukiwiki:FrontPage]]
+-[[pukiwiki.dev:FrontPage]]
+**検索だって出来る。 [#wec8fb2d]
+:Googleでpukiwikiを検索|
+[[Google:pukiwiki]]
+:YahooでPHPを検索|
+[[Yahoo:PHP]]
