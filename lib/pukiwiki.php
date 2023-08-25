@@ -15,6 +15,8 @@ if (! defined('DATA_HOME')) define('DATA_HOME', '');
 
 if (! defined('LIB_DIR')) define('LIB_DIR', '');
 
+include LIB_DIR . 'spyc.php'; // Ksuwiki
+
 require(LIB_DIR . 'func.php');
 require(LIB_DIR . 'file.php');
 require(LIB_DIR . 'plugin.php');

@@ -8,7 +8,7 @@
 //error_reporting(0); // Nothing
 error_reporting(E_ERROR | E_PARSE); // Avoid E_WARNING, E_NOTICE, etc
 //error_reporting(E_ALL); // Debug purpose
-
+date_default_timezone_set('Asia/Tokyo');
 // Special
 //define('PKWK_READONLY',  1);
 //define('PKWK_SAFE_MODE', 1);

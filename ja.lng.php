@@ -455,3 +455,39 @@ $_external_link_messages = array(
 	'desc' => '選択されたURLは本サイトのコンテンツではありません。',
 	'wait_n_seconds' => '%s 秒後に自動的に移動します。',
 );
+
+///////////////////////////////////////
+// site.inc.php
+$_site_messages = array(
+	'site_id' 	=> 'サイトID',
+	'title' 	=> 'サイト名',
+	'admin' 	=> '管理者',
+	'toppage' 	=> 'トップページ',
+	'skin' 	=> 'スキン',
+
+	'btn_save' 	=> '保存',
+	'btn_reset' => '取消',
+	'manage' 	=> 'サイト管理',
+	'operation'	=> '操作',
+
+	'new' 		=> '新規作成',
+	'delete' 	=> 'サイト削除',
+	'copy' 		=> 'サイト複製',
+	'modify' 	=> 'サイト編集',
+	'list' 		=> 'サイト一覧',
+	'view' 		=> '閲覧',
+	'edit' 		=> '編集',
+	'invalidact'=> '操作無効',
+	'unknown_site'=> 'コピー元が無効',
+
+	'link' 		=> 'リンク',
+	'inlink' 	=> '閲覧用リンク',
+	'exlink' 	=> '編集用リンク',
+
+	'passwd'	=> 'パスワード変更',
+	'passwd0'	=> 'パスワード',
+	'passwd1' 	=> '新パスワード',
+	'passwd2' 	=> 'パスワード確認',
+	'passwd_notmatch'  => 'パスワードが一致しません。',
+
+);

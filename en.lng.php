@@ -453,3 +453,37 @@ $_external_link_messages = array(
 	'desc' => 'The selected URL is not the contents of this site.',
 	'wait_n_seconds' => 'It will move to the page automatically after %s seconds.',
 );
+
+///////////////////////////////////////
+// site.inc.php
+$_site_messages = array(
+	'site_id' 	=> 'Site ID',
+	'title' 	=> 'Site Name',
+	'skin' 		=> 'Skin',
+	'toppage' 	=> 'Top Page',
+
+	'btn_save' 	=> 'Save',
+	'btn_reset' => 'Cancel',
+	'manage' 	=> 'Site Management',
+	'operation'	=> 'Operation',
+
+	'new' 		=> 'Create',
+	'delete' 	=> 'Delete',
+	'copy' 		=> 'Copy',
+	'modify' 	=> 'Modify',
+	'list' 		=> 'List',
+	'view' 		=> 'View',
+	'edit' 		=> 'Edit',
+	'invalidact'=> 'Invalid site management action',
+
+	'link' 		=> 'Links',
+	'inlink' 	=> 'Browse',
+	'exlink' 	=> 'Administrate',
+
+	'passwd_new'=> 'Change Password',
+	'passwd'	=> 'Password',
+	'passwd1' 	=> 'New Password',
+	'passwd2' 	=> 'Confirm Password',
+	'passwd_invalid'  => 'Passwords not match',
+
+);
