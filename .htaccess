@@ -21,6 +21,12 @@
   Require all denied
 </FilesMatch>
 
+# Force all requests to 'index.php' 
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php [L]
+
 ## Authentication to this directory with basic-auth
 ## needs 'AllowOverride AuthConfig' at httpd.conf
 #AuthType Basic

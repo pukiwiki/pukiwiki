@@ -43,7 +43,8 @@ function plugin_site_form($site_id, $act='modify'){
   $skin = 'default';
 
   if ($site_id){
-    $site_config = SPYC::YAMLLoad(WIKI_DIR . $site_id . DIRECTORY_SEPARATOR . SITE_CONFIG_FILE);
+    $site_config =  Symfony\Component\Yaml\Yaml::parseFile(
+      WIKI_DIR . $site_id . DIRECTORY_SEPARATOR . SITE_CONFIG_FILE);
     if ($site_config){
       list(
         'title' =>$title, 
@@ -130,7 +131,8 @@ function list_sites(){
     foreach($files as $file){
       $site = explode('/', $file);
       $site = end($site);
-      $config = SPYC::YAMLLoad($file . DIRECTORY_SEPARATOR . SITE_CONFIG_FILE);
+      $config =  Symfony\Component\Yaml\Yaml::parseFile(
+        $file . DIRECTORY_SEPARATOR . SITE_CONFIG_FILE);
       $site_config[$site] = $config;
     }
   }catch(PDOException $e){

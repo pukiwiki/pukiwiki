@@ -69,15 +69,12 @@ define('UI_LANG', LANG); // 'en' for Internationalized wikisite
 
 // You may hide these directories (from web browsers)
 // by setting DATA_HOME at index.php.
-// Ksuwiki
-define('SITE_TEMPLATE', '__template__'); // Ksuwiki
-define('SITE_CONFIG_FILE', '.site_config.yaml'); // Ksuwiki
-$site = isset($_GET['site']) ? $_GET['site'] : SITE_TEMPLATE; // Ksuwiki
-define('WIKI_DIR',      DATA_HOME . 'wiki/'     ); // Ksuwiki
-define('DATA_DIR',      WIKI_DIR .  $site . '/' ); // Ksuwiki
-$site_config = Spyc::YAMLLoad(DATA_DIR . SITE_CONFIG_FILE); // Ksuwiki
 
-# define('DATA_DIR',      DATA_HOME . 'wiki/'     ); // Latest wiki texts 
+require DATA_HOME . 'ksuwiki.ini.php';
+if (!defined('DATA_DIR')){
+	define('DATA_DIR',  WIKI_DIR . SITE_TEMPLATE . '/' ); 
+}
+# define('DATA_DIR',      DATA_HOME . 'wiki/'     ); // Latest wiki texts
 define('DIFF_DIR',      DATA_HOME . 'diff/'     ); // Latest diffs
 define('BACKUP_DIR',    DATA_HOME . 'backup/'   ); // Backups
 define('CACHE_DIR',     DATA_HOME . 'cache/'    ); // Some sort of caches
@@ -89,12 +86,9 @@ define('PLUGIN_DIR',    DATA_HOME . 'plugin/'   ); // Plugin directory
 // Directory settings II (ended with '/')
 
 // Skins / Stylesheets
-if ($site_config && isset($site_config['skin'])){ // Ksuwiki
-	define('SKIN_DIR', 'skin/' . $site_config['skin'] . '/');	
-}else{
+if (!defined('SKIN_DIR')){
 	define('SKIN_DIR', 'skin/');
 }
-# define('SKIN_DIR', 'skin/');
 // Skin files (SKIN_DIR/*.skin.php) are needed at
 // ./DATAHOME/SKIN_DIR from index.php, but
 // CSSs(*.css) and JavaScripts(*.js) are needed at
@@ -122,9 +116,7 @@ default  :
 /////////////////////////////////////////////////
 // Title of your Wikisite (Name this)
 // Also used as RSS feed's channel name etc
-# $page_title = 'PukiWiki ';
-$page_title = ($site_config && isset($site_config['title'])) ? // Ksuwiki
-	$site_config['title'] : 'PukiWiki ';  
+$page_title = 'PukiWiki ';
 
 // Specify PukiWiki URL (default: auto)
 //$script = 'http://example.com/pukiwiki/';

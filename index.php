@@ -20,5 +20,6 @@ date_default_timezone_set('Asia/Tokyo');
 define('DATA_HOME',	'');
 define('LIB_DIR',	'lib/');
 
+require(DATA_HOME . 'ksuwiki.ini.php');
 require(LIB_DIR . 'pukiwiki.php');
 ?>
