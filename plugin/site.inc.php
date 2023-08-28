@@ -155,9 +155,10 @@ function list_sites(){
     foreach (array('title','admin','skin') as $item){
       $body .= '<td class="style_td">' . $config[$item] . '</td>';
     }
-    foreach (array('modify','copy','passwd','delete','inlink','exlink') as $item){
+    foreach (array('modify','copy','passwd','delete') as $item){
       $body .= '<td class="style_td">' . _img_link('site_'.$item.'.png', m($item), $site_id, $item) . '</td>';
     }
+    $body .= '<td class="style_td">' . _img_link('site_inlink.png', m('open'), $site_id, 'open') . '</td>';
     $body .= '</tr>';
   }
   $body .= '</table>';
@@ -218,15 +219,15 @@ function plugin_site_go($act='modify'){
 
 // make an image link
 function _img_link($img,  $title, $site, $act){
-  $url = 'index.php?cmd=site&act='.$act. '&site_id='.$site;
+  $url = '?cmd=site&act='.$act. '&site_id='.$site;
   if ($act=="open"){
-    $url = PKWKSITE_ROOT . $site . '/' ;
+    $url = PKWK_HOME . 'site/' . $site;
   }
   if ($act=="admin"){
-    $url = PKWKSITE_ROOT . $site . '!/' ;
+    $url = PKWK_HOME . 'site/' . $site;
   }
   if ($act=="new"){
-    $url = 'index.php?cmd=site&act='.$act;
+    $url = '?cmd=site&act='.$act;
   }
   $link  = '<a href='  .  p($url) . '>';
   $link .= '<img src=' . p(IMAGE_DIR. $img) . ' height="20px" title='. p($title) . '/></a>' ;

@@ -16,16 +16,14 @@ $router = new \Bramus\Router\Router();
 
 $router->mount('/site', function () use ($router) {
     $router->get('/(\w+)', function ($site) {
+        define('DATA_DIR', WIKI_DIR .  $site . '/'); 
         $file = WIKI_DIR .  $site . '/'. SITE_CONFIG_FILE; 
         if (file_exists($file) and is_readable($file)){
             $config = Symfony\Component\Yaml\Yaml::parseFile($file);
             if ($config){
-                define('DATA_DIR', WIKI_DIR .  $site . '/'); 
                 define('SKIN_DIR', 'skin/' . $config['skin'] . '/');
                 define('SITE_CONF', $config);	
             }
-        }else{
-            define('DATA_DIR', WIKI_DIR .  $site . '/'); 
         }
     });
 
