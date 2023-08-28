@@ -54,7 +54,6 @@ define('MUTIME', getmicrotime());
 
 /////////////////////////////////////////////////
 // Require INI_FILE
-
 define('INI_FILE',  DATA_HOME . 'pukiwiki.ini.php');
 $die = '';
 if (! file_exists(INI_FILE) || ! is_readable(INI_FILE)) {

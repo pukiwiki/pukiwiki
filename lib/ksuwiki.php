@@ -5,7 +5,7 @@ function get_absolute_uri($uri){
 	$path = realpath($_SERVER['DOCUMENT_ROOT']);
 	$path = str_replace($path, '', realpath($uri));// remove prefix
 	$path = str_replace('\\', '/', $path);
-	if ( $path[0] != '/') $path = '/' . $path;
+	if ( substr($path, 0,1) != '/') $path = '/' . $path;
 	if (substr($path,-1) != '/') $path .= '/'; 
 	return $path;
 }

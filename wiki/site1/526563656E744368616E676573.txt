@@ -1,3 +1,4 @@
+-2023-08-28 (月) 14:20:50 - [ &pageaction("AutoTicketLinkName",diff); | &pageaction("AutoTicketLinkName",backup); ] [[AutoTicketLinkName]]
 -2023-08-25 (金) 09:43:02 - [ &pageaction("BracketName",diff); | &pageaction("BracketName",backup); ] [[BracketName]]
 -2023-08-25 (金) 09:43:02 - [ &pageaction("FormattingRules",diff); | &pageaction("FormattingRules",backup); ] [[FormattingRules]]
 -2023-08-25 (金) 09:43:02 - [ &pageaction("FrontPage",diff); | &pageaction("FrontPage",backup); ] [[FrontPage]]

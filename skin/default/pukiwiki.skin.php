@@ -78,7 +78,7 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
  <title><?php echo $title ?> - <?php echo $page_title ?></title>
 
  <link rel="SHORTCUT ICON" href="<?php echo $image['favicon'] ?>" />
- <link rel="stylesheet" type="text/css" href="<?php echo SKIN_DIR ?>pukiwiki.css" />
+ <link rel="stylesheet" type="text/css" href="<?php echo PKWK_HOME . SKIN_DIR ?>pukiwiki.css" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
  <script type="text/javascript" src="skin/main.js" defer></script>
  <script type="text/javascript" src="skin/search2.js" defer></script>

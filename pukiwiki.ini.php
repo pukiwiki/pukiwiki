@@ -69,12 +69,10 @@ define('UI_LANG', LANG); // 'en' for Internationalized wikisite
 
 // You may hide these directories (from web browsers)
 // by setting DATA_HOME at index.php.
-
-require DATA_HOME . 'ksuwiki.ini.php';
+# define('DATA_DIR',      DATA_HOME . 'wiki/'     ); // Latest wiki texts
 if (!defined('DATA_DIR')){
 	define('DATA_DIR',  WIKI_DIR . SITE_TEMPLATE . '/' ); 
 }
-# define('DATA_DIR',      DATA_HOME . 'wiki/'     ); // Latest wiki texts
 define('DIFF_DIR',      DATA_HOME . 'diff/'     ); // Latest diffs
 define('BACKUP_DIR',    DATA_HOME . 'backup/'   ); // Backups
 define('CACHE_DIR',     DATA_HOME . 'cache/'    ); // Some sort of caches
@@ -95,7 +93,7 @@ if (!defined('SKIN_DIR')){
 // ./SKIN_DIR from index.php.
 
 // Static image files
-define('IMAGE_DIR', 'image/');
+define('IMAGE_DIR', PKWK_HOME . 'image/');
 // Keep this directory shown via web browsers like
 // ./IMAGE_DIR from index.php.
 
@@ -117,7 +115,9 @@ default  :
 // Title of your Wikisite (Name this)
 // Also used as RSS feed's channel name etc
 $page_title = 'PukiWiki ';
-
+if (defined('SITE_CONF')) 
+	$page_title = SITE_CONF['title'];
+	
 // Specify PukiWiki URL (default: auto)
 //$script = 'http://example.com/pukiwiki/';
 
