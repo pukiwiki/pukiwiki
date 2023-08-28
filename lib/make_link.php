@@ -39,6 +39,7 @@ function make_link($string, $page = '')
 }
 
 // Converters of inline element
+#[AllowDynamicProperties]
 class InlineConverter
 {
 	var $converters; // as array()

@@ -1,19 +1,12 @@
 <?php 
-
 require __DIR__ . '/vendor/autoload.php';
 
 define('SITE_TEMPLATE', '__template__'); 
 define('SITE_CONFIG_FILE', '.site.yaml'); 
-define('WIKI_DIR',      DATA_HOME . 'wiki/'  ); 
-
-$path = str_replace(DIRECTORY_SEPARATOR,'/', realpath(__DIR__));
-$path = str_replace($_SERVER['DOCUMENT_ROOT'], '', $path);
-if (substr($path, -1)!='/') $path .= '/';
-if (substr($path, 0, 1)!='/') $path = '/' . $path;
-define('PKWK_HOME', $path);
+define('WIKI_DIR',  DATA_HOME . 'wiki/'  ); 
+define('PKWK_HOME', dirname($_SERVER['PHP_SELF']) .'/');
 
 $router = new \Bramus\Router\Router();
-
 $router->mount('/site', function () use ($router) {
     $router->get('/(\w+)', function ($site) {
         define('DATA_DIR', WIKI_DIR .  $site . '/'); 
