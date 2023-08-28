@@ -1,7 +1,7 @@
 <?php 
 require __DIR__ . '/vendor/autoload.php';
 
-define('SITE_TEMPLATE', '__template__'); 
+define('SITE_TEMPLATE', '_template'); 
 define('SITE_CONFIG_FILE', '.site.yaml'); 
 define('WIKI_DIR',  DATA_HOME . 'wiki/'  ); 
 define('PKWK_HOME', dirname($_SERVER['PHP_SELF']) .'/');
@@ -21,7 +21,7 @@ $router->mount('/site', function () use ($router) {
             define($item,  WIKI_DIR .'sites/'. $site .'/'. $dir ); 
         }
 
-        $file = DATA_DIR . SITE_CONFIG_FILE; 
+        $file = WIKI_DIR .'sites/'. $site .'/'. SITE_CONFIG_FILE; 
         if (file_exists($file) and is_readable($file)){
             $config = Symfony\Component\Yaml\Yaml::parseFile($file);
             if ($config){

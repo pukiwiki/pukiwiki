@@ -1,21 +1,20 @@
-/attach
-/backup
-/cache
-/counter
-/diff
+/wiki/*/attach
+/wiki/*/backup
+/wiki/*/cache
+/wiki/*/counter
+/wiki/*/diff
 
-/attach/*.[0-9]
-/attach/*.log
-/backup/*.gz
-/cache/*.ref
-/cache/*.rel
-/counter/*.count
-/counter/*.db
+/wiki/*/attach/*.[0-9]
+/wiki/*/attach/*.log
+/wiki/*/backup/*.gz
+/wiki/*/cache/*.ref
+/wiki/*/cache/*.rel
+/wiki/*/counter/*.count
+/wiki/*/counter/*.db
 
-/diff/*.txt
-/wiki/__template__/*.txt
-/wiki/*.txt
-/wiki.en/*.txt
+/wiki/*/diff/*.txt
+/wiki/_template/wiki/*.txt
+/wiki/sites/*.txt
 
 /nbproject/**
 /.vscode/
