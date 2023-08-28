@@ -1,0 +1,18 @@
+*IGNORE
+
+リンク元の表示をさせない URI を定義します。
+ここで定義するとリンクされるため http:// は不要です。
+
+|localhost/pukiwiki/index.php|
+// |http://localhost/pw14/|
+
+*COLOR
+
+一覧表示する際のヘッダー色を指定します。
+
+- ''cur'' は、整列のカレント行
+- ''etc'' は、整列されていない行
+
+|識別|色|h
+|cur|BGCOLOR(#88ff88):|
+|etc|BGCOLOR(#cccccc):|

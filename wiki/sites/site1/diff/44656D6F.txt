@@ -1,0 +1,19 @@
+-*サイト作成 [#j12228cd]
+--[[例(サイトID：example)>http://www-db.is.kyusan-u.ac.jp/ksuwiki/index.php?cmd=site_create]]
+- .../index.php?cmd=site_create
+-*サイト編集 [#fb9db4b2]
+--[[例(サイトID：example)>http://www-db.is.kyusan-u.ac.jp/ksuwiki/!!example/index.php?cmd=site_edit]]
+- .../index.php?cmd=site_edit
+ 
+-*サイトコピー [#o8b1e57b]
+--[[例(サイトID:depose)>http://www-db.is.kyusan-u.ac.jp/ksuwiki/!!demo/index.php?cmd=site_copy]]
+- .../index.php?cmd=site_copy
+-
+-*サイト削除 [#cce53a1d]
+--[[例>http://www-db.is.kyusan-u.ac.jp/ksuwiki/index.php?cmd=site_delete&site=depose]]
+- .../index.php?cmd=site_delete
+-
+-*パスワード変更 [#k327521c]
+--[[例(サイトID：example)>http://www-db.is.kyusan-u.ac.jp/ksuwiki/!!example/?cmd=site_pass]]
+- .../index.php?cmd=site_pass
+-

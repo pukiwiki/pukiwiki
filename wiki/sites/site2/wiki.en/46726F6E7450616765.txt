@@ -1,0 +1,18 @@
+#freeze
+* FrontPage [#vfad867b]
+
+This page will be shown when no page name is specified.
+
+Please edit as you like :) ((To avoid easy-SPAMming and easy-tricks, please freeze this page after describing your site's subject and/or destination. And please note about changing administrator's password!))
+
+
+** Test pages [#g9940424]
+- [[SandBox]] - Edit this page freely. Try it.
+- [[InterWikiSandBox]] - Try [[InterWiki]] here.
+
+** About PukiWiki [#h1775f3c]
+- [[PukiWiki]] - Introduction to PukiWiki
+
+** Documents [#v69c449c]
+- [[Help]] - How to edit pages in PukiWiki.
+- [[FormattingRules]] - Text formatting rules.

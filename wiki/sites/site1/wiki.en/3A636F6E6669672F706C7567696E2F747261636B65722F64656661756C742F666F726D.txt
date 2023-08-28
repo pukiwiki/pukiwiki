@@ -1,0 +1,11 @@
+#freeze
+|RIGHT:    |LEFT:     |c
+|~Proposer |[Proposer]|
+|~Category |[Category]|
+|~Severity |[Severity]|
+|~Status   |[Status]  |
+|~Page name|[_name] &size(12){Blank means automatic naming.};|
+|~Version  |[Version] &size(12){Blank is allowed};|
+|~Summary  |[Summary] |
+|~Messages |[Messages]|
+|>|CENTER:[_submit]   |

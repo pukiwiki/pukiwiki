@@ -69,17 +69,28 @@ define('UI_LANG', LANG); // 'en' for Internationalized wikisite
 
 // You may hide these directories (from web browsers)
 // by setting DATA_HOME at index.php.
+ 
 # define('DATA_DIR',      DATA_HOME . 'wiki/'     ); // Latest wiki texts
-if (!defined('DATA_DIR')){
-	define('DATA_DIR',  WIKI_DIR . SITE_TEMPLATE . '/' ); 
-}
-define('DIFF_DIR',      DATA_HOME . 'diff/'     ); // Latest diffs
-define('BACKUP_DIR',    DATA_HOME . 'backup/'   ); // Backups
-define('CACHE_DIR',     DATA_HOME . 'cache/'    ); // Some sort of caches
-define('UPLOAD_DIR',    DATA_HOME . 'attach/'   ); // Attached files and logs
-define('COUNTER_DIR',   DATA_HOME . 'counter/'  ); // Counter plugin's counts
+# define('DIFF_DIR',      DATA_HOME . 'diff/'     ); // Latest diffs
+# define('BACKUP_DIR',    DATA_HOME . 'backup/'   ); // Backups
+# define('CACHE_DIR',     DATA_HOME . 'cache/'    ); // Some sort of caches
+# define('UPLOAD_DIR',    DATA_HOME . 'attach/'   ); // Attached files and logs
+# define('COUNTER_DIR',   DATA_HOME . 'counter/'  ); // Counter plugin's counts
 define('PLUGIN_DIR',    DATA_HOME . 'plugin/'   ); // Plugin directory
 
+$definitions = array(
+	'DATA_DIR'=>'wiki/',
+	'DIFF_DIR'=>'diff/',
+	'BACKUP_DIR'=>'backup/',
+	'CACHE_DIR'=>'cache/',
+	'UPLOAD_DIR'=>'attach/',
+	'COUNTER_DIR'=>'counter/',
+);
+foreach ($definitions as $item=>$dir){
+	if (!defined($item)){
+		define($item,  WIKI_DIR . SITE_TEMPLATE .'/'. $dir ); 
+	}
+}
 /////////////////////////////////////////////////
 // Directory settings II (ended with '/')
 
@@ -199,7 +210,7 @@ $adminpass = '{x-php-md5}!';
 
 // Sample:
 //$adminpass = 'pass'; // Cleartext
-//$adminpass = '{x-php-md5}1a1dc91c907325c69271ddf0c944bc72'; // PHP md5()  'pass'
+$adminpass = '{x-php-md5}1a1dc91c907325c69271ddf0c944bc72'; // PHP md5()  'pass'
 //$adminpass = '{x-php-sha256}d74ff0ee8da3b9806b18c877dbf29bbde50b5bd8e4dad7a3a725000feb82e8f1'; // PHP sha256  'pass'
 //$adminpass = '{CRYPT}$1$AR.Gk94x$uCe8fUUGMfxAPH83psCZG/';   // LDAP CRYPT 'pass'
 //$adminpass = '{MD5}Gh3JHJBzJcaScd3wyUS8cg==';               // LDAP MD5   'pass'

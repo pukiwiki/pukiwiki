@@ -1,0 +1,22 @@
+#freeze
+#norelated
+* FrontPage [#qb249ac2]
+
+このページは、ページを指定しない時に表示されます。
+
+あなたのサイトに合わせ、自由に編集してください :) ((安易なSPAMやいたずらを防止するため、テーマや目的などの説明を加えた後、忘れずに凍結して下さい。パスワードの変更もお忘れなく!))
+
+
+** 練習ページ [#if72ced0]
+- [[SandBox]] -- 編集をお試しください
+- [[InterWikiSandBox]] -- [[InterWiki]]を試してみてください
+
+
+** PukiWikiについて [#c2af49f4]
+
+- [[PukiWiki]] -- PukiWikiのご紹介
+
+*** ドキュメント [#o366701b]
+- [[ヘルプ>Help]] -- PukiWikiで編集するには？
+- [[テキスト整形のルール(詳細版)>FormattingRules]]
+- [[プラグインマニュアル>PukiWiki/1.4/Manual/Plugin]]
