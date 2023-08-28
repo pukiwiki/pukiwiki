@@ -30,7 +30,7 @@ function plugin_site_action(){
   }else {
     $body .= plugin_site_form($site_id, $act) ;
   }
-  return array('msg'=>$msg, 'body'=>$body);
+  return array('msg'=>$msg,'body'=>$body);
 }
 
 function plugin_site_form($site_id, $act='modify'){
