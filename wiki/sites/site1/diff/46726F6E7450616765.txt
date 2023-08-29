@@ -1,5 +1,5 @@
--#author("2023-08-29T16:18:09+09:00","","")
-+#author("2023-08-29T16:32:57+09:00","","")
+-#author("2023-08-29T16:32:57+09:00","","")
++#author("2023-08-29T19:46:58+09:00","","")
  #norelated
  * FrontPage [#qb249ac2]
  
@@ -14,10 +14,11 @@
  
  #snippet(php){{
  <?php
- 
--echo 'hello';
-+echo 'hello, world!';
- if (2==3) {
+-
++$a = 2;
+ echo 'hello, world!';
+-if (2==3) {
++if ($a==3) {
    print('impossible!'); 
  }
  

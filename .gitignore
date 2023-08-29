@@ -14,7 +14,7 @@
 
 /wiki/*/diff/*.txt
 /wiki/_template/wiki/*.txt
-/wiki/sites/*.txt
+/wiki/sites/*/*.txt
 
 /nbproject/**
 /.vscode/

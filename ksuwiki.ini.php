@@ -33,6 +33,7 @@ $router->mount('/site', function () use ($router) {
             }
         }
     });
+    
     $router->post('/(\w+)', function ($site) {
         setup($site);
     });
