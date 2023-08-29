@@ -1,6 +1,11 @@
 (function(){
   // For ksuwiki plugin 
-  var prefix = "public/snippet/";        
+  var path = window.location.pathname;
+  path = path.replace(/site\/.*/, '');
+  path = path.replace(/[^/]+$/, '');
+
+
+  var prefix = path +"public/snippet/";        
   // For local test 
   //var prefix = "";
 

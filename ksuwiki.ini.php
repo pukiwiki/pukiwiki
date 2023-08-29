@@ -8,7 +8,7 @@ define('PKWK_HOME', dirname($_SERVER['PHP_SELF']) .'/');
 
 $router = new \Bramus\Router\Router();
 $router->mount('/site', function () use ($router) {
-    $router->get('/(\w+)', function ($site) {
+    function setup($site){
         $definitions = array(
             'DATA_DIR'=>'wiki/',
             'DIFF_DIR'=>'diff/',
@@ -20,6 +20,9 @@ $router->mount('/site', function () use ($router) {
         foreach ($definitions as $item=>$dir){
             define($item,  WIKI_DIR .'sites/'. $site .'/'. $dir ); 
         }
+    }
+    $router->get('/(\w+)', function ($site) {
+        setup($site);
 
         $file = WIKI_DIR .'sites/'. $site .'/'. SITE_CONFIG_FILE; 
         if (file_exists($file) and is_readable($file)){
@@ -30,7 +33,9 @@ $router->mount('/site', function () use ($router) {
             }
         }
     });
-
+    $router->post('/(\w+)', function ($site) {
+        setup($site);
+    });
 });
 
 $router->run();

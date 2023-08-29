@@ -1,3 +1,5 @@
+-#author("2023-08-29T16:18:09+09:00","","")
++#author("2023-08-29T16:32:57+09:00","","")
  #norelated
  * FrontPage [#qb249ac2]
  
@@ -10,6 +12,16 @@
  - [[SandBox]] -- 編集をお試しください
  - [[InterWikiSandBox]] -- [[InterWiki]]を試してみてください
  
+ #snippet(php){{
+ <?php
+ 
+-echo 'hello';
++echo 'hello, world!';
+ if (2==3) {
+   print('impossible!'); 
+ }
+ 
+ }}
  
  ** PukiWikiについて [#c2af49f4]
  

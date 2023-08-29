@@ -80,8 +80,8 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
  <link rel="SHORTCUT ICON" href="<?php echo $image['favicon'] ?>" />
  <link rel="stylesheet" type="text/css" href="<?php echo PKWK_HOME . SKIN_DIR ?>pukiwiki.css" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
- <script type="text/javascript" src="skin/main.js" defer></script>
- <script type="text/javascript" src="skin/search2.js" defer></script>
+ <script type="text/javascript" src="<?=PKWK_HOME?>skin/main.js" defer></script>
+ <script type="text/javascript" src="<?=PKWK_HOME?>skin/search2.js" defer></script>
 
 <?php echo $head_tag ?>
 </head>

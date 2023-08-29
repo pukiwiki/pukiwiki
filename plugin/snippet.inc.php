@@ -6,7 +6,7 @@
 // Live Snippet theme
 define('SNIPPET_THEME', 'Default');// 'Default'
 // Live Snippet [folder path]
-define('SNIPPET_PATH', DATA_HOME .  'public/snippet/');
+define('SNIPPET_PATH', PKWK_HOME . 'public/snippet/');
 // Live Snippet [tag name]
 define('SNIPPET_TAG_NAME', 'pre'); 
 // Live Snippet [default language]
