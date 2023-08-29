@@ -461,6 +461,7 @@ $_site_messages = array(
 	'title' 	=> 'Site Name',
 	'skin' 		=> 'Skin',
 	'toppage' 	=> 'Top Page',
+	'readonly' 	=> 'ReadOnly',
 
 	'btn_save' 	=> 'Save',
 	'btn_reset' => 'Cancel',

@@ -26,14 +26,14 @@ function plugin_site_action(){
   $site_id   = isset($vars['site_id'])   ? $vars['site_id'] : null; 
   $body .= '<h3>' . m('manage') .'::'. m($act) . '</h3>';
   if ($data_ready) {
-    $body .= plugin_site_go($act);
+    $body .= _site_save($act);
   }else {
-    $body .= plugin_site_form($site_id, $act) ;
+    $body .= _site_form($site_id, $act) ;
   }
   return array('msg'=>$msg,'body'=>$body);
 }
 
-function plugin_site_form($site_id, $act='modify'){
+function _site_form($site_id, $act='modify'){
   global $vars, $script;
 
   if ($act=='list'){
@@ -43,15 +43,14 @@ function plugin_site_form($site_id, $act='modify'){
   $skin = 'default';
 
   if ($site_id){
-    $site_config =  Symfony\Component\Yaml\Yaml::parseFile(
-      WIKI_DIR . $site_id . DIRECTORY_SEPARATOR . SITE_CONFIG_FILE);
+    $site_config =  _site_config($site_id);
     if ($site_config){
       list(
         'title' =>$title, 
         'skin'  =>$skin, 
-        'admin' =>$admin,  
-        'passwd'=>$passwd, 
-        'toppage'=>$toppage
+        'admin' =>$admin, 
+        'toppage'=>$toppage,
+        'readonly'=>$readonly,  
       ) = $site_config;
     }
   }
@@ -75,13 +74,18 @@ $skin_select .= '</select>';
     .'<input type="hidden" name="site_id" value="'. $site_id .'"/>';
   $input_id ='<tr><td class="style_td">' . m('site_id')  . '</td>'
     .'<td class="style_td"><input type="text" name="site_id" value='. p($site_id) .'size="35"/></td></tr>';
-  $hidden_id ='<input type="hidden" name="old_site" value="'. $site_id .'"/>';    
+  $hidden_id ='<input type="hidden" name="orig_site" value="'. $site_id .'"/>';    
   $input_pass='<tr><td class="style_td">' . m('passwd0')  . '</td>' 
     .'<td class="style_td"><input type="password" name="passwd0" size="35"/></td></tr>';
   $input_pass1='<tr><td class="style_td">' . m('passwd1')  . '</td>' 
     .'<td class="style_td"><input type="password" name="passwd1" size="35"/></td></tr>';
   $input_pass2='<tr><td class="style_td">' . m('passwd2')  . '</td>' 
     .'<td class="style_td"><input type="password" name="passwd2" size="35"/></td></tr>';
+  $writeable='';
+  foreach(array(1=>'Yes', 0=>'No') as $key=>$value){
+    $checked = $key==$readonly ? 'checked' : '';
+    $writeable .= '<input type="radio" name="readonly" value="' . $key. '" '.$checked.'>' . $value . '&nbsp;';
+  }
   $input_form= '
    <tr><td class="style_td">' . m('title')  . '</td>
    <td class="style_td"><input type="text" name="title" value="' . $title . '" size="60"/></td></tr>
@@ -90,8 +94,10 @@ $skin_select .= '</select>';
    <tr><td class="style_td">' . m('skin')   . '</td>
    <td class="style_td">' . $skin_select . '</td> </tr>
    <tr><td class="style_td">' . m('toppage'). '</td>
-   <td class="style_td"><input type="text" name="toppage" value="' . $toppage . '" size="35"/></td></tr>
-';
+   <td class="style_td"><input type="text" name="toppage" value="' . $toppage. '" size="35"/></td></tr>
+   <tr><td class="style_td">' . m('readonly'). '</td>
+   <td class="style_td">' . $writeable . '</td></tr>
+   ';
   switch ($act){
     case 'delete' :
       $body .= $show_id  . $input_pass;
@@ -120,20 +126,23 @@ EOD;
   return $body;
 }
 
+function _site_config($site){
+  return Symfony\Component\Yaml\Yaml::parseFile(
+    WIKI_DIR .'sites/' . $site . '/' . SITE_CONFIG_FILE
+  );
+}
+
 function list_sites(){
   global $vars, $script;
   $msg ='';
   $body = '';
   $site_config = array();
   try{
-    $files = glob(WIKI_DIR . '*' , GLOB_ONLYDIR);
-    $files = array_diff($files, array(WIKI_DIR . SITE_TEMPLATE));
+    $files = glob(WIKI_DIR .'sites/*' , GLOB_ONLYDIR);
     foreach($files as $file){
       $site = explode('/', $file);
       $site = end($site);
-      $config =  Symfony\Component\Yaml\Yaml::parseFile(
-        $file . DIRECTORY_SEPARATOR . SITE_CONFIG_FILE);
-      $site_config[$site] = $config;
+      $site_config[$site] = _site_config($site);
     }
   }catch(PDOException $e){
     $msg = 'Exception : '.$e->getMessage();
@@ -165,36 +174,43 @@ function list_sites(){
   return $body;
 }
 
-function plugin_site_go($act='modify'){
+function _site_save($act='modify'){
   global $vars;
-  $act = $vars['act'];
-  $site_id = isset($vars['site_id']) ? $vars['site_id'] : null;
-  $old_site= isset($vars['old_site']) ? $vars['old_site'] : null;
-  $pass0   = isset($vars['pass'])  ? trim($vars['passwd0']) : null;
-  $pass1   = isset($vars['pass1']) ? trim($vars['passwd1']) : null;
-  $pass2   = isset($vars['pass2']) ? trim($vars['passwd2']) : null;
-  $title   = $vars['title'];
-  $admin   = $vars['admin'];
-  $skin    = $vars['skin'];
-  $toppage = $vars['toppage'];
-  $lastmod = date('Y-n-d H:i:s');
+  foreach (['act', 'title', 'admin','skin','toppage','readonly'] as $item){
+    $$item = $vars[$item];   
+  }
+  foreach (['site_id', 'orig_site', 'passwd0','passwd1','passwd2'] as $item){
+    $$item = isset($vars[$item]) ? $vars[$item] : null; 
+  }
   $msg = '';
   try{
     switch ($act){
       case 'passwd' :
-        if ($pass1==null or $pass2==null or $pass1!==$pass2){
-          die_message(m('passwd_notmatch'));
-        }
-        // TODO: Update yaml config file
-        $msg = $act . " Update yaml config file";
-        break;
       case 'modify':
-        // TODO: Update yaml config file
-        $msg = $act . " Update yaml config file";
+        $config = _site_config($site_id);
+        if ($act=='passwd'){
+          if  ($passwd1==null or $passwd2==null or $passwd1!==$passwd2){
+            die_message(m('passwd_notmatch'));
+          }
+          $config['passwd'] = md5($passwd);
+        }
+        if ($act=='modify'){
+          if (md5($passwd0) !== $config['passwd']){
+            die_message('Password incorrect!');
+          }
+          foreach (['title', 'admin','skin','toppage','readonly'] as $item){
+            $config[$item] = $$item;   
+          }
+        }
+        $yaml = Symfony\Component\Yaml\Yaml::dump($config);
+        $file = WIKI_DIR .'sites/' . $site_id . '/' . SITE_CONFIG_FILE;
+        file_put_contents($file, $yaml);
+        $msg = "Successfully updated site ". $site_id;      
         break;
+  
       case 'copy':
-        if ($old_site){
-          $ok = copy_r(WIKI_DIR . $old_site, WIKI_DIR . $site_id);
+        if ($orig_site){
+          $ok = copy_r(WIKI_DIR . $orig_site, WIKI_DIR . $site_id);
         }else{
           $msg = m('unknown_site');
         }

@@ -1,6 +1,7 @@
-title: サンプル サイト１
+title: 'サンプル サイト１a'
 skin: default
 admin: hoge
-passwd: k1234
+passwd: 81b073de9370ea873f548e31b8adc081
 toppage: FrontPage
 reaonly: 0
+readonly: '0'

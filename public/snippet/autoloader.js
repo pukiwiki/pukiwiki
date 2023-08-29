@@ -1,11 +1,10 @@
 (function(){
   // For ksuwiki plugin 
-  var path = window.location.pathname;
-  path = path.replace(/site\/.*/, '');
-  path = path.replace(/[^/]+$/, '');
 
-
-  var prefix = path +"public/snippet/";        
+  // Get absolute path to this script
+  var path = window.location.pathname; 
+  path = path.replace(/site\/.*/, '').replace(/[^/]+$/, ''); 
+  var prefix = path +"public/snippet/";         
   // For local test 
   //var prefix = "";
 

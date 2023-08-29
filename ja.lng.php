@@ -461,9 +461,10 @@ $_external_link_messages = array(
 $_site_messages = array(
 	'site_id' 	=> 'サイトID',
 	'title' 	=> 'サイト名',
+	'skin' 	=> 'スキン',
 	'admin' 	=> '管理者',
 	'toppage' 	=> 'トップページ',
-	'skin' 	=> 'スキン',
+	'readonly' 	=> '読み込み専用',
 
 	'btn_save' 	=> '保存',
 	'btn_reset' => '取消',
