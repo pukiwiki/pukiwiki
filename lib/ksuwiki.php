@@ -10,7 +10,7 @@ function site_copy($src, $dst){
             $src_entry = $src . DIRECTORY_SEPARATOR . $entry;
             $dst_entry = $dst . DIRECTORY_SEPARATOR . $entry;
             if (is_dir($src_entry)){ 
-                copy_r($src_entry, $dst_entry);
+                site_copy($src_entry, $dst_entry);
             }else{ 
                 copy($src_entry, $dst_entry);
             }

@@ -4,7 +4,6 @@ require __DIR__ . '/vendor/autoload.php';
 define('SITE_TEMPLATE', '_template'); 
 define('SITE_CONFIG_FILE', '.site.yaml'); 
 define('WIKI_DIR',  DATA_HOME . 'wiki/'  ); 
-define('PKWK_HOME', dirname($_SERVER['PHP_SELF']) .'/');
 
 $router = new \Bramus\Router\Router();
 $router->mount('/site', function () use ($router) {
@@ -28,7 +27,6 @@ $router->mount('/site', function () use ($router) {
             if ($config){
                 define('SKIN_DIR', 'skin/' . $config['skin'] . '/');
                 define('SITE_TITLE', $config['title']);
-
                 session_start();
                 $auth_site = isset($_SESSION['authenticated_site']) ? $_SESSION['authenticated_site'] : null;
                 define('SITE_ADMIN', $auth_site==$site);

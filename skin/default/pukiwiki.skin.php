@@ -14,10 +14,11 @@
 // Set site identities
 $_IMAGE['skin']['logo']     =  'ksuwiki01.jpg'; //'pukiwiki.png';
 $_IMAGE['skin']['favicon']  = ''; // Sample: 'image/favicon.ico';
+
 // KsuWiki BEGIN
 $GLOBALS['_LINK']['login']   = SITE_URL ."?cmd=site&amp;act=login";
 $GLOBALS['_LINK']['logout']  = SITE_URL ."?cmd=site&amp;act=logout";
-$flag = defined('SITE_ADMIN') ? SITE_ADMIN : FALSE; 
+$flag = defined('SITE_ADMIN') ? SITE_ADMIN : false; 
 $enable_login = !$flag;
 $enable_logout = $flag;
 // KsuWiki END
@@ -81,7 +82,7 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
  <title><?php echo $title ? $title:'KsuWiki' ?> - <?php echo $page_title ?></title>
 
  <link rel="SHORTCUT ICON" href="<?php echo $image['favicon'] ?>" />
- <link rel="stylesheet" type="text/css" href="<?php echo PKWK_HOME . SKIN_DIR ?>pukiwiki.css" />
+ <link rel="stylesheet" type="text/css" href="<?=PKWK_HOME.SKIN_DIR?>pukiwiki.css" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
  <script type="text/javascript" src="<?=PKWK_HOME?>skin/main.js" defer></script>
  <script type="text/javascript" src="<?=PKWK_HOME?>skin/search2.js" defer></script>
