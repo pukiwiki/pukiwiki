@@ -29,10 +29,15 @@ HOW IT WORK
     readonly: 0
 
 5. New PHP scripts for KsuWiki
- (1) DATA_HOME . 'index.php'
+ (1) DATA_HOME . 'index.php', 
+   '.htaccess', 'composer.json'
  (2) DATA_HOME . 'ksuwiki.ini.php'
  (3) LIB . 'ksuwiki.php'
  (4) LIB . 'auth.php'
- (4) PLUGIN . 'site.ini.php'
- (5) SKIN . 'default/'
-
+ (5) PLUGIN . 'site.ini.php'
+   'snippet.inc.php'
+ (6) SKIN . 'default/'
+ 
+6. Dependencies
+ (1) symfony/yaml
+ (2) bramus/router
