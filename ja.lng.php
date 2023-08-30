@@ -485,7 +485,7 @@ $_site_messages = array(
 
 	'link' 		=> 'リンク',
 
-	'login'	=> 'ログイン',
+	'login'		=> 'ログイン',
 	'logout'	=> 'ログアウト',
 
 	'passwd'	=> 'パスワード変更',

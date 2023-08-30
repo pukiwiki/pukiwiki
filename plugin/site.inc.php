@@ -14,7 +14,7 @@ function plugin_site_action(){
     'list',   // list all wiki sites
     'new',    // create a new wiki site from template 
     'copy',   // create a copy of the specified wiki site
-    'admin', // modify the definition of a site (except site id)  
+    'setup',  // modify the definition of a site (except site id)  
     'delete', // delete a site, move it to trash folder
     'passwd', // change site password , using md5() hash
     'login',  // login
@@ -122,7 +122,7 @@ EOD;
     case 'passwd' :
       $body .= $show_id . $input_pass . $input_pass1 . $input_pass2;
       break;
-    case 'admin':
+    case 'setup':
       $body .= $show_id . $input_form . $input_pass;
       break;
     case 'copy':
@@ -183,12 +183,12 @@ function list_sites(){
     foreach (array('title','admin','skin') as $item){
       $body .= '<td class="style_td">' . $config[$item] . '</td>';
     }
-    foreach (array('admin','copy','passwd','delete') as $item){
+    foreach (array('setup','copy','passwd','delete') as $item){
       $body .= '<td class="style_td">' . _img_link('site_'.$item.'.png', m($item), $site_id, $item) . '</td>';
     }
     
-    $body .= '<td class="style_td">' . _img_link('site_open.png', m('view'), $site_id, 'view') . '</td>';
-    $body .= '<td class="style_td">' . _img_link('site_edit.png', m('edit'), $site_id, 'edit') . '</td>';
+    $body .= '<td class="style_td">' . _img_link('site_view.png', m('view'), $site_id, 'view') . '</td>';
+    $body .= '<td class="style_td">' . _img_link('site_edit.png', m('edit '), $site_id, 'edit') . '</td>';
     $body .= '</tr>';
   }
   $body .= '</table>';
@@ -208,7 +208,7 @@ function _site_save($act='modify'){
   try{
     switch ($act){
       case 'passwd' :
-      case 'admin':
+      case 'setup':
         $config = _site_config($site_id);
         if ($act=='passwd'){
           if  ($passwd1==null or $passwd2==null or $passwd1!==$passwd2){
@@ -304,7 +304,7 @@ function _img_link($img,  $title, $site, $act){
     $url = '?cmd=site&act='.$act;
   }
   $link  = '<a href='  .  p($url) . '>';
-  $link .= '<img src=' . p(IMAGE_DIR. $img) . ' height="20px" title='. p($title) . '/></a>' ;
+  $link .= '<img src=' . p(IMAGE_DIR . $img) . ' height="20px" title='. p($title) . '/></a>' ;
   return $link;
 }
 
