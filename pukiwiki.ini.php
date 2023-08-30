@@ -126,8 +126,8 @@ default  :
 // Title of your Wikisite (Name this)
 // Also used as RSS feed's channel name etc
 $page_title = 'PukiWiki ';
-if (defined('SITE_CONF')) 
-	$page_title = SITE_CONF['title'];
+if (defined('SITE_TITLE')) 
+	$page_title = SITE_TITLE;
 	
 // Specify PukiWiki URL (default: auto)
 //$script = 'http://example.com/pukiwiki/';

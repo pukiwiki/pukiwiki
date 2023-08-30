@@ -16,6 +16,8 @@
 /wiki/_template/wiki/*.txt
 /wiki/sites/*/*.txt
 
+/wiki/trash/*
+
 /nbproject/**
 /.vscode/
 

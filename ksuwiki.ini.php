@@ -20,7 +20,10 @@ $router->mount('/site', function () use ($router) {
         foreach ($definitions as $item=>$dir){
             define($item,  WIKI_DIR .'sites/'. $site .'/'. $dir ); 
         }
+        define('SITE_ID', $site);
+        define('SITE_URL', PKWK_HOME .'site/'. $site . '/'); 
     }
+
     $router->get('/(\w+)', function ($site) {
         setup($site);
 
@@ -29,7 +32,11 @@ $router->mount('/site', function () use ($router) {
             $config = Symfony\Component\Yaml\Yaml::parseFile($file);
             if ($config){
                 define('SKIN_DIR', 'skin/' . $config['skin'] . '/');
-                define('SITE_CONF', $config);	
+                define('SITE_TITLE', $config['title']);
+
+                session_start();
+                $auth_site = isset($_SESSION['authenticated_site']) ? $_SESSION['authenticated_site'] : null;
+                define('SITE_ADMIN', $auth_site==$site);
             }
         }
     });

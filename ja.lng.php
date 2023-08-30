@@ -466,7 +466,7 @@ $_site_messages = array(
 	'toppage' 	=> 'トップページ',
 	'readonly' 	=> '読み込み専用',
 
-	'btn_save' 	=> '保存',
+	'btn_save' 	=> '送信',
 	'btn_reset' => '取消',
 	'manage' 	=> 'サイト管理',
 	'operation'	=> '操作',
@@ -478,12 +478,15 @@ $_site_messages = array(
 	'list' 		=> 'サイト一覧',
 	'view' 		=> '閲覧',
 	'edit' 		=> '編集',
-	'invalidact'=> '操作無効',
-	'unknown_site'=> 'コピー元が無効',
+
+	'msg_invalidact'=> '操作無効',
+	'msg_unknown_site'=> 'コピー元が無効',
+	'msg_logout'=> 'ログアウトしました',
 
 	'link' 		=> 'リンク',
-	'inlink' 	=> '閲覧用リンク',
-	'exlink' 	=> '編集用リンク',
+
+	'login'	=> 'ログイン',
+	'logout'	=> 'ログアウト',
 
 	'passwd'	=> 'パスワード変更',
 	'passwd0'	=> 'パスワード',

@@ -14,12 +14,15 @@
 // Set site identities
 $_IMAGE['skin']['logo']     =  'ksuwiki01.jpg'; //'pukiwiki.png';
 $_IMAGE['skin']['favicon']  = ''; // Sample: 'image/favicon.ico';
+// KsuWiki BEGIN
+$GLOBALS['_LINK']['login']   = SITE_URL ."?cmd=site&amp;act=login";
+$GLOBALS['_LINK']['logout']  = SITE_URL ."?cmd=site&amp;act=logout";
+$flag = defined('SITE_ADMIN') ? SITE_ADMIN : FALSE; 
+$enable_login = !$flag;
+$enable_logout = $flag;
+// KsuWiki END
 
-$flag = isset($vars['admin']) ? 1 : 1 ;
-
-// SKIN_DEFAULT_DISABLE_TOPICPATH
-//   1 = Show reload URL
-//   0 = Show topicpath
+//  Show / Hide topic path
 if (! defined('SKIN_DEFAULT_DISABLE_TOPICPATH'))
 	define('SKIN_DEFAULT_DISABLE_TOPICPATH', $flag); // 1, 0
 
@@ -75,7 +78,7 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 <?php if ($nofollow || ! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
 <?php if ($html_meta_referrer_policy) { ?> <meta name="referrer" content="<?php echo htmlsc(html_meta_referrer_policy) ?>" /><?php } ?>
 
- <title><?php echo $title ?> - <?php echo $page_title ?></title>
+ <title><?php echo $title ? $title:'KsuWiki' ?> - <?php echo $page_title ?></title>
 
  <link rel="SHORTCUT ICON" href="<?php echo $image['favicon'] ?>" />
  <link rel="stylesheet" type="text/css" href="<?php echo PKWK_HOME . SKIN_DIR ?>pukiwiki.css" />
