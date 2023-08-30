@@ -14,7 +14,7 @@ function plugin_site_action(){
     'list',   // list all wiki sites
     'new',    // create a new wiki site from template 
     'copy',   // create a copy of the specified wiki site
-    'modify', // modify the definition of a site (except site id)  
+    'admin', // modify the definition of a site (except site id)  
     'delete', // delete a site, move it to trash folder
     'passwd', // change site password , using md5() hash
     'login',  // login
@@ -66,7 +66,7 @@ function _site_form($site_id, $act='modify'){
   }
   $action = PKWK_HOME . 'site/' . SITE_ID;
   $body = <<<EOD
-  <form action="$action" method="post">
+  <form action="$script" method="post">
   <input type="hidden" name="cmd" value="site" />
   <input type="hidden" name="act" value="$act" />
   <input type="hidden" name="dataready" value="ok"/>
@@ -122,7 +122,7 @@ EOD;
     case 'passwd' :
       $body .= $show_id . $input_pass . $input_pass1 . $input_pass2;
       break;
-    case 'modify':
+    case 'admin':
       $body .= $show_id . $input_form . $input_pass;
       break;
     case 'copy':
@@ -183,11 +183,12 @@ function list_sites(){
     foreach (array('title','admin','skin') as $item){
       $body .= '<td class="style_td">' . $config[$item] . '</td>';
     }
-    foreach (array('modify','copy','passwd','delete') as $item){
+    foreach (array('admin','copy','passwd','delete') as $item){
       $body .= '<td class="style_td">' . _img_link('site_'.$item.'.png', m($item), $site_id, $item) . '</td>';
     }
     
-    $body .= '<td class="style_td">' . _img_link('site_inlink.png', m('open'), $site_id, 'open') . '</td>';
+    $body .= '<td class="style_td">' . _img_link('site_open.png', m('view'), $site_id, 'view') . '</td>';
+    $body .= '<td class="style_td">' . _img_link('site_edit.png', m('edit'), $site_id, 'edit') . '</td>';
     $body .= '</tr>';
   }
   $body .= '</table>';
@@ -207,7 +208,7 @@ function _site_save($act='modify'){
   try{
     switch ($act){
       case 'passwd' :
-      case 'modify':
+      case 'admin':
         $config = _site_config($site_id);
         if ($act=='passwd'){
           if  ($passwd1==null or $passwd2==null or $passwd1!==$passwd2){
@@ -290,10 +291,15 @@ function _site_save($act='modify'){
 // make an image link
 function _img_link($img,  $title, $site, $act){
   $url = '?cmd=site&act='.$act. '&site_id='.$site;
-  if ($act == 'open'){
+  if ($act == 'view'){
     $url = PKWK_HOME . 'site/' . $site;
   }
-
+  if ($act == 'edit'){
+    $url = PKWK_HOME . 'site/' . $site;
+    if (!site_authed($site)){
+      $url .= '?cmd=site&act=login';
+    }
+  }
   if ($act=="new"){
     $url = '?cmd=site&act='.$act;
   }

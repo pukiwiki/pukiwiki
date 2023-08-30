@@ -22,11 +22,6 @@ $router->mount('/site', function () use ($router) {
         }
         define('SITE_ID', $site);
         define('SITE_URL', PKWK_HOME .'site/'. $site . '/'); 
-    }
-
-    $router->get('/(\w+)', function ($site) {
-        setup($site);
-
         $file = WIKI_DIR .'sites/'. $site .'/'. SITE_CONFIG_FILE; 
         if (file_exists($file) and is_readable($file)){
             $config = Symfony\Component\Yaml\Yaml::parseFile($file);
@@ -39,6 +34,10 @@ $router->mount('/site', function () use ($router) {
                 define('SITE_ADMIN', $auth_site==$site);
             }
         }
+    }
+
+    $router->get('/(\w+)', function ($site) {
+        setup($site);
     });
     
     $router->post('/(\w+)', function ($site) {

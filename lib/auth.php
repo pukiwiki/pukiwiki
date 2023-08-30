@@ -27,6 +27,11 @@ function pkwk_login($pass = '')
 {
 	global $adminpass;
 
+	// KsuWiki: prefer site_login
+	if (defined('SITE_ID')){
+		return site_login(SITE_ID, $pass);
+	}
+	// 
 	if (! PKWK_READONLY && isset($adminpass) &&
 		pkwk_hash_compute($pass, $adminpass) === $adminpass) {
 		return TRUE;

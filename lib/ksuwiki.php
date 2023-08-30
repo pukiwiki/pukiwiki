@@ -22,12 +22,19 @@ function site_copy($src, $dst){
   	return true;
 }
 
-function site_auth($site, $password)
-{
+function site_login($site, $password){
     $config = Symfony\Component\Yaml\Yaml::parseFile(
         WIKI_DIR .'sites/' . $site . '/' . SITE_CONFIG_FILE
     );
     if (md5($password) === $config['passwd']) {
+        return true;
+    }
+    return false;
+}
+
+function site_auth($site, $password)
+{
+    if (site_login($site, $password)){
         session_start();
         session_regenerate_id(true); // require: PHP5.1+
         $_SESSION['authenticated_site'] = $site;
@@ -36,6 +43,11 @@ function site_auth($site, $password)
 	return false;
 }
 
+function site_authed($site)
+{
+    session_start();
+    return isset($_SESSION['authenticated_site']) and $_SESSION['authenticated_site']==$site;
+}
 function site_logout()
 {
     $_SESSION = array();
