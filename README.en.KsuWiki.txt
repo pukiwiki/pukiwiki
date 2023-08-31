@@ -1,42 +1,43 @@
 KsuWiki - A PukiWiki extension that supports multiple sites in a single installation
 
-HOW IT WORK
+HOW DOES IT WORK
 
-1. Create 'sites' and '_template' directories under 'wiki/'
+A. Save data in separate directories for each site
+  A.1. Create 'sites' and '_template' directories under 'wiki/'
 
-2. Move all directories of original wiki site to 'wiki/_template/', including,
-   attach/, backup/, cache/, counter/, diff/
-   
-   used as template when creating a new site
+  A.2. Move all directories of original wiki site to 'wiki/_template/', including the following directories,
+    attach/, backup/, cache/, counter/, diff/
+    # used as template for new sites
 
-3. Each site has a directory (e.g., site1), under 'wiki/sites/', including, 　 
-   attach/, backup/, cache/, counter/, diff/ 
+  A.3. Create a directory for each site (e.g., site1) under 'wiki/sites/', including the following directories, 　 
+    attach/, backup/, cache/, counter/, diff/ 
 
-4. Create a config file, named '.site.yaml' under site directory, (e.g., 'wiki/sites/site1/') 
-   title: site's title
-   skin: which skin to use
-   admin: name of the administrator
-   passwd: password for site administration, md5 hashed
-   toppage: default page of the site
-   readonly: is the site is readonly
+  A.4. Create a config file, named '.site.yaml' under site directory, (e.g., 'wiki/sites/site1/') 
+    title: site's title
+    skin: which skin to use
+    admin: name of the administrator
+    passwd: password for site administration, md5 hashed
+    toppage: default page of the site
+    readonly: is the site is readonly
 
-   For example,
-    title: 'Samepl Site'
-    skin: default
-    admin: hoge
-    passwd: 81dc9bdb52d04dc20036dbd8313ed055
-    toppage: FrontPage
-    readonly: 0
+    For example,
+      title: 'Sample Site'
+      skin: default
+      admin: hoge
+      passwd: '{x-php-md5}81dc9bdb52d04dc20036dbd8313ed055'
+      toppage: FrontPage
+      readonly: 0
 
-5. New PHP scripts for KsuWiki
- (1) DATA_HOME . 'index.php', 
-   '.htaccess', 'composer.json'
- (2) DATA_HOME . 'ksuwiki.ini.php'
- (3) LIB . 'ksuwiki.php'
- (4) LIB . 'auth.php'
- (5) PLUGIN . 'site.ini.php'
-   'snippet.inc.php'
- (6) SKIN . 'default/'
+B. New PHP scripts and related files for KsuWiki
+  (1) DATA_HOME . 'index.php' (updated), 
+    '.htaccess'(updated), 'composer.json'(new)
+  (2) DATA_HOME . 'ksuwiki.ini.php'(new)
+    'pukiwiki.ini.php' (updated)
+  (3) LIB . 'ksuwiki.php'(new, functions for KsuWiki)
+  (4) LIB . 'auth.php' (updated)
+  (5) PLUGIN . 'site.ini.php' (new, plugin for site administration!)
+    'snippet.inc.php' (new, plugin for code syntax-highlight)
+  (6) SKIN . 'default/' (new, per-site skin files)
  
 6. Dependencies
  (1) symfony/yaml
