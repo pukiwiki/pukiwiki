@@ -1,4 +1,13 @@
-KsuWiki - A PukiWiki extension that supports multiple sites in a single installation
+KsuWiki - A PukiWiki extension supports multiple sites in a single PukiWiki installation
+
+FEATURES
+1. Support multiple sites under a single PukiWiki installation
+
+2. Provide 'view' and 'admin' modes 
+  - 'view' mode for readonly, hide navigation bar and tool bar
+  - 'admin' mode for edit requring login, show navigation bar and tool bar
+
+3. Site administration tool
 
 HOW DOES IT WORK?
 
@@ -43,10 +52,24 @@ B. New PHP scripts and related files for KsuWiki
 
   (6) SKIN . 'default/' (new, per-site skin files)
  
+  (7) New Contants
+    PKWK_HOME, SITE_ID
+
+
 C. Dependencies
  (1) symfony/yaml
  (2) bramus/router
 
 D. Site administration
-
+  A new plugin named 'site' is provided for site administration.
+  URL                     | Comment
+  -------------------------------  
+  ?cmd=site                | list all sites 
+  ?cmd=site&act=new        | create a new site from template
+  ?cmd=site&act=setup&site_id=site1     |  modify config of site1
+  ?cmd=site&act=delete&site_id=site1    | delete site1
+  ?cmd=site&act=copy&site_id=site1      |  create a new site from site1 
+  ?cmd=site&act=passwd&site_id=site1    |  change password of site1
+  ?cmd=site&act=login      |  login as administrator
+  ?cmd=site&act=logout     |  logout as administrator
 
