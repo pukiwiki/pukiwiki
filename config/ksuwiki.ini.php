@@ -1,5 +1,5 @@
 <?php 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 define('SITE_TEMPLATE', '_template'); 
 define('SITE_CONFIG_FILE', '.site.yaml'); 

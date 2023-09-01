@@ -1,0 +1,132 @@
+@charset "utf-8";
+
+body{
+	color:#000;
+	background-color:#ffffff;
+}
+
+/* Link General
+----------------------------------------------------------------------------- */
+a:link{
+	color:#009;
+}
+a:visited{
+	color:#330;
+}
+a:hover{
+	color:#f90;
+}
+
+/* header
+----------------------------------------------------------------------------- */
+div#header{
+	background-color:#f90;
+}
+div#header a{
+	color:#fff;
+}
+
+/* Navigator
+----------------------------------------------------------------------------- */
+div#navigator{
+	background-color:#999;
+}
+div#navigator a{
+	color:#fff;
+}
+div#navigator a:hover{
+	color:#fc0;
+}
+
+/* Contents
+----------------------------------------------------------------------------- */
+/* Page Title */
+div#content h1.title{
+	color:#f60;
+}
+div#content h1.title a{
+	color:#f60;
+}
+
+/* h1 (include.inc.php, calender_viwer.inc.php) */
+div#body h1{
+	color:#f60;
+	border-bottom:solid 2px #f60;
+	border-left:solid 10px #f60;
+}
+div#body h1 a{
+	color:#f60;
+}
+
+/* h2 */
+div#body h2{
+	color:#f60;
+	border-bottom:solid 2px #f60;
+	border-left:solid 10px #f60;
+}
+div#body h2 a{
+	color:#f60;
+}
+
+/* h3 */
+div#body h3{
+	color:#f60;
+	border-left:solid 10px #f60;
+}
+div#body h3 a{
+	color:#f60;
+}
+
+/* h3 */
+div#body h4{
+	color:#f60;
+}
+div#body h4 a{
+	color:#f60;
+}
+
+/* LeftBar
+----------------------------------------------------------------------------- */
+div#menubar{
+	background-color:#fc0;
+}
+div#left_bar h1,
+div#left_bar h2,
+div#left_bar h3,
+div#left_bar h4,
+div#left_bar h5{
+	color:#666;
+	border-style:none;
+	border-bottom:dotted 2px #666;
+}
+
+/* RightBar
+----------------------------------------------------------------------------- */
+div#rightbar1{
+	background-color:#fc0;
+}
+div#rightbar2{
+	background-color:#ff6;
+}
+div#rightbar3{
+	background-color:#ff6;
+}
+div#right_bar h1,
+div#right_bar h2,
+div#right_bar h3,
+div#right_bar h4,
+div#right_bar h5{
+	color:#666;
+	border-style:none;
+	border-bottom:dotted 2px #666;
+}
+
+/* footer
+----------------------------------------------------------------------------- */
+div#footer{
+	color:#666;
+	background-color:#f90;
+}
+div#footer a{
+	color:#fff;
+}

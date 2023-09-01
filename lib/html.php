@@ -41,7 +41,7 @@ function catbody($title, $page, $body)
 		}
 	}
 	if (! file_exists(SKIN_FILE) || ! is_readable(SKIN_FILE))
-		die_message('SKIN_FILE is not found');
+		die_message('SKIN_FILE is not found '.SKIN_FILE);
 
 	$_LINK = $_IMAGE = array();
 

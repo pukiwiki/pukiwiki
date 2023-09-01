@@ -1,0 +1,130 @@
+﻿@charset "UTF-8";
+/* 
+   $Date: 2004/11/21 12:48:02 $
+   $RCSfile: color_bluebox.css,v $
+*/
+
+body{
+	color:#000;
+	background-color:#ffffff;
+}
+
+/* Link General
+----------------------------------------------------------------------------- */
+a:link{
+	color:#353573;
+}
+a:visited{
+	color:#733535;
+}
+a:hover{
+	color:darkorange;
+}
+
+/* header
+----------------------------------------------------------------------------- */
+div#header{
+	background-color:#666e99;
+}
+div#header a{
+	color:#fff;
+}
+
+/* Page Title */
+div#content h1.title{
+	color:#666e99;
+}
+div#content h1.title a{
+	color:#666e99;
+}
+
+/* Navigator
+----------------------------------------------------------------------------- */
+div#navigator{
+	background-color:#999;
+}
+div#navigator a{
+	color:#fff;
+}
+div#navigator a:hover{
+	color:#fc0;
+}
+
+/* Contents
+----------------------------------------------------------------------------- */
+/* h1 (include.inc.php, calender_viwer.inc.php) */
+div#body h1{
+	color:#666e99;
+	border-bottom:solid 2px #666e99;
+	border-left:solid 10px #666e99;
+}
+div#body h1 a{
+	color:#666e99;
+}
+
+/* h2 */
+div#body h2{
+	color:#666e99;
+	border-bottom:solid 2px #666e99;
+	border-left:solid 10px #666e99;
+}
+div#body h2 a{
+	color:#666e99;
+}
+
+/* h3 */
+div#body h3{
+	color:#666e99;
+	border-left:solid 10px #666e99;
+}
+div#body h3 a{
+	color:#666e99;
+}
+
+/* LeftBar
+----------------------------------------------------------------------------- */
+div#menubar{
+	background-color:#a3bac2;
+}
+div#left_bar h1,
+div#left_bar h2,
+div#left_bar h3,
+div#left_bar h4,
+div#left_bar h5{
+	color:#fff;
+	background-color:#666e99;
+}
+
+/* RightBar
+----------------------------------------------------------------------------- */
+div#rightbar1{
+	background-color:#transparent;
+}
+div#rightbar2{
+	background-color:#tranasparent;
+}
+div#rightbar3{
+	background-color:#transparent;
+}
+div#right_bar{
+	border-left:dotted 1px #999;
+}
+div#right_bar h1,
+div#right_bar h2,
+div#right_bar h3,
+div#right_bar h4,
+div#right_bar h5{
+	color:#fff;
+	background-color:#999;
+}
+
+/* footer
+----------------------------------------------------------------------------- */
+div#footer{
+	color:#666;
+	background-color:transparent;
+	border-top:solid 1px #666;
+}
+div#footer a{
+	color:#666;
+}

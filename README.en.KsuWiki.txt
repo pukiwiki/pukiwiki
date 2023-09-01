@@ -1,6 +1,21 @@
-KsuWiki - A PukiWiki extension supports multiple sites in a single PukiWiki installation
+NAME
 
-FEATURES
+    KsuWiki - a Mult-Site extension of PukiWiki
+    
+    PukiWiki - PHP scripts for Web pages which can be edited by anyone, 
+               at any time, from anywhere. 
+
+        PukiWiki 1.5.4
+        Copyright
+          2001-2022 PukiWiki Developement Team
+          2001-2002 yu-ji (Based on PukiWiki 1.3 by yu-ji)
+        License: GPL version 2 or (at your option) any later version
+        https://pukiwiki.osdn.jp/
+
+DESCRIPTION
+
+
+FEATURES KsuWiki 
 1. Support multiple sites under a single PukiWiki installation
 
 2. Provide 'view' and 'admin' modes 
@@ -9,16 +24,17 @@ FEATURES
 
 3. Site administration tool
 
-FILE LAYOUT
-^^^^^^^^^^^
+DIRECTORY/FILE LAYOUT
+^^^^^^^^^^^^^^^^^^^^^
 PKWK_ROOT
 - index.php
+- INSTALL.txt
+- README.txt
 - ...
-- ksuwiki.ini.php # NEW !
-- pukiwiki.ini.php
+- UPDATING.txt
 
 + assets/   # NEW !
-  + image/  # MOVED FROM PKWK_ROOT !
+  + image/  # MOVED FROM PKWK_ROOT!
   + skin/   # MOVED FROM PKWK_ROOT!
     + default/   # NEW !
       + pukiwiki.css
@@ -26,10 +42,19 @@ PKWK_ROOT
 
     - pukiwiki.css
     - pukiwiki.skin.php
-  + snippet/    # NEW !
+  + snippet/    # NEW ! for snipet plugin
+
++ config/
+  - en.lang.php
+  - ja.lang.php
+  - default.ini.php
+  - ksuwiki.ini.php   # NEW !
+  - pukiwiki.ini.php  # UPDATED : update constant definitions
+
 + lib/
-  - auth.php    # UPDATED
+  - auth.php    # UPDATED: enable site login
   - ...
+  - init.php    # UPDATED: change path to '*.ini.php', '*.lang.php' 
   - ksuwiki.php # NEW !
   - ...
   - pukiwiki.php  
@@ -84,16 +109,20 @@ A. Store data for different sites in separate directories
       toppage: FrontPage
       readonly: 0
 
-B. New PHP scripts and related files for KsuWiki
+B. Other Optimization
+  (1) Move all static content to 'assets/' directory
+  (2) Move all '*.ini.php' and '*.lang.php' to 'config' directory
+
+C. New PHP scripts and related files for KsuWiki
   (1) DATA_HOME . 'index.php' (updated, add new definitions and require statement), 
     '.htaccess'(updated, add rewrite rules), 'composer.json'(new)
 
   (2) DATA_HOME . 'ksuwiki.ini.php'(new, for site initialization)
-    'pukiwiki.ini.php' (updated, insert site-related definition)
+    'pukiwiki.ini.php' (updated, add site-related definition)
 
   (3) LIB . 'ksuwiki.php'(new, functions specially implemented for KsuWiki)
 
-  (4) LIB . 'auth.php' (updated, for site login)
+  (4) LIB . 'auth.php' (updated, allow site login)
 
   (5) PLUGIN . 'site.ini.php' (new, plugin for site administration!)
     'snippet.inc.php' (new, plugin for code syntax-highlight)
@@ -101,8 +130,9 @@ B. New PHP scripts and related files for KsuWiki
   (6) SKIN . 'default/' (new, per-site skin files)
  
   (7) New Contants
-    PKWK_HOME, SITE_ID
-
+    PKWK_HOME, WIKI_DIR, CONF_DIR,
+    SITE_ID, SITE_TITLE, SITE_URL, SITE_ADMIN,
+    ALLOW_SHOW_FOOTER (in 'pukiwiki.skin.php') 
 
 C. Dependencies
  (1) symfony/yaml

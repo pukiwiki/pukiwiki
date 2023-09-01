@@ -108,7 +108,7 @@ if (!defined('SKIN_DIR')){
 
 // Static image files
 # define('IMAGE_DIR', 'image/');
-define('IMAGE_DIR', PKWK_HOME . 'image/'); # KsuWiki
+define('IMAGE_DIR', PKWK_HOME . 'assets/image/'); # KsuWiki
 // Keep this directory shown via web browsers like
 // ./IMAGE_DIR from index.php.
 

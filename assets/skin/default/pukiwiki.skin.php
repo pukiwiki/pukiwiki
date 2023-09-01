@@ -12,10 +12,10 @@
 // Settings (define before here, if you want)
 
 // Set site identities
-$_IMAGE['skin']['logo']     =  'ksuwiki01.jpg'; //'pukiwiki.png';
+$_IMAGE['skin']['logo']     =  'pukiwiki.png'; // 'pukiwiki.png'
 $_IMAGE['skin']['favicon']  = ''; // Sample: 'image/favicon.ico';
 
-// KsuWiki BEGIN
+# KsuWiki BEGIN
 $GLOBALS['_LINK']['login']   = SITE_URL ."?cmd=site&amp;act=login";
 $GLOBALS['_LINK']['logout']  = SITE_URL ."?cmd=site&amp;act=logout";
 $flag = defined('SITE_ADMIN') ? SITE_ADMIN : false; 
@@ -23,7 +23,7 @@ if (! defined('PKWK_SKIN_SHOW_FOOTER'))
 	define('PKWK_SKIN_SHOW_FOOTER', $flag); // 1, 0
 $enable_login = !$flag;
 $enable_logout = $flag;
-// KsuWiki END
+# KsuWiki END
 
 //  Show / Hide topic path
 if (! defined('SKIN_DEFAULT_DISABLE_TOPICPATH'))
@@ -86,15 +86,15 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
  <link rel="SHORTCUT ICON" href="<?php echo $image['favicon'] ?>" />
  <link rel="stylesheet" type="text/css" href="<?=PKWK_HOME.SKIN_DIR?>pukiwiki.css" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
- <script type="text/javascript" src="<?=PKWK_HOME?>skin/main.js" defer></script>
- <script type="text/javascript" src="<?=PKWK_HOME?>skin/search2.js" defer></script>
+ <script type="text/javascript" src="<?=PKWK_HOME?>assets/skin/main.js" defer></script>
+ <script type="text/javascript" src="<?=PKWK_HOME?>assets/skin/search2.js" defer></script>
 
 <?php echo $head_tag ?>
 </head>
 <body>
 <?php echo $html_scripting_data ?>
 <div id="header">
- <a href="<?php echo $link['top'] ?>"><img id="logo" src="<?php echo IMAGE_DIR . $image['logo'] ?>" height="80" alt="[PukiWiki]" title="[PukiWiki]" /></a>
+ <a href="<?php echo $link['top'] ?>"><img id="logo" src="<?php echo PKWK_HOME.SKIN_DIR.$image['logo'] ?>" height="80" alt="[PukiWiki]" title="[PukiWiki]" /></a>
 
  <h1 class="title"><?php echo $page_title ?></h1>
 

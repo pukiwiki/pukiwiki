@@ -21,9 +21,9 @@ define('LIB_DIR',	'lib/');
 
 # KsuWiki BEGIN
 date_default_timezone_set('Asia/Tokyo');
+define('CONF_DIR',	'config/');
 define('PKWK_HOME', dirname($_SERVER['PHP_SELF']) .'/');
-require(DATA_HOME . 'ksuwiki.ini.php');
+require(CONF_DIR . 'ksuwiki.ini.php');
 # KsuWiki END
-
 require(LIB_DIR . 'pukiwiki.php');
 ?>

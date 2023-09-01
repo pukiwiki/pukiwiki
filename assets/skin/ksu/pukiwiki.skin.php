@@ -1,8 +1,8 @@
 <?php
 // PukiWiki - Yet another WikiWikiWeb clone.
-// pukiwiki.skin.php
-// Copyright
-//   2002-2021 PukiWiki Development Team
+// $Id: pukiwiki.skin.php,v 1.48 2006/03/07 14:03:02 henoheno Exp $
+// Copyright (C)
+//   2002-2006 PukiWiki Developers Team
 //   2001-2002 Originally written by yu-ji
 // License: GPL v2 or (at your option) any later version
 //
@@ -12,24 +12,36 @@
 // Settings (define before here, if you want)
 
 // Set site identities
-$_IMAGE['skin']['logo']     = 'pukiwiki.png';
+$_IMAGE['skin']['logo']     =  'ksuwiki01.jpg'; //'pukiwiki.png';
 $_IMAGE['skin']['favicon']  = ''; // Sample: 'image/favicon.ico';
 
-// SKIN_DEFAULT_DISABLE_TOPICPATH
-//   1 = Show reload URL
-//   0 = Show topicpath
+# KsuWiki BEGIN
+$GLOBALS['_LINK']['login']   = SITE_URL ."?cmd=site&amp;act=login";
+$GLOBALS['_LINK']['logout']  = SITE_URL ."?cmd=site&amp;act=logout";
+$flag = defined('SITE_ADMIN') ? SITE_ADMIN : false; 
+if (! defined('PKWK_SKIN_SHOW_FOOTER'))
+	define('PKWK_SKIN_SHOW_FOOTER', $flag); // 1, 0
+$enable_login = !$flag;
+$enable_logout = $flag;
+# KsuWiki END
+
+//  Show / Hide topic path
 if (! defined('SKIN_DEFAULT_DISABLE_TOPICPATH'))
-	define('SKIN_DEFAULT_DISABLE_TOPICPATH', 1); // 1, 0
+	define('SKIN_DEFAULT_DISABLE_TOPICPATH', $flag); // 1, 0
 
 // Show / Hide navigation bar UI at your choice
 // NOTE: This is not stop their functionalities!
 if (! defined('PKWK_SKIN_SHOW_NAVBAR'))
-	define('PKWK_SKIN_SHOW_NAVBAR', 1); // 1, 0
+	define('PKWK_SKIN_SHOW_NAVBAR', $flag); // 1, 0
 
 // Show / Hide toolbar UI at your choice
 // NOTE: This is not stop their functionalities!
 if (! defined('PKWK_SKIN_SHOW_TOOLBAR'))
-	define('PKWK_SKIN_SHOW_TOOLBAR', 1); // 1, 0
+	define('PKWK_SKIN_SHOW_TOOLBAR', $flag); // 1, 0
+
+// Show / Hide footer UI at your choice
+if (! defined('PKWK_SKIN_SHOW_FOOTER'))
+        define('PKWK_SKIN_SHOW_FOOTER', $flag); // 1, 0
 
 // ------------------------------------------------------------
 // Code start
@@ -69,22 +81,22 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 <?php if ($nofollow || ! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
 <?php if ($html_meta_referrer_policy) { ?> <meta name="referrer" content="<?php echo htmlsc(html_meta_referrer_policy) ?>" /><?php } ?>
 
- <title><?php echo $title ?> - <?php echo $page_title ?></title>
+ <title><?php echo $title ? $title:'KsuWiki' ?> - <?php echo $page_title ?></title>
 
  <link rel="SHORTCUT ICON" href="<?php echo $image['favicon'] ?>" />
- <link rel="stylesheet" type="text/css" href="<?php echo SKIN_DIR ?>pukiwiki.css" />
+ <link rel="stylesheet" type="text/css" href="<?=PKWK_HOME.SKIN_DIR?>pukiwiki.css" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
- <script type="text/javascript" src="<?php echo SKIN_DIR ?>main.js" defer></script>
- <script type="text/javascript" src="<?php echo SKIN_DIR ?>search2.js" defer></script>
+ <script type="text/javascript" src="<?=PKWK_HOME?>assets/skin/main.js" defer></script>
+ <script type="text/javascript" src="<?=PKWK_HOME?>assets/skin/search2.js" defer></script>
 
 <?php echo $head_tag ?>
 </head>
 <body>
 <?php echo $html_scripting_data ?>
 <div id="header">
- <a href="<?php echo $link['top'] ?>"><img id="logo" src="<?php echo IMAGE_DIR . $image['logo'] ?>" width="80" height="80" alt="[PukiWiki]" title="[PukiWiki]" /></a>
+ <a href="<?php echo $link['top'] ?>"><img id="logo" src="<?php echo PKWK_HOME.SKIN_DIR.$image['logo'] ?>" height="80" alt="[PukiWiki]" title="[PukiWiki]" /></a>
 
- <h1 class="title"><?php echo $page ?></h1>
+ <h1 class="title"><?php echo $page_title ?></h1>
 
 <?php if ($is_page) { ?>
  <?php if(SKIN_DEFAULT_DISABLE_TOPICPATH) { ?>
@@ -257,6 +269,8 @@ function _toolbar($key, $x = 20, $y = 20){
 </div>
 <?php } // PKWK_SKIN_SHOW_TOOLBAR ?>
 
+<?php if (PKWK_SKIN_SHOW_FOOTER) { ?>
+<!-- Footer -->
 <?php if ($lastmodified != '') { ?>
 <div id="lastmodified">Last-modified: <?php echo $lastmodified ?></div>
 <?php } ?>
@@ -272,5 +286,7 @@ function _toolbar($key, $x = 20, $y = 20){
  Powered by PHP <?php echo PHP_VERSION ?>. HTML convert time: <?php echo elapsedtime() ?> sec.
  </p>
 </div>
+<?php } // PKWK_SKIN_SHOW_FOOTER ?>
+
 </body>
 </html>
