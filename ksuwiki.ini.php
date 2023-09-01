@@ -8,6 +8,8 @@ define('WIKI_DIR',  DATA_HOME . 'wiki/'  );
 $router = new \Bramus\Router\Router();
 $router->mount('/site', function () use ($router) {
     function setup($site){
+        define('SITE_ID', $site);
+        define('SITE_URL', PKWK_HOME .'site/'. $site . '/'); 
         $definitions = array(
             'DATA_DIR'=>'wiki/',
             'DIFF_DIR'=>'diff/',
@@ -19,8 +21,7 @@ $router->mount('/site', function () use ($router) {
         foreach ($definitions as $item=>$dir){
             define($item,  WIKI_DIR .'sites/'. $site .'/'. $dir ); 
         }
-        define('SITE_ID', $site);
-        define('SITE_URL', PKWK_HOME .'site/'. $site . '/'); 
+        $site_admin = false;
         $file = WIKI_DIR .'sites/'. $site .'/'. SITE_CONFIG_FILE; 
         if (file_exists($file) and is_readable($file)){
             $config = Symfony\Component\Yaml\Yaml::parseFile($file);
@@ -28,19 +29,17 @@ $router->mount('/site', function () use ($router) {
                 define('SKIN_DIR', 'skin/' . $config['skin'] . '/');
                 define('SITE_TITLE', $config['title']);
                 session_start();
-                $auth_site = isset($_SESSION['authenticated_site']) ? $_SESSION['authenticated_site'] : null;
-                define('SITE_ADMIN', $auth_site==$site);
+                $site_admin = isset($_SESSION['authenticated_site']) 
+                    and $_SESSION['authenticated_site'] 
+                    and $_SESSION['authenticated_site']===$site;
             }
         }
+        define('SITE_ADMIN', $site_admin);
     }
 
-    $router->get('/(\w+)', function ($site) {
+    $router->match('GET|POST', '/(\w+)', function ($site) {
         setup($site);
-    });
-    
-    $router->post('/(\w+)', function ($site) {
-        setup($site);
-    });
+    });    
 });
 
 $router->run();
