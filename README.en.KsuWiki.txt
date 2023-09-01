@@ -9,6 +9,48 @@ FEATURES
 
 3. Site administration tool
 
+FILE LAYOUT
+
+  PKWK_ROOT
+    - index.php
+    - ...
+    - ksuwiki.ini.php # new!
+    - pukiwiki.ini.php
+    + image/
+    + lib/
+        - auth.php   # modified
+        - ...
+        - ksuwiki.php # new !
+        - ...
+        - pukiwiki.php  
+    + public/ # new !
+    + skin/
+        + default/
+          + pukiwiki.css
+          + pukiwiki.skin.php
+        - pukiwiki.css
+        - pukiwiki.skin.php
+    + wiki/
+        + _template/
+            + attach/
+            + backup/
+            + cache/
+            + counter/
+            + diff/
+            + wiki/
+            + wiki.en/
+        + sites/  # new !
+            + site1/
+              + attach/
+              + ...
+              + wiki.en/
+              - .site.yaml
+            + site2/
+              + attach/
+              + ...
+              + wiki.en/
+              - .site.yaml
+
 HOW DOES IT WORK?
 
 A. Store data for different sites in separate directories 

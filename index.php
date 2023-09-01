@@ -19,11 +19,11 @@ error_reporting(E_ERROR | E_PARSE); // Avoid E_WARNING, E_NOTICE, etc
 define('DATA_HOME',	'');
 define('LIB_DIR',	'lib/');
 
-// KsuWiki BEGIN
+# KsuWiki BEGIN
 date_default_timezone_set('Asia/Tokyo');
 define('PKWK_HOME', dirname($_SERVER['PHP_SELF']) .'/');
 require(DATA_HOME . 'ksuwiki.ini.php');
-// KsuWiki END
+# KsuWiki END
 
 require(LIB_DIR . 'pukiwiki.php');
 ?>

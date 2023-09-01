@@ -37,7 +37,6 @@ function initialize_site($site)
             define('SITE_TITLE', $config['title']);
             session_start();
             $site_admin = isset($_SESSION['authenticated_site']) 
-                and $_SESSION['authenticated_site'] 
                 and $_SESSION['authenticated_site']===$site;
         }
     }
