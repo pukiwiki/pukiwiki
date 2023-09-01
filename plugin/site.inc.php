@@ -72,7 +72,7 @@ function _site_form($site_id, $act='modify'){
   <input type="hidden" name="dataready" value="ok"/>
   <table class="style_table">\n
 EOD;
-  $skins = array('', 'default');
+  $skins = array('', 'default', 'ksu', 'bluebox', 'orangebox', 'modern');
   $skin_select ='<select name="skin">';
   foreach ($skins as $opt_skin){
     $selected = ($opt_skin == $skin) ? ' selected' : '';
@@ -216,7 +216,7 @@ function _site_save($act='modify'){
           }
           $config['passwd'] = md5($passwd1);
         }
-        if ($act=='modify'){
+        if ($act=='setup'){
           if (md5($passwd) !== $config['passwd']){
             die_message('Password incorrect!');
           }
@@ -226,8 +226,11 @@ function _site_save($act='modify'){
         }
         $yaml = Symfony\Component\Yaml\Yaml::dump($config);
         $file = WIKI_DIR .'sites/' . $site_id . '/' . SITE_CONFIG_FILE;
-        file_put_contents($file, $yaml);
-        $msg = "Successfully updated site ". $site_id;      
+        if (file_put_contents($file, $yaml)){
+          $msg = 'Successfully updated/created the site ' . $site_id;
+        }else{
+          $msg = 'Failed to update/create the site ' . $site_id;
+        }  
         break;
   
       case 'new':
@@ -252,7 +255,11 @@ function _site_save($act='modify'){
         if ($ok and is_dir($target)){
           $yaml = Symfony\Component\Yaml\Yaml::dump($config);
           $file = $target . '/' . SITE_CONFIG_FILE;
-          file_put_contents($file, $yaml);
+          if (file_put_contents($file, $yaml)){
+            $msg = 'Successfully copied the site ' . $site_id;
+          }else{
+            $msg = 'Failed to created the site ' . $site_id;
+          }
         }
         break;
       case 'delete':
