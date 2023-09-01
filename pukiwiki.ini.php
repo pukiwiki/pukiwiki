@@ -98,7 +98,7 @@ foreach ( [
 # define('SKIN_DIR', 'skin/');
 # KsuWiki
 if (!defined('SKIN_DIR')){  
-	define('SKIN_DIR', 'skin/');
+	define('SKIN_DIR', 'assets/skin/');
 }
 # END
 // Skin files (SKIN_DIR/*.skin.php) are needed at

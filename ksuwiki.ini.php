@@ -33,7 +33,7 @@ function initialize_site($site)
     if (file_exists($file) and is_readable($file)){
         $config = Symfony\Component\Yaml\Yaml::parseFile($file);
         if ($config){
-            define('SKIN_DIR', 'skin/' . $config['skin'] . '/');
+            define('SKIN_DIR', 'assets/skin/' . $config['skin'] . '/');
             define('SITE_TITLE', $config['title']);
             session_start();
             $site_admin = isset($_SESSION['authenticated_site']) 
