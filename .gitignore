@@ -12,6 +12,14 @@
 /wiki/sites/*/counter/*.count
 /wiki/sites/*/counter/*.db
 
+/wiki/_template/attach/*.[0-9]
+/wiki/_template/attach/*.log
+/wiki/_template/backup/*.gz
+/wiki/_template/cache/*.ref
+/wiki/_template/cache/*.rel
+/wiki/_template/counter/*.count
+/wiki/_template/counter/*.db
+
 /wiki/trash/*
 
 /nbproject/**
