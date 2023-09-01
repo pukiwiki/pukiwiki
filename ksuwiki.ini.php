@@ -16,16 +16,16 @@ $router->run();
 
 function initialize_site($site)
 {
-    define('SITE_ID', $site);// TODO: check validity - is there a full set of data ?  
+    define('SITE_ID', $site);// TODO: check validity of $site - is there a full set of site data   
     define('SITE_URL', PKWK_HOME .'site/'. $site . '/'); 
-    foreach( array(
+    foreach( [
         'DATA_DIR'=>'wiki/',
         'DIFF_DIR'=>'diff/',
         'BACKUP_DIR'=>'backup/',
         'CACHE_DIR'=>'cache/',
         'UPLOAD_DIR'=>'attach/',
         'COUNTER_DIR'=>'counter/',
-    ) as $item=>$dir){
+    ] as $item=>$dir){
         define($item,  WIKI_DIR .'sites/'. $site .'/'. $dir ); 
     }
     $site_admin = false;
