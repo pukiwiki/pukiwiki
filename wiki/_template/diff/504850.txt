@@ -1,0 +1,10 @@
++#author("2023-08-29T07:43:34+09:00","","")
+ * PHP: Hypertext Preprocessor [#k50e5340]
+ 
+ http://www.php.net/
+ - http://jp2.php.net/ (日本のミラーサイト)
+ 
+ - 日本PHPユーザー会 (Japan PHP User Group)
+ -- http://www.php.gr.jp/
+-
++ssx
