@@ -77,15 +77,15 @@ define('UI_LANG', LANG); // 'en' for Internationalized wikisite
 # define('UPLOAD_DIR',    DATA_HOME . 'attach/'   ); // Attached files and logs
 # define('COUNTER_DIR',   DATA_HOME . 'counter/'  ); // Counter plugin's counts
 define('PLUGIN_DIR',    DATA_HOME . 'plugin/'   ); // Plugin directory
- # KsuWiki BEGIN
-foreach ( array(
-		'DATA_DIR'=>'wiki/',
-		'DIFF_DIR'=>'diff/',
-		'BACKUP_DIR'=>'backup/',
-		'CACHE_DIR'=>'cache/',
-		'UPLOAD_DIR'=>'attach/',
-		'COUNTER_DIR'=>'counter/',
-	) as $item=>$dir){
+# KsuWiki BEGIN
+foreach ( [
+	'DATA_DIR'=>'wiki/',
+	'DIFF_DIR'=>'diff/',
+	'BACKUP_DIR'=>'backup/',
+	'CACHE_DIR'=>'cache/',
+	'UPLOAD_DIR'=>'attach/',
+	'COUNTER_DIR'=>'counter/',
+] as $item=>$dir){
 	if (!defined($item)){
 		define($item,  WIKI_DIR . SITE_TEMPLATE .'/'. $dir ); 
 	}
