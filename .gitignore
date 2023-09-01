@@ -13,7 +13,6 @@
 /wiki/*/counter/*.db
 
 /wiki/*/diff/*.txt
-/wiki/_template/wiki/*.txt
 /wiki/sites/*/*.txt
 
 /wiki/trash/*

@@ -1,0 +1,5 @@
+* BracketName [#cf801032]
+WikiNameの書式で表現できない日本語などをページ名として扱えるようにする書式。
+ [[BracketName]] 
+のように [[ ]] で囲うと[[BracketName]]になります。
+もちろん日本語もOK。

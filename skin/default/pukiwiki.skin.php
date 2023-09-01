@@ -19,6 +19,8 @@ $_IMAGE['skin']['favicon']  = ''; // Sample: 'image/favicon.ico';
 $GLOBALS['_LINK']['login']   = SITE_URL ."?cmd=site&amp;act=login";
 $GLOBALS['_LINK']['logout']  = SITE_URL ."?cmd=site&amp;act=logout";
 $flag = defined('SITE_ADMIN') ? SITE_ADMIN : false; 
+if (! defined('PKWK_SKIN_SHOW_FOOTER'))
+	define('PKWK_SKIN_SHOW_FOOTER', $flag); // 1, 0
 $enable_login = !$flag;
 $enable_logout = $flag;
 // KsuWiki END
@@ -267,6 +269,8 @@ function _toolbar($key, $x = 20, $y = 20){
 </div>
 <?php } // PKWK_SKIN_SHOW_TOOLBAR ?>
 
+<?php if (PKWK_SKIN_SHOW_FOOTER) { ?>
+<!-- Footer -->
 <?php if ($lastmodified != '') { ?>
 <div id="lastmodified">Last-modified: <?php echo $lastmodified ?></div>
 <?php } ?>
@@ -282,5 +286,7 @@ function _toolbar($key, $x = 20, $y = 20){
  Powered by PHP <?php echo PHP_VERSION ?>. HTML convert time: <?php echo elapsedtime() ?> sec.
  </p>
 </div>
+<?php } // PKWK_SKIN_SHOW_FOOTER ?>
+
 </body>
 </html>
