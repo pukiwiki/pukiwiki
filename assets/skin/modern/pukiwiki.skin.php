@@ -20,22 +20,36 @@ define("WIKI_EXPLAIN", "");
 $_IMAGE['skin']['logo']     = 'logo.png';
 $_IMAGE['skin']['favicon']  = ''; // Sample: 'image/favicon.ico';
 
+# KsuWiki BEGIN
+$GLOBALS['_LINK']['login']   = SITE_URL ."?cmd=site&amp;act=login";
+$GLOBALS['_LINK']['logout']  = SITE_URL ."?cmd=site&amp;act=logout";
+$flag = defined('SITE_ADMIN') ? SITE_ADMIN : false; 
+if (! defined('PKWK_SKIN_SHOW_FOOTER'))
+	define('PKWK_SKIN_SHOW_FOOTER', $flag); // 1, 0
+$enable_login = !$flag;
+$enable_logout = $flag;
+# KsuWiki END
+
 // SKIN_DEFAULT_DISABLE_TOPICPATH
 //   1 = Show reload URL
 //   0 = Show topicpath
+//  Show / Hide topic path
 if (! defined('SKIN_DEFAULT_DISABLE_TOPICPATH'))
-    define('SKIN_DEFAULT_DISABLE_TOPICPATH', 0); // 1, 0
+	define('SKIN_DEFAULT_DISABLE_TOPICPATH', $flag); // 1, 0
 
 // Show / Hide navigation bar UI at your choice
 // NOTE: This is not stop their functionalities!
 if (! defined('PKWK_SKIN_SHOW_NAVBAR'))
-    define('PKWK_SKIN_SHOW_NAVBAR', 0); // 1, 0
+	define('PKWK_SKIN_SHOW_NAVBAR', $flag); // 1, 0
 
 // Show / Hide toolbar UI at your choice
 // NOTE: This is not stop their functionalities!
 if (! defined('PKWK_SKIN_SHOW_TOOLBAR'))
-    define('PKWK_SKIN_SHOW_TOOLBAR', 1); // 1, 0
+	define('PKWK_SKIN_SHOW_TOOLBAR', $flag); // 1, 0
 
+// Show / Hide footer UI at your choice
+if (! defined('PKWK_SKIN_SHOW_FOOTER'))
+        define('PKWK_SKIN_SHOW_FOOTER', $flag); // 1, 0
 // ------------------------------------------------------------
 // Code start
 
@@ -80,10 +94,10 @@ header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
  <title><?php echo $title ?> - <?php echo $page_title ?></title>
 
  <link rel="SHORTCUT ICON" href="<?php echo $image['favicon'] ?>" />
- <link rel="stylesheet" type="text/css" href="<?php echo SKIN_DIR ?>modern_black.css" />
+ <link rel="stylesheet" type="text/css" href="<?=PKWK_HOME.SKIN_DIR?>modern_black.css" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
- <script type="text/javascript" src="skin/main.js" defer></script>
- <script type="text/javascript" src="skin/search2.js" defer></script>
+ <script type="text/javascript" src="<?=PKWK_HOME?>assets/skin/main.js" defer></script>
+ <script type="text/javascript" src="<?=PKWK_HOME?>assets/skin/search2.js" defer></script>
 
 <?php echo $head_tag ?>
 </head>
@@ -132,7 +146,7 @@ function _toolbar($key, $x = 35, $y = 35){
     if (! isset($image[$key])) { echo 'IMAGE NOT FOUND'; return FALSE; }
 
     echo '<a href="' . $link[$key] . '">' .
-        '<img src="' . SKIN_DIR . "icon/" . $image[$key] . '" width="' . $x . '" height="' . $y . '" ' .
+        '<img src="' . PKWK_HOME . SKIN_DIR . "icon/" . $image[$key] . '" width="' . $x . '" height="' . $y . '" ' .
             'alt="' . $lang[$key] . '" title="' . $lang[$key] . '" />' .
         '</a>';
     return TRUE;
@@ -179,8 +193,8 @@ function _toolbar($key, $x = 35, $y = 35){
 </div>
 <?php } // PKWK_SKIN_SHOW_TOOLBAR ?>
 
-<div id="navigator">
 <?php if(PKWK_SKIN_SHOW_NAVBAR) { ?>
+<div id="navigator">
 <?php
 function _navigator($key, $value = '', $javascript = ''){
     $lang = & $GLOBALS['_LANG']['skin'];
@@ -234,8 +248,8 @@ function _navigator($key, $value = '', $javascript = ''){
  | <?php _navigator('logout') ?>
  <?php } ?>
  ]
-<?php } // PKWK_SKIN_SHOW_NAVBAR ?>
 </div>
+<?php } // PKWK_SKIN_SHOW_NAVBAR ?>
 
 <?php echo $hr ?>
 <div id="path">
@@ -283,7 +297,7 @@ if ($menu !== FALSE || $rightbar) { ?>
 <?php echo $hr ?>
 <?php echo $attaches ?>
 </div>
-<?php } ?>
+<?php } // PKWK_SKIN_SHOW_NAVBAR ?>
 
 <?php echo $hr ?>
 
@@ -291,6 +305,7 @@ if ($menu !== FALSE || $rightbar) { ?>
 <div id="lastmodified">Last-modified: <?php echo $lastmodified ?></div>
 <?php } ?>
 
+<?php if(PKWK_SKIN_SHOW_FOOTER) { ?>
 <?php if ($related != '') { ?>
 <div id="related">Link: <?php echo $related ?></div>
 <?php } ?>
@@ -302,5 +317,6 @@ if ($menu !== FALSE || $rightbar) { ?>
 &nbsp;|&nbsp;PHP: <?php echo PHP_VERSION ?>. HTML convert time: <?php echo elapsedtime() ?> sec.
  </p>
 </div>
+<?php } // PKWK_SKIN_SHOW_FOOTER ?>
 </body>
 </html>

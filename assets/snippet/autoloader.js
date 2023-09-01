@@ -4,7 +4,7 @@
   // Get absolute path to this script
   var path = window.location.pathname; 
   path = path.replace(/site\/.*/, '').replace(/[^/]+$/, ''); 
-  var prefix = path +"public/snippet/";         
+  var prefix = path +"assets/snippet/";         
   // For local test 
   //var prefix = "";
 

@@ -5,6 +5,15 @@
 // $Revision: 1.8 $
 // $Date: 2004/11/12 14:44:12 $
 //
+# KsuWiki BEGIN
+$GLOBALS['_LINK']['login']   = SITE_URL ."?cmd=site&amp;act=login";
+$GLOBALS['_LINK']['logout']  = SITE_URL ."?cmd=site&amp;act=logout";
+$flag = defined('SITE_ADMIN') ? SITE_ADMIN : false; 
+if (! defined('PKWK_SKIN_SHOW_FOOTER'))
+	define('PKWK_SKIN_SHOW_FOOTER', $flag); // 1, 0
+$enable_login = !$flag;
+$enable_logout = $flag;
+# KsuWiki END
 
 // HTTP headers
 pkwk_common_headers();
@@ -31,12 +40,31 @@ if (arg_check('read') && exist_plugin_convert('rightbar')) {
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<?php if ($nofollow || ! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
 	<?php if ($html_meta_referrer_policy) { ?> <meta name="referrer" content="<?php echo htmlsc(html_meta_referrer_policy) ?>" /><?php } ?>
-	<link rel="stylesheet" href="<?php echo SKIN_DIR ?>default.ja.css" type="text/css" media="screen,print" charset="Shift_JIS" />
+	<link rel="stylesheet" href="<?=PKWK_HOME.SKIN_DIR?>default.ja.css" type="text/css" media="screen,print" charset="Shift_JIS" />
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" /><?php // RSS auto-discovery ?>
 	<title><?php echo "$title - $page_title" ?></title>
-	<script type="text/javascript" src="<?php echo SKIN_DIR ?>external_link.js"></script>
-	<script type="text/javascript" src="skin/main.js" defer></script>
-	<script type="text/javascript" src="skin/search2.js" defer></script>
+	<script type="text/javascript">
+	function external_link(){
+		var host_Name = location.host;
+		var host_Check;
+		var link_Href;
+
+		for(var i=0; i < document.links.length; ++i)
+		{
+			link_Href = document.links[i].host;
+			host_Check = link_Href.indexOf(host_Name,0);
+
+			if(host_Check == -1){
+				document.links[i].innerHTML = document.links[i].innerHTML 
+				+ "<img src=\"<?=PKWK_HOME.SKIN_DIR?>external_link.gif\" height=\"11px\" width=\"11px\" alt=\"[紊・・・・・・潟・・\" class=\"external_link\">";
+			}
+
+		}
+	}
+	window.onload = external_link;
+	</script>
+	<script type="text/javascript" src="<?=PKWK_HOME?>assets/skin/main.js" defer></script>
+	<script type="text/javascript" src="<?=PKWK_HOME?>assets/skin/search2.js" defer></script>
 	<?php echo $head_tag ?>
 </head>
 <body>
