@@ -1,19 +1,16 @@
-/wiki/*/attach
-/wiki/*/backup
-/wiki/*/cache
-/wiki/*/counter
-/wiki/*/diff
+/wiki/sites/*/attach
+/wiki/sites/*/backup
+/wiki/sites/*/cache
+/wiki/sites/*/counter
+/wiki/sites/*/diff
 
-/wiki/*/attach/*.[0-9]
-/wiki/*/attach/*.log
-/wiki/*/backup/*.gz
-/wiki/*/cache/*.ref
-/wiki/*/cache/*.rel
-/wiki/*/counter/*.count
-/wiki/*/counter/*.db
-
-/wiki/*/diff/*.txt
-/wiki/sites/*/*.txt
+/wiki/sites/*/attach/*.[0-9]
+/wiki/sites/*/attach/*.log
+/wiki/sites/*/backup/*.gz
+/wiki/sites/*/cache/*.ref
+/wiki/sites/*/cache/*.rel
+/wiki/sites/*/counter/*.count
+/wiki/sites/*/counter/*.db
 
 /wiki/trash/*
 
