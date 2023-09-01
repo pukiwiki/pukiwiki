@@ -77,9 +77,8 @@ define('UI_LANG', LANG); // 'en' for Internationalized wikisite
 # define('UPLOAD_DIR',    DATA_HOME . 'attach/'   ); // Attached files and logs
 # define('COUNTER_DIR',   DATA_HOME . 'counter/'  ); // Counter plugin's counts
 define('PLUGIN_DIR',    DATA_HOME . 'plugin/'   ); // Plugin directory
-
-foreach ( 
-	array(
+ # KsuWiki BEGIN
+foreach ( array(
 		'DATA_DIR'=>'wiki/',
 		'DIFF_DIR'=>'diff/',
 		'BACKUP_DIR'=>'backup/',
@@ -91,20 +90,25 @@ foreach (
 		define($item,  WIKI_DIR . SITE_TEMPLATE .'/'. $dir ); 
 	}
 }
+# KsuWiki END
 /////////////////////////////////////////////////
 // Directory settings II (ended with '/')
 
 // Skins / Stylesheets
-if (!defined('SKIN_DIR')){
+# define('SKIN_DIR', 'skin/');
+# KsuWiki
+if (!defined('SKIN_DIR')){  
 	define('SKIN_DIR', 'skin/');
 }
+# END
 // Skin files (SKIN_DIR/*.skin.php) are needed at
 // ./DATAHOME/SKIN_DIR from index.php, but
 // CSSs(*.css) and JavaScripts(*.js) are needed at
 // ./SKIN_DIR from index.php.
 
 // Static image files
-define('IMAGE_DIR', PKWK_HOME . 'image/');
+# define('IMAGE_DIR', 'image/');
+define('IMAGE_DIR', PKWK_HOME . 'image/'); # KsuWiki
 // Keep this directory shown via web browsers like
 // ./IMAGE_DIR from index.php.
 
@@ -125,10 +129,9 @@ default  :
 /////////////////////////////////////////////////
 // Title of your Wikisite (Name this)
 // Also used as RSS feed's channel name etc
-$page_title = 'PukiWiki ';
-if (defined('SITE_TITLE')) 
-	$page_title = SITE_TITLE;
-	
+# $page_title = 'PukiWiki ';
+$page_title = defined('SITE_TITLE') ? SITE_TITLE : 'PukiWiki ';  # KsuWiki 
+
 // Specify PukiWiki URL (default: auto)
 //$script = 'http://example.com/pukiwiki/';
 
