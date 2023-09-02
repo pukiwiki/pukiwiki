@@ -14,15 +14,29 @@ NAME
 
 DESCRIPTION
 
+KsuWiki is an enhanced PuwkiWiki by supporting multiple sites under a single 
+installation.
 
-FEATURES KsuWiki 
+FEATURES 
 1. Support multiple sites under a single PukiWiki installation
+2. Support 'view' and 'admin' modes 
+  - 'view' mode,  for read only, hide navigation bar and tool bar
+  - 'admin' mode, for edit after login, show navigation bar and tool bar
+3. Provide a site administration tool
+4. Reorganize the layout of files and directories
 
-2. Provide 'view' and 'admin' modes 
-  - 'view' mode for readonly, hide navigation bar and tool bar
-  - 'admin' mode for edit requring login, show navigation bar and tool bar
-
-3. Site administration tool
+INSTALL
+1. Unzip the package a suitable place,called PKWK_ROOT under DocumentRoot
+2. Enter the PKWK_ROOT, install dependencies by typing
+  `$ composer install`
+3. Change permissions and ownership of wiki folders
+   `$ sudo chown -R apache.apache wiki`
+   `$ sudo chmod -R 777 wiki`
+4. Access to wiki sites
+  (1) View site list
+    http://example.jp/ksuwiki/?cmd=site
+  (2) View a site, for instance, site1 
+    http://example.jp/ksuwiki/site/site1  
 
 DIRECTORY/FILE LAYOUT
 ^^^^^^^^^^^^^^^^^^^^^
@@ -32,29 +46,25 @@ PKWK_ROOT
 - README.txt
 - ...
 - UPDATING.txt
-
 + assets/   # NEW !
   + image/  # MOVED FROM PKWK_ROOT!
   + skin/   # MOVED FROM PKWK_ROOT!
     + default/   # NEW !
       + pukiwiki.css
       + pukiwiki.skin.php
-
     - pukiwiki.css
     - pukiwiki.skin.php
   + snippet/    # NEW ! for snipet plugin
-
 + config/
   - en.lang.php
   - ja.lang.php
   - default.ini.php
   - ksuwiki.ini.php   # NEW !
   - pukiwiki.ini.php  # UPDATED : update constant definitions
-
 + lib/
   - auth.php    # UPDATED: enable site login
   - ...
-  - init.php    # UPDATED: change path to '*.ini.php', '*.lang.php' 
+  - init.php    # UPDATED: alter path to '*.ini.php', '*.lang.php' 
   - ksuwiki.php # NEW !
   - ...
   - pukiwiki.php  
@@ -86,13 +96,10 @@ HOW DOES IT WORK?
 
 A. Store data for different sites in separate directories 
   A.1. Create 'sites' and '_template' directories under 'wiki/'
-
   A.2. Move a set of directories for original wiki site to 'wiki/_template/', as template for creating new sites 
-    attach/, backup/, cache/, counter/, diff/
-
+    attach/, backup/, cache/, counter/, diff/, wiki, wiki.en/
   A.3. Create a directory for each site (e.g., site1) under 'wiki/sites/' 　 
-    attach/, backup/, cache/, counter/, diff/ 
-
+    attach/, backup/, cache/, counter/, diff/, wiki, wiki.en/
   A.4. Create a config file, named '.site.yaml' under site directory, (e.g., 'wiki/sites/site1/') 
     title: site's title
     skin: which skin to use
@@ -116,23 +123,18 @@ B. Other Optimization
 C. New PHP scripts and related files for KsuWiki
   (1) DATA_HOME . 'index.php' (updated, add new definitions and require statement), 
     '.htaccess'(updated, add rewrite rules), 'composer.json'(new)
-
   (2) DATA_HOME . 'ksuwiki.ini.php'(new, for site initialization)
     'pukiwiki.ini.php' (updated, add site-related definition)
-
   (3) LIB . 'ksuwiki.php'(new, functions specially implemented for KsuWiki)
-
   (4) LIB . 'auth.php' (updated, allow site login)
-
   (5) PLUGIN . 'site.ini.php' (new, plugin for site administration!)
     'snippet.inc.php' (new, plugin for code syntax-highlight)
-
   (6) SKIN . 'default/' (new, per-site skin files)
  
   (7) New Contants
     PKWK_HOME, WIKI_DIR, CONF_DIR,
     SITE_ID, SITE_TITLE, SITE_URL, SITE_ADMIN,
-    ALLOW_SHOW_FOOTER (in 'pukiwiki.skin.php') 
+    PKWK_SKIN_SHOW_FOOTER (in 'pukiwiki.skin.php') 
 
 C. Dependencies
  (1) symfony/yaml
@@ -145,9 +147,8 @@ D. Site administration
   ?cmd=site                | list all sites 
   ?cmd=site&act=new        | create a new site from template
   ?cmd=site&act=setup&site_id=site1     |  modify config of site1
-  ?cmd=site&act=delete&site_id=site1    | delete site1
+  ?cmd=site&act=delete&site_id=site1    |  delete site1
   ?cmd=site&act=copy&site_id=site1      |  create a new site from site1 
   ?cmd=site&act=passwd&site_id=site1    |  change password of site1
   ?cmd=site&act=login      |  login as administrator
   ?cmd=site&act=logout     |  logout as administrator
-
