@@ -269,12 +269,12 @@ function _toolbar($key, $x = 20, $y = 20){
 </div>
 <?php } // PKWK_SKIN_SHOW_TOOLBAR ?>
 
-<?php if (PKWK_SKIN_SHOW_FOOTER) { ?>
 <!-- Footer -->
 <?php if ($lastmodified != '') { ?>
 <div id="lastmodified">Last-modified: <?php echo $lastmodified ?></div>
 <?php } ?>
 
+<?php if (PKWK_SKIN_SHOW_FOOTER) { ?>
 <?php if ($related != '') { ?>
 <div id="related">Link: <?php echo $related ?></div>
 <?php } ?>
