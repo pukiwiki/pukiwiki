@@ -72,7 +72,7 @@ function _site_form($site_id, $act='modify'){
   <input type="hidden" name="dataready" value="ok"/>
   <table class="style_table">\n
 EOD;
-  $skins = array('', 'default', 'ksu', 'bluebox', 'orangebox', 'modern');
+  $skins = array('', 'default', 'ksu', 'bluebox', 'orangebox', 'modern', 'modern_black');
   $skin_select ='<select name="skin">';
   foreach ($skins as $opt_skin){
     $selected = ($opt_skin == $skin) ? ' selected' : '';
