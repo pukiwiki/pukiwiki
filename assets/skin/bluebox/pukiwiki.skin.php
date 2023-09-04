@@ -14,6 +14,23 @@ if (! defined('PKWK_SKIN_SHOW_FOOTER'))
 $enable_login = !$flag;
 $enable_logout = $flag;
 # KsuWiki END
+//  Show / Hide topic path
+if (! defined('SKIN_DEFAULT_DISABLE_TOPICPATH'))
+	define('SKIN_DEFAULT_DISABLE_TOPICPATH', $flag); // 1, 0
+
+// Show / Hide navigation bar UI at your choice
+// NOTE: This is not stop their functionalities!
+if (! defined('PKWK_SKIN_SHOW_NAVBAR'))
+	define('PKWK_SKIN_SHOW_NAVBAR', $flag); // 1, 0
+
+// Show / Hide toolbar UI at your choice
+// NOTE: This is not stop their functionalities!
+if (! defined('PKWK_SKIN_SHOW_TOOLBAR'))
+	define('PKWK_SKIN_SHOW_TOOLBAR', $flag); // 1, 0
+
+// Show / Hide footer UI at your choice
+if (! defined('PKWK_SKIN_SHOW_FOOTER'))
+    define('PKWK_SKIN_SHOW_FOOTER', $flag); // 1, 0
 
 // HTTP headers
 pkwk_common_headers();
@@ -113,6 +130,7 @@ if (arg_check('read') && exist_plugin_convert('rightbar')) {
 </div><!-- □END id:content -->
 </div><!-- □ END id:center_bar -->
 <!-- ◆RightBar◆ ========================================================== -->
+
 <div id="right_bar"><!-- ■BEGIN id:right_bar -->
 <div id="rightbar1" class="side_bar"><!-- ■BEGIN id:rightbar1 -->
 <h2>検索</h2>
@@ -127,6 +145,8 @@ if (arg_check('read') && exist_plugin_convert('rightbar')) {
 <input name="inter" value="Google.jp" type="radio" accesskey="w" id="serch_web"/><label for="serch_web">Web</label>
 </div>
 </form></div><!-- END id:rightbar1 -->
+
+<?php if(PKWK_SKIN_SHOW_NAVBAR) { ?>
 <div id="rightbar2" class="side_bar"><!-- ■BEGIN id:rightbar2 -->
 <h2>編集操作</h2>
 <ul>
@@ -147,7 +167,10 @@ if (arg_check('read') && exist_plugin_convert('rightbar')) {
 	<?php echo $rightbar ?>
 </div>
 <?php } ?><!-- □END id:rightbar3 -->
+<?php } // PKWK_SKIN_SHOW_NAVBAR ?>
+
 </div><!-- □END id:right_bar -->
+
 <!-- ◆ LeftBar ◆ ========================================================= -->
 <div id="left_bar"><!-- ■BEGIN id:left_bar -->
 <?php if ($menu !== FALSE) { ?>
@@ -156,13 +179,16 @@ if (arg_check('read') && exist_plugin_convert('rightbar')) {
 </div><!-- □END id:menubar -->
 <?php } ?>
 </div><!-- □END id:left_bar -->
+
 <!-- ◆ Footer ◆ ========================================================== -->
+
 <div id="footer"><!-- ■BEGIN id:footer -->
+<?php if(PKWK_SKIN_SHOW_FOOTER) { ?>
 <div id="copyright"><!-- ■BEGIN id:copyright -->
 	Modified by <a href="<?php echo $modifierlink ?>"><?php echo $modifier ?></a><br />
 	<?php echo S_COPYRIGHT ?>
-
 </div><!-- □END id:copyright -->
+<?php } // PKWK_SKIN_SHOW_FOOTER ?>
 </div><!-- □END id:footer -->
 <!-- ◆ END ◆ ============================================================= -->
 </div><!-- END id:wrapper -->

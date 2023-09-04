@@ -64,7 +64,7 @@ function _site_form($site_id, $act='modify'){
       ) = $site_config;
     }
   }
-  $action = PKWK_HOME . 'site/' . SITE_ID;
+
   $body = <<<EOD
   <form action="$script" method="post">
   <input type="hidden" name="cmd" value="site" />
