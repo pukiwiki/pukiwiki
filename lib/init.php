@@ -54,8 +54,8 @@ define('MUTIME', getmicrotime());
 
 /////////////////////////////////////////////////
 // Require INI_FILE
-
-define('INI_FILE',  DATA_HOME . 'pukiwiki.ini.php');
+# define('INI_FILE',  DATA_HOME . 'pukiwiki.ini.php');
+define('INI_FILE',  CONF_DIR . 'pukiwiki.ini.php'); # KsuWiki
 $die = '';
 if (! file_exists(INI_FILE) || ! is_readable(INI_FILE)) {
 	$die .= 'File is not found. (INI_FILE)' . "\n";
@@ -115,8 +115,11 @@ mb_detect_order('auto');
 /////////////////////////////////////////////////
 // INI_FILE: Require LANG_FILE
 
-define('LANG_FILE_HINT', DATA_HOME . LANG . '.lng.php');	// For encoding hint
-define('LANG_FILE',      DATA_HOME . UI_LANG . '.lng.php');	// For UI resource
+# define('LANG_FILE_HINT', DATA_HOME . LANG . '.lng.php');	// For encoding hint
+# define('LANG_FILE',      DATA_HOME . UI_LANG . '.lng.php');	// For UI resource
+define('LANG_FILE_HINT', CONF_DIR . LANG . '.lng.php');	// For KsuWiki
+define('LANG_FILE',      CONF_DIR . UI_LANG . '.lng.php');	// For KsuWiki
+
 $die = '';
 foreach (array('LANG_FILE_HINT', 'LANG_FILE') as $langfile) {
 	if (! file_exists(constant($langfile)) || ! is_readable(constant($langfile))) {
@@ -176,7 +179,8 @@ unset($agents, $matches);
 // Profile-related init and setting
 define('UA_PROFILE', isset($user_agent['profile']) ? $user_agent['profile'] : '');
 
-define('UA_INI_FILE', DATA_HOME . UA_PROFILE . '.ini.php');
+# define('UA_INI_FILE', DATA_HOME . UA_PROFILE . '.ini.php');
+define('UA_INI_FILE', CONF_DIR . UA_PROFILE . '.ini.php'); # For KsuWiki
 if (! file_exists(UA_INI_FILE) || ! is_readable(UA_INI_FILE)) {
 	die_message('UA_INI_FILE for "' . UA_PROFILE . '" not found.');
 } else {
@@ -454,7 +458,8 @@ $NotePattern = '/\(\(((?:(?>(?:(?!\(\()(?!\)\)(?:[^\)]|$)).)+)|(?R))*)\)\)/x'
 
 /////////////////////////////////////////////////
 // 初期設定(ユーザ定義ルール読み込み)
-require(DATA_HOME . 'rules.ini.php');
+# require(DATA_HOME . 'rules.ini.php');
+require(CONF_DIR . 'rules.ini.php'); # For KsuWiki
 
 /////////////////////////////////////////////////
 // Load HTML Entity pattern

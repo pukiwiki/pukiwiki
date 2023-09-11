@@ -1,0 +1,34 @@
+#freeze
+#norelated
+* PukiWiki
+
+- https://pukiwiki.osdn.jp/
+- https://osdn.jp/projects/pukiwiki/
+
+PukiWiki is one of the WikiEngines ,which enables everyone to edit any pages.
+
+And ,without your learning special knowledge, fomatted sentenses are created just by following the text formatting rule which is easy to understand.
+
+- Written in PHP.
+- 2 bytes character:Kanji is supported. 
+- InterWiki function is supported.
+- Periodic Backup is supported.
+- All data are stored in text format.
+- Distributed under GPL(( https://www.gnu.org/licenses/gpl.html )).
+
+** Links
+
+- [[PukiWiki-official:https://pukiwiki.osdn.jp/]] - PukiWiki official site
+-- Questions and comments are welcomed :)
+
+- Pukiwiki-dev - https://pukiwiki.osdn.jp/dev/
+-- PukiWiki official site for development. We develop next versions, maintain or security fix of older releases here.
+-- Our daily works are logged at [[Developer Diaries>https://pukiwiki.osdn.jp/dev/?%B3%AB%C8%AF%C6%FC%B5%AD]] (Sorry for  mainly in Japanese)
+
+- https://osdn.jp/projects/pukiwiki/
+-- Project summary of OSDN. You can download PukiWiki here.
+
+** Related pages [#zf685513]
+
+#ls2
+- [[InterWikiName]] -- Server list of [[InterWiki]]

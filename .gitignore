@@ -1,27 +1,33 @@
-/wiki
-/attach
-/backup
-/cache
-/counter
-/diff
+/wiki/sites/*/attach
+/wiki/sites/*/backup
+/wiki/sites/*/cache
+/wiki/sites/*/counter
+/wiki/sites/*/diff
 
-/attach/*.[0-9]
-/attach/*.log
-/backup/*.gz
-/cache/*.ref
-/cache/*.rel
-/counter/*.count
-/counter/*.db
+/wiki/sites/*/attach/*.[0-9]
+/wiki/sites/*/attach/*.log
+/wiki/sites/*/backup/*.gz
+/wiki/sites/*/cache/*.ref
+/wiki/sites/*/cache/*.rel
+/wiki/sites/*/counter/*.count
+/wiki/sites/*/counter/*.db
 
-/diff/*.txt
-/wiki/*.txt
-/wiki.en/*.txt
+/wiki/_template/attach/*.[0-9]
+/wiki/_template/attach/*.log
+/wiki/_template/backup/*.gz
+/wiki/_template/cache/*.ref
+/wiki/_template/cache/*.rel
+/wiki/_template/counter/*.count
+/wiki/_template/counter/*.db
+
+/wiki/trash/*
 
 /nbproject/**
 /.vscode/
 
 # Composer files
 /vendor/
+composer.lock
 
 # Log
 /log/

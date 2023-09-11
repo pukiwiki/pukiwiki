@@ -1,0 +1,331 @@
+﻿@charset "UTF-8";
+/* 
+   $Date: 2004/11/21 12:48:09 $
+   $RCSfile: plugin.css,v $
+*/
+
+/* ExternalLink (skin/orangebox/external_link.js)
+----------------------------------------------------------------------------- */
+.external_link{
+	margin:0px 8px 0px 3px;
+}
+
+/* EditForm
+----------------------------------------------------------------------------- */
+.edit_form{
+	clear:both;
+}
+div.edit_form textarea{
+	font-size:13pt;
+	width:95%;
+	min-width:99%;
+}
+
+/* EditPreview
+----------------------------------------------------------------------------- */
+div#preview{
+	background-color:#ffffcc;
+	margin-bottom:20px;
+	border-right:solid 2px #ccc;
+	border-bottom:solid 2px #ccc;
+}
+
+/* Paragraph Link
+----------------------------------------------------------------------------- */
+.anchor_super{
+	font-size:0.4em;
+	vertical-align:40%;
+}
+.super_index{
+	color:#f90;
+	font-size:0.4em;
+	vertical-align:40%;
+}
+div.side_bar a.anchor_super{
+	display:none;
+}
+div.jumpmenu{
+	font-size:0.6em;
+	text-align:right;
+	float:right;
+}
+div.jumpmenu a{
+	text-decoration:none;
+}
+
+/* Note
+----------------------------------------------------------------------------- */
+.note_super{
+	font-size:0.6em;
+	vertical-align:30%;
+}
+/* Diff
+------------------------------------------------------------------------------*/
+span.diff_added{
+	color:blue;
+}
+span.diff_removed{
+	color:red;
+}
+
+/* Serch
+----------------------------------------------------------------------------- */
+strong.word0{
+	background-color:#FFFF66;
+}
+strong.word1{
+	background-color:#A0FFFF;
+}
+strong.word2{
+	background-color:#99FF99;
+}
+strong.word3{
+	background-color:#FF9999;
+}
+strong.word4{
+	background-color:#FF66FF;
+}
+strong.word5{
+	background-color:#880000;
+	color:white;
+}
+strong.word6{
+	background-color:#00AA00;
+	color:white;
+}
+strong.word7{
+	background-color:#886800;
+	color:white;
+}
+strong.word8{
+	background-color:#004699;
+	color:white;
+}
+strong.word9{
+	background-color:#990099;
+	color:white;
+}
+
+/* Amazon (amazon.inc.phpの改造)
+----------------------------------------------------------------------------- */
+.amazon{
+	padding:.5em 1.5em .5em 1.5em;
+	text-align:center
+}
+div.side_bar div.amazon{
+	margin-top:0.5em;
+	padding:0px;
+}
+
+/* Calender (calendar*.inc.php)
+----------------------------------------------------------------------------- */
+table.style_calendar{
+	width:200px;
+	height:230px;
+	border:solid 1px #ccc;
+	background-color:#ccc;
+	text-align:center;
+	font-size:15px;
+}
+td.style_td_caltop{
+	background-color:#fff;
+	text-align:center;
+}
+td.style_td_today{
+	background-color:#ff9;
+	text-align:center;
+}
+td.style_td_sat{
+	background-color:#ddd;
+	text-align:center;
+}
+td.style_td_sun{
+	background-color:#fdd;
+	text-align:center;
+}
+td.style_td_blank{
+	background-color:#fff;
+	text-align:center;
+}
+td.style_td_day{
+	background-color:#eee;
+	text-align:center;
+}
+td.style_td_week{
+	color:#666;
+	background-color:#ccc;
+	font-weight:bold;
+	text-align:center;
+}
+table.style_calendar a{
+	color:black;
+	text-decoration:none;
+}
+table.style_calendar a strong{
+	color:#f60;
+	text-decoration:underline;
+}
+table.style_calendar a:hover strong{
+	color:#666;
+}
+
+div.side_bar table.style_calendar{
+	border:none;
+	text-align:center;
+	font-size:14px;
+	background-color:transparent;
+	width:83%;
+	height:auto;
+	min-width:99%;
+	margin:0px auto;
+}
+div.side_bar table.style_calendar a{
+	color:black;
+	background-color:transparent;
+	text-decoration:none;
+}
+div.side_bar table.style_calendar a strong{
+	color:#666;
+	text-decoration:underline;
+}
+div.side_bar td.style_td_caltop{
+	text-align:center;
+	background-color:transparent;
+}
+div.side_bar td.style_td_week{
+	color:#000;
+	text-align:center;
+	font-weight:normal;
+	background-color:transparent;
+}
+div.side_bar td.style_td_sat{
+	text-align:center;
+	background-color:transparent;
+}
+div.side_bar td.style_td_sun{
+	text-align:center;
+	background-color:transparent;
+}
+div.side_bar td.style_td_blank{
+	text-align:center;
+	background-color:transparent;
+}
+div.side_bar td.style_td_day{
+	text-align:center;
+	background-color:transparent;
+}
+div.side_bar td.style_td_today{
+	text-align:center;
+	background-color:transparent;
+}
+
+/* Clear (clear.inc.php)
+----------------------------------------------------------------------------- */
+.clear{
+	clear:both;
+}
+
+
+/* Contents (contents.inc.php)
+----------------------------------------------------------------------------- */
+div.contents{
+	border:solid 1px #999;
+	border-right:none;
+	border-bottom:solid 1px #fff;
+	width:60%;
+	margin:15px 0px;
+}
+div.contents:before{
+	content:"もくじ";
+	color:#fff;
+	background-color:#999;
+	font-size:12px;
+	font-weight:bold;
+	line-height:1em;
+	display:block;
+	width:3.5em;
+	text-align:center;
+	padding:2px;
+}
+div.contents ul{
+	margin:7px 0px 15px;
+}
+
+/* Counter (counter.inc.php)
+----------------------------------------------------------------------------- */
+div.counter{
+	font-size:70%;
+}
+
+/* Hr (hr.inc.php)
+----------------------------------------------------------------------------- */
+hr.short_line{
+	text-align:center;
+	width:80%;
+	margin:0px auto;
+}
+
+/* Image (ref.inc.php)
+----------------------------------------------------------------------------- */
+div.img_margin{
+	margin-left:32px;
+	margin-right:32px;
+}
+
+/* Incluede (include.inc.php)
+----------------------------------------------------------------------------- */
+h5.side_label{
+	text-align:center;
+}
+
+/* Navi (navi.inc.php)
+----------------------------------------------------------------------------- */
+ul.navi{
+	text-align:center;
+}
+li.navi_none{
+	display:inline;
+	float:none;
+}
+li.navi_left{
+	display:inline;
+	float:left;
+	text-align:left;
+}
+li.navi_right{
+	display:inline;
+	float:right;
+	text-align:right;
+}
+
+/* New (new.inc.php)
+----------------------------------------------------------------------------- */
+span.comment_date{
+	font-size:x-small;
+}
+span.new1{
+	color:red;
+	font-size:x-small;
+}
+span.new5{
+	color:green;
+	font-size:xx-small;
+}
+
+/* Popular (popular.inc.php)
+----------------------------------------------------------------------------- */
+span.counter{
+	font-size:1em;
+}
+
+/* vote.inc.php
+----------------------------------------------------------------------------- */
+td.vote_label{
+	background-color:#FFCCCC;
+}
+td.vote_td1{
+	background-color:#DDE5FF;
+}
+td.vote_td2{
+	background-color:#EEF5FF;
+}

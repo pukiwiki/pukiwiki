@@ -1,0 +1,21 @@
+{   
+    "name": "kinota93/ksuwiki",
+    "description": "A pukiwiki variant with multiple site support, based on pukiwiki 1.5.4-utf8",
+    "keywords": ["wiki", "pukiwiki", "multiple sites"],
+    "homepage": "https://github.com/kinota93/pukiwiki",
+    "type": "library",
+    "version": "1.5.4",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "kinota93",
+            "email": "knota93@gmail.com",
+            "homepage": "http://www.kinota93.io"
+        }
+    ],
+
+    "require": {
+        "symfony/yaml": "^5.0", 
+        "bramus/router": ">=1.6"
+    }
+}

@@ -367,7 +367,7 @@ class ListContainer extends Element
 		return $this->wrap(parent::toString(), $this->tag, $this->style);
 	}
 }
-
+#[AllowDynamicProperties]
 class ListElement extends Element
 {
 	function ListElement($level, $head)

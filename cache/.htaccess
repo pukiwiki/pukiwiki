@@ -1,6 +1,0 @@
-Require all denied
-
-# Amazon plugin's Image cache
-<FilesMatch "^ASIN.*\.jpg$">
-  Require all granted
-</FilesMatch>

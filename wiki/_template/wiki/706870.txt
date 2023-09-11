@@ -1,0 +1,12 @@
+[[FrontPage]]
+
+#code(php){{
+<html>
+<?php
+echo phpinfo();
+for ($i=0;$i <100; $i++){
+ print ($i);
+}
+?>
+</html>
+}}

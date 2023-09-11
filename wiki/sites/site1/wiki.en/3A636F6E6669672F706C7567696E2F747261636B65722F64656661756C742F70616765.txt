@@ -1,0 +1,15 @@
+#freeze
+* [Summary]
+-Page:     [_refer]
+-Proposer: [Proposer]
+-Severity: [Severity]
+-Status:   [Status]
+-Category: [Category]
+-Posted:   [_date]
+-Version:  [Version]
+
+** Messages
+[Messages]
+----
+
+#comment

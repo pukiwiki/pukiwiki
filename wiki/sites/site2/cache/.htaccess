@@ -1,0 +1,7 @@
+Order allow,deny
+Deny from all
+
+# Amazon plugin's Image cache
+<FilesMatch "^ASIN.*\.jpg$">
+	Allow from all
+</FilesMatch>

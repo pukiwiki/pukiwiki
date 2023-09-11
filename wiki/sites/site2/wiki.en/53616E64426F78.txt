@@ -1,0 +1,100 @@
+#freeze
+#norelated
+* SandBox: A page for your practice of editing [#o00a2b58]
+
+| NOTE: This page is now freezed due to anti SEO-SPAMming by default |
+
+#contents
+
+* Heading 1 [#vbd41e7f]
+** Heading 1-1 [#kfb7ed51]
+*** Heading1-1-1 [#r4f19051]
+- Item 1
+- Item 2
+- Item 3
+
+Paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 ''emphasis'' paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+
+Paragraph 2 paragraph 2 paragraph 2 paragraph 2 paragraph 2 
+paragraph 2 paragraph 2 paragraph 2 paragraph 2 paragraph 2 
+paragraph 2 paragraph 2 paragraph 2 paragraph 2 paragraph 2 
+
+** Heading 1-2 [#v25da732]
+:Term 1|Someting described, and ''Emphatic words'' ((Foot note 1. WikiName.))
+Paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+:Term 2|Someting described 2((Foot note 2. [[BracketName]]. ))
+:Term 3|Someting described 3((Foot note 3. It's disable ((footnotes)) in a footnote.))
+----
+* Heading2 [#e330e49e]
+** Heading 2-1 [#jdc9672d]
+https://pukiwiki.osdn.jp/
+** Heading2-2 [#ge656fc5]
+
+[[FrontPage]]
+
+Paragraph 1 paragraph 1 paragraph 1 paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 ''Italic'' paragraph 1 paragraph 1 
+paragraph 1 paragraph 1 '''''Italic Bold'''''paragraph 1 paragraph 1 
+>Paragraph 2 paragraph 2 paragraph 2 paragraph 2 paragraph 2 
+>paragraph 2 paragraph 2 paragraph 2 paragraph 2 paragraph 2 
+>paragraph 2 paragraph 2 paragraph 2 paragraph 2 paragraph 2 
+
+Level 0 level 0 level 0 level 0 level 0 level 0
+
+>Level 1
+>Level 1
+>Level 1
+>>Level 2
+>>Level 2
+>>Level 2
+>>>Level 3
+- Hello 1
+-- Hello 2
+lolololo2
+--- Hello 3
+-- Hello 2
+--- Hello 3
+-- Hello 2
+--- Hello 3
+>>>Level 3
+>>>Level 3
+>>>Level 3
+
+- Date 2001-12-06
+- Time 15:00:08
+- Date-and-time 2001-12-06 (Thu) 15:00:08
+
+- Auto hyperlink
+-- URL suffix seems a image, show it as an inline image
+--- https://pukiwiki.osdn.jp/image/b_pukiwiki-official.png
+-- Home
+--- http://example.org/
+-- Mail address
+--- info@example.org
+
+ Preformatted text preformatted text preformatted text 
+ Preformatted text preformatted text preformatted text 
+
+ date?
+2001-12-06
+ time?
+15:00:37
+ now?
+2001-12-06 (Thu) 15:00:37
+
+COLOR(#993333){ Enable to change text coloring (COLOR(#993333)) }
+
+SIZE(10){ Enable to change text size (SIZE(10)) }
+
+SIZE(20){ COLOR(#333399){ Specifying both (SIZE(20)COLOR(#333399)) } }
+
+%%Delete line%%
+
+Align-left
+CENTER:Align-center
+RIGHT:Align-right
