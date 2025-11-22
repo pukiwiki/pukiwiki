@@ -16,6 +16,45 @@
 
     var isSaving = false; // 保存中フラグ
 
+    // トースト通知を表示する関数
+    function showAutosaveNotification(message) {
+        // 既存の通知があれば削除
+        var existingToast = document.getElementById('autosave_toast');
+        if (existingToast) {
+            existingToast.remove();
+        }
+
+        // トースト要素を作成
+        var toast = document.createElement('div');
+        toast.id = 'autosave_toast';
+        toast.style.cssText = 'position: fixed; top: 20px; right: 20px; ' +
+            'background-color: #dff0d8; border: 1px solid #d6e9c6; color: #3c763d; ' +
+            'padding: 15px 20px; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); ' +
+            'z-index: 10000; font-size: 14px; animation: slideIn 0.3s ease-out;';
+        toast.textContent = message;
+
+        // アニメーションのスタイルを追加
+        if (!document.getElementById('autosave_toast_style')) {
+            var style = document.createElement('style');
+            style.id = 'autosave_toast_style';
+            style.textContent = '@keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }' +
+                '@keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(400px); opacity: 0; } }';
+            document.head.appendChild(style);
+        }
+
+        document.body.appendChild(toast);
+
+        // 3秒後にフェードアウトして削除
+        setTimeout(function () {
+            toast.style.animation = 'slideOut 0.3s ease-in';
+            setTimeout(function () {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 300);
+        }, 3000);
+    }
+
     setInterval(function () {
         // 既存下書き通知が表示されている場合は自動保存しない（問題#2対策）
         var draftNotice = document.getElementById('draft_notice');
@@ -66,6 +105,9 @@
                             var time = hours + ':' + minutes;
                             if (status) status.textContent = messages.saved + time;
                             lastContent = contentToSave; // 保存開始時点の内容で更新
+
+                            // トースト通知を表示
+                            showAutosaveNotification(messages.saved + time);
                         } else {
                             // 失敗時は.alert-dangerが含まれる
                             if (status) status.textContent = messages.failed;
