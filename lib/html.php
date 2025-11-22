@@ -472,6 +472,11 @@ $template
   <input type="hidden" name="page"   value="$s_page" />
   <input type="submit" name="cancel" value="$_btn_cancel" accesskey="c" />
  </form>
+</div>
+EOD;
+
+	// Autosave JavaScript
+	$body .= <<<EOD
  <script type="text/javascript">
  window.AUTOSAVE_MESSAGES = {
   saving: {$autosave_msg_saving},
@@ -481,7 +486,6 @@ $template
  };
  </script>
  <script type="text/javascript" src="skin/js/autosave.js"></script>
-</div>
 EOD;
 
 	$body .= '<ul><li><a href="' .
