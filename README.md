@@ -230,7 +230,12 @@ GPL v2 or later (PukiWiki本体と同じライセンス)
 
 ## 詳細ドキュメント
 
-より詳細な技術情報については、`DRAFT_FEATURE.md` を参照してください。
+より詳細な技術情報や開発関連ドキュメントは、`.claude/docs/` ディレクトリを参照してください。
+
+- [DRAFT_FEATURE.md](.claude/docs/DRAFT_FEATURE.md): 下書き機能の詳細仕様
+- [TODO.md](.claude/docs/TODO.md): 開発タスクと進捗状況
+- [RELEASE_NOTES_v1.1.0.md](.claude/docs/RELEASE_NOTES_v1.1.0.md): v1.1.0 リリースノート
+- [LOCAL_SETUP.md](.claude/docs/LOCAL_SETUP.md): ローカル開発環境セットアップガイド
 
 ---
 
