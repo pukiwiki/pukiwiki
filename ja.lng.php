@@ -455,3 +455,24 @@ $_external_link_messages = array(
 	'desc' => '選択されたURLは本サイトのコンテンツではありません。',
 	'wait_n_seconds' => '%s 秒後に自動的に移動します。',
 );
+
+///////////////////////////////////////
+// draft.inc.php / draft library
+$_msg_draft_not_found = '下書きはありません。';
+$_msg_draft_saved = '下書きを保存しました。';
+$_msg_draft_deleted = '下書きを削除しました。';
+$_msg_draft_published = '下書きを公開しました。';
+$_msg_draft_delete_confirm = 'この下書きを削除しますか?';
+$_msg_draft_publish_confirm = 'この下書きを公開しますか?';
+$_msg_draft_save_error = '下書きの保存に失敗しました。';
+$_msg_draft_delete_error = '下書きの削除に失敗しました。';
+$_msg_draft_publish_error = '下書きの公開に失敗しました。';
+$_msg_draft_loaded = '下書きを読み込みました。';
+$_msg_draft_exists = '下書きが保存されています';
+$_msg_draft_restore = '下書きから復帰';
+$_msg_draft_save = '下書き保存';
+$_msg_draft_list = '下書き一覧';
+$_msg_draft_edit = '編集';
+$_msg_draft_publish = '公開';
+$_msg_draft_delete = '削除';
+$_msg_draft_invalid_action = '不正な操作です。';
