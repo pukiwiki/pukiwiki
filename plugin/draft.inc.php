@@ -73,6 +73,8 @@ function plugin_draft_list()
 			$time_str = format_date($time);
 			$page_link = make_pagelink($page);
 			$edit_link = $script . '?cmd=edit&amp;page=' . rawurlencode($page) . '&amp;load_draft=true';
+			$confirm_publish = htmlsc(json_encode($_msg_draft_publish_confirm));
+			$confirm_delete  = htmlsc(json_encode($_msg_draft_delete_confirm));
 			
 			// Publish form
 			$publish_form = '<form action="' . $script . '" method="post" style="display:inline">' .
@@ -80,7 +82,7 @@ function plugin_draft_list()
 				'<input type="hidden" name="action" value="publish" />' .
 				'<input type="hidden" name="page" value="' . htmlsc($page) . '" />' .
 				'<input type="hidden" name="ticket" value="' . $ticket . '" />' .
-				'<input type="submit" value="' . $_msg_draft_publish . '" onclick="return confirm(\'' . $_msg_draft_publish_confirm . '\')" />' .
+				'<input type="submit" value="' . $_msg_draft_publish . '" onclick="return confirm(' . $confirm_publish . ')" />' .
 				'</form>';
 
 			// Delete form
@@ -89,7 +91,7 @@ function plugin_draft_list()
 				'<input type="hidden" name="action" value="delete" />' .
 				'<input type="hidden" name="page" value="' . htmlsc($page) . '" />' .
 				'<input type="hidden" name="ticket" value="' . $ticket . '" />' .
-				'<input type="submit" value="' . $_msg_draft_delete . '" onclick="return confirm(\'' . $_msg_draft_delete_confirm . '\')" />' .
+				'<input type="submit" value="' . $_msg_draft_delete . '" onclick="return confirm(' . $confirm_delete . ')" />' .
 				'</form>';
 
 			$body .= '<li>';

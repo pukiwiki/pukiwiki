@@ -397,6 +397,7 @@ EOD;
 	$draft_save_onclick = '';
 	if ($has_draft && !$hide_draft_notice) {
 		$draft_time = format_date(get_draft_filetime($page));
+		$confirm_overwrite = htmlsc(json_encode($_msg_draft_overwrite_confirm));
 		$draft_notice = <<<EOD
 <div class="alert alert-info" style="margin:10px 0; padding:10px; background-color:#d9edf7; border:1px solid #bce8f1; color:#31708f;">
 	<span>$_msg_draft_exists ($draft_time)</span>
@@ -408,7 +409,7 @@ EOD;
 </div>
 EOD;
 		// Add confirmation dialog for draft overwrite
-		$draft_save_onclick = ' onclick="return confirm(\'' . $_msg_draft_overwrite_confirm . '\');"';
+		$draft_save_onclick = ' onclick="return confirm(' . $confirm_overwrite . ');"';
 	}
 
 	// Checkbox 'do not change timestamp'
