@@ -432,8 +432,9 @@ EOD;
 
 	// 'margin-bottom', 'float:left', and 'margin-top'
 	// are for layout of 'cancel button'
-	$h_msg_edit_cancel_confirm = htmlsc($_msg_edit_cancel_confirm);
-	$h_msg_edit_unloadbefore_message = htmlsc($_msg_edit_unloadbefore_message);
+		$h_msg_edit_cancel_confirm = htmlsc($_msg_edit_cancel_confirm);
+		$h_msg_edit_unloadbefore_message = htmlsc($_msg_edit_unloadbefore_message);
+		$ticket_value = htmlsc(get_ticket());
 	$body = <<<EOD
 <div class="edit_form">
 $draft_notice
@@ -443,7 +444,7 @@ $template
   <input type="hidden" name="cmd"    value="edit" />
   <input type="hidden" name="page"   value="$s_page" />
   <input type="hidden" name="digest" value="$s_digest" />
-  <input type="hidden" name="ticket" value="<?= get_ticket() ?>" />
+  <input type="hidden" name="ticket" value="$ticket_value" />
   <input type="hidden" id="_msg_edit_cancel_confirm" value="$h_msg_edit_cancel_confirm" />
   <input type="hidden" id="_msg_edit_unloadbefore_message" value="$h_msg_edit_unloadbefore_message" />
   <textarea name="msg" rows="$rows" cols="$cols">$s_postdata</textarea>

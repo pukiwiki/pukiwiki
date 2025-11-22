@@ -534,7 +534,7 @@ $preformat_ltrim = 1;
 
 /////////////////////////////////////////////////
 // Convert linebreaks into <br />
-$line_break = 0;
+$line_break = 1;
 
 /////////////////////////////////////////////////
 // Use date-time rules (See rules.ini.php)

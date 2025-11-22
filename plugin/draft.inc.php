@@ -76,17 +76,16 @@ function plugin_draft_list()
 			$confirm_publish = htmlsc(json_encode($_msg_draft_publish_confirm));
 			$confirm_delete  = htmlsc(json_encode($_msg_draft_delete_confirm));
 			
-			// Publish form
-			$publish_form = '<form action="' . $script . '" method="post" style="display:inline">' .
-				'<input type="hidden" name="cmd" value="draft" />' .
-				'<input type="hidden" name="action" value="publish" />' .
+			// Edit form
+			$edit_form = '<form action="' . $script . '" method="get" style="display:inline-block; margin:0;">' .
+				'<input type="hidden" name="cmd" value="edit" />' .
 				'<input type="hidden" name="page" value="' . htmlsc($page) . '" />' .
-				'<input type="hidden" name="ticket" value="' . $ticket . '" />' .
-				'<input type="submit" value="' . $_msg_draft_publish . '" onclick="return confirm(' . $confirm_publish . ')" />' .
+				'<input type="hidden" name="load_draft" value="true" />' .
+				'<input type="submit" value="' . $_msg_draft_edit . '" />' .
 				'</form>';
 
 			// Delete form
-			$delete_form = '<form action="' . $script . '" method="post" style="display:inline">' .
+			$delete_form = '<form action="' . $script . '" method="post" style="display:inline-block; margin:0; margin-left:4px;">' .
 				'<input type="hidden" name="cmd" value="draft" />' .
 				'<input type="hidden" name="action" value="delete" />' .
 				'<input type="hidden" name="page" value="' . htmlsc($page) . '" />' .
@@ -97,9 +96,10 @@ function plugin_draft_list()
 			$body .= '<li>';
 			$body .= $page_link;
 			$body .= ' (' . $time_str . ')';
-			$body .= ' [<a href="' . $edit_link . '">' . $_msg_draft_edit . '</a>]';
-			$body .= ' ' . $publish_form;
-			$body .= ' ' . $delete_form;
+			$body .= '<div style="margin-top:4px; margin-bottom:8px;">';
+			$body .= $edit_form;
+			$body .= $delete_form;
+			$body .= '</div>';
 			$body .= '</li>';
 		}
 		$body .= '</ul>';
