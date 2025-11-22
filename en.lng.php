@@ -480,4 +480,10 @@ $_msg_draft_conflict_body = 'The page was updated after this draft was saved. Pl
 $_msg_draft_conflict_diff = 'Diff';
 $_btn_draft_force_publish = 'Force publish';
 $_msg_draft_force_publish_confirm = 'Publish this draft and overwrite changes?';
+
+// Autosave messages
+$_msg_draft_autosave_saving = 'Saving...';
+$_msg_draft_autosave_saved = 'Auto-saved at ';
+$_msg_draft_autosave_failed = 'Auto-save failed';
+$_msg_draft_autosave_error = 'Auto-save error';
 ?>

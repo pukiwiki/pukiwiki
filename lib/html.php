@@ -339,6 +339,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE, $hide_
 	global $notimeupdate;
 	global $_msg_edit_cancel_confirm, $_msg_edit_unloadbefore_message;
 	global $_msg_draft_exists, $_msg_draft_restore, $_msg_draft_overwrite_confirm, $_msg_draft_save_button;
+	global $_msg_draft_autosave_saving, $_msg_draft_autosave_saved, $_msg_draft_autosave_failed, $_msg_draft_autosave_error;
 	global $rule_page;
 
 	$script = get_base_uri();
@@ -399,7 +400,7 @@ EOD;
 		$draft_time = format_date(get_draft_filetime($page));
 		$confirm_overwrite = htmlsc(json_encode($_msg_draft_overwrite_confirm));
 		$draft_notice = <<<EOD
-<div class="alert alert-info" style="margin:10px 0; padding:10px; background-color:#d9edf7; border:1px solid #bce8f1; color:#31708f;">
+<div id="draft_notice" class="alert alert-info" style="margin:10px 0; padding:10px; background-color:#d9edf7; border:1px solid #bce8f1; color:#31708f;">
 	<span>$_msg_draft_exists ($draft_time)</span>
 	<form action="$script" method="post" style="display:inline; margin:0;">
 		<input type="hidden" name="cmd" value="edit" />
@@ -435,6 +436,13 @@ EOD;
 		$h_msg_edit_cancel_confirm = htmlsc($_msg_edit_cancel_confirm);
 		$h_msg_edit_unloadbefore_message = htmlsc($_msg_edit_unloadbefore_message);
 		$ticket_value = htmlsc(get_ticket());
+
+	// Autosave messages for JavaScript
+	$autosave_msg_saving = json_encode($_msg_draft_autosave_saving);
+	$autosave_msg_saved = json_encode($_msg_draft_autosave_saved);
+	$autosave_msg_failed = json_encode($_msg_draft_autosave_failed);
+	$autosave_msg_error = json_encode($_msg_draft_autosave_error);
+
 	$body = <<<EOD
 <div class="edit_form">
 $draft_notice
@@ -453,6 +461,7 @@ $template
    <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
    <input type="submit" name="write"   value="$_btn_update" accesskey="s" />
    <input type="submit" name="draft_save" value="$_msg_draft_save_button" accesskey="d" style="margin-left:10px;"$draft_save_onclick />
+   <span id="autosave_status" style="margin-left:10px; font-size:small; color:gray;"></span>
    $add_top
    $add_notimestamp
   </div>
@@ -464,6 +473,19 @@ $template
   <input type="submit" name="cancel" value="$_btn_cancel" accesskey="c" />
  </form>
 </div>
+EOD;
+
+	// Autosave JavaScript
+	$body .= <<<EOD
+ <script type="text/javascript">
+ window.AUTOSAVE_MESSAGES = {
+  saving: {$autosave_msg_saving},
+  saved: {$autosave_msg_saved},
+  failed: {$autosave_msg_failed},
+  error: {$autosave_msg_error}
+ };
+ </script>
+ <script type="text/javascript" src="skin/js/autosave.js"></script>
 EOD;
 
 	$body .= '<ul><li><a href="' .
