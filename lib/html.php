@@ -338,6 +338,7 @@ function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE, $hide_
 	global $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
 	global $_msg_edit_cancel_confirm, $_msg_edit_unloadbefore_message;
+	global $_msg_draft_exists, $_msg_draft_restore, $_msg_draft_overwrite_confirm, $_msg_draft_save_button;
 	global $rule_page;
 
 	$script = get_base_uri();
@@ -398,16 +399,16 @@ EOD;
 		$draft_time = format_date(get_draft_filetime($page));
 		$draft_notice = <<<EOD
 <div class="alert alert-info" style="margin:10px 0; padding:10px; background-color:#d9edf7; border:1px solid #bce8f1; color:#31708f;">
-	<span>下書きが保存されています ($draft_time)</span>
+	<span>$_msg_draft_exists ($draft_time)</span>
 	<form action="$script" method="post" style="display:inline; margin:0;">
 		<input type="hidden" name="cmd" value="edit" />
 		<input type="hidden" name="page" value="$s_page" />
-		<input type="submit" name="load_draft" value="下書きから復帰" style="padding:2px 10px; margin-left:10px;" />
+		<input type="submit" name="load_draft" value="$_msg_draft_restore" style="padding:2px 10px; margin-left:10px;" />
 	</form>
 </div>
 EOD;
 		// Add confirmation dialog for draft overwrite
-		$draft_save_onclick = ' onclick="return confirm(\'すでに保存されている下書きがあります。下書きを上書き保存しますか？\');"';
+		$draft_save_onclick = ' onclick="return confirm(\'' . $_msg_draft_overwrite_confirm . '\');"';
 	}
 
 	// Checkbox 'do not change timestamp'
@@ -448,7 +449,7 @@ $template
   <div style="float:left;">
    <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
    <input type="submit" name="write"   value="$_btn_update" accesskey="s" />
-   <input type="submit" name="draft_save" value="下書き保存" accesskey="d" style="margin-left:10px;"$draft_save_onclick />
+   <input type="submit" name="draft_save" value="$_msg_draft_save_button" accesskey="d" style="margin-left:10px;"$draft_save_onclick />
    $add_top
    $add_notimestamp
   </div>
