@@ -484,4 +484,10 @@ $_msg_draft_force_publish_confirm = '衝突を無視して公開します。よ�
 
 $_msg_draft_overwrite_confirm = 'すでに保存されている下書きがあります。下書きを上書き保存しますか？';
 $_msg_draft_save_button      = '下書き保存';
+
+// Autosave messages
+$_msg_draft_autosave_saving = '保存中...';
+$_msg_draft_autosave_saved = '自動保存完了: ';
+$_msg_draft_autosave_failed = '自動保存に失敗しました';
+$_msg_draft_autosave_error = '自動保存エラー';
 ?>
