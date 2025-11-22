@@ -154,7 +154,8 @@ function plugin_draft_publish()
 {
 	global $vars, $script;
 	global $_msg_draft_published, $_msg_draft_publish_error, $_msg_draft_publish, $_msg_draft_list;
-	global $_msg_draft_not_found, $_msg_draft_invalid_action;
+	global $_msg_draft_not_found, $_msg_draft_invalid_action, $_msg_draft_conflict_title, $_msg_draft_conflict_body;
+	global $_msg_draft_edit;
 
 	if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !check_ticket()) {
 		return array(
@@ -175,16 +176,51 @@ function plugin_draft_publish()
 	check_editable($page, true, true);
 
 	// Get draft content
-	$postdata = get_draft($page, TRUE, TRUE);
-	if ($postdata === FALSE || $postdata === '') {
+	$draft = get_draft_with_meta($page, TRUE, TRUE);
+	if ($draft === FALSE || $draft['content'] === '') {
 		return array(
 			'msg' => 'エラー',
 			'body' => '<p>' . $_msg_draft_not_found . '</p>'
 		);
 	}
 
+	// Conflict detection (digest優先、無ければtimestamp)
+	$current_source = get_source($page, TRUE, TRUE);
+	if ($current_source === FALSE) {
+		$current_source = '';
+	}
+	$current_digest = md5($current_source);
+
+	$draft_digest = $draft['meta']['digest'];
+	$draft_saved_ts = NULL;
+	if (!empty($draft['meta']['saved'])) {
+		$draft_saved_ts = strtotime($draft['meta']['saved']);
+	}
+
+	$conflict = FALSE;
+	if ($draft_digest !== NULL && $draft_digest !== '') {
+		if ($draft_digest !== $current_digest) {
+			$conflict = TRUE;
+		}
+	} else if ($draft_saved_ts !== NULL && $draft_saved_ts !== FALSE) {
+		$page_ts = get_filetime($page) + LOCALZONE;
+		if ($page_ts > $draft_saved_ts) {
+			$conflict = TRUE;
+		}
+	}
+
+	if ($conflict) {
+		$edit_link = $script . '?cmd=edit&amp;page=' . rawurlencode($page) . '&amp;load_draft=true';
+		$body  = '<p>' . $_msg_draft_conflict_body . '</p>';
+		$body .= '<p><a href="' . $edit_link . '">' . $_msg_draft_edit . '</a></p>';
+		return array(
+			'msg' => $_msg_draft_conflict_title,
+			'body' => $body
+		);
+	}
+
 	// Write to main page
-	page_write($page, $postdata);
+	page_write($page, $draft['content']);
 
 	// Delete draft
 	draft_delete($page);

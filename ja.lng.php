@@ -476,6 +476,8 @@ $_msg_draft_edit = '編集';
 $_msg_draft_publish = '公開';
 $_msg_draft_delete = '削除';
 $_msg_draft_invalid_action = '不正な操作です。';
+$_msg_draft_conflict_title = '下書きとページが衝突しています';
+$_msg_draft_conflict_body = '下書き保存後にページが更新されました。編集画面で内容を確認してマージしてください。';
 
 $_msg_draft_overwrite_confirm = 'すでに保存されている下書きがあります。下書きを上書き保存しますか？';
 $_msg_draft_save_button      = '下書き保存';

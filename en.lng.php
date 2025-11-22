@@ -475,4 +475,6 @@ $_msg_draft_exists = 'Draft saved (%s)';
 $_msg_draft_restore = 'Restore from draft';
 $_msg_draft_overwrite_confirm = 'Overwrite existing draft?';
 $_msg_draft_save_button = 'Save Draft';
+$_msg_draft_conflict_title = 'Draft conflicts with the page';
+$_msg_draft_conflict_body = 'The page was updated after this draft was saved. Please merge changes in the edit form.';
 ?>

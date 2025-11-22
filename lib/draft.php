@@ -28,7 +28,7 @@ function has_draft($page)
 }
 
 /**
- * Get draft source data of the page
+ * Get draft content only (backward compatible wrapper)
  *
  * @param $page page name
  * @param $lock lock
@@ -37,100 +37,95 @@ function has_draft($page)
  */
 function get_draft($page, $lock = TRUE, $join = FALSE)
 {
-	$result = $join ? '' : array();
+	$result = get_draft_with_meta($page, $lock, $join);
+	if ($result === FALSE) return FALSE;
+	return $result['content'];
+}
+
+/**
+ * Get draft content with metadata
+ *
+ * @param string $page
+ * @param bool $lock
+ * @param bool $join true: return string, false: return array of string
+ * @return array{content:mixed,meta:array<string,mixed>}|FALSE
+ */
+function get_draft_with_meta($page, $lock = TRUE, $join = FALSE)
+{
 	$file = get_draft_filename($page);
+	$result = array(
+		'content' => $join ? '' : array(),
+		'meta'    => array(
+			'saved'  => NULL,
+			'digest' => NULL,
+		),
+	);
 
-	if (file_exists($file)) {
-		$fp = @fopen($file, 'r');
-		if ($fp === FALSE) return FALSE;
+	if (!file_exists($file)) {
+		return $result;
+	}
 
-		if ($lock) {
-			flock($fp, LOCK_SH);
+	$fp = @fopen($file, 'r');
+	if ($fp === FALSE) return FALSE;
+
+	if ($lock) {
+		flock($fp, LOCK_SH);
+	}
+
+	$size = filesize($file);
+	if ($size === FALSE) {
+		$content = FALSE;
+	} else if ($size == 0) {
+		$content = '';
+	} else {
+		$content = fread($fp, $size);
+	}
+
+	if ($lock) {
+		flock($fp, LOCK_UN);
+	}
+	@fclose($fp);
+
+	if ($content === FALSE) {
+		return FALSE;
+	}
+
+	// Normalize CRLF
+	$content = str_replace("\r", '', $content);
+	$lines = explode("\n", $content);
+
+	// Parse metadata lines (top of file)
+	while (!empty($lines)) {
+		$line = $lines[0];
+		if (strpos($line, '#draft_saved:') === 0) {
+			$result['meta']['saved'] = substr($line, strlen('#draft_saved:'));
+			array_shift($lines);
+			continue;
 		}
+		if (strpos($line, '#draft_digest:') === 0) {
+			$result['meta']['digest'] = substr($line, strlen('#draft_digest:'));
+			array_shift($lines);
+			continue;
+		}
+		break;
+	}
 
-		// Read content
-		$size = filesize($file);
-		if ($size === FALSE) {
-			$content = FALSE;
-		} else if ($size == 0) {
-			$content = '';
+	$body_join = implode("\n", $lines);
+
+	if ($join) {
+		$result['content'] = $body_join;
+		return $result;
+	}
+
+	// Create array with newline suffix (similar to file())
+	if ($body_join === '') {
+		$result['content'] = array();
+	} else {
+		$with_newlines = preg_split('/(?<=\n)/', $body_join);
+		if ($with_newlines === FALSE) {
+			$result['content'] = array();
 		} else {
-			$content = fread($fp, $size);
-		}
-
-		if ($lock) {
-			flock($fp, LOCK_UN);
-		}
-		@fclose($fp);
-
-		if ($content !== FALSE) {
-			// Remove metadata line
-			$lines = explode("\n", $content);
-			if (isset($lines[0]) && strpos($lines[0], '#draft_saved:') === 0) {
-				array_shift($lines);
-			}
-			
-			if ($join) {
-				$result = implode("\n", $lines);
-				$result = str_replace("\r", '', $result);
-			} else {
-				$result = $lines;
-				// Restore newlines for array format (compatible with file())
-				foreach ($result as &$line) {
-					$line .= "\n";
-				}
-				// The last line might not need a newline if original didn't have one, 
-				// but file() usually keeps newlines. 
-				// However, explode removes them.
-				// Let's stick to the previous logic's behavior but safely.
-				// Previous logic used file() which keeps newlines.
-				// And fread() + explode() removes them.
-				// To be perfectly safe and consistent, let's use the string manipulation.
-				
-				// Actually, previous get_draft implementation for !join used file(), which keeps newlines.
-				// And it did str_replace("\r", '', $result) on the array? 
-				// No, str_replace on array works in PHP.
-				
-				// Let's simplify: Read as string, then process.
-				$string_result = implode("\n", $lines);
-				$string_result = str_replace("\r", '', $string_result);
-				
-				if ($join) {
-					$result = $string_result;
-				} else {
-					// Split back to array, keeping newlines?
-					// PukiWiki expects lines usually with newlines.
-					// But let's check how it was used.
-					// plugin_edit_load_draft uses $join=TRUE.
-					// plugin_draft_list doesn't use content.
-					// Where is $join=FALSE used?
-					// It seems default is $join=FALSE.
-					// If I change behavior, it might break things.
-					
-					// Let's reproduce file() behavior from string.
-					// file() returns array with newlines.
-					// explode("\n") removes newlines.
-					
-					// Re-implementation using file() logic but with proper locking:
-					// We already read content.
-					$result = explode("\n", $string_result);
-					// Add \n back to each line to match file() behavior
-					/*
-					foreach ($result as &$line) {
-						$line .= "\n";
-					}
-					*/
-					// Wait, the original code for !join:
-					// $result = file($file);
-					// ...
-					// $result = str_replace("\r", '', $result);
-					
-					// If I use fread, I get the whole string.
-					// If I want to be safe, I should use the read content.
-				}
-			}
-		} else {
-			return FALSE;
+			$result['content'] = $with_newlines;
 		}
 	}
 
@@ -174,7 +169,9 @@ function draft_write($page, $postdata)
 	$file = get_draft_filename($page);
 
 	// Add metadata
+	$page_digest = md5(join('', get_source($page)));
 	$metadata = '#draft_saved:' . get_date_atom(UTIME) . "\n";
+	$metadata .= '#draft_digest:' . $page_digest . "\n";
 	$content = $metadata . $postdata;
 
 	// Write to file
