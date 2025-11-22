@@ -328,6 +328,7 @@ function plugin_edit_setup_initial_pages()
 function plugin_edit_draft_save()
 {
 	global $vars;
+	global $_msg_draft_saved, $_msg_draft_save_error, $_msg_draft_save;
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	$msg = isset($vars['msg']) ? $vars['msg'] : '';
@@ -345,18 +346,18 @@ function plugin_edit_draft_save()
 	// Save draft
 	if (draft_write($page, $msg)) {
 		$body = '<div class="alert alert-success" style="margin:10px 0; padding:10px; background-color:#dff0d8; border:1px solid #d6e9c6; color:#3c763d;">';
-		$body .= '下書きを保存しました。';
+		$body .= $_msg_draft_saved;
 		$body .= '</div>';
 		$body .= edit_form($page, $msg, md5(join('', get_source($page))), FALSE);
 	} else {
 		$body = '<div class="alert alert-danger" style="margin:10px 0; padding:10px; background-color:#f2dede; border:1px solid #ebccd1; color:#a94442;">';
-		$body .= '下書きの保存に失敗しました。';
+		$body .= $_msg_draft_save_error;
 		$body .= '</div>';
 		$body .= edit_form($page, $msg, md5(join('', get_source($page))), FALSE);
 	}
 
 	return array(
-		'msg' => '下書き保存',
+		'msg' => $_msg_draft_save,
 		'body' => $body
 	);
 }
@@ -367,6 +368,7 @@ function plugin_edit_draft_save()
 function plugin_edit_load_draft()
 {
 	global $vars, $_title_edit;
+	global $_msg_draft_not_found, $_msg_draft_loaded;
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
@@ -382,12 +384,12 @@ function plugin_edit_load_draft()
 	if ($postdata === FALSE || $postdata === '') {
 		return array(
 			'msg' => 'エラー',
-			'body' => '<p>下書きが見つかりません。</p>'
+			'body' => '<p>' . $_msg_draft_not_found . '</p>'
 		);
 	}
 
 	$body = '<div class="alert alert-info" style="margin:10px 0; padding:10px; background-color:#d9edf7; border:1px solid #bce8f1; color:#31708f;">';
-	$body .= '下書きを読み込みました。';
+	$body .= $_msg_draft_loaded;
 	$body .= '</div>';
 	$body .= edit_form($page, $postdata, md5(join('', get_source($page))), FALSE, TRUE);
 

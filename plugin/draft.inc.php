@@ -54,34 +54,55 @@ function plugin_draft_action()
 function plugin_draft_list()
 {
 	global $script;
+	global $_msg_draft_not_found, $_msg_draft_list, $_msg_draft_edit, $_msg_draft_publish, $_msg_draft_delete;
+	global $_msg_draft_publish_confirm, $_msg_draft_delete_confirm;
 
 	$drafts = get_draft_list();
 
 	if (empty($drafts)) {
-		$body = '<p>下書きはありません。</p>';
+		$body = '<p>' . $_msg_draft_not_found . '</p>';
 	} else {
 		$body = '<ul>';
+		$ticket = get_ticket();
 		foreach ($drafts as $page) {
+			if (!is_editable($page)) continue;
+
 			$time = get_draft_filetime($page);
 			$time_str = format_date($time);
 			$page_link = make_pagelink($page);
 			$edit_link = $script . '?cmd=edit&amp;page=' . rawurlencode($page) . '&amp;load_draft=true';
-			$delete_link = $script . '?cmd=draft&amp;action=delete&amp;page=' . rawurlencode($page);
-			$publish_link = $script . '?cmd=draft&amp;action=publish&amp;page=' . rawurlencode($page);
+			
+			// Publish form
+			$publish_form = '<form action="' . $script . '" method="post" style="display:inline">' .
+				'<input type="hidden" name="cmd" value="draft" />' .
+				'<input type="hidden" name="action" value="publish" />' .
+				'<input type="hidden" name="page" value="' . htmlsc($page) . '" />' .
+				'<input type="hidden" name="ticket" value="' . $ticket . '" />' .
+				'<input type="submit" value="' . $_msg_draft_publish . '" onclick="return confirm(\'' . $_msg_draft_publish_confirm . '\')" />' .
+				'</form>';
+
+			// Delete form
+			$delete_form = '<form action="' . $script . '" method="post" style="display:inline">' .
+				'<input type="hidden" name="cmd" value="draft" />' .
+				'<input type="hidden" name="action" value="delete" />' .
+				'<input type="hidden" name="page" value="' . htmlsc($page) . '" />' .
+				'<input type="hidden" name="ticket" value="' . $ticket . '" />' .
+				'<input type="submit" value="' . $_msg_draft_delete . '" onclick="return confirm(\'' . $_msg_draft_delete_confirm . '\')" />' .
+				'</form>';
 
 			$body .= '<li>';
 			$body .= $page_link;
 			$body .= ' (' . $time_str . ')';
-			$body .= ' [<a href="' . $edit_link . '">編集</a>]';
-			$body .= ' [<a href="' . $publish_link . '" onclick="return confirm(\'この下書きを公開しますか?\')">公開</a>]';
-			$body .= ' [<a href="' . $delete_link . '" onclick="return confirm(\'この下書きを削除しますか?\')">削除</a>]';
+			$body .= ' [<a href="' . $edit_link . '">' . $_msg_draft_edit . '</a>]';
+			$body .= ' ' . $publish_form;
+			$body .= ' ' . $delete_form;
 			$body .= '</li>';
 		}
 		$body .= '</ul>';
 	}
 
 	return array(
-		'msg' => '下書き一覧',
+		'msg' => $_msg_draft_list,
 		'body' => $body
 	);
 }
@@ -92,6 +113,15 @@ function plugin_draft_list()
 function plugin_draft_delete()
 {
 	global $vars, $script;
+	global $_msg_draft_deleted, $_msg_draft_delete_error, $_msg_draft_delete, $_msg_draft_list;
+	global $_msg_draft_invalid_action;
+
+	if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !check_ticket()) {
+		return array(
+			'msg' => 'Error',
+			'body' => '<p>' . $_msg_draft_invalid_action . '</p>'
+		);
+	}
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	if ($page === '') {
@@ -105,14 +135,14 @@ function plugin_draft_delete()
 	check_editable($page, true, true);
 
 	if (draft_delete($page)) {
-		$body = '<p>下書きを削除しました。</p>';
-		$body .= '<p><a href="' . $script . '?cmd=draft">下書き一覧に戻る</a></p>';
+		$body = '<p>' . $_msg_draft_deleted . '</p>';
+		$body .= '<p><a href="' . $script . '?cmd=draft">' . $_msg_draft_list . 'に戻る</a></p>';
 	} else {
-		$body = '<p>下書きの削除に失敗しました。</p>';
+		$body = '<p>' . $_msg_draft_delete_error . '</p>';
 	}
 
 	return array(
-		'msg' => '下書き削除',
+		'msg' => $_msg_draft_delete,
 		'body' => $body
 	);
 }
@@ -123,6 +153,15 @@ function plugin_draft_delete()
 function plugin_draft_publish()
 {
 	global $vars, $script;
+	global $_msg_draft_published, $_msg_draft_publish_error, $_msg_draft_publish, $_msg_draft_list;
+	global $_msg_draft_not_found, $_msg_draft_invalid_action;
+
+	if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !check_ticket()) {
+		return array(
+			'msg' => 'Error',
+			'body' => '<p>' . $_msg_draft_invalid_action . '</p>'
+		);
+	}
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	if ($page === '') {
@@ -140,7 +179,7 @@ function plugin_draft_publish()
 	if ($postdata === FALSE || $postdata === '') {
 		return array(
 			'msg' => 'エラー',
-			'body' => '<p>下書きが見つかりません。</p>'
+			'body' => '<p>' . $_msg_draft_not_found . '</p>'
 		);
 	}
 
@@ -151,11 +190,11 @@ function plugin_draft_publish()
 	draft_delete($page);
 
 	$page_link = make_pagelink($page);
-	$body = '<p>下書きを公開しました: ' . $page_link . '</p>';
-	$body .= '<p><a href="' . $script . '?cmd=draft">下書き一覧に戻る</a></p>';
+	$body = '<p>' . $_msg_draft_published . ': ' . $page_link . '</p>';
+	$body .= '<p><a href="' . $script . '?cmd=draft">' . $_msg_draft_list . 'に戻る</a></p>';
 
 	return array(
-		'msg' => '下書き公開',
+		'msg' => $_msg_draft_publish,
 		'body' => $body
 	);
 }
