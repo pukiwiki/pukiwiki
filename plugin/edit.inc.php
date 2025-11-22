@@ -329,6 +329,15 @@ function plugin_edit_draft_save()
 {
 	global $vars;
 	global $_msg_draft_saved, $_msg_draft_save_error, $_msg_draft_save;
+	global $_msg_draft_invalid_action;
+
+	// CSRF protection
+	if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !check_ticket()) {
+		return array(
+			'msg' => 'Error',
+			'body' => '<p>' . $_msg_draft_invalid_action . '</p>'
+		);
+	}
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	$msg = isset($vars['msg']) ? $vars['msg'] : '';
