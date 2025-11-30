@@ -239,4 +239,143 @@ GPL v2 or later (PukiWiki本体と同じライセンス)
 
 ---
 
+## 開発者向け情報
+
+### PukiWikiアーキテクチャ概要
+
+PukiWikiはPHP製のWikiエンジンで、以下の構造を持ちます。
+
+#### ディレクトリ構成
+
+```
+pukiwiki_draft2/
+├── index.php           # エントリーポイント
+├── pukiwiki.ini.php    # 設定ファイル
+├── lib/                # コアライブラリ
+│   ├── pukiwiki.php    # メイン処理
+│   ├── init.php        # 初期化処理
+│   ├── html.php        # HTML生成
+│   ├── func.php        # 共通関数
+│   ├── file.php        # ファイル操作
+│   ├── auth.php        # 認証・権限
+│   ├── draft.php       # 【追加】下書き操作
+│   └── ...
+├── plugin/             # プラグイン
+│   ├── edit.inc.php    # ページ編集【変更】
+│   ├── draft.inc.php   # 【追加】下書き管理
+│   └── ...
+├── skin/               # スキン（テーマ）
+│   ├── pukiwiki.skin.php
+│   └── js/
+│       └── autosave.js # 【追加】自動保存機能
+├── wiki/               # ページデータ（テキスト形式）
+├── draft/              # 【追加】下書きデータ
+├── attach/             # 添付ファイル
+└── backup/             # バックアップデータ
+```
+
+#### リクエスト処理フロー
+
+1. `index.php` → `lib/pukiwiki.php` を呼び出し
+2. `lib/init.php` で初期化（設定読み込み、ディレクトリチェックなど）
+3. `?cmd=xxx` パラメータに基づいてプラグインを実行
+   - 例: `?cmd=edit` → `plugin/edit.inc.php` の `plugin_edit_action()` を実行
+4. プラグインが HTML を生成して返す
+5. `lib/html.php` でページ全体のレイアウトを構築
+6. レスポンスを出力
+
+#### プラグインシステム
+
+- **プラグイン命名規則**: `plugin/xxx.inc.php` → `plugin_xxx_action()` 関数
+- **アクションプラグイン**: `plugin_xxx_action()` - ページ全体を生成
+- **ブロックプラグイン**: `plugin_xxx_convert()` - Wiki記法内で使用
+- **インラインプラグイン**: `plugin_xxx_inline()` - 行内で使用
+
+#### 下書き機能の実装箇所
+
+- **lib/draft.php**: 下書き操作の中核ライブラリ（保存・読み込み・削除）
+  - `has_draft()` - 下書き存在確認
+  - `get_draft()` - 下書き取得
+  - `draft_write()` - 下書き保存
+  - `draft_delete()` - 下書き削除
+  - `get_draft_list()` - 下書き一覧取得
+- **plugin/draft.inc.php**: 下書き一覧・管理UI（`?cmd=draft`）
+  - `plugin_draft_action()` - メイン処理
+  - `plugin_draft_list()` - 一覧表示
+  - `plugin_draft_delete()` - 削除処理
+  - `plugin_draft_publish()` - 公開処理
+- **plugin/edit.inc.php**: 編集画面への下書き保存・復帰機能の追加
+  - `plugin_edit_draft_save()` - 下書き保存処理
+  - `plugin_edit_load_draft()` - 下書き読み込み処理
+- **lib/html.php**: 編集フォームへの下書きボタン・通知の追加
+- **skin/js/autosave.js**: 自動保存機能のJavaScript（30秒間隔で自動保存）
+
+### ローカル開発環境セットアップ
+
+#### 前提条件
+
+- PHP 8.3 または 8.4 がインストールされている
+- ファイルシステムの書き込み権限がある
+
+#### 開発サーバー起動
+
+```bash
+# PHPビルトインサーバーを起動
+php -S localhost:8080
+
+# ブラウザで http://localhost:8080 にアクセス
+```
+
+#### ディレクトリパーミッション設定
+
+```bash
+# 下書き機能に必要なパーミッション設定
+chmod 777 draft/
+chmod 777 wiki/
+chmod 777 attach/
+chmod 777 backup/
+chmod 777 counter/
+chmod 777 diff/
+```
+
+#### 動作確認
+
+```bash
+# PHP構文チェック（変更したファイルを確認）
+php -l lib/draft.php
+php -l plugin/draft.inc.php
+php -l plugin/edit.inc.php
+
+# PHPバージョン確認
+php -v
+```
+
+### セキュリティ対策
+
+下書き機能では以下のセキュリティ対策を実装しています:
+
+- **CSRF対策**: 全ての状態変更操作にトークンチェックを実装
+- **XSS対策**: 出力時は必ず `htmlsc()` でエスケープ
+- **権限チェック**: 全ての下書き操作で `check_editable()` を使用
+- **ファイル操作**: `encode()` でファイル名を安全化
+- **アクセス制限**: 読み取り専用モードと認証機能に対応
+
+### コーディング規約
+
+PukiWikiの既存コーディングスタイルに準拠しています:
+
+- 関数命名: `plugin_draft_*()`, `draft_*()`パターン
+- エラー抑制演算子(`@`)の使用は既存コードと同様に許容
+- 型宣言: PukiWiki本体が使用していない場合は無理に追加しない
+- PHP 8.3/8.4での動作を確保、PHP 9.0も視野
+
+### 参考にすべきPukiWikiコード
+
+- `plugin/edit.inc.php` - 編集・保存処理のパターン
+- `lib/file.php` - ファイル操作のパターン
+- `lib/auth.php` - 認証・権限チェック
+- `plugin/freeze.inc.php` - CSRF対策の実装例
+
+---
+
 **注意**: この下書き機能は、PukiWikiのオリジナル機能ではありません。カスタマイズとして追加されたものです。
