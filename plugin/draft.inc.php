@@ -180,8 +180,15 @@ function plugin_draft_publish()
 	check_editable($page, true, true);
 
 	// Get draft content
+	if (!has_draft($page)) {
+		return array(
+			'msg' => 'エラー',
+			'body' => '<p>' . $_msg_draft_not_found . '</p>'
+		);
+	}
+
 	$draft = get_draft_with_meta($page, TRUE, TRUE);
-	if ($draft === FALSE || $draft['content'] === '') {
+	if ($draft === FALSE) {
 		return array(
 			'msg' => 'エラー',
 			'body' => '<p>' . $_msg_draft_not_found . '</p>'
@@ -234,7 +241,7 @@ function plugin_draft_publish()
 		);
 	}
 
-	// Write to main page
+	// Write to main page (empty draft => delete page)
 	page_write($page, $draft['content']);
 
 	// Delete draft
@@ -278,15 +285,22 @@ function plugin_draft_force_publish()
 	check_editable($page, true, true);
 
 	// Get draft content
-	$draft = get_draft_with_meta($page, TRUE, TRUE);
-	if ($draft === FALSE || $draft['content'] === '') {
+	if (!has_draft($page)) {
 		return array(
 			'msg' => 'エラー',
 			'body' => '<p>' . $_msg_draft_not_found . '</p>'
 		);
 	}
 
-	// Write to main page
+	$draft = get_draft_with_meta($page, TRUE, TRUE);
+	if ($draft === FALSE) {
+		return array(
+			'msg' => 'エラー',
+			'body' => '<p>' . $_msg_draft_not_found . '</p>'
+		);
+	}
+
+	// Write to main page (empty draft => delete page)
 	page_write($page, $draft['content']);
 
 	// Delete draft

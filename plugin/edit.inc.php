@@ -389,8 +389,15 @@ function plugin_edit_load_draft()
 	}
 
 	// Get draft content
+	if (!has_draft($page)) {
+		return array(
+			'msg' => 'エラー',
+			'body' => '<p>' . $_msg_draft_not_found . '</p>'
+		);
+	}
+
 	$postdata = get_draft($page, TRUE, TRUE);
-	if ($postdata === FALSE || $postdata === '') {
+	if ($postdata === FALSE) {
 		return array(
 			'msg' => 'エラー',
 			'body' => '<p>' . $_msg_draft_not_found . '</p>'
