@@ -191,7 +191,7 @@ unset($user_agent);	// Unset after reading UA_INI_FILE
 // ディレクトリのチェック
 
 $die = '';
-foreach(array('DATA_DIR', 'DIFF_DIR', 'BACKUP_DIR', 'CACHE_DIR', 'DRAFT_DIR') as $dir){
+foreach(array('DATA_DIR', 'DIFF_DIR', 'BACKUP_DIR', 'CACHE_DIR') as $dir){
 	if (! is_writable(constant($dir)))
 		$die .= 'Directory is not found or not writable (' . $dir . ')' . "\n";
 }
@@ -508,6 +508,6 @@ function check_ticket() {
 	}
 	if (!isset($_SESSION['_ticket'])) return false;
 	if (!isset($_POST['ticket'])) return false;
-	
+
 	return hash_equals($_SESSION['_ticket'], $_POST['ticket']);
 }

@@ -174,9 +174,22 @@ function draft_write($page, $postdata)
 	$metadata .= '#draft_digest:' . $page_digest . "\n";
 	$content = $metadata . $postdata;
 
+	// Ensure draft directory exists
+	$dir = dirname($file);
+	if (!is_dir($dir)) {
+		if (!mkdir($dir, 0777, true)) {
+			return FALSE;
+		}
+	}
+
 	// Write to file
-	$fp = fopen($file, 'w');
-	if ($fp === FALSE) return FALSE;
+	$fp = @fopen($file, 'w');
+	if ($fp === FALSE) {
+		error_log('draft_write: failed to open ' . $file .
+			' (dir_exists=' . (is_dir($dir) ? 'yes' : 'no') .
+			', writable=' . (is_writable($dir) ? 'yes' : 'no') . ')');
+		return FALSE;
+	}
 
 	$success = FALSE;
 	if (flock($fp, LOCK_EX)) {
@@ -218,6 +231,9 @@ function draft_delete($page)
 function get_draft_list()
 {
 	$pages = array();
+
+	// DRAFT_DIR は draft_write() が初回保存時に作成する。未作成なら下書きなし
+	if (!is_dir(DRAFT_DIR)) return $pages;
 
 	if ($dh = opendir(DRAFT_DIR)) {
 		while (($file = readdir($dh)) !== FALSE) {
