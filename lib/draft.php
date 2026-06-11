@@ -7,9 +7,13 @@
 //
 // Draft related functions
 //
-// Version 1.1.0
+// Version 1.3.0
 //
 // [Changelog]
+// 1.3.0 (2026-06-11): Auto-create DRAFT_DIR
+//   - draft_write() creates DRAFT_DIR on first save (no manual setup needed)
+//   - Log diagnostics to error_log on write failure
+//   - get_draft_list() returns empty list when DRAFT_DIR does not exist
 // 1.1.0 (2025-11-15): Add access control support
 //   - Used by draft.inc.php with access restrictions
 // 1.0.0 (2025-11-15): Initial release
