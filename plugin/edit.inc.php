@@ -15,15 +15,15 @@ function plugin_edit_action()
 
 	if (PKWK_READONLY) die_message('PKWK_READONLY prohibits editing');
 
+	// Load draft library
+	require_once(LIB_DIR . 'draft.php');
+
 	// Create initial pages
 	plugin_edit_setup_initial_pages();
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	check_editable($page, true, true);
 	check_readable($page, true, true);
-
-	// Load draft library
-	require_once(LIB_DIR . 'draft.php');
 
 	if (isset($vars['preview'])) {
 		return plugin_edit_preview($vars['msg']);
@@ -77,7 +77,6 @@ function plugin_edit_preview_with_template()
 	$msg = '';
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	// Loading template
-	$template_page;
 	if (isset($vars['template_page']) && is_page($template_page = $vars['template_page'])) {
 		if (is_page_readable($template_page)) {
 			$msg = remove_author_info(get_source($vars['template_page'], TRUE, TRUE));
