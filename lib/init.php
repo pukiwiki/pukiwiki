@@ -503,11 +503,18 @@ function get_ticket() {
  * @return bool 有効な場合true
  */
 function check_ticket() {
+	global $post;
+
 	if (session_status() == PHP_SESSION_NONE) {
 		session_start();
 	}
 	if (!isset($_SESSION['_ticket'])) return false;
-	if (!isset($_POST['ticket'])) return false;
 
-	return hash_equals($_SESSION['_ticket'], $_POST['ticket']);
+	// プラグインによる再ディスパッチ時は $_POST に ticket が無い場合が
+	// あるため、入力フィルタ済みの $post を優先して参照する
+	$ticket = isset($post['ticket']) ? $post['ticket'] :
+		(isset($_POST['ticket']) ? $_POST['ticket'] : null);
+	if (!is_string($ticket)) return false;
+
+	return hash_equals($_SESSION['_ticket'], $ticket);
 }
