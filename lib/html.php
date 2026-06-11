@@ -485,7 +485,7 @@ EOD;
   error: {$autosave_msg_error}
  };
  </script>
- <script type="text/javascript" src="skin/js/autosave.js"></script>
+ <script type="text/javascript" src="skin/js/autosave.min.js"></script>
 EOD;
 
 	$body .= '<ul><li><a href="' .
