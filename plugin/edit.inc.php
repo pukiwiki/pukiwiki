@@ -271,6 +271,7 @@ function plugin_edit_write()
 	// NULL POSTING, OR removing existing page
 	if ($postdata === '') {
 		page_write($page, $postdata);
+		plugin_edit_discard_draft($page); // ページ自体が消えるので下書きも不要
 		$retvars['msg' ] = $_title_deleted;
 		$retvars['body'] = str_replace('$1', htmlsc($page), $_title_deleted);
 		return $retvars;
@@ -286,9 +287,45 @@ function plugin_edit_write()
 	}
 
 	page_write($page, $postdata, $notimeupdate != 0 && $notimestamp);
+	// 追記（cmd=add）はページ全体を書き上げたわけではないので下書きは残す。
+	// add はフォームの hidden（lib/html.php）経由でこの経路に来るため、
+	// ここでガードしないと「1 行追記しただけで書きかけの全文が消える」ことになる。
+	if (! $add) {
+		plugin_edit_discard_draft($page);
+	}
 	pkwk_headers_sent();
 	header('Location: ' . get_page_uri($page, PKWK_URI_ROOT));
 	exit;
+}
+
+/**
+ * 保存が確定したページの下書きを破棄する。
+ *
+ * autosave.js が 30 秒ごとに下書きを保存する一方、通常の「ページの更新」は
+ * 下書きを消さなかったため、公開済み記事の下書きが残り続けていた
+ * （実運用サイトでの棚卸しでは、存在した下書き 23 件のうち 21 件が
+ * 公開済みの残骸だった）。本文が本ページに入った時点で下書きの役目は
+ * 終わっているので破棄する。draft プラグインの公開処理
+ * （plugin_draft_publish → draft_delete）と同じ考え方。
+ *
+ * 呼ぶのは page_write() が成功した後だけ。衝突検出（digest 不一致）や
+ * パスワードエラーで編集フォームに戻る経路では呼ばないこと
+ * （利用者の書きかけを失わせないため）。それらの経路は
+ * plugin_edit_write() 内で page_write() に到達する前に return しているので、
+ * 構造上この関数は呼ばれない。
+ *
+ * 追記（cmd=add）も除外する。こちらは早期 return ではなく通常保存と同じ
+ * page_write() に到達するため、呼び出し側で $add を見て明示的に弾いている。
+ * 追記はページ全体を書き上げる操作ではなく、下書きの役目は終わっていない。
+ */
+function plugin_edit_discard_draft($page)
+{
+	// lib/draft.php は plugin_edit_action() の冒頭で require 済みだが、
+	// 下書きライブラリを持たない環境や他経路から呼ばれても
+	// 致命的エラーにならないようガードする
+	if (function_exists('has_draft') && function_exists('draft_delete') && has_draft($page)) {
+		draft_delete($page);
+	}
 }
 
 // Cancel (Back to the page / Escape edit page)

@@ -7,9 +7,13 @@
 //
 // Draft related functions
 //
-// Version 1.3.0
+// Version 1.4.0
 //
 // [Changelog]
+// 1.4.0 (2026-08-07): Discard the draft after a confirmed page save
+//   - edit.inc.php: plugin_edit_discard_draft() called right after page_write()
+//   - Not called on collision / password-error paths (protects work in progress)
+//   - Not called on append (cmd=add), which reaches the same page_write()
 // 1.3.0 (2026-06-11): Auto-create DRAFT_DIR
 //   - draft_write() creates DRAFT_DIR on first save (no manual setup needed)
 //   - Log diagnostics to error_log on write failure
