@@ -7,9 +7,17 @@
 //
 // Draft related functions
 //
-// Version 1.4.0
+// Version 1.4.1
 //
 // [Changelog]
+// 1.4.1 (2026-08-08): Protect DRAFT_DIR from direct HTTP access (security)
+//   - draft_protect_dir() writes .htaccess (Require all denied) + index.html
+//     into DRAFT_DIR, matching what the distribution ships for wiki/ attach/
+//     backup/ cache/ counter/ diff/
+//   - Called on every draft_write(), so existing installs self-heal on next save
+//   - Without it, draft/ relied solely on the root .htaccess *.txt rule; sites
+//     that customise the root .htaccess exposed unpublished drafts at
+//     draft/<strtoupper(bin2hex(pagename))>.txt
 // 1.4.0 (2026-08-07): Discard the draft after a confirmed page save
 //   - edit.inc.php: plugin_edit_discard_draft() called right after page_write()
 //   - Not called on collision / password-error paths (protects work in progress)
@@ -163,6 +171,39 @@ function get_draft_filetime($page)
 }
 
 /**
+ * Drop .htaccess / index.html into DRAFT_DIR so drafts cannot be fetched directly
+ *
+ * 他のデータディレクトリ（wiki/ attach/ backup/ cache/ counter/ diff/）は配布物に
+ * `Require all denied` の .htaccess を同梱しているが、draft/ は実行時に自動生成される
+ * ため同梱できない。素の配布状態ではルート .htaccess の
+ * `<FilesMatch "\.(ini\.php|lng\.php|txt|gz|tgz|zip)$">` が draft/*.txt も塞ぐが、
+ * ルート .htaccess を書き換えている環境（rewrite やキャッシュ制御の追加は珍しくない）では
+ * その唯一の防御が外れ、未公開の下書きが
+ *   https://example.com/draft/46726F6E7450616765.txt
+ * のように読めてしまう。ファイル名は strtoupper(bin2hex(ページ名)) で推測可能。
+ *
+ * 既存ディレクトリにも毎回チェックを入れるので、旧版からの更新でも次回保存時に自己修復する。
+ * 書き込みに失敗しても下書き保存自体は続行する（防御が一段減るだけで機能は壊さない）。
+ *
+ * @param $dir DRAFT_DIR path
+ * @return void
+ */
+function draft_protect_dir($dir)
+{
+	$dir = rtrim($dir, '/') . '/';
+
+	$guards = array(
+		'.htaccess'  => "Require all denied\n",
+		'index.html' => "Draft files are placed here.\n",
+	);
+	foreach ($guards as $name => $body) {
+		$path = $dir . $name;
+		if (file_exists($path)) continue;
+		@file_put_contents($path, $body, LOCK_EX);
+	}
+}
+
+/**
  * Save draft data
  *
  * @param $page page name
@@ -182,13 +223,14 @@ function draft_write($page, $postdata)
 	$metadata .= '#draft_digest:' . $page_digest . "\n";
 	$content = $metadata . $postdata;
 
-	// Ensure draft directory exists
+	// Ensure draft directory exists and is protected from direct HTTP access
 	$dir = dirname($file);
 	if (!is_dir($dir)) {
 		if (!mkdir($dir, 0777, true)) {
 			return FALSE;
 		}
 	}
+	draft_protect_dir($dir);
 
 	// Write to file
 	$fp = @fopen($file, 'w');
