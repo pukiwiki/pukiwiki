@@ -119,11 +119,34 @@ draft/[ページ名の16進数エンコード].txt
 PukiWiki 設置ディレクトリが PHP から書き込み可能であれば、そのまま動作します。
 
 自動作成に失敗する環境（親ディレクトリに書き込み権限がない場合）のみ、手動で作成してください。
+その場合は **`.htaccess` も忘れずに置いてください**（下記「直接取得の防止」を参照）。
 
 ```bash
 mkdir draft
 chmod 777 draft/
+printf 'Require all denied\n' > draft/.htaccess
 ```
+
+#### 直接取得の防止（v1.4.1 以降）
+
+下書きファイルは `draft/[ページ名の16進数エンコード].txt` という**推測可能な名前**で保存されます。
+`draft/` を Web から直接読めてしまうと、未公開の下書きが全文流出します。
+
+v1.4.1 から、`draft/` の作成時（および既存の `draft/` に対しても保存のたびに）
+`.htaccess`（`Require all denied`）と `index.html` を自動配置するようになりました。
+配布物が `wiki/` `attach/` `backup/` `cache/` `counter/` `diff/` に同梱しているものと同じ内容です。
+
+> **v1.4.0 以前から更新する場合**
+> 次回の下書き保存時に自動で `draft/.htaccess` が作られます。すぐに塞ぎたい場合は手動で:
+> ```bash
+> printf 'Require all denied\n' > draft/.htaccess
+> ```
+> 確認: `curl -o /dev/null -w '%{http_code}\n' https://example.com/draft/46726F6E7450616765.txt` が `403` になること。
+>
+> PukiWiki 標準のルート `.htaccess` には `<FilesMatch "\.(ini\.php|lng\.php|txt|...)$">` があり、
+> これが `draft/*.txt` も塞いでいます。**ルート `.htaccess` を書き換えている場合**
+> （rewrite ルールやキャッシュ制御を足すのはよくあります）はこの防御が外れているため、
+> 実際に未公開の下書きが読める状態になり得ます。
 
 ### 2. 動作確認
 
