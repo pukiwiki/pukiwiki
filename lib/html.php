@@ -331,13 +331,15 @@ EOS;
 }
 
 // Show 'edit' form
-function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
+function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE, $hide_draft_notice = FALSE)
 {
 	global $vars, $rows, $cols;
 	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel, $_msg_help;
 	global $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
 	global $_msg_edit_cancel_confirm, $_msg_edit_unloadbefore_message;
+	global $_msg_draft_exists, $_msg_draft_restore, $_msg_draft_overwrite_confirm, $_msg_draft_save_button;
+	global $_msg_draft_autosave_saving, $_msg_draft_autosave_saved, $_msg_draft_autosave_failed, $_msg_draft_autosave_error;
 	global $rule_page;
 
 	$script = get_base_uri();
@@ -389,6 +391,28 @@ EOD;
 	$b_preview   = isset($vars['preview']); // TRUE when preview
 	$btn_preview = $b_preview ? $_btn_repreview : $_btn_preview;
 
+	// Check if draft exists
+	require_once(LIB_DIR . 'draft.php');
+	$has_draft = has_draft($page);
+	$draft_notice = '';
+	$draft_save_onclick = '';
+	if ($has_draft && !$hide_draft_notice) {
+		$draft_time = format_date(get_draft_filetime($page));
+		$confirm_overwrite = htmlsc(json_encode($_msg_draft_overwrite_confirm));
+		$draft_notice = <<<EOD
+<div id="draft_notice" class="alert alert-info" style="margin:10px 0; padding:10px; background-color:#d9edf7; border:1px solid #bce8f1; color:#31708f;">
+	<span>$_msg_draft_exists ($draft_time)</span>
+	<form action="$script" method="post" style="display:inline; margin:0;">
+		<input type="hidden" name="cmd" value="edit" />
+		<input type="hidden" name="page" value="$s_page" />
+		<input type="submit" name="load_draft" value="$_msg_draft_restore" style="padding:2px 10px; margin-left:10px;" />
+	</form>
+</div>
+EOD;
+		// Add confirmation dialog for draft overwrite
+		$draft_save_onclick = ' onclick="return confirm(' . $confirm_overwrite . ');"';
+	}
+
 	// Checkbox 'do not change timestamp'
 	$add_notimestamp = '';
 	if ($notimeupdate != 0) {
@@ -409,16 +433,26 @@ EOD;
 
 	// 'margin-bottom', 'float:left', and 'margin-top'
 	// are for layout of 'cancel button'
-	$h_msg_edit_cancel_confirm = htmlsc($_msg_edit_cancel_confirm);
-	$h_msg_edit_unloadbefore_message = htmlsc($_msg_edit_unloadbefore_message);
+		$h_msg_edit_cancel_confirm = htmlsc($_msg_edit_cancel_confirm);
+		$h_msg_edit_unloadbefore_message = htmlsc($_msg_edit_unloadbefore_message);
+		$ticket_value = htmlsc(get_ticket());
+
+	// Autosave messages for JavaScript
+	$autosave_msg_saving = json_encode($_msg_draft_autosave_saving);
+	$autosave_msg_saved = json_encode($_msg_draft_autosave_saved);
+	$autosave_msg_failed = json_encode($_msg_draft_autosave_failed);
+	$autosave_msg_error = json_encode($_msg_draft_autosave_error);
+
 	$body = <<<EOD
 <div class="edit_form">
+$draft_notice
  <form action="$script" method="post" class="_plugin_edit_edit_form" style="margin-bottom:0;">
 $template
   $addtag
   <input type="hidden" name="cmd"    value="edit" />
   <input type="hidden" name="page"   value="$s_page" />
   <input type="hidden" name="digest" value="$s_digest" />
+  <input type="hidden" name="ticket" value="$ticket_value" />
   <input type="hidden" id="_msg_edit_cancel_confirm" value="$h_msg_edit_cancel_confirm" />
   <input type="hidden" id="_msg_edit_unloadbefore_message" value="$h_msg_edit_unloadbefore_message" />
   <textarea name="msg" rows="$rows" cols="$cols">$s_postdata</textarea>
@@ -426,6 +460,8 @@ $template
   <div style="float:left;">
    <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
    <input type="submit" name="write"   value="$_btn_update" accesskey="s" />
+   <input type="submit" name="draft_save" value="$_msg_draft_save_button" accesskey="d" style="margin-left:10px;"$draft_save_onclick />
+   <span id="autosave_status" style="margin-left:10px; font-size:small; color:gray;"></span>
    $add_top
    $add_notimestamp
   </div>
@@ -437,6 +473,19 @@ $template
   <input type="submit" name="cancel" value="$_btn_cancel" accesskey="c" />
  </form>
 </div>
+EOD;
+
+	// Autosave JavaScript
+	$body .= <<<EOD
+ <script type="text/javascript">
+ window.AUTOSAVE_MESSAGES = {
+  saving: {$autosave_msg_saving},
+  saved: {$autosave_msg_saved},
+  failed: {$autosave_msg_failed},
+  error: {$autosave_msg_error}
+ };
+ </script>
+ <script type="text/javascript" src="skin/js/autosave.min.js"></script>
 EOD;
 
 	$body .= '<ul><li><a href="' .

@@ -480,3 +480,41 @@ $line_rules = array_merge(array(
 	'&amp;(#[0-9]+|#x[0-9a-f]+|' . get_html_entity_pattern() . ');' => '&$1;',
 	"\r"          => '<br />' . "\n",	/* 行末にチルダは改行 */
 ), $line_rules);
+
+/////////////////////////////////////////////////
+// CSRF防止トークン機能 (Draft機能用)
+
+/**
+ * CSRF防止トークンを取得
+ * @return string トークン値
+ */
+function get_ticket() {
+	if (session_status() == PHP_SESSION_NONE) {
+		session_start();
+	}
+	if (!isset($_SESSION['_ticket'])) {
+		$_SESSION['_ticket'] = bin2hex(random_bytes(16));
+	}
+	return $_SESSION['_ticket'];
+}
+
+/**
+ * CSRF防止トークンを検証
+ * @return bool 有効な場合true
+ */
+function check_ticket() {
+	global $post;
+
+	if (session_status() == PHP_SESSION_NONE) {
+		session_start();
+	}
+	if (!isset($_SESSION['_ticket'])) return false;
+
+	// プラグインによる再ディスパッチ時は $_POST に ticket が無い場合が
+	// あるため、入力フィルタ済みの $post を優先して参照する
+	$ticket = isset($post['ticket']) ? $post['ticket'] :
+		(isset($_POST['ticket']) ? $_POST['ticket'] : null);
+	if (!is_string($ticket)) return false;
+
+	return hash_equals($_SESSION['_ticket'], $ticket);
+}

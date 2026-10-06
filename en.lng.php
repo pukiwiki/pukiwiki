@@ -453,3 +453,37 @@ $_external_link_messages = array(
 	'desc' => 'The selected URL is not the contents of this site.',
 	'wait_n_seconds' => 'It will move to the page automatically after %s seconds.',
 );
+
+///////////////////////////////////////
+// draft.inc.php, edit.inc.php, html.php
+$_msg_draft_saved = 'Draft saved.';
+$_msg_draft_save_error = 'Failed to save draft.';
+$_msg_draft_save = 'Save Draft';
+$_msg_draft_not_found = 'Draft not found.';
+$_msg_draft_loaded = 'Draft loaded.';
+$_msg_draft_list = 'Draft List';
+$_msg_draft_edit = 'Edit Draft';
+$_msg_draft_publish = 'Publish';
+$_msg_draft_delete = 'Delete Draft';
+$_msg_draft_deleted = 'Draft deleted.';
+$_msg_draft_delete_error = 'Failed to delete draft.';
+$_msg_draft_published = 'Draft published';
+$_msg_draft_publish_confirm = 'Publish this draft?';
+$_msg_draft_delete_confirm = 'Delete this draft?';
+$_msg_draft_invalid_action = 'Invalid action.';
+$_msg_draft_exists = 'Draft saved (%s)';
+$_msg_draft_restore = 'Restore from draft';
+$_msg_draft_overwrite_confirm = 'Overwrite existing draft?';
+$_msg_draft_save_button = 'Save Draft';
+$_msg_draft_conflict_title = 'Draft conflicts with the page';
+$_msg_draft_conflict_body = 'The page was updated after this draft was saved. Please merge changes in the edit form.';
+$_msg_draft_conflict_diff = 'Diff';
+$_btn_draft_force_publish = 'Force publish';
+$_msg_draft_force_publish_confirm = 'Publish this draft and overwrite changes?';
+
+// Autosave messages
+$_msg_draft_autosave_saving = 'Saving...';
+$_msg_draft_autosave_saved = 'Auto-saved at ';
+$_msg_draft_autosave_failed = 'Auto-save failed';
+$_msg_draft_autosave_error = 'Auto-save error';
+?>

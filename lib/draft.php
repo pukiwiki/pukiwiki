@@ -1,0 +1,304 @@
+<?php
+// PukiWiki - Yet another WikiWikiWeb clone.
+// draft.php
+// Copyright
+//   2024 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
+//
+// Draft related functions
+//
+// Version 1.4.1
+//
+// [Changelog]
+// 1.4.1 (2026-08-08): Protect DRAFT_DIR from direct HTTP access (security)
+//   - draft_protect_dir() writes .htaccess (Require all denied) + index.html
+//     into DRAFT_DIR, matching what the distribution ships for wiki/ attach/
+//     backup/ cache/ counter/ diff/
+//   - Called on every draft_write(), so existing installs self-heal on next save
+//   - Without it, draft/ relied solely on the root .htaccess *.txt rule; sites
+//     that customise the root .htaccess exposed unpublished drafts at
+//     draft/<strtoupper(bin2hex(pagename))>.txt
+// 1.4.0 (2026-08-07): Discard the draft after a confirmed page save
+//   - edit.inc.php: plugin_edit_discard_draft() called right after page_write()
+//   - Not called on collision / password-error paths (protects work in progress)
+//   - Not called on append (cmd=add), which reaches the same page_write()
+// 1.3.0 (2026-06-11): Auto-create DRAFT_DIR
+//   - draft_write() creates DRAFT_DIR on first save (no manual setup needed)
+//   - Log diagnostics to error_log on write failure
+//   - get_draft_list() returns empty list when DRAFT_DIR does not exist
+// 1.1.0 (2025-11-15): Add access control support
+//   - Used by draft.inc.php with access restrictions
+// 1.0.0 (2025-11-15): Initial release
+//   - Core draft management functions
+
+/**
+ * Check if draft exists for the page
+ *
+ * @param $page page name
+ * @return bool true if draft exists
+ */
+function has_draft($page)
+{
+	$file = get_draft_filename($page);
+	return file_exists($file);
+}
+
+/**
+ * Get draft content only (backward compatible wrapper)
+ *
+ * @param $page page name
+ * @param $lock lock
+ * @param $join true: return string, false: return array of string
+ * @return mixed draft data or FALSE if error occurred
+ */
+function get_draft($page, $lock = TRUE, $join = FALSE)
+{
+	$result = get_draft_with_meta($page, $lock, $join);
+	if ($result === FALSE) return FALSE;
+	return $result['content'];
+}
+
+/**
+ * Get draft content with metadata
+ *
+ * @param string $page
+ * @param bool $lock
+ * @param bool $join true: return string, false: return array of string
+ * @return array{content:mixed,meta:array<string,mixed>}|FALSE
+ */
+function get_draft_with_meta($page, $lock = TRUE, $join = FALSE)
+{
+	$file = get_draft_filename($page);
+	$result = array(
+		'content' => $join ? '' : array(),
+		'meta'    => array(
+			'saved'  => NULL,
+			'digest' => NULL,
+		),
+	);
+
+	if (!file_exists($file)) {
+		return $result;
+	}
+
+	$fp = @fopen($file, 'r');
+	if ($fp === FALSE) return FALSE;
+
+	if ($lock) {
+		flock($fp, LOCK_SH);
+	}
+
+	$size = filesize($file);
+	if ($size === FALSE) {
+		$content = FALSE;
+	} else if ($size == 0) {
+		$content = '';
+	} else {
+		$content = fread($fp, $size);
+	}
+
+	if ($lock) {
+		flock($fp, LOCK_UN);
+	}
+	@fclose($fp);
+
+	if ($content === FALSE) {
+		return FALSE;
+	}
+
+	// Normalize CRLF
+	$content = str_replace("\r", '', $content);
+	$lines = explode("\n", $content);
+
+	// Parse metadata lines (top of file)
+	while (!empty($lines)) {
+		$line = $lines[0];
+		if (strpos($line, '#draft_saved:') === 0) {
+			$result['meta']['saved'] = substr($line, strlen('#draft_saved:'));
+			array_shift($lines);
+			continue;
+		}
+		if (strpos($line, '#draft_digest:') === 0) {
+			$result['meta']['digest'] = substr($line, strlen('#draft_digest:'));
+			array_shift($lines);
+			continue;
+		}
+		break;
+	}
+
+	$body_join = implode("\n", $lines);
+
+	if ($join) {
+		$result['content'] = $body_join;
+		return $result;
+	}
+
+	// Create array with newline suffix (similar to file())
+	if ($body_join === '') {
+		$result['content'] = array();
+	} else {
+		$with_newlines = preg_split('/(?<=\n)/', $body_join);
+		if ($with_newlines === FALSE) {
+			$result['content'] = array();
+		} else {
+			$result['content'] = $with_newlines;
+		}
+	}
+
+	return $result;
+}
+
+/**
+ * Get draft physical file name
+ *
+ * @param $page page name
+ * @return string draft file path
+ */
+function get_draft_filename($page)
+{
+	return DRAFT_DIR . encode($page) . '.txt';
+}
+
+/**
+ * Get draft last-modified filetime
+ *
+ * @param $page page name
+ * @return int filetime or 0 if not exists
+ */
+function get_draft_filetime($page)
+{
+	return has_draft($page) ? filemtime(get_draft_filename($page)) - LOCALZONE : 0;
+}
+
+/**
+ * Drop .htaccess / index.html into DRAFT_DIR so drafts cannot be fetched directly
+ *
+ * 他のデータディレクトリ（wiki/ attach/ backup/ cache/ counter/ diff/）は配布物に
+ * `Require all denied` の .htaccess を同梱しているが、draft/ は実行時に自動生成される
+ * ため同梱できない。素の配布状態ではルート .htaccess の
+ * `<FilesMatch "\.(ini\.php|lng\.php|txt|gz|tgz|zip)$">` が draft/*.txt も塞ぐが、
+ * ルート .htaccess を書き換えている環境（rewrite やキャッシュ制御の追加は珍しくない）では
+ * その唯一の防御が外れ、未公開の下書きが
+ *   https://example.com/draft/46726F6E7450616765.txt
+ * のように読めてしまう。ファイル名は strtoupper(bin2hex(ページ名)) で推測可能。
+ *
+ * 既存ディレクトリにも毎回チェックを入れるので、旧版からの更新でも次回保存時に自己修復する。
+ * 書き込みに失敗しても下書き保存自体は続行する（防御が一段減るだけで機能は壊さない）。
+ *
+ * @param $dir DRAFT_DIR path
+ * @return void
+ */
+function draft_protect_dir($dir)
+{
+	$dir = rtrim($dir, '/') . '/';
+
+	$guards = array(
+		'.htaccess'  => "Require all denied\n",
+		'index.html' => "Draft files are placed here.\n",
+	);
+	foreach ($guards as $name => $body) {
+		$path = $dir . $name;
+		if (file_exists($path)) continue;
+		@file_put_contents($path, $body, LOCK_EX);
+	}
+}
+
+/**
+ * Save draft data
+ *
+ * @param $page page name
+ * @param $postdata draft data
+ * @return bool success
+ */
+function draft_write($page, $postdata)
+{
+	if (PKWK_READONLY) return FALSE;
+
+	$page = strip_bracket($page);
+	$file = get_draft_filename($page);
+
+	// Add metadata
+	$page_digest = md5(join('', get_source($page)));
+	$metadata = '#draft_saved:' . get_date_atom(UTIME) . "\n";
+	$metadata .= '#draft_digest:' . $page_digest . "\n";
+	$content = $metadata . $postdata;
+
+	// Ensure draft directory exists and is protected from direct HTTP access
+	$dir = dirname($file);
+	if (!is_dir($dir)) {
+		if (!mkdir($dir, 0777, true)) {
+			return FALSE;
+		}
+	}
+	draft_protect_dir($dir);
+
+	// Write to file
+	$fp = @fopen($file, 'w');
+	if ($fp === FALSE) {
+		error_log('draft_write: failed to open ' . $file .
+			' (dir_exists=' . (is_dir($dir) ? 'yes' : 'no') .
+			', writable=' . (is_writable($dir) ? 'yes' : 'no') . ')');
+		return FALSE;
+	}
+
+	$success = FALSE;
+	if (flock($fp, LOCK_EX)) {
+		rewind($fp);
+		$written = fputs($fp, $content);
+		flock($fp, LOCK_UN);
+		
+		if ($written !== FALSE && $written >= strlen($content)) {
+			$success = TRUE;
+		}
+	}
+	fclose($fp);
+
+	return $success;
+}
+
+/**
+ * Delete draft data
+ *
+ * @param $page page name
+ * @return bool success
+ */
+function draft_delete($page)
+{
+	if (PKWK_READONLY) return FALSE;
+
+	$file = get_draft_filename($page);
+	if (file_exists($file)) {
+		return unlink($file);
+	}
+	return TRUE;
+}
+
+/**
+ * Get list of all draft pages
+ *
+ * @return array list of page names that have drafts
+ */
+function get_draft_list()
+{
+	$pages = array();
+
+	// DRAFT_DIR は draft_write() が初回保存時に作成する。未作成なら下書きなし
+	if (!is_dir(DRAFT_DIR)) return $pages;
+
+	if ($dh = opendir(DRAFT_DIR)) {
+		while (($file = readdir($dh)) !== FALSE) {
+			if (preg_match('/^(.+)\.txt$/', $file, $matches)) {
+				$page = decode($matches[1]);
+				$pages[] = $page;
+			}
+		}
+		closedir($dh);
+	}
+
+	// Sort by modification time (newest first)
+	usort($pages, function($a, $b) {
+		return get_draft_filetime($b) - get_draft_filetime($a);
+	});
+
+	return $pages;
+}
