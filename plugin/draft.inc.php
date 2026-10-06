@@ -1,0 +1,200 @@
+<?php
+// PukiWiki - Yet another WikiWikiWeb clone.
+// draft.inc.php
+// Copyright 2024 PukiWiki Development Team
+// License: GPL v2 or (at your option) any later version
+//
+// Draft management plugin (cmd=draft)
+//
+// Version 1.1.0
+//
+// [Changelog]
+// 1.1.0 (2025-11-15): Add access control
+//   - Prohibit access in READONLY mode
+//   - Require authentication when $edit_auth is enabled
+// 1.0.0 (2025-11-15): Initial release
+//   - Draft list, delete, and publish functionality
+
+function plugin_draft_action()
+{
+	global $vars;
+
+	// 読み取り専用モードではアクセス拒否
+	if (PKWK_READONLY) {
+		die_message('Prohibited by admin (READONLY mode)');
+	}
+
+	// 認証が有効な場合、ログインユーザーのみアクセス可能
+	global $edit_auth;
+	if ($edit_auth) {
+		$auth_user = get_auth_user();
+		if (!$auth_user) {
+			die_message('Authentication required to view draft list');
+		}
+	}
+
+	// Load draft library
+	require_once(LIB_DIR . 'draft.php');
+
+	$action = isset($vars['action']) ? $vars['action'] : 'list';
+
+	switch ($action) {
+		case 'delete':
+			return plugin_draft_delete();
+		case 'publish':
+			return plugin_draft_publish();
+		default:
+			return plugin_draft_list();
+	}
+}
+
+/**
+ * Show draft list
+ */
+function plugin_draft_list()
+{
+	global $script;
+	global $_msg_draft_not_found, $_msg_draft_list, $_msg_draft_edit, $_msg_draft_publish, $_msg_draft_delete;
+	global $_msg_draft_publish_confirm, $_msg_draft_delete_confirm;
+
+	$drafts = get_draft_list();
+
+	if (empty($drafts)) {
+		$body = '<p>' . $_msg_draft_not_found . '</p>';
+	} else {
+		$body = '<ul>';
+		$ticket = get_ticket();
+		foreach ($drafts as $page) {
+			if (!is_editable($page)) continue;
+
+			$time = get_draft_filetime($page);
+			$time_str = format_date($time);
+			$page_link = make_pagelink($page);
+			$edit_link = $script . '?cmd=edit&amp;page=' . rawurlencode($page) . '&amp;load_draft=true';
+			
+			// Publish form
+			$publish_form = '<form action="' . $script . '" method="post" style="display:inline">' .
+				'<input type="hidden" name="cmd" value="draft" />' .
+				'<input type="hidden" name="action" value="publish" />' .
+				'<input type="hidden" name="page" value="' . htmlsc($page) . '" />' .
+				'<input type="hidden" name="ticket" value="' . $ticket . '" />' .
+				'<input type="submit" value="' . $_msg_draft_publish . '" onclick="return confirm(\'' . $_msg_draft_publish_confirm . '\')" />' .
+				'</form>';
+
+			// Delete form
+			$delete_form = '<form action="' . $script . '" method="post" style="display:inline">' .
+				'<input type="hidden" name="cmd" value="draft" />' .
+				'<input type="hidden" name="action" value="delete" />' .
+				'<input type="hidden" name="page" value="' . htmlsc($page) . '" />' .
+				'<input type="hidden" name="ticket" value="' . $ticket . '" />' .
+				'<input type="submit" value="' . $_msg_draft_delete . '" onclick="return confirm(\'' . $_msg_draft_delete_confirm . '\')" />' .
+				'</form>';
+
+			$body .= '<li>';
+			$body .= $page_link;
+			$body .= ' (' . $time_str . ')';
+			$body .= ' [<a href="' . $edit_link . '">' . $_msg_draft_edit . '</a>]';
+			$body .= ' ' . $publish_form;
+			$body .= ' ' . $delete_form;
+			$body .= '</li>';
+		}
+		$body .= '</ul>';
+	}
+
+	return array(
+		'msg' => $_msg_draft_list,
+		'body' => $body
+	);
+}
+
+/**
+ * Delete draft
+ */
+function plugin_draft_delete()
+{
+	global $vars, $script;
+	global $_msg_draft_deleted, $_msg_draft_delete_error, $_msg_draft_delete, $_msg_draft_list;
+	global $_msg_draft_invalid_action;
+
+	if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !check_ticket()) {
+		return array(
+			'msg' => 'Error',
+			'body' => '<p>' . $_msg_draft_invalid_action . '</p>'
+		);
+	}
+
+	$page = isset($vars['page']) ? $vars['page'] : '';
+	if ($page === '') {
+		return array(
+			'msg' => 'エラー',
+			'body' => '<p>ページが指定されていません。</p>'
+		);
+	}
+
+	// Check permission
+	check_editable($page, true, true);
+
+	if (draft_delete($page)) {
+		$body = '<p>' . $_msg_draft_deleted . '</p>';
+		$body .= '<p><a href="' . $script . '?cmd=draft">' . $_msg_draft_list . 'に戻る</a></p>';
+	} else {
+		$body = '<p>' . $_msg_draft_delete_error . '</p>';
+	}
+
+	return array(
+		'msg' => $_msg_draft_delete,
+		'body' => $body
+	);
+}
+
+/**
+ * Publish draft (convert to main page)
+ */
+function plugin_draft_publish()
+{
+	global $vars, $script;
+	global $_msg_draft_published, $_msg_draft_publish_error, $_msg_draft_publish, $_msg_draft_list;
+	global $_msg_draft_not_found, $_msg_draft_invalid_action;
+
+	if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !check_ticket()) {
+		return array(
+			'msg' => 'Error',
+			'body' => '<p>' . $_msg_draft_invalid_action . '</p>'
+		);
+	}
+
+	$page = isset($vars['page']) ? $vars['page'] : '';
+	if ($page === '') {
+		return array(
+			'msg' => 'エラー',
+			'body' => '<p>ページが指定されていません。</p>'
+		);
+	}
+
+	// Check permission
+	check_editable($page, true, true);
+
+	// Get draft content
+	$postdata = get_draft($page, TRUE, TRUE);
+	if ($postdata === FALSE || $postdata === '') {
+		return array(
+			'msg' => 'エラー',
+			'body' => '<p>' . $_msg_draft_not_found . '</p>'
+		);
+	}
+
+	// Write to main page
+	page_write($page, $postdata);
+
+	// Delete draft
+	draft_delete($page);
+
+	$page_link = make_pagelink($page);
+	$body = '<p>' . $_msg_draft_published . ': ' . $page_link . '</p>';
+	$body .= '<p><a href="' . $script . '?cmd=draft">' . $_msg_draft_list . 'に戻る</a></p>';
+
+	return array(
+		'msg' => $_msg_draft_publish,
+		'body' => $body
+	);
+}
