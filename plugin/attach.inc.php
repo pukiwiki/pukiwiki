@@ -435,6 +435,7 @@ EOD;
 class AttachFile
 {
 	var $page, $file, $age, $basename, $filename, $logname;
+	var $leafbasename, $exist, $type;
 	var $time = 0;
 	var $size = 0;
 	var $time_str = '';

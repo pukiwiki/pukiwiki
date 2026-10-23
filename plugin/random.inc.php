@@ -46,7 +46,7 @@ function plugin_random_action()
 			$pages[$_page] = strip_bracket($_page);
 	}
 
-	srand((double)microtime() * 1000000);
+	srand((float)microtime() * 1000000);
 	$page = array_rand($pages);
 
 	if ($page != '') $vars['refer'] = $page;

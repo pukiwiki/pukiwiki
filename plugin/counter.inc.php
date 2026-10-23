@@ -83,9 +83,9 @@ function plugin_counter_convert()
 		$yesterday_html = PLUGIN_COUNTER_ASYNC_HTML_YESTERDAY;
 		return <<<EOD
 <div class="counter">
-Counter: ${total_html},
-today: ${today_html},
-yesterday: ${yesterday_html}
+Counter: {$total_html},
+today: {$today_html},
+yesterday: {$yesterday_html}
 </div>
 EOD;
 	}
@@ -201,7 +201,9 @@ function plugin_counter_get_count($page)
 		// Read
 		foreach (array_keys($default) as $key) {
 			// Update
-			$c[$key] = rtrim(fgets($fp, 256));
+			$line = fgets($fp, 256);
+			if ($line === FALSE) break; // Empty file: keep default values
+			$c[$key] = rtrim($line);
 			if (feof($fp)) break;
 		}
 	}

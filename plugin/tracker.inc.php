@@ -768,6 +768,7 @@ function plugin_tracker_getlist($page,$refer,$config_name,$list,$order='',$limit
 class Tracker_list
 {
 	var $page;
+	var $items, $link_pages, $link_update_required, $pipe;
 	var $config;
 	var $list;
 	var $fields;
@@ -1097,7 +1098,7 @@ class Tracker_list
 					$dir = SORT_DESC;
 					break;
 				default:
-					continue;
+					break; // 'continue' here worked as 'break'
 			}
 			$this->order[$key] = $dir;
 		}

@@ -118,7 +118,7 @@ function pkwk_http_request($url, $method = 'GET', $headers = '', $post = array()
 
 	$resp = explode("\r\n\r\n", $response, 2);
 	$rccd = explode(' ', $resp[0], 3); // array('HTTP/1.1', '200', 'OK\r\n...')
-	$rc   = (integer)$rccd[1];
+	$rc   = (int)$rccd[1];
 
 	switch ($rc) {
 	case 301: // Moved Permanently

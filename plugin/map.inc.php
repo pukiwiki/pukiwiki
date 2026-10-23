@@ -96,6 +96,7 @@ function plugin_map_action()
 class MapNode
 {
 	var $page;
+	var $cache, $mark;
 	var $is_page;
 	var $link;
 	var $id;

@@ -223,7 +223,7 @@ function plugin_search2_do_search($query_text, $base, $start_index,
 	}
 	$message = str_replace('$1', htmlsc($query_text), str_replace('$2', count($found_pages),
 		str_replace('$3', count($page_names), $b_type_and ? $_msg_andresult : $_msg_orresult)));
-	$search_done = (boolean)($scan_page_index + 1 === count($page_names));
+	$search_done = (bool)($scan_page_index + 1 === count($page_names));
 	$result_obj = array(
 		'message' => $message,
 		'q' => $query_text,
@@ -249,7 +249,7 @@ function plugin_search2_do_search($query_text, $base, $start_index,
 	print(json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 }
 
-function plugin_search2_search_form($search_text = '', $bases = array(),
+function plugin_search2_search_form($search_text, $bases,
 	$offset, $prev_offset_s = null)
 {
 	global $_btn_search;

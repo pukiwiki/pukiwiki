@@ -154,7 +154,7 @@ function do_plugin_convert($name, $args = '')
 		// Insert a hidden field, supports idenrtifying text enconding
 		return preg_replace('/(<form[^>]*>)/', '$1 ' . "\n" .
 			'<div><input type="hidden" name="encode_hint" value="' .
-			PKWK_ENCODING_HINT . '" /></div>', $retvar);
+			PKWK_ENCODING_HINT . '" /></div>', (string)$retvar); // Some plugins return NULL
 	} else {
 		return $retvar;
 	}

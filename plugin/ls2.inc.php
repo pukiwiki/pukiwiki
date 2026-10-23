@@ -119,7 +119,7 @@ function plugin_ls2_show_lists($prefix, & $params)
 	}
 }
 
-function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE,
+function plugin_ls2_get_headings($page, & $params, $level, $include,
 	&$read_pages)
 {
 	static $_ls2_anchor = 0;

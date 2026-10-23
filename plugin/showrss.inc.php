@@ -308,7 +308,7 @@ class ShowRSS_XML
 		} else if (isset($item['PUBDATE'])) {
 			$time = plugin_showrss_get_timestamp($item['PUBDATE'], $this->modified_date);
 		} else if (isset($item['UPDATED'])) {
-			$time = plugin_showrss_get_timestamp($item['UPDATED'], $this->time);
+			$time = plugin_showrss_get_timestamp($item['UPDATED'], $this->modified_date);
 		} else {
 			$time_from_desc = FALSE;
 			if (isset($item['DESCRIPTION']) &&

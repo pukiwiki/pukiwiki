@@ -30,7 +30,7 @@ class Element
 {
 	var $parent;
 	var $elements; // References of childs
-	var $last;     // Insert new one at the back of the $last
+	var $last;     // Insert new one at the back of the $last (NULL: $this)
 
 	function Element()
 	{
@@ -39,12 +39,20 @@ class Element
 	function __construct()
 	{
 		$this->elements = array();
-		$this->last     = & $this;
+		$this->last     = NULL; // See setParent()
 	}
 
+	// PHP 4 copies an object at "$obj = new Foo()", so a reference to $this
+	// made in the constructor points to the original, not to $obj.
+	// Make such references here instead, when $obj is inserted.
 	function setParent(& $parent)
 	{
 		$this->parent = & $parent;
+		foreach (array_keys($this->elements) as $key)
+			if (is_object($this->elements[$key]))
+				$this->elements[$key]->parent = & $this;
+		if (! is_object($this->last))
+			$this->last = & $this;
 	}
 
 	function & add(& $obj)
@@ -61,7 +69,8 @@ class Element
 		$obj->setParent($this);
 		$this->elements[] = & $obj;
 
-		return $this->last = & $obj->last;
+		$this->last = & $obj->last;
+		return $this->last;
 	}
 
 	function canContain(& $obj)
@@ -101,9 +110,11 @@ function & Factory_Inline($text)
 {
 	// Check the first letter of the line
 	if (substr($text, 0, 1) == '~') {
-		return new Paragraph(' ' . substr($text, 1));
+		$obj = new Paragraph(' ' . substr($text, 1));
+		return $obj;
 	} else {
-		return new Inline($text);
+		$obj = new Inline($text);
+		return $obj;
 	}
 }
 
@@ -113,7 +124,8 @@ function & Factory_DList(& $root, $text)
 	if (count($out) < 2) {
 		return Factory_Inline($text);
 	} else {
-		return new DList($out);
+		$obj = new DList($out);
+		return $obj;
 	}
 }
 
@@ -123,7 +135,8 @@ function & Factory_Table(& $root, $text)
 	if (! preg_match('/^\|(.+)\|([hHfFcC]?)$/', $text, $out)) {
 		return Factory_Inline($text);
 	} else {
-		return new Table($out);
+		$obj = new Table($out);
+		return $obj;
 	}
 }
 
@@ -133,7 +146,8 @@ function & Factory_YTable(& $root, $text)
 	if ($text == ',') {
 		return Factory_Inline($text);
 	} else {
-		return new YTable(csv_explode(',', substr($text, 1)));
+		$obj = new YTable(csv_explode(',', substr($text, 1)));
+		return $obj;
 	}
 }
 
@@ -146,7 +160,8 @@ function & Factory_Div(& $root, $text)
 		// Usual code
 		if (preg_match('/^\#([^\(]+)(?:\((.*)\))?/', $text, $matches) &&
 		    exist_plugin_convert($matches[1])) {
-			return new Div($matches);
+			$obj = new Div($matches);
+			return $obj;
 		}
 	} else {
 		// Hack code
@@ -155,15 +170,18 @@ function & Factory_Div(& $root, $text)
 			$len  = strlen($matches[3]);
 			$body = array();
 			if ($len == 0) {
-				return new Div($matches); // Seems legacy block plugin
+				$obj = new Div($matches); // Seems legacy block plugin
+				return $obj;
 			} else if (preg_match('/\{{' . $len . '}\s*\r(.*)\r\}{' . $len . '}/', $text, $body)) { 
 				$matches[2] .= "\r" . $body[1] . "\r";
-				return new Div($matches); // Seems multiline-enabled block plugin
+				$obj = new Div($matches); // Seems multiline-enabled block plugin
+				return $obj;
 			}
 		}
 	}
 
-	return new Paragraph($text);
+	$obj = new Paragraph($text);
+	return $obj;
 }
 
 // Inline elements
@@ -260,10 +278,10 @@ class Heading extends Element
 		$this->level++; // h2,h3,h4
 	}
 
-	function & insert(& $obj)
+	function setParent(& $parent)
 	{
-		parent::insert($obj);
-		return $this->last = & $this;
+		parent::setParent($parent);
+		$this->last = & $this; // Insert nothing into the heading
 	}
 
 	function canContain(& $obj)
@@ -324,7 +342,8 @@ class ListContainer extends Element
 		$this->level = min(3, strspn($text, $head));
 		$text = ltrim(substr($text, $this->level));
 
-		parent::insert(new ListElement($this->level, $tag2));
+		$obj = new ListElement($this->level, $tag2);
+		parent::insert($obj);
 		if ($text != '')
 			$this->last = & $this->last->insert(Factory_Inline($text));
 	}
@@ -348,8 +367,10 @@ class ListContainer extends Element
 
 	function & insert(& $obj)
 	{
-		if (! is_a($obj, get_class($this)))
-			return $this->last = & $this->last->insert($obj);
+		if (! is_a($obj, get_class($this))) {
+			$this->last = & $this->last->insert($obj);
+			return $this->last;
+		}
 
 		// Break if no elements found (BugTrack/524)
 		if (count($obj->elements) == 1 && empty($obj->elements[0]->elements))
@@ -370,6 +391,9 @@ class ListContainer extends Element
 
 class ListElement extends Element
 {
+	var $level;
+	var $head;
+
 	function ListElement($level, $head)
 	{
 		$this->__construct($level, $head);
@@ -434,7 +458,8 @@ class DList extends ListContainer
 	function __construct($out)
 	{
 		parent::__construct('dl', 'dt', ':', $out[0]);
-		$this->last = & Element::insert(new ListElement($this->level, 'dd'));
+		$obj = new ListElement($this->level, 'dd');
+		$this->last = & Element::insert($obj);
 		if ($out[1] != '')
 			$this->last = & $this->last->insert(Factory_Inline($out[1]));
 	}
@@ -462,8 +487,12 @@ class BQuote extends Element
 			$level       = $this->level;
 			$this->level = 0;
 			$this->last  = & $this->end($root, $level);
-			if ($text != '')
-				$this->last = & $this->last->insert(Factory_Inline($text));
+			if ($text != '') {
+				if (is_object($this->last))
+					$this->last = & $this->last->insert(Factory_Inline($text));
+				else
+					$this->insert(Factory_Inline($text));
+			}
 		} else {
 			$this->insert(Factory_Inline($text));
 		}
@@ -502,7 +531,8 @@ class BQuote extends Element
 				return $parent->parent;
 			$parent = & $parent->parent;
 		}
-		return $this;
+		$last = NULL; // $this (see Element::setParent())
+		return $last;
 	}
 }
 
@@ -908,7 +938,9 @@ class Body extends Element
 
 			if (preg_match('/^(LEFT|CENTER|RIGHT):(.*)$/', $line, $matches)) {
 				// <div style="text-align:...">
-				$this->last = & $this->last->add(new Align(strtolower($matches[1])));
+				$obj = new Align(strtolower($matches[1]));
+				$this->last = & $this->last->add($obj);
+				unset($obj); // Break the reference (it is stored in $elements)
 				if ($matches[2] == '') continue;
 				$line = $matches[2];
 			}
@@ -923,7 +955,9 @@ class Body extends Element
 
 			// Horizontal Rule
 			if (substr($line, 0, 4) == '----') {
-				$this->insert(new HRule($this, $line));
+				$obj = new HRule($this, $line);
+				$this->insert($obj);
+				unset($obj);
 				continue;
 			}
 
@@ -948,13 +982,17 @@ class Body extends Element
 
 			// Heading
 			if ($head == '*') {
-				$this->insert(new Heading($this, $line));
+				$obj = new Heading($this, $line);
+				$this->insert($obj);
+				unset($obj);
 				continue;
 			}
 
 			// Pre
 			if ($head == ' ' || $head == "\t") {
-				$this->last = & $this->last->add(new Pre($this, $line));
+				$obj = new Pre($this, $line);
+				$this->last = & $this->last->add($obj);
+				unset($obj);
 				continue;
 			}
 
@@ -965,7 +1003,10 @@ class Body extends Element
 			// Other Character
 			if (isset($this->classes[$head])) {
 				$classname  = $this->classes[$head];
-				$this->last = & $this->last->add(new $classname($this, $line));
+				$last = & $this->last; // BQuote() may change $this->last
+				$obj  = new $classname($this, $line);
+				$this->last = & $last->add($obj);
+				unset($obj);
 				continue;
 			}
 
@@ -1000,7 +1041,8 @@ class Body extends Element
 		}
 		$text = trim($text);
 		// Add 'page contents' link to its heading
-		$this->contents_last = & $this->contents_last->add(new Contents_UList($text, $level, $id));
+		$obj = new Contents_UList($text, $level, $id);
+		$this->contents_last = & $this->contents_last->add($obj);
 		// Add heding
 		return array($text . $anchor, $this->count > 1 ? "\n" . $top : '', $autoid);
 	}

@@ -98,6 +98,7 @@ EOD;
 class line_diff
 {
 	var $arr1, $arr2, $m, $n, $pos, $key, $plus, $minus, $equal, $reverse;
+	var $path, $add_count, $delete_count, $result;
 
 	function line_diff($plus = '+', $minus = '-', $equal = ' ')
 	{

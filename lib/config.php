@@ -26,6 +26,7 @@ class Config
 {
 	var $name, $page; // Page name
 	var $objs = array();
+	var $config_name; // Used by tracker plugin
 
 	function Config($name)
 	{
